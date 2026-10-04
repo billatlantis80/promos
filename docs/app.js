@@ -5,6 +5,7 @@
  * comme telle ; sans remise chiffrée, on affiche l'offre sans étiquette.
  */
 import { lienAffilie, MENTION_AFFILIATION } from './affiliation.js';
+import * as C from './compte.js';
 
 const $ = (id) => document.getElementById(id);
 
@@ -173,20 +174,118 @@ function dessinerProfil() {
     </div>`;
 }
 
+/** Bloc « tes droits » : ce qui est gardé, où, et comment tout reprendre ou tout
+    effacer. Obligatoire pour la publication, et utile même sans obligation. */
+function blocDroits() {
+  return `
+    <div class="carte-bloc" style="margin-top:12px">
+      <h4>Tes données, tes droits</h4>
+      <p>Ce qui est conservé sur cet appareil : le nom d'utilisateur, une empreinte
+         du mot de passe (jamais le mot de passe), le prénom affiché, tes favoris
+         et tes réglages. <b>Rien n'est envoyé</b> : il n'y a ni serveur, ni
+         traqueur, ni cookie publicitaire.</p>
+      <ul>
+        <li><b>Voir et emporter</b> : « Télécharger mes données » produit un fichier
+            lisible qui contient tout.</li>
+        <li><b>Effacer</b> : « Supprimer mon compte » retire le compte et les
+            données de cet appareil, sans délai et sans avoir à demander à personne.</li>
+        <li><b>Durée</b> : jusqu'à ce que tu supprimes. Aucune copie n'existe ailleurs.</li>
+      </ul>
+      <p style="margin-top:8px">Les liens vers les marchands peuvent être affiliés :
+         l'application peut alors toucher une commission, <b>sans changer le prix
+         que tu paies</b>.</p>
+    </div>`;
+}
+
+const dateLisible = (iso) => {
+  try { return new Date(iso).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }); }
+  catch { return 'date inconnue'; }
+};
+
 function dessinerCompte() {
+  const f = C.ficheCompte();
+  if (!f) {
+    $('regCompte').innerHTML = `
+      <div class="carte-bloc">
+        <h4>Aucun compte sur cet appareil</h4>
+        <p>Ce compte <b>ne crée rien en ligne</b> : il n'y a pas de serveur. Il
+           protège l'accès à l'application (favoris, réglages) sur ce téléphone,
+           et donne un nom au porteur des données.</p>
+        <p>Ce qu'il ne fera jamais, pour que tu ne l'attendes pas : retrouver tes
+           favoris sur un autre appareil, ni te rendre un mot de passe oublié. Le
+           mot de passe n'est pas enregistré — seulement une empreinte calculée à
+           partir de lui.</p>
+        <div class="champ">
+          <label for="cNom">Nom d'utilisateur</label>
+          <input id="cNom" type="text" maxlength="24" autocomplete="username" placeholder="3 à 24 caractères">
+        </div>
+        <div class="champ">
+          <label for="cMdp">Mot de passe</label>
+          <input id="cMdp" type="password" autocomplete="new-password" placeholder="8 caractères minimum">
+        </div>
+        <div class="champ">
+          <label for="cMdp2">Répète le mot de passe</label>
+          <input id="cMdp2" type="password" autocomplete="new-password">
+        </div>
+        <p class="annonce" id="cAnnonce"></p>
+        <p style="margin:0"><button class="enregistrer" id="creerCompte">Créer mon compte</button></p>
+      </div>
+      ${blocDroits()}`;
+    return;
+  }
   $('regCompte').innerHTML = `
     <div class="carte-bloc">
-      <h4>Aucun compte pour l'instant</h4>
-      <p>L'application fonctionne entièrement sur ton appareil : profil, favoris, thème. Rien n'est envoyé nulle part.</p>
-      <p>L'inscription, la connexion, le mot de passe et la déconnexion demandent un <b>serveur</b> — un endroit qui vérifie qui tu es et qui retrouve ta liste depuis un autre téléphone. Tant qu'il n'existe pas, il n'y a pas de formulaire ici : un bouton « Se connecter » qui ne connecte personne serait un mensonge.</p>
-      <p>Ce qu'il faut, dans l'ordre :</p>
-      <ul>
-        <li>un service d'authentification (inscription, mot de passe oublié, déconnexion) ;</li>
-        <li>une politique de confidentialité et la suppression de compte — obligatoires pour le Play Store ;</li>
-        <li>la synchronisation, pour retrouver ses données ailleurs que sur ce téléphone.</li>
-      </ul>
-      <p style="margin-top:12px"><button class="outil" id="effacerAppareil" title="Efface profil, favoris, thème et réglages de cet appareil">Effacer mes données de cet appareil</button></p>
-    </div>`;
+      <div class="fiche-compte">
+        <span class="avatar">${esc(f.nom.slice(0, 1).toUpperCase())}</span>
+        <span>
+          <span class="qui">${esc(f.nom)}</span><br>
+          <span class="quand">compte local créé le ${dateLisible(f.cree)} · ${esc(f.algorithme || 'PBKDF2-SHA256')} ${f.tours ? `(${f.tours} tours)` : ''}</span>
+        </span>
+      </div>
+      <p>Ce compte vit sur cet appareil uniquement. Il protège l'accès à
+         l'application ; il ne synchronise rien et ne se connecte à rien.</p>
+      <div class="champ">
+        <label for="cAncien">Mot de passe actuel</label>
+        <input id="cAncien" type="password" autocomplete="current-password">
+      </div>
+      <div class="champ">
+        <label for="cNouveau">Nouveau mot de passe</label>
+        <input id="cNouveau" type="password" autocomplete="new-password">
+      </div>
+      <p class="annonce" id="cAnnonce"></p>
+      <div class="compte-actions">
+        <button class="enregistrer" id="changerMdp">Changer le mot de passe</button>
+        <button class="outil" id="verrouiller">Verrouiller maintenant</button>
+        <button class="outil" id="exporterDonnees">Télécharger mes données</button>
+        <button class="outil danger" id="supprimerCompte">Supprimer mon compte</button>
+      </div>
+    </div>
+    ${blocDroits()}`;
+}
+
+/** Export RGPD : tout ce que l'application garde, dans un seul fichier lisible. */
+function exporterDonnees() {
+  const paquet = {
+    application: 'Promos',
+    exporteLe: new Date().toISOString(),
+    avertissement: "Tout ce que l'application conserve sur cet appareil. Rien n'a été envoyé nulle part — il n'y a pas de serveur.",
+    compte: C.ficheCompte(),
+    profil: { ...profil },
+    favoris,
+    reglages: {
+      theme: themeEnregistre(),
+      affichage: vueEnregistree(),
+      economieDeDonnees: lireBool(CLE_ECO),
+    },
+  };
+  const url = URL.createObjectURL(new Blob([JSON.stringify(paquet, null, 2)], { type: 'application/json' }));
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'promos-mes-donnees.json';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
 }
 
 function ouvrirReglages() {
@@ -513,8 +612,112 @@ function brancher() {
     enregistrerProfil();
     dessinerProfil();
   });
-  $('regCompte').addEventListener('click', (e) => {
-    if (e.target.closest('#effacerAppareil')) effacerTout();
+  $('regCompte').addEventListener('click', async (e) => {
+    // Le message vit dans la rubrique ; après un nouveau rendu il faut le
+    // reposer, sinon il disparaît avec l'ancien contenu.
+    const annonce = (msg, ok = false) => {
+      const a = $('cAnnonce');
+      if (!a) return;
+      a.textContent = msg;
+      a.style.color = ok ? 'var(--vert)' : 'var(--accent-2)';
+    };
+
+    if (e.target.closest('#creerCompte')) {
+      const nom = ($('cNom') || {}).value || '';
+      const m1 = ($('cMdp') || {}).value || '';
+      const m2 = ($('cMdp2') || {}).value || '';
+      if (m1 !== m2) return annonce('Les deux mots de passe ne sont pas identiques.');
+      const r = await C.creerCompte(nom, m1);
+      dessinerCompte();
+      return annonce(r.ok ? `Compte « ${r.nom} » créé sur cet appareil.` : r.message, r.ok);
+    }
+
+    if (e.target.closest('#changerMdp')) {
+      const r = await C.changerMotDePasse(($('cAncien') || {}).value || '', ($('cNouveau') || {}).value || '');
+      dessinerCompte();
+      return annonce(r.ok ? 'Mot de passe changé.' : r.message, r.ok);
+    }
+
+    if (e.target.closest('#exporterDonnees')) {
+      exporterDonnees();
+      return annonce('Fichier « promos-mes-donnees.json » généré.', true);
+    }
+
+    if (e.target.closest('#verrouiller')) {
+      fermerReglages();
+      montrerVerrou();
+      return;
+    }
+
+    if (e.target.closest('#supprimerCompte')) {
+      // Deux appuis : un effacement définitif ne doit pas tenir à un doigt qui
+      // glisse. Et pas de fenêtre « confirm » : dans l'APK, le WebView peut la
+      // refuser en silence — la suppression ne marcherait alors jamais, sans
+      // que rien ne le signale.
+      const b = e.target.closest('#supprimerCompte');
+      if (!suppressionArmee) {
+        suppressionArmee = true;
+        b.textContent = 'Appuie encore pour confirmer';
+        setTimeout(() => {
+          suppressionArmee = false;
+          if (document.body.contains(b)) b.textContent = 'Supprimer mon compte';
+        }, 8000);
+        return annonce('Le compte ET les données de cet appareil seront effacés. Sans serveur, rien ne pourra être restauré.');
+      }
+      suppressionArmee = false;
+      C.supprimerCompte();
+      effacerTout();
+      dessinerCompte();
+      return annonce('Compte et données effacés de cet appareil.', true);
+    }
+  });
+}
+
+/* ---------- Verrou du compte local ---------- */
+let suppressionArmee = false;
+let dejaLance = false;
+
+function montrerVerrou() {
+  if (!C.compteEnregistre()) return;
+  $('titreVerrou').textContent = `Bonjour ${C.nomCompte()}`;
+  $('verrouIntro').textContent = "Entre ton mot de passe pour ouvrir l'application. Il n'est enregistré nulle part : si tu l'as oublié, personne ne pourra le retrouver, et la seule issue sera d'effacer le compte et les données de cet appareil.";
+  $('verrouOublie').textContent = 'J’ai oublié mon mot de passe';
+  oublisArmes = false;
+  $('verrouErreur').hidden = true;
+  $('verrou').hidden = false;
+  $('verrouMdp').value = '';
+  $('verrouMdp').focus();
+}
+
+let oublisArmes = false;
+
+function brancherVerrou() {
+  const valider = async () => {
+    const r = await C.verifierMotDePasseCompte($('verrouMdp').value);
+    if (!r.ok) {
+      $('verrouErreur').textContent = r.message;
+      $('verrouErreur').hidden = false;
+      $('verrouMdp').select();
+      return;
+    }
+    $('verrouErreur').hidden = true;
+    $('verrou').hidden = true;
+    $('verrouMdp').value = '';
+    if (!dejaLance) { dejaLance = true; lancer(); }
+  };
+  $('verrouOk').addEventListener('click', valider);
+  $('verrouMdp').addEventListener('keydown', (e) => { if (e.key === 'Enter') valider(); });
+  $('verrouOublie').addEventListener('click', () => {
+    if (!oublisArmes) {
+      oublisArmes = true;
+      $('verrouIntro').textContent = "Sans serveur, aucun mot de passe ne peut être retrouvé : personne ne le connaît, il n'est pas enregistré. Deux issues seulement — tu te souviens, ou on efface. Effacer supprime le compte ET les données (favoris, réglages) de cet appareil, définitivement.";
+      $('verrouOublie').textContent = 'Effacer le compte et les données (appuie encore)';
+      return;
+    }
+    C.supprimerCompte();
+    effacerTout();
+    $('verrou').hidden = true;
+    if (!dejaLance) { dejaLance = true; lancer(); }
   });
 }
 
@@ -561,7 +764,7 @@ async function chargerDonnees() {
   }
 }
 
-async function demarrer() {
+async function lancer() {
   $('mention').textContent = MENTION_AFFILIATION;
   // Thème et profil AVANT le premier rendu : sinon l'écran s'affiche aux
   // couleurs par défaut puis bascule sous les yeux de l'utilisateur.
@@ -597,6 +800,22 @@ async function demarrer() {
   dessinerPuces();
   dessinerBandeau();
   dessiner();
+}
+
+/**
+ * Au démarrage : s'il existe un compte sur cet appareil, le mot de passe est
+ * demandé AVANT de charger quoi que ce soit — sinon le verrou ne verrouille
+ * rien. Sans compte, l'application s'ouvre normalement.
+ */
+function demarrer() {
+  dessinerCompte();                 // construit la rubrique dès l'ouverture
+  if (C.compteEnregistre()) {
+    brancherVerrou();
+    montrerVerrou();
+    return;
+  }
+  dejaLance = true;
+  lancer();
 }
 
 demarrer();

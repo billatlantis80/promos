@@ -336,3 +336,37 @@ html[data-theme="contraste"] {
 .carte-bloc ul { margin: 6px 0 0; padding-left: 18px; color: var(--doux); }
 .annonce { margin: 10px 0 0; font-size: 13px; color: var(--vert); }
 
+/* PIÈGE PAYÉ : l'attribut `hidden` du navigateur pose « display: none », mais
+   une règle de classe qui fixe « display: flex » est PLUS FORTE que lui. Le
+   verrou restait donc affiché en permanence et interceptait tous les appuis :
+   l'application ne répondait plus à rien. Il faut rendre explicitement la main
+   à `hidden`. */
+.verrou[hidden] { display: none; }
+
+/* ---------- Compte local ---------- */
+/* Le verrou couvre tout : tant qu'il est là, rien de l'application n'est
+   atteignable — sinon il ne protégerait rien. */
+.verrou {
+  position: fixed; inset: 0; z-index: 60; padding: 20px;
+  background: rgba(8,9,12,.94);
+  display: flex; align-items: center; justify-content: center;
+}
+.verrou-boite {
+  width: 100%; max-width: 420px; padding: 20px;
+  background: var(--carte); border: 1px solid var(--bord); border-radius: var(--rayon);
+}
+.verrou-boite h2 { margin: 0 0 10px; font-size: 18px; }
+.verrou-intro { margin: 0 0 14px; font-size: 13px; line-height: 1.55; color: var(--doux); }
+.verrou-erreur { margin: 0 0 10px; font-size: 13px; color: var(--accent-2); }
+/* Bouton qui ressemble à un lien : pour les actions de secours (mot de passe
+   oublié), on ne veut pas qu'elles aient l'air d'une action principale. */
+.lien-bouton {
+  padding: 4px 0; border: 0; background: none; cursor: pointer;
+  color: var(--doux); font-size: 13px; text-decoration: underline;
+}
+.fiche-compte { display: flex; align-items: center; gap: 10px; margin: 0 0 10px; }
+.fiche-compte .qui { font-size: 14px; font-weight: 600; }
+.fiche-compte .quand { font-size: 12px; color: var(--doux); }
+.compte-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 0; }
+.danger { color: var(--accent-2); border-color: var(--accent-2); }
+

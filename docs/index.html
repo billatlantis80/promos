@@ -81,6 +81,24 @@
   </section>
 </section>
 
+<!-- Verrou du compte local. Quand un compte existe sur cet appareil,
+     l'application demande le mot de passe au démarrage. Sans serveur, ce mot de
+     passe ne protège QUE cet appareil : il n'est stocké nulle part, et personne
+     ne peut le retrouver — c'est écrit ici, avant la saisie. -->
+<section class="verrou" id="verrou" role="dialog" aria-modal="true" aria-labelledby="titreVerrou" hidden>
+  <div class="verrou-boite">
+    <h2 id="titreVerrou">Compte local</h2>
+    <p class="verrou-intro" id="verrouIntro">Entre ton mot de passe pour ouvrir l’application. Il n’est enregistré nulle part : si tu l’as oublié, personne ne pourra le retrouver, et la seule issue sera d’effacer le compte et les données de cet appareil.</p>
+    <div class="champ">
+      <label for="verrouMdp">Mot de passe</label>
+      <input id="verrouMdp" type="password" autocomplete="current-password">
+    </div>
+    <p class="verrou-erreur" id="verrouErreur" role="alert" hidden></p>
+    <p><button class="enregistrer" id="verrouOk">Déverrouiller</button></p>
+    <p><button class="lien-bouton" id="verrouOublie">J’ai oublié mon mot de passe</button></p>
+  </div>
+</section>
+
 <script type="module" src="app.js"></script>
 </body>
 </html>
