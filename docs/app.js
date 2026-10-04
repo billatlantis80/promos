@@ -61,6 +61,162 @@ function appliquerVue(v) {
   try { localStorage.setItem(CLE_VUE, retenue); } catch { /* privé : on s'en passe */ }
 }
 
+/* ---------- Thèmes ----------
+   Dix palettes, définies en CSS (html[data-theme="…"]) : le script ne pose qu'un
+   attribut. Chaque vignette des réglages montre les trois couleurs qui comptent
+   (fond, carte, accent) — un aperçu, pas une devinette. */
+const CLE_THEME = 'promos.theme';
+const THEME_DEFAUT = 'nuit';
+const THEMES = [
+  { id: 'nuit', nom: 'Nuit', fond: '#0c0d10', carte: '#14161b', accent: '#ff8a3d' },
+  { id: 'ardoise', nom: 'Ardoise', fond: '#0e1418', carte: '#131c21', accent: '#35c6e0' },
+  { id: 'foret', nom: 'Forêt', fond: '#0d130f', carte: '#121b14', accent: '#7ed957' },
+  { id: 'bordeaux', nom: 'Bordeaux', fond: '#140d10', carte: '#1d1317', accent: '#e0567a' },
+  { id: 'violette', nom: 'Violette', fond: '#100d18', carte: '#181326', accent: '#b06bff' },
+  { id: 'ocean', nom: 'Océan', fond: '#08111d', carte: '#0e1a2b', accent: '#38bdf8' },
+  { id: 'clair', nom: 'Clair', fond: '#f5f6f8', carte: '#ffffff', accent: '#e2621b' },
+  { id: 'sable', nom: 'Sable', fond: '#faf6ef', carte: '#ffffff', accent: '#a3671a' },
+  { id: 'aube', nom: 'Aube', fond: '#fdf3f7', carte: '#ffffff', accent: '#c72c72' },
+  { id: 'contraste', nom: 'Contraste', fond: '#000000', carte: '#0a0a0a', accent: '#ffd700' },
+];
+let theme = THEME_DEFAUT;
+
+function themeEnregistre() {
+  try { return localStorage.getItem(CLE_THEME); } catch { return null; }
+}
+
+function appliquerTheme(id) {
+  const t = THEMES.find((x) => x.id === id) || THEMES[0];
+  theme = t.id;
+  document.documentElement.dataset.theme = t.id;
+  // La barre d'état du téléphone suit le fond du thème : sans ça, une bande de
+  // l'ancienne couleur reste collée en haut de l'écran.
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.setAttribute('content', t.fond);
+  try { localStorage.setItem(CLE_THEME, t.id); } catch { /* navigation privée */ }
+  majThemes();
+}
+
+/** Marque la vignette du thème courant (les vignettes ne sont jamais reconstruites). */
+function majThemes() {
+  document.querySelectorAll('#themes .theme').forEach((b) => {
+    const actif = b.dataset.themeId === theme;
+    b.classList.toggle('on', actif);
+    b.setAttribute('aria-pressed', actif ? 'true' : 'false');
+    const c = b.querySelector('.coche');
+    if (c) c.textContent = actif ? '✓' : '';
+  });
+}
+
+/* ---------- Profil ----------
+   Profil LOCAL : prénom + initiale. Rien ne part sur un serveur — il n'y en a
+   pas — donc rien à protéger ailleurs que sur l'appareil. */
+const CLE_PROFIL = 'promos.profil';
+let profil = { prenom: '' };
+
+function chargerProfil() {
+  try {
+    const b = JSON.parse(localStorage.getItem(CLE_PROFIL) || '{}');
+    profil = { prenom: typeof b.prenom === 'string' ? b.prenom.slice(0, 24) : '' };
+  } catch { profil = { prenom: '' }; }
+}
+
+function enregistrerProfil() {
+  try { localStorage.setItem(CLE_PROFIL, JSON.stringify(profil)); } catch { /* privé */ }
+}
+
+const initiale = () => (profil.prenom.trim() ? profil.prenom.trim()[0].toUpperCase() : '?');
+
+/* Libellés du sélecteur d'affichage, repris dans les réglages (mêmes glyphes
+   que la barre du haut : c'est le MÊME réglage, pas un doublon). */
+const NOMS_VUES = {
+  grille: { court: '▦', etat: 'Tableau — deux offres côte à côte' },
+  liste: { court: '▤', etat: 'Liste — une offre par ligne, grand visuel' },
+  compacte: { court: '☰', etat: 'Compacte — beaucoup d’offres à l’écran' },
+};
+
+/* ---------- Réglages ---------- */
+function dessinerReglages() {
+  $('themes').innerHTML = THEMES.map((t) => `
+    <button class="theme" data-theme-id="${t.id}" aria-pressed="false">
+      <span class="pastilles" aria-hidden="true"><i style="background:${t.fond}"></i><i style="background:${t.carte}"></i><i style="background:${t.accent}"></i></span>
+      <span class="nom">${t.nom}</span><span class="coche"></span>
+    </button>`).join('');
+
+  // Miroir des réglages de la barre du haut. Les boutons portent la classe
+  // « vue » : appliquerVue() les allume tous, ici comme en haut — une seule
+  // source de vérité, donc aucun risque de désaccord entre les deux endroits.
+  $('regAffichage').innerHTML = `
+    <div class="vues" role="group" aria-label="Mode d'affichage">
+      ${VUES.map((v) => `<button class="vue" data-vue="${v}" title="${NOMS_VUES[v].etat}" aria-label="${NOMS_VUES[v].etat}">${NOMS_VUES[v].court}</button>`).join('')}
+    </div>
+    <p style="margin:12px 0 0">
+      <button class="outil" data-eco-miroir aria-pressed="false" title="Économie de données — aucun visuel téléchargé">Éco — aucun visuel téléchargé</button>
+    </p>`;
+
+  dessinerProfil();
+  dessinerCompte();
+  majThemes();
+}
+
+function dessinerProfil() {
+  const nom = profil.prenom.trim();
+  $('regProfil').innerHTML = `
+    <div class="champ">
+      <label for="prenom">Prénom affiché</label>
+      <input id="prenom" type="text" maxlength="24" autocomplete="given-name" placeholder="Ton prénom" value="${esc(nom)}">
+    </div>
+    <p style="margin:0 0 12px"><button class="enregistrer" id="enregistrerProfil">Enregistrer</button></p>
+    <div class="ligne-profil">
+      <span class="avatar" id="avatar" title="Aperçu">${esc(initiale())}</span>
+      <span>${nom ? `Bonjour ${esc(nom)}` : 'Aucun prénom enregistré'}<br><span style="font-size:12.5px;color:var(--doux)">Gardé sur cet appareil uniquement. Effacé avec les données du site.</span></span>
+    </div>`;
+}
+
+function dessinerCompte() {
+  $('regCompte').innerHTML = `
+    <div class="carte-bloc">
+      <h4>Aucun compte pour l'instant</h4>
+      <p>L'application fonctionne entièrement sur ton appareil : profil, favoris, thème. Rien n'est envoyé nulle part.</p>
+      <p>L'inscription, la connexion, le mot de passe et la déconnexion demandent un <b>serveur</b> — un endroit qui vérifie qui tu es et qui retrouve ta liste depuis un autre téléphone. Tant qu'il n'existe pas, il n'y a pas de formulaire ici : un bouton « Se connecter » qui ne connecte personne serait un mensonge.</p>
+      <p>Ce qu'il faut, dans l'ordre :</p>
+      <ul>
+        <li>un service d'authentification (inscription, mot de passe oublié, déconnexion) ;</li>
+        <li>une politique de confidentialité et la suppression de compte — obligatoires pour le Play Store ;</li>
+        <li>la synchronisation, pour retrouver ses données ailleurs que sur ce téléphone.</li>
+      </ul>
+      <p style="margin-top:12px"><button class="outil" id="effacerAppareil" title="Efface profil, favoris, thème et réglages de cet appareil">Effacer mes données de cet appareil</button></p>
+    </div>`;
+}
+
+function ouvrirReglages() {
+  majThemes();
+  $('feuille').hidden = false;
+  $('reglages').setAttribute('aria-expanded', 'true');
+  document.body.style.overflow = 'hidden';   // pas de défilement derrière la feuille
+}
+
+function fermerReglages() {
+  $('feuille').hidden = true;
+  $('reglages').setAttribute('aria-expanded', 'false');
+  document.body.style.overflow = '';
+}
+
+/** Efface tout ce qui vit sur l'appareil, puis remet l'application à son défaut. */
+function effacerTout() {
+  try { localStorage.clear(); } catch { /* privé */ }
+  favoris = [];
+  profil = { prenom: '' };
+  appliquerTheme(THEME_DEFAUT);
+  appliquerVue('grille');
+  etat.eco = false;
+  etat.favoris = false;
+  majOutils();
+  dessinerProfil();
+  dessinerPuces();
+  dessiner();
+}
+
 /* ---------- Économie de données ----------
    Une image masquée en CSS est quand même TÉLÉCHARGÉE : ce serait une fausse
    économie. Ici on n'émet simplement aucune adresse de visuel (voir carte()).
@@ -268,7 +424,9 @@ function dessiner() {
   $('fraicheur').textContent = `Recensé le ${new Date(etat.meta.genereLe || Date.now()).toLocaleString('fr-FR')} — ${total} entrées.`;
 }
 
-/** Reflet des réglages dans la barre (orange = actif) + compteur de favoris. */
+/** Reflet des réglages dans la barre (orange = actif) + compteur de favoris.
+    L'économie de données existe à deux endroits (barre du haut et réglages) :
+    on les allume ENSEMBLE, sinon l'un des deux mentirait sur l'état réel. */
 function majOutils() {
   const e = $('eco'), f = $('fav');
   e.classList.toggle('on', etat.eco);
@@ -276,7 +434,19 @@ function majOutils() {
   f.classList.toggle('on', etat.favoris);
   f.setAttribute('aria-pressed', etat.favoris ? 'true' : 'false');
   $('nFav').textContent = favoris.length ? String(favoris.length) : '';
+  document.querySelectorAll('[data-eco-miroir]').forEach((m) => {
+    m.classList.toggle('on', etat.eco);
+    m.setAttribute('aria-pressed', etat.eco ? 'true' : 'false');
+  });
   document.body.dataset.eco = etat.eco ? '1' : '0';
+}
+
+/** Bascule l'économie de données — un seul chemin, deux boutons. */
+function basculerEco() {
+  etat.eco = !etat.eco;
+  ecrireBool(CLE_ECO, etat.eco);
+  majOutils();
+  dessiner();
 }
 
 /** Garde de côté, ou retire. Hors mode favoris, on ne redessine QUE la carte
@@ -307,12 +477,7 @@ function brancher() {
   document.querySelectorAll('.vue').forEach((b) => {
     b.addEventListener('click', () => appliquerVue(b.dataset.vue));
   });
-  $('eco').addEventListener('click', () => {
-    etat.eco = !etat.eco;
-    ecrireBool(CLE_ECO, etat.eco);
-    majOutils();
-    dessiner();
-  });
+  $('eco').addEventListener('click', basculerEco);
   $('fav').addEventListener('click', () => {
     etat.favoris = !etat.favoris;
     ecrireBool(CLE_FAV_ACTIF, etat.favoris);
@@ -324,6 +489,32 @@ function brancher() {
   $('liste').addEventListener('click', (e) => {
     const b = e.target.closest('.favori');
     if (b) basculerFavori(b.dataset.id);
+  });
+
+  // --- Réglages ---
+  $('reglages').addEventListener('click', ouvrirReglages);
+  $('fermer').addEventListener('click', fermerReglages);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !$('feuille').hidden) fermerReglages();
+  });
+  // Thèmes : écouteur délégué sur la grille (dix vignettes, un seul écouteur).
+  $('themes').addEventListener('click', (e) => {
+    const b = e.target.closest('.theme');
+    if (b) appliquerTheme(b.dataset.themeId);
+  });
+  $('regAffichage').addEventListener('click', (e) => {
+    const v = e.target.closest('.vue');
+    if (v) { appliquerVue(v.dataset.vue); return; }
+    if (e.target.closest('[data-eco-miroir]')) basculerEco();
+  });
+  $('regProfil').addEventListener('click', (e) => {
+    if (!e.target.closest('#enregistrerProfil')) return;
+    profil.prenom = ($('prenom').value || '').trim().slice(0, 24);
+    enregistrerProfil();
+    dessinerProfil();
+  });
+  $('regCompte').addEventListener('click', (e) => {
+    if (e.target.closest('#effacerAppareil')) effacerTout();
   });
 }
 
@@ -372,6 +563,11 @@ async function chargerDonnees() {
 
 async function demarrer() {
   $('mention').textContent = MENTION_AFFILIATION;
+  // Thème et profil AVANT le premier rendu : sinon l'écran s'affiche aux
+  // couleurs par défaut puis bascule sous les yeux de l'utilisateur.
+  appliquerTheme(themeEnregistre() || THEME_DEFAUT);
+  chargerProfil();
+  dessinerReglages();               // construit le contenu de la feuille Réglages
   appliquerVue(vueEnregistree());   // avant tout rendu : aucun clignotement de mode
   chargerFavoris();
   etat.eco = lireBool(CLE_ECO);
