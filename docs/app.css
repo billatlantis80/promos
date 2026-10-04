@@ -56,6 +56,10 @@ body {
   border-radius: 10px; padding: 8px 6px; font-size: 13px;
 }
 #pays:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+#paysReglages {
+  width: 100%; background: var(--carte); color: var(--texte);
+  border: 1px solid var(--bord); border-radius: 10px; padding: 10px 8px; font-size: 14px;
+}
 #tri {
   background: var(--carte); color: var(--texte); border: 1px solid var(--bord);
   border-radius: 10px; padding: 8px 6px; font-size: 13px; flex: 1; min-width: 0;
@@ -350,23 +354,35 @@ html[data-theme="contraste"] {
    verrou restait donc affiché en permanence et interceptait tous les appuis :
    l'application ne répondait plus à rien. Il faut rendre explicitement la main
    à `hidden`. */
-.verrou[hidden] { display: none; }
-
-/* ---------- Compte local ---------- */
-/* Le verrou couvre tout : tant qu'il est là, rien de l'application n'est
-   atteignable — sinon il ne protégerait rien. */
-.verrou {
+/* Le verrou et la question du pays partagent la même mécanique : un panneau qui
+   couvre tout. Deux classes, une seule mise en forme — et surtout la même
+   reprise explicite de `hidden`, sinon le panneau resterait posé sur l'écran et
+   intercepterait tous les appuis (défaut déjà payé une fois ici). */
+.verrou, .modale {
   position: fixed; inset: 0; z-index: 60; padding: 20px;
   background: rgba(8,9,12,.94);
   display: flex; align-items: center; justify-content: center;
 }
-.verrou-boite {
-  width: 100%; max-width: 420px; padding: 20px;
+.verrou[hidden], .modale[hidden] { display: none; }
+.verrou-boite, .modale-boite {
+  width: 100%; max-width: 440px; padding: 20px; max-height: 86vh; overflow-y: auto;
   background: var(--carte); border: 1px solid var(--bord); border-radius: var(--rayon);
 }
-.verrou-boite h2 { margin: 0 0 10px; font-size: 18px; }
-.verrou-intro { margin: 0 0 14px; font-size: 13px; line-height: 1.55; color: var(--doux); }
+.verrou-boite h2, .modale-boite h2 { margin: 0 0 10px; font-size: 18px; }
+.verrou-intro, .modale-intro { margin: 0 0 14px; font-size: 13px; line-height: 1.55; color: var(--doux); }
 .verrou-erreur { margin: 0 0 10px; font-size: 13px; color: var(--accent-2); }
+/* Choix du pays : une liste qu'on touche. Le pays conseillé (d'après la langue
+   de l'appareil) est marqué — mais rien n'est décidé à la place de personne. */
+.pays-liste { display: flex; flex-direction: column; gap: 6px; margin: 0 0 12px; }
+.pays-item {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 10px;
+  padding: 11px 13px; cursor: pointer; text-align: left;
+  background: var(--carte-2); color: var(--texte);
+  border: 1px solid var(--bord); border-radius: 11px; font-size: 14px;
+}
+.pays-item span { font-size: 12px; color: var(--doux); }
+.pays-item.conseille { border-color: var(--accent); }
+.pays-item:hover { border-color: var(--accent-2); }
 /* Bouton qui ressemble à un lien : pour les actions de secours (mot de passe
    oublié), on ne veut pas qu'elles aient l'air d'une action principale. */
 .lien-bouton {

@@ -328,7 +328,9 @@ function effacerTout() {
   appliquerVue('grille');
   etat.eco = false;
   etat.favoris = false;
-  etat.pays = paysDetecte();
+  // Le pays repart à « tous » : les données effacées emportent le choix, et la
+  // question sera reposée à la prochaine ouverture.
+  etat.pays = 'tout';
   majOutils();
   dessinerProfil();
   dessinerPuces();
@@ -509,23 +511,79 @@ function marquerPuce() {
   });
 }
 
-/** Remplit le sélecteur de pays.
+/** Compte les offres par pays : ce que l'application contient VRAIMENT. */
+function compteParPays() {
+  const compte = {};
+  for (const o of etat.offres) { const p = o.pays || 'FR'; compte[p] = (compte[p] || 0) + 1; }
+  return compte;
+}
+
+/** Codes des pays présents, du plus fourni au moins fourni. */
+function codesPays() {
+  const compte = compteParPays();
+  return Object.keys(compte).filter((c) => NOMS_PAYS[c]).sort((a, b) => compte[b] - compte[a]);
+}
+
+function optionsPays() {
+  const compte = compteParPays();
+  return [`<option value="tout">Tous les pays (${etat.offres.length})</option>`]
+    .concat(codesPays().map((c) => `<option value="${esc(c)}">${esc(NOMS_PAYS[c])} (${compte[c]})</option>`))
+    .join('');
+}
+
+/** Remplit le sélecteur de pays (barre du haut) ET celui des réglages.
     On n'annonce QUE ce qui existe : un pays sans offre n'apparaît pas — sinon on
     proposerait un filtre qui vide l'écran, et l'utilisateur croirait l'app en
     panne. Les offres antérieures au filtre n'ont pas de pays : elles viennent de
     sources françaises, donc elles comptent pour la France. */
 function dessinerPays() {
-  const compte = {};
-  for (const o of etat.offres) { const p = o.pays || 'FR'; compte[p] = (compte[p] || 0) + 1; }
-  const codes = Object.keys(compte).filter((c) => NOMS_PAYS[c]).sort((a, b) => compte[b] - compte[a]);
-  $('pays').innerHTML = [
-    `<option value="tout">Tous les pays (${etat.offres.length})</option>`,
-    ...codes.map((c) => `<option value="${esc(c)}">${esc(NOMS_PAYS[c])} (${compte[c]})</option>`),
-  ].join('');
+  const codes = codesPays();
+  $('pays').innerHTML = optionsPays();
   // Un pays mémorisé qui n'a plus d'offre retombe sur « tous » : mieux vaut un
   // écran rempli qu'un filtre respecté à la lettre et vide.
   if (etat.pays !== 'tout' && !codes.includes(etat.pays)) etat.pays = 'tout';
   $('pays').value = etat.pays;
+
+  const rp = $('regPays');
+  if (rp) {
+    if (!$('paysReglages')) {
+      rp.innerHTML = '<div class="champ"><label for="paysReglages">Pays des offres</label>'
+        + '<select id="paysReglages"></select></div>'
+        + '<p style="margin:0;font-size:12.5px;color:var(--doux)">Seuls des pays d’Europe sont proposés : les trajets restent courts.</p>';
+    }
+    $('paysReglages').innerHTML = optionsPays();
+    $('paysReglages').value = etat.pays;
+  }
+}
+
+/** Applique un choix de pays, d'où qu'il vienne (question d'ouverture ou
+    réglages) : un seul chemin, donc aucune divergence possible entre les deux. */
+function choisirPays(code) {
+  etat.pays = code || 'tout';
+  etat.affichees = PAR_PAGE;
+  enregistrerPays();
+  $('paysDemande').hidden = true;
+  dessinerPays();
+  dessiner();
+}
+
+/** Question posée UNE FOIS, à la première ouverture de l'application.
+    On ne décide pas à la place de l'utilisateur : on propose, en signalant le
+    pays probable (d'après la langue de l'appareil), et on laisse « tous les pays
+    d'Europe » à un appui. Le choix reste modifiable dans les réglages. */
+function demanderPays() {
+  let enregistre = null;
+  try { enregistre = localStorage.getItem(CLE_PAYS); } catch { /* mode privé */ }
+  if (enregistre) return;
+  const codes = codesPays();
+  if (!codes.length) return;                 // pas de données : rien à demander
+  const compte = compteParPays();
+  const suggere = paysDetecte();
+  $('paysListe').innerHTML = codes.map((c) => `
+    <button class="pays-item${c === suggere ? ' conseille' : ''}" data-pays="${esc(c)}">
+      <b>${esc(NOMS_PAYS[c])}</b><span>${compte[c]} offre${compte[c] > 1 ? 's' : ''}</span>
+    </button>`).join('');
+  $('paysDemande').hidden = false;
 }
 
 function enregistrerPays() {
@@ -622,6 +680,16 @@ function brancher() {
     etat.pays = e.target.value; etat.affichees = PAR_PAGE;
     enregistrerPays();
     dessiner();
+  });
+  // Question d'ouverture : on touche un pays, c'est choisi (et mémorisé).
+  $('paysListe').addEventListener('click', (e) => {
+    const b = e.target.closest('.pays-item');
+    if (b) choisirPays(b.dataset.pays);
+  });
+  $('paysPasser').addEventListener('click', () => choisirPays('tout'));
+  // Réglages : le même choix, au même endroit que le reste.
+  $('regPays').addEventListener('change', (e) => {
+    if (e.target.id === 'paysReglages') choisirPays(e.target.value);
   });
   document.querySelectorAll('.vue').forEach((b) => {
     b.addEventListener('click', () => appliquerVue(b.dataset.vue));
@@ -823,9 +891,10 @@ async function lancer() {
   dessinerReglages();               // construit le contenu de la feuille Réglages
   appliquerVue(vueEnregistree());   // avant tout rendu : aucun clignotement de mode
   chargerFavoris();
-  // Pays : le choix mémorisé prime, sinon celui de l'appareil (« fr-BE » → BE).
-  // Un Belge voit d'abord la Belgique ; un clic sur « Tous les pays » élargit.
-  try { etat.pays = localStorage.getItem(CLE_PAYS) || paysDetecte(); } catch { etat.pays = paysDetecte(); }
+  // Pays : AUCUN choix par défaut. À la première ouverture, la question est
+  // posée (voir demanderPays) ; ensuite on relit le choix mémorisé. On ne décide
+  // pas à la place de l'utilisateur d'après la langue de son téléphone.
+  try { etat.pays = localStorage.getItem(CLE_PAYS) || 'tout'; } catch { etat.pays = 'tout'; }
   etat.eco = lireBool(CLE_ECO);
   etat.favoris = lireBool(CLE_FAV_ACTIF);
   majOutils();
@@ -854,6 +923,7 @@ async function lancer() {
   dessinerPays();
   dessinerBandeau();
   dessiner();
+  demanderPays();     // première ouverture : on demande le pays, une fois
 }
 
 /**

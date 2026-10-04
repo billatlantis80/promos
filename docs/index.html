@@ -80,6 +80,12 @@
   </section>
 
   <section class="rubrique">
+    <h3>Pays</h3>
+    <p>Les offres affichées viennent de ce pays. Tu peux en changer quand tu veux : chaque pays proposé a ses propres sources.</p>
+    <div id="regPays"></div>
+  </section>
+
+  <section class="rubrique">
     <h3>Compte</h3>
     <div id="regCompte"></div>
   </section>
@@ -100,6 +106,18 @@
     <p class="verrou-erreur" id="verrouErreur" role="alert" hidden></p>
     <p><button class="enregistrer" id="verrouOk">Déverrouiller</button></p>
     <p><button class="lien-bouton" id="verrouOublie">J’ai oublié mon mot de passe</button></p>
+  </div>
+</section>
+
+<!-- Question du pays : posée UNE FOIS, à la première ouverture. Le choix est
+     mémorisé, et modifiable ensuite dans les réglages. Chaque pays listé a de
+     vraies sources derrière lui — on ne propose pas un pays vide. -->
+<section class="modale" id="paysDemande" role="dialog" aria-modal="true" aria-labelledby="titrePaysDemande" hidden>
+  <div class="modale-boite">
+    <h2 id="titrePaysDemande">Où fais-tu tes achats ?</h2>
+    <p class="modale-intro">Choisis ton pays : l’application n’affichera que les offres de chez toi, et seulement des pays d’Europe — de vrais marchands, à côté de toi. Tu pourras changer d’avis dans les réglages.</p>
+    <div class="pays-liste" id="paysListe"></div>
+    <p><button class="lien-bouton" id="paysPasser">Voir tous les pays d’Europe pour l’instant</button></p>
   </div>
 </section>
 
