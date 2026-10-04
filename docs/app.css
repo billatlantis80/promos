@@ -122,27 +122,20 @@ body[data-vue="compacte"] .btn { font-size: 13px; padding: 8px 10px; }
 body[data-vue="compacte"] .quand { font-size: 11px; }
 
 .offre {
-  position: relative;   /* ancre l'étoile « garder de côté » */
+  position: relative;   /* repère des éléments positionnés de la carte */
   background: var(--carte); border: 1px solid var(--bord); border-radius: var(--rayon);
   overflow: hidden; display: flex; flex-direction: column;
 }
-/* Étoile placée en HAUT À GAUCHE : dans les trois modes, ce coin tombe sur le
-   visuel (en haut sur la carte, à gauche en compacte) — jamais sur le texte. */
+/* Étoile « garder de côté » : dans l'encadré de la carte, posée sur la ligne du
+   prix — donc entre le prix et le bouton, et JAMAIS sur la photo. Sa largeur est
+   fixe et elle ne se laisse pas comprimer : c'est le bouton qui garde sa place. */
 .favori {
-  position: absolute; top: 6px; left: 6px; z-index: 2;
-  width: 30px; height: 30px; border-radius: 50%; cursor: pointer;
-  background: rgba(12,13,16,.72); border: 1px solid var(--bord);
+  flex: 0 0 auto; width: 30px; height: 30px; border-radius: 9px; cursor: pointer;
+  background: var(--carte-2); border: 1px solid var(--bord);
   color: var(--doux); font-size: 15px; line-height: 1;
   display: flex; align-items: center; justify-content: center;
-  backdrop-filter: blur(3px);
 }
-.favori.on { color: var(--accent-2); border-color: var(--accent-2); background: rgba(12,13,16,.9); }
-/* Sans visuel (économie de données), l'étoile rentre dans la ligne d'étiquettes
-   au lieu de flotter : sinon elle recouvre le titre. */
-.favori.enligne {
-  position: static; width: auto; height: auto; border-radius: 999px;
-  padding: 3px 9px; font-size: 12px; background: var(--carte-2);
-}
+.favori.on { color: var(--accent-2); border-color: var(--accent-2); }
 /* Favori dont l'offre a quitté la liste : on le dit, plutôt que de laisser
    croire que le prix affiché est encore valable. */
 .etiquette.perime { background: transparent; border-style: dashed; color: var(--accent-2); }
@@ -165,7 +158,12 @@ body[data-eco="1"] .offre .visuel { display: none; }
 .etiquette.marchand { color: var(--texte); font-weight: 600; }
 .remise { background: var(--accent); color: #1b1206; font-weight: 700; border: 0; }
 .remise.calculee { background: transparent; color: var(--accent-2); border: 1px dashed var(--accent-2); font-weight: 600; }
-.prix { font-size: 19px; font-weight: 700; letter-spacing: -.3px; }
+/* Ligne du prix : conteneur souple qui porte le montant à gauche et l'étoile
+   « garder de côté » à droite. */
+.prix {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  font-size: 19px; font-weight: 700; letter-spacing: -.3px;
+}
 .prix .avant { font-size: 12.5px; font-weight: 400; color: var(--doux); text-decoration: line-through; margin-left: 6px; }
 .offre .bas { margin-top: auto; display: flex; align-items: center; gap: 8px; }
 .btn {

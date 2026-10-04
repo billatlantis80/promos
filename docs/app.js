@@ -158,14 +158,12 @@ function carte(o) {
     : (source
       ? `<div class="visuel" style="background-image:url('${source}')" role="img" aria-label=""></div>`
       : `<div class="visuel">${esc(NOMS_CATEGORIES[o.categorie] || '')}</div>`);
-  // En économie de données il n'y a plus de visuel : l'étoile ne peut plus
-  // flotter dessus sans recouvrir le titre. Elle prend alors sa place dans la
-  // ligne d'étiquettes.
+  // L'étoile « garder de côté » vit dans l'encadré de la carte, sur la ligne du
+  // prix (voir plus bas) : jamais sur la photo, et sans toucher au bouton.
   const garde = estFavori(o.id);
-  const etoile = `<button class="favori${garde ? ' on' : ''}${etat.eco ? ' enligne' : ''}" data-id="${esc(o.id)}" aria-pressed="${garde}"
+  const etoile = `<button class="favori${garde ? ' on' : ''}" data-id="${esc(o.id)}" aria-pressed="${garde}"
             title="${garde ? 'Retirer des favoris' : 'Garder de côté'}">&#9733;</button>`;
   const etiquettes = [
-    etat.eco ? etoile : '',
     o.marchand ? `<span class="etiquette marchand">${esc(o.marchand)}</span>` : '',
     // Le score communautaire Dealabs : c'est LUI qui a servi à ne garder que
     // les meilleures offres. L'afficher rend la sélection visible et vérifiable.
@@ -178,9 +176,13 @@ function carte(o) {
       ? `<span class="etiquette perime" title="Cette offre n'est plus dans la liste du jour : le prix affiché est celui du moment où tu l'as gardée de côté.">n’est plus dans la liste</span>`
       : '',
   ].filter(Boolean).join('');
-  const prix = o.prix != null
-    ? `<div class="prix">${euros(o.prix)}${o.prixAvant ? `<span class="avant">${euros(o.prixAvant)}</span>` : ''}</div>`
+  // Le montant est groupé dans un seul élément : la ligne du prix est un
+  // conteneur souple qui accueille l'étoile à sa droite. Sans ce groupe, le
+  // prix « avant » serait repoussé à l'autre bout de la ligne.
+  const montant = o.prix != null
+    ? `${euros(o.prix)}${o.prixAvant ? `<span class="avant">${euros(o.prixAvant)}</span>` : ''}`
     : '';
+  const prix = `<div class="prix">${montant ? `<span class="montant">${montant}</span>` : ''}${etoile}</div>`;
   const lien = lienAffilie(o.lienMarchand || o.lienPage, o.marchand);
   const article = o.type === 'article';
   // Pour une offre sortie de la liste, on date la MISE DE CÔTÉ et non la
@@ -190,7 +192,6 @@ function carte(o) {
     : esc(ilYA(o.date));
   return `<article class="offre">
     ${visuel}
-    ${etat.eco ? '' : etoile}
     <div class="corps">
       <h3>${esc(o.titre)}</h3>
       <div class="ligne">${etiquettes}</div>
