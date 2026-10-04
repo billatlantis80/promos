@@ -564,9 +564,12 @@ async function principal() {
     journal,
     offres,
   };
-  fs.writeFileSync(fichierEtat, JSON.stringify(sortie, null, 0));
+  // Toujours écrit : le hub local et le contrôle des sources lisent ce fichier,
+  // avec des visuels DISTANTS (relayés par notre serveur). En publication, on
+  // écrit EN PLUS le site (docs/), dont les visuels sont rapatriés sur place.
+  fs.writeFileSync(FICHIER, JSON.stringify(sortie, null, 0));
   console.log(`√ ${offres.length} offres au total (${nouvelles} nouvelles, ${misesAJour} mises à jour, ${journal.filter((j) => !j.ok).length} source(s) en échec)`);
-  console.log(`  → ${fichierEtat}`);
+  console.log(`  → ${FICHIER}`);
   if (PUBLIER) await publier(sortie);
 }
 

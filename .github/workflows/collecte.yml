@@ -1,17 +1,16 @@
 name: Collecte des promos
 
-# Toutes les 5 minutes, un runner GitHub (gratuit sur un dépôt public) collecte
-# les offres, télécharge leurs visuels et publie le tout dans docs/ — servi
-# ensuite par GitHub Pages. Aucun serveur à nous, donc : plus besoin du NAS,
-# et l'application est joignable depuis n'importe quel pays d'Europe.
+# Toutes les heures, en SECOURS. La collecte principale tourne sur le NAS du
+# propriétaire (fiable, toutes les 5 minutes) et pousse le site ici ; ce
+# workflow ne sert que si le NAS dort. Volontairement espacé : deux collecteurs
+# à la même minute se marcheraient dessus pour rien.
 #
 # Note honnête : GitHub ne garantit pas la minute exacte (les crons planifiés
-# peuvent être différés de quelques minutes sous charge, et un dépôt resté
-# 60 jours sans activité voit ses tâches planifiées désactivées — ce workflow
-# se réactive tout seul puisqu'il commite).
+# peuvent être différés de plusieurs minutes sous charge, et une planification
+# sur un dépôt neuf peut mettre un moment avant d'être honorée).
 on:
   schedule:
-    - cron: '*/5 * * * *'
+    - cron: '0 * * * *'
   workflow_dispatch:
 
 permissions:
@@ -46,5 +45,8 @@ jobs:
             echo "Rien de neuf depuis le dernier passage."
           else
             git commit -m "Collecte $(date -u +'%Y-%m-%d %H:%M UTC')"
+            # La collecte du NAS pousse ici aussi : on se remet sur ses épaules
+            # avant de pousser, sinon l'envoi est refusé.
+            git pull -q --rebase --autostash origin main
             git push
           fi
