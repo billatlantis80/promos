@@ -16,6 +16,10 @@
   </div>
   <div class="barre">
     <input id="recherche" type="search" placeholder="Chercher un produit, un marchand…" autocomplete="off">
+    <!-- Le pays va à côté de la recherche : « quoi » et « où ». Chaque pays
+         affiché a de VRAIES sources derrière lui (voir collecteur.mjs) — un
+         sélecteur sans source ne filtrerait rien, il mentirait. -->
+    <select id="pays" aria-label="Pays des offres"></select>
   </div>
   <div class="outils">
     <select id="tri">

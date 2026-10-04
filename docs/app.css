@@ -47,6 +47,15 @@ body {
   border: 1px solid var(--bord); border-radius: 10px; padding: 10px 12px; font-size: 14px;
 }
 #recherche:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+/* Le sélecteur de pays vit à côté de la recherche, pas dans la barre du bas :
+   celle-ci est déjà pleine (tri, affichage, éco, favoris, réglages) et y ajouter
+   un champ de plus écraserait tout le reste. */
+#pays {
+  flex: 0 0 auto; max-width: 46%;
+  background: var(--carte); color: var(--texte); border: 1px solid var(--bord);
+  border-radius: 10px; padding: 8px 6px; font-size: 13px;
+}
+#pays:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
 #tri {
   background: var(--carte); color: var(--texte); border: 1px solid var(--bord);
   border-radius: 10px; padding: 8px 6px; font-size: 13px; flex: 1; min-width: 0;

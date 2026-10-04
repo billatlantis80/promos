@@ -30,11 +30,29 @@ const NOMS_CATEGORIES = {
   bricolage: 'Bricolage', maison: 'Maison', tech: 'High-tech', mode: 'Mode',
   sport: 'Sport', jouets: 'Jeux & jouets', auto: 'Auto & moto', beaute: 'Beauté', autre: 'Autres',
 };
+
+/* Pays desservis — les mêmes codes que le collecteur. Chaque pays proposé a de
+   vraies sources derrière lui : le filtre ne peut donc pas afficher une liste
+   identique sous une autre étiquette. Le sélecteur n'annonce que les pays
+   réellement présents dans les données du jour. */
+const NOMS_PAYS = {
+  FR: 'France', BE: 'Belgique', DE: 'Allemagne', NL: 'Pays-Bas', ES: 'Espagne',
+  IT: 'Italie', AT: 'Autriche', PT: 'Portugal', PL: 'Pologne', SE: 'Suède',
+  IE: 'Irlande', GB: 'Royaume-Uni',
+};
+const CLE_PAYS = 'promos.pays';
+
+/** Pays de l'appareil, déduit de la langue (« fr-BE » → BE). Sans région
+ *  reconnue, on n'enferme personne : on ouvre sur tous les pays. */
+function paysDetecte() {
+  const region = (navigator.language || '').split('-')[1];
+  return region && NOMS_PAYS[region.toUpperCase()] ? region.toUpperCase() : 'tout';
+}
 const PAR_PAGE = 24;
 
 let etat = {
   offres: [], categorie: 'tout', marchand: 'tout', tri: 'remise', recherche: '',
-  affichees: PAR_PAGE, vue: 'grille', eco: false, favoris: false, meta: {},
+  affichees: PAR_PAGE, vue: 'grille', eco: false, favoris: false, meta: {}, pays: 'tout',
 };
 
 /* ---------- Mode d'affichage ----------
@@ -310,6 +328,7 @@ function effacerTout() {
   appliquerVue('grille');
   etat.eco = false;
   etat.favoris = false;
+  etat.pays = paysDetecte();
   majOutils();
   dessinerProfil();
   dessinerPuces();
@@ -377,6 +396,9 @@ function ilYA(iso) {
 
 /** Une offre passe-t-elle les filtres courants ? */
 function retenue(o) {
+  // Une offre sans pays date d'avant ce filtre : toutes les sources de l'époque
+  // étaient françaises, donc « FR » est la lecture juste — pas « inconnu ».
+  if (etat.pays !== 'tout' && (o.pays || 'FR') !== etat.pays) return false;
   if (etat.categorie !== 'tout' && o.categorie !== etat.categorie) return false;
   if (etat.marchand !== 'tout' && o.marchand !== etat.marchand) return false;
   if (etat.recherche) {
@@ -487,6 +509,29 @@ function marquerPuce() {
   });
 }
 
+/** Remplit le sélecteur de pays.
+    On n'annonce QUE ce qui existe : un pays sans offre n'apparaît pas — sinon on
+    proposerait un filtre qui vide l'écran, et l'utilisateur croirait l'app en
+    panne. Les offres antérieures au filtre n'ont pas de pays : elles viennent de
+    sources françaises, donc elles comptent pour la France. */
+function dessinerPays() {
+  const compte = {};
+  for (const o of etat.offres) { const p = o.pays || 'FR'; compte[p] = (compte[p] || 0) + 1; }
+  const codes = Object.keys(compte).filter((c) => NOMS_PAYS[c]).sort((a, b) => compte[b] - compte[a]);
+  $('pays').innerHTML = [
+    `<option value="tout">Tous les pays (${etat.offres.length})</option>`,
+    ...codes.map((c) => `<option value="${esc(c)}">${esc(NOMS_PAYS[c])} (${compte[c]})</option>`),
+  ].join('');
+  // Un pays mémorisé qui n'a plus d'offre retombe sur « tous » : mieux vaut un
+  // écran rempli qu'un filtre respecté à la lettre et vide.
+  if (etat.pays !== 'tout' && !codes.includes(etat.pays)) etat.pays = 'tout';
+  $('pays').value = etat.pays;
+}
+
+function enregistrerPays() {
+  try { localStorage.setItem(CLE_PAYS, etat.pays); } catch { /* mode privé */ }
+}
+
 function dessinerBandeau() {
   const b = $('bandeau');
   const enLigne = !!(etat.meta && (etat.meta.amazon || etat.meta.reseaux));
@@ -573,6 +618,11 @@ function basculerFavori(id) {
 function brancher() {
   $('recherche').addEventListener('input', (e) => { etat.recherche = e.target.value.trim(); etat.affichees = PAR_PAGE; dessiner(); });
   $('tri').addEventListener('change', (e) => { etat.tri = e.target.value; dessiner(); });
+  $('pays').addEventListener('change', (e) => {
+    etat.pays = e.target.value; etat.affichees = PAR_PAGE;
+    enregistrerPays();
+    dessiner();
+  });
   document.querySelectorAll('.vue').forEach((b) => {
     b.addEventListener('click', () => appliquerVue(b.dataset.vue));
   });
@@ -773,6 +823,9 @@ async function lancer() {
   dessinerReglages();               // construit le contenu de la feuille Réglages
   appliquerVue(vueEnregistree());   // avant tout rendu : aucun clignotement de mode
   chargerFavoris();
+  // Pays : le choix mémorisé prime, sinon celui de l'appareil (« fr-BE » → BE).
+  // Un Belge voit d'abord la Belgique ; un clic sur « Tous les pays » élargit.
+  try { etat.pays = localStorage.getItem(CLE_PAYS) || paysDetecte(); } catch { etat.pays = paysDetecte(); }
   etat.eco = lireBool(CLE_ECO);
   etat.favoris = lireBool(CLE_FAV_ACTIF);
   majOutils();
@@ -798,6 +851,7 @@ async function lancer() {
     return;
   }
   dessinerPuces();
+  dessinerPays();
   dessinerBandeau();
   dessiner();
 }
