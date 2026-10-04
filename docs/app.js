@@ -218,6 +218,18 @@ function dessinerPuces() {
   $('puces').querySelectorAll('.puce').forEach((el) => el.addEventListener('click', () => {
     etat.categorie = el.dataset.cat; etat.affichees = PAR_PAGE; dessiner();
   }));
+  marquerPuce();
+}
+
+/** Replace la couleur sur la puce réellement sélectionnée.
+    Les puces ne sont construites qu'au démarrage : sans ce replacement, changer
+    de catégorie filtrait bien la liste mais laissait « Tout » allumé. */
+function marquerPuce() {
+  $('puces').querySelectorAll('.puce').forEach((el) => {
+    const choisi = el.dataset.cat === etat.categorie;
+    el.classList.toggle('on', choisi);
+    el.setAttribute('aria-pressed', choisi ? 'true' : 'false');
+  });
 }
 
 function dessinerBandeau() {
@@ -237,6 +249,10 @@ function dessiner() {
   // En mode favoris, la source n'est plus le flux du jour mais le carnet.
   const source = etat.favoris ? listeFavoris() : etat.offres;
   const liste = triees(source.filter(retenue));
+  // Le surlignage de la catégorie se replace à CHAQUE rendu. Les puces n'étant
+  // construites qu'au démarrage, la couleur restait sinon figée sur « Tout » :
+  // le filtre marchait, mais rien à l'écran ne disait ce qui était sélectionné.
+  marquerPuce();
   $('liste').innerHTML = liste.slice(0, etat.affichees).map(carte).join('');
   $('vide').textContent = etat.favoris
     ? 'Aucun favori pour l’instant. Touche l’étoile d’une offre pour la garder de côté.'
