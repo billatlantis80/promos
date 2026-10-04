@@ -31,7 +31,10 @@ const NOMS_CATEGORIES = {
 };
 const PAR_PAGE = 24;
 
-let etat = { offres: [], categorie: 'tout', marchand: 'tout', tri: 'remise', recherche: '', affichees: PAR_PAGE, vue: 'grille', meta: {} };
+let etat = {
+  offres: [], categorie: 'tout', marchand: 'tout', tri: 'remise', recherche: '',
+  affichees: PAR_PAGE, vue: 'grille', eco: false, favoris: false, meta: {},
+};
 
 /* ---------- Mode d'affichage ----------
    Trois façons de parcourir les MÊMES offres. Le mode vit sur <body data-vue="…"> :
@@ -56,6 +59,52 @@ function appliquerVue(v) {
     b.setAttribute('aria-pressed', actif ? 'true' : 'false');
   });
   try { localStorage.setItem(CLE_VUE, retenue); } catch { /* privé : on s'en passe */ }
+}
+
+/* ---------- Économie de données ----------
+   Une image masquée en CSS est quand même TÉLÉCHARGÉE : ce serait une fausse
+   économie. Ici on n'émet simplement aucune adresse de visuel (voir carte()).
+   Le réglage est mémorisé, comme celui de l'affichage. */
+const CLE_ECO = 'promos.eco';
+const CLE_FAV_ACTIF = 'promos.favorisActif';
+
+function lireBool(cle) {
+  try { return localStorage.getItem(cle) === '1'; } catch { return false; }
+}
+function ecrireBool(cle, v) {
+  try { localStorage.setItem(cle, v ? '1' : '0'); } catch { /* privé */ }
+}
+
+/* ---------- Favoris ----------
+   On garde une COPIE de l'offre, pas seulement son identifiant : une offre
+   quitte la liste au bout de 30 jours, et « retrouver plus tard » n'aurait
+   alors plus aucun sens. La copie porte la date de mise de côté. À l'affichage,
+   si l'offre est encore dans la liste du jour on montre la version FRAÎCHE ;
+   sinon la copie est signalée comme telle, avec le prix de l'époque — on ne
+   fait jamais passer un ancien prix pour le prix courant. */
+const CLE_FAV = 'promos.favoris';
+let favoris = [];
+
+function chargerFavoris() {
+  try {
+    const brut = JSON.parse(localStorage.getItem(CLE_FAV) || '[]');
+    favoris = Array.isArray(brut) ? brut.filter((f) => f && f.offre && f.offre.id && f.misDeCote) : [];
+  } catch { favoris = []; }
+}
+function enregistrerFavoris() {
+  try { localStorage.setItem(CLE_FAV, JSON.stringify(favoris)); } catch { /* privé */ }
+}
+const estFavori = (id) => favoris.some((f) => f.offre.id === id);
+
+/** Liste à afficher en mode favoris : version fraîche si l'offre existe encore. */
+function listeFavoris() {
+  const parId = new Map(etat.offres.map((o) => [o.id, o]));
+  return favoris.map((f) => {
+    const fraiche = parId.get(f.offre.id);
+    return fraiche
+      ? { ...fraiche, encoreEnListe: true, misDeCote: f.misDeCote }
+      : { ...f.offre, encoreEnListe: false, misDeCote: f.misDeCote };
+  });
 }
 
 const esc = (s) => String(s == null ? '' : s)
@@ -99,13 +148,24 @@ function carte(o) {
   //   - chemin relatif (« img/xxx.jpg ») → il vient de notre propre site
   //     publié ; on le préfixe par BASE (vide sur place, adresse du site dans
   //     l'APK) et il s'affiche partout, sans aucun serveur à nous.
-  const source = o.image
+  // Économie de données : on n'émet AUCUNE adresse de visuel. Masquer une image
+  // en CSS ne l'empêche pas d'être téléchargée — ce serait une fausse économie.
+  const source = (!etat.eco && o.image)
     ? (/^https?:/i.test(o.image) ? `${BASE}img?u=${encodeURIComponent(o.image)}` : `${BASE}${o.image}`)
     : '';
-  const visuel = source
-    ? `<div class="visuel" style="background-image:url('${source}')" role="img" aria-label=""></div>`
-    : `<div class="visuel">${esc(NOMS_CATEGORIES[o.categorie] || '')}</div>`;
+  const visuel = etat.eco
+    ? ''
+    : (source
+      ? `<div class="visuel" style="background-image:url('${source}')" role="img" aria-label=""></div>`
+      : `<div class="visuel">${esc(NOMS_CATEGORIES[o.categorie] || '')}</div>`);
+  // En économie de données il n'y a plus de visuel : l'étoile ne peut plus
+  // flotter dessus sans recouvrir le titre. Elle prend alors sa place dans la
+  // ligne d'étiquettes.
+  const garde = estFavori(o.id);
+  const etoile = `<button class="favori${garde ? ' on' : ''}${etat.eco ? ' enligne' : ''}" data-id="${esc(o.id)}" aria-pressed="${garde}"
+            title="${garde ? 'Retirer des favoris' : 'Garder de côté'}">&#9733;</button>`;
   const etiquettes = [
+    etat.eco ? etoile : '',
     o.marchand ? `<span class="etiquette marchand">${esc(o.marchand)}</span>` : '',
     // Le score communautaire Dealabs : c'est LUI qui a servi à ne garder que
     // les meilleures offres. L'afficher rend la sélection visible et vérifiable.
@@ -114,21 +174,30 @@ function carte(o) {
     o.remise != null
       ? `<span class="etiquette remise${o.remiseCalculee ? ' calculee' : ''}" title="${o.remiseCalculee ? 'Pourcentage calculé entre deux prix réels' : 'Pourcentage annoncé par la source'}">${o.remiseCalculee ? '≈ ' : ''}-${o.remise} %</span>`
       : '',
+    o.encoreEnListe === false
+      ? `<span class="etiquette perime" title="Cette offre n'est plus dans la liste du jour : le prix affiché est celui du moment où tu l'as gardée de côté.">n’est plus dans la liste</span>`
+      : '',
   ].filter(Boolean).join('');
   const prix = o.prix != null
     ? `<div class="prix">${euros(o.prix)}${o.prixAvant ? `<span class="avant">${euros(o.prixAvant)}</span>` : ''}</div>`
     : '';
   const lien = lienAffilie(o.lienMarchand || o.lienPage, o.marchand);
   const article = o.type === 'article';
+  // Pour une offre sortie de la liste, on date la MISE DE CÔTÉ et non la
+  // parution : c'est ce qui dit à l'utilisateur ce qu'il a sous les yeux.
+  const quand = o.encoreEnListe === false
+    ? `gardée ${esc(ilYA(o.misDeCote))}`
+    : esc(ilYA(o.date));
   return `<article class="offre">
     ${visuel}
+    ${etat.eco ? '' : etoile}
     <div class="corps">
       <h3>${esc(o.titre)}</h3>
       <div class="ligne">${etiquettes}</div>
       ${prix}
       <div class="bas">
         <a class="btn" href="${esc(lien)}" target="_blank" rel="noopener nofollow sponsored">${article ? 'Lire l’article' : 'Voir l’offre'}</a>
-        <span class="quand">${esc(ilYA(o.date))}</span>
+        <span class="quand">${quand}</span>
       </div>
     </div>
   </article>`;
@@ -164,8 +233,13 @@ function dessinerBandeau() {
 }
 
 function dessiner() {
-  const liste = triees(etat.offres.filter(retenue));
+  // En mode favoris, la source n'est plus le flux du jour mais le carnet.
+  const source = etat.favoris ? listeFavoris() : etat.offres;
+  const liste = triees(source.filter(retenue));
   $('liste').innerHTML = liste.slice(0, etat.affichees).map(carte).join('');
+  $('vide').textContent = etat.favoris
+    ? 'Aucun favori pour l’instant. Touche l’étoile d’une offre pour la garder de côté.'
+    : 'Aucune offre ne correspond à ce filtre.';
   $('vide').hidden = liste.length > 0;
   const reste = liste.length - etat.affichees;
   $('plus').hidden = reste <= 0;
@@ -177,11 +251,62 @@ function dessiner() {
   $('fraicheur').textContent = `Recensé le ${new Date(etat.meta.genereLe || Date.now()).toLocaleString('fr-FR')} — ${total} entrées.`;
 }
 
+/** Reflet des réglages dans la barre (orange = actif) + compteur de favoris. */
+function majOutils() {
+  const e = $('eco'), f = $('fav');
+  e.classList.toggle('on', etat.eco);
+  e.setAttribute('aria-pressed', etat.eco ? 'true' : 'false');
+  f.classList.toggle('on', etat.favoris);
+  f.setAttribute('aria-pressed', etat.favoris ? 'true' : 'false');
+  $('nFav').textContent = favoris.length ? String(favoris.length) : '';
+  document.body.dataset.eco = etat.eco ? '1' : '0';
+}
+
+/** Garde de côté, ou retire. Hors mode favoris, on ne redessine QUE la carte
+ *  concernée : refaire tout le rendu relancerait les visuels pour rien. */
+function basculerFavori(id) {
+  const i = favoris.findIndex((f) => f.offre.id === id);
+  if (i >= 0) favoris.splice(i, 1);
+  else {
+    const o = etat.offres.find((x) => x.id === id);
+    if (!o) return;                       // offre inconnue : rien à garder
+    favoris.push({ offre: o, misDeCote: new Date().toISOString() });
+  }
+  enregistrerFavoris();
+  majOutils();
+  if (etat.favoris) { dessiner(); return; }
+  const b = [...document.querySelectorAll('.favori')].find((x) => x.dataset.id === id);
+  if (b) {
+    const garde = estFavori(id);
+    b.classList.toggle('on', garde);
+    b.setAttribute('aria-pressed', garde ? 'true' : 'false');
+    b.title = garde ? 'Retirer des favoris' : 'Garder de côté';
+  }
+}
+
 function brancher() {
   $('recherche').addEventListener('input', (e) => { etat.recherche = e.target.value.trim(); etat.affichees = PAR_PAGE; dessiner(); });
   $('tri').addEventListener('change', (e) => { etat.tri = e.target.value; dessiner(); });
   document.querySelectorAll('.vue').forEach((b) => {
     b.addEventListener('click', () => appliquerVue(b.dataset.vue));
+  });
+  $('eco').addEventListener('click', () => {
+    etat.eco = !etat.eco;
+    ecrireBool(CLE_ECO, etat.eco);
+    majOutils();
+    dessiner();
+  });
+  $('fav').addEventListener('click', () => {
+    etat.favoris = !etat.favoris;
+    ecrireBool(CLE_FAV_ACTIF, etat.favoris);
+    etat.affichees = PAR_PAGE;
+    majOutils();
+    dessiner();
+  });
+  // Étoile : écouteur délégué — les cartes sont recréées à chaque rendu.
+  $('liste').addEventListener('click', (e) => {
+    const b = e.target.closest('.favori');
+    if (b) basculerFavori(b.dataset.id);
   });
 }
 
@@ -231,6 +356,10 @@ async function chargerDonnees() {
 async function demarrer() {
   $('mention').textContent = MENTION_AFFILIATION;
   appliquerVue(vueEnregistree());   // avant tout rendu : aucun clignotement de mode
+  chargerFavoris();
+  etat.eco = lireBool(CLE_ECO);
+  etat.favoris = lireBool(CLE_FAV_ACTIF);
+  majOutils();
   brancher();
   try {
     let d;
