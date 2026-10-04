@@ -16,10 +16,6 @@
   </div>
   <div class="barre">
     <input id="recherche" type="search" placeholder="Chercher un produit, un marchand…" autocomplete="off">
-    <!-- Le pays va à côté de la recherche : « quoi » et « où ». Chaque pays
-         affiché a de VRAIES sources derrière lui (voir collecteur.mjs) — un
-         sélecteur sans source ne filtrerait rien, il mentirait. -->
-    <select id="pays" aria-label="Pays des offres"></select>
   </div>
   <div class="outils">
     <select id="tri">
@@ -34,7 +30,6 @@
     </div>
     <button class="outil" id="eco" aria-pressed="false" title="Économie de données — aucun visuel téléchargé">Éco</button>
     <button class="outil" id="fav" aria-pressed="false" title="Mes favoris">&#9733;<span class="n" id="nFav"></span></button>
-    <button class="outil" id="reglages" aria-haspopup="dialog" aria-expanded="false" title="Réglages — thème et couleurs, affichage, profil, compte">&#9881;</button>
   </div>
   <nav class="puces" id="puces"></nav>
 </header>
@@ -51,74 +46,6 @@
   <p class="fresque" id="fraicheur"></p>
   <p class="note">Les offres sont rassemblées depuis des flux publics (Dealabs, presse spécialisée, Google News). Aucune donnée n'est revendiquée : chaque offre renvoie à sa source, qui fait foi.</p>
 </footer>
-
-<!-- Réglages : feuille plein écran. Le contenu des rubriques est construit par
-     app.js (thèmes, affichage, profil, compte) pour ne pas dupliquer les
-     réglages de la barre du haut — une seule source de vérité. -->
-<section class="feuille" id="feuille" role="dialog" aria-modal="true" aria-labelledby="titreReglages" hidden>
-  <div class="feuille-tete">
-    <h2 id="titreReglages">Réglages</h2>
-    <button class="fermer" id="fermer">Fermer</button>
-  </div>
-
-  <section class="rubrique">
-    <h3>Thème et couleurs</h3>
-    <p>Dix thèmes. Le choix s'applique tout de suite et reste enregistré sur cet appareil.</p>
-    <div class="themes" id="themes"></div>
-  </section>
-
-  <section class="rubrique">
-    <h3>Affichage</h3>
-    <p>Les mêmes réglages que la barre du haut, réunis ici.</p>
-    <div id="regAffichage"></div>
-  </section>
-
-  <section class="rubrique">
-    <h3>Profil</h3>
-    <p>Ce que l'application sait de toi — et rien de plus.</p>
-    <div id="regProfil"></div>
-  </section>
-
-  <section class="rubrique">
-    <h3>Pays</h3>
-    <p>Les offres affichées viennent de ce pays. Tu peux en changer quand tu veux : chaque pays proposé a ses propres sources.</p>
-    <div id="regPays"></div>
-  </section>
-
-  <section class="rubrique">
-    <h3>Compte</h3>
-    <div id="regCompte"></div>
-  </section>
-</section>
-
-<!-- Verrou du compte local. Quand un compte existe sur cet appareil,
-     l'application demande le mot de passe au démarrage. Sans serveur, ce mot de
-     passe ne protège QUE cet appareil : il n'est stocké nulle part, et personne
-     ne peut le retrouver — c'est écrit ici, avant la saisie. -->
-<section class="verrou" id="verrou" role="dialog" aria-modal="true" aria-labelledby="titreVerrou" hidden>
-  <div class="verrou-boite">
-    <h2 id="titreVerrou">Compte local</h2>
-    <p class="verrou-intro" id="verrouIntro">Entre ton mot de passe pour ouvrir l’application. Il n’est enregistré nulle part : si tu l’as oublié, personne ne pourra le retrouver, et la seule issue sera d’effacer le compte et les données de cet appareil.</p>
-    <div class="champ">
-      <label for="verrouMdp">Mot de passe</label>
-      <input id="verrouMdp" type="password" autocomplete="current-password">
-    </div>
-    <p class="verrou-erreur" id="verrouErreur" role="alert" hidden></p>
-    <p><button class="enregistrer" id="verrouOk">Déverrouiller</button></p>
-    <p><button class="lien-bouton" id="verrouOublie">J’ai oublié mon mot de passe</button></p>
-  </div>
-</section>
-
-<!-- Question du pays : posée UNE FOIS, à la première ouverture. Le choix est
-     mémorisé, et modifiable ensuite dans les réglages. Chaque pays listé a de
-     vraies sources derrière lui — on ne propose pas un pays vide. -->
-<section class="modale" id="paysDemande" role="dialog" aria-modal="true" aria-labelledby="titrePaysDemande" hidden>
-  <div class="modale-boite">
-    <h2 id="titrePaysDemande">Où fais-tu tes achats ?</h2>
-    <p class="modale-intro">Choisis ton pays : l’application n’affichera que les offres de chez toi, et seulement des pays d’Europe — de vrais marchands, à côté de toi. Tu pourras changer d’avis dans les réglages.</p>
-    <div class="pays-liste" id="paysListe"></div>
-  </div>
-</section>
 
 <script type="module" src="app.js"></script>
 </body>
