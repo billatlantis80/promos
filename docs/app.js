@@ -176,13 +176,12 @@ function carte(o) {
       ? `<span class="etiquette perime" title="Cette offre n'est plus dans la liste du jour : le prix affiché est celui du moment où tu l'as gardée de côté.">n’est plus dans la liste</span>`
       : '',
   ].filter(Boolean).join('');
-  // Le montant est groupé dans un seul élément : la ligne du prix est un
-  // conteneur souple qui accueille l'étoile à sa droite. Sans ce groupe, le
-  // prix « avant » serait repoussé à l'autre bout de la ligne.
+  // Le montant est groupé dans un seul élément : sans ce groupe, le prix
+  // « avant » serait repoussé à l'autre bout de la ligne.
   const montant = o.prix != null
     ? `${euros(o.prix)}${o.prixAvant ? `<span class="avant">${euros(o.prixAvant)}</span>` : ''}`
     : '';
-  const prix = `<div class="prix">${montant ? `<span class="montant">${montant}</span>` : ''}${etoile}</div>`;
+  const prix = montant ? `<div class="prix"><span class="montant">${montant}</span></div>` : '';
   const lien = lienAffilie(o.lienMarchand || o.lienPage, o.marchand);
   const article = o.type === 'article';
   // Pour une offre sortie de la liste, on date la MISE DE CÔTÉ et non la
@@ -196,6 +195,7 @@ function carte(o) {
       <h3>${esc(o.titre)}</h3>
       <div class="ligne">${etiquettes}</div>
       ${prix}
+      <div class="espace-fav">${etoile}</div>
       <div class="bas">
         <a class="btn" href="${esc(lien)}" target="_blank" rel="noopener nofollow sponsored">${article ? 'Lire l’article' : 'Voir l’offre'}</a>
         <span class="quand">${quand}</span>

@@ -130,7 +130,8 @@ body[data-vue="compacte"] .quand { font-size: 11px; }
    prix — donc entre le prix et le bouton, et JAMAIS sur la photo. Sa largeur est
    fixe et elle ne se laisse pas comprimer : c'est le bouton qui garde sa place. */
 .favori {
-  flex: 0 0 auto; width: 30px; height: 30px; border-radius: 9px; cursor: pointer;
+  flex: 0 0 auto;
+  width: 30px; height: 30px; border-radius: 9px; cursor: pointer;
   background: var(--carte-2); border: 1px solid var(--bord);
   color: var(--doux); font-size: 15px; line-height: 1;
   display: flex; align-items: center; justify-content: center;
@@ -158,14 +159,23 @@ body[data-eco="1"] .offre .visuel { display: none; }
 .etiquette.marchand { color: var(--texte); font-weight: 600; }
 .remise { background: var(--accent); color: #1b1206; font-weight: 700; border: 0; }
 .remise.calculee { background: transparent; color: var(--accent-2); border: 1px dashed var(--accent-2); font-weight: 600; }
-/* Ligne du prix : conteneur souple qui porte le montant à gauche et l'étoile
-   « garder de côté » à droite. */
+/* Ligne du prix : le montant, groupé. */
 .prix {
-  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  display: flex; align-items: center; gap: 8px;
   font-size: 19px; font-weight: 700; letter-spacing: -.3px;
 }
 .prix .avant { font-size: 12.5px; font-weight: 400; color: var(--doux); text-decoration: line-through; margin-left: 6px; }
-.offre .bas { margin-top: auto; display: flex; align-items: center; gap: 8px; }
+/* Bandeau de l'étoile « garder de côté » : il occupe l'espace libre de l'encadré,
+   entre le prix et le bouton — c'est là qu'il y a de la place. Comme il absorbe
+   la hauteur disponible, l'étoile se centre dans le vide SANS allonger la carte
+   quand elle a du mou ; les marges négatives annulent les deux gouttières du
+   corps pour ne rien décaler d'autre. */
+.espace-fav {
+  flex: 1 1 auto; min-height: 30px;
+  display: flex; align-items: center; justify-content: flex-end;
+  margin: -8px 0;
+}
+.offre .bas { margin-top: 0; display: flex; align-items: center; gap: 8px; }
 .btn {
   flex: 1; text-align: center; text-decoration: none; font-size: 14px; font-weight: 600;
   padding: 10px 12px; border-radius: 11px; background: var(--accent); color: #1b1206;
