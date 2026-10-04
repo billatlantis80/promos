@@ -249,7 +249,9 @@ html[data-theme="ocean"] {
 html[data-theme="clair"] {
   --fond: #f5f6f8; --carte: #ffffff; --carte-2: #eef0f4; --bord: #dcdfe6;
   --texte: #14161b; --doux: #656c7a;
-  --accent: #e2621b; --accent-2: #b25b00;
+  /* #c04d0a et non un orange vif : mesuré 4,88:1 avec le texte blanc du bouton
+     et 4,51:1 contre le fond — les deux au-dessus du seuil de lisibilité. */
+  --accent: #c04d0a; --accent-2: #b25b00;
   --tete: rgba(245, 246, 248, .94); --sur-accent: #ffffff;
 }
 html[data-theme="sable"] {
