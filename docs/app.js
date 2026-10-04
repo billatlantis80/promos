@@ -483,14 +483,33 @@ function carte(o) {
   </article>`;
 }
 
+/** Les offres du pays choisi — la base sur laquelle on annonce des nombres.
+ *  Sans risque de double comptage : « tout » rend la liste telle quelle. */
+function offresDuPays() {
+  if (etat.pays === 'tout') return etat.offres;
+  return etat.offres.filter((o) => (o.pays || 'FR') === etat.pays);
+}
+
 function dessinerPuces() {
-  const offres = etat.offres;
+  // Les nombres disent ce que contient le PAYS choisi, pas le catalogue entier.
+  // Ils étaient calculés sur toutes les offres : « Tout » annonçait 590 à un
+  // Belge qui n'en voyait que 32, et changer de pays ne faisait bouger aucun
+  // compteur — l'écran paraissait figé alors que le filtre, lui, marchait.
+  const offres = offresDuPays();
   const parCat = {};
   for (const o of offres) parCat[o.categorie] = (parCat[o.categorie] || 0) + 1;
-  const cats = Object.keys(parCat).sort((a, b) => parCat[b] - parCat[a]);
+  // « Autres » ferme toujours la marche : c'est le reste, pas une catégorie
+  // comme les autres — sa place est après toutes, quel que soit son nombre.
+  const cats = Object.keys(parCat).filter((c) => NOMS_CATEGORIES[c]).sort((a, b) => {
+    if (a === 'autre' || b === 'autre') return a === 'autre' ? 1 : -1;
+    return parCat[b] - parCat[a];
+  });
+  // Une catégorie choisie absente du pays retombe sur « Tout » : sinon l'onglet
+  // disparaîtrait de la liste en laissant le filtre actif, et l'écran semblerait
+  // vide sans qu'aucune commande ne dise pourquoi.
+  if (etat.categorie !== 'tout' && !cats.includes(etat.categorie)) etat.categorie = 'tout';
   const puces = [`<button class="puce${etat.categorie === 'tout' ? ' on' : ''}" data-cat="tout">Tout<span class="n">${offres.length}</span></button>`];
   for (const c of cats) {
-    if (!NOMS_CATEGORIES[c]) continue;
     puces.push(`<button class="puce${etat.categorie === c ? ' on' : ''}" data-cat="${esc(c)}">${esc(NOMS_CATEGORIES[c])}<span class="n">${parCat[c]}</span></button>`);
   }
   $('puces').innerHTML = puces.join('');
@@ -564,6 +583,7 @@ function choisirPays(code) {
   enregistrerPays();
   $('paysDemande').hidden = true;
   dessinerPays();
+  dessinerPuces();   // les compteurs par catégorie suivent le pays choisi
   dessiner();
 }
 
@@ -579,10 +599,18 @@ function demanderPays() {
   if (!codes.length) return;                 // pas de données : rien à demander
   const compte = compteParPays();
   const suggere = paysDetecte();
-  $('paysListe').innerHTML = codes.map((c) => `
-    <button class="pays-item${c === suggere ? ' conseille' : ''}" data-pays="${esc(c)}">
+  // « Tous les pays d'Europe » vient EN PREMIER : c'est l'échappatoire, et une
+  // échappatoire qu'on doit chercher en bas de liste n'en est plus une. Il est
+  // présenté comme les pays : même apparence, même geste, rien à part.
+  const items = [`<button class="pays-item" data-pays="tout">
+      <b>Tous les pays d’Europe</b><span>${etat.offres.length} offres</span>
+    </button>`];
+  for (const c of codes) {
+    items.push(`<button class="pays-item${c === suggere ? ' conseille' : ''}" data-pays="${esc(c)}">
       <b>${esc(NOMS_PAYS[c])}</b><span>${compte[c]} offre${compte[c] > 1 ? 's' : ''}</span>
-    </button>`).join('');
+    </button>`);
+  }
+  $('paysListe').innerHTML = items.join('');
   $('paysDemande').hidden = false;
 }
 
@@ -679,6 +707,7 @@ function brancher() {
   $('pays').addEventListener('change', (e) => {
     etat.pays = e.target.value; etat.affichees = PAR_PAGE;
     enregistrerPays();
+    dessinerPuces();   // même règle que dans choisirPays() : les nombres suivent
     dessiner();
   });
   // Question d'ouverture : on touche un pays, c'est choisi (et mémorisé).
@@ -686,7 +715,6 @@ function brancher() {
     const b = e.target.closest('.pays-item');
     if (b) choisirPays(b.dataset.pays);
   });
-  $('paysPasser').addEventListener('click', () => choisirPays('tout'));
   // Réglages : le même choix, au même endroit que le reste.
   $('regPays').addEventListener('change', (e) => {
     if (e.target.id === 'paysReglages') choisirPays(e.target.value);
