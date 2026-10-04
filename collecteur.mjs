@@ -188,6 +188,51 @@ const SOURCES_ENSEIGNES = [
   { id: 'coolblue-be-3', nom: 'Coolblue', type: 'enseigne', pays: 'BE', langue: 'fr', reposMin: 30, url: 'https://www.coolblue.be/fr/offres?page=3' },
 ];
 
+/* ------------------------------------------------------------------ *
+ *  AMAZON BELGIQUE — enfin trouvé, et par une porte inattendue.
+ *
+ *  Ce qui bloquait : la page `amazon.com.be/deals`, celle que l'on ouvre dans
+ *  un navigateur, est construite en JavaScript — 423 Ko servis, ZÉRO ASIN, zéro
+ *  prix. Et l'API Product Advertising exige une clé. Conclusion d'hier : « pas
+ *  de source possible ». Elle était fausse.
+ *
+ *  Ce qui marche : la page de RECHERCHE (`/s`), elle, est rendue côté serveur.
+ *  Mesuré : 59 à 60 ASIN, 165 prix pour une simple requête. Surtout, Amazon y
+ *  expose ses PROPRES filtres de promotion — le paramètre `rh=p_n_deal_type`.
+ *  Filtrer dessus ne liste plus « des produits qui parlent de promo » (ce que
+ *  faisait une recherche par mot-clé, avec des résultats absurdes comme du
+ *  collagène à -99 %), mais les articles qu'Amazon classe lui-même en promotion.
+ *
+ *  Fiabilité mesurée sur 5 appels espacés : 3 rendent 48 produits, 2 rendent une
+ *  page vide de 215 Ko. Ce n'est donc PAS une source qu'on interroge toutes les
+ *  cinq minutes : `reposMin` élevé, et un passage vide est compté comme « 0
+ *  retenue » — jamais comme une erreur, jamais comme un effacement. Les offres
+ *  déjà engrangées restent en place (règle générale du collecteur).
+ *
+ *  Les remises sont VÉRIFIÉES, et c'est le piège de cette source : chaque carte
+ *  contient plusieurs prix, dont le PRIX À L'UNITÉ (« 0,10 €/unité »). Un
+ *  extracteur naïf prenait le plus petit comme prix et le plus grand comme prix
+ *  barré, et fabriquait des remises de -99 % qui n'existaient pas. On distingue
+ *  donc les deux balises : `span.a-price` = prix demandé, `span.a-price
+ *  a-text-price` = prix de référence barré. Une remise n'est calculée QUE si le
+ *  second est strictement supérieur au premier — deux prix réels, rien d'autre.
+ *  Le « Économisez X % » affiché à côté est ignoré : relevé contradictoire avec
+ *  les deux prix de la même carte (49 % annoncés là où les prix disent 19 %).
+ * ------------------------------------------------------------------ */
+const SOURCES_AMAZON = [
+  { id: 'amazon-be-deals', nom: 'Amazon', type: 'amazon', pays: 'BE', langue: 'fr', reposMin: 90, url: 'https://www.amazon.com.be/s?rh=p_n_deal_type%3A210770357031' },
+  // Trois rayons nommés par l'utilisateur — bricolage, jouets, maison — pour que
+  // ces rubriques ne dépendent pas du hasard d'une page « toutes promotions ».
+  // Aucune catégorie n'est IMPOSÉE : le titre décide, car une recherche Amazon
+  // ramène aussi des résultats sponsorisés hors sujet.
+  { id: 'amazon-be-bricolage', nom: 'Amazon', type: 'amazon', pays: 'BE', langue: 'fr', reposMin: 120, url: 'https://www.amazon.com.be/s?k=bricolage&rh=p_n_deal_type%3A210770357031' },
+  { id: 'amazon-be-jouets', nom: 'Amazon', type: 'amazon', pays: 'BE', langue: 'fr', reposMin: 120, url: 'https://www.amazon.com.be/s?k=jouet+enfant&rh=p_n_deal_type%3A210770357031' },
+  { id: 'amazon-be-maison', nom: 'Amazon', type: 'amazon', pays: 'BE', langue: 'fr', reposMin: 120, url: 'https://www.amazon.com.be/s?k=cuisine+maison&rh=p_n_deal_type%3A210770357031' },
+  // Version néerlandaise : la Belgique est bilingue, et les intitulés de
+  // produits diffèrent (« speelgoed » n'est pas « jouet »).
+  { id: 'amazon-be-nl', nom: 'Amazon', type: 'amazon', pays: 'BE', langue: 'nl', reposMin: 120, url: 'https://www.amazon.com.be/s?k=aanbieding&language=nl_BE&rh=p_n_deal_type%3A210770357031' },
+];
+
 /* Noms des pays, pour l'affichage. Un code seul (« BE ») ne dit rien à personne.
    Exporté : les tests comparent cette liste à celle de l'interface, parce que
    deux listes recopiées finissent toujours par diverger en silence. */
@@ -304,28 +349,63 @@ const VEILLE_BING = PAYS_BING.flatMap((p) => p.requetes.map((q, i) => ({
  * offre (le filtre cherche un mot de promo DANS le titre, c'est sa règle).
  */
 const ENSEIGNES_PAR_PAYS = [
-  { pays: 'BE', langue: 'fr', mkt: 'fr-BE', marchands: ['Colruyt', 'Delhaize', 'Lidl Belgique', 'Aldi Belgique', 'Action Belgique', 'Amazon Belgique', 'Carrefour Belgique', 'Media Markt Belgique', 'Kruidvat', 'Hema Belgique', 'Vanden Borre', 'Coolblue Belgique'] },
-  { pays: 'BE', langue: 'nl', mkt: 'nl-BE', marchands: ['Colruyt promotie', 'Delhaize promotie', 'Lidl België', 'Aldi België', 'Action België', 'Amazon België', 'Carrefour België', 'Media Markt België', 'Kruidvat actie', 'Hema België', 'Vanden Borre', 'Coolblue België'] },
+  {
+    pays: 'BE', langue: 'fr', mkt: 'fr-BE',
+    marchands: [
+      // grandes surfaces
+      'Colruyt', 'Delhaize', 'Lidl Belgique', 'Aldi Belgique', 'Carrefour Belgique', 'Intermarché Belgique', 'Spar Belgique', 'Bio-Planet', 'OKay',
+      // bricolage et jardin
+      'Hubo', 'Brico Belgique', 'Gamma Belgique', 'Toolstation Belgique',
+      // jouets
+      'DreamLand', 'Fun Belgique', 'Maxi Toys',
+      // électro, mode, maison
+      'Amazon Belgique', 'Media Markt Belgique', 'Coolblue Belgique', 'Vanden Borre', 'Krëfel', 'Action Belgique', 'Kruidvat', 'Hema Belgique', 'JBC Belgique', 'Torfs',
+      // Les DÉPLIANTS : en Belgique, les promos de supermarché se lisent dans le
+      // folder de la semaine. La requête est écrite en clair (voir motif()) et
+      // l'étiquette reste le nom du marchand.
+      ['folder Colruyt', 'Colruyt'], ['folder Delhaize', 'Delhaize'], ['dépliant promotion supermarché', 'Supermarchés'],
+    ],
+  },
+  {
+    pays: 'BE', langue: 'nl', mkt: 'nl-BE',
+    marchands: [
+      'Colruyt promotie', 'Delhaize promotie', 'Lidl België', 'Aldi België', 'Carrefour België', 'Intermarché België', 'Spar België', 'Bio-Planet', 'OKay',
+      'Hubo promotie', 'Brico België', 'Gamma België', 'Toolstation België',
+      'DreamLand', 'Fun België', 'Maxi Toys',
+      'Amazon België', 'Media Markt België', 'Coolblue België', 'Vanden Borre', 'Krefel', 'Action België', 'Kruidvat actie', 'Hema België', 'JBC België', 'Torfs',
+      ['folder Colruyt', 'Colruyt'], ['folder Delhaize', 'Delhaize'], ['folder supermarkt aanbiedingen', 'Supermarkten'],
+    ],
+  },
 ];
 
-/** Le nom d'enseigne propre, tiré de la requête : « Lidl Belgique » → « Lidl ».
- *  Sans cela l'étiquette affichée porterait le mot du pays, ce qui n'est pas le
- *  nom du marchand. */
-function nomEnseigne(requete) {
-  return String(requete).split(/\s+/)[0] || requete;
+/* Une entrée de la liste est soit un nom de marchand (« Lidl Belgique »), soit
+ * un couple [requête, étiquette] quand la requête ne se déduit pas du nom.
+ * Sans ce second cas, une recherche « folder Delhaize » s'étiquetterait
+ * « Folder » : l'utilisateur verrait une offre signée d'un marchand qui
+ * n'existe pas. */
+function motif(e, mot) {
+  if (Array.isArray(e)) return { q: e[0], nom: e[1] };
+  return { q: `${e} ${mot}`, nom: String(e).split(/\s+/)[0] };
 }
 
-const VEILLE_ENSEIGNES = ENSEIGNES_PAR_PAYS.flatMap((p) => p.marchands.map((m) => {
+const VEILLE_ENSEIGNES = ENSEIGNES_PAR_PAYS.flatMap((p) => p.marchands.map((e) => {
   const mot = p.langue === 'nl' ? 'promotie' : 'promotion';
+  const { q, nom } = motif(e, mot);
+  // L'identifiant porte la REQUÊTE et pas seulement le marchand : « Colruyt » et
+  // « folder Colruyt » sont deux recherches distinctes sur le même marchand, et
+  // deux sources qui partageraient un identifiant se marcheraient dessus dans le
+  // suivi des délais de repos (une seule serait interrogée, l'autre jamais).
+  // Attrapé par le test « les identifiants de source sont uniques ».
+  const slug = (s) => s.toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 30);
   return {
-    id: `enseigne-${p.pays.toLowerCase()}-${p.langue}-${nomEnseigne(m).toLowerCase().replace(/[^a-z0-9]/g, '')}`,
-    nom: `${nomEnseigne(m)} (${p.pays})`,
+    id: `enseigne-${p.pays.toLowerCase()}-${p.langue}-${slug(nom)}-${slug(q)}`,
+    nom: `${nom} (${p.pays})`,
     type: 'presse',
     pays: p.pays,
     langue: p.langue,
     // Le marchand dont on parle : c'est LUI qui étiquettera l'offre.
-    marchandImpose: nomEnseigne(m),
-    url: `https://www.bing.com/news/search?q=${encodeURIComponent(m + ' ' + mot)}&format=RSS&mkt=${p.mkt}`,
+    marchandImpose: nom,
+    url: `https://www.bing.com/news/search?q=${encodeURIComponent(q)}&format=RSS&mkt=${p.mkt}`,
     reposMin: 45,
   };
 }));
@@ -345,7 +425,7 @@ function lienReel(lien) {
 /** Toutes les sources, France et Europe. Exporté pour que les tests vérifient
     que chacune déclare bien un pays — une source sans pays enverrait ses offres
     dans le mauvais pays, sans que rien ne le signale. */
-export const TOUTES_SOURCES = [...SOURCES, ...SOURCES_ENSEIGNES, ...VEILLE_PAYS, ...VEILLE_BING, ...VEILLE_ENSEIGNES];
+export const TOUTES_SOURCES = [...SOURCES, ...SOURCES_ENSEIGNES, ...SOURCES_AMAZON, ...VEILLE_PAYS, ...VEILLE_BING, ...VEILLE_ENSEIGNES];
 
 /** Exportés pour les TESTS : le filtre par langue et l'anti-tuile se vérifient
  *  en les exécutant, pas en relisant le fichier. */
@@ -354,7 +434,7 @@ export { MOTS_PROMO, motsPromo, ecarterTuiles, veilleParPays, lienReel, dedupliq
    (outils/verificateur-categories.mjs) et les tests rejouent `famille()` sur
    les offres publiées. Un contrôle qui recopierait la table des mots serait un
    contrôle qui vérifie sa propre copie — donc rien du tout. */
-export { famille, FAMILLES, CATEGORIES_SOURCES, categorieDeSource, sansAccents, offresEnseigne, compterMots, MARQUES };
+export { famille, FAMILLES, CATEGORIES_SOURCES, categorieDeSource, sansAccents, offresEnseigne, offresAmazon, compterMots, MARQUES };
 
 /** Recherches Google News : un flux par famille de produits. Gratuit, sans clé. */
 const RECHERCHES = [
@@ -1187,6 +1267,94 @@ function versNumberCarte(texte) {
   return Number.isFinite(v) && v > 0 && v < 100000 ? Math.round(v * 100) / 100 : null;
 }
 
+/* ------------------------------------------------------------------ *
+ *  AMAZON — lire une page de résultats.
+ *
+ *  Découpe : entre deux ASIN CONSÉCUTIFS. C'est la seule qui suive vraiment la
+ *  structure — les URL de redirection d'Amazon dépassent le millier de
+ *  caractères, et une fenêtre de taille fixe autour de l'ASIN tombe à côté du
+ *  prix (vérifié : 59 ASIN dans la page, 1 seul produit correctement lu avec
+ *  une fenêtre de 5 000 caractères).
+ *
+ *  Prix : le piège de cette source. Une carte contient PLUSIEURS prix, dont le
+ *  prix à l'unité (« 0,10 €/unité »). En prenant le plus petit comme prix et le
+ *  plus grand comme prix barré, on fabriquait des remises de -99 % sur du
+ *  collagène. On distingue donc les deux balises par leur classe :
+ *      span.a-price              → le prix demandé
+ *      span.a-price.a-text-price → le prix de référence, barré
+ *  et une remise n'est calculée que si le second dépasse STRICTEMENT le premier.
+ *  Le « Économisez 49 % » affiché à côté est ignoré : sur la même carte, les
+ *  deux prix disaient 19 %. On se fie aux nombres, pas au slogan.
+ * ------------------------------------------------------------------ */
+function prixAmazon(bloc) {
+  let courant = null, barre = null;
+  for (const m of bloc.matchAll(/<span class="(a-price[^"]*)"/g)) {
+    const fenetre = bloc.slice(m.index, m.index + 500);
+    const val = versNombre((fenetre.match(/a-offscreen">\s*([^<]+?)\s*</) || [])[1] || '');
+    if (val == null) continue;
+    // PRIX À L'UNITÉ : Amazon affiche « 159,90 €/litre » juste après le prix, dans
+    // la MÊME balise technique que le prix barré. Pris pour une référence, il
+    // fabriquait un parfum d'intérieur à -90 % (15,99 € « avant » 159,90 €).
+    // Repéré sur les données réelles après une première livraison — le contrôle
+    // sur une seule page enregistrée ne l'avait pas vu, parce que le défaut
+    // dépend du produit (il faut un article vendu au litre, au kilo ou au lot).
+    const suite = fenetre.slice(0, 300).replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ');
+    const estUnitaire = /€\s*\/|\/\s*(unité|unite|pièce|piece|pce|kg|litre|litro|l\b|ml|100\s?(g|ml)|\d+\s?m\b|lot|pack|rouleau)/i.test(suite);
+    if (/a-text-price/.test(m[1])) {
+      if (estUnitaire) continue;                       // prix au litre : pas une référence
+      if (barre == null || val > barre) barre = val;
+    } else if (courant == null) courant = val;
+  }
+  // Garde-fou de vraisemblance : un prix de référence qui vaut cinq fois le prix
+  // demandé n'est pas une promotion, c'est une autre unité ou une autre variante.
+  if (barre != null && courant != null && barre >= courant * 5) barre = null;
+  return { courant, barre };
+}
+
+function offresAmazon(html, source) {
+  const positions = [...html.matchAll(/data-asin="([A-Z0-9]{10})"/g)];
+  const offres = [], vus = new Set();
+  for (let i = 0; i < positions.length; i++) {
+    const asin = positions[i][1];
+    if (vus.has(asin)) continue;
+    const bloc = html.slice(positions[i].index, i + 1 < positions.length ? positions[i + 1].index : html.length);
+    const { courant, barre } = prixAmazon(bloc);
+    if (courant == null) continue;
+    const brut = (bloc.match(/<h2[^>]*>[\s\S]{0,700}?<span[^>]*>([^<]{12,220})<\/span>/) || [])[1]
+      || (bloc.match(/alt="([^"]{14,220})"/) || [])[1] || '';
+    const titre = nettoyer(brut);
+    if (!titre) continue;
+    const image = (bloc.match(/src="(https:\/\/m\.media-amazon\.com\/images\/I\/[^"]+)"/) || [])[1] || '';
+    const lien = `https://www.amazon.com.be/dp/${asin}`;
+    vus.add(asin);
+    // Le prix barré n'est retenu que s'il est PLUS ÉLEVÉ : sinon ce n'est pas
+    // une référence, c'est le prix à l'unité ou une variante moins chère.
+    const avant = barre != null && barre > courant ? barre : null;
+    const rem = remise(titre, courant, avant, false);
+    offres.push({
+      id: 'a' + asin,
+      type: 'offre',
+      titre: titre.slice(0, 220),
+      lienMarchand: lien,
+      lienPage: lien,
+      // Le vendeur est connu : c'est Amazon. Rien à deviner depuis un titre.
+      marchand: 'Amazon',
+      prix: courant,
+      prixAvant: avant,
+      remise: rem ? rem.pourcent : null,
+      remiseCalculee: rem ? rem.calculee : false,
+      categorie: famille(titre, ''),
+      categorieSource: 'amazon',
+      image,
+      date: new Date().toISOString(),
+      source: source.nom,
+      sourceId: source.id,
+      pays: source.pays || 'BE',
+    });
+  }
+  return offres;
+}
+
 /* Le classement d'une offre, réduit à ses SEULS champs conservés (titre +
  *  catégorie de source).
  *
@@ -1220,6 +1388,19 @@ async function collecterSource(source) {
       const offres = offresEnseigne(corps, source);
       journal.push({ source: source.id, ok: true, items: 0, retenues: offres.length });
       if (VERBEUX) console.log(`  ${source.id} : ${offres.length} offre(s) d'enseigne`);
+      return offres;
+    }
+    // Amazon : une page de résultats, pas un flux. Une page VIDE n'est pas une
+    // panne — mesuré, 2 appels sur 5 rendent une page sans produit. On la
+    // journalise comme « 0 retenue » avec la raison, pour qu'elle ne soit ni
+    // confondue avec un échec ni prise pour un effacement du catalogue.
+    if (source.type === 'amazon') {
+      const offres = offresAmazon(corps, source);
+      journal.push({
+        source: source.id, ok: true, items: 0, retenues: offres.length,
+        ...(offres.length ? {} : { note: 'page sans produit (Amazon limite par intermittence) — les offres déjà engrangées sont conservées' }),
+      });
+      if (VERBEUX) console.log(`  ${source.id} : ${offres.length} offre(s) Amazon`);
       return offres;
     }
     const blocs = items(corps);
@@ -1540,7 +1721,7 @@ async function principal() {
   // leur « température » collée devant (« 298° - Vente flash »). On les écarte —
   // elles reviendront propres à cette collecte.
   const avantAssainir = existant.offres.length;
-  let reclasses = 0;
+  let reclasses = 0, remisesRetirees = 0;
   const propres = existant.offres
     .filter((o) => !/^\s*\d{1,4}\s*°\s*[-–—]/.test(o.titre || ''))
     // Les offres engrangées AVANT le décodeur d'entités gardent leurs échappements
@@ -1565,6 +1746,17 @@ async function principal() {
       // notre veille Google News française, qui n'a pas de pays propre — on la
       // rattache donc à la France plutôt que de la laisser invisible.
       if (!c.pays) c.pays = 'FR';
+      // Prix barré invraisemblable : on le retire, ET sa remise avec lui. Un
+      // couple de prix dont la référence vaut cinq fois le prix demandé ne vient
+      // pas d'une promotion mais d'une confusion d'unité (prix au litre, au
+      // kilo, au lot). Mesuré sur les données réelles : un parfum d'intérieur
+      // affiché à -90 %, prix « barré » à 159,90 € pour 15,99 € — c'était le prix
+      // au litre. Le nettoyage est RÉTROACTIF, comme le reclassement : les offres
+      // déjà publiées portaient la fausse remise, et leur source ne les réémettra
+      // pas forcément. Un faux pourcentage est pire que pas d'offre.
+      if (c.prixAvant != null && c.prix != null && c.prixAvant >= c.prix * 5) {
+        c.prixAvant = null; c.remise = null; c.remiseCalculee = false; remisesRetirees++;
+      }
       // RECLASSEMENT. Les offres déjà en base gardent la catégorie calculée par
       // la version du code qui les a vues arriver — c'est-à-dire, pour tout ce
       // qui a été collecté avant la correction multilingue, une catégorie
@@ -1580,6 +1772,7 @@ async function principal() {
     console.log(`Assainissement : ${avantAssainir - propres.length} offre(s) au titre pollué écartée(s)`);
   }
   if (reclasses) console.log(`Reclassement : ${reclasses} offre(s) rangée(s) dans la bonne rubrique`);
+  if (remisesRetirees) console.log(`Assainissement : ${remisesRetirees} remise(s) invraisemblable(s) retirée(s) (prix barré ≥ 5× le prix demandé)`);
   const connues = new Map(propres.map((o) => [cleDe(o), o]));
 
   // Chaque source a son propre délai de repos (« reposMin ») : la collecte passe

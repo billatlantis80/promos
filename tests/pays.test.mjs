@@ -43,7 +43,7 @@ test('chaque source a une adresse et un type connus', () => {
     // d'en ajouter une quatrième en silence : un flux (« dealabs », « presse »
     // — des <item> à découper) ou une PAGE d'enseigne (« enseigne » — un
     // JSON-LD à lire, ce qui n'a rien à voir).
-    assert.ok(['dealabs', 'presse', 'enseigne'].includes(s.type), `${s.id} : type inconnu (${s.type})`);
+    assert.ok(['dealabs', 'presse', 'enseigne', 'amazon'].includes(s.type), `${s.id} : type inconnu (${s.type})`);
     assert.ok(s.id && s.nom, `${s.id} : identifiant ou nom manquant`);
   }
 });
