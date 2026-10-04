@@ -82,11 +82,6 @@ const PAR_PAGE = 24;
 let etat = {
   offres: [], categorie: 'tout', marchand: 'tout', tri: 'remise', recherche: '',
   affichees: PAR_PAGE, vue: 'grille', eco: false, favoris: false, meta: {}, pays: 'tout',
-  // « Promotions uniquement » : ne garder que les offres dont la remise est
-  // VÉRIFIÉE. Éteint par défaut — allumé d'office, il viderait l'écran dans les
-  // pays dont les marchands ne publient pas de prix barré, et une app qui
-  // s'ouvre sur du vide est une app qu'on referme.
-  promos: false,
 };
 
 /* ---------- Mode d'affichage ----------
@@ -205,7 +200,6 @@ function dessinerReglages() {
     </div>
     <p style="margin:12px 0 0">
       <button class="outil" data-eco-miroir aria-pressed="false" title="Économie de données — aucun visuel téléchargé">Éco — aucun visuel téléchargé</button>
-      <button class="outil" data-promos-miroir aria-pressed="false" title="Promotions uniquement — n'afficher que les offres dont la remise est vérifiée">Promos — remise vérifiée uniquement</button>
     </p>`;
 
   dessinerProfil();
@@ -378,7 +372,6 @@ function effacerTout() {
    Le réglage est mémorisé, comme celui de l'affichage. */
 const CLE_ECO = 'promos.eco';
 const CLE_FAV_ACTIF = 'promos.favorisActif';
-const CLE_PROMOS = 'promos.promosSeulement';
 
 function lireBool(cle) {
   try { return localStorage.getItem(cle) === '1'; } catch { return false; }
@@ -439,11 +432,6 @@ function retenue(o) {
   if (etat.pays !== 'tout' && (o.pays || 'FR') !== etat.pays) return false;
   if (etat.categorie !== 'tout' && o.categorie !== etat.categorie) return false;
   if (etat.marchand !== 'tout' && o.marchand !== etat.marchand) return false;
-  // Filtrer sur la REMISE VÉRIFIÉE, et non sur la présence d'un prix : un prix
-  // affiché n'est pas une promotion — le catalogue Coolblue en est plein, et
-  // l'utilisateur l'a dit sans détour. La remise, elle, vient soit d'un
-  // pourcentage écrit par la source, soit du calcul de deux prix RÉELS.
-  if (etat.promos && o.remise == null) return false;
   if (etat.recherche) {
     const q = etat.recherche.toLowerCase();
     if (!(`${o.titre} ${o.marchand} ${o.categorie}`.toLowerCase().includes(q))) return false;
@@ -692,11 +680,6 @@ function dessiner() {
   const total = etat.meta.total || etat.offres.length;
   $('comptes').innerHTML = `${etat.meta.totalOffres ?? '—'} offres · ${etat.meta.totalVeille ?? '—'} veille<br>mis à jour ${esc(ilYA(etat.meta.genereLe || new Date().toISOString()))}`;
   $('fraicheur').textContent = `Recensé le ${new Date(etat.meta.genereLe || Date.now()).toLocaleString('fr-FR')} — ${total} entrées.`;
-  // Les outils sont rafraîchis ICI, en fin de rendu, et pas seulement au
-  // démarrage : le compteur de promotions dépend des filtres en cours (pays,
-  // rayon, recherche). Appelé une seule fois au lancement, il restait vide — les
-  // données n'étaient pas encore chargées — et affichait ensuite un nombre faux.
-  majOutils();
 }
 
 /** Reflet des réglages dans la barre (orange = actif) + compteur de favoris.
@@ -709,15 +692,6 @@ function majOutils() {
   f.classList.toggle('on', etat.favoris);
   f.setAttribute('aria-pressed', etat.favoris ? 'true' : 'false');
   $('nFav').textContent = favoris.length ? String(favoris.length) : '';
-  const p = $('promos');
-  p.classList.toggle('on', etat.promos);
-  p.setAttribute('aria-pressed', etat.promos ? 'true' : 'false');
-  const np = nombrePromos();
-  $('nPromos').textContent = np ? String(np) : '';
-  document.querySelectorAll('[data-promos-miroir]').forEach((m) => {
-    m.classList.toggle('on', etat.promos);
-    m.setAttribute('aria-pressed', etat.promos ? 'true' : 'false');
-  });
   document.querySelectorAll('[data-eco-miroir]').forEach((m) => {
     m.classList.toggle('on', etat.eco);
     m.setAttribute('aria-pressed', etat.eco ? 'true' : 'false');
@@ -731,31 +705,6 @@ function basculerEco() {
   ecrireBool(CLE_ECO, etat.eco);
   majOutils();
   dessiner();
-}
-
-/** Bascule « promotions uniquement ». Même principe que l'économie de données :
- *  un seul chemin, deux boutons (barre du haut et réglages). */
-function basculerPromos() {
-  etat.promos = !etat.promos;
-  ecrireBool(CLE_PROMOS, etat.promos);
-  etat.affichees = PAR_PAGE;
-  majOutils();
-  dessiner();
-}
-
-/** Combien d'offres le filtre « promotions » montrerait, si on l'allumait.
- *
- *  On compte avec le filtre ÉTEINT, sinon le calcul s'auto-interdirait : le
- *  compteur mesurerait ce que le filtre vient de retirer. Il porte sur les
- *  autres filtres en cours (pays, rayon, recherche), pour annoncer ce que
- *  l'utilisateur verrait VRAIMENT — pas un total théorique qui promettrait une
- *  liste vide. */
-function nombrePromos() {
-  const avant = etat.promos;
-  etat.promos = false;
-  const n = etat.offres.filter((o) => o.remise != null && retenue(o)).length;
-  etat.promos = avant;
-  return n;
 }
 
 /** Garde de côté, ou retire. Hors mode favoris, on ne redessine QUE la carte
@@ -802,7 +751,6 @@ function brancher() {
     b.addEventListener('click', () => appliquerVue(b.dataset.vue));
   });
   $('eco').addEventListener('click', basculerEco);
-  $('promos').addEventListener('click', basculerPromos);
   $('fav').addEventListener('click', () => {
     etat.favoris = !etat.favoris;
     ecrireBool(CLE_FAV_ACTIF, etat.favoris);
@@ -831,7 +779,6 @@ function brancher() {
     const v = e.target.closest('.vue');
     if (v) { appliquerVue(v.dataset.vue); return; }
     if (e.target.closest('[data-eco-miroir]')) basculerEco();
-    if (e.target.closest('[data-promos-miroir]')) basculerPromos();
   });
   $('regProfil').addEventListener('click', (e) => {
     if (!e.target.closest('#enregistrerProfil')) return;
@@ -1006,7 +953,6 @@ async function lancer() {
   try { etat.pays = localStorage.getItem(CLE_PAYS) || 'tout'; } catch { etat.pays = 'tout'; }
   etat.eco = lireBool(CLE_ECO);
   etat.favoris = lireBool(CLE_FAV_ACTIF);
-  etat.promos = lireBool(CLE_PROMOS);
   majOutils();
   brancher();
   try {
