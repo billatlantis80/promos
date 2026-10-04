@@ -121,11 +121,24 @@ const server = http.createServer((req, res) => {
   }
 
   const PUBLIC = path.join(RACINE, 'public');
+  const DOCS = path.join(RACINE, 'docs');
   const rel = url.pathname === '/' ? 'index.html' : url.pathname.replace(/^\/+/, '');
-  // data/offres.json vit un cran au-dessus de public/ : on l'autorise
-  // explicitement, sans ouvrir le reste du dossier.
-  const fichier = rel === 'data/offres.json' ? DONNEES : path.normalize(path.join(PUBLIC, rel));
-  if (fichier !== DONNEES && !fichier.startsWith(PUBLIC)) { res.writeHead(403).end('Forbidden'); return; }
+  // Trois familles de fichiers, chacune dans son dossier :
+  //   - data/offres.json vit un cran au-dessus de public/ : autorisé nommément ;
+  //   - les visuels publiés vivent dans docs/img/ : les offres publiées les
+  //     référencent en chemin relatif, mais le service local sert public/ — donc
+  //     ces fichiers n'y étaient pas et TOUS les visuels répondaient 404 (cartes
+  //     grises en local pendant que le site publié, lui, les affichait) ;
+  //   - tout le reste vient de public/.
+  let fichier;
+  if (rel === 'data/offres.json') fichier = DONNEES;
+  else if (rel.startsWith('img/')) fichier = path.normalize(path.join(DOCS, rel));
+  else fichier = path.normalize(path.join(PUBLIC, rel));
+
+  const racines = [DONNEES, PUBLIC, DOCS];
+  if (!racines.some((d) => fichier === d || fichier.startsWith(d + path.sep))) {
+    res.writeHead(403).end('Forbidden'); return;
+  }
 
   fs.readFile(fichier, (err, data) => {
     if (err) { res.writeHead(404, { 'content-type': 'text/html; charset=utf-8' }); res.end('<h1>404</h1>'); return; }
