@@ -30,6 +30,7 @@
     </div>
     <button class="outil" id="eco" aria-pressed="false" title="Économie de données — aucun visuel téléchargé">Éco</button>
     <button class="outil" id="fav" aria-pressed="false" title="Mes favoris">&#9733;<span class="n" id="nFav"></span></button>
+    <button class="outil" id="reglages" aria-haspopup="dialog" aria-expanded="false" title="Réglages — thème et couleurs, affichage, profil, compte">&#9881;</button>
   </div>
   <nav class="puces" id="puces"></nav>
 </header>
@@ -46,6 +47,39 @@
   <p class="fresque" id="fraicheur"></p>
   <p class="note">Les offres sont rassemblées depuis des flux publics (Dealabs, presse spécialisée, Google News). Aucune donnée n'est revendiquée : chaque offre renvoie à sa source, qui fait foi.</p>
 </footer>
+
+<!-- Réglages : feuille plein écran. Le contenu des rubriques est construit par
+     app.js (thèmes, affichage, profil, compte) pour ne pas dupliquer les
+     réglages de la barre du haut — une seule source de vérité. -->
+<section class="feuille" id="feuille" role="dialog" aria-modal="true" aria-labelledby="titreReglages" hidden>
+  <div class="feuille-tete">
+    <h2 id="titreReglages">Réglages</h2>
+    <button class="fermer" id="fermer">Fermer</button>
+  </div>
+
+  <section class="rubrique">
+    <h3>Thème et couleurs</h3>
+    <p>Dix thèmes. Le choix s'applique tout de suite et reste enregistré sur cet appareil.</p>
+    <div class="themes" id="themes"></div>
+  </section>
+
+  <section class="rubrique">
+    <h3>Affichage</h3>
+    <p>Les mêmes réglages que la barre du haut, réunis ici.</p>
+    <div id="regAffichage"></div>
+  </section>
+
+  <section class="rubrique">
+    <h3>Profil</h3>
+    <p>Ce que l'application sait de toi — et rien de plus.</p>
+    <div id="regProfil"></div>
+  </section>
+
+  <section class="rubrique">
+    <h3>Compte</h3>
+    <div id="regCompte"></div>
+  </section>
+</section>
 
 <script type="module" src="app.js"></script>
 </body>

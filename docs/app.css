@@ -10,6 +10,13 @@
   --accent-2: #ffd166;
   --vert: #3ddc84;
   --rouge: #ff5c5c;
+  /* --tete : fond de l'en-tête collant (il doit suivre le thème, sinon une
+     bande sombre resterait en haut d'un thème clair).
+     --sur-accent : couleur du texte posé SUR la couleur d'accent. Un accent
+     clair demande du texte sombre, un accent sombre demande du texte clair :
+     sans cette variable, un thème à accent foncé donnait du texte illisible. */
+  --tete: rgba(12, 13, 16, .94);
+  --sur-accent: #1b1206;
   --rayon: 14px;
 }
 * { box-sizing: border-box; }
@@ -25,7 +32,7 @@ body {
 /* ---------- En-tête ---------- */
 .tete {
   position: sticky; top: 0; z-index: 10;
-  background: rgba(12,13,16,.94);
+  background: var(--tete);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--bord);
   padding: 10px 12px 0;
@@ -51,7 +58,7 @@ body {
   border: 1px solid var(--bord); border-radius: 10px; padding: 8px 10px;
   font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;
 }
-.outil.on { background: var(--accent); border-color: var(--accent); color: #1b1206; font-weight: 600; }
+.outil.on { background: var(--accent); border-color: var(--accent); color: var(--sur-accent); font-weight: 600; }
 .outil .n { font-size: 11px; opacity: .85; }
 /* Sélecteur d'affichage : trois boutons, l'actif en orange. */
 .vues {
@@ -62,14 +69,14 @@ body {
   background: transparent; border: 0; color: var(--doux); cursor: pointer;
   font-size: 15px; line-height: 1; padding: 8px 8px; border-radius: 8px;
 }
-.vue.on { background: var(--accent); color: #1b1206; }
+.vue.on { background: var(--accent); color: var(--sur-accent); }
 .puces { display: flex; gap: 6px; overflow-x: auto; padding: 0 0 10px; scrollbar-width: none; }
 .puces::-webkit-scrollbar { display: none; }
 .puce {
   flex: 0 0 auto; background: var(--carte); color: var(--doux); border: 1px solid var(--bord);
   border-radius: 999px; padding: 6px 12px; font-size: 13px; cursor: pointer; white-space: nowrap;
 }
-.puce.on { background: var(--accent); border-color: var(--accent); color: #1b1206; font-weight: 600; }
+.puce.on { background: var(--accent); border-color: var(--accent); color: var(--sur-accent); font-weight: 600; }
 .puce .n { opacity: .65; font-size: 11px; margin-left: 4px; }
 
 /* ---------- Bandeau d'information ---------- */
@@ -157,7 +164,7 @@ body[data-eco="1"] .offre .visuel { display: none; }
   background: var(--carte-2); border: 1px solid var(--bord); color: var(--doux);
 }
 .etiquette.marchand { color: var(--texte); font-weight: 600; }
-.remise { background: var(--accent); color: #1b1206; font-weight: 700; border: 0; }
+.remise { background: var(--accent); color: var(--sur-accent); font-weight: 700; border: 0; }
 .remise.calculee { background: transparent; color: var(--accent-2); border: 1px dashed var(--accent-2); font-weight: 600; }
 /* Ligne du prix : le montant, groupé. */
 .prix {
@@ -178,7 +185,7 @@ body[data-eco="1"] .offre .visuel { display: none; }
 .offre .bas { margin-top: 0; display: flex; align-items: center; gap: 8px; }
 .btn {
   flex: 1; text-align: center; text-decoration: none; font-size: 14px; font-weight: 600;
-  padding: 10px 12px; border-radius: 11px; background: var(--accent); color: #1b1206;
+  padding: 10px 12px; border-radius: 11px; background: var(--accent); color: var(--sur-accent);
 }
 .btn.ghost { background: transparent; color: var(--doux); border: 1px solid var(--bord); flex: 0 0 auto; font-weight: 500; }
 .quand { font-size: 11.5px; color: var(--doux); }
@@ -192,3 +199,138 @@ body[data-eco="1"] .offre .visuel { display: none; }
 .pied { margin: 26px 12px 0; padding-top: 16px; border-top: 1px solid var(--bord); color: var(--doux); font-size: 12px; }
 .pied p { margin: 0 0 8px; }
 .pied .note { opacity: .8; }
+
+/* ============================================================
+   THÈMES — dix palettes
+   Chaque thème ne fait que REdéfinir des variables : aucune règle de mise en
+   page n'y touche. Changer de thème ne peut donc rien casser dans la carte, la
+   grille ou les boutons. Le thème vit sur <html data-theme="…"> et « nuit »
+   reste le défaut si rien n'a été choisi.
+   ============================================================ */
+html[data-theme="nuit"] {
+  --fond: #0c0d10; --carte: #14161b; --carte-2: #1a1d24; --bord: #262a33;
+  --texte: #eceef3; --doux: #9aa1ae;
+  --accent: #ff8a3d; --accent-2: #ffd166;
+  --tete: rgba(12, 13, 16, .94); --sur-accent: #1b1206;
+}
+html[data-theme="ardoise"] {
+  --fond: #0e1418; --carte: #131c21; --carte-2: #18242b; --bord: #22333c;
+  --texte: #e6eef2; --doux: #93a6b1;
+  --accent: #35c6e0; --accent-2: #8be9fd;
+  --tete: rgba(14, 20, 24, .94); --sur-accent: #04222a;
+}
+html[data-theme="foret"] {
+  --fond: #0d130f; --carte: #121b14; --carte-2: #17241a; --bord: #243526;
+  --texte: #e8f0e6; --doux: #9bb098;
+  --accent: #7ed957; --accent-2: #d9f99d;
+  --tete: rgba(13, 19, 15, .94); --sur-accent: #10230a;
+}
+html[data-theme="bordeaux"] {
+  --fond: #140d10; --carte: #1d1317; --carte-2: #251820; --bord: #3a2430;
+  --texte: #f2e9ec; --doux: #b09aa4;
+  --accent: #e0567a; --accent-2: #ffd166;
+  --tete: rgba(20, 13, 16, .94); --sur-accent: #2a0714;
+}
+html[data-theme="violette"] {
+  --fond: #100d18; --carte: #181326; --carte-2: #201a30; --bord: #2f2545;
+  --texte: #ece8f7; --doux: #a79ec2;
+  --accent: #b06bff; --accent-2: #ff7ae0;
+  --tete: rgba(16, 13, 24, .94); --sur-accent: #17072b;
+}
+html[data-theme="ocean"] {
+  --fond: #08111d; --carte: #0e1a2b; --carte-2: #132238; --bord: #1d3350;
+  --texte: #e6eefb; --doux: #8fa4c2;
+  --accent: #38bdf8; --accent-2: #5eead4;
+  --tete: rgba(8, 17, 29, .94); --sur-accent: #04202f;
+}
+/* Thèmes clairs : l'accent doit rester assez sombre pour que le texte posé
+   dessus soit lisible, et --accent-2 (étoile gardée, remise calculée) doit
+   contraster avec du blanc, sinon il disparaît. */
+html[data-theme="clair"] {
+  --fond: #f5f6f8; --carte: #ffffff; --carte-2: #eef0f4; --bord: #dcdfe6;
+  --texte: #14161b; --doux: #656c7a;
+  --accent: #e2621b; --accent-2: #b25b00;
+  --tete: rgba(245, 246, 248, .94); --sur-accent: #ffffff;
+}
+html[data-theme="sable"] {
+  --fond: #faf6ef; --carte: #ffffff; --carte-2: #f2ece1; --bord: #e2d9c9;
+  --texte: #2a241d; --doux: #7a6d5c;
+  --accent: #a3671a; --accent-2: #8a5a12;
+  --tete: rgba(250, 246, 239, .94); --sur-accent: #ffffff;
+}
+html[data-theme="aube"] {
+  --fond: #fdf3f7; --carte: #ffffff; --carte-2: #f7e9f0; --bord: #ecd7e3;
+  --texte: #2b1b23; --doux: #806b76;
+  --accent: #c72c72; --accent-2: #9c2b60;
+  --tete: rgba(253, 243, 247, .94); --sur-accent: #ffffff;
+}
+/* Contraste : pensée pour la lisibilité extrême (malvoyance, plein soleil). */
+html[data-theme="contraste"] {
+  --fond: #000000; --carte: #0a0a0a; --carte-2: #171717; --bord: #6b6b6b;
+  --texte: #ffffff; --doux: #d8d8d8;
+  --accent: #ffd700; --accent-2: #ffff00;
+  --tete: rgba(0, 0, 0, .96); --sur-accent: #000000;
+}
+
+/* ============================================================
+   RÉGLAGES — feuille plein écran (thèmes, affichage, profil, compte)
+   ============================================================ */
+.feuille {
+  position: fixed; inset: 0; z-index: 40; overflow-y: auto;
+  background: var(--fond); padding: 0 12px 48px;
+}
+.feuille[hidden] { display: none; }
+.feuille-tete {
+  position: sticky; top: 0; z-index: 1; margin: 0 -12px 6px; padding: 12px;
+  background: var(--tete); backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--bord);
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+}
+.feuille-tete h2 { margin: 0; font-size: 18px; }
+.fermer {
+  background: var(--carte); color: var(--texte); border: 1px solid var(--bord);
+  border-radius: 10px; padding: 8px 14px; font-size: 14px; cursor: pointer;
+}
+.rubrique { margin: 20px 0 0; }
+.rubrique > h3 {
+  margin: 0 0 4px; font-size: 12.5px; letter-spacing: .8px;
+  text-transform: uppercase; color: var(--doux);
+}
+.rubrique > p { margin: 0 0 10px; font-size: 13px; color: var(--doux); }
+/* Grille des dix thèmes : chaque vignette montre fond, carte et accent. */
+.themes { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+@media (min-width: 520px) { .themes { grid-template-columns: repeat(3, 1fr); } }
+.theme {
+  display: flex; align-items: center; gap: 9px; text-align: left; cursor: pointer;
+  background: var(--carte); color: var(--texte); border: 1px solid var(--bord);
+  border-radius: 12px; padding: 8px 10px; font-size: 13.5px;
+}
+.theme.on { border-color: var(--accent); font-weight: 600; box-shadow: 0 0 0 1px var(--accent) inset; }
+.theme .pastilles { display: flex; flex: 0 0 auto; border-radius: 7px; overflow: hidden; border: 1px solid var(--bord); }
+.theme .pastilles i { display: block; width: 11px; height: 26px; }
+.theme .nom { flex: 1; min-width: 0; }
+.theme .coche { color: var(--accent); }
+.champ { display: flex; flex-direction: column; gap: 6px; margin: 10px 0; }
+.champ label { font-size: 13px; color: var(--doux); }
+.champ input {
+  background: var(--carte); color: var(--texte); border: 1px solid var(--bord);
+  border-radius: 10px; padding: 10px 12px; font-size: 15px;
+}
+.champ input:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+.enregistrer {
+  background: var(--accent); color: var(--sur-accent); border: 0; border-radius: 11px;
+  padding: 11px 16px; font-size: 15px; font-weight: 600; cursor: pointer;
+}
+.ligne-profil { display: flex; align-items: center; gap: 12px; }
+.avatar {
+  width: 42px; height: 42px; flex: 0 0 auto; border-radius: 50%;
+  background: var(--accent); color: var(--sur-accent);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 17px;
+}
+.carte-bloc { background: var(--carte); border: 1px solid var(--bord); border-radius: var(--rayon); padding: 12px; font-size: 13.5px; }
+.carte-bloc h4 { margin: 0 0 6px; font-size: 14.5px; }
+.carte-bloc p { margin: 0 0 8px; color: var(--doux); }
+.carte-bloc ul { margin: 6px 0 0; padding-left: 18px; color: var(--doux); }
+.annonce { margin: 10px 0 0; font-size: 13px; color: var(--vert); }
+
