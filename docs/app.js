@@ -31,7 +31,32 @@ const NOMS_CATEGORIES = {
 };
 const PAR_PAGE = 24;
 
-let etat = { offres: [], categorie: 'tout', marchand: 'tout', tri: 'remise', recherche: '', affichees: PAR_PAGE, meta: {} };
+let etat = { offres: [], categorie: 'tout', marchand: 'tout', tri: 'remise', recherche: '', affichees: PAR_PAGE, vue: 'grille', meta: {} };
+
+/* ---------- Mode d'affichage ----------
+   Trois façons de parcourir les MÊMES offres. Le mode vit sur <body data-vue="…"> :
+   c'est le CSS qui fait le travail, donc l'affichage reste juste même si ce script
+   échoue (le défaut, « grille », est posé en dur dans la feuille de style).
+   Le choix est mémorisé : on ne redemande pas à l'utilisateur, à chaque
+   ouverture, ce qu'il a déjà tranché. */
+const VUES = ['grille', 'liste', 'compacte'];
+const CLE_VUE = 'promos.vue';
+
+function vueEnregistree() {
+  try { return localStorage.getItem(CLE_VUE); } catch { return null; }   // navigation privée
+}
+
+function appliquerVue(v) {
+  const retenue = VUES.includes(v) ? v : 'grille';
+  etat.vue = retenue;
+  document.body.dataset.vue = retenue;
+  document.querySelectorAll('.vue').forEach((b) => {
+    const actif = b.dataset.vue === retenue;
+    b.classList.toggle('on', actif);
+    b.setAttribute('aria-pressed', actif ? 'true' : 'false');
+  });
+  try { localStorage.setItem(CLE_VUE, retenue); } catch { /* privé : on s'en passe */ }
+}
 
 const esc = (s) => String(s == null ? '' : s)
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -155,6 +180,9 @@ function dessiner() {
 function brancher() {
   $('recherche').addEventListener('input', (e) => { etat.recherche = e.target.value.trim(); etat.affichees = PAR_PAGE; dessiner(); });
   $('tri').addEventListener('change', (e) => { etat.tri = e.target.value; dessiner(); });
+  document.querySelectorAll('.vue').forEach((b) => {
+    b.addEventListener('click', () => appliquerVue(b.dataset.vue));
+  });
 }
 
 /**
@@ -202,6 +230,7 @@ async function chargerDonnees() {
 
 async function demarrer() {
   $('mention').textContent = MENTION_AFFILIATION;
+  appliquerVue(vueEnregistree());   // avant tout rendu : aucun clignotement de mode
   brancher();
   try {
     let d;
