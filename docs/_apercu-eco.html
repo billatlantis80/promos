@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Aperçu : normal et économie de données</title>
+<style>
+  body { margin: 0; background: #000; color: #eee; display: flex; gap: 10px; padding: 10px;
+         font: 13px/1.3 system-ui, sans-serif; }
+  figure { margin: 0; }
+  figcaption { padding: 6px 2px; font-weight: 600; }
+  iframe { width: 360px; height: 720px; border: 1px solid #333; border-radius: 12px; background: #0c0d10; }
+</style>
+</head>
+<body>
+  <figure><figcaption>Normal — tableau, avec visuels</figcaption><iframe data-vue="grille" data-eco="0" src="./"></iframe></figure>
+  <figure><figcaption>Économie de données + compacte</figcaption><iframe data-vue="compacte" data-eco="1" src="./"></iframe></figure>
+<script>
+  // On repose le réglage en boucle : un simple écouteur « load » rate parfois le
+  // cadre déjà chargé, et l'application remet son propre état à son démarrage.
+  // La page n'est prête à être capturée que quand les DEUX cadres portent bien
+  // le mode demandé — on l'expose dans window.PRET.
+  window.PRET = false;
+  const cadres = [...document.querySelectorAll('iframe')];
+  let tours = 0;
+  const minuteur = setInterval(() => {
+    tours++;
+    cadres.forEach((f) => {
+      const d = f.contentDocument;
+      if (!d || !d.body) return;
+      d.body.dataset.vue = f.dataset.vue;
+      d.body.dataset.eco = f.dataset.eco;
+    });
+    const ok = cadres.every((f) => {
+      const d = f.contentDocument;
+      return d && d.body && d.body.dataset.vue === f.dataset.vue && d.body.dataset.eco === f.dataset.eco;
+    });
+    if ((ok && tours > 8) || tours > 60) { window.PRET = ok; clearInterval(minuteur); }
+  }, 150);
+</script>
+</body>
+</html>

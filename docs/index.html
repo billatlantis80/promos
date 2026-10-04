@@ -16,6 +16,8 @@
   </div>
   <div class="barre">
     <input id="recherche" type="search" placeholder="Chercher un produit, un marchand…" autocomplete="off">
+  </div>
+  <div class="outils">
     <select id="tri">
       <option value="remise">Meilleures remises</option>
       <option value="recent">Plus récentes</option>
@@ -26,6 +28,8 @@
       <button class="vue" data-vue="liste" aria-label="Liste : une offre par ligne, grand visuel" title="Liste — une offre par ligne">&#9636;</button>
       <button class="vue" data-vue="compacte" aria-label="Compacte : vignette et texte serrés" title="Compacte — beaucoup d'offres à l'écran">&#9776;</button>
     </div>
+    <button class="outil" id="eco" aria-pressed="false" title="Économie de données — aucun visuel téléchargé">Éco</button>
+    <button class="outil" id="fav" aria-pressed="false" title="Mes favoris">&#9733;<span class="n" id="nFav"></span></button>
   </div>
   <nav class="puces" id="puces"></nav>
 </header>

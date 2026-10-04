@@ -42,8 +42,17 @@ body {
 #recherche:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
 #tri {
   background: var(--carte); color: var(--texte); border: 1px solid var(--bord);
-  border-radius: 10px; padding: 10px 6px; font-size: 13px; max-width: 34%;
+  border-radius: 10px; padding: 8px 6px; font-size: 13px; flex: 1; min-width: 0;
 }
+/* Barre d'outils : tri, affichage, économie de données, favoris. */
+.outils { display: flex; gap: 6px; margin: 0 0 10px; align-items: stretch; }
+.outil {
+  flex: 0 0 auto; background: var(--carte); color: var(--doux);
+  border: 1px solid var(--bord); border-radius: 10px; padding: 8px 10px;
+  font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;
+}
+.outil.on { background: var(--accent); border-color: var(--accent); color: #1b1206; font-weight: 600; }
+.outil .n { font-size: 11px; opacity: .85; }
 /* Sélecteur d'affichage : trois boutons, l'actif en orange. */
 .vues {
   display: flex; gap: 2px; flex: 0 0 auto;
@@ -113,9 +122,34 @@ body[data-vue="compacte"] .btn { font-size: 13px; padding: 8px 10px; }
 body[data-vue="compacte"] .quand { font-size: 11px; }
 
 .offre {
+  position: relative;   /* ancre l'étoile « garder de côté » */
   background: var(--carte); border: 1px solid var(--bord); border-radius: var(--rayon);
   overflow: hidden; display: flex; flex-direction: column;
 }
+/* Étoile placée en HAUT À GAUCHE : dans les trois modes, ce coin tombe sur le
+   visuel (en haut sur la carte, à gauche en compacte) — jamais sur le texte. */
+.favori {
+  position: absolute; top: 6px; left: 6px; z-index: 2;
+  width: 30px; height: 30px; border-radius: 50%; cursor: pointer;
+  background: rgba(12,13,16,.72); border: 1px solid var(--bord);
+  color: var(--doux); font-size: 15px; line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+  backdrop-filter: blur(3px);
+}
+.favori.on { color: var(--accent-2); border-color: var(--accent-2); background: rgba(12,13,16,.9); }
+/* Sans visuel (économie de données), l'étoile rentre dans la ligne d'étiquettes
+   au lieu de flotter : sinon elle recouvre le titre. */
+.favori.enligne {
+  position: static; width: auto; height: auto; border-radius: 999px;
+  padding: 3px 9px; font-size: 12px; background: var(--carte-2);
+}
+/* Favori dont l'offre a quitté la liste : on le dit, plutôt que de laisser
+   croire que le prix affiché est encore valable. */
+.etiquette.perime { background: transparent; border-style: dashed; color: var(--accent-2); }
+
+/* Économie de données : les visuels ne sont même pas DEMANDÉS (voir app.js) ;
+   cette règle ne sert qu'à rattraper une carte rendue avant l'activation. */
+body[data-eco="1"] .offre .visuel { display: none; }
 .offre .visuel {
   height: 168px; background: var(--carte-2) center/contain no-repeat;
   display: flex; align-items: center; justify-content: center;
