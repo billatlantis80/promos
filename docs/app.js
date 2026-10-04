@@ -31,6 +31,35 @@ const NOMS_CATEGORIES = {
   sport: 'Sport', jouets: 'Jeux & jouets', auto: 'Auto & moto', beaute: 'Beauté', autre: 'Autres',
 };
 
+/* L'ORDRE des onglets, identique dans TOUS les pays.
+ *
+ * Il était calculé par nombre d'offres décroissant : « High-tech » passait donc
+ * devant ou derrière « Maison » selon le pays consulté, et l'utilisateur ne
+ * retrouvait plus ses onglets au même endroit d'un pays à l'autre. Un ordre qui
+ * bouge quand on change de pays oblige à relire toute la barre à chaque fois.
+ *
+ * Cet ordre est celui que la France affichait — pris comme référence. Il est
+ * ÉCRIT ici, pas déduit des données : c'est la seule façon qu'il ne change plus
+ * jamais, ni en changeant de pays, ni à mesure que les offres arrivent.
+ * « Autres » reste en dernier : c'est le reste, pas une catégorie comme les
+ * autres (décision déjà prise, conservée).
+ *
+ * Une catégorie inconnue (ajoutée par le collecteur sans passer par ici) se
+ * range juste avant « Autres » — jamais au milieu et jamais en tête.
+ */
+const ORDRE_CATEGORIES = ['tech', 'maison', 'mode', 'auto', 'jouets', 'sport', 'bricolage', 'beaute', 'autre'];
+
+/** Rang d'affichage d'une catégorie : un entier, ou « juste avant Autres ». */
+function rangCategorie(c) {
+  const i = ORDRE_CATEGORIES.indexOf(c);
+  if (i >= 0) return i;
+  // Inconnue : on la range juste AVANT « Autres » — jamais après (sinon
+  // « Autres » ne serait plus le dernier, décision déjà prise), jamais en tête,
+  // et jamais au milieu des catégories connues.
+  const rangAutre = ORDRE_CATEGORIES.indexOf('autre');
+  return (rangAutre >= 0 ? rangAutre : ORDRE_CATEGORIES.length) - 0.5;
+}
+
 /* Pays desservis — les mêmes codes que le collecteur. Chaque pays proposé a de
    vraies sources derrière lui : le filtre ne peut donc pas afficher une liste
    identique sous une autre étiquette. Le sélecteur n'annonce que les pays
@@ -498,12 +527,11 @@ function dessinerPuces() {
   const offres = offresDuPays();
   const parCat = {};
   for (const o of offres) parCat[o.categorie] = (parCat[o.categorie] || 0) + 1;
-  // « Autres » ferme toujours la marche : c'est le reste, pas une catégorie
-  // comme les autres — sa place est après toutes, quel que soit son nombre.
-  const cats = Object.keys(parCat).filter((c) => NOMS_CATEGORIES[c]).sort((a, b) => {
-    if (a === 'autre' || b === 'autre') return a === 'autre' ? 1 : -1;
-    return parCat[b] - parCat[a];
-  });
+  // L'ORDRE est celui d'ORDRE_CATEGORIES — jamais le nombre d'offres. Trier par
+  // fréquence faisait danser les onglets d'un pays à l'autre : « High-tech » et
+  // « Maison » échangeaient leur place selon le pays consulté.
+  const cats = Object.keys(parCat).filter((c) => NOMS_CATEGORIES[c])
+    .sort((a, b) => rangCategorie(a) - rangCategorie(b));
   // Une catégorie choisie absente du pays retombe sur « Tout » : sinon l'onglet
   // disparaîtrait de la liste en laissant le filtre actif, et l'écran semblerait
   // vide sans qu'aucune commande ne dise pourquoi.
