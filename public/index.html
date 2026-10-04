@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0c0d10">
+<title>Promos — toutes les offres au même endroit</title>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<header class="tete">
+  <div class="tete-in">
+    <div class="marque"><span class="pastille"></span><b>Promos</b></div>
+    <div class="comptes" id="comptes">chargement…</div>
+  </div>
+  <div class="barre">
+    <input id="recherche" type="search" placeholder="Chercher un produit, un marchand…" autocomplete="off">
+    <select id="tri">
+      <option value="remise">Meilleures remises</option>
+      <option value="recent">Plus récentes</option>
+      <option value="prix">Prix croissant</option>
+    </select>
+  </div>
+  <nav class="puces" id="puces"></nav>
+</header>
+
+<main>
+  <div id="bandeau" class="bandeau"></div>
+  <section id="liste" class="grille"></section>
+  <p id="vide" class="vide" hidden>Aucune offre ne correspond à ce filtre.</p>
+  <p id="plus" class="plus" hidden></p>
+</main>
+
+<footer class="pied">
+  <p id="mention"></p>
+  <p class="fresque" id="fraicheur"></p>
+  <p class="note">Les offres sont rassemblées depuis des flux publics (Dealabs, presse spécialisée, Google News). Aucune donnée n'est revendiquée : chaque offre renvoie à sa source, qui fait foi.</p>
+</footer>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

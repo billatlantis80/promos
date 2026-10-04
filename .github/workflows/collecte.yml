@@ -1,0 +1,50 @@
+name: Collecte des promos
+
+# Toutes les 5 minutes, un runner GitHub (gratuit sur un dépôt public) collecte
+# les offres, télécharge leurs visuels et publie le tout dans docs/ — servi
+# ensuite par GitHub Pages. Aucun serveur à nous, donc : plus besoin du NAS,
+# et l'application est joignable depuis n'importe quel pays d'Europe.
+#
+# Note honnête : GitHub ne garantit pas la minute exacte (les crons planifiés
+# peuvent être différés de quelques minutes sous charge, et un dépôt resté
+# 60 jours sans activité voit ses tâches planifiées désactivées — ce workflow
+# se réactive tout seul puisqu'il commite).
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: collecte-promos
+  cancel-in-progress: false
+
+jobs:
+  collecte:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Tests
+        run: node --test
+
+      - name: Collecter et publier
+        run: node collecteur.mjs --publier
+
+      - name: Commiter le site publié
+        run: |
+          git config user.name  "collecteur-promos"
+          git config user.email "collecteur-promos@users.noreply.github.com"
+          git add -A docs
+          if git diff --cached --quiet; then
+            echo "Rien de neuf depuis le dernier passage."
+          else
+            git commit -m "Collecte $(date -u +'%Y-%m-%d %H:%M UTC')"
+            git push
+          fi

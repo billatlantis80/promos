@@ -1,0 +1,5 @@
+Ce fichier empêche GitHub Pages d'appliquer Jekyll au site.
+
+Sans lui, Pages ignore les fichiers dont le nom commence par un souligné et
+peut recopier inutilement l'arborescence. On n'a ici que des fichiers statiques
+(HTML, CSS, JS, JSON, images) : un simple `_` vide suffit à le lui dire.

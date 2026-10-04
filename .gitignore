@@ -1,0 +1,8 @@
+# État local du hub : le collecteur le régénère, et le site publié a le sien
+# dans docs/offres.json. Pas la peine de versionner les deux.
+data/
+
+# Rien de généré à la main ici
+node_modules/
+*.log
+.DS_Store

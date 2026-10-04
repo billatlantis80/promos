@@ -1,0 +1,105 @@
+/* Application n°2 — feuille de style. Sombre, dense, lisible au pouce. */
+:root {
+  --fond: #0c0d10;
+  --carte: #14161b;
+  --carte-2: #1a1d24;
+  --bord: #262a33;
+  --texte: #eceef3;
+  --doux: #9aa1ae;
+  --accent: #ff8a3d;
+  --accent-2: #ffd166;
+  --vert: #3ddc84;
+  --rouge: #ff5c5c;
+  --rayon: 14px;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--fond);
+  color: var(--texte);
+  font: 15px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  padding-bottom: 40px;
+}
+
+/* ---------- En-tête ---------- */
+.tete {
+  position: sticky; top: 0; z-index: 10;
+  background: rgba(12,13,16,.94);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--bord);
+  padding: 10px 12px 0;
+}
+.tete-in { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.marque { display: flex; align-items: center; gap: 8px; font-size: 17px; letter-spacing: .2px; }
+.pastille { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 12px var(--accent); }
+.comptes { color: var(--doux); font-size: 12px; text-align: right; }
+.barre { display: flex; gap: 8px; margin: 10px 0; }
+#recherche {
+  flex: 1; min-width: 0; background: var(--carte); color: var(--texte);
+  border: 1px solid var(--bord); border-radius: 10px; padding: 10px 12px; font-size: 14px;
+}
+#recherche:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+#tri {
+  background: var(--carte); color: var(--texte); border: 1px solid var(--bord);
+  border-radius: 10px; padding: 10px 8px; font-size: 13px; max-width: 46%;
+}
+.puces { display: flex; gap: 6px; overflow-x: auto; padding: 0 0 10px; scrollbar-width: none; }
+.puces::-webkit-scrollbar { display: none; }
+.puce {
+  flex: 0 0 auto; background: var(--carte); color: var(--doux); border: 1px solid var(--bord);
+  border-radius: 999px; padding: 6px 12px; font-size: 13px; cursor: pointer; white-space: nowrap;
+}
+.puce.on { background: var(--accent); border-color: var(--accent); color: #1b1206; font-weight: 600; }
+.puce .n { opacity: .65; font-size: 11px; margin-left: 4px; }
+
+/* ---------- Bandeau d'information ---------- */
+.bandeau { margin: 12px; padding: 10px 12px; border-radius: var(--rayon); font-size: 13px; display: none; }
+.bandeau.on { display: block; }
+.bandeau.info { background: #16202b; border: 1px solid #24405a; color: #cfe4f7; }
+.bandeau.alerte { background: #2a1717; border: 1px solid #5a2626; color: #ffd4d4; }
+
+/* ---------- Grille d'offres ---------- */
+main { padding: 0 12px; }
+.grille { display: grid; gap: 12px; grid-template-columns: 1fr; }
+@media (min-width: 620px) { .grille { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 980px) { .grille { grid-template-columns: repeat(3, 1fr); } }
+
+.offre {
+  background: var(--carte); border: 1px solid var(--bord); border-radius: var(--rayon);
+  overflow: hidden; display: flex; flex-direction: column;
+}
+.offre .visuel {
+  height: 168px; background: var(--carte-2) center/contain no-repeat;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--doux); font-size: 12px; border-bottom: 1px solid var(--bord);
+}
+.offre .corps { padding: 11px 12px 12px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.offre h3 { margin: 0; font-size: 14.5px; font-weight: 600; line-height: 1.35; }
+.offre .ligne { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.etiquette {
+  font-size: 11.5px; padding: 3px 8px; border-radius: 999px;
+  background: var(--carte-2); border: 1px solid var(--bord); color: var(--doux);
+}
+.etiquette.marchand { color: var(--texte); font-weight: 600; }
+.remise { background: var(--accent); color: #1b1206; font-weight: 700; border: 0; }
+.remise.calculee { background: transparent; color: var(--accent-2); border: 1px dashed var(--accent-2); font-weight: 600; }
+.prix { font-size: 19px; font-weight: 700; letter-spacing: -.3px; }
+.prix .avant { font-size: 12.5px; font-weight: 400; color: var(--doux); text-decoration: line-through; margin-left: 6px; }
+.offre .bas { margin-top: auto; display: flex; align-items: center; gap: 8px; }
+.btn {
+  flex: 1; text-align: center; text-decoration: none; font-size: 14px; font-weight: 600;
+  padding: 10px 12px; border-radius: 11px; background: var(--accent); color: #1b1206;
+}
+.btn.ghost { background: transparent; color: var(--doux); border: 1px solid var(--bord); flex: 0 0 auto; font-weight: 500; }
+.quand { font-size: 11.5px; color: var(--doux); }
+
+/* ---------- Divers ---------- */
+.vide, .plus { text-align: center; color: var(--doux); margin: 26px 0; font-size: 14px; }
+.plus button {
+  background: var(--carte); color: var(--texte); border: 1px solid var(--bord);
+  border-radius: 11px; padding: 11px 18px; font-size: 14px; cursor: pointer;
+}
+.pied { margin: 26px 12px 0; padding-top: 16px; border-top: 1px solid var(--bord); color: var(--doux); font-size: 12px; }
+.pied p { margin: 0 0 8px; }
+.pied .note { opacity: .8; }
