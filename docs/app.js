@@ -579,6 +579,13 @@ const PART_AMAZON = 0.6;
  *  mesuré sur le cas polonais (16 Amazon pour 1 enseigne → 2 lignes). */
 const MELANGE_MIN = 24;
 
+/** Part des 40 % réservée à la presse quand des articles existent. Sans ce
+ *  quota, le plafond coupait toujours la queue du camp — donc tous les articles
+ *  de presse, puisqu'ils sont classés après les boutiques : les « quelque
+ *  annonce presse » demandées disparaissaient en totalité. Dix pour cent, c'est
+ *  « quelques-unes » : présent, jamais envahissant. */
+const QUOTA_PRESSE = 0.1;
+
 function melanger(liste, cmp) {
   // Chaque camp est trié AVANT d'alterner. Sans ça, un tri appliqué après coup
   // (par remise décroissante) remettait tous les Amazon en tête : le mélange
@@ -590,8 +597,10 @@ function melanger(liste, cmp) {
   // ont souvent deux prix réels, donc un meilleur rang au tri : sans ce
   // départage, la première page d'un Belge était faite de « lire le bon plan »
   // alors que l'objectif est de renvoyer vers les enseignes.
-  const autres = liste.filter((o) => !estAmazon(o))
-    .sort((a, b) => (estBonPlanPresse(a) ? 1 : 0) - (estBonPlanPresse(b) ? 1 : 0) || tri(a, b));
+  const reste = liste.filter((o) => !estAmazon(o));
+  const presse = reste.filter(estBonPlanPresse).sort(tri);
+  const boutiques = reste.filter((o) => !estBonPlanPresse(o)).sort(tri);
+  const autres = [...boutiques, ...presse];
   if (!amazon.length || !autres.length) return [...liste].sort(tri);
   const nAmazon = Math.min(amazon.length, Math.floor((autres.length * PART_AMAZON) / (1 - PART_AMAZON)));
   const nAutres = Math.min(autres.length, Math.round((nAmazon * (1 - PART_AMAZON)) / PART_AMAZON));
@@ -601,13 +610,23 @@ function melanger(liste, cmp) {
   // MELANGE_MIN, la liste ne se juge plus : on montre TOUT ce qu'on a, et
   // l'en-tête annonce la proportion réellement atteinte, sans la maquiller.
   if (nAmazon + nAutres < MELANGE_MIN) return [...liste].sort(tri);
+  // Alternance par arithmétique de rang. La version précédente était une
+  // boucle gloutonne qui pouvait s'arrêter avant la fin : la queue du camp des
+  // 40 % — souvent les articles de presse, désormais classés après les
+  // boutiques — disparaissait alors SANS erreur ni trace. Ici le nombre de
+  // lignes est exact par construction.
+  // Quota de presse : elle est minoritaire, mais jamais évincée en totalité.
+  const nPresse = presse.length ? Math.max(1, Math.min(presse.length, Math.round(nAutres * QUOTA_PRESSE))) : 0;
+  const nBoutiques = Math.min(boutiques.length, Math.max(0, nAutres - nPresse));
+  const autRetenues = [...boutiques.slice(0, nBoutiques), ...presse.slice(0, nPresse)];
+  const total = nAmazon + autRetenues.length;
   const sortie = [];
-  let i = 0; let j = 0;
-  while (i < nAmazon || j < nAutres) {
-    const vise = (sortie.length + 1) * PART_AMAZON;
-    if (i < nAmazon && (j >= nAutres || i < vise)) sortie.push(amazon[i++]);
-    else if (j < nAutres) sortie.push(autres[j++]);
-    else break;
+  let i = 0;
+  let j = 0;
+  for (let k = 0; k < total; k += 1) {
+    const veutAmazon = Math.round((k + 1) * PART_AMAZON) > i;
+    if (i < nAmazon && (veutAmazon || j >= autRetenues.length)) sortie.push(amazon[i++]);
+    else sortie.push(autRetenues[j++]);
   }
   return sortie;
 }

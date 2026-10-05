@@ -1,0 +1,26 @@
+import fs from 'node:fs';
+import vm from 'node:vm';
+const js = fs.readFileSync(new URL('../public/app.js', import.meta.url), 'utf8');
+const debut = js.indexOf('const REMISE_MIN');
+const fin = js.indexOf('/** Combien de bonnes promotions par pays');
+const ctx = vm.createContext({});
+const R = vm.runInContext(`${js.slice(debut, fin)}
+  ;({ estAmazon, estPromoVerifiee, estOffreEnseigne, estBonPlanPresse, estBonnePromo, dedoublonner, cleProduit, melanger })`, ctx);
+const brut = JSON.parse(fs.readFileSync(new URL('../docs/offres.json', import.meta.url), 'utf8'));
+const offres = Array.isArray(brut) ? brut : brut.offres;
+const p = process.argv[2] || 'ES';
+const l = offres.filter((o) => (o.pays || 'FR') === p && R.estBonnePromo(o));
+const amz = l.filter(R.estAmazon);
+console.log(`${p} : ${l.length} bonnes, dont ${amz.length} Amazon`);
+console.log('après dédoublonnage :', R.dedoublonner(l).length, '| dont Amazon', R.dedoublonner(l).filter(R.estAmazon).length);
+console.log('');
+console.log('5 premiers Amazon — clé produit :');
+for (const o of amz.slice(0, 5)) console.log(`   prix=${o.prix} clé="${R.cleProduit(o)}" | titre="${String(o.titre).slice(0, 60)}"`);
+console.log('');
+const cles = new Set(amz.map(R.cleProduit));
+console.log(`clés DISTINCTES parmi les Amazon de ${p} : ${cles.size}`);
+const c = {};
+for (const o of l) c[R.cleProduit(o)] = (c[R.cleProduit(o)] || 0) + 1;
+const top = Object.entries(c).sort((a, b) => b[1] - a[1]).slice(0, 4);
+console.log('clés les plus répétées :');
+for (const [k, v] of top) console.log(`   ${v}× "${k.slice(0, 70)}"`);

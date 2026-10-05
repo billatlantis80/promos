@@ -1,0 +1,32 @@
+import fs from 'node:fs';
+import vm from 'node:vm';
+const js = fs.readFileSync(new URL('../public/app.js', import.meta.url), 'utf8');
+const debut = js.indexOf('const REMISE_MIN');
+const fin = js.indexOf('/** Combien de bonnes promotions par pays');
+const ctx = vm.createContext({});
+const R = vm.runInContext(`${js.slice(debut, fin)}
+  ;({ estAmazon, estPromoVerifiee, estOffreEnseigne, estBonnePromo, melanger })`, ctx);
+const brut = JSON.parse(fs.readFileSync(new URL('../docs/offres.json', import.meta.url), 'utf8'));
+const offres = Array.isArray(brut) ? brut : brut.offres;
+const p = process.argv[2] || 'BE';
+const l = offres.filter((o) => (o.pays || 'FR') === p);
+console.log(`--- ${p} : ${l.length} offres au total ---`);
+const compte = (f) => l.filter(f).length;
+console.log('avec prix            :', compte((o) => o.prix != null));
+console.log('avec prixAvant       :', compte((o) => o.prixAvant != null));
+console.log('avec remise stockée  :', compte((o) => o.remise != null));
+console.log('avec temperature     :', compte((o) => o.temperature != null));
+console.log('Amazon (marchand)    :', compte(R.estAmazon));
+console.log('estPromoVerifiee     :', compte(R.estPromoVerifiee));
+console.log('estOffreEnseigne     :', compte(R.estOffreEnseigne));
+console.log('');
+console.log('Détail des promos vérifiées de', p, ':');
+for (const o of l.filter(R.estPromoVerifiee)) console.log(`   ${o.marchand} | ${o.remise}% | ${o.prix} <- ${o.prixAvant} | ${String(o.titre).slice(0, 55)}`);
+console.log('');
+console.log('Offres à DEUX prix réels mais remise stockée nulle :',
+  l.filter((o) => o.prix != null && o.prixAvant != null && o.prixAvant > o.prix && o.remise == null).length);
+console.log('');
+console.log('Sources des offres d’enseigne retenues :');
+const c = {};
+for (const o of l.filter(R.estOffreEnseigne)) c[o.marchand] = (c[o.marchand] || 0) + 1;
+for (const [k, v] of Object.entries(c).sort((a, b) => b[1] - a[1])) console.log(`   ${String(v).padStart(3)} ${k}`);
