@@ -82,36 +82,37 @@ fi
 
 git commit -q -m "Collecte $(date -u +'%Y-%m-%d %H:%M UTC')" || true
 
-# Le workflow GitHub pousse ici aussi : on se replace sur ses épaules d'abord.
-if ! $GIT pull -q --rebase --autostash origin main >/dev/null 2>&1; then
-  # docs/offres.json est un fichier GÉNÉRÉ : la version locale vient d'être
-  # recalculée à l'instant, c'est donc la plus fraîche. Un conflit dessus n'a
-  # rien à arbitrer — on garde la nôtre et on poursuit la synchronisation.
-  # (C'est exactement ce conflit qui a bloqué le dépôt quatorze heures.)
-  resolu=0
-  if [ -d .git/rebase-merge ] || [ -d .git/rebase-apply ]; then
-    if $GIT diff --name-only --diff-filter=U | grep -qx 'docs/offres.json'; then
-      $GIT checkout --ours -- docs/offres.json >/dev/null 2>&1 && $GIT add docs/offres.json >/dev/null 2>&1
-    fi
-    if [ -z "$($GIT diff --name-only --diff-filter=U)" ]; then
-      $GIT rebase --continue >/dev/null 2>&1 && resolu=1
-    fi
-  fi
-  if [ "$resolu" -ne 1 ]; then
-    # On ne laisse JAMAIS le dépôt au milieu d'un rebasage : c'est ce qui le
-    # condamnait à échouer à chaque passage suivant.
-    $GIT rebase --abort >/dev/null 2>&1 || true
-    alerte "⚠ Promos : synchronisation GitHub impossible — site local à jour, envoi en attente"
+# Synchronisation GitHub.
+#
+# Méthode, et pourquoi celle-là. La version précédente faisait
+# « git pull --rebase » puis « git push ». Deux défauts, tous deux mesurés :
+#
+#   1. UN CONFLIT LAISSAIT LE DÉPÔT COINCÉ. Les commits à rejouer ne portent que
+#      des fichiers GÉNÉRÉS (docs/offres.json, docs/img), recalculés à chaque
+#      passage — il n'y a donc rien à arbitrer, et pourtant le rebasage
+#      s'arrêtait, le passage suivant échouait pareil, et l'alerte repartait
+#      toutes les 5 minutes pendant quatorze heures.
+#   2. LE WORKFLOW GITHUB POUSSE AUSSI. Entre le moment où l'on lit l'origine et
+#      celui où l'on écrit, la référence bouge : « cannot lock ref », envoi
+#      refusé.
+#
+# D'où cette méthode : on se replace sur l'origine, on pose UN SEUL commit
+# par-dessus, on pousse. Un commit posé sur la pointe de l'origine part toujours
+# en avance rapide — il ne peut pas entrer en conflit. Et si la pointe a encore
+# bougé, on recommence : c'est une course, elle se règle en réessayant.
+for essai in 1 2 3; do
+  $GIT fetch -q origin main >/dev/null 2>&1 || { sleep 3; continue; }
+  $GIT reset --soft FETCH_HEAD >/dev/null 2>&1
+  $GIT add -A docs >/dev/null 2>&1
+  $GIT commit -q -m "Collecte $(date -u +'%Y-%m-%d %H:%M UTC')" >/dev/null 2>&1 || true
+  if $GIT push -q origin main >/dev/null 2>&1; then
+    # Tout est passé : on efface le souvenir de l'alerte, pour que la prochaine
+    # panne soit annoncée TOUT DE SUITE au lieu d'attendre 30 minutes.
+    rm -f /tmp/promos-alerte.txt
     exit 0
   fi
-fi
+  sleep 4
+done
 
-if ! $GIT push -q origin main >/dev/null 2>&1; then
-  alerte "⚠ Promos : envoi vers GitHub impossible — site local à jour, envoi en attente"
-  exit 0
-fi
-
-# Tout est passé : on efface le souvenir de l'alerte, pour que la prochaine
-# panne soit annoncée TOUT DE SUITE au lieu d'attendre 30 minutes.
-rm -f /tmp/promos-alerte.txt
+alerte "⚠ Promos : envoi vers GitHub impossible — site local à jour, envoi en attente"
 exit 0
