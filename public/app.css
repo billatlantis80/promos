@@ -179,6 +179,16 @@ body[data-eco="1"] .offre .visuel { display: none; }
 .etiquette.marchand { color: var(--texte); font-weight: 600; }
 .remise { background: var(--accent); color: var(--sur-accent); font-weight: 700; border: 0; }
 .remise.calculee { background: transparent; color: var(--accent-2); border: 1px dashed var(--accent-2); font-weight: 600; }
+/* L'économie en euros — le chiffre qui décide d'un achat. Bordure d'accent
+   plutôt que fond plein : sur les dix thèmes, un fond coloré n'a pas toujours
+   de quoi écrire dessus lisiblement. */
+.etiquette.econ { background: transparent; border-color: var(--accent-2); color: var(--accent-2); font-weight: 700; }
+/* Issue de secours quand aucune promotion vérifiée n'existe dans ce rayon. */
+#voirTout {
+  margin-top: 10px; padding: 10px 16px; border-radius: 10px; font-size: 14px;
+  border: 1px solid var(--accent); background: var(--accent); color: var(--sur-accent);
+  font-weight: 600; cursor: pointer;
+}
 /* Ligne du prix : le montant, groupé. */
 .prix {
   display: flex; align-items: center; gap: 8px;

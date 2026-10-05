@@ -82,6 +82,11 @@ const PAR_PAGE = 24;
 let etat = {
   offres: [], categorie: 'tout', marchand: 'tout', tri: 'remise', recherche: '',
   affichees: PAR_PAGE, vue: 'grille', eco: false, favoris: false, meta: {}, pays: 'tout',
+  // PORTÉE de la liste. « promos » est le DÉFAUT : l'application s'ouvre sur les
+  // bonnes promotions, pas sur un catalogue. C'est la raison d'être du produit —
+  // on ne montre que ce qui vaut le déplacement, et l'utilisateur qui veut tout
+  // voir le demande (dernier choix du sélecteur de tri).
+  portee: 'promos',
 };
 
 /* ---------- Mode d'affichage ----------
@@ -425,6 +430,40 @@ function ilYA(iso) {
   return `il y a ${Math.round(mn / 1440)} j`;
 }
 
+/* ---- Ce qu'est une BONNE promotion, et pourquoi ce n'est pas un avis ----
+ *
+ *  DEUX PRIX RÉELS affichés : le prix demandé ET son prix de référence. C'est la
+ *  seule preuve qu'on puisse montrer sur la carte — « 29,99 € au lieu de
+ *  89,99 € ». Un pourcentage écrit sans prix ne prouve rien : mesuré sur les
+ *  données réelles, le tri par pourcentage faisait remonter des « -99 % » qui
+ *  étaient « 99 % sRGB » dans le titre d'un écran d'occasion, et des « -70 % »
+ *  sans aucun prix.
+ *
+ *  ET au moins 15 % de remise. En dessous, ce n'est pas un bon plan, c'est un
+ *  prix : 61 offres du catalogue étaient entre 10 et 14 %, elles n'aident
+ *  personne à décider.
+ *
+ *  Ce que cette règle donne sur le catalogue réel : 315 offres, dont 98 % chez
+ *  Amazon, remise moyenne 35 %, économie moyenne 119 €. Peu de lignes, mais
+ *  toutes défendables — et c'est ce qui fait revenir l'utilisateur.
+ */
+const REMISE_MIN = 15;
+const estBonnePromo = (o) => o.prix != null && o.prixAvant != null && o.prixAvant > o.prix
+  && o.remise != null && o.remise >= REMISE_MIN;
+
+/** Combien de bonnes promotions par pays. C'est ce que l'utilisateur verra à
+ *  l'ouverture : annoncer « 544 offres » pour n'en montrer que 41 ferait croire
+ *  à un filtre cassé. */
+function promosParPays() {
+  const compte = {};
+  for (const o of etat.offres) {
+    if (!estBonnePromo(o)) continue;
+    const p = o.pays || 'FR';
+    compte[p] = (compte[p] || 0) + 1;
+  }
+  return compte;
+}
+
 /** Une offre passe-t-elle les filtres courants ? */
 function retenue(o) {
   // Une offre sans pays date d'avant ce filtre : toutes les sources de l'époque
@@ -432,6 +471,9 @@ function retenue(o) {
   if (etat.pays !== 'tout' && (o.pays || 'FR') !== etat.pays) return false;
   if (etat.categorie !== 'tout' && o.categorie !== etat.categorie) return false;
   if (etat.marchand !== 'tout' && o.marchand !== etat.marchand) return false;
+  // Portée : par défaut, SEULES les bonnes promotions passent (voir
+  // estBonnePromo). « Toutes les offres » reste accessible dans le sélecteur.
+  if (etat.portee === 'promos' && !estBonnePromo(o)) return false;
   if (etat.recherche) {
     const q = etat.recherche.toLowerCase();
     if (!(`${o.titre} ${o.marchand} ${o.categorie}`.toLowerCase().includes(q))) return false;
@@ -480,6 +522,11 @@ function carte(o) {
     o.remise != null
       ? `<span class="etiquette remise${o.remiseCalculee ? ' calculee' : ''}" title="${o.remiseCalculee ? 'Pourcentage calculé entre deux prix réels' : 'Pourcentage annoncé par la source'}">${o.remiseCalculee ? '≈ ' : ''}-${o.remise} %</span>`
       : '',
+    // Ce que l'utilisateur gagne, en euros. C'est le chiffre qui décide d'un
+    // achat — « économise 60 € » parle plus que « -67 % ».
+    (o.prix != null && o.prixAvant != null && o.prixAvant > o.prix)
+      ? `<span class="etiquette econ" title="Économie par rapport au prix de référence">économise ${euros(o.prixAvant - o.prix)}</span>`
+      : '',
     o.encoreEnListe === false
       ? `<span class="etiquette perime" title="Cette offre n'est plus dans la liste du jour : le prix affiché est celui du moment où tu l'as gardée de côté.">n’est plus dans la liste</span>`
       : '',
@@ -505,7 +552,7 @@ function carte(o) {
       ${prix}
       <div class="espace-fav">${etoile}</div>
       <div class="bas">
-        <a class="btn" href="${esc(lien)}" target="_blank" rel="noopener nofollow sponsored">${article ? 'Lire l’article' : 'Voir l’offre'}</a>
+        <a class="btn" href="${esc(lien)}" target="_blank" rel="noopener nofollow sponsored">${article ? 'Lire l’article' : (o.marchand === 'Amazon' ? 'Acheter sur Amazon' : 'Voir l’offre')}</a>
         <span class="quand">${quand}</span>
       </div>
     </div>
@@ -515,8 +562,12 @@ function carte(o) {
 /** Les offres du pays choisi — la base sur laquelle on annonce des nombres.
  *  Sans risque de double comptage : « tout » rend la liste telle quelle. */
 function offresDuPays() {
-  if (etat.pays === 'tout') return etat.offres;
-  return etat.offres.filter((o) => (o.pays || 'FR') === etat.pays);
+  const base = etat.pays === 'tout'
+    ? etat.offres
+    : etat.offres.filter((o) => (o.pays || 'FR') === etat.pays);
+  // Les compteurs suivent la PORTÉE : annoncer « Tout 544 » au-dessus d'une
+  // liste de 41 promotions ferait croire que l'affichage est cassé.
+  return etat.portee === 'promos' ? base.filter(estBonnePromo) : base;
 }
 
 function dessinerPuces() {
@@ -567,13 +618,21 @@ function compteParPays() {
 
 /** Codes des pays présents, du plus fourni au moins fourni. */
 function codesPays() {
-  const compte = compteParPays();
+  // On annonce des PROMOTIONS, pas des offres : c'est ce que l'utilisateur
+  // trouvera en entrant. Un « 544 » pour 41 lignes affichées ferait croire à une
+  // panne — c'est exactement l'erreur qu'on vient de corriger ailleurs, aux
+  // trois endroits où ce compte est affiché.
+  const compte = promosParPays();
   return Object.keys(compte).filter((c) => NOMS_PAYS[c]).sort((a, b) => compte[b] - compte[a]);
 }
 
 function optionsPays() {
-  const compte = compteParPays();
-  return [`<option value="tout">Tous les pays (${etat.offres.length})</option>`]
+  // On annonce des PROMOTIONS, pas des offres : c'est ce que l'utilisateur
+  // trouvera en entrant. Un « 544 » pour 41 lignes affichées ferait croire à une
+  // panne — c'est exactement l'erreur qu'on vient de corriger ailleurs, aux
+  // trois endroits où ce compte est affiché.
+  const compte = promosParPays();
+  return [`<option value="tout">Tous les pays (${etat.offres.filter(estBonnePromo).length})</option>`]
     .concat(codesPays().map((c) => `<option value="${esc(c)}">${esc(NOMS_PAYS[c])} (${compte[c]})</option>`))
     .join('');
 }
@@ -625,17 +684,21 @@ function demanderPays() {
   if (enregistre) return;
   const codes = codesPays();
   if (!codes.length) return;                 // pas de données : rien à demander
-  const compte = compteParPays();
+  // On annonce des PROMOTIONS, pas des offres : c'est ce que l'utilisateur
+  // trouvera en entrant. Un « 544 » pour 41 lignes affichées ferait croire à une
+  // panne — c'est exactement l'erreur qu'on vient de corriger ailleurs, aux
+  // trois endroits où ce compte est affiché.
+  const compte = promosParPays();
   const suggere = paysDetecte();
   // « Tous les pays d'Europe » vient EN PREMIER : c'est l'échappatoire, et une
   // échappatoire qu'on doit chercher en bas de liste n'en est plus une. Il est
   // présenté comme les pays : même apparence, même geste, rien à part.
   const items = [`<button class="pays-item" data-pays="tout">
-      <b>Tous les pays d’Europe</b><span>${etat.offres.length} offres</span>
+      <b>Tous les pays d’Europe</b><span>${etat.offres.filter(estBonnePromo).length} promos</span>
     </button>`];
   for (const c of codes) {
     items.push(`<button class="pays-item${c === suggere ? ' conseille' : ''}" data-pays="${esc(c)}">
-      <b>${esc(NOMS_PAYS[c])}</b><span>${compte[c]} offre${compte[c] > 1 ? 's' : ''}</span>
+      <b>${esc(NOMS_PAYS[c])}</b><span>${compte[c] || 0} promo${(compte[c] || 0) > 1 ? 's' : ''}</span>
     </button>`);
   }
   $('paysListe').innerHTML = items.join('');
@@ -668,22 +731,42 @@ function dessiner() {
   // le filtre marchait, mais rien à l'écran ne disait ce qui était sélectionné.
   marquerPuce();
   $('liste').innerHTML = liste.slice(0, etat.affichees).map(carte).join('');
-  $('vide').textContent = etat.favoris
-    ? 'Aucun favori pour l’instant. Touche l’étoile d’une offre pour la garder de côté.'
-    : 'Aucune offre ne correspond à ce filtre.';
   $('vide').hidden = liste.length > 0;
+  if (!liste.length && etat.portee === 'promos' && !etat.favoris) {
+    // Rien à montrer dans ce rayon ou ce pays : on le DIT, et on ouvre une porte
+    // plutôt que de laisser un écran vide sans issue.
+    $('vide').innerHTML = 'Aucune <b>promotion vérifiée</b> ici pour l’instant : nous n’affichons que les offres à deux prix réels, dont la remise est démontrable.'
+      + '<br><button id="voirTout">Voir toutes les offres</button>';
+    $('voirTout').addEventListener('click', () => {
+      etat.portee = 'tout'; etat.tri = 'remise';
+      $('tri').value = 'tout';
+      etat.affichees = PAR_PAGE;
+      dessinerPuces();
+      dessiner();
+    });
+  } else {
+    $('vide').textContent = etat.favoris
+      ? 'Aucun favori pour l’instant. Touche l’étoile d’une offre pour la garder de côté.'
+      : 'Aucune offre ne correspond à ce filtre.';
+  }
   const reste = liste.length - etat.affichees;
   $('plus').hidden = reste <= 0;
   $('plus').innerHTML = reste > 0 ? `<button id="btnPlus">Afficher ${Math.min(PAR_PAGE, reste)} offres de plus (${reste} restantes)</button>` : '';
   if (reste > 0) $('btnPlus').addEventListener('click', () => { etat.affichees += PAR_PAGE; dessiner(); });
 
   const total = etat.meta.total || etat.offres.length;
-  $('comptes').innerHTML = `${etat.meta.totalOffres ?? '—'} offres · ${etat.meta.totalVeille ?? '—'} veille<br>mis à jour ${esc(ilYA(etat.meta.genereLe || new Date().toISOString()))}`;
+  // L'en-tête dit ce qui est À L'ÉCRAN, pas la taille du catalogue : annoncer
+  // « 2 027 offres » au-dessus de 315 lignes ferait croire à un affichage cassé.
+  if (etat.portee === 'promos') {
+    const nb = etat.offres.filter(estBonnePromo).length;
+    $('comptes').innerHTML = `<b>${nb}</b> promotions vérifiées<br>mis à jour ${esc(ilYA(etat.meta.genereLe || new Date().toISOString()))}`;
+  } else {
+    $('comptes').innerHTML = `${etat.meta.totalOffres ?? '—'} offres · ${etat.meta.totalVeille ?? '—'} veille<br>mis à jour ${esc(ilYA(etat.meta.genereLe || new Date().toISOString()))}`;
+  }
   $('fraicheur').textContent = `Recensé le ${new Date(etat.meta.genereLe || Date.now()).toLocaleString('fr-FR')} — ${total} entrées.`;
   // Les outils sont rafraîchis ICI, en fin de rendu, et pas seulement au
-  // démarrage : le compteur de promotions dépend des filtres en cours (pays,
-  // rayon, recherche). Appelé une seule fois au lancement, il restait vide — les
-  // données n'étaient pas encore chargées — et affichait ensuite un nombre faux.
+  // démarrage : le compteur de favoris et l'état du mode économie dépendent de
+  // ce qui vient d'être dessiné.
   majOutils();
 }
 
@@ -736,7 +819,16 @@ function basculerFavori(id) {
 
 function brancher() {
   $('recherche').addEventListener('input', (e) => { etat.recherche = e.target.value.trim(); etat.affichees = PAR_PAGE; dessiner(); });
-  $('tri').addEventListener('change', (e) => { etat.tri = e.target.value; dessiner(); });
+  $('tri').addEventListener('change', (e) => {
+    // Le premier choix est une PORTÉE, pas un tri : il décide de ce qu'on
+    // montre. Les autres trient le catalogue entier.
+    const v = e.target.value;
+    etat.portee = v === 'promos' ? 'promos' : 'tout';
+    etat.tri = (v === 'promos' || v === 'tout') ? 'remise' : v;
+    etat.affichees = PAR_PAGE;
+    dessinerPuces();   // les compteurs d'onglets suivent la portée
+    dessiner();
+  });
   $('pays').addEventListener('change', (e) => {
     etat.pays = e.target.value; etat.affichees = PAR_PAGE;
     enregistrerPays();

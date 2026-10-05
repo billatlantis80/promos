@@ -22,8 +22,13 @@
     <select id="pays" aria-label="Pays des offres"></select>
   </div>
   <div class="outils">
+    <!-- Le premier choix n'est pas un TRI mais une PORTÉE : « Meilleures promos »
+         est ce que l'application montre À LA BASE — uniquement des offres à deux
+         prix réels, remise vérifiable. Les autres choix élargissent au catalogue
+         entier, pour qui veut tout voir. -->
     <select id="tri">
-      <option value="remise">Meilleures remises</option>
+      <option value="promos">Meilleures promos</option>
+      <option value="tout">Toutes les offres</option>
       <option value="recent">Plus récentes</option>
       <option value="prix">Prix croissant</option>
     </select>
