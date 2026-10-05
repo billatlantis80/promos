@@ -467,11 +467,31 @@ const REMISE_MIN = 15;
  */
 const CHALEUR_MIN = 100;
 
+/** Un pourcentage ANNONCÉ (et non calculé entre deux prix réels) ne vaut que
+ *  s'il est crédible. Au-delà de 90 %, ce n'est plus une remise : « 99 % sRGB »
+ *  dans le titre d'un écran d'occasion a déjà produit une fausse remise de
+ *  99 %, et l'offre est entrée dans les « bonnes promos » par cette porte. Un
+ *  faux pourcentage est pire que pas d'offre. */
+const REMISE_ANNONCEE_MAX = 90;
+const remiseCredible = (o) => o.remise != null && o.remise >= REMISE_MIN && o.remise <= REMISE_ANNONCEE_MAX;
+
+/** La remise qu'on peut MONTRER sur la carte, ou null.
+ *
+ *  Distinction nécessaire : une offre peut être légitime (score communautaire
+ *  478°, prix réel de 63,99 € chez un vrai marchand) et porter malgré tout un
+ *  faux pourcentage dans son titre — le Dell P2422H « 99 % sRGB » passait ainsi
+ *  avec « -99 % » écrit sur la carte. L'offre reste, le pourcentage faux part.
+ */
+function remiseMontrable(o) {
+  if (o.remise == null || o.remise < REMISE_MIN) return null;
+  return (o.remiseCalculee || o.remise <= REMISE_ANNONCEE_MAX) ? o.remise : null;
+}
+
 /** Un journal n'est pas une enseigne : « Le Parisien » vend du papier, pas des
  *  écouteurs. Sans ce crible, les rédactions (Le Parisien, Forbes, Les
  *  Numériques, HDblog, dslweb, Mac4Ever…) remplissaient les 40 % et
  *  l'étiquette « enseigne » devenait un mensonge. */
-const REDACTIONS = /(parisien|figaro|[ée]quipe|forbes|independent|mashable|estad|express|ginjfo|phototrend|labomaison|iphoneaddict|mac4ever|num[ée]rique|phonandroid|dslweb|hdblog|tuttotech|tomshw|tuttoandroid|presse|dealabs|hotukdeals|mydealz|chollometro|preisjaeger|journal|magazine|bloomberg|wired|verge|01net|frandroid|clubic|journaldugeek|numerama|presse-citron|tomshardware|\.fr\b|\.com\b|\.it\b|\.net\b|\.be\b|\.de\b|\.es\b|\.pt\b|\.pl\b|\.se\b|\.ie\b|\.uk\b|\.nl\b)/i;
+const REDACTIONS = /(parisien|figaro|[ée]quipe|forbes|independent|mashable|estad|express|ginjfo|phototrend|labomaison|iphoneaddict|mac4ever|watchgeneration|num[ée]rique|phonandroid|dslweb|hdblog|tuttotech|tomshw|tuttoandroid|presse|dealabs|hotukdeals|mydealz|chollometro|preisjaeger|journal|magazine|bloomberg|wired|verge|01net|frandroid|clubic|journaldugeek|numerama|presse-citron|tomshardware|\.fr\b|\.com\b|\.it\b|\.net\b|\.be\b|\.de\b|\.es\b|\.pt\b|\.pl\b|\.se\b|\.ie\b|\.uk\b|\.nl\b)/i;
 
 /** Noms de marchand qui ne désignent AUCUNE boutique : le nom de la source
  *  elle-même quand le flux ne dit rien, ou un domaine brut. */
@@ -499,11 +519,45 @@ function estOffreEnseigne(o) {
   const m = String(o.marchand).trim();
   if (!m || MARCHANDS_NON_BOUTIQUE.test(m) || REDACTIONS.test(m)) return false;
   if (o.categorieSource === 'enseigne') return true;              // page d'offres de l'enseigne
-  if (o.remise != null && o.remise >= REMISE_MIN) return true;    // remise annoncée par la source
+  if (remiseCredible(o)) return true;                             // remise annoncée par la source
   return o.temperature != null && o.temperature >= CHALEUR_MIN;   // score de la communauté
 }
 
-const estBonnePromo = (o) => estPromoVerifiee(o) || estOffreEnseigne(o);
+/** Étage 3 — la PRESSE, à la demande de l'utilisateur.
+ *
+ *  Un article de presse n'est PAS une enseigne : on ne l'étiquette jamais
+ *  comme telle, sinon l'étiquette ment. Mais quand il porte un prix réel ET une
+ *  remise annoncée ≥ 15 %, c'est un vrai bon plan — « les écouteurs Nothing Ear
+ *  (3) chutent à 96 € au lieu de 179 € ». Ces articles sont donc admis, marqués
+ *  « presse », et comptés dans les 40 % aux côtés des enseignes.
+ */
+function estBonPlanPresse(o) {
+  if (o.prix == null || !remiseCredible(o)) return false;
+  const m = String(o.marchand || '').trim();
+  // Le nom de la source (dealabs, pepper, presse…) n'est pas une signature :
+  // il ne dit pas qui a relevé l'offre, donc il n'entre pas ici.
+  if (!m || MARCHANDS_NON_BOUTIQUE.test(m)) return false;
+  return REDACTIONS.test(m);
+}
+
+const estBonnePromo = (o) => estPromoVerifiee(o) || estOffreEnseigne(o) || estBonPlanPresse(o);
+
+/** Clé de dédoublonnage : le même produit au même prix chez la même boutique
+ *  n'a pas à figurer deux fois. Cas réel : l'Allemagne et l'Autriche partagent
+ *  amazon.de — le même Fire TV Stick apparaissait deux fois de suite. */
+const cleProduit = (o) => `${String(o.titre || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim().slice(0, 90)}|${o.prix}`;
+
+function dedoublonner(liste) {
+  const vus = new Set();
+  const sortie = [];
+  for (const o of liste) {
+    const k = cleProduit(o);
+    if (vus.has(k)) continue;
+    vus.add(k);
+    sortie.push(o);
+  }
+  return sortie;
+}
 
 /*  MÉLANGE 60 % / 40 % — décision du propriétaire du produit : la majorité des
  *  résultats doit pointer chez Amazon (lien direct, commissions), et 40 % vers
@@ -525,10 +579,20 @@ const PART_AMAZON = 0.6;
  *  mesuré sur le cas polonais (16 Amazon pour 1 enseigne → 2 lignes). */
 const MELANGE_MIN = 24;
 
-function melanger(liste) {
-  const amazon = liste.filter(estAmazon);
-  const autres = liste.filter((o) => !estAmazon(o));
-  if (!amazon.length || !autres.length) return liste;
+function melanger(liste, cmp) {
+  // Chaque camp est trié AVANT d'alterner. Sans ça, un tri appliqué après coup
+  // (par remise décroissante) remettait tous les Amazon en tête : le mélange
+  // existait dans les données et disparaissait à l'écran. Mesuré sur le site
+  // publié : vingt cartes Amazon d'affilée sous un en-tête annonçant 60/40.
+  const tri = cmp || (() => 0);
+  const amazon = liste.filter(estAmazon).sort(tri);
+  // Dans le camp des 40 %, les BOUTIQUES passent avant la presse. Les articles
+  // ont souvent deux prix réels, donc un meilleur rang au tri : sans ce
+  // départage, la première page d'un Belge était faite de « lire le bon plan »
+  // alors que l'objectif est de renvoyer vers les enseignes.
+  const autres = liste.filter((o) => !estAmazon(o))
+    .sort((a, b) => (estBonPlanPresse(a) ? 1 : 0) - (estBonPlanPresse(b) ? 1 : 0) || tri(a, b));
+  if (!amazon.length || !autres.length) return [...liste].sort(tri);
   const nAmazon = Math.min(amazon.length, Math.floor((autres.length * PART_AMAZON) / (1 - PART_AMAZON)));
   const nAutres = Math.min(autres.length, Math.round((nAmazon * (1 - PART_AMAZON)) / PART_AMAZON));
   // Un pays qui manque d'un côté ne doit pas être puni deux fois. Mesuré sur
@@ -536,7 +600,7 @@ function melanger(liste) {
   // d'enseigne — tenir la proportion n'y laissait que 2 lignes à l'écran. Sous
   // MELANGE_MIN, la liste ne se juge plus : on montre TOUT ce qu'on a, et
   // l'en-tête annonce la proportion réellement atteinte, sans la maquiller.
-  if (nAmazon + nAutres < MELANGE_MIN) return liste;
+  if (nAmazon + nAutres < MELANGE_MIN) return [...liste].sort(tri);
   const sortie = [];
   let i = 0; let j = 0;
   while (i < nAmazon || j < nAutres) {
@@ -562,13 +626,15 @@ function promosParPays() {
   // en montrer 73 ferait croire à une panne, et c'est exactement l'écart qu'on
   // vient de supprimer partout où ce nombre est écrit.
   const compte = {};
-  for (const p of Object.keys(parts)) compte[p] = melanger(parts[p]).length;
+  // Même dédoublonnage et même mélange que l'affichage : un compteur qui
+  // annonce plus de lignes qu'on n'en peut voir est un compteur qui ment.
+  for (const p of Object.keys(parts)) compte[p] = melanger(dedoublonner(parts[p])).length;
   return compte;
 }
 
 /** Ce que l'application annonce à l'ouverture : toutes langues, tous pays —
  *  mais déjà passé au mélange, donc identique au défilement qui suivra. */
-const totalPromos = () => melanger(etat.offres.filter(estBonnePromo)).length;
+const totalPromos = () => melanger(dedoublonner(etat.offres.filter(estBonnePromo))).length;
 
 /** Une offre passe-t-elle les filtres courants ? */
 function retenue(o) {
@@ -587,20 +653,23 @@ function retenue(o) {
   return true;
 }
 
-function triees(liste) {
-  const l = [...liste];
+/** Le comparateur du tri courant. Extrait de « triees » parce que le MÉLANGE en
+ *  a besoin : il trie chaque camp séparément avant d'alterner. */
+function comparateur() {
+  if (etat.tri === 'prix') return (a, b) => (a.prix ?? 1e9) - (b.prix ?? 1e9) || (b.remise || 0) - (a.remise || 0);
+  if (etat.tri === 'recent') return (a, b) => new Date(b.date) - new Date(a.date);
   // Tri par remise : les promos à DEUX PRIX RÉELS passent devant les offres
   // d'enseigne — leur pourcentage est démontrable, il n'est pas seulement
   // annoncé. À qualité égale, la remise décide, puis le score de la
   // communauté, puis la fraîcheur. Sans ce premier critère, une remise
   // annoncée de 75 % passait devant une remise réelle de 67 %.
-  if (etat.tri === 'remise') l.sort((a, b) => (estPromoVerifiee(b) ? 1 : 0) - (estPromoVerifiee(a) ? 1 : 0)
-    || (b.remise || 0) - (a.remise || 0) || (b.temperature || 0) - (a.temperature || 0)
-    || new Date(b.date) - new Date(a.date));
-  else if (etat.tri === 'prix') l.sort((a, b) => (a.prix ?? 1e9) - (b.prix ?? 1e9) || (b.remise || 0) - (a.remise || 0));
-  else l.sort((a, b) => new Date(b.date) - new Date(a.date));
-  return l;
+  return (a, b) => (estPromoVerifiee(b) ? 1 : 0) - (estPromoVerifiee(a) ? 1 : 0)
+    || (remiseMontrable(b) || 0) - (remiseMontrable(a) || 0)
+    || (b.temperature || 0) - (a.temperature || 0)
+    || new Date(b.date) - new Date(a.date);
 }
+
+function triees(liste) { return [...liste].sort(comparateur()); }
 
 function carte(o) {
   // Les visuels passent par NOTRE serveur (même origine) : servis directement
@@ -632,14 +701,20 @@ function carte(o) {
     // les meilleures offres. L'afficher rend la sélection visible et vérifiable.
     o.temperature != null ? `<span class="etiquette chaud" title="Score de la communauté Dealabs">${o.temperature}°</span>` : '',
     `<span class="etiquette">${esc(NOMS_CATEGORIES[o.categorie] || o.categorie)}</span>`,
-    o.remise != null
-      ? `<span class="etiquette remise${o.remiseCalculee ? ' calculee' : ''}" title="${o.remiseCalculee ? 'Pourcentage calculé entre deux prix réels' : 'Pourcentage annoncé par la source'}">${o.remiseCalculee ? '≈ ' : ''}-${o.remise} %</span>`
+    remiseMontrable(o) != null
+      ? `<span class="etiquette remise${o.remiseCalculee ? ' calculee' : ''}" title="${o.remiseCalculee ? 'Pourcentage calculé entre deux prix réels' : 'Pourcentage annoncé par la source'}">${o.remiseCalculee ? '≈ ' : ''}-${remiseMontrable(o)} %</span>`
       : '',
     // Une offre d'enseigne SANS remise chiffrée : on le DIT. Laisser croire à
     // un pourcentage qu'on n'a pas pu vérifier serait exactement le défaut
     // qu'on a passé la journée à corriger.
     (estOffreEnseigne(o) && !estPromoVerifiee(o))
       ? `<span class="etiquette" title="Prix réel et marchand affichés ; cette enseigne ne publie pas de prix barré, donc aucune remise n'est chiffrée.">prix réel</span>`
+      : '',
+    // Un article de PRESSE est nommé comme tel. Le compter comme une enseigne
+    // ferait croire que « Le Parisien » vend des écouteurs ; le taire priverait
+    // l'utilisateur d'un vrai bon plan (« 96 € au lieu de 179 € »).
+    (estBonPlanPresse(o) && !estPromoVerifiee(o))
+      ? `<span class="etiquette" title="Bon plan relevé par la presse : prix réel affiché et remise annoncée par l’article.">presse</span>`
       : '',
     // Ce que l'utilisateur gagne, en euros. C'est le chiffre qui décide d'un
     // achat — « économise 60 € » parle plus que « -67 % ».
@@ -658,6 +733,13 @@ function carte(o) {
   const prix = montant ? `<div class="prix"><span class="montant">${montant}</span></div>` : '';
   const lien = lienAffilie(o.lienMarchand || o.lienPage, o.marchand);
   const article = o.type === 'article';
+  // Le bouton dit OÙ il emmène. « Voir l'offre » pour tout le monde obligeait
+  // l'utilisateur à deviner s'il allait chez Amazon, chez Coolblue ou sur un
+  // article de presse.
+  const libelle = article ? 'Lire l’article'
+    : (estAmazon(o) ? 'Acheter sur Amazon'
+      : (estOffreEnseigne(o) ? `Voir chez ${esc(o.marchand)}`
+        : (estBonPlanPresse(o) ? 'Lire le bon plan' : 'Voir l’offre')));
   // Pour une offre sortie de la liste, on date la MISE DE CÔTÉ et non la
   // parution : c'est ce qui dit à l'utilisateur ce qu'il a sous les yeux.
   const quand = o.encoreEnListe === false
@@ -671,7 +753,7 @@ function carte(o) {
       ${prix}
       <div class="espace-fav">${etoile}</div>
       <div class="bas">
-        <a class="btn" href="${esc(lien)}" target="_blank" rel="noopener nofollow sponsored">${article ? 'Lire l’article' : (estAmazon(o) ? 'Acheter sur Amazon' : (estOffreEnseigne(o) ? `Voir chez ${esc(o.marchand)}` : 'Voir l’offre'))}</a>
+        <a class="btn" href="${esc(lien)}" target="_blank" rel="noopener nofollow sponsored">${libelle}</a>
         <span class="quand">${quand}</span>
       </div>
     </div>
@@ -687,8 +769,12 @@ function offresDuPays() {
   // Les compteurs suivent la PORTÉE : annoncer « Tout 544 » au-dessus d'une
   // liste de 41 promotions ferait croire que l'affichage est cassé.
   // Le mélange 60/40 s'applique ICI, au seul endroit qui décide de ce qui
-  // s'affiche : les puces, les sélecteurs et l'en-tête en dérivent tous.
-  return etat.portee === 'promos' ? melanger(base.filter(estBonnePromo)) : base;
+  // s'affiche : les puces, les sélecteurs, l'en-tête ET la liste en dérivent
+  // tous. On dédoublonne AVANT de mélanger, sinon un même produit partagé par
+  // deux pays (Allemagne et Autriche sur amazon.de) comptait double.
+  return etat.portee === 'promos'
+    ? melanger(dedoublonner(base.filter(estBonnePromo)), comparateur())
+    : base;
 }
 
 function dessinerPuces() {
@@ -845,8 +931,17 @@ function dessinerBandeau() {
 
 function dessiner() {
   // En mode favoris, la source n'est plus le flux du jour mais le carnet.
-  const source = etat.favoris ? listeFavoris() : etat.offres;
-  const liste = triees(source.filter(retenue));
+  // La source est la liste DÉJÀ MÉLANGÉE du pays choisi (voir offresDuPays).
+  // Avant, la liste partait de `etat.offres` : le mélange n'alimentait que les
+  // compteurs, et l'écran montrait vingt Amazon d'affilée sous un en-tête qui
+  // annonçait 60/40. C'était le mensonge le plus visible de l'application.
+  const source = etat.favoris ? listeFavoris() : offresDuPays();
+  // En portée « promos », l'ordre est DÉJÀ établi par le mélange (chaque camp
+  // trié, puis alterné). Le retrier ici regrouperait les Amazon en tête et
+  // détruirait l'alternance — exactement ce qui produisait le mur.
+  const liste = etat.favoris || etat.portee !== 'promos'
+    ? triees(source.filter(retenue))
+    : source.filter(retenue);
   // Le surlignage de la catégorie se replace à CHAQUE rendu. Les puces n'étant
   // construites qu'au démarrage, la couleur restait sinon figée sur « Tout » :
   // le filtre marchait, mais rien à l'écran ne disait ce qui était sélectionné.
@@ -884,11 +979,13 @@ function dessiner() {
     // Amazon est majoritaire, et d'où viennent les autres lignes. Le nombre de
     // pays était juste, mais muet sur la composition — c'était ça, le problème
     // de compréhension des paramètres de recherche.
-    const melange = melanger(etat.offres.filter(estBonnePromo));
+    // Dédoublonné, comme la liste : le nombre annoncé doit être atteignable en
+    // faisant défiler l'écran.
+    const melange = melanger(dedoublonner(etat.offres.filter(estBonnePromo)));
     const nb = melange.length;
     const nAmz = melange.filter(estAmazon).length;
     const pcAmz = nb ? Math.round((nAmz / nb) * 100) : 0;
-    $('comptes').innerHTML = `<b>${nb}</b> bonnes promos<br>≈ ${pcAmz} % Amazon · ${100 - pcAmz} % autres enseignes<br>mis à jour ${esc(ilYA(etat.meta.genereLe || new Date().toISOString()))}`;
+    $('comptes').innerHTML = `<b>${nb}</b> bonnes promos<br>≈ ${pcAmz} % Amazon · ${100 - pcAmz} % enseignes &amp; presse<br>mis à jour ${esc(ilYA(etat.meta.genereLe || new Date().toISOString()))}`;
   } else {
     $('comptes').innerHTML = `${etat.meta.totalOffres ?? '—'} offres · ${etat.meta.totalVeille ?? '—'} veille<br>mis à jour ${esc(ilYA(etat.meta.genereLe || new Date().toISOString()))}`;
   }
