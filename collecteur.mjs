@@ -233,6 +233,66 @@ const SOURCES_AMAZON = [
   { id: 'amazon-be-nl', nom: 'Amazon', type: 'amazon', pays: 'BE', langue: 'nl', reposMin: 120, url: 'https://www.amazon.com.be/s?k=aanbieding&language=nl_BE&rh=p_n_deal_type%3A210770357031' },
 ];
 
+/* VENTES FLASH DU JOUR — la page « goldbox » de chaque Amazon.
+ *
+ *  Demandé, et c'est la MEILLEURE porte d'Amazon : contrairement à l'accueil
+ *  (rendu 202, vide) et à /deals (mur JavaScript), cette page-ci répond 200 et
+ *  EMBARQUE ses offres en JSON. On y lit, pour chaque vente flash, le prix
+ *  flash, le prix courant, le libellé « Offre à durée limitée » et l'état de
+ *  l'offre. Deux prix RÉELS : la remise se calcule, sans dépendre de la langue,
+ *  là où la page de recherche ne donnait le plus souvent aucun prix de
+ *  référence.
+ *
+ *  Mesuré : 29 ventes flash sur amazon.com.be et amazon.fr, 27 sur amazon.de.
+ *
+ *  L'Autriche n'a pas d'Amazon : on y achète sur amazon.de (amazon.at y
+ *  redirige). Le Portugal est dans la même situation avec amazon.es. Les deux
+ *  sont donc servis par le domaine qui les livre VRAIMENT, mais étiquetés avec
+ *  leur propre pays — c'est le pays de l'acheteur qui compte, pas le siège du
+ *  site.
+ *
+ *  Les repos sont DÉCALÉS les uns des autres (241, 243, 245…). Ils ne se
+ *  déclenchent donc pas tous dans la même passe : la collecte est tuée à 120 s,
+ *  et douze pages de 400 Ko d'un coup la feraient tomber. Le décalage les
+ *  désynchronise sans qu'aucun ne soit servi moins souvent.
+ */
+const sourceFlash = (pays, domaine, langue, entete, decalage) => ({
+  id: `flash-${pays.toLowerCase()}`,
+  nom: 'Amazon', type: 'flash', pays,
+  // `langue` reste un CODE (« fr », « de »…) : c'est lui qui choisit le filtre
+  // de mots du pays, et un test vérifie qu'il en existe un. Il ne faut donc PAS
+  // y mettre la valeur d'en-tête HTTP, qui est une autre chose.
+  langue,
+  // L'en-tête envoyé à Amazon, lui, est plus précis : il porte la variante
+  // régionale et les langues de secours.
+  entete,
+  reposMin: 240 + decalage,
+  url: `https://www.${domaine}/gp/goldbox`,
+});
+
+const SOURCES_VENTES_FLASH = [
+  // Décalage de 25 MINUTES entre deux pays, pas de 2 minutes.
+  //   Mesuré : avec des décalages serrés, les douze pages tombaient dans la même
+  //   passe, pesaient sur le budget de 45 s réservé aux flux, et DEUX d'entre
+  //   elles (l'Allemagne et l'Espagne) ont été abandonnées en route — marquées
+  //   « vues » mais sans une seule offre, donc muettes pour quatre heures. Un
+  //   décalage large garantit qu'elles ne se rejoignent plus jamais.
+  sourceFlash('BE', 'amazon.com.be', 'fr', 'fr-BE,fr;q=0.9,en;q=0.8', 0),
+  sourceFlash('FR', 'amazon.fr', 'fr', 'fr-FR,fr;q=0.9', 25),
+  sourceFlash('DE', 'amazon.de', 'de', 'de-DE,de;q=0.9', 50),
+  sourceFlash('AT', 'amazon.de', 'de', 'de-DE,de;q=0.9', 75),
+  sourceFlash('GB', 'amazon.co.uk', 'en', 'en-GB,en;q=0.9', 100),
+  sourceFlash('IE', 'amazon.ie', 'en', 'en-IE,en;q=0.9', 125),
+  sourceFlash('ES', 'amazon.es', 'es', 'es-ES,es;q=0.9', 150),
+  // Le Portugal n'a pas d'Amazon : on y achète sur amazon.es, dont les pages
+  // sont en espagnol. Le pays reste PT — c'est le pays de l'acheteur.
+  sourceFlash('PT', 'amazon.es', 'pt', 'es-ES,es;q=0.9', 175),
+  sourceFlash('IT', 'amazon.it', 'it', 'it-IT,it;q=0.9', 200),
+  sourceFlash('NL', 'amazon.nl', 'nl', 'nl-NL,nl;q=0.9', 225),
+  sourceFlash('SE', 'amazon.se', 'sv', 'sv-SE,sv;q=0.9', 250),
+  sourceFlash('PL', 'amazon.pl', 'pl', 'pl-PL,pl;q=0.9', 275),
+];
+
 /* Noms des pays, pour l'affichage. Un code seul (« BE ») ne dit rien à personne.
    Exporté : les tests comparent cette liste à celle de l'interface, parce que
    deux listes recopiées finissent toujours par diverger en silence. */
@@ -425,7 +485,7 @@ function lienReel(lien) {
 /** Toutes les sources, France et Europe. Exporté pour que les tests vérifient
     que chacune déclare bien un pays — une source sans pays enverrait ses offres
     dans le mauvais pays, sans que rien ne le signale. */
-export const TOUTES_SOURCES = [...SOURCES, ...SOURCES_ENSEIGNES, ...SOURCES_AMAZON, ...VEILLE_PAYS, ...VEILLE_BING, ...VEILLE_ENSEIGNES];
+export const TOUTES_SOURCES = [...SOURCES, ...SOURCES_ENSEIGNES, ...SOURCES_AMAZON, ...SOURCES_VENTES_FLASH, ...VEILLE_PAYS, ...VEILLE_BING, ...VEILLE_ENSEIGNES];
 
 /** Exportés pour les TESTS : le filtre par langue et l'anti-tuile se vérifient
  *  en les exécutant, pas en relisant le fichier. */
@@ -434,7 +494,7 @@ export { MOTS_PROMO, motsPromo, ecarterTuiles, veilleParPays, lienReel, dedupliq
    (outils/verificateur-categories.mjs) et les tests rejouent `famille()` sur
    les offres publiées. Un contrôle qui recopierait la table des mots serait un
    contrôle qui vérifie sa propre copie — donc rien du tout. */
-export { famille, FAMILLES, CATEGORIES_SOURCES, categorieDeSource, sansAccents, offresEnseigne, offresAmazon, compterMots, MARQUES };
+export { famille, FAMILLES, MARQUES, MOTS_FORTS, CATEGORIES_SOURCES, categorieDeSource, sansAccents, offresEnseigne, offresAmazon, offresVenteFlash, compterMots, remise, pourcentEcrit, SOURCES_VENTES_FLASH };
 
 /** Recherches Google News : un flux par famille de produits. Gratuit, sans clé. */
 const RECHERCHES = [
@@ -821,6 +881,63 @@ const MARQUES = {
   auto: ['michelin', 'continental', 'castrol', 'bosch auto'],
 };
 
+/** MOTS FORTS — le mot d'APPAREIL prime sur la marque.
+ *
+ *  Règle appliquée, demandée explicitement : un appareil électronique va en
+ *  high-tech, l'électroménager va en maison, l'électronique de beauté va en béauté.
+ *
+ *  Pourquoi une table à part : une MARQUE ne dit pas la famille d'un produit.
+ *  Samsung fait des téléphones (high-tech) ET des réfrigérateurs (maison) ;
+ *  Braun des épilateurs (beauté) ET des robots de cuisine (maison) ; Bosch des
+ *  perceuses (bricolage) ET des lave-linge (maison). Tant que la marque décidait
+ *  seule, « Samsung Réfrigérateur » partait en high-tech.
+ *
+ *  Ces mots sont donc examinés AVANT tout le reste — avant les marques, avant la
+ *  catégorie de la source : dès qu'un appareil est NOMMÉ, c'est lui qui tranche.
+ */
+const MOTS_FORTS = {
+  // ÉLECTROMÉNAGER → maison
+  maison: [
+    'refrigerateur', 'frigo', 'frigorifique', 'congelateur', 'kuhlschrank', 'koelkast', 'frigorifico', 'frigorifero', 'lodowka', 'kylskap', 'gefrierschrank', 'vriezer',
+    'lave-linge', 'lavelinge', 'machine a laver', 'waschmaschine', 'wasmachine', 'lavatrice', 'lavadora', 'pralka', 'tvatmaskin',
+    'lave-vaisselle', 'lavevaisselle', 'geschirrspuler', 'vaatwasser', 'lavastoviglie', 'lavavajillas', 'zmywarka', 'diskmaskin',
+    'seche-linge', 'sechelinge', 'trockner', 'droger', 'asciugatrice', 'secadora', 'suszarka', 'torktumlare',
+    'aspirateur', 'staubsauger', 'stofzuiger', 'aspirapolvere', 'aspirador', 'odkurzacz', 'dammsugare',
+    'micro-ondes', 'microondes', 'mikrowelle', 'microgolf', 'microonde', 'microondas', 'mikrofalowka', 'mikrovagsugn',
+    'four encastrable', 'four electrique', 'backofen', 'ofen', 'forno', 'horno', 'piekarnik', 'ugn',
+    'cafetiere', 'kaffeemaschine', 'koffiezetapparaat', 'macchina del caffe', 'maquina de cafe', 'ekspres do kawy', 'kaffemaskin',
+    'bouilloire', 'wasserkocher', 'waterkoker', 'bollitore', 'hervidor', 'czajnik', 'vattenkokare',
+    'friteuse', 'fritteuse', 'airfryer', 'fritadeira', 'frytkownica', 'heissluftfritteuse',
+    'cocotte-minute', 'autocuiseur', 'schnellkochtopf', 'cocotte minute',
+    'purificateur d air', 'luftreiniger', 'luchtzuiveraar', 'purificador de aire',
+  ],
+  // ÉLECTRONIQUE DE BEAUTÉ → beauté
+  beaute: [
+    'epilateur', 'epilator', 'epilierer', 'ontharingsapparaat', 'depiladora', 'epilatore', 'depilatore',
+    'rasoir electrique', 'rasoir', 'elektrorasierer', 'scheerapparaat', 'maquina de afeitar', 'rasoio elettrico', 'golarka', 'rakapparat',
+    'tondeuse a cheveux', 'tondeuse barbe', 'haarschneider', 'haartrimmer', 'clipper',
+    'seche-cheveux', 'seche cheveux', 'sechecheveux', 'haartrockner', 'haardroger', 'asciugacapelli', 'secador de pelo', 'suszarka do wlosow', 'fon',
+    'lisseur', 'lisseur de cheveux', 'haarglatter', 'stijltang', 'piastra per capelli', 'plancha de pelo', 'prostownica', 'plattang',
+    'brosse a dents electrique', 'brosse a dents', 'elektrische zahnburste', 'zahnburste', 'elektrische tandenborstel', 'cepillo de dientes electrico', 'spazzolino elettrico', 'szczoteczka elektryczna', 'eltandborste',
+    'brosse soufflante', 'soin du visage', 'appareil de massage', 'masseur',
+  ],
+  // APPAREIL TECHNIQUE → high-tech
+  tech: [
+    'smartphone', 'telephone portable', 'handy', 'smartfon', 'telefoon', 'telefono', 'telefone',
+    'ordinateur portable', 'pc portable', 'laptop', 'notebook', 'ultrabook', 'chromebook',
+    'tablette', 'tablet', 'tableta', 'tabletka', 'surfplatta',
+    'televiseur', 'fernseher', 'televisie', 'televisor', 'televisore', 'telewizor', 'tv-apparat', 'smart tv', 'television',
+    'montre connectee', 'smartwatch', 'apple watch', 'fitbit', 'garmin',
+    'casque audio', 'casque bluetooth', 'ecouteurs', 'earbuds', 'airpods', 'kopfhorer', 'hoofdtelefoon', 'auriculares', 'cuffie', 'sluchawki', 'horlurar',
+    'enceinte connectee', 'enceinte bluetooth', 'barre de son', 'soundbar', 'lautsprecher', 'luidspreker', 'altavoz', 'glosnik', 'hogtalare',
+    'imprimante', 'drucker', 'printer', 'impressora', 'drukarka', 'skrivare',
+    'appareil photo', 'appareil photo numerique', 'action cam', 'camera', 'camera de surveillance', 'fotocamera',
+    'drone', 'routeur', 'router', 'disque dur', 'ssd', 'nvme', 'carte graphique', 'barrette memoire',
+    'console de jeu', 'spielekonsole', 'spelcomputer', 'consola', 'konsola', 'spelkonsol', 'playstation', 'manette',
+    'ecran d ordinateur', 'moniteur', 'monitor', 'ecran pc',
+  ],
+};
+
 /** Normalisation de comparaison : accents, apostrophes, lettres spéciales.
  *
  *  Trois raisons, toutes constatées par un test qui échouait :
@@ -875,6 +992,34 @@ const FAMILLES_NORM = Object.fromEntries(
   ]),
 );
 
+/* Placé ICI, et pas avec MOTS_FORTS : ces tables ont besoin de `sansAccents`,
+ *  défini juste au-dessus. Les déclarer plus haut les ferait évaluer avant lui
+ *  → erreur de zone morte temporelle au chargement du module. */
+const MOTS_FORTS_NORM = Object.fromEntries(
+  Object.entries(MOTS_FORTS).map(([f, mots]) => [f, mots.map((m) => sansAccents(m).toLowerCase())]),
+);
+
+/** La famille indiquée par un mot d'appareil NOMMÉ, ou null si le titre n'en
+ *  nomme aucun.
+ *
+ *  Le départage se fait par la LONGUEUR TOTALE des mots trouvés, et non par leur
+ *  nombre : c'est ce qui fait gagner le terme le plus spécifique. Sans cela,
+ *  « Haartrockner » (sèche-cheveux, beauté) perdait contre « trockner »
+ *  (sèche-linge, maison) qu'il contient — un point partout, et l'ordre de la
+ *  table décidait. Avec la longueur, 12 caractères battent 8.
+ */
+function familleDAppareil(texteBas) {
+  let choisie = null, score = 0;
+  for (const [fam, mots] of Object.entries(MOTS_FORTS_NORM)) {
+    const trouves = mots.filter((m) => (m.length <= 3
+      ? new RegExp('(^|[^a-z0-9à-ÿ])' + m + '([^a-z0-9à-ÿ]|$)', 'i').test(texteBas)
+      : texteBas.includes(m)));
+    const poids = trouves.reduce((a, m) => a + Math.max(3, m.length), 0);
+    if (poids > score) { score = poids; choisie = fam; }
+  }
+  return choisie;
+}
+
 /* Comment une offre est classée — l'ordre des preuves est ici, et nulle part
  * ailleurs. Trois sources, de la plus forte à la plus faible :
  *
@@ -893,6 +1038,9 @@ const FAMILLES_NORM = Object.fromEntries(
  */
 function famille(texte, categorieSource) {
   const bas = sansAccents(String(texte || '')).toLowerCase();
+  // 0. L'appareil NOMMÉ tranche en premier (règle demandée). Voir MOTS_FORTS.
+  const appareil = familleDAppareil(bas);
+  if (appareil) return appareil;
   let meilleur = 'autre', score = 0;
   for (const [fam, mots] of Object.entries(FAMILLES_NORM)) {
     const n = compterMots(mots, bas);
@@ -978,24 +1126,100 @@ const versPrix = (texte) => {
   return Number.isFinite(v) && v > 0 && v < 100000 ? Math.round(v * 100) / 100 : null;
 };
 
+/* Mots qui QUALIFIENT un pourcentage.
+ *
+ *  Distinction décisive : « 50 % Rabatt » est une remise, « 1,5 % Fett » est un
+ *  taux de matière grasse, « 100 % » peut être une composition. Un pourcentage
+ *  seul ne prouve rien — il faut qu'un mot de promotion l'accompagne. */
+const MOTS_QUALIFIANT_POURCENT = /(korting|rabatt|r[ée]duction|reduction|remise|sconto|descuento|desconto|zni[żz]ka|znizka|rabat|off\b|sale|soldes|promo|angebot|oferta|promo[çc][ãa]o|erbjudande|rea\b|statt|au lieu de|invece di|instead of)/i;
+
+/* Formules d'ACCROCHE : elles annoncent un maximum, pas une remise.
+ *  « jusqu'à -84 % », « bis zu 25 % », « up to 50 % Off », « até 95 % de
+ *  desconto » ne disent rien du produit affiché — les compter serait fabriquer
+ *  une remise. Chaque langue a sa formule, et les oublier en laisse passer.
+ *
+ *  `at[ée](?![a-zà-ÿ])` et non `at[ée]\b` : en JavaScript, `\b` ne connaît que
+ *  les lettres ASCII, donc après « é » il ne se place jamais. Un `\b` fautif
+ *  aurait laissé passer tout le portugais. */
+const ACCROCHE_POURCENT = /(jusqu['’]?\s?[àa]|à partir de|a partir de|bis zu|up to|upp till|tot en met|\btot\b|fino a|hasta|at[ée](?![a-zà-ÿ])|no m[áa]ximo|max\.?|maximum|maximal|desde|vanaf|najwy[żz]ej|\bdo\s+\d|\bod\s+\d)/i;
+
+/* Un pourcentage SUIVI d'un mot de liaison (« of », « av », « des »…) exprime
+ *  une PROPORTION, pas une remise : « aimé par 95 % des joueurs ». Sans cette
+ *  règle, ces taux entraient comme remises — et 95 % de remise, ça fait acheter.
+ *
+ *  `of\b` et non `of` : sans la limite de mot, « 15% off » était pris pour
+ *  « 15 % of » et la vraie promotion était jetée. */
+const POURCENT_PROPORTION = /^\s+(av\b|of\b|des\b|du\b|della\b|dei\b|del\b|de los\b|de las\b|z\b|ze\b|spo[śs]r[óo]d\b|af\b)/i;
+
+/**
+ * Le pourcentage de remise ÉCRIT dans la source, ou null.
+ *
+ *  Trois acceptions, de la plus sûre à la moins sûre :
+ *
+ *    1. un signe moins le précède (« -12 % ») — la forme habituelle ;
+ *    2. un mot de promotion l'accompagne à moins de trente caractères
+ *       (« 50 % Rabatt », « 15 % korting », « 30 % off ») — c'est ce que
+ *       publient les sites d'entraide allemands, néerlandais et anglais, et
+ *       c'est pour cela que des centaines d'offres annonçaient une remise sans
+ *       qu'elle soit enregistrée : le code ne connaissait que la forme française
+ *       signée ;
+ *    3. il est collé à un prix (« à 69,99 € (-12%) »), ce qui l'ancre sur un
+ *       produit précis et non sur un slogan.
+ *
+ *  Sont refusés dans tous les cas : les formules d'accroche, cherchées
+ *  UNIQUEMENT AVANT le nombre, et les proportions, cherchées UNIQUEMENT APRÈS.
+ *
+ *  Pourquoi cette séparation des côtés : une fenêtre indifférenciée fait
+ *  disqualifier le mauvais pourcentage. Mesuré sur « aimé par 95 % av spelarna,
+ *  har 85 % rabatt » : l'accroche voisine faisait jeter le 85 %, qui était la
+ *  vraie remise du titre.
+ */
+function pourcentEcrit(texte) {
+  const t = String(texte || '');
+  const plausible = (n) => Number.isFinite(n) && n > 0 && n < 100;
+  /* Ce qui précède le nombre, mais SEULEMENT dans la même proposition.
+   *  On s'arrête à la ponctuation : dans « PS Store Sale mit bis zu 92 % Rabatt,
+   *  jetzt 85 % Rabatt », le « bis zu » appartient au 92, pas au 85. Sans cette
+   *  coupe, la vraie remise du produit était jetée à cause de l'accroche d'à
+   *  côté. */
+  const avantDe = (index) => {
+    const brut = t.slice(Math.max(0, index - 34), index);
+    let coupe = -1;
+    for (const c of [',', '.', ';', ':', '!', '?', '|', '(', ')']) {
+      coupe = Math.max(coupe, brut.lastIndexOf(c));
+    }
+    return coupe >= 0 ? brut.slice(coupe + 1) : brut;
+  };
+  const apresDe = (fin) => t.slice(fin, fin + 34);
+  const fenetre = (index, longueur) => t.slice(Math.max(0, index - 30), index + longueur + 30);
+  const disqualifie = (index, fin) => ACCROCHE_POURCENT.test(avantDe(index)) || POURCENT_PROPORTION.test(apresDe(fin));
+
+  // 1. signe moins.
+  for (const m of t.matchAll(/[-−]\s?(\d{1,2})\s?%/g)) {
+    if (disqualifie(m.index, m.index + m[0].length)) continue;
+    if (plausible(Number(m[1]))) return Number(m[1]);
+  }
+  // 2. pourcentage accompagné d'un mot de promotion.
+  for (const m of t.matchAll(/(\d{1,2})\s?%/g)) {
+    const fin = m.index + m[0].length;
+    if (disqualifie(m.index, fin)) continue;
+    if (MOTS_QUALIFIANT_POURCENT.test(fenetre(m.index, m[0].length)) && plausible(Number(m[1]))) return Number(m[1]);
+  }
+  // 3. pourcentage collé à un prix.
+  const ancre = t.match(/\d+[.,]\d{2}\s?€[^\d]{0,14}?\(?\s*[-−]?\s?(\d{1,2})\s?%/);
+  if (ancre && plausible(Number(ancre[1]))) return Number(ancre[1]);
+  return null;
+}
+
 /**
  * Remise : on n'accepte QUE deux preuves.
- *   1. un pourcentage écrit noir sur blanc dans la source (« -32 % ») ;
+ *   1. un pourcentage écrit noir sur blanc et QUALIFIÉ (voir pourcentEcrit) ;
  *   2. deux prix réels (avant / après) — le pourcentage est alors CALCULÉ.
  * Sinon : aucune remise affichée. Un faux pourcentage est pire que pas d'offre.
  */
-function remise(texte, prix, prixAvant, autoriserPourcent = true) {
-  // Un pourcentage TROUVÉ DANS UN TITRE n'est pas une remise produit : « jusqu'à
-  // -84 % sur ces offres » est un chiffre d'accroche journalistique. L'afficher
-  // comme une remise ferait croire à une bonne affaire qui n'existe pas. On ne
-  // l'accepte donc que sur les offres produits (Dealabs), jamais sur la veille.
-  if (autoriserPourcent) {
-    const pourcent = String(texte || '').match(/[-−]\s?(\d{1,2})\s?%/);
-    if (pourcent) {
-      const p = Number(pourcent[1]);
-      if (p > 0 && p < 100) return { pourcent: p, calculee: false };
-    }
-  }
+function remise(texte, prix, prixAvant) {
+  const ecrit = pourcentEcrit(texte);
+  if (ecrit != null) return { pourcent: ecrit, calculee: false };
   if (prix != null && prixAvant != null && prixAvant > prix) {
     return { pourcent: Math.round(((prixAvant - prix) / prixAvant) * 100), calculee: true };
   }
@@ -1121,7 +1345,7 @@ function offrePresse(bloc, source, familleImposee) {
   const texte = `${titre} ${description}`;
   const prix = versPrix(titre);
   const avant = versPrix((texte.match(/au lieu de\s*([^.,;]{0,20})/i) || [])[1] || '');
-  const rem = remise(texte, prix, avant, false);   // jamais de % d'accroche ici
+  const rem = remise(texte, prix, avant);   // jamais de % d'accroche ici
   // Une VRAIE offre a un prix. Sans prix, c'est un article de veille — et une
   // remise en pourcentage sans prix n'a rien à faire dans la liste des offres.
   const type = prix != null ? 'offre' : 'article';
@@ -1207,7 +1431,7 @@ function offresEnseigne(html, source) {
     // Prix barré affiché : c'est une remise VRAIE (deux prix de la source), donc
     // on la calcule. Sans second prix, on n'affiche aucune remise — règle
     // inchangée : un faux pourcentage est pire que pas d'offre.
-    const rem = remise(texte, p.prix, p.prixAvant, false);
+    const rem = remise(texte, p.prix, p.prixAvant);
     return {
       id: 'e' + Buffer.from((p.lien || p.titre).split('').reverse().join('')).toString('base64url').slice(0, 14),
       type: 'offre',
@@ -1330,7 +1554,7 @@ function offresAmazon(html, source) {
     // Le prix barré n'est retenu que s'il est PLUS ÉLEVÉ : sinon ce n'est pas
     // une référence, c'est le prix à l'unité ou une variante moins chère.
     const avant = barre != null && barre > courant ? barre : null;
-    const rem = remise(titre, courant, avant, false);
+    const rem = remise(titre, courant, avant);
     offres.push({
       id: 'a' + asin,
       type: 'offre',
@@ -1355,6 +1579,99 @@ function offresAmazon(html, source) {
   return offres;
 }
 
+/**
+ * Ventes flash du jour, lues dans le JSON que la page « goldbox » embarque.
+ *
+ *  On ne JSON.parse PAS la page entière : un seul caractère invalide ferait
+ *  tomber les 400 Ko. On repère chaque « priceToPay » et on remonte le fil du
+ *  MÊME produit — dernier ASIN et dernier titre vus avant lui, puis le prix
+ *  courant et l'étiquette juste après. Une découpe bornée, qui survit à un JSON
+ *  légèrement abîmé.
+ *
+ *  Deux prix réels valent mieux qu'un pourcentage écrit : la remise est
+ *  CALCULÉE sur le prix flash et le prix courant. L'étiquette d'Amazon
+ *  (« 43 % de réduction », « 81 % Rabatt ») ne sert que de secours, quand la
+ *  page ne donne pas les deux prix.
+ */
+function offresVenteFlash(html, source) {
+  const offres = [], vus = new Set();
+  const domaine = new URL(source.url).hostname.replace(/^www\./, '');
+  const nombre = (s) => {
+    const v = Number(String(s || '').replace(',', '.'));
+    return Number.isFinite(v) && v > 0 ? Math.round(v * 100) / 100 : null;
+  };
+
+  for (const pos of html.matchAll(/"priceToPay"/g)) {
+    const i = pos.index;
+    const avant = html.slice(Math.max(0, i - 3000), i);
+    const apres = html.slice(i, i + 1400);
+
+    const asin = [...avant.matchAll(/"asin":"(B0[A-Z0-9]{8})"/g)].map((m) => m[1]).pop();
+    if (!asin || vus.has(asin)) continue;
+    const titreBrut = [...avant.matchAll(/"title":"([^"]{10,320})"/g)].map((m) => m[1]).pop();
+    if (!titreBrut) continue;
+    const titre = nettoyer(titreBrut.replace(/\\"/g, '"').replace(/\\u0026/gi, '&'));
+    if (!titre) continue;
+
+    const courant = nombre((apres.match(/"priceToPay":\{"label":"[^"]*","price":"([\d.,]+)"/) || [])[1]);
+    if (courant == null) continue;
+    const barre = nombre((apres.match(/"basisPrice":\{"label":"[^"]*","price":"([\d.,]+)"/) || [])[1]);
+    // Prix de référence retenu seulement s'il est PLUS ÉLEVÉ — même règle que
+    // la page de recherche : un « prix courant » inférieur n'est pas un repère.
+    const prixAvant = barre != null && barre > courant ? barre : null;
+    const etiquette = (apres.match(/"dealBadge"[\s\S]{0,500}?"text":"([^"]{2,40})"/) || [])[1] || '';
+    // Les DEUX PRIX d'abord. Ils sont toujours là sur cette page, et une remise
+    // calculée sur deux prix réels est plus solide qu'une étiquette. L'étiquette
+    // ne sert que de secours, si Amazon n'a pas donné de prix courant.
+    //
+    // Défaut mesuré : en lisant l'étiquette d'abord, la remise était marquée
+    // « écrite » (non calculée), et la relecture rétroactive des remises — qui ne
+    // voit que le TITRE — l'effaçait ensuite. Des ventes flash à -50 % restaient
+    // affichées sans aucun pourcentage.
+    const rem = prixAvant != null
+      ? { pourcent: Math.round(((prixAvant - courant) / prixAvant) * 100), calculee: true }
+      : remise(`${titre} ${etiquette}`, courant, null);
+
+    // L'image est celle du produit : on prend le premier visuel situé APRÈS son
+    // ASIN, sinon on risquerait celui du produit précédent.
+    const blocProduit = avant.slice(Math.max(0, avant.lastIndexOf(`"asin":"${asin}"`)));
+    const base = (blocProduit.match(/"baseUrl":"(https:\/\/m\.media-amazon\.com\/images\/I\/[^"]+)"/) || [])[1]
+      || [...avant.matchAll(/"baseUrl":"(https:\/\/m\.media-amazon\.com\/images\/I\/[^"]+)"/g)].pop()?.[1];
+    const image = base ? `${base}.jpg` : '';
+
+    vus.add(asin);
+    offres.push({
+      // Le PAYS fait partie de l'identifiant. Deux pays peuvent partager un
+      // domaine — l'Autriche achète sur amazon.de, le Portugal sur amazon.es — et
+      // un même ASIN y est alors la MÊME vente flash. Avec un identifiant
+      // partagé, la fusion écrasait l'un par l'autre : mesuré, l'Autriche et le
+      // Portugal ont perdu leurs 28 et 23 ventes flash dès que l'Allemagne et
+      // l'Espagne ont répondu à leur tour.
+      id: 'fl' + (source.pays || 'BE') + asin,
+      type: 'offre',
+      titre: titre.slice(0, 220),
+      lienMarchand: `https://www.${domaine}/dp/${asin}`,
+      lienPage: `https://www.${domaine}/dp/${asin}`,
+      marchand: 'Amazon',
+      prix: courant,
+      prixAvant,
+      remise: rem ? rem.pourcent : null,
+      remiseCalculee: rem ? rem.calculee : false,
+      categorie: famille(titre, ''),
+      categorieSource: 'vente flash',
+      image,
+      date: new Date().toISOString(),
+      source: source.nom,
+      sourceId: source.id,
+      pays: source.pays || 'BE',
+      // Marque la provenance : une vente flash est limitée dans le temps, et
+      // l'interface peut le dire sans le deviner d'après le titre.
+      venteFlash: true,
+    });
+  }
+  return offres;
+}
+
 /* Le classement d'une offre, réduit à ses SEULS champs conservés (titre +
  *  catégorie de source).
  *
@@ -1372,8 +1689,8 @@ export function classerOffre(o) {
 /* ------------------------------------------------------------------ *
  *  Collecte
  * ------------------------------------------------------------------ */
-async function lire(url) {
-  const r = await fetch(url, { headers: { 'user-agent': UA, 'accept-language': 'fr-FR,fr;q=0.9' }, redirect: 'follow' });
+async function lire(url, langue = 'fr-FR,fr;q=0.9') {
+  const r = await fetch(url, { headers: { 'user-agent': UA, 'accept-language': langue }, redirect: 'follow' });
   if (!r.ok) throw new Error(`HTTP ${r.status}`);
   return r.text();
 }
@@ -1381,13 +1698,23 @@ async function lire(url) {
 const journal = [];
 async function collecterSource(source) {
   try {
-    const corps = await lire(source.url);
+    const corps = await lire(source.url, source.entete || source.langue);
     // Une enseigne ne rend pas un flux mais une PAGE : on lit son JSON-LD au
     // lieu de chercher des <item>. Deux lectures distinctes, jamais mélangées.
     if (source.type === 'enseigne') {
       const offres = offresEnseigne(corps, source);
       journal.push({ source: source.id, ok: true, items: 0, retenues: offres.length });
       if (VERBEUX) console.log(`  ${source.id} : ${offres.length} offre(s) d'enseigne`);
+      return offres;
+    }
+    // Ventes flash du jour : la page les embarque en JSON, on les y lit.
+    if (source.type === 'flash') {
+      const offres = offresVenteFlash(corps, source);
+      journal.push({
+        source: source.id, ok: true, items: 0, retenues: offres.length,
+        ...(offres.length ? {} : { note: 'page de ventes flash sans offre lisible (Amazon limite par intermittence) — les offres déjà engrangées sont conservées' }),
+      });
+      if (VERBEUX) console.log(`  ${source.id} : ${offres.length} vente(s) flash ${source.pays}`);
       return offres;
     }
     // Amazon : une page de résultats, pas un flux. Une page VIDE n'est pas une
@@ -1721,7 +2048,7 @@ async function principal() {
   // leur « température » collée devant (« 298° - Vente flash »). On les écarte —
   // elles reviendront propres à cette collecte.
   const avantAssainir = existant.offres.length;
-  let reclasses = 0, remisesRetirees = 0;
+  let reclasses = 0, remisesRetirees = 0, remisesAjoutees = 0;
   const propres = existant.offres
     .filter((o) => !/^\s*\d{1,4}\s*°\s*[-–—]/.test(o.titre || ''))
     // Les offres engrangées AVANT le décodeur d'entités gardent leurs échappements
@@ -1766,6 +2093,27 @@ async function principal() {
       // réseau) et ça rend la correction rétroactive.
       const vraie = classerOffre(c);
       if (vraie !== c.categorie) { c.categorie = vraie; reclasses++; }
+      // REMISE relue dans le titre, DANS LES DEUX SENS.
+      //   • une remise absente y est peut-être écrite (« 50 % Rabatt ») — c'est
+      //     ce qui a fait passer le nombre de promotions vérifiées de 26 à 280 ;
+      //   • une remise PRÉSENTE peut être fausse : « descontos de até 95 % »
+      //     (« jusqu'à », en portugais) avait été comptée, parce que les
+      //     formules d'accroche des neuf langues n'étaient pas toutes connues.
+      //     Publier 95 % de remise sur un article de presse, c'est exactement le
+      //     faux qu'on refuse.
+      // Les remises CALCULÉES (deux prix réels) ne se relisent pas dans un titre.
+      if (!c.remiseCalculee) {
+        const actuelle = c.remise ?? null;
+        const relue = pourcentEcrit(c.titre);
+        // On AJOUTE toujours (c'est ce qui a fait passer les promotions de 26 à
+        // 280). On n'EFFACE que sur un ARTICLE de presse : c'est là que vivent
+        // les formules d'accroche (« descontos de até 95 % »), et c'est la seule
+        // catégorie dont le texte d'origine est relu. Effacer aussi sur les
+        // offres marchandes perdait de vraies remises annoncées dans une
+        // description que le titre ne porte pas — mesuré : 537 → 351.
+        if (relue != null) { c.remise = relue; remisesAjoutees++; }
+        else if (actuelle != null && c.type === 'article') { c.remise = null; remisesRetirees++; }
+      }
       return c;
     });
   if (propres.length !== avantAssainir) {
@@ -1773,6 +2121,7 @@ async function principal() {
   }
   if (reclasses) console.log(`Reclassement : ${reclasses} offre(s) rangée(s) dans la bonne rubrique`);
   if (remisesRetirees) console.log(`Assainissement : ${remisesRetirees} remise(s) invraisemblable(s) retirée(s) (prix barré ≥ 5× le prix demandé)`);
+  if (remisesAjoutees) console.log(`Remises relues : ${remisesAjoutees} offre(s) dont le pourcentage était écrit dans le titre sans être enregistré`);
   const connues = new Map(propres.map((o) => [cleDe(o), o]));
 
   // Chaque source a son propre délai de repos (« reposMin ») : la collecte passe
@@ -1781,6 +2130,8 @@ async function principal() {
   // immédiate, pas le contenu — et on arrête de taper à la porte de quelqu'un
   // qui ne nous doit rien.
   const vuLe = existant.sourcesVuLe || {};
+  // Nombre de passages consécutifs sans rien rendu, par source (voir plus bas).
+  const vides = { ...(existant.sourcesVides || {}) };
   const maintenant = Date.now();
   const enRepos = (s) => {
     const min = s.reposMin || 0;
@@ -1800,6 +2151,13 @@ async function principal() {
     ...sources.map((s) => collecterSource(s)),
     ...RECHERCHES.map((r) => collecterRecherche(r)),
   ]);
+
+  // Ce que chaque source a RÉELLEMENT rendu. Sert plus bas à ne pas marquer
+  // « vue » une source qui n'a rien pu rendre (voir sourcesVuLe).
+  const renduParSource = new Map();
+  for (const o of paquets.flat()) {
+    renduParSource.set(o.sourceId, (renduParSource.get(o.sourceId) || 0) + 1);
+  }
 
   let nouvelles = 0, misesAJour = 0;
   for (const offre of paquets.flat()) {
@@ -1858,7 +2216,34 @@ async function principal() {
     genereLe: new Date().toISOString(),
     // Date du dernier appel de chaque source : c'est ce qui fait vivre le repos
     // (voir « reposMin »). Une source en repos garde ses offres déjà engrangées.
-    sourcesVuLe: { ...vuLe, ...Object.fromEntries(sources.map((s) => [s.id, new Date().toISOString()])) },
+    // Une source qui n'a RIEN rendu n'est PAS marquée « vue ».
+    //
+    //   Défaut mesuré : Amazon répond par intermittence une page vide ou un mur
+    //   anti-robot. La source était quand même horodatée, donc mise en repos
+    //   pour tout son délai — l'Allemagne et l'Espagne sont ainsi restées sans
+    //   une seule vente flash, marquées « vues » à la même seconde que les dix
+    //   autres. Une panne muette, celle qu'on ne voit qu'en la cherchant.
+    //
+    //   On la laisse donc en attente : elle sera réinterrogée au passage suivant
+    //   (5 minutes). Mais pas indéfiniment — après trois passages vides, on
+    //   l'horodate quand même, sinon une source définitivement morte serait
+    //   frappée toutes les 5 minutes.
+    sourcesVuLe: {
+      ...vuLe,
+      ...Object.fromEntries(
+        sources
+          .filter((s) => renduParSource.get(s.id) || (vides[s.id] || 0) >= 3)
+          .map((s) => [s.id, new Date().toISOString()]),
+      ),
+    },
+    sourcesVides: Object.fromEntries(
+      sources
+        .filter((s) => renduParSource.get(s.id))
+        .map((s) => [s.id, 0])
+        .concat(Object.entries(vides).filter(([id]) => !renduParSource.get(id) && (vides[id] || 0) < 3)
+          .map(([id, n]) => [id, n + 1]))
+        .filter(([, n]) => n > 0),
+    ),
     parPays,
     total: offres.length,
     totalOffres: vraies.length,

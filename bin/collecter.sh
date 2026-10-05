@@ -18,11 +18,41 @@ set -u
 cd /opt/data/webdev/projects/promos || { echo "⚠ Promos : dossier du projet introuvable"; exit 1; }
 export PATH="/opt/data/bin:$PATH"
 
+# --- Alerte qui ne radote pas -------------------------------------------------
+# Défaut mesuré : quand la synchronisation GitHub a cassé, le même message est
+# parti toutes les 5 minutes pendant quatorze heures — 88 fois. Un message qu'on
+# voit 88 fois ne se lit plus ; il finit par masquer le prochain vrai problème.
+# On ne répète donc un MÊME message qu'au bout de 30 minutes.
+alerte() {
+  fichier="/tmp/promos-alerte.txt"
+  maintenant=$(date +%s)
+  texte="$1"
+  if [ -f "$fichier" ]; then
+    dernier=$(cut -d' ' -f1 "$fichier" 2>/dev/null)
+    ancien=$(cut -d' ' -f2- "$fichier" 2>/dev/null)
+    if [ "$ancien" = "$texte" ] && [ "$((maintenant - ${dernier:-0}))" -lt 1800 ]; then
+      return 0
+    fi
+  fi
+  echo "$maintenant $texte" > "$fichier" 2>/dev/null || true
+  echo "$texte"
+}
+
+# --- Se débloquer soi-même, AVANT toute autre chose ---------------------------
+# Défaut mesuré : quand « git pull --rebase » tombait sur un conflit, le script
+# s'arrêtait LÀ, sans nettoyer. Le dépôt restait au milieu d'un rebasage ; le
+# passage suivant échouait de la même façon ; et la publication vers GitHub
+# restait bloquée pour toujours. Un dépôt bloqué doit se débloquer tout seul.
+GIT="git -c core.editor=true"
+if [ -d .git/rebase-merge ] || [ -d .git/rebase-apply ]; then
+  $GIT rebase --abort >/dev/null 2>&1 || true
+fi
+
 SORTIE=$(node collecteur.mjs --publier 2>&1)
 CODE=$?
 
 if [ "$CODE" -ne 0 ]; then
-  echo "⚠ Collecte Promos en ÉCHEC (code $CODE)"
+  alerte "⚠ Collecte Promos en ÉCHEC (code $CODE)"
   echo "$SORTIE" | tail -5
   exit 1
 fi
@@ -40,8 +70,8 @@ try {
 ' 2>/dev/null)
 
 case "$INFO" in
-  SOURCES:*)   echo "⚠ Promos : plus de la moitié des sources sont en échec — $INFO" ;;
-  ILLISIBLE:*) echo "⚠ Promos : data/offres.json illisible (${INFO#ILLISIBLE:})" ;;
+  SOURCES:*)   alerte "⚠ Promos : plus de la moitié des sources sont en échec — $INFO" ;;
+  ILLISIBLE:*) alerte "⚠ Promos : data/offres.json illisible (${INFO#ILLISIBLE:})" ;;
 esac
 
 # Publication : on n'envoie que si le site publié a réellement changé.
@@ -53,14 +83,35 @@ fi
 git commit -q -m "Collecte $(date -u +'%Y-%m-%d %H:%M UTC')" || true
 
 # Le workflow GitHub pousse ici aussi : on se replace sur ses épaules d'abord.
-if ! git pull -q --rebase --autostash origin main >/dev/null 2>&1; then
-  echo "⚠ Promos : synchronisation GitHub impossible (conflit de rebasage) — site local à jour, envoi en attente"
+if ! $GIT pull -q --rebase --autostash origin main >/dev/null 2>&1; then
+  # docs/offres.json est un fichier GÉNÉRÉ : la version locale vient d'être
+  # recalculée à l'instant, c'est donc la plus fraîche. Un conflit dessus n'a
+  # rien à arbitrer — on garde la nôtre et on poursuit la synchronisation.
+  # (C'est exactement ce conflit qui a bloqué le dépôt quatorze heures.)
+  resolu=0
+  if [ -d .git/rebase-merge ] || [ -d .git/rebase-apply ]; then
+    if $GIT diff --name-only --diff-filter=U | grep -qx 'docs/offres.json'; then
+      $GIT checkout --ours -- docs/offres.json >/dev/null 2>&1 && $GIT add docs/offres.json >/dev/null 2>&1
+    fi
+    if [ -z "$($GIT diff --name-only --diff-filter=U)" ]; then
+      $GIT rebase --continue >/dev/null 2>&1 && resolu=1
+    fi
+  fi
+  if [ "$resolu" -ne 1 ]; then
+    # On ne laisse JAMAIS le dépôt au milieu d'un rebasage : c'est ce qui le
+    # condamnait à échouer à chaque passage suivant.
+    $GIT rebase --abort >/dev/null 2>&1 || true
+    alerte "⚠ Promos : synchronisation GitHub impossible — site local à jour, envoi en attente"
+    exit 0
+  fi
+fi
+
+if ! $GIT push -q origin main >/dev/null 2>&1; then
+  alerte "⚠ Promos : envoi vers GitHub impossible — site local à jour, envoi en attente"
   exit 0
 fi
 
-if ! git push -q origin main >/dev/null 2>&1; then
-  echo "⚠ Promos : envoi vers GitHub impossible — site local à jour, envoi en attente"
-  exit 0
-fi
-
+# Tout est passé : on efface le souvenir de l'alerte, pour que la prochaine
+# panne soit annoncée TOUT DE SUITE au lieu d'attendre 30 minutes.
+rm -f /tmp/promos-alerte.txt
 exit 0

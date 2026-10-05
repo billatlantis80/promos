@@ -43,16 +43,20 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { famille, FAMILLES, MARQUES, categorieDeSource, sansAccents, classerOffre, compterMots } from '../collecteur.mjs';
+import { famille, FAMILLES, MARQUES, MOTS_FORTS, categorieDeSource, sansAccents, classerOffre, compterMots } from '../collecteur.mjs';
 
-/* Tous les mots utilisables pour classer, marques comprises — mêmes listes que
+/* Tous les mots utilisables pour classer : listes de familles, marques ET mots
+   d'appareil — mêmes tables que le collecteur, fusionnées comme lui. Juger sur
+   une autre table que celle du classement, c'est inventer des défauts.
+
+   Original : marques comprises — mêmes listes que
    le collecteur, fusionnées comme lui. Le vérificateur doit juger sur
    EXACTEMENT ce sur quoi le collecteur décide : sinon il inventerait des
    défauts (« cette offre n'a aucune preuve ») là où la marque en était une. */
 const MOTS_TOUS = Object.fromEntries(
   Object.entries(FAMILLES).map(([f, mots]) => [
     f,
-    [...mots, ...(MARQUES[f] || [])].map((m) => sansAccents(m).toLowerCase()),
+    [...mots, ...(MARQUES[f] || []), ...(MOTS_FORTS[f] || [])].map((m) => sansAccents(m).toLowerCase()),
   ]),
 );
 
@@ -90,7 +94,7 @@ console.log(`  seuil   : ${SEUIL} % d'offres non classées par pays, ${SEUIL_MOT
  *  1. COHÉRENCE : le classement enregistré correspond-il au calcul ?
  * ------------------------------------------------------------------ */
 let incoherentes = 0, sansPreuve = 0, contredites = 0;
-const exemplesIncoherence = [], exemplesSansPreuve = [];
+const exemplesIncoherence = [], exemplesSansPreuve = [], exemplesContredites = [];
 for (const o of offres) {
   const cat = o.categorie || 'autre';
   // On rejuge avec EXACTEMENT la fonction du collecteur : recopier la règle
@@ -123,7 +127,23 @@ for (const o of offres) {
       }
     }
     const meilleur = scores.filter(([, n]) => n > 0).sort((a, b) => b[1] - a[1])[0];
-    if (meilleur && meilleur[0] !== cat && meilleur[1] >= 2) contredites++;
+    // Mais si la rubrique attribuée vient d'un MOT D'APPAREIL, il n'y a pas de
+    // contradiction : c'est la règle de priorité qui a tranché, et elle est
+    // voulue (voir MOTS_FORTS). Mesuré : « Philips Multigroom 7000 Series
+    // All-in-One 17-delars trimmer - rakapparat » — un rasoir, donc beauté — était
+    // accusé de « mode » par deux mots parasites. Le contrôle doit connaître
+    // l'ordre des règles, sinon il reproche au classement d'appliquer sa propre
+    // consigne.
+    const motsAppareil = (MOTS_FORTS[cat] || []).map((m) => sansAccents(m).toLowerCase());
+    const parAppareil = compterMots(motsAppareil, t) > 0;
+    if (!parAppareil && meilleur && meilleur[0] !== cat && meilleur[1] >= 2) {
+      contredites++;
+      // On NOMME l'offre. Un contrôle qui annonce « 1 offre » sans dire laquelle
+      // ne peut pas être corrigé — il faut aller la chercher à la main.
+      if (exemplesContredites.length < 8) {
+        exemplesContredites.push({ pays: o.pays, cat, mieux: meilleur[0], n: meilleur[1], titre: String(o.titre || '').slice(0, 70) });
+      }
+    }
   }
 }
 console.log(`1. COHÉRENCE ET PREUVES`);
@@ -140,7 +160,10 @@ if (sansPreuve) {
 } else {
   console.log(`   ✓ chaque offre rangée dans une rubrique est justifiée par sa source, son titre ou sa marque`);
 }
-if (contredites) console.log(`   ✗ ${contredites} offre(s) contredites par deux mots ou plus du titre`);
+if (contredites) {
+  console.log(`   ✗ ${contredites} offre(s) contredites par deux mots ou plus du titre`);
+  exemplesContredites.forEach((e) => console.log(`      [${e.pays}] rangée ${e.cat}, mais ${e.n} mots disent ${e.mieux} : ${e.titre}`));
+}
 else console.log(`   ✓ aucune offre dont le titre désigne clairement une autre rubrique`);
 
 /* Ces deux-là sont les contrôles BLOQUANTS : ce sont eux qui traduisent le
