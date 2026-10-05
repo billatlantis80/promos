@@ -483,14 +483,24 @@ const estAmazon = (o) => /amazon/i.test(String(o.marchand || ''));
 const estPromoVerifiee = (o) => o.prix != null && o.prixAvant != null && o.prixAvant > o.prix
   && o.remise != null && o.remise >= REMISE_MIN;
 
-/** Étage 2 — une vraie boutique, un prix réel, et un signe de qualité. */
+/** Étage 2 — une vraie boutique, un prix réel, et un signe de qualité.
+ *
+ *  Trois signes, et le troisième a été trouvé en diagnostiquant la Belgique :
+ *  là-bas, AUCUNE des 558 offres ne porte de score communautaire (les sources
+ *  Dealabs n'existent pas pour la Belgique) et les enseignes belges ne publient
+ *  aucun prix barré. Le pays de l'utilisateur ne rendait donc que 8 lignes.
+ *  Or Coolblue est collecté depuis SA PAGE D'OFFRES (`/fr/offres`) — donc des
+ *  articles que l'enseigne présente elle-même comme ses offres du moment, avec
+ *  leur prix réel. Le collecteur marque ces lignes `categorieSource:
+ *  "enseigne"` : c'est une preuve de provenance, pas une déduction. */
 function estOffreEnseigne(o) {
   if (estAmazon(o)) return false;
   if (o.prix == null || !o.marchand) return false;
   const m = String(o.marchand).trim();
   if (!m || MARCHANDS_NON_BOUTIQUE.test(m) || REDACTIONS.test(m)) return false;
-  if (o.remise != null && o.remise >= REMISE_MIN) return true;
-  return o.temperature != null && o.temperature >= CHALEUR_MIN;
+  if (o.categorieSource === 'enseigne') return true;              // page d'offres de l'enseigne
+  if (o.remise != null && o.remise >= REMISE_MIN) return true;    // remise annoncée par la source
+  return o.temperature != null && o.temperature >= CHALEUR_MIN;   // score de la communauté
 }
 
 const estBonnePromo = (o) => estPromoVerifiee(o) || estOffreEnseigne(o);
@@ -510,12 +520,23 @@ const estBonnePromo = (o) => estPromoVerifiee(o) || estOffreEnseigne(o);
  */
 const PART_AMAZON = 0.6;
 
+/** Sous ce nombre de lignes, une liste ne se juge plus : plutôt que de
+ *  sacrifier des offres réelles à une proportion, on montre tout. Plancher
+ *  mesuré sur le cas polonais (16 Amazon pour 1 enseigne → 2 lignes). */
+const MELANGE_MIN = 24;
+
 function melanger(liste) {
   const amazon = liste.filter(estAmazon);
   const autres = liste.filter((o) => !estAmazon(o));
   if (!amazon.length || !autres.length) return liste;
   const nAmazon = Math.min(amazon.length, Math.floor((autres.length * PART_AMAZON) / (1 - PART_AMAZON)));
   const nAutres = Math.min(autres.length, Math.round((nAmazon * (1 - PART_AMAZON)) / PART_AMAZON));
+  // Un pays qui manque d'un côté ne doit pas être puni deux fois. Mesuré sur
+  // les données réelles : la Pologne a 16 promos Amazon vérifiées pour 1 offre
+  // d'enseigne — tenir la proportion n'y laissait que 2 lignes à l'écran. Sous
+  // MELANGE_MIN, la liste ne se juge plus : on montre TOUT ce qu'on a, et
+  // l'en-tête annonce la proportion réellement atteinte, sans la maquiller.
+  if (nAmazon + nAutres < MELANGE_MIN) return liste;
   const sortie = [];
   let i = 0; let j = 0;
   while (i < nAmazon || j < nAutres) {
