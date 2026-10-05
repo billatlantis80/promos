@@ -448,21 +448,106 @@ function ilYA(iso) {
  *  toutes défendables — et c'est ce qui fait revenir l'utilisateur.
  */
 const REMISE_MIN = 15;
-const estBonnePromo = (o) => o.prix != null && o.prixAvant != null && o.prixAvant > o.prix
+
+/*  ÉTAGE 2 — l'offre d'ENSEIGNE.
+ *
+ *  Pourquoi il a fallu un second étage, et pourquoi ce n'est pas un
+ *  relâchement de la règle : mesuré sur les données réelles, les 317 promos à
+ *  deux prix réels étaient 311 fois chez Amazon. Or les grandes enseignes
+ *  européennes NE publient PAS de prix barré lisible — sondé une par une,
+ *  MediaMarkt (BE/NL/PL), bol.com, Coolblue, Darty, Fnac, Currys, Argos,
+ *  Elgiganten, Worten : 403, 429, ou page vide. Aucune ne livre de donnée
+ *  produit. Exiger deux prix barrés partout, c'était donc afficher 98 %
+ *  d'Amazon : l'inverse du catalogue demandé.
+ *
+ *  Ce qu'on peut prouver pour une enseigne : le PRIX RÉEL affiché, le NOM de
+ *  la boutique, et un signe de qualité qui ne vient pas de nous — soit une
+ *  remise annoncée ≥ 15 %, soit le score que la communauté donne au bon plan
+ *  (≥ 100°). Le reste est jeté.
+ */
+const CHALEUR_MIN = 100;
+
+/** Un journal n'est pas une enseigne : « Le Parisien » vend du papier, pas des
+ *  écouteurs. Sans ce crible, les rédactions (Le Parisien, Forbes, Les
+ *  Numériques, HDblog, dslweb, Mac4Ever…) remplissaient les 40 % et
+ *  l'étiquette « enseigne » devenait un mensonge. */
+const REDACTIONS = /(parisien|figaro|[ée]quipe|forbes|independent|mashable|estad|express|ginjfo|phototrend|labomaison|iphoneaddict|mac4ever|num[ée]rique|phonandroid|dslweb|hdblog|tuttotech|tomshw|tuttoandroid|presse|dealabs|hotukdeals|mydealz|chollometro|preisjaeger|journal|magazine|bloomberg|wired|verge|01net|frandroid|clubic|journaldugeek|numerama|presse-citron|tomshardware|\.fr\b|\.com\b|\.it\b|\.net\b|\.be\b|\.de\b|\.es\b|\.pt\b|\.pl\b|\.se\b|\.ie\b|\.uk\b|\.nl\b)/i;
+
+/** Noms de marchand qui ne désignent AUCUNE boutique : le nom de la source
+ *  elle-même quand le flux ne dit rien, ou un domaine brut. */
+const MARCHANDS_NON_BOUTIQUE = /^(dealabs|hotukdeals|mydealz|chollometro|pepper(\s+(nl|pl))?|preisjaeger|presse|nl|pl|fr|de|es|it|pt|se|ie|gb|uk|at|be|marchand|abc|deal|deals)$/i;
+
+const estAmazon = (o) => /amazon/i.test(String(o.marchand || ''));
+
+/** Étage 1 — deux prix réels affichés, remise ≥ 15 %. C'est la preuve montrable. */
+const estPromoVerifiee = (o) => o.prix != null && o.prixAvant != null && o.prixAvant > o.prix
   && o.remise != null && o.remise >= REMISE_MIN;
+
+/** Étage 2 — une vraie boutique, un prix réel, et un signe de qualité. */
+function estOffreEnseigne(o) {
+  if (estAmazon(o)) return false;
+  if (o.prix == null || !o.marchand) return false;
+  const m = String(o.marchand).trim();
+  if (!m || MARCHANDS_NON_BOUTIQUE.test(m) || REDACTIONS.test(m)) return false;
+  if (o.remise != null && o.remise >= REMISE_MIN) return true;
+  return o.temperature != null && o.temperature >= CHALEUR_MIN;
+}
+
+const estBonnePromo = (o) => estPromoVerifiee(o) || estOffreEnseigne(o);
+
+/*  MÉLANGE 60 % / 40 % — décision du propriétaire du produit : la majorité des
+ *  résultats doit pointer chez Amazon (lien direct, commissions), et 40 % vers
+ *  les autres grandes enseignes du pays.
+ *
+ *  C'est un PLAFOND des deux côtés, donc une vraie proportion, et pas une
+ *  simple préférence de tri : sans plafond sur les enseignes, la Belgique
+ *  (44 promos Amazon pour 157 offres d'enseignes) afficherait 22 % d'Amazon —
+ *  l'inverse de la cible. Sans plafond sur Amazon, les pays riches en ventes
+ *  flash repartiraient à 98 % d'Amazon.
+ *
+ *  L'alternance est VOULUE : le mélange doit se voir dès la première page,
+ *  sinon l'utilisateur croit que les enseignes ont disparu.
+ */
+const PART_AMAZON = 0.6;
+
+function melanger(liste) {
+  const amazon = liste.filter(estAmazon);
+  const autres = liste.filter((o) => !estAmazon(o));
+  if (!amazon.length || !autres.length) return liste;
+  const nAmazon = Math.min(amazon.length, Math.floor((autres.length * PART_AMAZON) / (1 - PART_AMAZON)));
+  const nAutres = Math.min(autres.length, Math.round((nAmazon * (1 - PART_AMAZON)) / PART_AMAZON));
+  const sortie = [];
+  let i = 0; let j = 0;
+  while (i < nAmazon || j < nAutres) {
+    const vise = (sortie.length + 1) * PART_AMAZON;
+    if (i < nAmazon && (j >= nAutres || i < vise)) sortie.push(amazon[i++]);
+    else if (j < nAutres) sortie.push(autres[j++]);
+    else break;
+  }
+  return sortie;
+}
 
 /** Combien de bonnes promotions par pays. C'est ce que l'utilisateur verra à
  *  l'ouverture : annoncer « 544 offres » pour n'en montrer que 41 ferait croire
  *  à un filtre cassé. */
 function promosParPays() {
-  const compte = {};
+  const parts = {};
   for (const o of etat.offres) {
     if (!estBonnePromo(o)) continue;
     const p = o.pays || 'FR';
-    compte[p] = (compte[p] || 0) + 1;
+    (parts[p] = parts[p] || []).push(o);
   }
+  // Le compte passe par le MÊME mélange que l'affichage : annoncer « 201 » pour
+  // en montrer 73 ferait croire à une panne, et c'est exactement l'écart qu'on
+  // vient de supprimer partout où ce nombre est écrit.
+  const compte = {};
+  for (const p of Object.keys(parts)) compte[p] = melanger(parts[p]).length;
   return compte;
 }
+
+/** Ce que l'application annonce à l'ouverture : toutes langues, tous pays —
+ *  mais déjà passé au mélange, donc identique au défilement qui suivra. */
+const totalPromos = () => melanger(etat.offres.filter(estBonnePromo)).length;
 
 /** Une offre passe-t-elle les filtres courants ? */
 function retenue(o) {
@@ -483,7 +568,14 @@ function retenue(o) {
 
 function triees(liste) {
   const l = [...liste];
-  if (etat.tri === 'remise') l.sort((a, b) => (b.remise || 0) - (a.remise || 0) || new Date(b.date) - new Date(a.date));
+  // Tri par remise : les promos à DEUX PRIX RÉELS passent devant les offres
+  // d'enseigne — leur pourcentage est démontrable, il n'est pas seulement
+  // annoncé. À qualité égale, la remise décide, puis le score de la
+  // communauté, puis la fraîcheur. Sans ce premier critère, une remise
+  // annoncée de 75 % passait devant une remise réelle de 67 %.
+  if (etat.tri === 'remise') l.sort((a, b) => (estPromoVerifiee(b) ? 1 : 0) - (estPromoVerifiee(a) ? 1 : 0)
+    || (b.remise || 0) - (a.remise || 0) || (b.temperature || 0) - (a.temperature || 0)
+    || new Date(b.date) - new Date(a.date));
   else if (etat.tri === 'prix') l.sort((a, b) => (a.prix ?? 1e9) - (b.prix ?? 1e9) || (b.remise || 0) - (a.remise || 0));
   else l.sort((a, b) => new Date(b.date) - new Date(a.date));
   return l;
@@ -522,6 +614,12 @@ function carte(o) {
     o.remise != null
       ? `<span class="etiquette remise${o.remiseCalculee ? ' calculee' : ''}" title="${o.remiseCalculee ? 'Pourcentage calculé entre deux prix réels' : 'Pourcentage annoncé par la source'}">${o.remiseCalculee ? '≈ ' : ''}-${o.remise} %</span>`
       : '',
+    // Une offre d'enseigne SANS remise chiffrée : on le DIT. Laisser croire à
+    // un pourcentage qu'on n'a pas pu vérifier serait exactement le défaut
+    // qu'on a passé la journée à corriger.
+    (estOffreEnseigne(o) && !estPromoVerifiee(o))
+      ? `<span class="etiquette" title="Prix réel et marchand affichés ; cette enseigne ne publie pas de prix barré, donc aucune remise n'est chiffrée.">prix réel</span>`
+      : '',
     // Ce que l'utilisateur gagne, en euros. C'est le chiffre qui décide d'un
     // achat — « économise 60 € » parle plus que « -67 % ».
     (o.prix != null && o.prixAvant != null && o.prixAvant > o.prix)
@@ -552,7 +650,7 @@ function carte(o) {
       ${prix}
       <div class="espace-fav">${etoile}</div>
       <div class="bas">
-        <a class="btn" href="${esc(lien)}" target="_blank" rel="noopener nofollow sponsored">${article ? 'Lire l’article' : (o.marchand === 'Amazon' ? 'Acheter sur Amazon' : 'Voir l’offre')}</a>
+        <a class="btn" href="${esc(lien)}" target="_blank" rel="noopener nofollow sponsored">${article ? 'Lire l’article' : (estAmazon(o) ? 'Acheter sur Amazon' : (estOffreEnseigne(o) ? `Voir chez ${esc(o.marchand)}` : 'Voir l’offre'))}</a>
         <span class="quand">${quand}</span>
       </div>
     </div>
@@ -567,7 +665,9 @@ function offresDuPays() {
     : etat.offres.filter((o) => (o.pays || 'FR') === etat.pays);
   // Les compteurs suivent la PORTÉE : annoncer « Tout 544 » au-dessus d'une
   // liste de 41 promotions ferait croire que l'affichage est cassé.
-  return etat.portee === 'promos' ? base.filter(estBonnePromo) : base;
+  // Le mélange 60/40 s'applique ICI, au seul endroit qui décide de ce qui
+  // s'affiche : les puces, les sélecteurs et l'en-tête en dérivent tous.
+  return etat.portee === 'promos' ? melanger(base.filter(estBonnePromo)) : base;
 }
 
 function dessinerPuces() {
@@ -632,7 +732,7 @@ function optionsPays() {
   // panne — c'est exactement l'erreur qu'on vient de corriger ailleurs, aux
   // trois endroits où ce compte est affiché.
   const compte = promosParPays();
-  return [`<option value="tout">Tous les pays (${etat.offres.filter(estBonnePromo).length})</option>`]
+  return [`<option value="tout">Tous les pays (${totalPromos()})</option>`]
     .concat(codesPays().map((c) => `<option value="${esc(c)}">${esc(NOMS_PAYS[c])} (${compte[c]})</option>`))
     .join('');
 }
@@ -694,7 +794,7 @@ function demanderPays() {
   // échappatoire qu'on doit chercher en bas de liste n'en est plus une. Il est
   // présenté comme les pays : même apparence, même geste, rien à part.
   const items = [`<button class="pays-item" data-pays="tout">
-      <b>Tous les pays d’Europe</b><span>${etat.offres.filter(estBonnePromo).length} promos</span>
+      <b>Tous les pays d’Europe</b><span>${totalPromos()} promos</span>
     </button>`];
   for (const c of codes) {
     items.push(`<button class="pays-item${c === suggere ? ' conseille' : ''}" data-pays="${esc(c)}">
@@ -735,7 +835,7 @@ function dessiner() {
   if (!liste.length && etat.portee === 'promos' && !etat.favoris) {
     // Rien à montrer dans ce rayon ou ce pays : on le DIT, et on ouvre une porte
     // plutôt que de laisser un écran vide sans issue.
-    $('vide').innerHTML = 'Aucune <b>promotion vérifiée</b> ici pour l’instant : nous n’affichons que les offres à deux prix réels, dont la remise est démontrable.'
+    $('vide').innerHTML = 'Aucune <b>bonne promo</b> ici pour l’instant : nous n’affichons que des offres à prix réel — deux prix affichés quand la remise peut être démontrée, et pour les autres enseignes un prix réel avec le nom de la boutique.'
       + '<br><button id="voirTout">Voir toutes les offres</button>';
     $('voirTout').addEventListener('click', () => {
       etat.portee = 'tout'; etat.tri = 'remise';
@@ -758,8 +858,16 @@ function dessiner() {
   // L'en-tête dit ce qui est À L'ÉCRAN, pas la taille du catalogue : annoncer
   // « 2 027 offres » au-dessus de 315 lignes ferait croire à un affichage cassé.
   if (etat.portee === 'promos') {
-    const nb = etat.offres.filter(estBonnePromo).length;
-    $('comptes').innerHTML = `<b>${nb}</b> promotions vérifiées<br>mis à jour ${esc(ilYA(etat.meta.genereLe || new Date().toISOString()))}`;
+    // Ce que l'en-tête annonce = ce que la liste contient, mélange compris, et
+    // la PROPORTION est écrite noir sur blanc : l'utilisateur voit pourquoi
+    // Amazon est majoritaire, et d'où viennent les autres lignes. Le nombre de
+    // pays était juste, mais muet sur la composition — c'était ça, le problème
+    // de compréhension des paramètres de recherche.
+    const melange = melanger(etat.offres.filter(estBonnePromo));
+    const nb = melange.length;
+    const nAmz = melange.filter(estAmazon).length;
+    const pcAmz = nb ? Math.round((nAmz / nb) * 100) : 0;
+    $('comptes').innerHTML = `<b>${nb}</b> bonnes promos<br>≈ ${pcAmz} % Amazon · ${100 - pcAmz} % autres enseignes<br>mis à jour ${esc(ilYA(etat.meta.genereLe || new Date().toISOString()))}`;
   } else {
     $('comptes').innerHTML = `${etat.meta.totalOffres ?? '—'} offres · ${etat.meta.totalVeille ?? '—'} veille<br>mis à jour ${esc(ilYA(etat.meta.genereLe || new Date().toISOString()))}`;
   }
