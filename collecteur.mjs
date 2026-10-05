@@ -256,8 +256,10 @@ const SOURCES_AMAZON = [
  *  et douze pages de 400 Ko d'un coup la feraient tomber. Le décalage les
  *  désynchronise sans qu'aucun ne soit servi moins souvent.
  */
-const sourceFlash = (pays, domaine, langue, entete, decalage) => ({
+const sourceFlash = (pays, domaine, langue, entete, decalage, paysAussi) => ({
   id: `flash-${pays.toLowerCase()}`,
+  // Second pays desservi par le même domaine (voir offresVenteFlash).
+  ...(paysAussi ? { paysAussi } : {}),
   nom: 'Amazon', type: 'flash', pays,
   // `langue` reste un CODE (« fr », « de »…) : c'est lui qui choisit le filtre
   // de mots du pays, et un test vérifie qu'il en existe un. Il ne faut donc PAS
@@ -279,14 +281,15 @@ const SOURCES_VENTES_FLASH = [
   //   décalage large garantit qu'elles ne se rejoignent plus jamais.
   sourceFlash('BE', 'amazon.com.be', 'fr', 'fr-BE,fr;q=0.9,en;q=0.8', 0),
   sourceFlash('FR', 'amazon.fr', 'fr', 'fr-FR,fr;q=0.9', 25),
-  sourceFlash('DE', 'amazon.de', 'de', 'de-DE,de;q=0.9', 50),
-  sourceFlash('AT', 'amazon.de', 'de', 'de-DE,de;q=0.9', 75),
+  // L'Autriche est servie par LE MÊME appel que l'Allemagne : deux requêtes
+  // identiques parties ensemble, et Amazon refuse la seconde.
+  sourceFlash('DE', 'amazon.de', 'de', 'de-DE,de;q=0.9', 50, 'AT'),
   sourceFlash('GB', 'amazon.co.uk', 'en', 'en-GB,en;q=0.9', 100),
   sourceFlash('IE', 'amazon.ie', 'en', 'en-IE,en;q=0.9', 125),
-  sourceFlash('ES', 'amazon.es', 'es', 'es-ES,es;q=0.9', 150),
+  sourceFlash('ES', 'amazon.es', 'es', 'es-ES,es;q=0.9', 150, 'PT'),
   // Le Portugal n'a pas d'Amazon : on y achète sur amazon.es, dont les pages
   // sont en espagnol. Le pays reste PT — c'est le pays de l'acheteur.
-  sourceFlash('PT', 'amazon.es', 'pt', 'es-ES,es;q=0.9', 175),
+  // (Partage de requête avec l'Espagne, même raison que ci-dessus.)
   sourceFlash('IT', 'amazon.it', 'it', 'it-IT,it;q=0.9', 200),
   sourceFlash('NL', 'amazon.nl', 'nl', 'nl-NL,nl;q=0.9', 225),
   sourceFlash('SE', 'amazon.se', 'sv', 'sv-SE,sv;q=0.9', 250),
@@ -1669,6 +1672,23 @@ function offresVenteFlash(html, source) {
       venteFlash: true,
     });
   }
+
+  // DEUX PAYS PEUVENT PARTAGER UN DOMAINE : l'Autriche achète sur amazon.de, le
+  // Portugal sur amazon.es. On ne fait PAS deux requêtes identiques — la seconde
+  // se fait refuser. Mesuré : l'Allemagne et l'Espagne restaient à zéro pendant
+  // que l'Autriche et le Portugal, même page au même instant, recevaient leurs
+  // vingt-neuf et vingt-trois ventes flash. Une seule lecture, recopiée.
+  if (source.paysAussi) {
+    const aussi = source.paysAussi;
+    for (const o of [...offres]) {
+      offres.push({
+        ...o,
+        id: 'fl' + aussi + o.id.slice(4),
+        pays: aussi,
+        sourceId: 'flash-' + aussi.toLowerCase(),
+      });
+    }
+  }
   return offres;
 }
 
@@ -1768,7 +1788,16 @@ async function collecterRecherche([familleId, requete]) {
  */
 const cleDe = (o) => {
   const u = String(o.lienPage || '').replace(/^https?:\/\/(www\.)?/, '').split('?')[0].replace(/\/$/, '');
-  return u || String(o.titre).toLowerCase().replace(/[^a-z0-9à-ÿ]+/g, ' ').trim().slice(0, 80);
+  const base = u || String(o.titre).toLowerCase().replace(/[^a-z0-9à-ÿ]+/g, ' ').trim().slice(0, 80);
+  // LE PAYS FAIT PARTIE DE L'IDENTITÉ DE L'OFFRE.
+  //
+  //   Un même produit, sur un même domaine, sert DEUX pays : l'Autriche achète
+  //   sur amazon.de et le Portugal sur amazon.es. Sans le pays dans la clé, la
+  //   copie du second pays écrasait l'offre du premier — même URL, même titre —
+  //   et l'Allemagne comme l'Espagne restaient à zéro vente flash alors que
+  //   leur page avait bel et bien été lue. Le défaut ne se voyait qu'en
+  //   comparant deux pays, jamais en regardant un seul.
+  return (o.pays || 'FR') + '|' + base;
 };
 
 /* ------------------------------------------------------------------ *
