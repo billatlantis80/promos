@@ -708,7 +708,7 @@ function promosParPays() {
   const parts = {};
   for (const o of etat.offres) {
     if (!estBonnePromo(o)) continue;
-    const p = o.pays || 'FR';
+    const p = paysDe(o);
     (parts[p] = parts[p] || []).push(o);
   }
   // Le compte passe par le MÊME mélange que l'affichage : annoncer « 201 » pour
@@ -725,11 +725,61 @@ function promosParPays() {
  *  mais déjà passé au mélange, donc identique au défilement qui suivra. */
 const totalPromos = () => melanger(dedoublonner(etat.offres.filter(estBonnePromo))).length;
 
+/* ---- Le pays de la BOUTIQUE, quand il ne fait aucun doute ----
+ *
+ *  Une offre porte le pays de sa SOURCE. C'est juste pour un flux national
+ *  (Dealabs est français), mais faux dès qu'une source étrangère relaie une
+ *  boutique d'un autre pays : un bon plan Bol relayé par une communauté
+ *  néerlandaise s'affichait sous « Pays-Bas ».
+ *
+ *  DÉCISION DU PROPRIÉTAIRE DU PRODUIT : rattacher le bon plan au pays de la
+ *  BOUTIQUE. Mesuré AVANT d'écrire une ligne : sur 8 173 offres, cette table ne
+ *  change aujourd'hui AUCUNE attribution — chaque boutique mono-pays est déjà
+ *  relayée par son propre pays. Elle porte donc sur l'avenir : le jour où une
+ *  source étrangère relaiera une boutique belge, l'offre ira sous la Belgique
+ *  au lieu de disparaître du filtre de l'utilisateur belge.
+ *
+ *  Seules les boutiques SANS ambiguïté sont listées. Les enseignes présentes
+ *  dans plusieurs pays — Amazon, Media Markt, Coolblue, Lidl, Carrefour, Fnac,
+ *  Decathlon, Zalando, Ikea, Action, Hema, Kaufland, eBay, Steam — restent sur
+ *  le pays de leur source : leur en attribuer un serait une devinette.
+ */
+const PAYS_BOUTIQUE = new Map([
+  // Belgique
+  ['colruyt', 'BE'], ['delhaize', 'BE'], ['vanden borre', 'BE'], ['krëfel', 'BE'],
+  ['krefel', 'BE'], ['brico', 'BE'], ['hubo', 'BE'], ['gamma', 'BE'],
+  ['dreamland', 'BE'], ['fun', 'BE'], ['maxi toys', 'BE'], ['torfs', 'BE'],
+  ['jbc', 'BE'], ['okay', 'BE'], ['bio-planet', 'BE'], ['toolstation', 'BE'],
+  ['vandenborre', 'BE'], ['corail', 'BE'], ['pointcarré', 'BE'],
+  // Royaume-Uni
+  ['tesco', 'GB'], ['argos', 'GB'], ['currys', 'GB'], ['costco', 'GB'],
+  ['asda', 'GB'], ['george at asda', 'GB'], ['boots', 'GB'], ['next', 'GB'],
+  ['secret sales', 'GB'], ['loaded', 'GB'], ['shopto', 'GB'], ['screwfix', 'GB'],
+  ['marks electrical', 'GB'], ['the beauty store', 'GB'], ['farmfoods', 'GB'],
+  // Pologne
+  ['allegro', 'PL'], ['biedronka', 'PL'], ['media expert', 'PL'], ['rtv euro agd', 'PL'],
+  ['empik', 'PL'], ['inpost', 'PL'],
+  // Espagne, Portugal, Italie, Pays-Bas, Allemagne
+  ['pccomponentes', 'ES'], ['alcampo', 'ES'], ['traventia', 'ES'],
+  ['el corte inglés', 'ES'], ['miravia', 'ES'], ['fc moto', 'ES'], ['buscounchollo', 'ES'],
+  ['worten', 'PT'], ['continente', 'PT'],
+  ['jumbo', 'NL'], ['nederlandse spoorwegen', 'NL'],
+  ['expert', 'DE'], ['urlaubspiraten', 'DE'], ['imusic', 'DE'],
+]);
+
+/** Le pays à retenir pour une offre : celui de la BOUTIQUE s'il est certain,
+ *  sinon celui de la source. Un seul point de décision, donc aucun risque
+ *  qu'un filtre et un compteur ne soient plus d'accord. */
+function paysDe(o) {
+  const m = String(o.marchand || '').trim().toLowerCase();
+  return PAYS_BOUTIQUE.get(m) || o.pays || 'FR';
+}
+
 /** Une offre passe-t-elle les filtres courants ? */
 function retenue(o) {
   // Une offre sans pays date d'avant ce filtre : toutes les sources de l'époque
   // étaient françaises, donc « FR » est la lecture juste — pas « inconnu ».
-  if (etat.pays !== 'tout' && (o.pays || 'FR') !== etat.pays) return false;
+  if (etat.pays !== 'tout' && paysDe(o) !== etat.pays) return false;
   if (etat.categorie !== 'tout' && o.categorie !== etat.categorie) return false;
   if (etat.marchand !== 'tout' && o.marchand !== etat.marchand) return false;
   // Portée : par défaut, SEULES les bonnes promotions passent (voir
@@ -861,7 +911,7 @@ function carte(o) {
 function offresDuPays() {
   const base = etat.pays === 'tout'
     ? etat.offres
-    : etat.offres.filter((o) => (o.pays || 'FR') === etat.pays);
+    : etat.offres.filter((o) => paysDe(o) === etat.pays);
   // Les compteurs suivent la PORTÉE : annoncer « Tout 544 » au-dessus d'une
   // liste de 41 promotions ferait croire que l'affichage est cassé.
   // Le mélange 60/40 s'applique ICI, au seul endroit qui décide de ce qui
@@ -915,7 +965,7 @@ function marquerPuce() {
 /** Compte les offres par pays : ce que l'application contient VRAIMENT. */
 function compteParPays() {
   const compte = {};
-  for (const o of etat.offres) { const p = o.pays || 'FR'; compte[p] = (compte[p] || 0) + 1; }
+  for (const o of etat.offres) { const p = paysDe(o); compte[p] = (compte[p] || 0) + 1; }
   return compte;
 }
 
