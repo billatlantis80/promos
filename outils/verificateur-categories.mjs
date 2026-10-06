@@ -43,7 +43,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { famille, FAMILLES, MARQUES, MOTS_FORTS, categorieDeSource, sansAccents, sansNegations, classerOffre, compterMots, estJeuNumerique, estSoin, retirerTrompeurs } from '../collecteur.mjs';
+import { famille, FAMILLES, MARQUES, MOTS_FORTS, categorieDeSource, sansAccents, sansNegations, classerOffre, compterMots, estJeuNumerique, estSoin, ageEnfant, retirerTrompeurs } from '../collecteur.mjs';
 
 /* Tous les mots utilisables pour classer : listes de familles, marques ET mots
    d'appareil — mêmes tables que le collecteur, fusionnées comme lui. Juger sur
@@ -139,13 +139,19 @@ for (const o of offres) {
     // l'ignore reproche au classement d'appliquer sa propre consigne — c'est
     // exactement ce qui laissait 19 offres belges accusées « sans preuve ».
     const soinBeaute = cat === 'beaute' && estSoin(o.titre);
+    // Une PLAGE d'âge d'enfant (E4) classe en Jouets sans mot d'enfant : la
+    // preuve est la plage elle-même, comme le soin ci-dessus. Une offre rangée
+    // jouets sur sa seule plage d'âge (« Pasta dental 6-13 años ») n'est donc
+    // pas « sans preuve » — le contrôle doit lire la même règle que le
+    // classement.
+    const ageJouets = cat === 'jouets' && ageEnfant(t);
     // Rubrique IMPOSÉE par la page de la source (voir SOURCES_ACTIVITES) :
     // « Soin du visage au choix » est rangé en « Activité » parce que la page
     // dont il vient est une page de PRESTATIONS — un soin en institut n'est pas
     // un cosmétique. Le titre ne peut pas la contredire, pour la même raison
     // que pour les mots d'appareil : c'est l'ordre des règles, et il est voulu.
     const imposee = Boolean(o.categorieImposee);
-    if (!touche && !sourceOk && !numerique && !soinBeaute) {
+    if (!touche && !sourceOk && !numerique && !soinBeaute && !ageJouets) {
       sansPreuve++;
       if (exemplesSansPreuve.length < 8) {
         exemplesSansPreuve.push({ pays: o.pays, cat, titre: String(o.titre || '').slice(0, 58), src: o.categorieSource });
@@ -161,7 +167,7 @@ for (const o of offres) {
     // consigne.
     const motsAppareil = (MOTS_FORTS[cat] || []).map((m) => sansAccents(m).toLowerCase());
     const parAppareil = compterMots(motsAppareil, t) > 0;
-    if (!parAppareil && !numerique && !imposee && meilleur && meilleur[0] !== cat && meilleur[1] >= 2) {
+    if (!parAppareil && !numerique && !imposee && !ageJouets && meilleur && meilleur[0] !== cat && meilleur[1] >= 2) {
       contredites++;
       // On NOMME l'offre. Un contrôle qui annonce « 1 offre » sans dire laquelle
       // ne peut pas être corrigé — il faut aller la chercher à la main.

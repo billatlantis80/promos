@@ -564,7 +564,7 @@ export { MOTS_PROMO, motsPromo, ecarterTuiles, veilleParPays, lienReel, dedupliq
    (outils/verificateur-categories.mjs) et les tests rejouent `famille()` sur
    les offres publiées. Un contrôle qui recopierait la table des mots serait un
    contrôle qui vérifie sa propre copie — donc rien du tout. */
-export { famille, FAMILLES, MARQUES, MOTS_FORTS, CATEGORIES_SOURCES, categorieDeSource, sansAccents, sansNegations, offresEnseigne, offresAmazon, offresVenteFlash, offresGroupon, remiseCredibleSource, compterMots, remise, pourcentEcrit, SOURCES_VENTES_FLASH, SOURCES_ACTIVITES, prixReferenceEnseigne, estJeuNumerique, estSoin, MOTS_A_FRONTIERE, exigeFrontiere, retirerTrompeurs };
+export { famille, FAMILLES, MARQUES, MOTS_FORTS, CATEGORIES_SOURCES, categorieDeSource, sansAccents, sansNegations, offresEnseigne, offresAmazon, offresVenteFlash, offresGroupon, remiseCredibleSource, compterMots, remise, pourcentEcrit, SOURCES_VENTES_FLASH, SOURCES_ACTIVITES, prixReferenceEnseigne, estJeuNumerique, estSoin, ageEnfant, MOTS_A_FRONTIERE, exigeFrontiere, retirerTrompeurs };
 
 /** Recherches Google News : un flux par famille de produits. Gratuit, sans clé. */
 const RECHERCHES = [
@@ -1209,6 +1209,44 @@ const MOTS_FORTS = {
     'gra planszowa', 'gra karciana', 'klocki', 'pluszak', 'lalka', 'zabawka', 'puzzle',
     // sv
     'bradspel', 'kortspel', 'byggklossar', 'gosedjur', 'docka', 'leksak', 'pussel',
+    // DEMANDE DE B (plan point 10 / unité E4) : « toute annonce contenant
+    //  fille, garçon, enfant ou une catégorie d'âge d'enfant » va en Jeux &
+    //  jouets. Ces mots sont donc ici, en MOTS FORTS : ils tranchent avant la
+    //  marque et avant la catégorie de la source, comme un produit nommé.
+    //  ⚠ MESURÉ dans cette session sur les 9 379 offres publiées (en comparant
+    //  classerOffre() avant/après la règle) : 93 offres changent de rubrique
+    //  vers « jouets » — 34 bricolage, 24 tech, 13 maison, 13 mode, 4 beauté,
+    //  3 sport, 1 électroménager, 1 autre. Restent 14 offres portant un mot
+    //  d'enfant hors de jouets, parce qu'un mot d'appareil NOMMÉ, plus long,
+    //  l'emporte (brosse à dents, montre connectée, appareil photo, écouteurs
+    //  JBL Junior, titres de jeux vidéo) — voir `node outils/mesure-enfant.mjs`
+    //  et le rapport de E4, cas cités un par un.
+    //  Mots courts protégés par une frontière (voir MOTS_A_FRONTIERE) pour que
+    //  « junge » n'attrape pas « junger », et « barn » pas « barniz ».
+    //  ⚠ « kind » NU est VOLONTAIREMENT ABSENT, et c'est une mesure : la
+    //  comparaison ignore la langue du titre, donc l'allemand « Kind » attrapait
+    //  l'anglais « kind » (« Kind of Blue » de Miles Davis, « Kind to Skin »
+    //  d'Astonish — 2 offres mesurées, envoyées à tort en jouets). Les formes
+    //  utiles de l'allemand/néerlandais (« kinder », « kindern », « kinderen »)
+    //  restent, et « kind » continue de voter un point dans FAMILLES.
+    // fr
+    'fille', 'fillettes', 'garcon', 'garcons', 'enfant', 'enfants',
+    // en
+    'girl', 'girls', 'boy', 'boys', 'child', 'children', 'kid', 'kids',
+    // de
+    'madchen', 'junge', 'jungen', 'kinder', 'kindern',
+    // nl
+    'meisje', 'meisjes', 'jongen', 'jongens', 'kinderen',
+    // es
+    'nina', 'ninas', 'nino', 'ninos', 'chica', 'chico', 'chicos',
+    // it
+    'bambina', 'bambine', 'bambino', 'bambini', 'ragazza', 'ragazze', 'ragazzo', 'ragazzi',
+    // pt
+    'menina', 'meninas', 'menino', 'meninos', 'crianca', 'criancas',
+    // pl
+    'dziewczynka', 'dziewczynki', 'chlopiec', 'chlopcy', 'dziecko', 'dzieci',
+    // sv
+    'flicka', 'flickor', 'pojke', 'pojkar', 'barn', 'barnen',
   ],
 };
 
@@ -1313,7 +1351,17 @@ const MOTS_FORTS_NORM = Object.fromEntries(
  *  le trait d'union en est une : « tri-band » et « quad-band » passaient encore,
  *  et un routeur NETGEAR se rangeait dans les accessoires auto. Les mots justes
  *  de la même famille (« autoband », « autobanden ») restent en place. */
-const MOTS_A_FRONTIERE = new Set(['auto', 'moto', 'tire', 'wagen', 'wiel', 'mota']);
+const MOTS_A_FRONTIERE = new Set(['auto', 'moto', 'tire', 'wagen', 'wiel', 'mota',
+  // E4 : mots d'ENFANT courts ou glissants, lus entre deux frontières pour ne
+  //  pas attraper un nom qui les contient — « Kindle » (kind), « barniz »
+  //  (barn, espagnol : vernis), « junger/junges » (junge, allemand).
+  //  Ajoutés APRÈS MESURE des collisions en sous-chaîne sur les 9 379 offres :
+  //   « kids » → « Kidston » (Cath Kidston, savon) et « snookids » (marque) ;
+  //   « child » → « schildpad » (tortue, nl) et « Schildkröte » (tortue, de) ;
+  //   « chica » → « Chicago » (la ville, dans une offre de vols USA).
+  //  Ces trois mots gardent leur sens quand ils sont un vrai mot (« for kids »,
+  //  « child », « niñas y chicas ») : la frontière ne les retire pas.
+  'kind', 'barn', 'nina', 'nino', 'junge', 'kids', 'child', 'chica']);
 
 /** Un mot-clé doit-il être lu entre deux frontières de mot ? */
 const exigeFrontiere = (m) => m.length <= 3 || MOTS_A_FRONTIERE.has(m);
@@ -1337,8 +1385,22 @@ const exigeFrontiere = (m) => m.length <= 3 || MOTS_A_FRONTIERE.has(m);
  *  titre qui cite les téléphones compatibles (« iPhone, Samsung, Motoroli »)
  *  partait en accessoire auto à cause du génitif. « motorolie » et « motorolja »
  *  — l'huile moteur, qu'on VEUT garder — ne sont pas touchés : la frontière de
- *  mot après « motoroli » échoue devant le « e » de « motorolie ». */
-const MOTS_TROMPEURS = /(^|[^a-z])(motorola|motoroli|motorole|motorolu|streifen)([^a-z]|$)/g;
+ *  mot après « motoroli » échoue devant le « e » de « motorolie ».
+ *
+ *  E4 (demande de B sur « fille / garçon / enfant ») a ajouté les collisions
+ *  MESURÉES ci-dessous, retirées ici plutôt que de renoncer au mot d'enfant
+ *  (comptes relevés dans cette session sur les 9 379 offres publiées) :
+ *    « good girl »  — le parfum Carolina Herrera « Good Girl » partait en
+ *                     jouets sur le mot « girl » (2 offres) ;
+ *    « kinder schokolade » (1) / « kinder bueno » (1) — la marque de CHOCOLAT
+ *                     Kinder partait en jouets sur le mot « kinder » ;
+ *    « orient bambino » — la montre Orient « Bambino » partait en jouets sur
+ *                     le mot italien « bambino » (2 offres, titres espagnols) ;
+ *    « beach boys » (1) / « lost boys » (1) — le groupe « The Beach Boys » et
+ *                     la B.O. « The Lost Boys » (vinyles) partaient en jouets
+ *                     sur le mot « boys ».
+ */
+const MOTS_TROMPEURS = /(^|[^a-z])(motorola|motoroli|motorole|motorolu|streifen|good girl|kinder schokolade|kinder bueno|orient bambino|beach boys|lost boys)([^a-z]|$)/g;
 const retirerTrompeurs = (texte) => texte.replace(MOTS_TROMPEURS, '$1 $3');
 
 /** Les marqueurs d'un jeu NUMÉRIQUE — application, téléchargement… ou console.
@@ -1394,6 +1456,29 @@ const estJeuNumerique = (bas) => SUPPORT_NUMERIQUE.test(bas)
   || CONSOLE_CLAIRE.test(bas)
   || (CONSOLE_AMBIGU.test(bas) && MOT_JEU.test(sansNomsAppareils(bas)));
 
+/** Une PLAGE d'âge d'enfant (deux nombres autour d'un tiret ou d'un « à »).
+ *
+ *  Demande de B (unité E4) : « une catégorie d'âge d'enfant » range en Jeux &
+ *  jouets. Mesuré AVANT d'écrire la règle : un âge SEUL (« 12 ans », « 6 mois »)
+ *  est trop bruité pour être une preuve — 51 offres hors vocabulaire enfant le
+ *  portent sans être des jouets (« Ordinateur Portable Alienware 15 »,
+ *  « Pack 1 Mois », « 6 Monate Tagesgeld », « Google GEMINI AI Pro na 18
+ *  miesięcy »). Un âge en MOIS est pire encore (coupons, tailles, diagonales
+ *  d'écran). Seule la PLAGE de deux nombres, bornée à 14 ans, résiste : elle
+ *  attrape « jouet Tesla 1,5 à 4 ans » et « pasta dental 6-13 años », et laisse
+ *  dehors « les 15-24 ans » d'un article de presse. Le plafond de 14 est la
+ *  mesure, pas une intuition : les 5 plages trouvées dans les données sont
+ *  1,5-4 / 6-13 / 5 ans seul / 15-24 / une référence Kindle.
+ */
+const RE_PLAGE_AGE = /\b(\d{1,2})\s*(?:[,.]5)?\s*(?:[-–—]|\bà\b|\ba\b|\bbis\b|\btot\b|\bal\b)\s*(\d{1,2})\s*(?:ans|jaar|jahre|jaren|anos|anni|lat|ar)\b/;
+function ageEnfant(texteBas) {
+  const m = texteBas.match(RE_PLAGE_AGE);
+  if (!m) return false;
+  const bas = Number(m[1]), haut = Number(m[2]);
+  return bas >= 0 && haut <= 14 && bas <= haut;
+}
+const POIDS_AGE_ENFANT = 6;   // même poids que le mot « enfant » (6 lettres)
+
 /** La famille indiquée par un PRODUIT NOMMÉ (un appareil, un type de jeu…), ou
  *  null si le titre n'en nomme aucun.
  *
@@ -1412,7 +1497,11 @@ function familleParMotFort(texteBas) {
     const trouves = mots.filter((m) => (exigeFrontiere(m)
       ? new RegExp('(^|[^a-z0-9à-ÿ])' + m + '([^a-z0-9à-ÿ]|$)', 'i').test(texteBas)
       : texteBas.includes(m)));
-    const poids = trouves.reduce((a, m) => a + Math.max(3, m.length), 0);
+    const poids = trouves.reduce((a, m) => a + Math.max(3, m.length), 0)
+      // E4 : une plage d'âge d'enfant pèse comme le mot « enfant », donc elle
+      //  tranche elle aussi — mais un appareil NOMMÉ plus long la bat, comme
+      //  pour les mots d'enfant eux-mêmes.
+      + (fam === 'jouets' && ageEnfant(texteBas) ? POIDS_AGE_ENFANT : 0);
     if (poids > score) { score = poids; choisie = fam; }
   }
   return choisie;
