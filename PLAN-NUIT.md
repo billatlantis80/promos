@@ -40,6 +40,35 @@
     tondeuse à gazon. ⚠ Second piège : un **rasoir MANUEL** (lame, jetable) n'est
     pas un appareil — s'il est déplacé vers Électroménager, le **citer dans le
     rapport** plutôt que de le cacher.
+13. **Les TONDEUSES À GAZON vont dans le BRICOLAGE.** ⚠ **Conflit MESURÉ dans le
+    code, à corriger** : la liste `bricolage` (collecteur.mjs, ligne 681) contient
+    aujourd'hui le mot **nu `'tondeuse'`**, qui attraperait aussi la tondeuse à
+    **cheveux**. Il doit devenir **`'tondeuse a gazon'`**. Les huit autres langues
+    ont déjà leur mot propre et n'ont pas ce défaut : `lawnmower` (en),
+    `rasenmaher` (de), `grasmachine` (nl), `cortacesped` (es), `tosaerba` (it),
+    `cortador de relva` (pt), `kosiarka` (pl), `grasklippare` (sv).
+    **Contrôle obligatoire** : après correction, une « tondeuse à gazon » doit
+    être en **bricolage**, une « tondeuse à cheveux » en **Électroménager**.
+14. **Contrôler la catégorie « AUTRES »** : « il faut bien vérifier les éléments
+    qui sont mis dans cette catégorie afin de vérifier s'ils ne peuvent pas être
+    classés dans d'autres qui leur correspondent ». C'est la plus grosse
+    rubrique (~20 % des offres) : c'est donc là que se cachent les erreurs, et
+    chaque offre qui en sort est un vrai gain.
+15. **Les CHAUSSETTES et tout autre VÊTEMENT vont en MODE.** ⚠ **Lacune
+    MESURÉE le 6/10** : le mot **`chaussette` n'existe dans AUCUNE table** — sur
+    17 offres qui le portent, **6 sont hors de Mode**, dont 4 en « Autres »
+    (« Chaussettes Basses Homme Femme 10/20 Paires »). Même trou pour les
+    **sous-vêtements** (26 offres, 11 hors Mode : caleçon, boxer, *trunks* —
+    « Calvin Klein Men's Trunks » est en « Autres ») et les **accessoires**
+    (29 offres, 14 hors Mode : écharpe, casquette, bonnet, gants). À compléter
+    dans les **9 langues** : chaussettes, sous-vêtements, écharpe, casquette,
+    bonnet, gants, jupe, short, maillot, pyjama, t-shirt, sweat, blouson,
+    sandales, claquettes.
+    ⚠ **Mots PIÉGEUX, à lire entre deux frontières et à ne pas laisser trancher
+    seuls** : **`ceinture`** (vêtement OU ceinture de sécurité → auto, 4 offres
+    mesurées), **`gant`** (main OU gant de toilette → maison/beauté), **`montre`**
+    (bijou OU montre connectée → high-tech), **`short`** (vêtement OU
+    « short-court »), **`slip`** (sous-vêtement OU autre sens selon la langue).
 
 ## 2. Règles de méthode — non négociables
 
@@ -103,6 +132,13 @@ parce qu'elle doit embarquer tout le reste. Si le temps manque, on s'arrête au
 milieu de la phase C : l'application reste alors cohérente et publiée, jamais
 à moitié modifiée.
 
+**RÈGLE DE SAUVETAGE — à appliquer sans hésiter :** s'il reste **moins de 3
+passages** avant 05:45 UTC (07:45 heure belge), **sauter directement à la phase
+D** (publication + APK) même si C n'est pas finie. Mieux vaut livrer un site
+publié et un APK **vérifié**, avec des traductions partielles — le rapport le
+dira —, que de n'avoir rien publié du tout. Une unité non finie reste cochée
+« à faire » : on ne ment jamais sur l'avancement.
+
 ### Phase A — AUDIT ET CATÉGORIES
 | # | Unité | État |
 |---|-------|------|
@@ -112,6 +148,8 @@ milieu de la phase C : l'application reste alors cohérente et publiée, jamais
 | A4 | Vérifier **bricolage** : idem | à faire |
 | A5 | Vérifier les autres rubriques (tech, maison, mode, beauté, sport, auto) : contradictions source/titre | à faire |
 | A6 | Corriger **uniquement** les faux positifs démontrés (mot à frontière, mot trompeur, produit nommé) ; re-mesurer | à faire |
+| A7 | **AUDIT DE « AUTRES »** — outil prêt : `node outils/audit-autres.mjs` (lister les mots fréquents absents de toutes nos tables). **Constats MESURÉS le 6/10 à 20h50** (1 876 offres en « autres », soit 20,4 % de 9 191) : (a) une **grande part sont des pages de CODES PROMO**, pas des produits — `code`/`codes`/`rabatt`/`gutschein`/`descuento`/`sconto`/`desconto`/`korting`/`promocja`/`voucher` ; il faut décider si elles ont leur place ; (b) des **articles de presse** (« Actualité : Prime Day… », « Die fünf besten Angebote ») ; (c) de **vrais produits dont le mot manque** — « PHILIPS Sonicare … tandborsthuvude » (tête de brosse à dents, **sv**) → Beauté ; « Braun Series 7 72-G7200CC » (**rasoir**) → Électroménager ; « Philips 8000 Series DST8040/30 » (fer à repasser) → Électroménager ; (d) des **domaines sans rubrique du tout** : alimentation (chocolate, vodka, sauvignon, lemonade), musique/vinyle, **voyage (hotel → Activité !)** ; (e) **marque manquante confirmée : `bosch` absent de `MARQUES.bricolage`** — à ajouter et à mesurer. **Méthode** : traiter par lots de 40 offres, corriger la table, re-mesurer le taux de « autres » ; ne jamais vider « Autres » de force — une offre sans preuve n'a rien à faire ailleurs | à faire |
+| A8 | **VÊTEMENTS → MODE** (demande explicite de B). Compléter les tables dans les **9 langues** : **`chaussette` (absent, mesuré !)**, `calecon`/`boxer`/`trunks`, `echarpe`, `casquette`, `bonnet`, `gants`, `jupe`, `short`, `maillot`, `pyjama`, `t-shirt`, `sweat`, `blouson`, `sandales`, `claquettes`. Outil de mesure : `node outils/audit-vetements.mjs`. **Contrôle obligatoire** : relancer l'outil et vérifier que la colonne « ailleurs » tombe à ~0 pour les chaussettes et les sous-vêtements. ⚠ **Mots piégeux à ne pas laisser trancher seuls** : `ceinture` (auto : ceinture de sécurité), `gant` (gant de toilette), `montre` (montre connectée → high-tech), `short`, `slip` | à faire |
 
 ### Phase B — SOURCES ET ACTIVITÉ
 | # | Unité | État |
@@ -142,7 +180,7 @@ milieu de la phase C : l'application reste alors cohérente et publiée, jamais
 ### Phase E — DEMANDES DU 6 OCTOBRE AU SOIR (priorité haute)
 | # | Unité | État |
 |---|-------|------|
-| E1 | Créer la rubrique **Électroménager** pour TOUS les pays : sortir de « Maison » les APPAREILS (frigo, congélateur, lave-linge, lave-vaisselle, sèche-linge, aspirateur, cafetière, machine à café, micro-ondes, bouilloire, grille-pain, friteuse sans huile, sèche-cheveux, lisseur, fer à repasser, rasoir électrique, tondeuse à cheveux / à barbe / à poils (⚠ **PAS** la tondeuse à gazon, qui est du jardin), ventilateur, chauffage, purificateur…) en **9 langues** ; déclarer la rubrique dans l'interface **et** dans l'ordre des onglets. ⚠ **NE PAS DÉPLACER** : téléviseur, écran, projecteur, barre de son, enceinte, casque, ordinateur, téléphone, console — ils **restent en High-tech** (demande explicite de B : « Les télévisions doivent être dans high-tech, pas dans électro »). Un **test dédié** doit vérifier qu'une télé reste en High-tech et qu'un frigo va en Électroménager | à faire |
+| E1 | Créer la rubrique **Électroménager** pour TOUS les pays : sortir de « Maison » les APPAREILS (frigo, congélateur, lave-linge, lave-vaisselle, sèche-linge, aspirateur, cafetière, machine à café, micro-ondes, bouilloire, grille-pain, friteuse sans huile, sèche-cheveux, lisseur, fer à repasser, rasoir électrique, tondeuse à cheveux / à barbe / à poils (⚠ **PAS** la tondeuse à gazon, qui est du jardin), ventilateur, chauffage, purificateur…) en **9 langues** ; déclarer la rubrique dans l'interface **et** dans l'ordre des onglets. ⚠ **NE PAS DÉPLACER** : téléviseur, écran, projecteur, barre de son, enceinte, casque, ordinateur, téléphone, console — ils **restent en High-tech** (demande explicite de B : « Les télévisions doivent être dans high-tech, pas dans électro »). Un **test dédié** doit vérifier qu'une télé reste en High-tech et qu'un frigo va en Électroménager. ⚠ **Défauts MESURÉS dans le code, à corriger dans cette unité** : (a) `bricolage` contient le mot **nu** `'tondeuse'` (l. 681) → le remplacer par `'tondeuse a gazon'`, sinon une tondeuse à cheveux part au jardin ; (b) `beaute` contient `'rasoir'` et `'tondeuse barbe'` (l. 839) → à déplacer vers Électroménager ; (c) `maison` contient `'electromenager'`, `'aspirateur'`, `'cafetiere'`, `'frigo'`, `'lave-linge'`, `'lave-vaisselle'`, `'seche-linge'`, `'refrigerateur'`, `'micro-ondes'`, `'bouilloire'`, `'purificateur'`, `'ventilateur'`, `'chauffage'`, `'robot'` (l. 701) → à déplacer vers la nouvelle rubrique, **en conservant `maison` pour le mobilier, la literie, la déco et le jardin**. Contrôles obligatoires : télé → High-tech ; frigo → Électroménager ; **tondeuse à gazon → bricolage** ; **tondeuse à cheveux → Électroménager** | à faire |
 | E2 | Ordre des onglets à mettre à jour partout : `Tout > High-tech > Électroménager > Maison > Mode > Auto & moto > Jeux & jouets > Sport > Bricolage > Beauté > Activité > Autres` | à faire |
 | E3 | **Soins → Beauté** : les soins de beauté, du corps, les massages et soins de bien-être vont en **Beauté**, plus en Activité. Défaire le `categorieImposee: 'activite'` là où la page est un SOIN ; **garder Activité pour les SORTIES** (voyage, concerts, spectacles, loisirs, restaurants, zoo, montgolfière). Mesurer l'effet avant/après et citer les cas limites | à faire |
 | E4 | **fille / garçon / enfant / catégories d'âge → Jeux & jouets** (9 langues). Implémenter, PUIS **mesurer la casse** : compter les offres déplacées et **citer nommément** celles où c'est discutable (ex. « siège auto enfant », « vélo enfant », « montre enfant »). Si une famille d'appareil nommé est plus précise, le DIRE dans le rapport — B tranchera | à faire |
