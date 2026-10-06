@@ -2,7 +2,7 @@
 
 Fiche générée depuis le code (`collecteur.mjs`) et les données publiées (`docs/offres.json`).
 
-**172 flux** répartis sur **37 domaines** · **6643 offres** collectées · **1577 affichées** (mélange 60 % Amazon / 40 % autres).
+**172 flux** répartis sur **37 domaines** · **6644 offres** collectées · **1577 affichées** (mélange 60 % Amazon / 40 % autres).
 
 Aucune clé d’API n’est utilisée : tous les flux ci-dessous sont publics et gratuits.
 
@@ -49,9 +49,9 @@ _Chaque bon plan arrive avec **le nom de la boutique et un prix réel**, plus le
 
 _Sert à détecter les bon plans relayés (articles « à X € au lieu de Y € »). La plupart n’ont pas de prix exploitable : très peu atteignent le mélange._
 
-### Enseignes surveillées nommément (46)
+### Enseignes surveillées nommément (50)
 
-01net · 4gnews · Action (BE) · Aldi (BE) · Amazon (BE) · Androidworld · Bio-Planet (BE) · Brico (BE) · Carrefour (BE) · Clubic · Colruyt (BE) · Coolblue (BE) · DHnet · Delhaize (BE) · DreamLand (BE) · Frandroid · Fun (BE) · Gamma (BE) · Gazet van Antwerpen · HDblog · Hema (BE) · Het Nieuwsblad · Hubo (BE) · Intermarché (BE) · JBC (BE) · Journal du Geek · Krefel (BE) · Kruidvat (BE) · Krëfel (BE) · Les Numériques · Lidl (BE) · M3 · Macitynet · Maxi (BE) · Media (BE) · Mobil.se · OKay (BE) · Spar (BE) · Supermarchés (BE) · Supermarkten (BE) · Teknikveckan · Toolstation (BE) · Torfs (BE) · TuttoAndroid · Vanden (BE) · iPhoneItalia
+01net · 4gnews · Action (BE) · Aldi (BE) · Amazon (BE) · Androidworld · Bio-Planet (BE) · Brico (BE) · Carrefour (BE) · Clubic · Colruyt (BE) · Colruyt promotie (BE) · Coolblue (BE) · DHnet · Delhaize (BE) · Delhaize promotie (BE) · DreamLand (BE) · Frandroid · Fun (BE) · Gamma (BE) · Gazet van Antwerpen · HDblog · Hema (BE) · Het Nieuwsblad · Hubo (BE) · Hubo promotie (BE) · Intermarché (BE) · JBC (BE) · Journal du Geek · Krefel (BE) · Kruidvat (BE) · Kruidvat actie (BE) · Krëfel (BE) · Les Numériques · Lidl (BE) · M3 · Macitynet · Maxi Toys (BE) · Media Markt (BE) · Mobil.se · OKay (BE) · Spar (BE) · Supermarchés (BE) · Supermarkten (BE) · Teknikveckan · Toolstation (BE) · Torfs (BE) · TuttoAndroid · Vanden Borre (BE) · iPhoneItalia
 
 - **bing.com** — 94 flux *(moteur : requêtes par pays et par enseigne surveillée)*
 - **news.google.com** — 36 flux *(moteur : requêtes par pays et par enseigne surveillée)*

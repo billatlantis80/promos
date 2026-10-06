@@ -448,7 +448,17 @@ const ENSEIGNES_PAR_PAYS = [
  * n'existe pas. */
 function motif(e, mot) {
   if (Array.isArray(e)) return { q: e[0], nom: e[1] };
-  return { q: `${e} ${mot}`, nom: String(e).split(/\s+/)[0] };
+  // L'étiquette est le nom du marchand SANS son qualificatif de pays
+  // (« Aldi Belgique » → « Aldi », le pays étant déjà porté par l'offre).
+  //
+  // DÉFAUT CORRIGÉ : c'était `String(e).split(/\s+/)[0]`, le PREMIER MOT. Deux
+  // syllabes d'un vrai nom disparaissaient donc de l'affichage — « Media Markt »
+  // s'étiquetait « Media », « Vanden Borre » s'étiquetait « Vanden », et la
+  // carte signait l'offre d'un marchand qui n'existe pas. Le commentaire
+  // ci-dessus mettait déjà en garde contre ce risque pour un autre cas ; la
+  // règle n'avait simplement pas été appliquée ici.
+  const nom = String(e).replace(/\s+(belgique|belgi[ëe])$/i, '').trim();
+  return { q: `${e} ${mot}`, nom };
 }
 
 const VEILLE_ENSEIGNES = ENSEIGNES_PAR_PAYS.flatMap((p) => p.marchands.map((e) => {
