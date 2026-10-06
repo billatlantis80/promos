@@ -26,10 +26,19 @@ pays des offres.**
 
 **Défaut** : la langue du navigateur si elle est dans la liste, sinon `fr`.
 
-**Hors périmètre, à dire honnêtement** : les **titres des offres** restent dans
-leur langue d'origine — ce sont des données de source, pas de l'interface. On ne
-traduit QUE l'interface (libellés, boutons, réglages, messages). Aucune clé
-d'API n'est utilisée (règle du projet : services gratuits sans clé).
+**Décision de B sur les titres d'offres** (à respecter, pas à réinterpréter) :
+
+- Le **titre d'origine est CONSERVÉ** quand il est lié à une **marque**.
+- **Seul le vocabulaire courant** est traduit.
+- Les **informations techniques et spécifiques** du produit ne sont **JAMAIS**
+  touchées : références, modèles, capacités, unités, dimensions, compatibilités.
+- Conséquence pratique : la traduction des titres est **prudente et partielle**,
+  et un titre est **laissé intact dès qu'un doute existe**. Un titre mal traduit
+  ferait dire à un marchand ce qu'il n'a pas dit — c'est pire que pas de
+  traduction. **L'interface, elle, est traduite intégralement** : c'est la partie
+  certaine et le cœur du travail.
+
+Aucune clé d'API n'est utilisée (règle du projet : services gratuits sans clé).
 
 ## 2. Dessin technique
 
