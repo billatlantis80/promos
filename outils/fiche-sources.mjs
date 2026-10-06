@@ -88,9 +88,19 @@ for (const [k, v] of Object.entries(affichees).sort((a, b) => b[1] - a[1])) {
   lignes.push(`| ${k} | ${v} | ${collectees[k] || 0} |`);
 }
 lignes.push('');
-lignes.push('## Sites écartés, et pourquoi');
+lignes.push('## Pourquoi UNE seule enseigne branchée');
 lignes.push('');
-lignes.push('Sondés un par un : **MediaMarkt** (BE, NL, PL), **bol.com**, **Darty**, **Fnac**, **Currys**, **Argos**, **Elgiganten**, **Worten**, **Gamma** — réponse 403 ou 429, page construite en JavaScript, ou zéro donnée produit. Aucun ne publie de prix barré lisible : c’est la raison pour laquelle l’Irlande, les Pays-Bas, le Portugal, le Royaume-Uni et la Suède n’ont aujourd’hui presque que des offres Amazon.');
+lignes.push('La famille « enseignes » compte un marchand, **Coolblue**, et voici l’état exact des autres — mesuré, pas supposé. Chaque enseigne demande un travail sur mesure : il n’existe ni flux commun, ni format partagé.');
+lignes.push('');
+lignes.push('- **Coolblue BE** — page `/fr/offres` en **JSON-LD schema.org** (`ItemList` → `Product` → `offers.price`) : nom, prix et visuel dans un format normalisé. **Branchée**, 3 pages.');
+lignes.push('- **Colruyt, Delhaize, Lidl, Aldi, Carrefour, Kruidvat, Action** — dépliants en **image** et applications JavaScript : **0 produit, 0 prix** dans le HTML servi. Colruyt expose une passerelle publique, mais elle réclame un `clientCode` introuvable dans ses pages — et une devinette n’est pas une source.');
+lignes.push('- **Amazon.com.be** — page 100 % JavaScript (0 ASIN, 0 prix dans le HTML) ; l’API Product Advertising exige une clé. Écartée au titre de la règle « aucune clé ».');
+lignes.push('- **Media Markt BE** — annoncé un temps comme lisible en JSON-LD, puis **revérifié : chemins de promotions en 404**, page d’accueil sans `ItemList` (4 prix seulement). Piste périmée, jamais branchée.');
+lignes.push('- **MediaMarkt NL/PL, Euronics** — chemins testés en 404 ou redirection : l’URL de promotions n’a pas été trouvée. Ce n’est **pas** un refus du site, c’est une recherche inaboutie.');
+lignes.push('- **bol.com, Darty, Fnac, Currys, Argos, Elgiganten** — refus explicite (**403** ou **429**) depuis ce serveur, avec un navigateur standard.');
+lignes.push('- **Worten** — répond 200, mais aucune donnée produit dans la page.');
+lignes.push('');
+lignes.push('Conséquence assumée : les 40 % reposent aujourd’hui sur **Coolblue + les 7 communautés de bons plans**. Étendre la part des enseignes est un travail **marchand par marchand** — un chemin de promotions à trouver, un format à valider, un analyseur à écrire.');
 lignes.push('');
 
 fs.writeFileSync(new URL('SOURCES.md', racine), lignes.join('\n'));

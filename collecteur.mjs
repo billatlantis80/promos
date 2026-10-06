@@ -156,10 +156,18 @@ const SOURCES = [
  *      Colruyt expose bien une passerelle publique, mais elle réclame un
  *      `clientCode` introuvable dans ses pages : impasse, et une devinette
  *      n'est pas une source.
- *    • Coolblue BE et Media Markt BE → leurs pages de promotions publient
- *      leurs articles en **JSON-LD schema.org** (`ItemList` → `Product` →
- *      `offers.price`), avec le nom, le prix et le visuel. C'est un format
- *      normalisé, fait pour être lu : on s'y branche.
+ *    • Coolblue BE → sa page d'offres publie ses articles en **JSON-LD
+ *      schema.org** (`ItemList` → `Product` → `offers.price`), avec le nom, le
+ *      prix et le visuel. C'est un format normalisé, fait pour être lu : on s'y
+ *      branche. C'est, à ce jour, la SEULE enseigne branchée — d'où le fait que
+ *      la famille « enseignes » ne compte qu'un marchand.
+ *
+ *    • Media Markt BE → annoncé ici comme lisible en JSON-LD, puis REVÉRIFIÉ :
+ *      les chemins de promotions rendent tous **404** (coquille JavaScript de
+ *      478 Ko), et la page d'accueil ne porte que 4 prix, sans aucun `ItemList`.
+ *      La piste était périmée et n'a jamais été branchée. À ne pas remettre ici
+ *      sans la remesurer : une note optimiste non vérifiée fait perdre une
+ *      demi-journée à celui qui la croit.
  *
  *  Pourquoi le JSON-LD et pas du découpage de HTML : c'est le format que le
  *  marchand DESTINE aux robots (référencement, comparateurs). Il ne dépend ni

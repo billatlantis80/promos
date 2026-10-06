@@ -2,7 +2,7 @@
 
 Fiche générée depuis le code (`collecteur.mjs`) et les données publiées (`docs/offres.json`).
 
-**172 flux** répartis sur **37 domaines** · **6644 offres** collectées · **1577 affichées** (mélange 60 % Amazon / 40 % autres).
+**172 flux** répartis sur **37 domaines** · **8138 offres** collectées · **1825 affichées** (mélange 60 % Amazon / 40 % autres).
 
 Aucune clé d’API n’est utilisée : tous les flux ci-dessous sont publics et gratuits.
 
@@ -77,21 +77,32 @@ _Sert à détecter les bon plans relayés (articles « à X € au lieu de Y €
 
 | Source | Affichées | Collectées |
 |---|---|---|
-| Amazon | 946 | 1876 |
-| MyDealz | 199 | 627 |
-| Chollometro | 137 | 609 |
-| Dealabs | 130 | 505 |
-| Coolblue | 102 | 102 |
-| Preisjäger | 39 | 141 |
-| Presse IT (it) 1 | 6 | 116 |
-| Presse BE (fr) 1 | 5 | 50 |
-| Pepper PL | 3 | 385 |
-| Veille presse | 3 | 61 |
-| Presse DE (de) 1 | 2 | 30 |
-| Presse BE (fr) 3 | 2 | 53 |
-| Presse IT (it) 3 | 2 | 24 |
-| Clubic | 1 | 13 |
+| Amazon | 1094 | 2142 |
+| MyDealz | 221 | 856 |
+| Chollometro | 169 | 770 |
+| Dealabs | 161 | 623 |
+| Coolblue | 108 | 108 |
+| Preisjäger | 45 | 202 |
+| Presse IT (it) 1 | 7 | 114 |
+| Presse BE (fr) 1 | 5 | 53 |
+| Pepper PL | 4 | 508 |
+| Veille presse | 3 | 62 |
+| Presse DE (de) 1 | 2 | 72 |
+| Presse BE (fr) 3 | 2 | 55 |
+| Presse IT (it) 3 | 2 | 28 |
+| Clubic | 1 | 19 |
+| Pepper NL | 1 | 212 |
 
-## Sites écartés, et pourquoi
+## Pourquoi UNE seule enseigne branchée
 
-Sondés un par un : **MediaMarkt** (BE, NL, PL), **bol.com**, **Darty**, **Fnac**, **Currys**, **Argos**, **Elgiganten**, **Worten**, **Gamma** — réponse 403 ou 429, page construite en JavaScript, ou zéro donnée produit. Aucun ne publie de prix barré lisible : c’est la raison pour laquelle l’Irlande, les Pays-Bas, le Portugal, le Royaume-Uni et la Suède n’ont aujourd’hui presque que des offres Amazon.
+La famille « enseignes » compte un marchand, **Coolblue**, et voici l’état exact des autres — mesuré, pas supposé. Chaque enseigne demande un travail sur mesure : il n’existe ni flux commun, ni format partagé.
+
+- **Coolblue BE** — page `/fr/offres` en **JSON-LD schema.org** (`ItemList` → `Product` → `offers.price`) : nom, prix et visuel dans un format normalisé. **Branchée**, 3 pages.
+- **Colruyt, Delhaize, Lidl, Aldi, Carrefour, Kruidvat, Action** — dépliants en **image** et applications JavaScript : **0 produit, 0 prix** dans le HTML servi. Colruyt expose une passerelle publique, mais elle réclame un `clientCode` introuvable dans ses pages — et une devinette n’est pas une source.
+- **Amazon.com.be** — page 100 % JavaScript (0 ASIN, 0 prix dans le HTML) ; l’API Product Advertising exige une clé. Écartée au titre de la règle « aucune clé ».
+- **Media Markt BE** — annoncé un temps comme lisible en JSON-LD, puis **revérifié : chemins de promotions en 404**, page d’accueil sans `ItemList` (4 prix seulement). Piste périmée, jamais branchée.
+- **MediaMarkt NL/PL, Euronics** — chemins testés en 404 ou redirection : l’URL de promotions n’a pas été trouvée. Ce n’est **pas** un refus du site, c’est une recherche inaboutie.
+- **bol.com, Darty, Fnac, Currys, Argos, Elgiganten** — refus explicite (**403** ou **429**) depuis ce serveur, avec un navigateur standard.
+- **Worten** — répond 200, mais aucune donnée produit dans la page.
+
+Conséquence assumée : les 40 % reposent aujourd’hui sur **Coolblue + les 7 communautés de bons plans**. Étendre la part des enseignes est un travail **marchand par marchand** — un chemin de promotions à trouver, un format à valider, un analyseur à écrire.
