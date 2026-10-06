@@ -505,20 +505,23 @@ const estPromoVerifiee = (o) => o.prix != null && o.prixAvant != null && o.prixA
 
 /** Étage 2 — une vraie boutique, un prix réel, et un signe de qualité.
  *
- *  Trois signes, et le troisième a été trouvé en diagnostiquant la Belgique :
- *  là-bas, AUCUNE des 558 offres ne porte de score communautaire (les sources
- *  Dealabs n'existent pas pour la Belgique) et les enseignes belges ne publient
- *  aucun prix barré. Le pays de l'utilisateur ne rendait donc que 8 lignes.
- *  Or Coolblue est collecté depuis SA PAGE D'OFFRES (`/fr/offres`) — donc des
- *  articles que l'enseigne présente elle-même comme ses offres du moment, avec
- *  leur prix réel. Le collecteur marque ces lignes `categorieSource:
- *  "enseigne"` : c'est une preuve de provenance, pas une déduction. */
+ *  Deux signes, et deux seulement :
+ *   — une remise annoncée par la source, crédible (≥ 15 % et ≤ 90 %) ;
+ *   — ou le score que la communauté donne au bon plan (≥ 100°).
+ *
+ *  DÉFAUT CORRIGÉ — l'étage acceptait aussi toute offre publiée sur la « page
+ *  d'offres » d'une enseigne. L'intention était de sauver la couverture belge :
+ *  sans cela, la Belgique ne rendait que 8 lignes. Mesure faite sur cette page :
+ *  22 produits, 5 seulement portent un prix de référence, UN SEUL atteint 15 %.
+ *  Ce n'est donc pas une page de promotions, c'est un catalogue à prix nu — et
+ *  la faire passer remplissait l'application d'annonces sans aucune réduction,
+ *  précisément ce qu'un utilisateur venu chercher des bons plans ne veut pas.
+ *  Une enseigne n'entre plus ici que si elle apporte une réduction réelle. */
 function estOffreEnseigne(o) {
   if (estAmazon(o)) return false;
   if (o.prix == null || !o.marchand) return false;
   const m = String(o.marchand).trim();
   if (!m || MARCHANDS_NON_BOUTIQUE.test(m) || REDACTIONS.test(m)) return false;
-  if (o.categorieSource === 'enseigne') return true;              // page d'offres de l'enseigne
   if (remiseCredible(o)) return true;                             // remise annoncée par la source
   return o.temperature != null && o.temperature >= CHALEUR_MIN;   // score de la communauté
 }
