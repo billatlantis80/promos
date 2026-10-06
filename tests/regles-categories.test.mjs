@@ -5,13 +5,20 @@
  * LANGUES du catalogue :
  *
  *   1. tout appareil électronique ou technologique → high-tech ;
- *   2. l'électroménager → maison ;
- *   3. l'électronique de beauté → beauté.
+ *   2. l'électroménager → ÉLECTROMÉNAGER (onglet dédié, à côté de High-tech) —
+ *      c'était « maison » avant la demande du 6 octobre au soir : les appareils
+ *      ménagers (froid, lavage, cuisson, entretien, soin du linge et des
+ *      cheveux) ont maintenant leur rubrique, et « maison » garde le mobilier,
+ *      la déco et le jardin ;
+ *   3. l'électronique de beauté SANS rapport avec les cheveux ni le rasage
+ *      (épilateurs, brosses à dents, soins) → beauté. Les rasoirs, tondeuses à
+ *      cheveux/barbe, sèche-cheveux et lisseurs vont en Électroménager.
  *
  * Ce qui rend ces règles non triviales : une MARQUE ne dit pas la famille d'un
  * produit. Samsung fait des téléphones (high-tech) ET des réfrigérateurs
- * (maison) ; Bosch des perceuses (bricolage) ET des lave-linge (maison) ; Dyson
- * des aspirateurs (maison) ET des sèche-cheveux (beauté). Tant que la marque
+ * (électroménager) ; Bosch des perceuses (bricolage) ET des lave-linge
+ * (électroménager) ; Dyson des aspirateurs (électroménager) ET des
+ * sèche-cheveux (électroménager aussi, désormais). Tant que la marque
  * décidait, « Samsung Réfrigérateur » partait en high-tech.
  *
  * D'où la règle appliquée : dès qu'un APPAREIL EST NOMMÉ, c'est lui qui tranche,
@@ -47,7 +54,7 @@ test('règle 1 — tout appareil électronique ou technologique va en high-tech'
   assert.deepEqual(rates, [], `titres technologiques mal rangés : ${rates.join(' | ')}`);
 });
 
-test('règle 2 — l’électroménager va en maison, MÊME sous une marque de high-tech', () => {
+test('règle 2 — l’électroménager va en ÉLECTROMÉNAGER, MÊME sous une marque de high-tech', () => {
   const cas = [
     ['Samsung Réfrigérateur combiné RS70F66KBTEF', 'marque high-tech + appareil'],
     ['Réfrigérateur Samsung 400 L', ''],
@@ -63,22 +70,49 @@ test('règle 2 — l’électroménager va en maison, MÊME sous une marque de h
     ['Odkurzacz pionowy Electrolux', 'polonais'],
     ['Dammsugare Electrolux', 'suédois'],
   ];
-  const rates = cas.filter(([t]) => famille(t, '') !== 'maison').map(([t]) => t);
+  const rates = cas.filter(([t]) => famille(t, '') !== 'electromenager').map(([t]) => t);
   assert.deepEqual(rates, [], `électroménager mal rangé : ${rates.join(' | ')}`);
 });
 
-test('règle 3 — l’électronique de beauté va en beauté, MÊME sous une marque de maison', () => {
+test('règle 2 bis — rasoirs, tondeuses et soin des cheveux → Électroménager (ils quittent Beauté)', () => {
+  const cas = [
+    ['Braun Series 9 rasoir électrique', 'rasoir électrique'],
+    ['Sèche-cheveux Dyson Supersonic', 'marque maison + appareil'],
+    ['Lisseur de cheveux Philips', 'lisseur'],
+    ['Haartrockner Philips BHD300', 'allemand — contient « trockner » (sèche-linge)'],
+    ['Tondeuse barbe Philips Series 5000', 'tondeuse à barbe'],
+    ['Tondeuse à cheveux Wahl', 'tondeuse à cheveux'],
+    ['Scheerapparaat Philips 7000', 'néerlandais'],
+    ['Asciugacapelli Philips', 'italien'],
+    ['Secador de pelo Philips', 'espagnol'],
+    ['Suszarka do włosów Philips', 'polonais'],
+  ];
+  const rates = cas.filter(([t]) => famille(t, '') !== 'electromenager').map(([t]) => `${t} → ${famille(t, '')}`);
+  assert.deepEqual(rates, [], `rasoirs / cheveux mal rangés :\n  ${rates.join('\n  ')}`);
+});
+
+test('E1 — contrôles du partage : télé → High-tech, frigo → Électroménager, tondeuse à gazon → Bricolage, tondeuse à cheveux → Électroménager', () => {
+  // Ces quatre-là sont les contrôles EXIGÉS par la demande du 6 octobre :
+  // l'onglet Électroménager ne doit pas voler les téléviseurs (high-tech), et
+  // il ne doit pas confondre la tondeuse à CHEVEUX avec la tondeuse à GAZON.
+  assert.equal(famille('Téléviseur LG OLED 55 pouces', ''), 'tech', 'une télé reste en high-tech');
+  assert.equal(famille('TV Samsung QE55Q60 55 pouces', ''), 'tech', 'une télé reste en high-tech');
+  assert.equal(famille('Enceinte Bluetooth JBL Charge 6', ''), 'tech', 'une enceinte diffuse du son : high-tech');
+  assert.equal(famille('Barre de son Samsung HW-Q600', ''), 'tech', 'une barre de son reste en high-tech');
+  assert.equal(famille('Réfrigérateur Samsung 400 L', ''), 'electromenager', 'un frigo va en électroménager');
+  assert.equal(famille('Tondeuse à gazon thermique', ''), 'bricolage', 'la tondeuse à gazon reste en bricolage');
+  assert.equal(famille('Tondeuse à cheveux Wahl', ''), 'electromenager', 'la tondeuse à cheveux va en électroménager');
+  assert.equal(famille('Robot Tondeuse sans fil Dreame A1 Pro', ''), 'bricolage', 'un robot de tonte est une tondeuse à gazon');
+});
+
+test('règle 3 — l’électronique de beauté (hors cheveux et rasage) va en beauté', () => {
   const cas = [
     ['Épilateur Braun Silk-épil 9', ''],
-    ['Braun Series 9 rasoir électrique', ''],
-    ['Sèche-cheveux Dyson Supersonic', 'marque maison + appareil beauté'],
-    ['Lisseur de cheveux Philips', ''],
     ['Brosse à dents électrique Oral-B iO', ''],
-    ['Haartrockner Philips BHD300', 'allemand — contient « trockner » (sèche-linge)'],
-    ['Tondeuse barbe Philips Series 5000', ''],
-    ['Scheerapparaat Philips 7000', 'néerlandais'],
     ['Depiladora Philips BRL130', 'espagnol'],
-    ['Asciugacapelli Philips', 'italien'],
+    ['Epilatore Philips', 'italien'],
+    ['Ontharingsapparaat Philips', 'néerlandais'],
+    ['Appareil de massage facial Philips', 'soin du visage'],
   ];
   const rates = cas.filter(([t]) => famille(t, '') !== 'beaute').map(([t]) => t);
   assert.deepEqual(rates, [], `électronique de beauté mal rangée : ${rates.join(' | ')}`);
@@ -102,7 +136,7 @@ test('les règles d’appareil ne cassent pas les autres rayons', () => {
 test('un appareil nommé l’emporte sur la catégorie de la source', () => {
   // Une source peut se tromper : un lave-linge rangé par erreur en high-tech
   // reste un lave-linge. C'est ce que veut dire « le mot d'appareil d'abord ».
-  assert.equal(famille('Samsung Réfrigérateur combiné', 'High-Tech'), 'maison');
+  assert.equal(famille('Samsung Réfrigérateur combiné', 'High-Tech'), 'electromenager');
   assert.equal(famille('Épilateur Braun Silk-épil 9', 'High-Tech'), 'beaute');
   assert.equal(famille('Téléviseur LG OLED 55', 'Gaming'), 'tech');
 });
@@ -112,7 +146,7 @@ test('un titre réduit à une référence constructeur reste en « Autres »', (
   // d'après la seule marque (« Samsung ») enverrait des réfrigérateurs en
   // high-tech — c'est exactement le défaut qu'on vient de corriger.
   assert.equal(famille('Bosch MSM4B610', ''), 'autre');
-  assert.equal(famille('Miele G 5664 SC Vi', 'maison'), 'maison', 'la marque reste un indice acceptable quand elle est sans ambiguïté');
+  assert.equal(famille('Miele G 5664 SC Vi', ''), 'electromenager', 'Miele est une marque d’appareils ménagers, sans ambiguïté');
 });
 
 test('un JEU DE SOCIÉTÉ ne part pas en bricolage sous prétexte qu’on y parle de bricolage', () => {

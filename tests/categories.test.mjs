@@ -44,9 +44,9 @@ const TITRES_PAR_LANGUE = [
   ['de', 'Kopfhörer Bluetooth mit Ladegerät', 'tech'],
   ['pl', 'Słuchawki bezprzewodowe z etui', 'tech'],
   ['sv', 'Hörlurar trådlösa med laddare', 'tech'],
-  ['pt', 'Aspirador vertical sem fio', 'maison'],
-  ['es', 'Freidora de aire sin aceite', 'maison'],
-  ['nl', 'Stofzuiger zonder zak', 'maison'],
+  ['pt', 'Aspirador vertical sem fio', 'electromenager'],
+  ['es', 'Freidora de aire sin aceite', 'electromenager'],
+  ['nl', 'Stofzuiger zonder zak', 'electromenager'],
   ['it', 'Profumo e crema idratante', 'beaute'],
   ['pl', 'Perfumy i krem nawilżający', 'beaute'],
   ['sv', 'Leksaker för barn', 'jouets'],
@@ -165,12 +165,14 @@ test('les marques rangent dans leur famille, apostrophes comprises', () => {
   // « De'Longhi » avec une apostrophe typographique n'était pas reconnu comme
   // « delonghi » : la marque était bien dans la liste, et l'offre tombait
   // quand même en « Autres ».
-  assert.equal(famille('De’Longhi Magnifica Plus ECAM320.61.G', ''), 'maison');
-  assert.equal(famille("De'Longhi Magnifica Plus", ''), 'maison');
+  //  Depuis l'onglet Électroménager, les marques d'APPAREILS ménagers
+  //  (De'Longhi, Dyson, Miele…) rangent dans « electromenager », pas « maison ».
+  assert.equal(famille('De’Longhi Magnifica Plus ECAM320.61.G', ''), 'electromenager');
+  assert.equal(famille("De'Longhi Magnifica Plus", ''), 'electromenager');
   assert.equal(famille('Apple AirPods Pro 3', ''), 'tech');
   assert.equal(famille('Samsung Galaxy S26 Ultra', ''), 'tech');
   assert.equal(famille('LEGO Editions McLaren F1', ''), 'jouets');
-  assert.equal(famille('Dyson V15s Detect Submarine', ''), 'maison');
+  assert.equal(famille('Dyson V15s Detect Submarine', ''), 'electromenager');
   assert.ok(MARQUES.tech.length > 20, 'la table des marques tech est suspicieusement courte');
 });
 

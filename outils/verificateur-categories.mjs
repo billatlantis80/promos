@@ -279,7 +279,7 @@ console.log(`   ${'total'.padEnd(10)} ${LANGUES.map((l) => `${l}:${grandTotal[l]
 if (manques.length) problemes.push(`familles incomplètes : ${manques.join(' | ')}`);
 
 /* Catégories de sources : combien de libellés étrangers sont reconnus ? */
-console.log(`\n   CATEGORIES_SOURCES : ${(source.match(/\['[^']+',\s*'(autre|tech|maison|bricolage|mode|sport|jouets|auto|beaute)'\]/g) || []).length} motifs déclarés`);
+console.log(`\n   CATEGORIES_SOURCES : ${(source.match(/\['[^']+',\s*'(autre|tech|electromenager|maison|bricolage|mode|sport|jouets|auto|beaute)'\]/g) || []).length} motifs déclarés`);
 const brut = new Set(offres.map((o) => o.categorieSource).filter(Boolean));
 // « presse » et les noms de NOS familles ne sont pas des libellés à traduire :
 // ce sont des valeurs que le collecteur écrit lui-même, et categorieDeSource()

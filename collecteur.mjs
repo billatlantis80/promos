@@ -678,13 +678,13 @@ function items(xml) {
 const FAMILLES = {
   bricolage: [
     // fr
-    'bricolage', 'outillage', 'quincaillerie', 'jardin', 'perceuse', 'visseuse', 'peinture', 'sanitaire', 'plomberie', 'electricite', 'atelier', 'brico', 'tondeuse', 'scie', 'tournevis', 'echelle', 'chaudiere', 'robinet', 'souffleur', 'taille-haie', 'debroussailleuse',
+    'bricolage', 'outillage', 'quincaillerie', 'jardin', 'perceuse', 'visseuse', 'peinture', 'sanitaire', 'plomberie', 'electricite', 'atelier', 'brico', 'tondeuse a gazon', 'robot tondeuse', 'tondeuse robot', 'scie', 'tournevis', 'echelle', 'chaudiere', 'robinet', 'souffleur', 'taille-haie', 'debroussailleuse',
     // en
-    'diy', 'tools', 'toolbox', 'drill', 'screwdriver', 'paint', 'plumbing', 'lawnmower', 'ladder', 'hardware', 'sander', 'wallpaper',
+    'diy', 'tools', 'toolbox', 'drill', 'screwdriver', 'paint', 'plumbing', 'lawnmower', 'lawn mower', 'mower', 'ladder', 'hardware', 'sander', 'wallpaper',
     // de
-    'baumarkt', 'werkzeug', 'bohrmaschine', 'schraubendreher', 'akku', 'garten', 'rasenmaher', 'leiter', 'eisenwaren', 'heizung', 'werkbank',
+    'baumarkt', 'werkzeug', 'bohrmaschine', 'schraubendreher', 'akku', 'garten', 'rasenmaher', 'mahroboter', 'leiter', 'eisenwaren', 'heizung', 'werkbank',
     // nl
-    'doe-het-zelf', 'gereedschap', 'boormachine', 'schroevendraaier', 'verf', 'sanitair', 'tuin', 'grasmachine', 'zaag', 'ijzerwaren', 'kraan',
+    'doe-het-zelf', 'gereedschap', 'boormachine', 'schroevendraaier', 'verf', 'sanitair', 'tuin', 'grasmachine', 'robotmaaier', 'zaag', 'ijzerwaren', 'kraan',
     // es
     'bricolaje', 'herramientas', 'taladro', 'destornillador', 'pintura', 'fontaneria', 'jardin', 'cortacesped', 'sierra', 'escalera', 'ferreteria',
     // it
@@ -696,25 +696,62 @@ const FAMILLES = {
     // sv
     'gor-det-sjalv', 'verktyg', 'borrmaskin', 'skruvmejsel', 'farg', 'tradgard', 'grasklippare', 'sag', 'stege',
   ],
+  //  MAISON — le MOBILIER, la DÉCO, le LINGE DE MAISON et le JARDIN.
+  //  Les APPAREILS MÉNAGERS (froid, cuisson, lavage, entretien, soin du linge
+  //  et des cheveux, climatisation) ne sont plus ici : ils sont dans la
+  //  famille « electromenager » juste après. Le partage demandé est celui-ci :
+  //  ce qui diffuse ou affiche une image (téléviseur, écran, enceinte) reste
+  //  en high-tech ; ce qui MEUBLE ou DÉCORE reste en maison ; l'appareil
+  //  ménager va en électroménager.
   maison: [
     // fr
-    'maison', 'habitat', 'electromenager', 'cuisine', 'literie', 'matelas', 'aspirateur', 'cafetiere', 'robot', 'frigo', 'lave-linge', 'meuble', 'deco', 'piscine', 'barbecue', 'bouilloire', 'cocotte', 'poele', 'couette', 'oreiller', 'micro-ondes', 'lave-vaisselle', 'seche-linge', 'refrigerateur', 'purificateur', 'ventilateur', 'chauffage', 'vaisselle',
+    'maison', 'habitat', 'cuisine', 'literie', 'matelas', 'meuble', 'deco', 'piscine', 'barbecue', 'cocotte', 'poele', 'couette', 'oreiller', 'vaisselle',
     // en
-    'home', 'kitchen', 'mattress', 'bedding', 'vacuum', 'kettle', 'toaster', 'airfryer', 'air fryer', 'coffee machine', 'fridge', 'dishwasher', 'washing machine', 'dryer', 'microwave', 'blender', 'cookware', 'pan', 'duvet', 'pillow', 'furniture', 'decor', 'air purifier', 'fan', 'heater', 'bed sheet',
+    'home', 'kitchen', 'mattress', 'bedding', 'cookware', 'pan', 'duvet', 'pillow', 'furniture', 'decor', 'bed sheet',
     // de
-    'haushalt', 'kuche', 'matratze', 'bettwaren', 'staubsauger', 'wasserkocher', 'heissluftfritteuse', 'kaffeemaschine', 'kuhlschrank', 'geschirrspuler', 'waschmaschine', 'trockner', 'mikrowelle', 'pfanne', 'bettdecke', 'kissen', 'mobel', 'deko', 'gartenmobel', 'luftreiniger', 'ventilator', 'backofen', 'herd',
+    'haushalt', 'kuche', 'matratze', 'bettwaren', 'pfanne', 'bettdecke', 'kissen', 'mobel', 'deko', 'gartenmobel',
     // nl
-    'woning', 'huis', 'keuken', 'matras', 'beddengoed', 'stofzuiger', 'waterkoker', 'koffiezetapparaat', 'koelkast', 'vaatwasser', 'wasmachine', 'droger', 'microgolf', 'dekbed', 'kussen', 'meubels', 'decoratie', 'tuinmeubelen', 'luchtzuiveraar', 'verwarming',
+    'woning', 'huis', 'keuken', 'matras', 'beddengoed', 'dekbed', 'kussen', 'meubels', 'decoratie', 'tuinmeubelen',
     // es
-    'hogar', 'vivienda', 'colchon', 'ropa de cama', 'aspirador', 'hervidor', 'tostadora', 'freidora de aire', 'cafetera', 'frigorifico', 'lavavajillas', 'lavadora', 'secadora', 'microondas', 'batidora', 'sarten', 'edredon', 'almohada', 'muebles', 'decoracion', 'purificador', 'calefaccion',
+    'hogar', 'vivienda', 'colchon', 'ropa de cama', 'sarten', 'edredon', 'almohada', 'muebles', 'decoracion',
     // it
-    'casa', 'materasso', 'biancheria', 'aspirapolvere', 'bollitore', 'tostapane', 'friggitrice', 'caffe', 'frigorifero', 'lavastoviglie', 'lavatrice', 'asciugatrice', 'microonde', 'frullatore', 'padella', 'piumino', 'cuscino', 'mobili', 'arredamento', 'purificatore', 'riscaldamento',
+    'casa', 'materasso', 'biancheria', 'caffe', 'padella', 'piumino', 'cuscino', 'mobili', 'arredamento',
     // pt
-    'cozinha', 'colchao', 'roupa de cama', 'chaleira', 'torradeira', 'fritadeira', 'maquina de cafe', 'frigorifico', 'maquina de lavar', 'secador', 'micro-ondas', 'liquidificadora', 'frigideira', 'edredao', 'almofada', 'moveis', 'decoracao', 'ventoinha', 'aquecimento',
+    'cozinha', 'colchao', 'roupa de cama', 'frigideira', 'edredao', 'almofada', 'moveis', 'decoracao',
     // pl
-    'dom', 'kuchnia', 'materac', 'posciel', 'odkurzacz', 'czajnik', 'toster', 'frytkownica', 'ekspres do kawy', 'lodowka', 'zmywarka', 'pralka', 'suszarka', 'mikrofalowka', 'patelnia', 'koldra', 'poduszka', 'meble', 'dekoracje', 'oczyszczacz', 'wentylator', 'ogrzewanie',
+    'dom', 'kuchnia', 'materac', 'posciel', 'patelnia', 'koldra', 'poduszka', 'meble', 'dekoracje',
     // sv
-    'hem', 'kok', 'madrass', 'sangklader', 'dammsugare', 'vattenkokare', 'brodrost', 'kaffemaskin', 'kylskap', 'diskmaskin', 'tvatmaskin', 'torktumlare', 'mikrovagsugn', 'stekpanna', 'tacke', 'kudde', 'mobler', 'inredning', 'luftrenare', 'flakt', 'varmare',
+    'hem', 'kok', 'madrass', 'sangklader', 'stekpanna', 'tacke', 'kudde', 'mobler', 'inredning',
+  ],
+  //  ÉLECTROMÉNAGER — les APPAREILS ménagers, et rien d'autre. Il prend le
+  //  froid (frigo, congélateur), le lavage (lave-linge, lave-vaisselle,
+  //  sèche-linge), l'entretien (aspirateur), la cuisson (micro-ondes, four,
+  //  cafetière, bouilloire, grille-pain, friteuse), le soin du linge (fer à
+  //  repasser) et des cheveux (sèche-cheveux, lisseur, rasoir, tondeuse à
+  //  cheveux/barbe) et la climatisation (ventilateur, chauffage, purificateur).
+  //  Il NE PREND PAS ce qui diffuse une image : téléviseur, écran, projecteur,
+  //  barre de son, enceinte restent en high-tech (voir FAMILLES.tech).
+  //  ⚠ La TONDEUSE À GAZON reste en bricolage : « tondeuse » seule est ici
+  //  lue comme tondeuse À CHEVEUX seulement quand le mot « cheveux » suit.
+  electromenager: [
+    // fr
+    'electromenager', 'frigo', 'refrigerateur', 'congelateur', 'lave-linge', 'lave-vaisselle', 'seche-linge', 'aspirateur', 'cafetiere', 'machine a cafe', 'micro-ondes', 'bouilloire', 'grille-pain', 'friteuse', 'seche-cheveux', 'lisseur', 'fer a repasser', 'tondeuse a cheveux', 'ventilateur', 'chauffage', 'purificateur', 'cuisiniere',
+    // en
+    'appliance', 'appliances', 'vacuum cleaner', 'kettle', 'toaster', 'air fryer', 'coffee machine', 'espresso machine', 'fridge', 'refrigerator', 'freezer', 'dishwasher', 'washing machine', 'dryer', 'microwave', 'blender', 'food processor', 'hair dryer', 'straightener', 'clothes iron', 'fan', 'heater', 'air purifier',
+    // de
+    'haushaltsgerat', 'kuhlschrank', 'gefrierschrank', 'waschmaschine', 'geschirrspuler', 'trockner', 'staubsauger', 'kaffeemaschine', 'mikrowelle', 'wasserkocher', 'fritteuse', 'heissluftfritteuse', 'haartrockner', 'glatteisen', 'buggeleisen', 'rasierer', 'haarschneider', 'ventilator', 'heizung', 'luftreiniger', 'backofen', 'kochfeld',
+    // nl
+    'huishoudapparaat', 'koelkast', 'vriezer', 'wasmachine', 'vaatwasser', 'droger', 'stofzuiger', 'koffiezetapparaat', 'microgolf', 'waterkoker', 'friteuse', 'haardroger', 'stijltang', 'strijkijzer', 'scheerapparaat', 'haartrimmer', 'ventilator', 'verwarming', 'luchtzuiveraar', 'oven', 'kookplaat',
+    // es
+    'electrodomestico', 'frigorifico', 'congelador', 'lavadora', 'lavavajillas', 'secadora', 'aspirador', 'cafetera', 'microondas', 'hervidor', 'freidora', 'secador de pelo', 'alaciador', 'plancha de pelo', 'plancha de ropa', 'maquina de afeitar', 'cortapelo', 'ventilador', 'calefaccion', 'purificador', 'horno', 'batidora',
+    // it
+    'elettrodomestico', 'frigorifero', 'congelatore', 'lavatrice', 'lavastoviglie', 'asciugatrice', 'aspirapolvere', 'macchina del caffe', 'microonde', 'bollitore', 'friggitrice', 'asciugacapelli', 'piastra per capelli', 'ferro da stiro', 'rasoio', 'tagliacapelli', 'ventilatore', 'riscaldamento', 'purificatore', 'forno', 'frullatore', 'tostapane',
+    // pt
+    'eletrodomestico', 'frigorifico', 'congelador', 'maquina de lavar', 'maquina de lavar louca', 'secador', 'aspirador', 'maquina de cafe', 'micro-ondas', 'chaleira', 'fritadeira', 'secador de cabelo', 'prancha de cabelo', 'ferro de engomar', 'maquina de barbear', 'aparador de cabelo', 'ventoinha', 'aquecimento', 'purificador', 'forno', 'liquidificadora', 'torradeira',
+    // pl
+    'agd', 'lodowka', 'zamrazarka', 'pralka', 'zmywarka', 'suszarka', 'odkurzacz', 'ekspres do kawy', 'mikrofalowka', 'czajnik', 'frytkownica', 'suszarka do wlosow', 'prostownica', 'zelazko', 'golarka', 'maszynka do wlosow', 'wentylator', 'ogrzewanie', 'oczyszczacz', 'piekarnik', 'blender', 'toster',
+    // sv
+    'vitvara', 'kylskap', 'frys', 'tvatmaskin', 'diskmaskin', 'torktumlare', 'dammsugare', 'kaffemaskin', 'mikrovagsugn', 'vattenkokare', 'harfon', 'plattang', 'strykjarn', 'rakapparat', 'harstrimmer', 'flakt', 'varmare', 'luftrenare', 'ugn', 'spis',
   ],
   tech: [
     // fr
@@ -722,7 +759,7 @@ const FAMILLES = {
     // en
     'laptop', 'notebook', 'monitor', 'screen', 'headphone', 'earbud', 'earbuds', 'keyboard', 'mouse', 'tablet', 'phone', 'television', 'soundbar', 'printer', 'camera', 'console', 'gpu', 'charger', 'powerbank', 'power bank', 'smartwatch', 'speaker', 'router', 'usb', 'hard drive', 'ps5', 'ps4', 'xbox', 'nintendo', 'switch', 'steam',
     // de
-    'notebook', 'bildschirm', 'kopfhorer', 'tastatur', 'maus', 'handy', 'fernseher', 'soundbar', 'drucker', 'kamera', 'konsole', 'festplatte', 'grafikkarte', 'ladegerat', 'lautsprecher', 'smartwatch', 'elektronik', 'computer', 'rechner', 'kopfhorer', 'bugeleisen',
+    'notebook', 'bildschirm', 'kopfhorer', 'tastatur', 'maus', 'handy', 'fernseher', 'soundbar', 'drucker', 'kamera', 'konsole', 'festplatte', 'grafikkarte', 'ladegerat', 'lautsprecher', 'smartwatch', 'elektronik', 'computer', 'rechner', 'kopfhorer',
     // nl
     'laptop', 'notebook', 'scherm', 'koptelefoon', 'hoofdtelefoon', 'toetsenbord', 'muis', 'telefoon', 'televisie', 'printer', 'camera', 'console', 'grafische kaart', 'oplader', 'luidspreker', 'smartwatch', 'elektronica', 'computer', 'koptelefoons',
     // es
@@ -836,23 +873,23 @@ const FAMILLES = {
   ],
   beaute: [
     // fr
-    'beaute', 'parfum', 'cosmetique', 'soin', 'maquillage', 'cheveux', 'rasoir', 'brosse a dents', 'creme', 'shampoing', 'gel douche', 'hygiene', 'epilateur', 'epilation', 'tondeuse barbe',
+    'beaute', 'parfum', 'cosmetique', 'soin', 'maquillage', 'cheveux', 'brosse a dents', 'creme', 'shampoing', 'gel douche', 'hygiene', 'epilateur', 'epilation',
     // en
-    'beauty', 'perfume', 'fragrance', 'cosmetics', 'skincare', 'makeup', 'hair', 'razor', 'toothbrush', 'cream', 'shampoo', 'shower gel', 'grooming', 'epilator', 'shaver',
+    'beauty', 'perfume', 'fragrance', 'cosmetics', 'skincare', 'makeup', 'hair', 'toothbrush', 'cream', 'shampoo', 'shower gel', 'grooming', 'epilator',
     // de
-    'parfumerie', 'kosmetik', 'pflege', 'schminke', 'haare', 'rasierer', 'zahnburste', 'creme', 'shampoo', 'duschgel', 'epilierer',
+    'parfumerie', 'kosmetik', 'pflege', 'schminke', 'haare', 'zahnburste', 'creme', 'shampoo', 'duschgel', 'epilierer',
     // nl
-    'parfum', 'cosmetica', 'verzorging', 'make-up', 'haar', 'scheerapparaat', 'tandenborstel', 'shampoo', 'douchegel', 'drogisterij',
+    'parfum', 'cosmetica', 'verzorging', 'make-up', 'haar', 'tandenborstel', 'shampoo', 'douchegel', 'drogisterij',
     // es
-    'belleza', 'perfume', 'cosmetica', 'cuidado', 'maquillaje', 'pelo', 'cabello', 'maquina de afeitar', 'cepillo de dientes', 'champu', 'gel de ducha',
+    'belleza', 'perfume', 'cosmetica', 'cuidado', 'maquillaje', 'pelo', 'cabello', 'cepillo de dientes', 'champu', 'gel de ducha',
     // it
-    'bellezza', 'profumo', 'cosmetica', 'cura', 'trucco', 'capelli', 'rasoio', 'spazzolino', 'crema', 'shampoo', 'docciaschiuma',
+    'bellezza', 'profumo', 'cosmetica', 'cura', 'trucco', 'capelli', 'spazzolino', 'crema', 'shampoo', 'docciaschiuma',
     // pt
-    'beleza', 'perfume', 'cosmetica', 'cuidado', 'maquilhagem', 'cabelo', 'maquina de barbear', 'escova de dentes', 'champo', 'gel de banho',
+    'beleza', 'perfume', 'cosmetica', 'cuidado', 'maquilhagem', 'cabelo', 'escova de dentes', 'champo', 'gel de banho',
     // pl
-    'uroda', 'perfumy', 'kosmetyki', 'pielegnacja', 'makijaz', 'wlosy', 'golarka', 'szczoteczka', 'krem', 'szampon', 'zel pod prysznic',
+    'uroda', 'perfumy', 'kosmetyki', 'pielegnacja', 'makijaz', 'wlosy', 'szczoteczka', 'krem', 'szampon', 'zel pod prysznic',
     // sv
-    'skonhet', 'parfym', 'kosmetik', 'hudvard', 'smink', 'har', 'rakapparat', 'tandborste', 'kram', 'schampo', 'duschgel',
+    'skonhet', 'parfym', 'kosmetik', 'hudvard', 'smink', 'har', 'tandborste', 'kram', 'schampo', 'duschgel',
   ],
 };
 
@@ -888,7 +925,11 @@ const CATEGORIES_SOURCES = [
   // --- MAISON
   ['maison', 'maison'], ['home &', 'maison'], ['home', 'maison'], ['habitat', 'maison'],
   ['hogar', 'maison'], ['dom i mieszkanie', 'maison'], ['haus', 'maison'], ['wohnen', 'maison'],
-  ['wonen', 'maison'], ['casa', 'maison'], ['electromenager', 'maison'], ['literie', 'maison'],
+  ['wonen', 'maison'], ['casa', 'maison'], ['literie', 'maison'],
+  // --- ÉLECTROMÉNAGER (libellés que publient les marchands)
+  ['electromenager', 'electromenager'], ['haushaltsgerate', 'electromenager'],
+  ['electrodomesticos', 'electromenager'], ['elettrodomestici', 'electromenager'],
+  ['elektro', 'electromenager'], ['agd', 'electromenager'],
   ['meuble', 'maison'], ['mobilier', 'maison'], ['interieur', 'maison'], ['inrichting', 'maison'],
   ['haushalt', 'maison'], ['kueche', 'maison'], ['kuche', 'maison'], ['koch', 'maison'],
   ['bricolage &', 'bricolage'],
@@ -978,7 +1019,8 @@ const CATEGORIES_SOURCES = [
  */
 const MARQUES = {
   tech: ['apple', 'iphone', 'ipad', 'macbook', 'airpods', 'imac', 'airtag', 'apple watch', 'samsung', 'galaxy', 'pixel', 'xiaomi', 'redmi', 'poco', 'oppo', 'oneplus', 'huawei', 'honor', 'playstation', 'nintendo', 'xbox', 'lenovo', 'asus', 'acer', 'alienware', 'razer', 'logitech', 'bose', 'jbl', 'sennheiser', 'anker', 'ugreen', 'nvidia', 'geforce', 'rtx', 'ryzen', 'kindle', 'chromecast', 'fire tv', 'garmin', 'fitbit', 'gopro', 'dji', 'roku', 'tcl', 'hisense', 'buds', 'boitier'],
-  maison: ['dyson', 'tefal', 'moulinex', 'delonghi', 'krups', 'nespresso', 'senseo', 'miele', 'whirlpool', 'magimix', 'pyrex', 'ikea'],
+  maison: ['ikea', 'pyrex', 'conforama'],
+  electromenager: ['dyson', 'tefal', 'moulinex', 'delonghi', 'krups', 'nespresso', 'senseo', 'miele', 'whirlpool', 'magimix'],
   bricolage: ['makita', 'einhell', 'ryobi', 'worx', 'karcher', 'gardena', 'wera', 'dewalt', 'metabo', 'hilti', 'fiskars', 'wolf garten', 'scheppach'],
   sport: ['decathlon', 'quechua', 'btwin', 'orbea', 'canyon', 'specialized'],
   beaute: ['loreal', 'sephora', 'nivea', 'garnier', 'oral-b', 'gillette', 'neutrogena', 'douglas', 'braun silk'],
@@ -1009,30 +1051,53 @@ const MARQUES = {
  *  catégorie de la source : dès qu'un produit est NOMMÉ, c'est lui qui tranche.
  */
 const MOTS_FORTS = {
-  // ÉLECTROMÉNAGER → maison
-  maison: [
+  // TONDEUSES À GAZON / ROBOTS DE TONTE → bricolage.
+  //  Ce sont des PRODUITS NOMMÉS : le nom de l'appareil tranche avant la
+  //  catégorie de la source (plusieurs robots de tonte étaient rangés en
+  //  high-tech parce que la source les publiait dans une rubrique « tech »).
+  //  ⚠ La tondeuse à CHEVEUX n'est PAS ici : elle va en électroménager.
+  bricolage: [
+    'tondeuse a gazon', 'robot tondeuse', 'tondeuse robot',
+    'lawnmower', 'lawn mower', 'robot lawn mower', 'mower', 'rasenmaher', 'mahroboter',
+    'grasmachine', 'robotmaaier', 'cortacesped', 'tosaerba', 'cortador de relva', 'kosiarka', 'grasklippare',
+  ],
+  // ÉLECTROMÉNAGER → electromenager (nouvel onglet, à côté de High-tech).
+  //  Les appareils ménagers ne vont PLUS en « maison » : cette famille ne
+  //  garde que le mobilier, la déco, le linge de maison et le jardin.
+  electromenager: [
     'refrigerateur', 'frigo', 'frigorifique', 'congelateur', 'kuhlschrank', 'koelkast', 'frigorifico', 'frigorifero', 'lodowka', 'kylskap', 'gefrierschrank', 'vriezer',
     'lave-linge', 'lavelinge', 'machine a laver', 'waschmaschine', 'wasmachine', 'lavatrice', 'lavadora', 'pralka', 'tvatmaskin',
     'lave-vaisselle', 'lavevaisselle', 'geschirrspuler', 'vaatwasser', 'lavastoviglie', 'lavavajillas', 'zmywarka', 'diskmaskin',
     'seche-linge', 'sechelinge', 'trockner', 'droger', 'asciugatrice', 'secadora', 'suszarka', 'torktumlare',
-    'aspirateur', 'staubsauger', 'stofzuiger', 'aspirapolvere', 'aspirador', 'odkurzacz', 'dammsugare',
+    'aspirateur', 'aspirateur balai', 'aspirateur robot', 'staubsauger', 'stofzuiger', 'aspirapolvere', 'aspirador', 'odkurzacz', 'dammsugare',
     'micro-ondes', 'microondes', 'mikrowelle', 'microgolf', 'microonde', 'microondas', 'mikrofalowka', 'mikrovagsugn',
     'four encastrable', 'four electrique', 'backofen', 'ofen', 'forno', 'horno', 'piekarnik', 'ugn',
-    'cafetiere', 'kaffeemaschine', 'koffiezetapparaat', 'macchina del caffe', 'maquina de cafe', 'ekspres do kawy', 'kaffemaskin',
+    'cafetiere', 'machine a cafe', 'kaffeemaschine', 'koffiezetapparaat', 'macchina del caffe', 'maquina de cafe', 'ekspres do kawy', 'kaffemaskin', 'espresso machine',
     'bouilloire', 'wasserkocher', 'waterkoker', 'bollitore', 'hervidor', 'czajnik', 'vattenkokare',
-    'friteuse', 'fritteuse', 'airfryer', 'fritadeira', 'frytkownica', 'heissluftfritteuse',
+    'friteuse', 'fritteuse', 'airfryer', 'air fryer', 'fritadeira', 'frytkownica', 'heissluftfritteuse', 'freidora de aire', 'friggitrice',
     'cocotte-minute', 'autocuiseur', 'schnellkochtopf', 'cocotte minute',
     'purificateur d air', 'luftreiniger', 'luchtzuiveraar', 'purificador de aire',
+    // Grille-pain
+    'grille-pain', 'toaster', 'tostadora', 'tostapane', 'torradeira', 'toster', 'brodrost',
+    // Fer à repasser (soin du linge)
+    'fer a repasser', 'bugeleisen', 'strijkijzer', 'plancha de ropa', 'ferro da stiro', 'ferro de engomar', 'zelazko', 'strykjarn',
+    // Sèche-cheveux et lisseur (soin des cheveux) — quittent beauté
+    'seche-cheveux', 'seche cheveux', 'sechecheveux', 'haartrockner', 'haardroger', 'asciugacapelli', 'secador de pelo', 'suszarka do wlosow', 'harfon', 'fon',
+    'lisseur', 'lisseur de cheveux', 'haarglatter', 'stijltang', 'piastra per capelli', 'plancha de pelo', 'prostownica', 'plattang', 'brosse soufflante',
+    // Rasoirs et tondeuses (à cheveux/barbe/poils) — quittent beauté
+    'rasoir electrique', 'rasoir', 'elektrorasierer', 'scheerapparaat', 'maquina de afeitar', 'rasoio elettrico', 'golarka', 'rakapparat', 'maquina de barbear',
+    'tondeuse a cheveux', 'tondeuse a barbe', 'tondeuse pour barbe', 'tondeuse barbe', 'haarschneider', 'haartrimmer', 'clipper', 'tagliacapelli', 'maszynka do wlosow', 'harstrimmer',
+    // Robots de cuisine (le mot NU « robot » reste dehors : il désigne aussi
+    //  un jouet, et un jouet-robot ne doit pas partir en électroménager).
+    'robot de cuisine', 'robot patissier', 'robot cuiseur', 'robot menager', 'robot aspirateur',
+    // Cuisson (four/plaques) — noms précis uniquement
+    'cuisiniere', 'kochfeld', 'kookplaat', 'placa de cocina', 'piano cottura', 'plyta indukcyjna', 'koksspis',
   ],
-  // ÉLECTRONIQUE DE BEAUTÉ → beauté
+  // ÉLECTRONIQUE DE BEAUTÉ → beauté (soins de la personne, pas appareils ménagers)
   beaute: [
     'epilateur', 'epilator', 'epilierer', 'ontharingsapparaat', 'depiladora', 'epilatore', 'depilatore',
-    'rasoir electrique', 'rasoir', 'elektrorasierer', 'scheerapparaat', 'maquina de afeitar', 'rasoio elettrico', 'golarka', 'rakapparat',
-    'tondeuse a cheveux', 'tondeuse barbe', 'haarschneider', 'haartrimmer', 'clipper',
-    'seche-cheveux', 'seche cheveux', 'sechecheveux', 'haartrockner', 'haardroger', 'asciugacapelli', 'secador de pelo', 'suszarka do wlosow', 'fon',
-    'lisseur', 'lisseur de cheveux', 'haarglatter', 'stijltang', 'piastra per capelli', 'plancha de pelo', 'prostownica', 'plattang',
     'brosse a dents electrique', 'brosse a dents', 'elektrische zahnburste', 'zahnburste', 'elektrische tandenborstel', 'cepillo de dientes electrico', 'spazzolino elettrico', 'szczoteczka elektryczna', 'eltandborste',
-    'brosse soufflante', 'soin du visage', 'appareil de massage', 'masseur',
+    'soin du visage', 'appareil de massage', 'masseur', 'masseur facial',
   ],
   // APPAREIL TECHNIQUE → high-tech
   tech: [
