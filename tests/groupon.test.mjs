@@ -106,17 +106,21 @@ test('les doublons d’une même page sont écartés', () => {
   assert.equal(o.length, 1, 'le même bon plan deux fois ne doit remplir la liste qu’une fois');
 });
 
-test('toutes les offres d’une page de prestations sortent en « activité »', () => {
+test('E3 — soins, repas et sorties d’une page « activité » sont répartis', () => {
+  // Demande de B (point 9) : un SOIN n'est pas une SORTIE. Une page de
+  // prestations Groupon mêle les deux : le soin part en Beauté, le repas pris
+  // dehors et la sortie restent en Activité (point 22).
   const o = offresGroupon(page([
     carte('a', 'Soin de relaxation du dos et du corps', 1999, 6000),
     carte('b', 'Déjeuner gastronomique au Restaurant Terborght', 5500, 7000),
-    carte('c', 'Exceptionnel ! Vol en montgolfière', 1400, 7000),
+    carte('c', 'Exceptionnel ! Vol en montgolfière', 2900, 7000),
   ]), SOURCE);
-  assert.ok(o.length >= 2, `au moins deux offres doivent survivre, obtenu ${o.length}`);
-  for (const x of o) {
-    assert.equal(x.categorie, 'activite', `« ${x.titre} » doit être en activité`);
-    assert.equal(x.categorieSource, 'activite');
-  }
+  assert.equal(o.length, 3, `trois offres doivent survivre, obtenu ${o.length}`);
+  const parTitre = Object.fromEntries(o.map((x) => [x.titre, x.categorie]));
+  assert.equal(parTitre['Soin de relaxation du dos et du corps'], 'beaute', 'un SOIN va en Beauté');
+  assert.equal(parTitre['Déjeuner gastronomique au Restaurant Terborght'], 'activite', 'un repas PRIS DEHORS reste en Activité');
+  assert.equal(parTitre['Exceptionnel ! Vol en montgolfière'], 'activite', 'une sortie reste en Activité');
+  for (const x of o) assert.equal(x.categorieSource, 'activite', 'la rubrique de source reste « activités »');
 });
 
 test('une page sans JSON ne rend rien — et ne casse rien', () => {
@@ -125,7 +129,7 @@ test('une page sans JSON ne rend rien — et ne casse rien', () => {
   assert.deepEqual(offresGroupon('<script id="__NEXT_DATA__">pas du json</script>', SOURCE), []);
 });
 
-test('le classement NE DÉFAIT PAS la rubrique imposée par la source', () => {
+test('le classement NE DÉFAIT PAS une rubrique imposée par la source', () => {
   // Le collecteur reclasse les offres déjà collectées en rejouant classerOffre
   // sur le titre et la catégorie de source. Si « activité » n'était pas
   // reconnue comme une rubrique de source, chaque passage de la collecte
@@ -133,26 +137,22 @@ test('le classement NE DÉFAIT PAS la rubrique imposée par la source', () => {
   // chaque cycle, sans une seule erreur dans les journaux.
   assert.equal(categorieDeSource('activite'), 'activite', 'la rubrique doit être reconnue');
   assert.equal(
-    classerOffre({ titre: 'Massages & rituels bien-être pour relâcher le corps', categorieSource: 'activite' }),
+    classerOffre({ titre: 'Menu grec en 3 services', categorieImposee: 'activite', categorieSource: 'activite' }),
     'activite',
-    'un titre qui ne dit rien de la rubrique ne doit pas la faire tomber',
+    'un repas pris dehors (aucun mot de soin) reste dans la rubrique imposée',
   );
 });
 
-test('une rubrique IMPOSÉE survit au reclassement, même contrée par le titre', () => {
-  // Mesuré sur la collecte réelle : « Soin du visage au choix ou modelage duo »
-  // et « Forfaits beauté et soins cheveux et visage » repartaient en « Beauté »,
-  // parce que leur titre contient DEUX mots de beauté — et la règle autorise la
-  // source à être contredite par deux mots. Or ce sont des PRESTATIONS, pas des
-  // cosmétiques : la page de soldes de Groupon le sait mieux que le titre.
-  // D'où le marqueur `categorieImposee`, posé sur l'offre et respecté par
-  // classerOffre — sans lui, la rubrique « Activité » se vidait des soins à
-  // chaque passage de la collecte, en silence.
+test('E3 — un SOIN d’une page imposée « activité » part en BEAUTÉ', () => {
+  // Demande de B (point 9), qui CHANGE la décision précédente : la page de
+  // soldes Groupon marquait « Soin du visage au choix ou modelage duo » en
+  // Activité. Or un soin n'est pas une sortie — il part désormais en Beauté,
+  // tout en gardant le marqueur de page (categorieImposee) pour la traçabilité.
   const o = offresGroupon(page([carte('soin', 'Soin du visage au choix ou modelage duo', 5099, 7900)]), SOURCE);
-  assert.equal(o.length, 1, 'l’offre doit passer le garde-fou (−35 %)');
-  assert.equal(o[0].categorie, 'activite');
-  assert.equal(o[0].categorieImposee, 'activite', 'le marqueur doit être POSÉ sur l’offre');
-  assert.equal(classerOffre(o[0]), 'activite', 'et il doit survivre à un reclassement');
+  assert.equal(o.length, 1, 'l’offre doit passer le garde-fou');
+  assert.equal(o[0].categorie, 'beaute', 'un soin va en Beauté, plus en Activité');
+  assert.equal(o[0].categorieImposee, 'activite', 'le marqueur de page reste POSÉ sur l’offre');
+  assert.equal(classerOffre(o[0]), 'beaute', 'et le reclassement le confirme');
 });
 
 test('une offre ordinaire ne porte AUCUN marqueur d’imposition', () => {
@@ -163,5 +163,17 @@ test('une offre ordinaire ne porte AUCUN marqueur d’imposition', () => {
   assert.equal(o.length, 1);
   assert.equal(o[0].categorieImposee, null);
   assert.equal(classerOffre(o[0]), o[0].categorie, 'sans marqueur, le titre redecide normalement');
+});
+
+test('E3 — les pièges de mots ne font pas basculer un repas en Beauté', () => {
+  // Un mot de soin est pris en PRÉFIXE (« massage » → « massages »), mais les
+  // pièges connus sont neutralisés : « besoin » contient « soin », et « spa »
+  // ne doit pas lire « spaghettis ». Sans cela, un menu partirait en Beauté.
+  const C = (t) => classerOffre({ titre: t, categorieImposee: 'activite', categorieSource: 'activite' });
+  assert.equal(C('Menu avec soupe de spaghetti'), 'activite', '« spaghettis » n’est pas un spa');
+  assert.equal(C('Menu grec'), 'activite', 'un repas sans mot de soin reste en Activité');
+  assert.equal(C('Sans besoin particulier, menu du jour'), 'activite', '« besoin » n’est pas un soin');
+  assert.equal(C('Massage relaxant 1h'), 'beaute', 'un massage va en Beauté');
+  assert.equal(C('Soins du visage et du cou'), 'beaute', 'un soin du visage va en Beauté');
 });
 

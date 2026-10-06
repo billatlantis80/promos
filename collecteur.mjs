@@ -2067,7 +2067,10 @@ function offresGroupon(html, source) {
       prixAvant: avant,
       remise: Math.round(((avant - prix) / avant) * 100),
       remiseCalculee: true,
-      categorie: source.categorieImposee || famille(titre, source.categorie || ''),
+      // Le classement passe par classerOffre() — la MÊME fonction que le
+      // reclassement et le vérificateur. Elle sait qu'une page imposée
+      // « activité » peut contenir des SOINS, qui partent alors en Beauté.
+      categorie: classerOffre({ titre, categorieImposee: source.categorieImposee || null, categorieSource: source.categorie || 'groupon' }),
       categorieSource: source.categorieImposee || source.categorie || 'groupon',
       // La rubrique vient de la PAGE, pas du titre : on le DIT sur l'offre, pour
       // que le reclassement ultérieur (classerOffre) et le vérificateur ne la
@@ -2285,6 +2288,61 @@ function offresVenteFlash(html, source) {
   return offres;
 }
 
+/* Les SOINS de beauté, du corps et du bien-être — neuf langues.
+ *
+ *  Demande de B (plan, point 9) : « tous les soins de beauté, du corps, les
+ *  massages et autres soins de bien-être » vont en **Beauté** — un SOIN n'est
+ *  pas une SORTIE. Or la page « Activité » de Groupon est imposée en bloc sur
+ *  toute la source (`categorieImposee: 'activite'`, voir SOURCES_ACTIVITES) :
+ *  sans cette table, un « Soin du visage » resterait en Activité à jamais.
+ *
+ *  Mesuré le 6/10 sur les 67 offres belges de ces deux pages : 29 portent un de
+ *  ces mots (soin, massage, modelage, spa, HIFU, peeling, réflexologie, thermes,
+ *  headspa, wenkbrauwen…). Les repas pris dehors (« Menu grec », « brunch »,
+ *  « sushi », « couscous ») et les sorties (zoo, attractions, toboggans,
+ *  montgolfière) n'en portent AUCUN : ils restent en Activité. Les mots sont
+ *  écrits sans accent (le texte est désaccentué avant comparaison) et pris en
+ *  préfixe (un « massage » doit reconnaître « massages »).
+ */
+const MOTS_SOIN = [
+  // fr
+  'soin', 'massage', 'modelage', 'spa', 'bien-etre', 'beaute', 'esthetique',
+  'hammam', 'sauna', 'thermes', 'reflexologie', 'cryolipolyse', 'microblading',
+  'microneedling', 'hifu', 'peeling', 'lifting', 'epilation', 'manucure',
+  'pedicure', 'coiffure', 'maquillage', 'ongles', 'sourcils', 'cils', 'visage',
+  'institut de beaute', 'headspa',
+  // en
+  'beauty', 'facial', 'skincare', 'wellness', 'manicure', 'waxing', 'hairdresser',
+  // de
+  'kosmetik', 'gesichtsbehandlung', 'schonheitspflege', 'friseur', 'manikure',
+  // nl
+  'ontspanning', 'schoonheid', 'wenkbrauwen', 'wimpers', 'verzorging',
+  'gezichtsbehandeling', 'kapsalon',
+  // es
+  'masaje', 'belleza', 'estetica', 'depilacion', 'manicura', 'peluqueria', 'bienestar',
+  // it
+  'massaggio', 'bellezza', 'estetica', 'depilazione', 'manicure', 'parrucchiere', 'termale',
+  // pt
+  'massagem', 'beleza', 'depilacao', 'manicure', 'cabeleireiro', 'termas',
+  // pl
+  'masaz', 'kosmetyka', 'depilacja', 'manicure', 'fryzjer',
+  // sv
+  'massage', 'skonhet', 'ansiktsbehandling', 'frisor', 'manikyr', 'depilering', 'valmaende',
+];
+// Mots courts ou glissants : « spa » ne doit pas lire « spaghettis » ni
+// « sparen », « cils » ne doit pas lire un autre mot. On exige une frontière.
+const SOIN_A_FRONTIERE = new Set(['spa', 'cils', 'hifu']);
+
+/** Vrai si le titre nomme un SOIN (beauté / corps / bien-être). */
+function estSoin(titre) {
+  const bas = retirerTrompeurs(sansNegations(sansAccents(String(titre || '')).toLowerCase()))
+    // « besoin » contient « soin » : on le neutralise avant la recherche.
+    .replace(/besoin/g, ' ');
+  return MOTS_SOIN.some((m) => (SOIN_A_FRONTIERE.has(m)
+    ? new RegExp('(^|[^a-z])' + m + '([^a-z]|$)').test(bas)
+    : bas.includes(m)));
+}
+
 /* Le classement d'une offre, réduit à ses SEULS champs conservés (titre +
  *  catégorie de source).
  *
@@ -2300,7 +2358,15 @@ export function classerOffre(o) {
   // elle ne vient pas d'une lecture du titre, elle vient du rayon que le
   // marchand a lui-même construit (voir SOURCES_ACTIVITES). La rejouer contre
   // le titre la déferait à chaque passage, en silence.
-  if (o.categorieImposee) return o.categorieImposee;
+  if (o.categorieImposee) {
+    // EXCEPTION (demande de B, plan point 9) : la page « Activité » de Groupon
+    // mêle SORTIES et SOINS. Un soin de beauté, du corps ou du bien-être n'est
+    // PAS une sortie : quand le titre le nomme, l'offre part en BEAUTÉ. Le
+    // reste de la page — repas pris dehors (point 22), concerts, spectacles,
+    // parcs, zoo — reste en Activité.
+    if (o.categorieImposee === 'activite' && estSoin(o.titre)) return 'beaute';
+    return o.categorieImposee;
+  }
   return famille(o.titre || '', o.categorieSource);
 }
 
