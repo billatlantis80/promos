@@ -564,7 +564,7 @@ export { MOTS_PROMO, motsPromo, ecarterTuiles, veilleParPays, lienReel, dedupliq
    (outils/verificateur-categories.mjs) et les tests rejouent `famille()` sur
    les offres publiées. Un contrôle qui recopierait la table des mots serait un
    contrôle qui vérifie sa propre copie — donc rien du tout. */
-export { famille, FAMILLES, MARQUES, MOTS_FORTS, CATEGORIES_SOURCES, categorieDeSource, sansAccents, sansNegations, offresEnseigne, offresAmazon, offresVenteFlash, offresGroupon, remiseCredibleSource, compterMots, remise, pourcentEcrit, SOURCES_VENTES_FLASH, SOURCES_ACTIVITES, prixReferenceEnseigne, estJeuNumerique, MOTS_A_FRONTIERE, exigeFrontiere, retirerTrompeurs };
+export { famille, FAMILLES, MARQUES, MOTS_FORTS, CATEGORIES_SOURCES, categorieDeSource, sansAccents, sansNegations, offresEnseigne, offresAmazon, offresVenteFlash, offresGroupon, remiseCredibleSource, compterMots, remise, pourcentEcrit, SOURCES_VENTES_FLASH, SOURCES_ACTIVITES, prixReferenceEnseigne, estJeuNumerique, estSoin, MOTS_A_FRONTIERE, exigeFrontiere, retirerTrompeurs };
 
 /** Recherches Google News : un flux par famille de produits. Gratuit, sans clé. */
 const RECHERCHES = [

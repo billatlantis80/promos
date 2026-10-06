@@ -43,7 +43,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { famille, FAMILLES, MARQUES, MOTS_FORTS, categorieDeSource, sansAccents, sansNegations, classerOffre, compterMots, estJeuNumerique, retirerTrompeurs } from '../collecteur.mjs';
+import { famille, FAMILLES, MARQUES, MOTS_FORTS, categorieDeSource, sansAccents, sansNegations, classerOffre, compterMots, estJeuNumerique, estSoin, retirerTrompeurs } from '../collecteur.mjs';
 
 /* Tous les mots utilisables pour classer : listes de familles, marques ET mots
    d'appareil — mêmes tables que le collecteur, fusionnées comme lui. Juger sur
@@ -133,13 +133,19 @@ for (const o of offres) {
     //  NOTE : la marque de console SEULE n'excuse rien (« LEGO Super Mario
     //  Nintendo » est un jouet) — voir estJeuNumerique, qui exige un mot de jeu.
     const numerique = cat === 'tech' && estJeuNumerique(t);
+    // Un SOIN (beauté / corps / bien-être) classé en Beauté PAR estSoin() : il
+    // vient d'une page imposée « Activité » et la preuve est le mot de soin
+    // lui-même (voir classerOffre, demande de B du 6 octobre). Un contrôle qui
+    // l'ignore reproche au classement d'appliquer sa propre consigne — c'est
+    // exactement ce qui laissait 19 offres belges accusées « sans preuve ».
+    const soinBeaute = cat === 'beaute' && estSoin(o.titre);
     // Rubrique IMPOSÉE par la page de la source (voir SOURCES_ACTIVITES) :
     // « Soin du visage au choix » est rangé en « Activité » parce que la page
     // dont il vient est une page de PRESTATIONS — un soin en institut n'est pas
     // un cosmétique. Le titre ne peut pas la contredire, pour la même raison
     // que pour les mots d'appareil : c'est l'ordre des règles, et il est voulu.
     const imposee = Boolean(o.categorieImposee);
-    if (!touche && !sourceOk && !numerique) {
+    if (!touche && !sourceOk && !numerique && !soinBeaute) {
       sansPreuve++;
       if (exemplesSansPreuve.length < 8) {
         exemplesSansPreuve.push({ pays: o.pays, cat, titre: String(o.titre || '').slice(0, 58), src: o.categorieSource });
