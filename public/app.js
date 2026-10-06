@@ -28,7 +28,8 @@ const BASE = DANS_APK ? HUB : '';
 
 const NOMS_CATEGORIES = {
   bricolage: 'Bricolage', maison: 'Maison', tech: 'High-tech', mode: 'Mode',
-  sport: 'Sport', jouets: 'Jeux & jouets', auto: 'Auto & moto', beaute: 'Beauté', autre: 'Autres',
+  sport: 'Sport', jouets: 'Jeux & jouets', auto: 'Auto & moto', beaute: 'Beauté',
+  activite: 'Activité', autre: 'Autres',
 };
 
 /* L'ORDRE des onglets, identique dans TOUS les pays.
@@ -47,7 +48,7 @@ const NOMS_CATEGORIES = {
  * Une catégorie inconnue (ajoutée par le collecteur sans passer par ici) se
  * range juste avant « Autres » — jamais au milieu et jamais en tête.
  */
-const ORDRE_CATEGORIES = ['tech', 'maison', 'mode', 'auto', 'jouets', 'sport', 'bricolage', 'beaute', 'autre'];
+const ORDRE_CATEGORIES = ['tech', 'maison', 'mode', 'auto', 'jouets', 'sport', 'bricolage', 'beaute', 'activite', 'autre'];
 
 /** Rang d'affichage d'une catégorie : un entier, ou « juste avant Autres ». */
 function rangCategorie(c) {
@@ -704,29 +705,13 @@ function melanger(liste, cmp) {
   return sortie;
 }
 
-/** Combien de bonnes promotions par pays. C'est ce que l'utilisateur verra à
- *  l'ouverture : annoncer « 544 offres » pour n'en montrer que 41 ferait croire
- *  à un filtre cassé. */
-function promosParPays() {
-  const parts = {};
-  for (const o of etat.offres) {
-    if (!estBonnePromo(o)) continue;
-    const p = paysDe(o);
-    (parts[p] = parts[p] || []).push(o);
-  }
-  // Le compte passe par le MÊME mélange que l'affichage : annoncer « 201 » pour
-  // en montrer 73 ferait croire à une panne, et c'est exactement l'écart qu'on
-  // vient de supprimer partout où ce nombre est écrit.
-  const compte = {};
-  // Même dédoublonnage et même mélange que l'affichage : un compteur qui
-  // annonce plus de lignes qu'on n'en peut voir est un compteur qui ment.
-  for (const p of Object.keys(parts)) compte[p] = melanger(dedoublonner(parts[p])).length;
-  return compte;
-}
-
-/** Ce que l'application annonce à l'ouverture : toutes langues, tous pays —
- *  mais déjà passé au mélange, donc identique au défilement qui suivra. */
-const totalPromos = () => melanger(dedoublonner(etat.offres.filter(estBonnePromo))).length;
+/* Le compte par pays du SÉLECTEUR (voir `compteParPays`) porte sur TOUTES les
+ * offres, pas sur les seules « bonnes promos ». Décision du propriétaire du
+ * produit : un pays doit annoncer son contenu RÉEL. Un chiffre qui ne comptait
+ * que les promotions faisait paraître la Belgique presque vide alors qu'elle
+ * contient des milliers d'offres — l'utilisateur n'avait aucun moyen de savoir
+ * où chercher. L'en-tête, lui, reste lié à la PORTÉE (« N bonnes promos » ou
+ * « N offres ») : il décrit la liste affichée, ce qui est son rôle. */
 
 /* ---- Le pays de la BOUTIQUE, quand il ne fait aucun doute ----
  *
@@ -965,7 +950,10 @@ function marquerPuce() {
   });
 }
 
-/** Compte les offres par pays : ce que l'application contient VRAIMENT. */
+/** Compte les offres par pays : ce que l'application contient VRAIMENT.
+ *  C'est CE chiffre que portent le sélecteur de la barre du haut, celui des
+ *  réglages et la question d'ouverture — et non le seul nombre de « bonnes
+ *  affaires », qui faisait paraître un pays presque vide. */
 function compteParPays() {
   const compte = {};
   for (const o of etat.offres) { const p = paysDe(o); compte[p] = (compte[p] || 0) + 1; }
@@ -974,21 +962,21 @@ function compteParPays() {
 
 /** Codes des pays présents, du plus fourni au moins fourni. */
 function codesPays() {
-  // On annonce des PROMOTIONS, pas des offres : c'est ce que l'utilisateur
-  // trouvera en entrant. Un « 544 » pour 41 lignes affichées ferait croire à une
-  // panne — c'est exactement l'erreur qu'on vient de corriger ailleurs, aux
-  // trois endroits où ce compte est affiché.
-  const compte = promosParPays();
+  // Trié sur TOUTES les offres du pays — le MÊME chiffre que celui affiché en
+  // face de chaque pays dans le sélecteur. Trier sur un autre nombre que celui
+  // qu'on montre ferait paraître l'ordre arbitraire.
+  const compte = compteParPays();
   return Object.keys(compte).filter((c) => NOMS_PAYS[c]).sort((a, b) => compte[b] - compte[a]);
 }
 
 function optionsPays() {
-  // On annonce des PROMOTIONS, pas des offres : c'est ce que l'utilisateur
-  // trouvera en entrant. Un « 544 » pour 41 lignes affichées ferait croire à une
-  // panne — c'est exactement l'erreur qu'on vient de corriger ailleurs, aux
-  // trois endroits où ce compte est affiché.
-  const compte = promosParPays();
-  return [`<option value="tout">Tous les pays (${totalPromos()})</option>`]
+  // Le sélecteur annonce TOUTES les offres de chaque pays, pas seulement les
+  // bonnes promotions : c'est le contenu réel du pays, et le seul chiffre qui ne
+  // bouge pas sous les pieds de l'utilisateur quand il change de portée de tri.
+  // Il portait auparavant le nombre de « bonnes affaires » (mesuré : 203 pour la
+  // Belgique) — il annonce désormais le pays entier.
+  const compte = compteParPays();
+  return [`<option value="tout">Tous les pays (${etat.offres.length})</option>`]
     .concat(codesPays().map((c) => `<option value="${esc(c)}">${esc(NOMS_PAYS[c])} (${compte[c]})</option>`))
     .join('');
 }
@@ -1040,21 +1028,21 @@ function demanderPays() {
   if (enregistre) return;
   const codes = codesPays();
   if (!codes.length) return;                 // pas de données : rien à demander
-  // On annonce des PROMOTIONS, pas des offres : c'est ce que l'utilisateur
-  // trouvera en entrant. Un « 544 » pour 41 lignes affichées ferait croire à une
-  // panne — c'est exactement l'erreur qu'on vient de corriger ailleurs, aux
-  // trois endroits où ce compte est affiché.
-  const compte = promosParPays();
+  // Même chiffre que le sélecteur de la barre du haut : TOUTES les offres du
+  // pays (voir optionsPays), et non le seul nombre de « bonnes affaires ». Deux
+  // listes du même choix ne peuvent pas annoncer deux nombres différents.
+  const compte = compteParPays();
   const suggere = paysDetecte();
   // « Tous les pays d'Europe » vient EN PREMIER : c'est l'échappatoire, et une
   // échappatoire qu'on doit chercher en bas de liste n'en est plus une. Il est
   // présenté comme les pays : même apparence, même geste, rien à part.
   const items = [`<button class="pays-item" data-pays="tout">
-      <b>Tous les pays d’Europe</b><span>${totalPromos()} promos</span>
+      <b>Tous les pays d’Europe</b><span>${etat.offres.length} offres</span>
     </button>`];
   for (const c of codes) {
+    const n = compte[c] || 0;
     items.push(`<button class="pays-item${c === suggere ? ' conseille' : ''}" data-pays="${esc(c)}">
-      <b>${esc(NOMS_PAYS[c])}</b><span>${compte[c] || 0} promo${(compte[c] || 0) > 1 ? 's' : ''}</span>
+      <b>${esc(NOMS_PAYS[c])}</b><span>${n} offre${n > 1 ? 's' : ''}</span>
     </button>`);
   }
   $('paysListe').innerHTML = items.join('');

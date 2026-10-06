@@ -17,6 +17,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import { execFileSync } from 'node:child_process';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -203,6 +204,45 @@ const SOURCES_ENSEIGNES = [
   { id: 'coolblue-be-6', nom: 'Coolblue', type: 'enseigne', pays: 'BE', langue: 'fr', reposMin: 30, url: 'https://www.coolblue.be/fr/offres?page=6' },
   { id: 'coolblue-be-7', nom: 'Coolblue', type: 'enseigne', pays: 'BE', langue: 'fr', reposMin: 30, url: 'https://www.coolblue.be/fr/offres?page=7' },
   { id: 'coolblue-be-8', nom: 'Coolblue', type: 'enseigne', pays: 'BE', langue: 'fr', reposMin: 30, url: 'https://www.coolblue.be/fr/offres?page=8' },
+
+  // GROUPON BELGIQUE — la seule plateforme belge qui publie ses bons plans avec
+  // DEUX prix réels (« 26,99 € au lieu de 59,90 € »). Trouvée après avoir sondé
+  // une trentaine de domaines belges (voir SOURCES.md) : les autres enseignes
+  // belges répondent 403/429, rendent leur page en JavaScript, ou ne publient
+  // aucun prix dans le HTML.
+  //
+  // Sa page `/goods` liste des PRODUITS, en JSON-LD standard : un `ItemList` de
+  // `Product`, chacun avec `offers.price` ET un `offers.priceSpecification` de
+  // type `ListPrice` — c'est-à-dire le prix de référence. Le robot est autorisé
+  // (leur `robots.txt` dit `Allow: /`, `search=yes`), et une seule requête par
+  // heure suffit à cette page.
+  { id: 'groupon-be-goods', nom: 'Groupon', type: 'enseigne', pays: 'BE', langue: 'fr', reposMin: 60, viaCurl: true, url: 'https://www.groupon.be/goods' },
+];
+
+/* ------------------------------------------------------------------ *
+ *  ACTIVITÉS — les bons plans de SERVICE.
+ *
+ *  Demande explicite du propriétaire du produit : « spa, centre de beauté,
+ *  restaurant, zoo, montgolfière » doivent avoir leur onglet, au même niveau
+ *  que High-tech ou Mode. Ces offres n'existaient nulle part jusqu'ici : les
+ *  communautés belges de bons plans n'existent pas (mesuré : `be.pepper.com`
+ *  inexistant, flux Dealabs Belgique en 404) et les enseignes belges se
+ *  taisent. Groupon, lui, publie ces bons plans avec leurs deux prix.
+ *
+ *  Pourquoi ces pages sont forcées en « activité » plutôt que classées par leur
+ *  titre : la page `/fr/landing/sale` a été MESURÉE avant d'être branchée —
+ *  ses 61 bons plans sont TOUS des prestations (massage, spa, restaurant,
+ *  brunch, fitness, soins) ; aucune n'est un produit. Le titre déciderait donc
+ *  à tort (« Soin de relaxation du dos » irait en beauté, ce qui est faux :
+ *  c'est un soin en institut, pas un cosmétique). La page, elle, ne se trompe
+ *  pas : c'est sa nature.
+ *
+ *  Ce qui N'EST PAS forcé : `/goods`, la page de produits, qui passe par le
+ *  lecteur d'enseigne et dont le titre décide normalement.
+ * ------------------------------------------------------------------ */
+const SOURCES_ACTIVITES = [
+  { id: 'groupon-be-sale', nom: 'Groupon', type: 'groupon', pays: 'BE', langue: 'fr', reposMin: 60, viaCurl: true, categorieImposee: 'activite', url: 'https://www.groupon.be/fr/landing/sale' },
+  { id: 'groupon-be-bonplan', nom: 'Groupon', type: 'groupon', pays: 'BE', langue: 'fr', reposMin: 60, viaCurl: true, categorieImposee: 'activite', url: 'https://www.groupon.be/fr/bon-plan' },
 ];
 
 /* ------------------------------------------------------------------ *
@@ -515,7 +555,7 @@ function lienReel(lien) {
 /** Toutes les sources, France et Europe. Exporté pour que les tests vérifient
     que chacune déclare bien un pays — une source sans pays enverrait ses offres
     dans le mauvais pays, sans que rien ne le signale. */
-export const TOUTES_SOURCES = [...SOURCES, ...SOURCES_ENSEIGNES, ...SOURCES_AMAZON, ...SOURCES_VENTES_FLASH, ...VEILLE_PAYS, ...VEILLE_BING, ...VEILLE_ENSEIGNES];
+export const TOUTES_SOURCES = [...SOURCES, ...SOURCES_ENSEIGNES, ...SOURCES_ACTIVITES, ...SOURCES_AMAZON, ...SOURCES_VENTES_FLASH, ...VEILLE_PAYS, ...VEILLE_BING, ...VEILLE_ENSEIGNES];
 
 /** Exportés pour les TESTS : le filtre par langue et l'anti-tuile se vérifient
  *  en les exécutant, pas en relisant le fichier. */
@@ -524,7 +564,7 @@ export { MOTS_PROMO, motsPromo, ecarterTuiles, veilleParPays, lienReel, dedupliq
    (outils/verificateur-categories.mjs) et les tests rejouent `famille()` sur
    les offres publiées. Un contrôle qui recopierait la table des mots serait un
    contrôle qui vérifie sa propre copie — donc rien du tout. */
-export { famille, FAMILLES, MARQUES, MOTS_FORTS, CATEGORIES_SOURCES, categorieDeSource, sansAccents, offresEnseigne, offresAmazon, offresVenteFlash, compterMots, remise, pourcentEcrit, SOURCES_VENTES_FLASH, prixReferenceEnseigne };
+export { famille, FAMILLES, MARQUES, MOTS_FORTS, CATEGORIES_SOURCES, categorieDeSource, sansAccents, sansNegations, offresEnseigne, offresAmazon, offresVenteFlash, offresGroupon, remiseCredibleSource, compterMots, remise, pourcentEcrit, SOURCES_VENTES_FLASH, SOURCES_ACTIVITES, prixReferenceEnseigne, estJeuNumerique, MOTS_A_FRONTIERE, exigeFrontiere, retirerTrompeurs };
 
 /** Recherches Google News : un flux par famille de produits. Gratuit, sans clé. */
 const RECHERCHES = [
@@ -534,7 +574,10 @@ const RECHERCHES = [
   ['mode', 'promo vêtements réduction mode'],
   ['sport', 'promo sport fitness réduction'],
   ['jouets', 'promo jouets enfant réduction'],
-  ['auto', 'promo accessoires auto réduction'],
+  // « moto » ajouté à la requête : la rubrique s'appelle « Auto & moto », et
+  // l'ancienne requête ne cherchait que l'auto — la moitié de son intitulé
+  // n'avait aucune source derrière elle.
+  ['auto', 'promo accessoires auto voiture moto casque réduction'],
 ];
 
 /* ------------------------------------------------------------------ *
@@ -755,23 +798,41 @@ const FAMILLES = {
   ],
   auto: [
     // fr
+    //  « auto », « moto », « tire » et « wagen » sont ici mais lus ENTRE DEUX
+    //  FRONTIÈRES (voir MOTS_A_FRONTIERE) : sans cela « autonomie », « Motorola »,
+    //  « à tirer » et « Bollerwagen » en faisaient des accessoires de voiture.
+    //  « band » (nl) a été retiré : le trait d'union étant une frontière,
+    //  « tri-band » suffisait à ranger un routeur ici.
     'auto', 'voiture', 'moto', 'pneu', 'automobile', 'garage', 'carrosserie', 'huile moteur', 'casque moto', 'accessoires auto', 'batterie voiture',
+    'essuie-glace', 'plaquettes de frein', 'amortisseur', 'jante', 'attelage', 'retroviseur', 'pot d echappement', 'carte grise', 'gps auto',
     // en
     'car', 'motorbike', 'motorcycle', 'tyre', 'tire', 'automotive', 'engine oil', 'car parts', 'dash cam', 'dashcam', 'car battery',
+    'brake pads', 'car care', 'car seat', 'car cover', 'car mat', 'windscreen wiper', 'roof rack', 'tow bar',
     // de
+    //  « wagen » seul est trop glissant (« Bollerwagen » = chariot à main,
+    //  « Fahrradanhänger » = remorque de vélo) : on NOMME les véhicules au lieu
+    //  de s'appuyer sur le suffixe.
     'wagen', 'motorrad', 'reifen', 'kfz', 'motorol', 'autozubehor', 'dashcam', 'autobatterie',
+    'neuwagen', 'gebrauchtwagen', 'volkswagen', 'wohnwagen', 'fahrzeug', 'autohaus', 'autoreifen', 'autoteile',
+    'bremsbelag', 'zundkerze', 'scheibenwischer', 'kennzeichen', 'anhangerkupplung', 'dachbox',
     // nl
-    'motorfiets', 'band', 'autoband', 'motorolie', 'autoaccessoires', 'autobatterij', 'wagen', 'autobanden', 'autozetel', 'trekhaak', 'ruitenwisser', 'wiel',
+    'motorfiets', 'autoband', 'motorolie', 'autoaccessoires', 'autobatterij', 'wagen', 'autobanden', 'autozetel', 'trekhaak', 'ruitenwisser', 'wiel',
+    'remblokken', 'uitlaat', 'buitenspiegel', 'dakkoffer',
     // es
     'coche', 'coches', 'motos', 'neumatico', 'automovil', 'aceite de motor', 'accesorios coche', 'bateria de coche',
+    'pastillas de freno', 'limpiaparabrisas', 'matricula', 'portaequipajes',
     // it
     'pneumatico', 'pneumatici', 'olio motore', 'accessori auto', 'batteria auto', 'automobile', 'ricambi', 'tergicristalli',
+    'pastiglie dei freni', 'portapacchi', 'specchietto retrovisore',
     // pt
     'carro', 'carros', 'automovel', 'mota', 'pneu', 'pneus', 'oleo de motor', 'acessorios auto', 'bateria de carro', 'pecas auto', 'limpa para-brisas',
+    'pastilhas de travao', 'escapamento', 'bagageiro',
     // pl
-    'samochod', 'motocykl', 'opona', 'opony', 'olej silnikowy', 'akcesoria samochodowe', 'akumulator', 'czesci samochodowe', 'wycieraczki', 'felgi',
+    'samochod', 'motocykl', 'opona', 'opony', 'olej silnikowy', 'akcesoria samochodowe', 'akumulator samochodowy', 'czesci samochodowe', 'wycieraczki', 'felgi',
+    'klocki hamulcowe', 'tlumik', 'bagaznik dachowy',
     // sv
     'bil', 'bilar', 'motorcykel', 'dack', 'motorolja', 'biltillbehor', 'bilbatteri', 'reservdelar', 'vindrutetorkare', 'bensin',
+    'bromsbelagg', 'takracke', 'dragkrok',
   ],
   beaute: [
     // fr
@@ -857,6 +918,21 @@ const CATEGORIES_SOURCES = [
   ['auto & moto', 'auto'], ['auto-moto', 'auto'], ['auto & motorrad', 'auto'], ['auto & motor', 'auto'],
   ['coches y motos', 'auto'], ['cars & motorbikes', 'auto'], ['motoryzacja', 'auto'], ['automobil', 'auto'],
   ['voitures', 'auto'], ['auto', 'auto'], ['coches', 'auto'], ['motorrad', 'auto'], ['moto', 'auto'],
+  // --- ACTIVITÉ (bons plans de SERVICE)
+  //  « Activité » n'est PAS une famille déduite du TITRE, et c'est délibéré :
+  //  sondé sur les données réelles, aucun mot de service ne tient dans un
+  //  catalogue de produits — « concert » est dans une barre de son, « show »
+  //  dans « Echo Show » et « showmodel », « massage » dans un pistolet de
+  //  massage, « aquarium » dans un aquarium à poissons. Une famille de mots
+  //  aurait donc rangé des PRODUITS en « Activité » (52 offres mesurées
+  //  contredites). La rubrique vient de la SOURCE, qui sait ce qu'elle vend
+  //  (Groupon, dont les pages de bons plans sont des prestations) — comme
+  //  « presse » ou « enseigne », qui sont aussi des étiquettes de source.
+  ['activite', 'activite'],
+  ['spa & bien-etre', 'activite'], ['bien-etre &', 'activite'], ['wellness &', 'activite'],
+  ['restaurant', 'activite'], ['gastronomie', 'activite'], ['restauration', 'activite'],
+  ['loisirs', 'activite'], ['activites', 'activite'], ['sorties', 'activite'],
+  ['freizeitpark', 'activite'], ['vrije tijd', 'activite'], ['ocio y', 'activite'],
   // --- BEAUTÉ
   ['beaute & sante', 'beaute'], ['sante & cosmetiques', 'beaute'], ['beauty & gesundheit', 'beaute'],
   ['beauty & gezondheid', 'beaute'], ['health & beauty', 'beaute'], ['beauty & health', 'beaute'],
@@ -911,10 +987,11 @@ const MARQUES = {
   auto: ['michelin', 'continental', 'castrol', 'bosch auto'],
 };
 
-/** MOTS FORTS — le mot d'APPAREIL prime sur la marque.
+/** MOTS FORTS — le PRODUIT NOMMÉ prime sur tout le reste.
  *
  *  Règle appliquée, demandée explicitement : un appareil électronique va en
- *  high-tech, l'électroménager va en maison, l'électronique de beauté va en béauté.
+ *  high-tech, l'électroménager va en maison, l'électronique de beauté va en
+ *  beauté, et un jeu de société va en jeux et jouets.
  *
  *  Pourquoi une table à part : une MARQUE ne dit pas la famille d'un produit.
  *  Samsung fait des téléphones (high-tech) ET des réfrigérateurs (maison) ;
@@ -922,8 +999,14 @@ const MARQUES = {
  *  perceuses (bricolage) ET des lave-linge (maison). Tant que la marque décidait
  *  seule, « Samsung Réfrigérateur » partait en high-tech.
  *
+ *  Pourquoi les JOUETS y sont aussi : un titre qui dit « jeu de société » ET
+ *  « ensemble de bricolage » était rangé en bricolage. Le mot d'appareil
+ *  n'était pas en cause — c'est la même question posée autrement : quand un
+ *  titre nomme DEUX choses, laquelle est le produit ? Celle qui est nommée le
+ *  plus précisément. Voir la table ci-dessous.
+ *
  *  Ces mots sont donc examinés AVANT tout le reste — avant les marques, avant la
- *  catégorie de la source : dès qu'un appareil est NOMMÉ, c'est lui qui tranche.
+ *  catégorie de la source : dès qu'un produit est NOMMÉ, c'est lui qui tranche.
  */
 const MOTS_FORTS = {
   // ÉLECTROMÉNAGER → maison
@@ -966,6 +1049,102 @@ const MOTS_FORTS = {
     'console de jeu', 'spielekonsole', 'spelcomputer', 'consola', 'konsola', 'spelkonsol', 'playstation', 'manette',
     'ecran d ordinateur', 'moniteur', 'monitor', 'ecran pc',
   ],
+  // ACCESSOIRES AUTO ET MOTO → auto
+  //
+  //  Défaut RAPPORTÉ : « la rubrique auto-moto ne contient aucun élément lié
+  //  aux autos et aux motos ». Mesuré : sur 231 offres de la rubrique, la
+  //  plupart venaient de mots de CIRCONSTANCE lus en sous-chaîne — « autonomie »,
+  //  « Motorola », « waistband », « wielka promocja ». Corriger ces faux
+  //  positifs ne suffisait pourtant pas : la rubrique se vidait de vrais
+  //  produits. D'où cette table, qui est l'autre moitié du correctif.
+  //
+  //  Ces mots sont des PRODUITS NOMMÉS, au même titre qu'un appareil
+  //  électroménager : dès qu'un titre en porte un, c'est lui qui tranche —
+  //  avant la marque et avant la catégorie de la source. « Casque Moto Intégral »
+  //  part ainsi en auto alors qu'il ne portait qu'UN mot et que la source
+  //  parlait de high-tech.
+  auto: [
+    // fr
+    'pneu', 'pneus', 'pneu hiver', 'huile moteur', 'casque moto', 'batterie voiture', 'essuie-glace',
+    'plaquettes de frein', 'amortisseur', 'attelage', 'galerie de toit', 'jante', 'retroviseur',
+    // en
+    'tyre', 'tyres', 'engine oil', 'motor oil', 'car battery', 'dash cam', 'dashcam', 'brake pads',
+    'windscreen wiper', 'tow bar', 'roof rack', 'car cover', 'car mat',
+    // de
+    'reifen', 'motorol', 'autobatterie', 'dashcam', 'bremsbelag', 'zundkerze', 'scheibenwischer',
+    'anhangerkupplung', 'autoreifen', 'autoteile', 'dachbox',
+    // nl
+    'autoband', 'autobanden', 'motorolie', 'autobatterij', 'remblokken', 'ruitenwisser', 'trekhaak', 'dakkoffer',
+    // es
+    'neumatico', 'aceite de motor', 'bateria de coche', 'pastillas de freno', 'limpiaparabrisas', 'portaequipajes',
+    // it
+    'pneumatico', 'pneumatici', 'olio motore', 'batteria auto', 'pastiglie dei freni', 'tergicristalli',
+    // pt
+    'pneu', 'pneus', 'oleo de motor', 'bateria de carro', 'pastilhas de travao', 'limpa para-brisas',
+    // pl
+    'opona', 'opony', 'olej silnikowy', 'akumulator samochodowy', 'klocki hamulcowe', 'wycieraczki', 'felgi',
+    // sv
+    'dack', 'motorolja', 'bilbatteri', 'bromsbelagg', 'vindrutetorkare', 'dragkrok',
+  ],
+  // JEUX ET JOUETS → jouets
+  //
+  //  Défaut RAPPORTÉ, et mesuré avant d'écrire une ligne : « on retrouve
+  //  beaucoup de jeux de société pour les enfants dans le bricolage car il y a
+  //  le mot bricolage dedans ». La cause exacte : un titre qui dit à la fois
+  //  « jeu de société » ET « ensemble de bricolage » comptait DEUX points pour
+  //  bricolage — le mot « bricolage », PLUS « brico », qu'il contient — contre
+  //  UN seul pour jouets. Un jeu de société partait donc dans le rayon des
+  //  perceuses.
+  //
+  //  Le TYPE de jeu est un mot de PRODUIT, exactement comme un appareil : il
+  //  doit primer sur les mots de circonstance. « jeu de societe » (15
+  //  caractères) bat « bricolage » (9) par la longueur, comme « haartrockner »
+  //  bat « trockner ». D'où la règle d'écriture : les mots sont pris en
+  //  LOCUTION, jamais seuls. Un « jeu » nu se confond avec un « jeu de clés »
+  //  (bricolage) ou un « jeu de pneus » (auto) — précisément le piège qu'on
+  //  veut éviter. Même raison pour « toy », écrit avec sa frontière de mot
+  //  (trois lettres) : sans elle, « Toyota » deviendrait un jouet.
+  jouets: [
+    // fr
+    //  « peluche » et « doudou » sont VOLONTAIREMENT ABSENTS, et c'est une
+    //  mesure, pas un oubli : en français « peluche » désigne aussi les
+    //  peluches de TISSU (« chiffon microfibre sans peluche », « rasoir anti
+    //  bouloche : élimination des peluches » Philips), et « doudou » est le
+    //  début de « doudoune » (une parka Nike partait en jouets). Les deux mots
+    //  restent dans FAMILLES, où ils ne font qu'un point parmi d'autres ; ils
+    //  ne doivent pas trancher seuls.
+    'jeu de societe', 'jeux de societe', 'jeu de plateau', 'jeu de cartes', 'jeu de role', 'jeu educatif', 'jeu d eveil', 'jeu de construction', 'pate a modeler', 'pate a sel', 'cube de jeu', 'figurine', 'poupee', 'puzzle',
+    //  « lego » est un PRODUIT NOMMÉ, au même titre qu'un « jeu de société ». La
+    //  demande est explicite : « tous les produits lego doivent être classés dans
+    //  les jeux et jouets ». Mesuré avant d'écrire cette ligne : sur 211 offres
+    //  LEGO, 9 partaient ailleurs (5 en maison, 4 en high-tech) parce qu'un mot
+    //  du titre marquait plus de points. Un nom de produit ne se discute pas :
+    //  un set LEGO reste un jouet, qu'il représente une voiture, un robot ou
+    //  une plante — y compris les gammes « Technic » et « Speed Champions ».
+    //  (Seul un JEU NUMÉRIQUE garde la priorité : voir JEU_NUMERIQUE.)
+    'lego',
+    // en
+    'board game', 'board games', 'card game', 'action figure', 'building blocks', 'jigsaw puzzle', 'plush toy', 'stuffed animal', 'model kit', 'toys',
+    // de
+    'brettspiel', 'kartenspiel', 'bauklotze', 'spielfigur', 'kuscheltier', 'puppe', 'spielzeug', 'modellbausatz', 'puzzle',
+    // nl
+    'bordspel', 'kaartspel', 'bouwblokken', 'speelgoed', 'knuffel', 'puzzel', 'legpuzzel', 'modelbouw',
+    // es
+    //  « peluche » est absent ICI AUSSI : la comparaison ne connaît PAS la
+    //  langue du titre. Le laisser en espagnol ferait matcher « élimination des
+    //  peluches » d'un rasoir français — le mot espagnol rattraperait le texte
+    //  français. Un mot ambigu ne peut donc pas rester « seulement » dans une
+    //  autre langue.
+    'juego de mesa', 'juego de cartas', 'bloques de construccion', 'figura de accion', 'rompecabezas', 'muneca', 'juguete',
+    // it
+    'gioco da tavolo', 'gioco di carte', 'mattoncini', 'action figure', 'bambola', 'giocattolo', 'puzzle',
+    // pt
+    'jogo de tabuleiro', 'jogo de cartas', 'blocos de construcao', 'quebra-cabeca', 'boneca', 'brinquedo', 'puzzle',
+    // pl
+    'gra planszowa', 'gra karciana', 'klocki', 'pluszak', 'lalka', 'zabawka', 'puzzle',
+    // sv
+    'bradspel', 'kortspel', 'byggklossar', 'gosedjur', 'docka', 'leksak', 'pussel',
+  ],
 };
 
 /** Normalisation de comparaison : accents, apostrophes, lettres spéciales.
@@ -992,6 +1171,23 @@ const sansAccents = (s) => String(s || '')
   .replace(/[łßøđæœþı]/g, (c) => LETTRES_SPECIALES[c])
   .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
   .replace(/['\u2019\u02bc`]/g, '');
+
+/** Neutralise les mentions NÉGATIVES : elles ressemblent à un mot-clé et
+ *  disent le contraire.
+ *
+ *  Cas mesuré : « AIDEA Lot de 50 Chiffon Microfibre sans peluche » se rangeait
+ *  en « Jeux & jouets » — le mot « peluche » y suffisait. Or il ne désigne pas
+ *  un jouet, mais les peluches de TISSU que le chiffon ne fait pas. Un chiffon
+ *  microfibre n'est pas un doudou.
+ *
+ *  Volontairement ÉTROIT : seules les formes niées de « peluche » sont
+ *  retirées. Étendre la règle à « sans <n'importe quoi> » toucherait des
+ *  locutions où le mot nié décrit vraiment le produit (« enceinte sans fil »,
+ *  « sucre sans gluten ») — on remplacerait un défaut par un autre, en moins
+ *  visible. La liste s'allongera sur PREUVE, jamais par prudence.
+ */
+const NEGATIONS = /(sans|anti|elimination des?|elimine les?|enleve les?|retire les?)[\s-]*peluches?/g;
+const sansNegations = (texte) => String(texte || '').replace(NEGATIONS, ' ');
 
 const CATEGORIES_SOURCES_NORM = CATEGORIES_SOURCES.map(([motif, fam]) => [sansAccents(motif).toLowerCase(), fam]);
 
@@ -1029,19 +1225,126 @@ const MOTS_FORTS_NORM = Object.fromEntries(
   Object.entries(MOTS_FORTS).map(([f, mots]) => [f, mots.map((m) => sansAccents(m).toLowerCase())]),
 );
 
-/** La famille indiquée par un mot d'appareil NOMMÉ, ou null si le titre n'en
- *  nomme aucun.
+/* Mots qui exigent une FRONTIÈRE DE MOT, quelle que soit leur longueur.
+ *
+ *  La règle générale est : un mot de 4 caractères ou plus est cherché en
+ *  SOUS-CHAÎNE — c'est nécessaire pour attraper les pluriels et les composés
+ *  (« pneu » → « pneus », « reifen » → « Autoreifen »). Mais quelques mots
+ *  courts, lus ainsi, attrapent n'importe quoi. Tous ont été vus à l'œuvre sur
+ *  la rubrique « Auto & moto », où ils envoyaient :
+ *
+ *    « auto »  → « autonomie », « automatique », « Kaffeevollautomat »
+ *    « moto »  → « Motorola », « trollingmotorer » (moteur de bateau)
+ *    « tire »  → « voitures en métal à tirer » (un jouet !), « a partire da »
+ *    « wagen » → « Bollerwagen » (chariot à main), « Fahrradanhänger »
+ *    « wiel »  → « wielka promocja » (polonais : « grande promo »)
+ *    « mota »  → « amortajado »
+ *
+ *  Ces mots restent dans leurs familles, mais ne sont plus lus qu'entre deux
+ *  frontières : « accessoires auto » et « casque moto » continuent de matcher,
+ *  « autonome » et « Motorola » non. La règle n'enlève rien d'utile.
+ *
+ *  « band » (nl : pneu) a été RETIRÉ, lui — la frontière ne suffisait pas, car
+ *  le trait d'union en est une : « tri-band » et « quad-band » passaient encore,
+ *  et un routeur NETGEAR se rangeait dans les accessoires auto. Les mots justes
+ *  de la même famille (« autoband », « autobanden ») restent en place. */
+const MOTS_A_FRONTIERE = new Set(['auto', 'moto', 'tire', 'wagen', 'wiel', 'mota']);
+
+/** Un mot-clé doit-il être lu entre deux frontières de mot ? */
+const exigeFrontiere = (m) => m.length <= 3 || MOTS_A_FRONTIERE.has(m);
+
+/* Mots qui TROMPENT la lecture : retirés du texte AVANT toute comparaison.
+ *
+ *  Une frontière de mot ne suffit pas quand le mot-clé est CONTENU dans un nom
+ *  qui n'a rien à voir, avec des lettres de chaque côté :
+ *
+ *    « motorola »  contient « motorol » (huile moteur) et « moto » → un
+ *                  téléphone partait en accessoire auto ;
+ *    « streifen »  (allemand : bande, ruban) contient « reifen » (pneu) → un
+ *                  ruban LED partait en pneu.
+ *
+ *  On retire le MOT ENTIER, pas le fragment : la phrase reste intacte, donc un
+ *  titre qui parle vraiment de Motorola ET d'huile moteur reste classé en auto.
+ *  Le remplacement par un espace (et non par rien) conserve les frontières
+ *  autour des mots voisins — « Motorola,huile » ne doit pas coller deux mots.
+ *
+ *  Les DÉCLINAISONS sont listées (polonais : « Motoroli », « Motorolę ») : un
+ *  titre qui cite les téléphones compatibles (« iPhone, Samsung, Motoroli »)
+ *  partait en accessoire auto à cause du génitif. « motorolie » et « motorolja »
+ *  — l'huile moteur, qu'on VEUT garder — ne sont pas touchés : la frontière de
+ *  mot après « motoroli » échoue devant le « e » de « motorolie ». */
+const MOTS_TROMPEURS = /(^|[^a-z])(motorola|motoroli|motorole|motorolu|streifen)([^a-z]|$)/g;
+const retirerTrompeurs = (texte) => texte.replace(MOTS_TROMPEURS, '$1 $3');
+
+/** Les marqueurs d'un jeu NUMÉRIQUE — application, téléchargement… ou console.
+ *
+ *  Pourquoi ce contrôle existe : « Patchwork Board Game - Android Game App » et
+ *  « Solitaire Pro : Card Games gratuit sur Android (Dématérialisé) » nomment un
+ *  jeu de société, donc les mots forts les envoyaient en « Jeux & jouets ».
+ *  Or ce ne sont pas des jouets : ce sont des LOGICIELS. Le support est nommé
+ *  lui aussi, et il passe avant — c'est la même règle, appliquée à l'envers.
+ *
+ *  Le contrôle est donc volontairement étroit : il ne s'applique QU'à une offre
+ *  déjà reconnue comme jouet. Ailleurs il ne décide rien.
+ *
+ *  Règle d'écriture : tout est SANS ACCENT. Le motif est testé sur le texte
+ *  déjà passé par `sansAccents()` — une entrée écrite « dématérialisé » ne
+ *  rencontrerait jamais « dematerialise » et ne servirait à rien.
+ */
+/**
+ * SEULE PREUVE D'UN JEU NUMÉRIQUE : le SUPPORT logiciel nommé — application,
+ * téléchargement, dématérialisé. Ces mots ne désignent rien d'autre qu'un
+ * logiciel, où qu'ils apparaissent : ils suffisent à eux seuls.
+ */
+const SUPPORT_NUMERIQUE = /(android|\bios\b|application|app game|game app|dematerialise|telechargement|download|jeu video|video game|videojuego|spelcomputer)/;
+
+/**
+ * LES NOMS DE CONSOLE, en deux groupes — et la distinction n'est pas
+ * théorique, elle est mesurée : les JEUX VIDÉO LEGO doivent rester en
+ * high-tech (« LEGO Batman: … (PS5/Xbox) », « LEGO City Undercover | jeu PS4 »),
+ * et là, seuls les noms de console apparaissent dans le titre.
+ */
+/** Nomment une CONSOLE et rien d'autre : jamais un jouet, jamais un objet.
+ *  Suffisent à eux seuls à trancher. */
+const CONSOLE_CLAIRE = /\b(playstation|xbox|ps[45])\b/;
+/** Ambiguës, elles : « nintendo » est aussi une licence de jouets, « steam »
+ *  la vapeur d'une locomotive, « switch » un interrupteur. Défaut RAPPORTÉ et
+ *  mesuré — « LEGO Super Mario **Nintendo** Display Model » et « LEGO City
+ *  60511 Vintage **Steam** Train » partaient en high-tech sur ce seul mot. Seul,
+ *  il ne prouve donc rien ; il lui faut à côté un mot qui dit le JEU. */
+const CONSOLE_AMBIGU = /\b(nintendo|steam|switch)\b/;
+/** Le mot du JEU, en neuf langues. */
+const MOT_JEU = /\b(jeu|jeux|game|games|gioco|giochi|juego|juegos|spiel|spiele|spel|spellen|jogo|jogos)\b/;
+/** Mais certains NOMS D'APPAREIL contiennent le mot : « Game Boy » est une
+ *  console, pas un jeu. Défaut mesuré sur un set LEGO à l'effigie d'une Game
+ *  Boy : « LEGO Super Mario Game Boy Building Set for Adults - Nintendo Display
+ *  Model » partait en high-tech, parce que « Nintendo » (marque ambiguë) ET
+ *  « Game Boy » (qui contient « game ») s'y trouvaient. On retire donc le nom
+ *  de l'appareil AVANT de chercher le mot du jeu — un titre qui parle vraiment
+ *  d'un jeu Game Boy (« Tetris Game Boy ») garde son « game » final. */
+const sansNomsAppareils = (s) => s.replace(/\bgame ?boy\b/g, ' ');
+
+/** Le titre décrit-il un logiciel plutôt qu'un objet ? Voir JEU_NUMERIQUE. */
+const estJeuNumerique = (bas) => SUPPORT_NUMERIQUE.test(bas)
+  || CONSOLE_CLAIRE.test(bas)
+  || (CONSOLE_AMBIGU.test(bas) && MOT_JEU.test(sansNomsAppareils(bas)));
+
+/** La famille indiquée par un PRODUIT NOMMÉ (un appareil, un type de jeu…), ou
+ *  null si le titre n'en nomme aucun.
  *
  *  Le départage se fait par la LONGUEUR TOTALE des mots trouvés, et non par leur
  *  nombre : c'est ce qui fait gagner le terme le plus spécifique. Sans cela,
  *  « Haartrockner » (sèche-cheveux, beauté) perdait contre « trockner »
  *  (sèche-linge, maison) qu'il contient — un point partout, et l'ordre de la
  *  table décidait. Avec la longueur, 12 caractères battent 8.
+ *
+ *  C'est aussi ce qui règle les JEUX DE SOCIÉTÉ : « jeu de societe » (15) bat
+ *  « bricolage » (9), donc un titre qui porte les deux va en jeux et jouets.
  */
-function familleDAppareil(texteBas) {
+function familleParMotFort(texteBas) {
   let choisie = null, score = 0;
   for (const [fam, mots] of Object.entries(MOTS_FORTS_NORM)) {
-    const trouves = mots.filter((m) => (m.length <= 3
+    const trouves = mots.filter((m) => (exigeFrontiere(m)
       ? new RegExp('(^|[^a-z0-9à-ÿ])' + m + '([^a-z0-9à-ÿ]|$)', 'i').test(texteBas)
       : texteBas.includes(m)));
     const poids = trouves.reduce((a, m) => a + Math.max(3, m.length), 0);
@@ -1067,10 +1370,21 @@ function familleDAppareil(texteBas) {
  *  par une intuition.
  */
 function famille(texte, categorieSource) {
-  const bas = sansAccents(String(texte || '')).toLowerCase();
-  // 0. L'appareil NOMMÉ tranche en premier (règle demandée). Voir MOTS_FORTS.
-  const appareil = familleDAppareil(bas);
-  if (appareil) return appareil;
+  // La négation est retirée AVANT toute lecture : « sans peluche » ne doit pas
+  // compter comme le mot « peluche ». Voir sansNegations().
+  // Les mots TROMPEURS le sont aussi (« motorola », « streifen ») : ce sont des
+  // noms qui contiennent un de nos mots-clés sans en être. Voir MOTS_TROMPEURS.
+  const bas = retirerTrompeurs(sansNegations(sansAccents(String(texte || '')).toLowerCase()));
+  // 0. Le PRODUIT NOMMÉ tranche en premier (règle demandée). Voir MOTS_FORTS.
+  const appareil = familleParMotFort(bas);
+  if (appareil) {
+    // …sauf si le titre dit aussi qu'il s'agit d'un JEU NUMÉRIQUE : une
+    // application qui simule un jeu de société reste un logiciel. Voir
+    // JEU_NUMERIQUE — le support nommé l'emporte, comme le produit nommé.
+    // estJeuNumerique — le support nommé l'emporte, comme le produit nommé.
+    if (appareil === 'jouets' && estJeuNumerique(bas)) return 'tech';
+    return appareil;
+  }
   let meilleur = 'autre', score = 0;
   for (const [fam, mots] of Object.entries(FAMILLES_NORM)) {
     const n = compterMots(mots, bas);
@@ -1108,10 +1422,11 @@ function famille(texte, categorieSource) {
  * Compte les mots-clés présents. DÉFAUT CORRIGÉ : une recherche « pc », « tv »
  * ou « jeu » par simple `includes` trouvait n'importe quoi à l'intérieur des
  * URL encodées de Google News — un article de mode était classé High-tech.
- * Les mots courts exigent donc une frontière de mot.
+ * Les mots courts exigent donc une frontière de mot — ainsi que ceux listés
+ * dans MOTS_A_FRONTIERE, quelle que soit leur longueur.
  */
 function compterMots(mots, texteBas) {
-  return mots.filter((m) => (m.length <= 3
+  return mots.filter((m) => (exigeFrontiere(m)
     ? new RegExp('(^|[^a-zà-ÿ])' + m + '([^a-zà-ÿ]|$)', 'i').test(texteBas)
     : texteBas.includes(m))).length;
 }
@@ -1449,6 +1764,61 @@ function prixReferenceEnseigne(html) {
   return table;
 }
 
+/** Le prix de référence publié dans une `priceSpecification` de type
+ *  `ListPrice` — la forme qu'utilise Groupon pour écrire « au lieu de ».
+ *
+ *  Le champ peut être un objet OU un tableau, et la casse du `priceType` varie
+ *  d'un marchand à l'autre (« ListPrice », « https://schema.org/ListPrice »).
+ *  On accepte les deux : refuser la forme la plus courante ferait perdre
+ *  toutes les remises d'une source, en silence.
+ */
+function referenceListe(off) {
+  if (!off || !off.priceSpecification) return null;
+  const specs = Array.isArray(off.priceSpecification) ? off.priceSpecification : [off.priceSpecification];
+  for (const s of specs) {
+    if (s && /listprice/i.test(String(s.priceType || ''))) {
+      const v = versNombre(s.price);
+      if (v != null) return v;
+    }
+  }
+  return null;
+}
+
+/** GARDE-FOU DE VRAISEMBLANCE — « uniquement des promotions crédibles ».
+ *
+ *  Demande explicite : « Je n'ai pas besoin d'avoir de la pollution. » Groupon
+ *  publie des prix de référence souvent GONFLÉS : mesuré sur sa propre page,
+ *  une licence à 11,99 € « au lieu de 129,90 € » (−91 %), un matelas à 149 €
+ *  « au lieu de 1 339 € » (−89 %). Ce ne sont pas des promotions, ce sont des
+ *  prix conseillés invérifiables — exactement le faux « −99 % » qu'on a banni.
+ *
+ *  Deux verrous, et les deux nombres viennent des données réelles :
+ *    — le prix de référence ne peut pas valoir 5× le prix demandé ou plus
+ *      (au-delà, ce n'est plus le même article, ou ce n'est plus un prix) ;
+ *    — la remise calculée doit tenir dans [15 %, 90 %] — sous 15 % ce n'est
+ *      pas un bon plan, au-dessus de 90 % ce n'est plus une remise.
+ *
+ *  Ce qu'il donne sur la page réellement mesurée : 59 bons plans retenus sur
+ *  61 sur la page « sale », et 2 sur 9 sur la page de produits. Peu, mais
+ *  aucun faux. Un faux pourcentage est pire que pas d'offre.
+ */
+const RATIO_REFERENCE_MAX = 5;
+function referenceVraisemblable(prix, avant) {
+  if (avant == null || prix == null || prix <= 0) return null;
+  if (avant <= prix) return null;
+  if (avant >= prix * RATIO_REFERENCE_MAX) return null;
+  return avant;
+}
+
+const REMISE_SOURCE_MIN = 15;
+const REMISE_SOURCE_MAX = 90;
+function remiseCredibleSource(prix, avant) {
+  const ref = referenceVraisemblable(prix, avant);
+  if (ref == null) return false;
+  const p = Math.round(((ref - prix) / ref) * 100);
+  return p >= REMISE_SOURCE_MIN && p <= REMISE_SOURCE_MAX;
+}
+
 function offresEnseigne(html, source) {
   const produits = [];
   const vus = new Set();
@@ -1466,10 +1836,15 @@ function offresEnseigne(html, source) {
     produits.push({
       titre: nettoyer(o.name),
       prix,
-      // Trois sources possibles pour le prix de référence, dans l'ordre de
-      // fiabilité : le JSON-LD (rare ici), puis la charge interne de la page.
-      prixAvant: versNombre((off && (off.highPrice || off.listPrice)) || o.highPrice)
-        ?? reference.get(nettoyer(o.name)) ?? null,
+      // Quatre sources possibles pour le prix de référence, dans l'ordre de
+      // fiabilité : les champs `highPrice`/`listPrice` du JSON-LD, la
+      // `priceSpecification` de type `ListPrice` (là où Groupon écrit « au lieu
+      // de »), puis la charge interne de la page (Coolblue). Le garde-fou de
+      // vraisemblance s'applique en dernier, à la valeur retenue.
+      prixAvant: referenceVraisemblable(prix,
+        versNombre((off && (off.highPrice || off.listPrice)) || o.highPrice)
+        ?? referenceListe(off)
+        ?? reference.get(nettoyer(o.name)) ?? null),
       lien: lien || source.url,
       image: /^https?:\/\//i.test(image) ? image : '',
       marque: typeof o.brand === 'object' && o.brand ? String(o.brand.name || '') : String(o.brand || ''),
@@ -1510,8 +1885,8 @@ function offresEnseigne(html, source) {
       prixAvant: p.prixAvant,
       remise: rem ? rem.pourcent : null,
       remiseCalculee: rem ? rem.calculee : false,
-      categorie: famille(p.titre, source.categorie || ''),
-      categorieSource: source.categorie || 'enseigne',
+      categorie: source.categorieImposee || famille(p.titre, source.categorie || ''),
+      categorieSource: source.categorieImposee || source.categorie || 'enseigne',
       image: p.image,
       date: new Date().toISOString(),
       source: source.nom,
@@ -1542,10 +1917,22 @@ function produitsDepuisCartes(html) {
 }
 
 /** « 12,99 € » ou « 12.99 » → 12.99. `versPrix` ne lit qu'un prix en euros
- *  suivi du symbole ; ici le prix arrive parfois sans lui (JSON-LD). */
+ *  suivi du symbole ; ici le prix arrive parfois sans lui (JSON-LD).
+ *
+ *  DÉFAUT CORRIGÉ — le JSON-LD schema.org autorise un prix en CHAÎNE NUE
+ *  (« "price": "1429.00" »), et c'est ce que publie Groupon. Sans la branche
+ *  ci-dessous, chaque produit passait pour « sans prix » : la page rendait
+ *  ZÉRO offre, sans erreur ni trace. Mesuré avant correction : 9 produits
+ *  lus, 0 retenu ; après : 9 lus, 2 retenus par le garde-fou de vraisemblance.
+ */
 function versNombre(v) {
   if (typeof v === 'number') return Number.isFinite(v) && v > 0 && v < 100000 ? Math.round(v * 100) / 100 : null;
-  return versPrix(String(v ?? ''));
+  const s = String(v ?? '').trim();
+  if (/^\d{1,5}(?:[.,]\d{1,2})?$/.test(s)) {
+    const n = Number(s.replace(',', '.'));
+    return Number.isFinite(n) && n > 0 && n < 100000 ? Math.round(n * 100) / 100 : null;
+  }
+  return versPrix(s);
 }
 
 function versNumberCarte(texte) {
@@ -1554,6 +1941,85 @@ function versNumberCarte(texte) {
   if (!m) return null;
   const v = Number(m[1].replace(',', '.'));
   return Number.isFinite(v) && v > 0 && v < 100000 ? Math.round(v * 100) / 100 : null;
+}
+
+/* ------------------------------------------------------------------ *
+ *  GROUPON — lire une page de bons plans.
+ *
+ *  Deux formats selon la page, et le lecteur s'en accommode :
+ *    • `/fr/landing/sale`, `/fr/bon-plan` → le JSON d'une application Next.js,
+ *      dans `<script id="__NEXT_DATA__">`. Les bons plans y sont des objets
+ *      `StandardDealCard` portant `title`, `url`, `prices.price.amount` et
+ *      `prices.strikeThroughPrice.amount` — les DEUX prix, en centimes.
+ *    • `/goods` (produits) → même JSON-LD standard que Coolblue, traité par
+ *      offresEnseigne. Pas de code ici.
+ *
+ *  Les montants sont en CENTIMES (699 = 6,99 €) : les prendre pour des euros
+ *  afficherait des licences à 699 € au lieu de 6,99 €. Vérifié sur la page.
+ *
+ *  GARDE-FOU : un bon plan n'est retenu que si ses deux prix donnent une remise
+ *  plausible (voir remiseCredibleSource). La remise est CALCULÉE entre les deux
+ *  prix, jamais lue dans le titre — Groupon écrit « jusqu'à 50 % » dans
+ *  certains titres, un maximum qui ne dit rien de l'offre affichée.
+ * ------------------------------------------------------------------ */
+function offresGroupon(html, source) {
+  const out = [];
+  const vus = new Set();
+  const bloc = String(html).match(/<script id="__NEXT_DATA__"[^>]*>([\s\S]*?)<\/script>/i);
+  if (!bloc) return out;
+  let data;
+  try { data = JSON.parse(bloc[1]); } catch { return out; }
+  const cartes = [];
+  (function parcourir(o) {
+    if (!o || typeof o !== 'object') return;
+    if (o.__typename === 'StandardDealCard') cartes.push(o);
+    for (const v of Object.values(o)) parcourir(v);
+  })(data);
+  const centimes = (o) => (o && Number.isFinite(o.amount) ? Math.round(o.amount) / 100 : null);
+  for (const c of cartes) {
+    const prix = centimes(c.prices && c.prices.price);
+    const avant = referenceVraisemblable(prix, centimes(c.prices && c.prices.strikeThroughPrice));
+    if (!remiseCredibleSource(prix, avant)) continue;
+    const titre = nettoyer(c.title);
+    const lien = String(c.url || '').trim();
+    if (!titre || !lien) continue;
+    const cle = String(c.id || c.uuid || lien).toLowerCase();
+    if (vus.has(cle)) continue;
+    vus.add(cle);
+    const imgs = c.imageUrls;
+    const image = typeof imgs === 'string' ? imgs
+      : (imgs && (imgs.large || imgs.medium || imgs.small)) || '';
+    out.push({
+      id: 'g' + Buffer.from((lien || titre).split('').reverse().join('')).toString('base64url').slice(0, 14),
+      type: 'offre',
+      titre: titre.slice(0, 220),
+      lienMarchand: lien,
+      lienPage: lien,
+      // Le marchand affiché est Groupon : c'est chez lui que l'achat se fait,
+      // et c'est le seul nom que l'utilisateur peut vérifier d'un clic.
+      marchand: source.marchandImpose || source.nom,
+      prix,
+      prixAvant: avant,
+      remise: Math.round(((avant - prix) / avant) * 100),
+      remiseCalculee: true,
+      categorie: source.categorieImposee || famille(titre, source.categorie || ''),
+      categorieSource: source.categorieImposee || source.categorie || 'groupon',
+      // La rubrique vient de la PAGE, pas du titre : on le DIT sur l'offre, pour
+      // que le reclassement ultérieur (classerOffre) et le vérificateur ne la
+      // défassent pas. Sans ce marqueur, « Soin du visage au choix » repartait
+      // en « Beauté » au passage suivant — le titre contient deux mots de
+      // beauté, et la règle autorise la source à être contredite par deux mots.
+      // Or un soin en institut n'est pas un cosmétique : la page le sait mieux
+      // que le titre.
+      categorieImposee: source.categorieImposee || null,
+      image: /^https?:\/\//i.test(image) ? image : '',
+      date: new Date().toISOString(),
+      source: source.nom,
+      sourceId: source.id,
+      pays: source.pays || 'BE',
+    });
+  }
+  return out;
 }
 
 /* ------------------------------------------------------------------ *
@@ -1765,6 +2231,11 @@ function offresVenteFlash(html, source) {
  *  base : un reclassement ultérieur doit pouvoir retrouver exactement la même
  *  décision sans elle. */
 export function classerOffre(o) {
+  // Une rubrique IMPOSÉE par la page de la source est conservée telle quelle :
+  // elle ne vient pas d'une lecture du titre, elle vient du rayon que le
+  // marchand a lui-même construit (voir SOURCES_ACTIVITES). La rejouer contre
+  // le titre la déferait à chaque passage, en silence.
+  if (o.categorieImposee) return o.categorieImposee;
   return famille(o.titre || '', o.categorieSource);
 }
 
@@ -1777,16 +2248,54 @@ async function lire(url, langue = 'fr-FR,fr;q=0.9') {
   return r.text();
 }
 
+/** Lecture par `curl`, pour les marchands qui REFUSENT le client HTTP de Node.
+ *
+ *  MESURÉ, et c'est ce qui a coûté une collecte entière : groupon.be répond
+ *  **403** à `fetch()` — avec les en-têtes minimaux COMME avec un jeu complet de
+ *  navigateur (Accept, Accept-Encoding, Sec-Fetch-*, Upgrade-Insecure-Requests).
+ *  La même URL répond **200** à curl, sans aucun en-tête particulier, et en
+ *  HTTP/1.1 comme en HTTP/2. Ce ne sont donc pas les en-têtes qui décident :
+ *  c'est l'EMPREINTE TLS du client. Node en a une qui le désigne comme robot,
+ *  curl non.
+ *
+ *  On ne contourne rien et on ne falsifie rien : on change de client HTTP pour
+ *  lire la MÊME page publique, que le marchand autorise explicitement
+ *  (`robots.txt` : `Allow: /`). Le premier essai de collecte l'a prouvé : les
+ *  offres Groupon étaient absentes des données publiées, sans une seule erreur
+ *  visible dans l'application — seulement une ligne « HTTP 403 » dans le
+ *  journal. Un lecteur qui échoue en silence est pire que pas de lecteur.
+ *
+ *  `-f` est essentiel : sans lui, curl sort avec le code 0 même sur un 403 et
+ *  rendrait une page d'erreur que le lecteur prendrait pour une page vide.
+ */
+function lireParCurl(url, langue = 'fr-BE,fr;q=0.9') {
+  return execFileSync('curl', [
+    '-fsS', '-L', '--compressed', '--max-time', '25',
+    '-A', UA, '-H', `Accept-Language: ${langue}`,
+    url,
+  ], { encoding: 'utf8', maxBuffer: 32 * 1024 * 1024 });
+}
+
 const journal = [];
 async function collecterSource(source) {
   try {
-    const corps = await lire(source.url, source.entete || source.langue);
+    // Certains marchands refusent le client HTTP de Node (voir lireParCurl) :
+    // la source le déclare, et on lit avec curl. Même page, même URL.
+    const entete = source.entete || source.langue;
+    const corps = source.viaCurl ? lireParCurl(source.url, entete) : await lire(source.url, entete);
     // Une enseigne ne rend pas un flux mais une PAGE : on lit son JSON-LD au
     // lieu de chercher des <item>. Deux lectures distinctes, jamais mélangées.
     if (source.type === 'enseigne') {
       const offres = offresEnseigne(corps, source);
       journal.push({ source: source.id, ok: true, items: 0, retenues: offres.length });
       if (VERBEUX) console.log(`  ${source.id} : ${offres.length} offre(s) d'enseigne`);
+      return offres;
+    }
+    // Bon plans de SERVICE (Groupon) : la page embarque ses cartes en JSON.
+    if (source.type === 'groupon') {
+      const offres = offresGroupon(corps, source);
+      journal.push({ source: source.id, ok: true, items: 0, retenues: offres.length });
+      if (VERBEUX) console.log(`  ${source.id} : ${offres.length} bon(s) plan(s) ${source.categorieImposee || ''}`);
       return offres;
     }
     // Ventes flash du jour : la page les embarque en JSON, on les y lit.
@@ -1878,6 +2387,36 @@ const extension = (url) => {
   return m ? '.' + m[1].toLowerCase() : '.jpg';
 };
 
+/** Le format RÉEL d'un fichier, lu dans sa signature.
+ *
+ *  Pourquoi ne pas croire l'en-tête `content-type` : img.grouponcdn.com annonce
+ *  « application/octet-stream » pour de VRAIES images webp/jpeg — mesuré, 33 des
+ *  37 visuels Groupon restés distants. Le rapatrieur exigeait `image/…` : il
+ *  refusait ces fichiers, l'adresse restait distante, et l'application la
+ *  demandait alors à NOTRE relais d'images — lequel n'existe que sur le hub du
+ *  NAS, pas sur le site GitHub Pages. Résultat : des cartes grises sur le site
+ *  public et dans l'APK hors du réseau de la maison.
+ *
+ *  On lit donc les octets, comme le fait un navigateur. Un type MIME est une
+ *  déclaration ; une signature est un fait. */
+const formatImage = (buf) => {
+  if (!buf || buf.length < 12) return '';
+  if (buf[0] === 0xff && buf[1] === 0xd8 && buf[2] === 0xff) return 'jpeg';
+  if (buf.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]))) return 'png';
+  if (/^GIF8[79]a$/.test(buf.subarray(0, 6).toString('latin1'))) return 'gif';
+  if (buf.subarray(0, 4).toString('latin1') === 'RIFF' && buf.subarray(8, 12).toString('latin1') === 'WEBP') return 'webp';
+  if (buf.subarray(4, 8).toString('latin1') === 'ftyp'
+      && /^(avif|avis|heic|heix|mif1|msf1)$/.test(buf.subarray(8, 12).toString('latin1'))) return 'avif';
+  if (buf[0] === 0x42 && buf[1] === 0x4d) return 'bmp';                    // « BM »
+  const tete = buf.subarray(0, 512).toString('utf8').trimStart().toLowerCase();
+  if (tete.startsWith('<svg') || (tete.startsWith('<?xml') && tete.includes('<svg'))) return 'svg';
+  return '';
+};
+
+// Exporté pour les tests : c'est ce contrôle qui décide si un visuel est
+// rapatrié ou laissé distant — donc affiché ou invisible sur le site public.
+export { formatImage };
+
 async function publier(sortie) {
   const dossierImg = path.join(DOSSIER_PUBLIE, 'img');
   fs.mkdirSync(dossierImg, { recursive: true });
@@ -1927,9 +2466,9 @@ async function publier(sortie) {
         headers: { 'user-agent': UA, 'referer': 'https://' + new URL(o.image).hostname + '/' },
       });
       if (!r.ok) throw new Error('HTTP ' + r.status);
-      const type = r.headers.get('content-type') || '';
       const buf = Buffer.from(await r.arrayBuffer());
-      if (!type.startsWith('image/') || buf.length === 0) throw new Error('pas une image');
+      // Le type DÉCLARÉ ne fait pas foi (voir formatImage) : on lit la signature.
+      if (!formatImage(buf)) throw new Error('pas une image');
       fs.writeFileSync(path.join(dossierImg, nom), buf);
       attendus.add(nom);
       o.image = 'img/' + nom;
@@ -2302,6 +2841,16 @@ async function principal() {
   // annonce ce qu'elle contient réellement, au lieu d'afficher des pays vides.
   const parPays = {};
   for (const o of offres) { const p = o.pays || 'FR'; parPays[p] = (parPays[p] || 0) + 1; }
+
+  // Les sources publient parfois leurs adresses de visuel ÉCHAPPÉES en HTML
+  // (« …&amp;smart=true » chez DHnet, « https:&#x2F;&#x2F;image.mobil.se&#x2F;… »
+  // chez Mobil.se). Telles quelles, ce ne sont PAS des URL : le téléchargement
+  // échoue (400 Bad Request, « no host given ») et la carte reste grise — 16
+  // visuels mesurés. On les décode ici, UNE fois, pour toutes les sources :
+  // c'est le seul point qui ne se perdra pas quand une nouvelle source sera
+  // branchée. `decaper` (et non `decoderEntites`) parce que certaines sources
+  // double-encodent.
+  for (const o of offres) if (o.image) o.image = decaper(o.image);
 
   const sortie = {
     genereLe: new Date().toISOString(),

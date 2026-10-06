@@ -12,7 +12,17 @@ const brut = JSON.parse(fs.readFileSync(new URL('../docs/offres.json', import.me
 const offres = Array.isArray(brut) ? brut : brut.offres;
 const js = fs.readFileSync(new URL('../public/app.js', import.meta.url), 'utf8');
 const d = js.indexOf('const REMISE_MIN');
-const f = js.indexOf('/** Combien de bonnes promotions par pays');
+// Repère de FIN : on découpe jusqu'à la section suivante, écrite en clair.
+// Défaut vécu : ce repère était le commentaire d'une fonction depuis supprimée.
+// Un `indexOf` qui rend -1 faisait alors `slice(d, -1)` — c'est-à-dire TOUT le
+// reste du fichier, code d'interface compris — et le script mourait sur
+// « dessinerCompte is not defined » au lieu de dire que son repère avait
+// disparu. Les deux bornes sont donc exigées, explicitement.
+const f = js.indexOf('/* ---- Le pays de la BOUTIQUE');
+if (d < 0 || f < 0 || f <= d) {
+  console.error('REPÈRE INTROUVABLE dans public/app.js : impossible de délimiter la tranche à évaluer.');
+  process.exit(1);
+}
 const ctx = vm.createContext({});
 const R = vm.runInContext(`${js.slice(d, f)}
   ;({ MARCHANDS_NON_BOUTIQUE, REDACTIONS })`, ctx);

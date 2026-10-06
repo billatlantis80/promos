@@ -39,11 +39,13 @@ test('chaque pays proposé a au moins une source derrière lui', () => {
 test('chaque source a une adresse et un type connus', () => {
   for (const s of TOUTES_SOURCES) {
     assert.match(s.url || '', /^https:\/\/[^ ]+$/, `${s.id} : adresse manquante ou non sécurisée`);
-    // Trois lectures possibles, et un test qui les énumère est ce qui empêche
-    // d'en ajouter une quatrième en silence : un flux (« dealabs », « presse »
-    // — des <item> à découper) ou une PAGE d'enseigne (« enseigne » — un
-    // JSON-LD à lire, ce qui n'a rien à voir).
-    assert.ok(['dealabs', 'presse', 'enseigne', 'amazon', 'flash'].includes(s.type), `${s.id} : type inconnu (${s.type})`);
+    // Les lectures possibles, énumérées ici pour qu'on ne puisse pas en ajouter
+    // une en silence : un flux (« dealabs », « presse » — des <item> à
+    // découper), une PAGE d'enseigne (« enseigne » — un JSON-LD à lire), une
+    // page de bons plans embarqués en JSON (« groupon »), ou une page Amazon
+    // (« amazon », « flash »). Chacune a son lecteur, et un type non listé
+    // enverrait la page au mauvais lecteur — donc zéro offre, sans erreur.
+    assert.ok(['dealabs', 'presse', 'enseigne', 'groupon', 'amazon', 'flash'].includes(s.type), `${s.id} : type inconnu (${s.type})`);
     assert.ok(s.id && s.nom, `${s.id} : identifiant ou nom manquant`);
   }
 });

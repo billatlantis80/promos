@@ -361,3 +361,26 @@ test('la question d’ouverture propose « tous les pays » EN PREMIER', () => {
   assert.doesNotMatch(html, /paysPasser/, 'l’ancien lien du bas de liste doit avoir disparu de la page');
   assert.doesNotMatch(js, /paysPasser/, 'son écouteur doit avoir disparu du script');
 });
+
+test('l’onglet « Activité » existe, au même niveau que les autres rubriques', () => {
+  // Demande explicite : « Tu peux créer une catégorie spa, centre de beauté,
+  // restaurant, zoo, montgolfière, tu peux l'appeler activité, à mettre à la
+  // même hauteur que les onglets high-tech, mode et autres. » Un onglet à part
+  // entière, donc — pas un sous-filtre, pas un repli dans « Autres ».
+  const noms = blocConstant('NOMS_CATEGORIES');
+  const ordre = blocConstant('ORDRE_CATEGORIES');
+  assert.match(noms, /activite:\s*'Activité'/, 'l’onglet doit s’appeler « Activité »');
+  const iAct = ordre.indexOf("'activite'");
+  const iAutre = ordre.indexOf("'autre'");
+  assert.ok(iAct > 0, '« Activité » doit figurer dans l’ordre des onglets, et pas en tête');
+  assert.ok(iAct < iAutre, `« Activité » précède « Autres » (positions ${iAct} / ${iAutre})`);
+  // Une rubrique de PREMIER niveau : son rang doit être un VRAI rang, et non
+  // celui du repli « juste avant Autres » servi aux catégories inconnues de
+  // l'interface. C'est la différence entre un onglet et une catégorie subie.
+  const { ctx } = bacAPuces();
+  const rang = ctx.rangCategorie('activite');
+  const rangInconnue = ctx.rangCategorie('categorie-jamais-vue');
+  assert.ok(rang >= 0, `« Activité » doit être connue de l’interface (rang ${rang})`);
+  assert.ok(rang < rangInconnue, `« Activité » (rang ${rang}) doit passer avant une catégorie inconnue (rang ${rangInconnue})`);
+});
+

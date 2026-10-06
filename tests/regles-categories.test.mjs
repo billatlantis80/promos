@@ -114,3 +114,57 @@ test('un titre réduit à une référence constructeur reste en « Autres »', (
   assert.equal(famille('Bosch MSM4B610', ''), 'autre');
   assert.equal(famille('Miele G 5664 SC Vi', 'maison'), 'maison', 'la marque reste un indice acceptable quand elle est sans ambiguïté');
 });
+
+test('un JEU DE SOCIÉTÉ ne part pas en bricolage sous prétexte qu’on y parle de bricolage', () => {
+  // Défaut rapporté : « on retrouve beaucoup de jeux de société pour les enfants
+  // dans le bricolage car il y a le mot bricolage dedans. Mais il y a aussi le
+  // mot jeu de société. Il faut corriger et les renvoyer vers jeux et jouet. »
+  //
+  //  Cause mesurée : un titre qui dit les deux comptait DEUX points pour
+  //  bricolage (le mot « bricolage », plus « brico » qu'il contient) contre UN
+  //  pour jouets. Le type de jeu est maintenant un mot fort : « jeu de societe »
+  //  (15 caractères) bat « bricolage » (9) par la longueur.
+  const cas = [
+    ['Junior Créez Votre Propre Kit De Jeu De Société, Ensemble De Bricolage', 'jouets'],
+    ['Créez Votre Propre Kit De Jeu De Société, Ensemble De Bricolage', 'jouets'],
+    ['22mm Cube de jeu pour enfants vierges à 6 côtés - Pour jeu de société', 'jouets'],
+    ['[Prime] Jeu de société Zombicide - Seconde Edition', 'jouets'],
+    ['Monopoly Deal kaartspel (Nederlandse versie)', 'jouets'],
+    ['ROKR Puzzle 3D en bois pour adulte - Kit de bricolage - Modèle globe', 'jouets'],
+    ['Play-Doh, coffret Tourbillon de smoothies, jouet avec pâte à modeler', 'jouets'],
+    ['ATM Gaming MOUTON MOUTON - Jeu de Société Famille et Amis', 'jouets'],
+    ['Korting op Beyblade speelgoed', 'jouets'],
+  ];
+  const rates = cas.filter(([t, f]) => famille(t, '') !== f).map(([t, f]) => `${t} → ${famille(t, '')} (attendu ${f})`);
+  assert.deepEqual(rates, [], `jeux de société mal rangés :\n  ${rates.join('\n  ')}`);
+});
+
+test('les FAUX AMIS ne font pas basculer un produit en jouets', () => {
+  // « peluche » désigne aussi les peluches de TISSU, et « doudou » est le début
+  // de « doudoune ». Mesuré sur les données réelles AVANT de les retirer des
+  // mots forts : un rasoir anti-bouloche Philips, des chiffons microfibre et une
+  // parka Nike partaient tous en « Jeux & jouets ». La comparaison ignorant la
+  // langue du titre, « peluche » devait être retiré de TOUTES les langues, pas
+  // seulement du français.
+  for (const [titre, piege] of [
+    ['Rasoir anti bouloche Philips GC026/80 - élimination des Peluches', 'peluche = peluches de tissu'],
+    ['Doudoune longue Nike Liverpool FC 24/25 Strike Windrunner', 'doudou = début de doudoune'],
+    ['AIDEA Lot de 50 Chiffon Microfibre sans peluche', 'peluche = peluches de tissu'],
+  ]) {
+    assert.notEqual(famille(titre, ''), 'jouets', `${piege} : « ${titre} » ne doit pas aller en jouets`);
+  }
+});
+
+test('un jeu NUMÉRIQUE n’est pas un jouet', () => {
+  // Le support est nommé, lui aussi : une application qui simule un jeu de
+  // société reste un logiciel. C'est la règle du produit nommé, appliquée à
+  // l'envers — et c'est ce qui empêche « Board Game App » de finir dans le
+  // rayon des jouets.
+  assert.equal(famille('Patchwork Board Game - Android Game App', ''), 'tech');
+  assert.equal(famille('Solitaire Pro : Card Games [Android]', ''), 'tech');
+  // Mais un jeu de société EN CARTON reste un jouet, même vendu sur un site
+  // high-tech : le mot fort doit continuer de gagner quand rien ne dit
+  // « numérique ».
+  assert.equal(famille('Casino Jeu de société familial', 'Gaming'), 'jouets');
+});
+

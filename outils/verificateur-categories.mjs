@@ -43,7 +43,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { famille, FAMILLES, MARQUES, MOTS_FORTS, categorieDeSource, sansAccents, classerOffre, compterMots } from '../collecteur.mjs';
+import { famille, FAMILLES, MARQUES, MOTS_FORTS, categorieDeSource, sansAccents, sansNegations, classerOffre, compterMots, estJeuNumerique, retirerTrompeurs } from '../collecteur.mjs';
 
 /* Tous les mots utilisables pour classer : listes de familles, marques ET mots
    d'appareil — mêmes tables que le collecteur, fusionnées comme lui. Juger sur
@@ -116,11 +116,30 @@ for (const o of offres) {
   //   • contredite : le titre désigne une autre rubrique avec au moins deux
   //     mots — une preuve plus forte que celle qui a servi à classer.
   if (cat !== 'autre') {
-    const t = sansAccents(String(o.titre || '')).toLowerCase();
+    // MÊME préparation du texte que le classement : accents retirés, négations
+    // neutralisées (« sans peluche » n'est pas « peluche »), et mots TROMPEURS
+    // retirés (« Motorola » n'est pas de l'huile moteur, « Streifen » n'est pas
+    // un pneu). Un contrôle qui lit autre chose que ce que lit le classement
+    // invente des défauts — et on les cherche ensuite au mauvais endroit.
+    const t = retirerTrompeurs(sansNegations(sansAccents(String(o.titre || '')).toLowerCase()));
     const scores = Object.entries(MOTS_TOUS).map(([f, mots]) => [f, compterMots(mots, t)]);
     const touche = scores.some(([f, n]) => f === cat && n > 0);
     const sourceOk = categorieDeSource(o.categorieSource) === cat;
-    if (!touche && !sourceOk) {
+    // Un JEU NUMÉRIQUE rangé en high-tech : la décision vient de la règle
+    // estJeuNumerique du collecteur (« le support nommé l'emporte sur le type de
+    // jeu » — un « Board Game App » reste un logiciel). Le contrôle doit la
+    // connaître, exactement comme il connaît la priorité des mots d'appareil :
+    // sinon il reproche au classement d'appliquer sa propre consigne.
+    //  NOTE : la marque de console SEULE n'excuse rien (« LEGO Super Mario
+    //  Nintendo » est un jouet) — voir estJeuNumerique, qui exige un mot de jeu.
+    const numerique = cat === 'tech' && estJeuNumerique(t);
+    // Rubrique IMPOSÉE par la page de la source (voir SOURCES_ACTIVITES) :
+    // « Soin du visage au choix » est rangé en « Activité » parce que la page
+    // dont il vient est une page de PRESTATIONS — un soin en institut n'est pas
+    // un cosmétique. Le titre ne peut pas la contredire, pour la même raison
+    // que pour les mots d'appareil : c'est l'ordre des règles, et il est voulu.
+    const imposee = Boolean(o.categorieImposee);
+    if (!touche && !sourceOk && !numerique) {
       sansPreuve++;
       if (exemplesSansPreuve.length < 8) {
         exemplesSansPreuve.push({ pays: o.pays, cat, titre: String(o.titre || '').slice(0, 58), src: o.categorieSource });
@@ -136,7 +155,7 @@ for (const o of offres) {
     // consigne.
     const motsAppareil = (MOTS_FORTS[cat] || []).map((m) => sansAccents(m).toLowerCase());
     const parAppareil = compterMots(motsAppareil, t) > 0;
-    if (!parAppareil && meilleur && meilleur[0] !== cat && meilleur[1] >= 2) {
+    if (!parAppareil && !numerique && !imposee && meilleur && meilleur[0] !== cat && meilleur[1] >= 2) {
       contredites++;
       // On NOMME l'offre. Un contrôle qui annonce « 1 offre » sans dire laquelle
       // ne peut pas être corrigé — il faut aller la chercher à la main.
@@ -188,7 +207,7 @@ for (const o of offres) {
     // La différence tient à UNE question : la source a-t-elle tranché ?
     if (categorieDeSource(o.categorieSource)) s.autreChoisi++;
     else {
-      const texte = sansAccents(String(o.titre || '')).toLowerCase();
+      const texte = retirerTrompeurs(sansNegations(sansAccents(String(o.titre || '')).toLowerCase()));
       // MÊME règle de correspondance que le classement (compterMots), et non
       // un `includes` : sans frontière de mot, « car » (auto) se retrouve dans
       // « carte », « sac » (mode) dans « sachet », « dom » (maison) dans
