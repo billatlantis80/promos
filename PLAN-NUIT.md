@@ -19,6 +19,27 @@
    Ne traduire que le **vocabulaire courant** — **jamais** les informations
    **techniques et spécifiques du produit**.
 7. Délai : **demain matin**. Travail de qualité, preuves à l'appui.
+8. **NOUVEL ONGLET « Électroménager »** (ou « Électro ») pour **TOUS les pays**,
+   placé **à côté de High-tech**. On y met « tout ce qui est frigo, aspirateur,
+   sèche-cheveux, toute la technologie de ce style ».
+9. **Tous les soins de beauté, du corps, les massages et autres soins de
+   bien-être** vont dans la catégorie **Beauté**. ⟵ **cela CHANGE la décision
+   précédente** qui forçait les pages Groupon en « Activité » : un SOIN n'est pas
+   une SORTIE.
+10. **Toute annonce contenant « fille », « garçon », « enfant » ou une catégorie
+    d'âge d'enfant** doit être rangée dans **Jeux & jouets**.
+11. **Les TÉLÉVISIONS restent en HIGH-TECH**, pas en Électroménager. Règle de
+    partage à appliquer : ce qui **diffuse ou affiche** une image (téléviseur,
+    écran, projecteur, barre de son, enceinte) reste **High-tech** ;
+    l'**électroménager** ne prend que les appareils **ménagers** (froid,
+    cuisson, lavage, entretien, soin du linge et des cheveux, climatisation).
+12. **Les RASOIRS et les TONDEUSES À CHEVEUX vont en Électroménager** (ils
+    quittent Beauté). ⚠ **Piège à verrouiller** : en français « tondeuse » seule
+    désigne aussi la **tondeuse à GAZON**, qui est du jardin/bricolage — n'y
+    accepter que « tondeuse à cheveux / à barbe / à poils », **jamais** la
+    tondeuse à gazon. ⚠ Second piège : un **rasoir MANUEL** (lame, jetable) n'est
+    pas un appareil — s'il est déplacé vers Électroménager, le **citer dans le
+    rapport** plutôt que de le cacher.
 
 ## 2. Règles de méthode — non négociables
 
@@ -71,6 +92,17 @@
 
 Chaque passage : faire l'unité → lancer `bash bin/tester.sh` → commiter → cocher ici.
 
+**ORDRE D'EXÉCUTION DES PHASES — à respecter, il n'est PAS l'ordre du fichier :**
+
+> **E → A → B → C → D**
+
+Raison : la phase **E** porte les demandes les plus récentes de B (onglet
+Électroménager, soins en Beauté, « enfant/fille/garçon » en jouets) — elles
+passent d'abord. La phase **D** (publication et APK) est toujours **en dernier**,
+parce qu'elle doit embarquer tout le reste. Si le temps manque, on s'arrête au
+milieu de la phase C : l'application reste alors cohérente et publiée, jamais
+à moitié modifiée.
+
 ### Phase A — AUDIT ET CATÉGORIES
 | # | Unité | État |
 |---|-------|------|
@@ -106,6 +138,15 @@ Chaque passage : faire l'unité → lancer `bash bin/tester.sh` → commiter →
 | C10 | `pl` | à faire |
 | C11 | `sv` | à faire |
 | C12 | Mesure honnête du reste en français, par langue, cas cités | à faire |
+
+### Phase E — DEMANDES DU 6 OCTOBRE AU SOIR (priorité haute)
+| # | Unité | État |
+|---|-------|------|
+| E1 | Créer la rubrique **Électroménager** pour TOUS les pays : sortir de « Maison » les APPAREILS (frigo, congélateur, lave-linge, lave-vaisselle, sèche-linge, aspirateur, cafetière, machine à café, micro-ondes, bouilloire, grille-pain, friteuse sans huile, sèche-cheveux, lisseur, fer à repasser, rasoir électrique, tondeuse à cheveux / à barbe / à poils (⚠ **PAS** la tondeuse à gazon, qui est du jardin), ventilateur, chauffage, purificateur…) en **9 langues** ; déclarer la rubrique dans l'interface **et** dans l'ordre des onglets. ⚠ **NE PAS DÉPLACER** : téléviseur, écran, projecteur, barre de son, enceinte, casque, ordinateur, téléphone, console — ils **restent en High-tech** (demande explicite de B : « Les télévisions doivent être dans high-tech, pas dans électro »). Un **test dédié** doit vérifier qu'une télé reste en High-tech et qu'un frigo va en Électroménager | à faire |
+| E2 | Ordre des onglets à mettre à jour partout : `Tout > High-tech > Électroménager > Maison > Mode > Auto & moto > Jeux & jouets > Sport > Bricolage > Beauté > Activité > Autres` | à faire |
+| E3 | **Soins → Beauté** : les soins de beauté, du corps, les massages et soins de bien-être vont en **Beauté**, plus en Activité. Défaire le `categorieImposee: 'activite'` là où la page est un SOIN ; **garder Activité pour les SORTIES** (voyage, concerts, spectacles, loisirs, restaurants, zoo, montgolfière). Mesurer l'effet avant/après et citer les cas limites | à faire |
+| E4 | **fille / garçon / enfant / catégories d'âge → Jeux & jouets** (9 langues). Implémenter, PUIS **mesurer la casse** : compter les offres déplacées et **citer nommément** celles où c'est discutable (ex. « siège auto enfant », « vélo enfant », « montre enfant »). Si une famille d'appareil nommé est plus précise, le DIRE dans le rapport — B tranchera | à faire |
+| E5 | Recollecter, publier, vérifier la répartition par rubrique (chaque nouveau compteur doit être justifié par une preuve) | à faire |
 
 ### Phase D — LIVRAISON
 | # | Unité | État |
