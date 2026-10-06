@@ -540,7 +540,37 @@ function estBonPlanPresse(o) {
   return REDACTIONS.test(m);
 }
 
-const estBonnePromo = (o) => estPromoVerifiee(o) || estOffreEnseigne(o) || estBonPlanPresse(o);
+/** Étage 4 — la BONNE AFFAIRE : ni prix, ni remise chiffrable.
+ *
+ *  Nécessaire parce que les grandes enseignes refusent qu'on lise leurs prix
+ *  (Media Markt, Bol, Argos, Tesco, Costco, Media Expert, Allegro, Biedronka…).
+ *  Leurs promotions n'existent chez nous que RELAYÉES par les communautés : nom
+ *  de la boutique, photo, lien, score d'intérêt — mais aucun prix. Les jeter,
+ *  c'était perdre l'enseigne entière.
+ *
+ *  On les montre donc pour ce qu'elles sont : une photo, un titre, une
+ *  boutique, un lien — et AUCUN prix, puisque nous n'en avons pas. Le badge
+ *  « bonne affaire » le dit à l'écran : jamais de pourcentage inventé, jamais de
+ *  prix déduit du titre.
+ *
+ *  Deux garde-fous : la source doit être une COMMUNAUTÉ (c'est elle qui nomme
+ *  la boutique — un journal n'est pas un marchand), et le bon plan doit être
+ *  réellement populaire (≥ 100°). Amazon est exclu : ses offres se prouvent par
+ *  leurs deux prix, ailleurs dans l'application.
+ */
+const CHALEUR_AFFAIRE = 100;
+
+function estBonneAffaire(o) {
+  if (o.prix != null) return false;                       // un prix ⇒ étage 1 ou 2
+  if (estAmazon(o)) return false;                         // Amazon se prouve par ses prix
+  if (!o.titre || !(o.lienMarchand || o.lienPage)) return false;
+  if (!SOURCE_COMMUNAUTE.test(String(o.sourceId || ''))) return false;
+  const m = String(o.marchand || '').trim();
+  if (!m || MARCHANDS_NON_BOUTIQUE.test(m) || REDACTIONS.test(m)) return false;
+  return o.temperature != null && o.temperature >= CHALEUR_AFFAIRE;
+}
+
+const estBonnePromo = (o) => estPromoVerifiee(o) || estOffreEnseigne(o) || estBonPlanPresse(o) || estBonneAffaire(o);
 
 /** Clé de dédoublonnage : le même produit au même prix chez la même boutique
  *  n'a pas à figurer deux fois. Cas réel : l'Allemagne et l'Autriche partagent
@@ -586,6 +616,36 @@ const MELANGE_MIN = 24;
  *  « quelques-unes » : présent, jamais envahissant. */
 const QUOTA_PRESSE = 0.1;
 
+/** Part des 40 % réservée aux BONNES AFFAIRES sans prix (voir estBonneAffaire).
+ *  Sans quota, elles étaient classées après les offres à prix et le plafond les
+ *  évincait toutes : les enseignes qu'on ne peut pas chiffrer (Bol, Media
+ *  Expert, Tesco, Argos…) n'auraient jamais été visibles — exactement ce qu'on
+ *  cherche à corriger. */
+const QUOTA_AFFAIRE = 0.25;
+
+/** Les sources qui RELAIENT un bon plan — les communautés. Elles nomment la
+ *  boutique et donnent le score d'intérêt : c'est ce qui autorise une « bonne
+ *  affaire » sans prix. Les sources de presse, elles, signent l'article du nom
+ *  du journal, qui n'est pas une boutique. */
+const SOURCE_COMMUNAUTE = /^(dealabs|mydealz|chollometro|pepper|hotukdeals|preisjaeger)/i;
+
+/** Entrelace deux listes selon la part cible de la première.
+ *  Sert à RÉPARTIR les bonnes affaires dans tout le camp des 40 % au lieu de
+ *  les entasser à la fin : groupées, il fallait dérouler plus de 1 600 cartes
+ *  pour en croiser une — autant dire jamais. */
+function entrelacer(a, b, partA) {
+  const total = a.length + b.length;
+  const sortie = [];
+  let i = 0;
+  let j = 0;
+  for (let k = 0; k < total; k += 1) {
+    const veutA = Math.round((k + 1) * partA) > i;
+    if (i < a.length && (veutA || j >= b.length)) sortie.push(a[i++]);
+    else sortie.push(b[j++]);
+  }
+  return sortie;
+}
+
 function melanger(liste, cmp) {
   // Chaque camp est trié AVANT d'alterner. Sans ça, un tri appliqué après coup
   // (par remise décroissante) remettait tous les Amazon en tête : le mélange
@@ -597,10 +657,14 @@ function melanger(liste, cmp) {
   // ont souvent deux prix réels, donc un meilleur rang au tri : sans ce
   // départage, la première page d'un Belge était faite de « lire le bon plan »
   // alors que l'objectif est de renvoyer vers les enseignes.
+  // Trois qualités dans le camp des 40 %, et dans cet ordre d'affichage : les
+  // offres à prix prouvé d'abord, puis les bonnes affaires sans prix (les
+  // enseignes qu'on ne peut pas chiffrer), puis la presse.
   const reste = liste.filter((o) => !estAmazon(o));
   const presse = reste.filter(estBonPlanPresse).sort(tri);
-  const boutiques = reste.filter((o) => !estBonPlanPresse(o)).sort(tri);
-  const autres = [...boutiques, ...presse];
+  const affaires = reste.filter((o) => !estBonPlanPresse(o) && estBonneAffaire(o)).sort(tri);
+  const boutiques = reste.filter((o) => !estBonPlanPresse(o) && !estBonneAffaire(o)).sort(tri);
+  const autres = [...boutiques, ...affaires, ...presse];
   if (!amazon.length || !autres.length) return [...liste].sort(tri);
   const nAmazon = Math.min(amazon.length, Math.floor((autres.length * PART_AMAZON) / (1 - PART_AMAZON)));
   const nAutres = Math.min(autres.length, Math.round((nAmazon * (1 - PART_AMAZON)) / PART_AMAZON));
@@ -615,10 +679,16 @@ function melanger(liste, cmp) {
   // 40 % — souvent les articles de presse, désormais classés après les
   // boutiques — disparaissait alors SANS erreur ni trace. Ici le nombre de
   // lignes est exact par construction.
-  // Quota de presse : elle est minoritaire, mais jamais évincée en totalité.
+  // Quotas : presse et bonnes affaires sont minoritaires, mais jamais évincées
+  // en totalité — sans eux, le plafond coupait la queue du camp et les
+  // enseignes invisibles le restaient. Le reste va aux offres à prix prouvé.
   const nPresse = presse.length ? Math.max(1, Math.min(presse.length, Math.round(nAutres * QUOTA_PRESSE))) : 0;
-  const nBoutiques = Math.min(boutiques.length, Math.max(0, nAutres - nPresse));
-  const autRetenues = [...boutiques.slice(0, nBoutiques), ...presse.slice(0, nPresse)];
+  const nAffaire = affaires.length ? Math.max(1, Math.min(affaires.length, Math.round(nAutres * QUOTA_AFFAIRE))) : 0;
+  const nBoutiques = Math.min(boutiques.length, Math.max(0, nAutres - nPresse - nAffaire));
+  const bSel = boutiques.slice(0, nBoutiques);
+  const aSel = affaires.slice(0, nAffaire);
+  const partBoutique = (bSel.length + aSel.length) ? bSel.length / (bSel.length + aSel.length) : 1;
+  const autRetenues = [...entrelacer(bSel, aSel, partBoutique), ...presse.slice(0, nPresse)];
   const total = nAmazon + autRetenues.length;
   const sortie = [];
   let i = 0;
@@ -735,6 +805,12 @@ function carte(o) {
     (estBonPlanPresse(o) && !estPromoVerifiee(o))
       ? `<span class="etiquette" title="Bon plan relevé par la presse : prix réel affiché et remise annoncée par l’article.">presse</span>`
       : '',
+    // Une BONNE AFFAIRE : l'enseigne ne publie pas ses prix, donc nous n'en
+    // affichons aucun — ni prix, ni pourcentage. Le badge le dit franchement
+    // plutôt que de laisser croire à une carte cassée.
+    estBonneAffaire(o)
+      ? `<span class="etiquette affaire" title="Bon plan relayé par la communauté : cette enseigne ne publie pas ses prix, donc aucun prix — ni remise — n’est affiché.">bonne affaire</span>`
+      : '',
     // Ce que l'utilisateur gagne, en euros. C'est le chiffre qui décide d'un
     // achat — « économise 60 € » parle plus que « -67 % ».
     (o.prix != null && o.prixAvant != null && o.prixAvant > o.prix)
@@ -758,7 +834,8 @@ function carte(o) {
   const libelle = article ? 'Lire l’article'
     : (estAmazon(o) ? 'Acheter sur Amazon'
       : (estOffreEnseigne(o) ? `Voir chez ${esc(o.marchand)}`
-        : (estBonPlanPresse(o) ? 'Lire le bon plan' : 'Voir l’offre')));
+        : (estBonPlanPresse(o) ? 'Lire le bon plan'
+          : (estBonneAffaire(o) ? 'Voir la bonne affaire' : 'Voir l’offre'))));
   // Pour une offre sortie de la liste, on date la MISE DE CÔTÉ et non la
   // parution : c'est ce qui dit à l'utilisateur ce qu'il a sous les yeux.
   const quand = o.encoreEnListe === false

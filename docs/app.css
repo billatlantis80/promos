@@ -183,6 +183,11 @@ body[data-eco="1"] .offre .visuel { display: none; }
    plutôt que fond plein : sur les dix thèmes, un fond coloré n'a pas toujours
    de quoi écrire dessus lisiblement. */
 .etiquette.econ { background: transparent; border-color: var(--accent-2); color: var(--accent-2); font-weight: 700; }
+/* La « bonne affaire » : l'enseigne ne publie pas ses prix, donc la carte n'en
+   montre aucun. Bordure tiretée, comme « n'est plus dans la liste » — ici le
+   tiret signale une information ABSENTE, pas une promotion. Surtout pas de fond
+   plein coloré : rien qui puisse se confondre avec une remise. */
+.etiquette.affaire { background: transparent; border-style: dashed; color: var(--doux); }
 /* Issue de secours quand aucune promotion vérifiée n'existe dans ce rayon. */
 #voirTout {
   margin-top: 10px; padding: 10px 16px; border-radius: 10px; font-size: 14px;

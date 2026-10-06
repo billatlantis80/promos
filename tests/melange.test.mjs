@@ -21,6 +21,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import vm from 'node:vm';
 import { fileURLToPath } from 'node:url';
+import { TOUTES_SOURCES } from '../collecteur.mjs';
 
 const ICI = path.dirname(fileURLToPath(import.meta.url));
 const js = fs.readFileSync(path.join(ICI, '..', 'public', 'app.js'), 'utf8');
@@ -32,7 +33,7 @@ const code = js.slice(debut, fin);
 
 const ctx = vm.createContext({});
 const R = vm.runInContext(`${code}
-  ;({ REMISE_MIN, CHALEUR_MIN, PART_AMAZON, MELANGE_MIN, estAmazon, estPromoVerifiee, estOffreEnseigne, estBonPlanPresse, estBonnePromo, dedoublonner, melanger })`, ctx);
+  ;({ REMISE_MIN, CHALEUR_MIN, CHALEUR_AFFAIRE, REMISE_ANNONCEE_MAX, PART_AMAZON, MELANGE_MIN, estAmazon, estPromoVerifiee, estOffreEnseigne, estBonPlanPresse, estBonneAffaire, estBonnePromo, SOURCE_COMMUNAUTE, dedoublonner, melanger, entrelacer })`, ctx);
 
 /** Fabrique d'offre minimale. */
 const offre = (marchand, extra = {}) => ({ marchand, prix: null, prixAvant: null, remise: null, temperature: null, ...extra });
@@ -124,6 +125,65 @@ test('étage 3 : la presse n’est jamais étiquetée « enseigne »', () => {
   const a = offre('WatchGeneration', { prix: 96, remise: 46 });
   assert.equal(R.estBonnePromo(a), true, 'elle doit être admise');
   assert.equal(R.estOffreEnseigne(a), false, 'mais jamais comme une boutique');
+});
+
+/* ---------------------------------------------------------------- étage 4 */
+
+test('étage 4 : une boutique sans prix relayée par une communauté passe', () => {
+  // Bol, Tesco, Argos, Media Expert… : leurs prix ne sont pas lisibles. On
+  // affiche la bonne affaire sans prix plutôt que de perdre l'enseigne.
+  const a = { ...offre('Tesco', { temperature: 200 }), sourceId: 'hotukdeals', titre: 'Xbox Series S', lienPage: 'https://exemple' };
+  assert.equal(R.estBonneAffaire(a), true);
+});
+
+test('étage 4 : hors communauté, une offre sans prix n’est pas une bonne affaire', () => {
+  // Un journal signe son article de son propre nom : ce n'est pas une boutique.
+  const a = { ...offre('Boulanger', { temperature: 400 }), sourceId: 'presse-be-fr-1', titre: 'Un PC', lienPage: 'https://exemple' };
+  assert.equal(R.estBonneAffaire(a), false);
+});
+
+test('étage 4 : sans popularité, on ne relaie pas', () => {
+  const a = { ...offre('Bol', { temperature: 40 }), sourceId: 'pepper-nl', titre: 'Un truc', lienPage: 'https://exemple' };
+  assert.equal(R.estBonneAffaire(a), false);
+});
+
+test('étage 4 : une offre AVEC prix n’est pas une bonne affaire', () => {
+  const a = { ...offre('Bol', { prix: 19.99, temperature: 400 }), sourceId: 'pepper-nl', titre: 'Un truc', lienPage: 'https://exemple' };
+  assert.equal(R.estBonneAffaire(a), false, 'elle relève des étages 1 ou 2');
+});
+
+test('étage 4 : Amazon est exclu — ses offres se prouvent par leurs prix', () => {
+  const a = { ...offre('Amazon', { temperature: 900 }), sourceId: 'hotukdeals', titre: 'Echo Dot', lienPage: 'https://exemple' };
+  assert.equal(R.estBonneAffaire(a), false);
+});
+
+test('étage 4 : il faut un titre et un lien, sinon il n’y a rien à montrer', () => {
+  const sansTitre = { ...offre('Tesco', { temperature: 200 }), sourceId: 'hotukdeals', lienPage: 'https://exemple' };
+  assert.equal(R.estBonneAffaire(sansTitre), false);
+  const sansLien = { ...offre('Tesco', { temperature: 200 }), sourceId: 'hotukdeals', titre: 'Xbox' };
+  assert.equal(R.estBonneAffaire(sansLien), false);
+});
+
+test('le crible « communauté » couvre EXACTEMENT les sources de communauté', () => {
+  // Sinon la règle dérive en silence : une source de communauté ajoutée plus
+  // tard ne serait jamais relayée, ou une source de presse le serait à tort.
+  const sources = TOUTES_SOURCES.map((s) => ({ id: s.id, type: s.type }));
+  const communautes = sources.filter((s) => s.type === 'dealabs');
+  const autres = sources.filter((s) => s.type !== 'dealabs');
+  assert.ok(communautes.length >= 7, 'les 7 communautés doivent être déclarées');
+  for (const s of communautes) assert.ok(R.SOURCE_COMMUNAUTE.test(s.id), `${s.id} doit être reconnue comme communauté`);
+  for (const s of autres) assert.ok(!R.SOURCE_COMMUNAUTE.test(s.id), `${s.id} ne doit PAS passer pour une communauté`);
+});
+
+test('les bonnes affaires sont réparties, jamais entassées à la fin', () => {
+  // Entassées, il fallait dérouler plus de 1 600 cartes pour en croiser une.
+  const boutiques = Array.from({ length: 20 }, (_, i) => ({ m: `B${i}` }));
+  const affaires = Array.from({ length: 6 }, (_, i) => ({ m: `A${i}` }));
+  const l = R.entrelacer(boutiques, affaires, boutiques.length / (boutiques.length + affaires.length));
+  assert.equal(l.length, 26, 'aucune ligne ne doit être perdue');
+  const premiere = l.findIndex((o) => o.m.startsWith('A'));
+  assert.ok(premiere >= 0, 'au moins une bonne affaire doit sortir');
+  assert.ok(premiere <= Math.ceil(l.length / 3), `première bonne affaire au rang ${premiere} sur ${l.length} — trop loin`);
 });
 
 /* ------------------------------------------------------------ doublons */
