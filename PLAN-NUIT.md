@@ -69,6 +69,44 @@
     mesurées), **`gant`** (main OU gant de toilette → maison/beauté), **`montre`**
     (bijou OU montre connectée → high-tech), **`short`** (vêtement OU
     « short-court »), **`slip`** (sous-vêtement OU autre sens selon la langue).
+16. **DEUX NOUVEAUX ONGLETS : « MEUBLES » et « NOURRITURE ».**
+    - **Meubles** : le mobilier sort de « Maison » (canapé, table, chaise, lit,
+      armoire, bureau, étagère, commode, buffet, fauteuil…). Maison garde la
+      déco, le linge de maison et le jardin.
+    - **Nourriture** : rubrique **entièrement neuve** (alimentation, boissons).
+      Elle n'existe pas aujourd'hui — l'audit de « Autres » l'a confirmé :
+      *chocolate*, *vodka*, *sauvignon*, *lemonade*, *custard* y sont en vrac.
+    Dans les **9 langues**, et déclarés dans l'interface **et** l'ordre des onglets.
+17. **LES SOURCES DOIVENT ÊTRE LOCALES AU PAYS.** Ses mots : « un allemand ne va
+    pas aller acheter des fraises sur un site internet en Espagne ». Donc, pour
+    chaque pays, on cherche les sites **DU pays** (supermarchés, enseignes de
+    meubles locales) et on n'affiche que ceux-là. **Règle générale et pas
+    seulement pour l'alimentation** : une source étrangère ne remplit pas un
+    onglet national.
+    ⚠ **Blocage déjà mesuré, à ne pas repayer** : les grandes enseignes
+    alimentaires (Colruyt, Delhaize, Lidl, Aldi, Carrefour, Kruidvat, Action)
+    publient leurs dépliants en **IMAGE** et en JavaScript → **zéro prix dans le
+    HTML**. Il faut chercher ailleurs : **drives** de courses en ligne,
+    catalogues web, flux publics. Et appliquer la règle des **deux prix réels** :
+    sans deuxième prix, ce n'est pas une promotion.
+18. **NOUVEL ONGLET « ANIMAUX »** — nourriture **ET** accessoires pour animaux.
+    ⚠ **Distinction à ne pas rater** : la nourriture pour **animaux** va en
+    **Animaux**, PAS en « Nourriture » (qui est réservée à l'alimentation
+    humaine). Accessoires : panier, litière, laisse, collier, jouet, cage,
+    aquarium, niche, arbre à chat.
+19. **NOUVEL ONGLET « VOYAGES »** — ⚠ **cela coupe « Activité » en deux** :
+    - **Voyages** : vols, hôtels, séjours, city-breaks, croisières, locations.
+    - **Activité** garde les **sorties** : concerts, spectacles, loisirs,
+      restaurants, zoo, parcs.
+20. **POUR LES VOYAGES : UNIQUEMENT LES GROSSES PROMOTIONS.** Ses mots :
+    « uniquement prendre les grosses promotions car il y a beaucoup de sites ».
+    Donc un **seuil plus élevé que les 15 % habituels** — proposé : **≥ 30 %**,
+    à ajuster par la mesure (compter combien d'offres restent à 30 %, 40 %, 50 %,
+    et choisir un seuil qui laisse un onglet utile ET peu de déchet).
+    ⚠ **Et jamais de faux rabais** : un site de voyage qui n'affiche qu'un prix
+    « à partir de » **sans prix de référence** ne produit PAS de promotion — on
+    n'invente pas de pourcentage. Mieux vaut un onglet Voyages mince et vrai
+    qu'un onglet rempli de remises fabriquées.
 
 ## 2. Règles de méthode — non négociables
 
@@ -119,7 +157,11 @@
 
 ## 5. Unités de travail (une par passage, dans cet ordre)
 
-Chaque passage : faire l'unité → lancer `bash bin/tester.sh` → commiter → cocher ici.
+Chaque passage : faire **la prochaine unité** → lancer `bash bin/tester.sh` → commiter → cocher ici.
+Si l'unité a été **courte** (moins de ~5 minutes) **et** que tous les tests passent,
+**enchaîner sur la suivante** — jamais plus de **deux** par passage, et seulement
+si la première est terminée et commitée. Le nombre de passages est limité : les
+petites unités ne doivent pas coûter une nuit chacune.
 
 **ORDRE D'EXÉCUTION DES PHASES — à respecter, il n'est PAS l'ordre du fichier :**
 
@@ -160,6 +202,12 @@ dira —, que de n'avoir rien publié du tout. Une unité non finie reste coché
 | B4 | Chercher d'autres **sources d'annonces** par pays (enseignes, comparateurs, flux publics) — au moins 3 nouvelles pistes mesurées | à faire |
 | B5 | Câbler les sources **prouvées stables** ; `SOURCES_ACTIVITES` doit couvrir plusieurs pays | à faire |
 | B6 | Recollecter, publier, mesurer la répartition par pays et par rubrique | à faire |
+| B7 | **Sources MEUBLES, par pays, LOCALES.** Chercher les enseignes d'ameublement **du pays** (pas de source étrangère). Pour chacune : sonde avec contrôle positif ET négatif, puis **deux relevés** qui rendent la même chose avant tout câblage. Objectif : au moins **3 pays** avec des meubles à deux prix réels | à faire |
+| B8 | **Sources NOURRITURE, par pays, LOCALES.** Règle de B : « un Allemand ne va pas acheter des fraises sur un site en Espagne ». ⚠ **Blocage déjà payé, à ne pas refaire** : Colruyt, Delhaize, Lidl, Aldi, Carrefour, Kruidvat, Action → dépliants en **image** + JS, **zéro prix dans le HTML**. Chercher du côté des **drives de courses en ligne**, catalogues web et flux publics. Ne câbler que le prouvé (deux prix réels, deux relevés identiques) | à faire |
+| B9 | Recollecter et **mesurer la couverture par pays** des nouvelles rubriques : pour chaque pays, combien d'offres Meubles et Nourriture. Nommer les pays **vides** au lieu de les passer sous silence | à faire |
+| B10 | **Sources ANIMAUX, par pays, LOCALES** : animaleries en ligne du pays — nourriture ET accessoires (croquettes, litière, laisse, collier, panier, aquarium, niche). Deux prix réels, deux relevés identiques avant câblage | à faire |
+| B11 | **Sources VOYAGES — trouver une SOLUTION**, pas juste un site. Contrainte de B : « uniquement prendre les grosses promotions car il y a beaucoup de sites ». Donc : (a) **seuil élevé** (≥ 30 %, à valider par la mesure) ; (b) **ne jamais fabriquer un pourcentage** sur un prix « à partir de » sans prix de référence ; (c) sonder les sites de voyage ET les comparateurs **du pays**. Rapporter ce qui marche **et ce qui ne marche pas**, avec les mesures | à faire |
+| B12 | Mesurer la **couverture Animaux + Voyages par pays** et **nommer les pays vides** ; ne pas déguiser un onglet presque vide en succès | à faire |
 
 ### Phase C — TRADUCTIONS (détail dans `TRADUCTIONS.md`)
 | # | Unité | État |
@@ -181,10 +229,14 @@ dira —, que de n'avoir rien publié du tout. Une unité non finie reste coché
 | # | Unité | État |
 |---|-------|------|
 | E1 | Créer la rubrique **Électroménager** pour TOUS les pays : sortir de « Maison » les APPAREILS (frigo, congélateur, lave-linge, lave-vaisselle, sèche-linge, aspirateur, cafetière, machine à café, micro-ondes, bouilloire, grille-pain, friteuse sans huile, sèche-cheveux, lisseur, fer à repasser, rasoir électrique, tondeuse à cheveux / à barbe / à poils (⚠ **PAS** la tondeuse à gazon, qui est du jardin), ventilateur, chauffage, purificateur…) en **9 langues** ; déclarer la rubrique dans l'interface **et** dans l'ordre des onglets. ⚠ **NE PAS DÉPLACER** : téléviseur, écran, projecteur, barre de son, enceinte, casque, ordinateur, téléphone, console — ils **restent en High-tech** (demande explicite de B : « Les télévisions doivent être dans high-tech, pas dans électro »). Un **test dédié** doit vérifier qu'une télé reste en High-tech et qu'un frigo va en Électroménager. ⚠ **Défauts MESURÉS dans le code, à corriger dans cette unité** : (a) `bricolage` contient le mot **nu** `'tondeuse'` (l. 681) → le remplacer par `'tondeuse a gazon'`, sinon une tondeuse à cheveux part au jardin ; (b) `beaute` contient `'rasoir'` et `'tondeuse barbe'` (l. 839) → à déplacer vers Électroménager ; (c) `maison` contient `'electromenager'`, `'aspirateur'`, `'cafetiere'`, `'frigo'`, `'lave-linge'`, `'lave-vaisselle'`, `'seche-linge'`, `'refrigerateur'`, `'micro-ondes'`, `'bouilloire'`, `'purificateur'`, `'ventilateur'`, `'chauffage'`, `'robot'` (l. 701) → à déplacer vers la nouvelle rubrique, **en conservant `maison` pour le mobilier, la literie, la déco et le jardin**. Contrôles obligatoires : télé → High-tech ; frigo → Électroménager ; **tondeuse à gazon → bricolage** ; **tondeuse à cheveux → Électroménager** | à faire |
-| E2 | Ordre des onglets à mettre à jour partout : `Tout > High-tech > Électroménager > Maison > Mode > Auto & moto > Jeux & jouets > Sport > Bricolage > Beauté > Activité > Autres` | à faire |
-| E3 | **Soins → Beauté** : les soins de beauté, du corps, les massages et soins de bien-être vont en **Beauté**, plus en Activité. Défaire le `categorieImposee: 'activite'` là où la page est un SOIN ; **garder Activité pour les SORTIES** (voyage, concerts, spectacles, loisirs, restaurants, zoo, montgolfière). Mesurer l'effet avant/après et citer les cas limites | à faire |
+| E2 | Ordre des onglets à mettre à jour partout : `Tout > High-tech > Électroménager > Meubles > Maison > Mode > Auto & moto > Jeux & jouets > Sport > Bricolage > Beauté > Nourriture > Animaux > Voyages > Activité > Autres` | à faire |
+| E3 | **Soins → Beauté** : les soins de beauté, du corps, les massages et soins de bien-être vont en **Beauté**, plus en Activité. Défaire le `categorieImposee: 'activite'` là où la page est un SOIN ; **garder Activité pour les SORTIES** (concerts, spectacles, loisirs, restaurants, zoo, montgolfière) — ⚠ **le VOYAGE part désormais dans le nouvel onglet VOYAGES** (unité E8). Mesurer l'effet avant/après et citer les cas limites | à faire |
 | E4 | **fille / garçon / enfant / catégories d'âge → Jeux & jouets** (9 langues). Implémenter, PUIS **mesurer la casse** : compter les offres déplacées et **citer nommément** celles où c'est discutable (ex. « siège auto enfant », « vélo enfant », « montre enfant »). Si une famille d'appareil nommé est plus précise, le DIRE dans le rapport — B tranchera | à faire |
 | E5 | Recollecter, publier, vérifier la répartition par rubrique (chaque nouveau compteur doit être justifié par une preuve) | à faire |
+| E6 | Créer les rubriques **MEUBLES** et **NOURRITURE** dans les **9 langues**. Meubles : canapé, table, chaise, lit, armoire, bureau, étagère, commode, fauteuil, buffet, matelas ? (⚠ le matelas reste en **Maison/Literie** — c'est du linge de lit, pas du mobilier). Nourriture : alimentation, boisson, chocolat, bière, vin, café, thé, biscuits, céréales, conserves. Sortir le mobilier de `maison` **sans toucher** à la déco, la literie et le jardin. Déclarer dans l'interface **et** l'ordre des onglets (E2) | à faire |
+| E7 | **Contrôle des deux nouvelles rubriques** : compter les offres de chacune et **citer 5 exemples** par rubrique ; vérifier qu'aucun meuble n'est resté en Maison et qu'aucun aliment ne traîne en « Autres ». Mesurer la baisse du taux de « Autres » avec `node outils/audit-autres.mjs` | à faire |
+| E8 | Créer les rubriques **ANIMAUX** et **VOYAGES** dans les **9 langues**. Animaux : chien, chat, croquettes, pâtée, litière, laisse, collier, panier, aquarium, niche, arbre à chat, animalerie, rongeur, oiseau, poisson. Voyages : vol, billet d'avion, hôtel, séjour, location, croisière, week-end, city-break, location de voiture. ⚠ La nourriture **ANIMALE** va en **Animaux**, jamais en « Nourriture » (réservée à l'alimentation humaine). Déclarer dans l'interface **et** l'ordre des onglets (E2) | à faire |
+| E9 | **Contrôle Animaux + Voyages** : compte et **5 exemples** par rubrique ; vérifier qu'aucun produit animalier n'est tombé en « Nourriture » et qu'aucune offre de voyage n'est restée en **Activité** ; mesurer la baisse de « Autres ». Pour **Voyages**, **mesurer la distribution des remises** (combien à ≥ 30 %, ≥ 40 %, ≥ 50 %) et **proposer le seuil** qui garde l'onglet utile sans déchet — le rapporter à B | à faire |
 
 ### Phase D — LIVRAISON
 | # | Unité | État |
