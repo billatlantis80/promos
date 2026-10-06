@@ -199,6 +199,10 @@ function bacAPuces() {
   vm.runInContext([
     blocConstant('NOMS_CATEGORIES'),
     blocConstant('ORDRE_CATEGORIES'),
+    // Le compte par pays passe par paysDe : sans cette table, le bac à sable
+    // levait « paysDe is not defined » et quatre contrôles tombaient.
+    blocConstant('PAYS_BOUTIQUE'),
+    extraire('paysDe'),
     extraire('rangCategorie'),
     extraire('offresDuPays'),
     extraire('dessinerPuces'),

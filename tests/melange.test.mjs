@@ -27,13 +27,43 @@ const ICI = path.dirname(fileURLToPath(import.meta.url));
 const js = fs.readFileSync(path.join(ICI, '..', 'public', 'app.js'), 'utf8');
 
 const debut = js.indexOf('const REMISE_MIN');
-const fin = js.indexOf('/** Combien de bonnes promotions par pays');
+// La tranche testée va jusqu'à `retenue` : elle doit contenir les règles de
+// sélection ET le rattachement au pays de la boutique (paysDe), qui vit après
+// le compte par pays. S'arrêter au commentaire de promosParPays laissait paysDe
+// hors tranche, et le fichier de tests entier échouait.
+const fin = js.indexOf('/** Une offre passe-t-elle les filtres courants ? */');
 assert.ok(debut > 0 && fin > debut, 'les règles de sélection doivent rester extractibles du fichier');
 const code = js.slice(debut, fin);
 
 const ctx = vm.createContext({});
 const R = vm.runInContext(`${code}
-  ;({ REMISE_MIN, CHALEUR_MIN, CHALEUR_AFFAIRE, REMISE_ANNONCEE_MAX, PART_AMAZON, MELANGE_MIN, estAmazon, estPromoVerifiee, estOffreEnseigne, estBonPlanPresse, estBonneAffaire, estBonnePromo, SOURCE_COMMUNAUTE, dedoublonner, melanger, entrelacer })`, ctx);
+  ;({ REMISE_MIN, CHALEUR_MIN, CHALEUR_AFFAIRE, REMISE_ANNONCEE_MAX, PART_AMAZON, MELANGE_MIN, estAmazon, estPromoVerifiee, estOffreEnseigne, estBonPlanPresse, estBonneAffaire, estBonnePromo, SOURCE_COMMUNAUTE, paysDe, PAYS_BOUTIQUE, dedoublonner, melanger, entrelacer })`, ctx);
+
+/* ------------------------------------------------- le pays de la boutique */
+
+test('le pays de la BOUTIQUE l’emporte sur celui de la source', () => {
+  // Décision du propriétaire du produit : un bon plan relayé par une source
+  // étrangère doit aller sous le pays de la boutique, sinon il disparaît du
+  // filtre de l'utilisateur de ce pays.
+  assert.equal(R.paysDe({ marchand: 'Tesco', pays: 'NL' }), 'GB');
+  assert.equal(R.paysDe({ marchand: 'Allegro', pays: 'GB' }), 'PL');
+  assert.equal(R.paysDe({ marchand: 'Colruyt', pays: 'NL' }), 'BE');
+});
+
+test('une enseigne présente dans PLUSIEURS pays n’est jamais rattachée', () => {
+  // Amazon, Media Markt, Coolblue, Lidl, Carrefour… : leur attribuer un pays
+  // serait une devinette, donc on garde celui de la source.
+  for (const m of ['Amazon', 'MediaMarkt', 'Coolblue', 'Lidl', 'Carrefour', 'Zalando', 'Ikea', 'Steam', 'Kaufland', 'eBay']) {
+    assert.equal(R.paysDe({ marchand: m, pays: 'AT' }), 'AT', m);
+    assert.equal(R.PAYS_BOUTIQUE.has(m.toLowerCase()), false, `${m} ne doit pas figurer dans la table`);
+  }
+});
+
+test('une boutique inconnue garde le pays de sa source', () => {
+  assert.equal(R.paysDe({ marchand: 'Bazar du coin', pays: 'SE' }), 'SE');
+  assert.equal(R.paysDe({ marchand: '', pays: 'IT' }), 'IT');
+  assert.equal(R.paysDe({ marchand: 'X' }), 'FR', 'sans pays du tout, la lecture juste reste FR');
+});
 
 /** Fabrique d'offre minimale. */
 const offre = (marchand, extra = {}) => ({ marchand, prix: null, prixAvant: null, remise: null, temperature: null, ...extra });

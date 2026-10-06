@@ -68,8 +68,8 @@ test('l’interface connaît exactement les mêmes pays que le collecteur', () =
 test('le pays est un vrai filtre, pas un décor', () => {
   assert.match(html, /id="pays"/, 'le sélecteur de pays doit être dans la page');
   assert.match(
-    app, /if \(etat\.pays !== 'tout' && \(o\.pays \|\| 'FR'\) !== etat\.pays\) return false;/,
-    'une offre d’un autre pays doit être écartée',
+    app, /if \(etat\.pays !== 'tout' && paysDe\(o\) !== etat\.pays\) return false;/,
+    'une offre d’un autre pays doit être écartée — via paysDe, donc selon le pays de la BOUTIQUE quand il est certain',
   );
   assert.match(app, /dessinerPays\(\)/, 'le sélecteur doit être rempli depuis les données');
   assert.match(app, /navigator\.language/, 'le pays de l’appareil doit servir de choix par défaut');

@@ -194,6 +194,15 @@ const SOURCES_ENSEIGNES = [
   { id: 'coolblue-be-1', nom: 'Coolblue', type: 'enseigne', pays: 'BE', langue: 'fr', reposMin: 30, url: 'https://www.coolblue.be/fr/offres' },
   { id: 'coolblue-be-2', nom: 'Coolblue', type: 'enseigne', pays: 'BE', langue: 'fr', reposMin: 30, url: 'https://www.coolblue.be/fr/offres?page=2' },
   { id: 'coolblue-be-3', nom: 'Coolblue', type: 'enseigne', pays: 'BE', langue: 'fr', reposMin: 30, url: 'https://www.coolblue.be/fr/offres?page=3' },
+  // Pages 4 à 8 : mesuré, la page 6 répond encore (200, 22 prix) et la page 12
+  // est en 404 — la liste s'arrête entre les deux. Huit pages restent une
+  // requête toutes les 30 minutes : la politesse envers le marchand est tenue.
+  // C'est la SEULE enseigne belge lisible : autant en prendre ce qu'elle offre.
+  { id: 'coolblue-be-4', nom: 'Coolblue', type: 'enseigne', pays: 'BE', langue: 'fr', reposMin: 30, url: 'https://www.coolblue.be/fr/offres?page=4' },
+  { id: 'coolblue-be-5', nom: 'Coolblue', type: 'enseigne', pays: 'BE', langue: 'fr', reposMin: 30, url: 'https://www.coolblue.be/fr/offres?page=5' },
+  { id: 'coolblue-be-6', nom: 'Coolblue', type: 'enseigne', pays: 'BE', langue: 'fr', reposMin: 30, url: 'https://www.coolblue.be/fr/offres?page=6' },
+  { id: 'coolblue-be-7', nom: 'Coolblue', type: 'enseigne', pays: 'BE', langue: 'fr', reposMin: 30, url: 'https://www.coolblue.be/fr/offres?page=7' },
+  { id: 'coolblue-be-8', nom: 'Coolblue', type: 'enseigne', pays: 'BE', langue: 'fr', reposMin: 30, url: 'https://www.coolblue.be/fr/offres?page=8' },
 ];
 
 /* ------------------------------------------------------------------ *
