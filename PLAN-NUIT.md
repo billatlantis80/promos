@@ -107,6 +107,25 @@
     « à partir de » **sans prix de référence** ne produit PAS de promotion — on
     n'invente pas de pourcentage. Mieux vaut un onglet Voyages mince et vrai
     qu'un onglet rempli de remises fabriquées.
+21. **NUANCE ACTIVITÉ / VOYAGES — ELLE EST GÉOGRAPHIQUE.** Ses mots exacts :
+    « les activités sont à faire dans le pays concerné et les voyages concernent
+    des pays à l'étranger ».
+    - **Activité** = ce qui se fait **DANS le pays de l'offre** : un spa à
+      Bruxelles pour un Belge, un zoo en Espagne pour un Espagnol.
+    - **Voyages** = ce qui emmène **À L'ÉTRANGER** : un séjour en Espagne vu
+      depuis la Belgique.
+    ⚠ **Conséquence, et c'est contre-intuitif** : la MÊME prestation (un hôtel,
+    un parc) peut aller dans l'un **ou** l'autre onglet selon la **destination**,
+    pas selon le type de produit. Il faut donc un **détecteur de destination** :
+    si la destination nommée est un **autre pays** que celui de l'offre →
+    **Voyages** ; sinon → **Activité**.
+    ⚠ Ce qui reste vrai malgré tout : un **forfait de voyage** (vol, croisière,
+    séjour, nuits, location de voiture, aller-retour) va en **Voyages**, même
+    quand la destination n'est pas identifiable dans le titre.
+    ⚠ **Obligation de mesure** : compter les cas où la destination n'est PAS
+    identifiable (ils sont la principale source d'erreur) et **citer les cas
+    ambigus** — un hôtel dans le pays de l'offre, un titre sans destination —
+    plutôt que de trancher en silence.
 
 ## 2. Règles de méthode — non négociables
 
@@ -235,8 +254,8 @@ dira —, que de n'avoir rien publié du tout. Une unité non finie reste coché
 | E5 | Recollecter, publier, vérifier la répartition par rubrique (chaque nouveau compteur doit être justifié par une preuve) | à faire |
 | E6 | Créer les rubriques **MEUBLES** et **NOURRITURE** dans les **9 langues**. Meubles : canapé, table, chaise, lit, armoire, bureau, étagère, commode, fauteuil, buffet, matelas ? (⚠ le matelas reste en **Maison/Literie** — c'est du linge de lit, pas du mobilier). Nourriture : alimentation, boisson, chocolat, bière, vin, café, thé, biscuits, céréales, conserves. Sortir le mobilier de `maison` **sans toucher** à la déco, la literie et le jardin. Déclarer dans l'interface **et** l'ordre des onglets (E2) | à faire |
 | E7 | **Contrôle des deux nouvelles rubriques** : compter les offres de chacune et **citer 5 exemples** par rubrique ; vérifier qu'aucun meuble n'est resté en Maison et qu'aucun aliment ne traîne en « Autres ». Mesurer la baisse du taux de « Autres » avec `node outils/audit-autres.mjs` | à faire |
-| E8 | Créer les rubriques **ANIMAUX** et **VOYAGES** dans les **9 langues**. Animaux : chien, chat, croquettes, pâtée, litière, laisse, collier, panier, aquarium, niche, arbre à chat, animalerie, rongeur, oiseau, poisson. Voyages : vol, billet d'avion, hôtel, séjour, location, croisière, week-end, city-break, location de voiture. ⚠ La nourriture **ANIMALE** va en **Animaux**, jamais en « Nourriture » (réservée à l'alimentation humaine). Déclarer dans l'interface **et** l'ordre des onglets (E2) | à faire |
-| E9 | **Contrôle Animaux + Voyages** : compte et **5 exemples** par rubrique ; vérifier qu'aucun produit animalier n'est tombé en « Nourriture » et qu'aucune offre de voyage n'est restée en **Activité** ; mesurer la baisse de « Autres ». Pour **Voyages**, **mesurer la distribution des remises** (combien à ≥ 30 %, ≥ 40 %, ≥ 50 %) et **proposer le seuil** qui garde l'onglet utile sans déchet — le rapporter à B | à faire |
+| E8 | Créer les rubriques **ANIMAUX** et **VOYAGES** dans les **9 langues**. Animaux : chien, chat, croquettes, pâtée, litière, laisse, collier, panier, aquarium, niche, arbre à chat, animalerie, rongeur, oiseau, poisson. Voyages : vol, billet d'avion, hôtel, séjour, location, croisière, week-end, city-break, location de voiture. ⚠ **Le partage ACTIVITÉ / VOYAGES est GÉOGRAPHIQUE (point 21)** : prestation **dans le pays de l'offre** → **Activité** ; destination dans un **AUTRE pays** → **Voyages**. Il faut donc un **détecteur de destination** (noms de pays et de villes, 9 langues) comparable au champ `pays` de l'offre — **la même prestation change d'onglet selon la destination**. ⚠ La nourriture **ANIMALE** va en **Animaux**, jamais en « Nourriture » (réservée à l'alimentation humaine). Déclarer dans l'interface **et** l'ordre des onglets (E2) | à faire |
+| E9 | **Contrôle Animaux + Voyages** : compte et **5 exemples** par rubrique ; vérifier qu'aucun produit animalier n'est tombé en « Nourriture » et qu'aucune offre de voyage n'est restée en **Activité** ; mesurer la baisse de « Autres ». Pour **Voyages**, **mesurer la distribution des remises** (combien à ≥ 30 %, ≥ 40 %, ≥ 50 %) et **proposer le seuil** qui garde l'onglet utile sans déchet — le rapporter à B. ⚠ **Partage géographique (point 21)** : compter les offres dont la **destination n'est PAS identifiable** (principal gisement d'erreurs) et **citer les cas ambigus** — un hôtel situé dans le pays de l'offre, un titre sans destination. Nommer ces cas au lieu de les taire | à faire |
 
 ### Phase D — LIVRAISON
 | # | Unité | État |
