@@ -524,7 +524,7 @@ export { MOTS_PROMO, motsPromo, ecarterTuiles, veilleParPays, lienReel, dedupliq
    (outils/verificateur-categories.mjs) et les tests rejouent `famille()` sur
    les offres publiées. Un contrôle qui recopierait la table des mots serait un
    contrôle qui vérifie sa propre copie — donc rien du tout. */
-export { famille, FAMILLES, MARQUES, MOTS_FORTS, CATEGORIES_SOURCES, categorieDeSource, sansAccents, offresEnseigne, offresAmazon, offresVenteFlash, compterMots, remise, pourcentEcrit, SOURCES_VENTES_FLASH };
+export { famille, FAMILLES, MARQUES, MOTS_FORTS, CATEGORIES_SOURCES, categorieDeSource, sansAccents, offresEnseigne, offresAmazon, offresVenteFlash, compterMots, remise, pourcentEcrit, SOURCES_VENTES_FLASH, prixReferenceEnseigne };
 
 /** Recherches Google News : un flux par famille de produits. Gratuit, sans clé. */
 const RECHERCHES = [
@@ -1418,9 +1418,41 @@ function offrePresse(bloc, source, familleImposee) {
  * ------------------------------------------------------------------ */
 const TYPES_PRODUIT = new Set(['Product', 'IndividualProduct', 'ProductModel']);
 
+/** Prix de référence, lu dans la CHARGE INTERNE de la page.
+ *
+ *  Le JSON-LD d'une page d'enseigne ne publie QUE le prix demandé : `listPrice`
+ *  y est absent, et `ajouter()` plus bas ne trouvait donc aucun second prix —
+ *  d'où des cartes à prix nu, sans aucun intérêt pour un utilisateur venu
+ *  chercher des réductions.
+ *
+ *  Ce prix de référence existe pourtant, à côté du prix de vente, dans la
+ *  charge React de la page (`listPrice.includingVat` / `salesPrice.includingVat`)
+ *  — échappée dans le HTML, donc lue par motif.
+ *
+ *  MESURÉ sur deux pages réelles avant d'écrire cette fonction : 22 produits
+ *  par page, 5 avec un prix de référence sur la première (un seul ≥ 15 %), 1 sur
+ *  la sixième (−10 %). Autrement dit la page « offres » de Coolblue est un
+ *  CATALOGUE, pas une page de promotions. On lit quand même la référence : les
+ *  quelques vraies remises qu'elle contient valent d'être montrées, et elles
+ *  seront calculées entre deux prix réels.
+ */
+function prixReferenceEnseigne(html) {
+  const table = new Map();
+  const re = /\\"name\\":\\"([^"\\]{3,120})\\"[\s\S]{0,600}?\\"listPrice\\":\{\\"includingVat\\":([0-9.]+)[\s\S]{0,200}?\\"salesPrice\\":\{\\"includingVat\\":([0-9.]+)/g;
+  for (const [, nom, liste, prix] of String(html).matchAll(re)) {
+    const l = Number(liste);
+    const p = Number(prix);
+    // Un `listPrice` à 0 est l'aveu du marchand qu'il n'y a pas de référence :
+    // le retenir fabriquerait une remise de 100 %.
+    if (Number.isFinite(l) && Number.isFinite(p) && l > p && p > 0) table.set(nettoyer(nom), l);
+  }
+  return table;
+}
+
 function offresEnseigne(html, source) {
   const produits = [];
   const vus = new Set();
+  const reference = prixReferenceEnseigne(html);
   const ajouter = (o) => {
     const brut = Array.isArray(o.image) ? o.image[0] : o.image;
     const image = typeof brut === 'string' ? brut : (brut && (brut.url || brut.contentUrl)) || '';
@@ -1434,7 +1466,10 @@ function offresEnseigne(html, source) {
     produits.push({
       titre: nettoyer(o.name),
       prix,
-      prixAvant: versNombre((off && (off.highPrice || off.listPrice)) || o.highPrice),
+      // Trois sources possibles pour le prix de référence, dans l'ordre de
+      // fiabilité : le JSON-LD (rare ici), puis la charge interne de la page.
+      prixAvant: versNombre((off && (off.highPrice || off.listPrice)) || o.highPrice)
+        ?? reference.get(nettoyer(o.name)) ?? null,
       lien: lien || source.url,
       image: /^https?:\/\//i.test(image) ? image : '',
       marque: typeof o.brand === 'object' && o.brand ? String(o.brand.name || '') : String(o.brand || ''),

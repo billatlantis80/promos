@@ -104,11 +104,18 @@ test('étage 3 : la presse est soumise au même plafond de crédibilité', () =>
   assert.equal(R.estBonPlanPresse(offre('Le Parisien', { prix: 30, remise: 95 })), false);
 });
 
-test('étage 2 : une offre publiée sur la PAGE D’OFFRES de l’enseigne passe', () => {
-  // Cas Coolblue Belgique : prix réel, aucune remise chiffrée, aucun score
-  // communautaire. Sans cette règle, la Belgique ne rendait que 8 lignes — le
-  // pays de l'utilisateur, sur 12 pays couverts.
-  assert.equal(R.estOffreEnseigne(offre('Coolblue', { prix: 367, categorieSource: 'enseigne' })), true);
+test('étage 2 : une page « offres » sans réduction ne suffit PAS', () => {
+  // Coolblue : sa page d'offres est un catalogue à prix nu — 22 produits, 5
+  // avec un prix de référence, un seul ≥ 15 %. L'accepter remplissait
+  // l'application d'annonces sans réduction et sans intérêt.
+  assert.equal(R.estOffreEnseigne(offre('Coolblue', { prix: 367, categorieSource: 'enseigne' })), false);
+});
+
+test('étage 2 : une enseigne AVEC une vraie réduction passe toujours', () => {
+  // Le même Coolblue, quand un prix de référence réel existe (−15 %).
+  assert.equal(R.estOffreEnseigne(offre('Coolblue', {
+    prix: 69, prixAvant: 81, remise: 15, remiseCalculee: true, categorieSource: 'enseigne',
+  })), true);
 });
 
 test('étage 2 : un prix réel sans aucun signe de qualité est jeté', () => {

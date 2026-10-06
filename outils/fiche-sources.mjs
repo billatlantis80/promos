@@ -92,7 +92,7 @@ lignes.push('## Pourquoi UNE seule enseigne branchée');
 lignes.push('');
 lignes.push('La famille « enseignes » compte un marchand, **Coolblue**, et voici l’état exact des autres — mesuré, pas supposé. Chaque enseigne demande un travail sur mesure : il n’existe ni flux commun, ni format partagé.');
 lignes.push('');
-lignes.push('- **Coolblue BE** — page `/fr/offres` en **JSON-LD schema.org** (`ItemList` → `Product` → `offers.price`) : nom, prix et visuel dans un format normalisé. **Branchée**, 3 pages.');
+lignes.push('- **Coolblue BE** — page `/fr/offres` en **JSON-LD schema.org**, 8 pages. ⚠️ C’est un **CATALOGUE à prix nu**, pas une page de promotions. Mesuré : 22 produits par page, 5 seulement portent un prix de référence, **un seul atteint 15 %**. Seules ces vraies remises sont désormais affichées — le prix de référence est lu dans la charge interne de la page, là où il vit réellement.');
 lignes.push('- **Colruyt, Delhaize, Lidl, Aldi, Carrefour, Kruidvat, Action** — dépliants en **image** et applications JavaScript : **0 produit, 0 prix** dans le HTML servi. Colruyt expose une passerelle publique, mais elle réclame un `clientCode` introuvable dans ses pages — et une devinette n’est pas une source.');
 lignes.push('- **Amazon.com.be** — page 100 % JavaScript (0 ASIN, 0 prix dans le HTML) ; l’API Product Advertising exige une clé. Écartée au titre de la règle « aucune clé ».');
 lignes.push('- **Media Markt BE** — annoncé un temps comme lisible en JSON-LD, puis **revérifié : chemins de promotions en 404**, page d’accueil sans `ItemList` (4 prix seulement). Piste périmée, jamais branchée.');

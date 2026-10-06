@@ -2,7 +2,7 @@
 
 Fiche générée depuis le code (`collecteur.mjs`) et les données publiées (`docs/offres.json`).
 
-**172 flux** répartis sur **37 domaines** · **8138 offres** collectées · **1825 affichées** (mélange 60 % Amazon / 40 % autres).
+**177 flux** répartis sur **37 domaines** · **8293 offres** collectées · **1825 affichées** (mélange 60 % Amazon / 40 % autres).
 
 Aucune clé d’API n’est utilisée : tous les flux ci-dessous sont publics et gratuits.
 
@@ -31,7 +31,7 @@ _Page de recherche rendue côté serveur, filtrée par Amazon lui-même (`p_n_de
 
 _Articles que l’enseigne présente elle-même comme ses offres du moment, avec leur **prix réel**. Aucun prix barré publié : la remise n’est donc pas chiffrable._
 
-- **coolblue.be** — 3 flux, pays : BE
+- **coolblue.be** — 8 flux, pays : BE
 
 ## Communautés de bons plans (RSS public, sans clé)
 
@@ -78,26 +78,26 @@ _Sert à détecter les bon plans relayés (articles « à X € au lieu de Y €
 | Source | Affichées | Collectées |
 |---|---|---|
 | Amazon | 1094 | 2142 |
-| MyDealz | 221 | 856 |
-| Chollometro | 169 | 770 |
-| Dealabs | 161 | 623 |
-| Coolblue | 108 | 108 |
-| Preisjäger | 45 | 202 |
+| MyDealz | 192 | 873 |
+| Chollometro | 154 | 779 |
+| Dealabs | 139 | 629 |
+| HotUKDeals | 101 | 853 |
+| Pepper PL | 60 | 516 |
+| Preisjäger | 42 | 206 |
+| Pepper NL | 21 | 213 |
 | Presse IT (it) 1 | 7 | 114 |
 | Presse BE (fr) 1 | 5 | 53 |
-| Pepper PL | 4 | 508 |
 | Veille presse | 3 | 62 |
 | Presse DE (de) 1 | 2 | 72 |
 | Presse BE (fr) 3 | 2 | 55 |
 | Presse IT (it) 3 | 2 | 28 |
 | Clubic | 1 | 19 |
-| Pepper NL | 1 | 212 |
 
 ## Pourquoi UNE seule enseigne branchée
 
 La famille « enseignes » compte un marchand, **Coolblue**, et voici l’état exact des autres — mesuré, pas supposé. Chaque enseigne demande un travail sur mesure : il n’existe ni flux commun, ni format partagé.
 
-- **Coolblue BE** — page `/fr/offres` en **JSON-LD schema.org** (`ItemList` → `Product` → `offers.price`) : nom, prix et visuel dans un format normalisé. **Branchée**, 3 pages.
+- **Coolblue BE** — page `/fr/offres` en **JSON-LD schema.org**, 8 pages. ⚠️ C’est un **CATALOGUE à prix nu**, pas une page de promotions. Mesuré : 22 produits par page, 5 seulement portent un prix de référence, **un seul atteint 15 %**. Seules ces vraies remises sont désormais affichées — le prix de référence est lu dans la charge interne de la page, là où il vit réellement.
 - **Colruyt, Delhaize, Lidl, Aldi, Carrefour, Kruidvat, Action** — dépliants en **image** et applications JavaScript : **0 produit, 0 prix** dans le HTML servi. Colruyt expose une passerelle publique, mais elle réclame un `clientCode` introuvable dans ses pages — et une devinette n’est pas une source.
 - **Amazon.com.be** — page 100 % JavaScript (0 ASIN, 0 prix dans le HTML) ; l’API Product Advertising exige une clé. Écartée au titre de la règle « aucune clé ».
 - **Media Markt BE** — annoncé un temps comme lisible en JSON-LD, puis **revérifié : chemins de promotions en 404**, page d’accueil sans `ItemList` (4 prix seulement). Piste périmée, jamais branchée.
