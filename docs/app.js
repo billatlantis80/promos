@@ -28,8 +28,7 @@ const BASE = DANS_APK ? HUB : '';
 
 const NOMS_CATEGORIES = {
   bricolage: 'Bricolage', maison: 'Maison', tech: 'High-tech', mode: 'Mode',
-  sport: 'Sport', jouets: 'Jeux & jouets', auto: 'Auto & moto', beaute: 'Beauté',
-  activite: 'Activité', autre: 'Autres',
+  sport: 'Sport', jouets: 'Jeux & jouets', auto: 'Auto & moto', beaute: 'Beauté', autre: 'Autres',
 };
 
 /* L'ORDRE des onglets, identique dans TOUS les pays.
@@ -48,7 +47,7 @@ const NOMS_CATEGORIES = {
  * Une catégorie inconnue (ajoutée par le collecteur sans passer par ici) se
  * range juste avant « Autres » — jamais au milieu et jamais en tête.
  */
-const ORDRE_CATEGORIES = ['tech', 'maison', 'mode', 'auto', 'jouets', 'sport', 'bricolage', 'beaute', 'activite', 'autre'];
+const ORDRE_CATEGORIES = ['tech', 'maison', 'mode', 'auto', 'jouets', 'sport', 'bricolage', 'beaute', 'autre'];
 
 /** Rang d'affichage d'une catégorie : un entier, ou « juste avant Autres ». */
 function rangCategorie(c) {
