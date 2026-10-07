@@ -53,14 +53,6 @@ h1, h2, h3, h4, .marque b, .prix { font-family: var(--police-titre); }
 }
 .tete-in { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
 .marque { display: flex; align-items: center; gap: 8px; font-size: 17px; letter-spacing: .2px; }
-/* Nom + phrase d'accroche, empilés comme sur la planche d'identité. La phrase
-   passe sur une seconde ligne : sans ce conteneur, elle se poserait À CÔTÉ du
-   nom, puisque .marque est une rangée. */
-.enseigne { display: flex; flex-direction: column; line-height: 1.06; min-width: 0; }
-.accroche {
-  font-size: 9.5px; font-weight: 500; color: var(--doux);
-  letter-spacing: .5px; text-transform: uppercase; white-space: nowrap;
-}
 .pastille { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 12px var(--accent); }
 /* Le logo de marque : un carré arrondi bleu et le K blanc. Taille fixe pour que
    l'en-tête ne bouge pas d'un pixel quand la police système change. */

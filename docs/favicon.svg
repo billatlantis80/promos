@@ -1,11 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
-  <!-- Icône Kazendra : le K de l'en-tête, bras montant en flèche. Même tracé que
-       le SVG de la page, pour qu'il n'existe qu'une seule définition du logo. -->
+  <!-- Icône Kazendra : la LETTRE K de la planche d'identité — relevée sur le
+       logotype fourni — en bleu du logotype (#1E5C8A) sur carré blanc arrondi.
+       Pas d'étiquette : décision de B. Le tracé vient d'une vectorisation du
+       fichier reçu ; la boîte de référence du K complet est 1000 x 1000. -->
   <rect width="40" height="40" rx="9" fill="#ffffff"/>
-  <g transform="translate(-1.2 0)">
-    <path d="M11 8h5.5v24H11z" fill="#0d3b5b"/>
-    <path d="M16.5 19.5h6l9 12.5h-6z" fill="#0d3b5b"/>
-    <path d="M15.6 21.6 25.1 12.1 28.9 15.9 19.4 25.4z" fill="#eb912d"/>
-    <path d="M24 11 30.5 10.5 30 17z" fill="#eb912d"/>
+  <g transform="translate(6.80 6.80) scale(0.02640)">
+    <path d="M 50 999 L 32 963 L 29 49 L 37 28 L 49 26 L 54 13 L 65 7 L 209 -1 L 247 5 L 275 28 L 277 300 L 270 367 L 278 412 L 300 417 L 309 416 L 346 381 L 449 272 L 484 226 L 610 105 L 668 31 L 685 20 L 730 1 L 915 1 L 948 12 L 952 37 L 938 65 L 899 94 L 884 122 L 828 173 L 807 206 L 776 232 L 751 267 L 719 289 L 711 307 L 660 354 L 583 447 L 604 491 L 665 563 L 666 583 L 708 615 L 725 648 L 751 670 L 812 758 L 861 815 L 874 844 L 898 861 L 916 896 L 957 937 L 972 972 L 971 999 Z M 713 999 L 707 986 L 681 967 L 649 931 L 621 884 L 623 873 L 585 844 L 567 803 L 526 773 L 508 733 L 470 702 L 441 654 L 407 627 L 371 656 L 340 670 L 330 696 L 278 760 L 275 966 L 253 999 Z" fill="#1E5C8A"/>
   </g>
 </svg>

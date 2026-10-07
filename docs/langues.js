@@ -61,6 +61,11 @@ const LOCALES = {
 const FR = {
   // — Titre de l'onglet / en-tête —
   'Kazendra — Les meilleures promotions': 'Kazendra — Les meilleures promotions',
+  // PHRASE D'ACCROCHE — RÉSERVÉE À LA PUBLICITÉ, PAS AFFICHÉE DANS LA PAGE.
+  // Décision de B : « La phrase d'accroche ne doit pas être écrite sur la page
+  // internet. C'est la phrase d'accroche qu'on utilisera pour la publicité qu'on
+  // va générer plus tard. » Les neuf traductions restent donc ici, prêtes pour
+  // la campagne — aucune n'est appelée par l'interface.
   'Découvrez les meilleures promotions': 'Découvrez les meilleures promotions',
   'Chercher un produit, un marchand…': 'Chercher un produit, un marchand…',
   'Pays des offres': 'Pays des offres',
