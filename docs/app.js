@@ -247,6 +247,10 @@ function changerLangue(code) {
   if (!definirLangue(code)) return;   // code inconnu : on ne casse rien
   traduireDOM();
   dessinerLangue();
+  // Les noms de pays et le nombre d'offres par pays sont des LIBELLÉS : sans ce
+  // redessin, le sélecteur gardait « Tous les pays (10070) / Allemagne (1539) »
+  // en français au milieu d'une interface allemande — mesuré dans le navigateur.
+  dessinerPays();
   dessinerPuces();
   dessinerBandeau();
   dessinerReglages();
@@ -467,9 +471,12 @@ const euros = (v) => (v == null ? '' : (Math.round(v * 100) / 100).toLocaleStrin
 function ilYA(iso) {
   const mn = Math.round((Date.now() - new Date(iso).getTime()) / 60000);
   if (!Number.isFinite(mn)) return '';
-  if (mn < 60) return `il y a ${Math.max(1, mn)} min`;
-  if (mn < 1440) return `il y a ${Math.round(mn / 60)} h`;
-  return `il y a ${Math.round(mn / 1440)} j`;
+  // Les trois âges relatifs passent par le dictionnaire : sans cela l'en-tête
+  // allemand affichait « aktualisiert il y a 7 min » — mesuré dans le navigateur
+  // le 7/10, la seule ligne restée française d'un bandeau par ailleurs traduit.
+  if (mn < 60) return t('il y a {n} min', { n: Math.max(1, mn) });
+  if (mn < 1440) return t('il y a {n} h', { n: Math.round(mn / 60) });
+  return t('il y a {n} j', { n: Math.round(mn / 1440) });
 }
 
 /* ---- Ce qu'est une BONNE promotion, et pourquoi ce n'est pas un avis ----
@@ -1077,13 +1084,17 @@ function demanderPays() {
   // « Tous les pays d'Europe » vient EN PREMIER : c'est l'échappatoire, et une
   // échappatoire qu'on doit chercher en bas de liste n'en est plus une. Il est
   // présenté comme les pays : même apparence, même geste, rien à part.
+  //  ⚠ Libellés TRADUITS. Défaut vu sur la capture d'écran du 7/10 : la fenêtre
+  //  « Wo kaufst du ein? » était bien en allemand, mais sa liste de pays restait
+  //  « Allemagne / Royaume-Uni / Belgique ». C'est pourtant la PREMIÈRE fenêtre
+  //  que voit un nouvel utilisateur : elle ne doit pas être à moitié traduite.
   const items = [`<button class="pays-item" data-pays="tout">
-      <b>Tous les pays d’Europe</b><span>${etat.offres.length} offres</span>
+      <b>${esc(t("Tous les pays d'Europe"))}</b><span>${esc(t('{n} offres', { n: etat.offres.length }))}</span>
     </button>`];
   for (const c of codes) {
     const n = compte[c] || 0;
     items.push(`<button class="pays-item${c === suggere ? ' conseille' : ''}" data-pays="${esc(c)}">
-      <b>${esc(NOMS_PAYS[c])}</b><span>${n} offre${n > 1 ? 's' : ''}</span>
+      <b>${esc(t(NOMS_PAYS[c]))}</b><span>${esc(t(n > 1 ? '{n} offres' : '{n} offre', { n }))}</span>
     </button>`);
   }
   $('paysListe').innerHTML = items.join('');
@@ -1099,10 +1110,14 @@ function dessinerBandeau() {
   const enLigne = !!(etat.meta && (etat.meta.amazon || etat.meta.reseaux));
   const msgs = [];
   if (etat.meta && etat.meta.horsLigne) {
-    const quand = etat.meta.genereLe ? new Date(etat.meta.genereLe).toLocaleString('fr-FR') : 'date inconnue';
-    msgs.push(`<b>Hors ligne</b> : le serveur des promos est injoignable. La liste ci-dessous est l'instantané embarqué du ${esc(quand)} ; les visuels ne sont pas disponibles.`);
+    // Libellés TRADUITS : c'étaient les deux dernières phrases françaises d'une
+    // interface par ailleurs traduite (relevé sur la capture du 7/10).
+    const quand = etat.meta.genereLe
+      ? new Date(etat.meta.genereLe).toLocaleString(locale())
+      : String(etat.meta.genereLe || '—');
+    msgs.push(t("<b>Hors ligne</b> : le serveur des promos est injoignable. La liste ci-dessous est l'instantané embarqué du {n} ; les visuels ne sont pas disponibles.", { n: esc(quand) }));
   }
-  if (!enLigne) msgs.push(`<b>À activer</b> : l'identifiant d'affiliation n'est pas encore renseigné (fichier <code>affiliation.js</code>). Les liens sortent donc en direct, sans commission.`);
+  if (!enLigne) msgs.push(t("<b>À activer</b> : l'identifiant d'affiliation n'est pas encore renseigné (fichier <code>affiliation.js</code>). Les liens sortent donc en direct, sans commission."));
   if (msgs.length) { b.className = 'bandeau info on'; b.innerHTML = msgs.join('<br>'); }
   else { b.className = 'bandeau'; b.innerHTML = ''; }
 }

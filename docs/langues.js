@@ -193,6 +193,8 @@ const FR = {
   // — Bandeau d'état —
   'Hors ligne': 'Hors ligne',
   'À activer': 'À activer',
+  "<b>À activer</b> : l'identifiant d'affiliation n'est pas encore renseigné (fichier <code>affiliation.js</code>). Les liens sortent donc en direct, sans commission.": "<b>À activer</b> : l'identifiant d'affiliation n'est pas encore renseigné (fichier <code>affiliation.js</code>). Les liens sortent donc en direct, sans commission.",
+  "<b>Hors ligne</b> : le serveur des promos est injoignable. La liste ci-dessous est l'instantané embarqué du {n} ; les visuels ne sont pas disponibles.": "<b>Hors ligne</b> : le serveur des promos est injoignable. La liste ci-dessous est l'instantané embarqué du {n} ; les visuels ne sont pas disponibles.",
   'données indisponibles': 'données indisponibles',
 
   // — Verrou du compte local —
@@ -366,6 +368,8 @@ const NL = {
   'il y a {n} j': '{n} d geleden',
   'Hors ligne': 'Offline',
   'À activer': 'Te activeren',
+  "<b>À activer</b> : l'identifiant d'affiliation n'est pas encore renseigné (fichier <code>affiliation.js</code>). Les liens sortent donc en direct, sans commission.": "<b>Te activeren</b> : de affiliate-ID is nog niet ingevuld (bestand <code>affiliation.js</code>). De links gaan dus rechtstreeks, zonder commissie.",
+  "<b>Hors ligne</b> : le serveur des promos est injoignable. La liste ci-dessous est l'instantané embarqué du {n} ; les visuels ne sont pas disponibles.": "<b>Offline</b> : de promotieserver is onbereikbaar. De lijst hieronder is de ingebouwde momentopname van {n} ; de beelden zijn niet beschikbaar.",
   'données indisponibles': 'gegevens niet beschikbaar',
   'Compte local': 'Lokaal account',
   "Entre ton mot de passe pour ouvrir l'application. Il n'est enregistré nulle part : si tu l'as oublié, personne ne pourra le retrouver, et la seule issue sera d'effacer le compte et les données de cet appareil.": 'Voer je wachtwoord in om de app te openen. Het wordt nergens opgeslagen: als je het vergeet, kan niemand het terugvinden en is de enige uitweg het account en de gegevens van dit toestel te wissen.',
@@ -531,6 +535,8 @@ const DE = {
   'il y a {n} j': 'vor {n} T.',
   'Hors ligne': 'Offline',
   'À activer': 'Zu aktivieren',
+  "<b>À activer</b> : l'identifiant d'affiliation n'est pas encore renseigné (fichier <code>affiliation.js</code>). Les liens sortent donc en direct, sans commission.": "<b>Zu aktivieren</b> : Die Affiliate-ID ist noch nicht eingetragen (Datei <code>affiliation.js</code>). Die Links führen daher direkt, ohne Provision.",
+  "<b>Hors ligne</b> : le serveur des promos est injoignable. La liste ci-dessous est l'instantané embarqué du {n} ; les visuels ne sont pas disponibles.": "<b>Offline</b> : Der Angebotsserver ist nicht erreichbar. Die Liste unten ist der eingebettete Schnappschuss vom {n} ; die Bilder sind nicht verfügbar.",
   'données indisponibles': 'Daten nicht verfügbar',
   'Compte local': 'Lokales Konto',
   "Entre ton mot de passe pour ouvrir l'application. Il n'est enregistré nulle part : si tu l'as oublié, personne ne pourra le retrouver, et la seule issue sera d'effacer le compte et les données de cet appareil.": 'Gib dein Passwort ein, um die App zu öffnen. Es wird nirgends gespeichert: Wenn du es vergisst, kann es niemand wiederfinden, und der einzige Ausweg ist, das Konto und die Daten dieses Geräts zu löschen.',
@@ -696,6 +702,8 @@ const EN = {
   'il y a {n} j': '{n} d ago',
   'Hors ligne': 'Offline',
   'À activer': 'To activate',
+  "<b>À activer</b> : l'identifiant d'affiliation n'est pas encore renseigné (fichier <code>affiliation.js</code>). Les liens sortent donc en direct, sans commission.": "<b>To activate</b>: the affiliate ID has not been filled in yet (file <code>affiliation.js</code>). Links therefore go direct, with no commission.",
+  "<b>Hors ligne</b> : le serveur des promos est injoignable. La liste ci-dessous est l'instantané embarqué du {n} ; les visuels ne sont pas disponibles.": "<b>Offline</b>: the deals server is unreachable. The list below is the built-in snapshot from {n}; images are not available.",
   'données indisponibles': 'data unavailable',
   'Compte local': 'Local account',
   "Entre ton mot de passe pour ouvrir l'application. Il n'est enregistré nulle part : si tu l'as oublié, personne ne pourra le retrouver, et la seule issue sera d'effacer le compte et les données de cet appareil.": 'Enter your password to open the app. It is stored nowhere: if you forget it, no one can recover it, and the only way out will be to erase the account and the data of this device.',
@@ -861,6 +869,8 @@ const ES = {
   'il y a {n} j': 'hace {n} d',
   'Hors ligne': 'Sin conexión',
   'À activer': 'Por activar',
+  "<b>À activer</b> : l'identifiant d'affiliation n'est pas encore renseigné (fichier <code>affiliation.js</code>). Les liens sortent donc en direct, sans commission.": "<b>Por activar</b>: el identificador de afiliación aún no está rellenado (archivo <code>affiliation.js</code>). Los enlaces salen directos, sin comisión.",
+  "<b>Hors ligne</b> : le serveur des promos est injoignable. La liste ci-dessous est l'instantané embarqué du {n} ; les visuels ne sont pas disponibles.": "<b>Sin conexión</b>: el servidor de ofertas no responde. La lista de abajo es la instantánea integrada del {n}; las imágenes no están disponibles.",
   'données indisponibles': 'datos no disponibles',
   'Compte local': 'Cuenta local',
   "Entre ton mot de passe pour ouvrir l'application. Il n'est enregistré nulle part : si tu l'as oublié, personne ne pourra le retrouver, et la seule issue sera d'effacer le compte et les données de cet appareil.": 'Introduce tu contraseña para abrir la aplicación. No se guarda en ningún sitio: si la olvidas, nadie podrá recuperarla, y la única salida será borrar la cuenta y los datos de este dispositivo.',
@@ -1026,6 +1036,8 @@ const IT = {
   'il y a {n} j': '{n} g fa',
   'Hors ligne': 'Offline',
   'À activer': 'Da attivare',
+  "<b>À activer</b> : l'identifiant d'affiliation n'est pas encore renseigné (fichier <code>affiliation.js</code>). Les liens sortent donc en direct, sans commission.": "<b>Da attivare</b>: l'identificativo di affiliazione non è ancora inserito (file <code>affiliation.js</code>). I link escono quindi diretti, senza provvigione.",
+  "<b>Hors ligne</b> : le serveur des promos est injoignable. La liste ci-dessous est l'instantané embarqué du {n} ; les visuels ne sont pas disponibles.": "<b>Offline</b>: il server delle offerte non è raggiungibile. L'elenco qui sotto è l'istantanea integrata del {n}; le immagini non sono disponibili.",
   'données indisponibles': 'dati non disponibili',
   'Compte local': 'Account locale',
   "Entre ton mot de passe pour ouvrir l'application. Il n'est enregistré nulle part : si tu l'as oublié, personne ne pourra le retrouver, et la seule issue sera d'effacer le compte et les données de cet appareil.": 'Inserisci la password per aprire l\'app. Non è registrata da nessuna parte: se la dimentichi, nessuno potrà recuperarla, e l\'unica via d\'uscita sarà cancellare l\'account e i dati di questo dispositivo.',
@@ -1191,6 +1203,8 @@ const PT = {
   'il y a {n} j': 'há {n} d',
   'Hors ligne': 'Offline',
   'À activer': 'A ativar',
+  "<b>À activer</b> : l'identifiant d'affiliation n'est pas encore renseigné (fichier <code>affiliation.js</code>). Les liens sortent donc en direct, sans commission.": "<b>Por ativar</b>: o identificador de afiliação ainda não está preenchido (ficheiro <code>affiliation.js</code>). Os links saem diretos, sem comissão.",
+  "<b>Hors ligne</b> : le serveur des promos est injoignable. La liste ci-dessous est l'instantané embarqué du {n} ; les visuels ne sont pas disponibles.": "<b>Offline</b>: o servidor de promoções está inacessível. A lista abaixo é a captura integrada de {n}; as imagens não estão disponíveis.",
   'données indisponibles': 'dados indisponíveis',
   'Compte local': 'Conta local',
   "Entre ton mot de passe pour ouvrir l'application. Il n'est enregistré nulle part : si tu l'as oublié, personne ne pourra le retrouver, et la seule issue sera d'effacer le compte et les données de cet appareil.": 'Introduz a tua palavra-passe para abrir a aplicação. Não é guardada em lado nenhum: se a esqueceres, ninguém a poderá encontrar, e a única saída será apagar a conta e os dados deste aparelho.',
@@ -1356,6 +1370,8 @@ const PL = {
   'il y a {n} j': '{n} dni temu',
   'Hors ligne': 'Offline',
   'À activer': 'Do aktywacji',
+  "<b>À activer</b> : l'identifiant d'affiliation n'est pas encore renseigné (fichier <code>affiliation.js</code>). Les liens sortent donc en direct, sans commission.": "<b>Do aktywacji</b>: identyfikator afiliacyjny nie został jeszcze wpisany (plik <code>affiliation.js</code>). Linki prowadzą więc bezpośrednio, bez prowizji.",
+  "<b>Hors ligne</b> : le serveur des promos est injoignable. La liste ci-dessous est l'instantané embarqué du {n} ; les visuels ne sont pas disponibles.": "<b>Offline</b>: serwer promocji jest nieosiągalny. Lista poniżej to wbudowany zapis z {n}; obrazy są niedostępne.",
   'données indisponibles': 'dane niedostępne',
   'Compte local': 'Konto lokalne',
   "Entre ton mot de passe pour ouvrir l'application. Il n'est enregistré nulle part : si tu l'as oublié, personne ne pourra le retrouver, et la seule issue sera d'effacer le compte et les données de cet appareil.": 'Wpisz hasło, aby otworzyć aplikację. Nie jest nigdzie zapisywane: jeśli je zapomnisz, nikt go nie odzyska, a jedynym wyjściem będzie usunięcie konta i danych z tego urządzenia.',
@@ -1521,6 +1537,8 @@ const SV = {
   'il y a {n} j': 'för {n} dagar sedan',
   'Hors ligne': 'Offline',
   'À activer': 'Att aktivera',
+  "<b>À activer</b> : l'identifiant d'affiliation n'est pas encore renseigné (fichier <code>affiliation.js</code>). Les liens sortent donc en direct, sans commission.": "<b>Att aktivera</b>: affiliate-ID:t är ännu inte ifyllt (filen <code>affiliation.js</code>). Länkarna går därför direkt, utan provision.",
+  "<b>Hors ligne</b> : le serveur des promos est injoignable. La liste ci-dessous est l'instantané embarqué du {n} ; les visuels ne sont pas disponibles.": "<b>Offline</b>: erbjudandeservern är onåbar. Listan nedan är den inbyggda ögonblicksbilden från {n}; bilderna är inte tillgängliga.",
   'données indisponibles': 'data otillgänglig',
   'Compte local': 'Lokalt konto',
   "Entre ton mot de passe pour ouvrir l'application. Il n'est enregistré nulle part : si tu l'as oublié, personne ne pourra le retrouver, et la seule issue sera d'effacer le compte et les données de cet appareil.": 'Ange ditt lösenord för att öppna appen. Det sparas ingenstans: om du glömmer det kan ingen hitta det, och enda utvägen blir att radera kontot och uppgifterna på den här enheten.',
@@ -1770,7 +1788,19 @@ export function langueDetectee() {
 /** Langue mémorisée si valide, sinon celle du navigateur, sinon le défaut. */
 export function chargerLangue() {
   const memo = memoLangue();
-  return estLangue(memo) ? memo : langueDetectee();
+  const code = estLangue(memo) ? memo : langueDetectee();
+  /* ⚠ Elle APPLIQUE la langue, elle ne fait pas que la rendre.
+   *
+   *  Défaut mesuré le 7/10, en rechargeant la page après un test : l'application
+   *  appelait chargerLangue() puis traduisait le DOM, mais la langue courante
+   *  n'était jamais changée. La page repartait donc en français à chaque
+   *  chargement, et ne redevenait allemande qu'après un passage MANUEL dans les
+   *  Réglages — le choix de l'utilisateur ne survivait pas à un rechargement.
+   *
+   *  On n'écrit PAS la mémoire ici : tant que l'utilisateur n'a rien choisi, la
+   *  langue détectée reste une proposition, pas une décision enregistrée. */
+  if (estLangue(code)) langueCourante = code;
+  return code;
 }
 
 /** Interpole les {cle} d'un gabarit avec les variables fournies. */
