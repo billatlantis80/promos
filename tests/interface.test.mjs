@@ -489,8 +489,14 @@ test('le logo est le logotype fourni : carré arrondi, K détouré, dégradé', 
   // portent le MÊME dessin — deux tracés divergents donneraient une icône
   // d'onglet différente du logo de l'en-tête — et que les couleurs employées
   // sont celles RELEVÉES sur l'image, pas des approximations.
+  // On ne compare QUE le bloc du logo. Compter tous les <path> de la page
+  // cassait dès qu'on ajoutait une icône ailleurs (étoile des favoris,
+  // engrenage des réglages, logos Google et Facebook…) — le test accusait du
+  // code juste.
+  const bloc = html.match(/<svg class="logo"[\s\S]*?<\/svg>/);
+  assert.ok(bloc, 'l’icône de l’en-tête doit exister dans index.html');
   const traces = (t) => (t.match(/<path d="([^"]+)"/g) || []).sort();
-  const dansPage = traces(html);
+  const dansPage = traces(bloc[0]);
   const dansOnglet = traces(lire('favicon.svg'));
   assert.ok(dansPage.length >= 3,
     `l’icône se dessine en plusieurs calques (carré, K blanc, remplissage, pistes), or ${dansPage.length} tracé(s)`);

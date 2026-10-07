@@ -198,6 +198,24 @@ const NOMS_VUES = {
 };
 
 /* ---------- Réglages ---------- */
+/** ONGLETS DES RÉGLAGES. Un seul compartiment visible à la fois.
+ *  Le choix n'est PAS mémorisé : on rouvre toujours sur « Compte », qui est ce
+ *  qu'on vient chercher quand on ne sait pas où c'est. */
+const CLE_ONGLET = 'promos.ongletReglages';
+
+function afficherOnglet(nom) {
+  const onglets = [...document.querySelectorAll('.onglet[data-onglet]')];
+  const panneaux = [...document.querySelectorAll('.panneau[data-panneau]')];
+  const connu = onglets.some((o) => o.dataset.onglet === nom);
+  if (!connu) nom = onglets.length ? onglets[0].dataset.onglet : '';
+  for (const o of onglets) {
+    const actif = o.dataset.onglet === nom;
+    o.setAttribute('aria-selected', actif ? 'true' : 'false');
+    o.classList.toggle('on', actif);
+  }
+  for (const p of panneaux) p.hidden = p.dataset.panneau !== nom;
+}
+
 function dessinerReglages() {
   // Le paramètre est renommé « th » : « t » est désormais la fonction de
   // traduction importée — le masquer ici serait un piège silencieux.
@@ -219,9 +237,53 @@ function dessinerReglages() {
     </p>`;
 
   dessinerProfil();
+  dessinerConnexion();
   dessinerLangue();
   dessinerCompte();
   majThemes();
+}
+
+/** Rubrique « Inscription et connexion ».
+ *
+ *  Google et Facebook demandent un IDENTIFIANT D'APPLICATION (client ID), qui
+ *  appartient au propriétaire de l'application — jamais à nous. Tant qu'il n'est
+ *  pas renseigné, le bouton ne fait pas semblant : il dit ce qui manque, au lieu
+ *  d'ouvrir une fenêtre qui échouerait.
+ */
+function dessinerConnexion() {
+  const rc = $('regConnexion');
+  if (!rc) return;
+  const pret = (id) => typeof id === 'string' && id.trim().length > 0;
+  const style = 'width:100%;display:flex;align-items:center;justify-content:center;gap:9px;'
+    + 'padding:11px 12px;border-radius:11px;font:inherit;font-weight:600;font-size:14px;'
+    + 'cursor:pointer;text-decoration:none;border:1px solid var(--bord)';
+  rc.innerHTML = `
+    <p>
+      <button class="connexion" id="connexionGoogle" style="${style};background:#fff;color:#1f1f1f">
+        <svg viewBox="0 0 48 48" aria-hidden="true" style="width:18px;height:18px"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+        ${esc(t('Se connecter avec Google'))}
+      </button>
+    </p>
+    <p>
+      <button class="connexion" id="connexionFacebook" style="${style};background:#1877F2;color:#fff;border-color:#1877F2">
+        <svg viewBox="0 0 24 24" aria-hidden="true" style="width:18px;height:18px;fill:#fff"><path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06C2 17.08 5.66 21.24 10.44 22v-7.03H7.9v-2.91h2.54V9.85c0-2.51 1.49-3.9 3.77-3.9 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.78-1.63 1.57v1.88h2.78l-.45 2.91h-2.33V22C18.34 21.24 22 17.08 22 12.06z"/></svg>
+        ${esc(t('Se connecter avec Facebook'))}
+      </button>
+    </p>
+    <p class="note" style="font-size:12.5px;color:var(--doux)">
+      ${esc(t("Ces connexions demandent un identifiant d'application. Tant qu'il n'est pas renseigné, elles restent fermées."))}
+    </p>`;
+  $('connexionGoogle').addEventListener('click', () => annoncerConnexion('Google'));
+  $('connexionFacebook').addEventListener('click', () => annoncerConnexion('Facebook'));
+}
+
+/** Sans identifiant d'application, on EXPLIQUE au lieu de faire semblant. */
+function annoncerConnexion(reseau) {
+  const id = reseau === 'Google' ? window.KAZENDRA_GOOGLE_CLIENT_ID
+                                 : window.KAZENDRA_FACEBOOK_APP_ID;
+  if (typeof id === 'string' && id.trim()) return;   // renseigné : le branchement s'en occupe
+  alert(t("La connexion {r} n'est pas encore ouverte : il manque l'identifiant d'application.",
+          { r: reseau }));
 }
 
 /** Rubrique « Langue » : le sélecteur des 9 langues, avec leur NOM NATIF.
@@ -389,6 +451,13 @@ function exporterDonnees() {
 
 function ouvrirReglages() {
   majThemes();
+  // Brancher les onglets. On utilise « onclick » et non addEventListener :
+  // ouvrir les réglages deux fois poserait sinon deux écouteurs sur le même
+  // bouton, et le second clic basculerait deux fois.
+  for (const o of document.querySelectorAll('.onglet[data-onglet]')) {
+    o.onclick = () => afficherOnglet(o.dataset.onglet);
+  }
+  afficherOnglet('compte');
   $('feuille').hidden = false;
   $('reglages').setAttribute('aria-expanded', 'true');
   document.body.style.overflow = 'hidden';   // pas de défilement derrière la feuille
@@ -870,7 +939,7 @@ function carte(o) {
   // prix (voir plus bas) : jamais sur la photo, et sans toucher au bouton.
   const garde = estFavori(o.id);
   const etoile = `<button class="favori${garde ? ' on' : ''}" data-id="${esc(o.id)}" aria-pressed="${garde}"
-            title="${esc(garde ? t('Retirer des favoris') : t('Garder de côté'))}">&#9733;</button>`;
+            title="${esc(garde ? t('Retirer des favoris') : t('Garder de côté'))}">${garde ? ICONE_ETOILE_PLEINE : ICONE_ETOILE_VIDE}</button>`;
   const etiquettes = [
     o.marchand ? `<span class="etiquette marchand">${esc(o.marchand)}</span>` : '',
     // Le score communautaire Dealabs : c'est LUI qui a servi à ne garder que
@@ -981,6 +1050,14 @@ function carte(o) {
      3. les LIENS DIRECTS : WhatsApp, e-mail, et copier le lien — de vrais liens
         qui fonctionnent partout, même sans aucune API de partage.
    ============================================================ */
+
+/* Les icônes de l'interface sont celles d'ANDROID (Material Design), pas des
+   glyphes de police : le ⚙ et le ★ du clavier changent d'un appareil à l'autre.
+   L'étoile a DEUX états — pleine si l'offre est gardée, vide sinon — comme dans
+   la barre d'état d'Android. */
+export const ICONE_ETOILE_PLEINE = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>';
+export const ICONE_ETOILE_VIDE = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M22 9.24l-7.19-.62L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.63-7.03L22 9.24zM12 15.4l-3.76 2.27 1-4.28-3.32-2.88 4.38-.38L12 6.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28L12 15.4z"/></svg>';
+export const ICONE_ENGRENAGE = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94L14.4 2.81c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41L9.25 5.35c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>';
 
 /** Le lien partagé porte l'identifiant du marché visé, comme le bouton. */
 function lienPartage(o) {
@@ -1283,9 +1360,14 @@ function dessiner() {
     // La répartition Amazon / autres enseignes est un RÉGLAGE DE PROGRAMMATION
     // (le mélange se décide dans melanger(), et il est testé là-bas). L'afficher
     // obligeait l'utilisateur à lire un paramètre interne qui ne le concerne pas.
-    // L'en-tête ne garde donc que le nombre de bonnes promos et la date de MISE
-    // À JOUR — deux informations, pas trois.
-    $('comptes').innerHTML = `<b>${nb}</b> ${esc(t('bonnes promos'))}<br>${esc(t('mis à jour {n}', { n: ilYA(etat.meta.genereLe || new Date().toISOString()) }))}`;
+    // L'en-tête dit donc TROIS choses, dans cet ordre : le nombre de bonnes
+    // promos (ce qui est à l'écran), le total des promotions du catalogue
+    // (demande de B : « entre les deux, sur la deuxième ligne »), puis la date
+    // de mise à jour. Sans le total, « 2 415 » ne veut rien dire.
+    const totalPromos = etat.meta.totalOffres ?? '—';
+    $('comptes').innerHTML = `<b>${nb}</b> ${esc(t('bonnes promos'))}`
+      + `<br>${esc(t('{n} promotions', { n: totalPromos }))}`
+      + `<br>${esc(t('mis à jour {n}', { n: ilYA(etat.meta.genereLe || new Date().toISOString()) }))}`;
   } else {
     $('comptes').innerHTML = `${etat.meta.totalOffres ?? '—'} ${esc(t('offres'))} · ${etat.meta.totalVeille ?? '—'} ${esc(t('veille'))}<br>${esc(t('mis à jour {n}', { n: ilYA(etat.meta.genereLe || new Date().toISOString()) }))}`;
   }

@@ -79,9 +79,9 @@
     </div>
     <button class="outil" id="eco" aria-pressed="false" title="Économie de données — aucun visuel téléchargé"
             data-i18n-title="Économie de données — aucun visuel téléchargé" data-i18n="Éco">Éco</button>
-    <button class="outil" id="fav" aria-pressed="false" title="Mes favoris" data-i18n-title="Mes favoris">&#9733;<span class="n" id="nFav"></span></button>
+    <button class="outil" id="fav" aria-pressed="false" title="Mes favoris" data-i18n-title="Mes favoris"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><span class="n" id="nFav"></span></button>
     <button class="outil" id="reglages" aria-haspopup="dialog" aria-expanded="false" title="Réglages — thème et couleurs, affichage, profil, compte"
-            data-i18n-title="Réglages — thème et couleurs, affichage, profil, compte">&#9881;</button>
+            data-i18n-title="Réglages — thème et couleurs, affichage, profil, compte"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94L14.4 2.81c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41L9.25 5.35c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg></button>
   </div>
   <nav class="puces" id="puces"></nav>
 </header>
@@ -119,44 +119,76 @@
     <button class="fermer" id="fermer" data-i18n="Fermer">Fermer</button>
   </div>
 
-  <section class="rubrique">
-    <h3 data-i18n="Thème et couleurs">Thème et couleurs</h3>
-    <p data-i18n="Dix thèmes. Le choix s'applique tout de suite et reste enregistré sur cet appareil.">Dix thèmes. Le choix s'applique tout de suite et reste enregistré sur cet appareil.</p>
-    <div class="themes" id="themes"></div>
-  </section>
+  <!-- COMPARTIMENTS. Les réglages tenaient en une seule colonne si longue qu'on
+       n'y trouvait plus rien : chaque famille a maintenant son onglet, et un
+       seul est ouvert à la fois. -->
+  <div class="onglets" role="tablist" aria-label="Réglages" id="ongletsReglages">
+    <button class="onglet" role="tab" data-onglet="compte" aria-selected="true" data-i18n="Compte">Compte</button>
+    <button class="onglet" role="tab" data-onglet="langue" aria-selected="false" data-i18n="Langue">Langue</button>
+    <button class="onglet" role="tab" data-onglet="themes" aria-selected="false" data-i18n="Thèmes">Thèmes</button>
+    <button class="onglet" role="tab" data-onglet="affichage" aria-selected="false" data-i18n="Affichage">Affichage</button>
+    <button class="onglet" role="tab" data-onglet="infos" aria-selected="false" data-i18n="Informations">Informations</button>
+  </div>
 
-  <section class="rubrique">
-    <h3 data-i18n="Affichage">Affichage</h3>
-    <p data-i18n="Les mêmes réglages que la barre du haut, réunis ici.">Les mêmes réglages que la barre du haut, réunis ici.</p>
-    <div id="regAffichage"></div>
-  </section>
+  <div class="panneau" data-panneau="compte" role="tabpanel">
+    <section class="rubrique">
+      <h3 data-i18n="Inscription et connexion">Inscription et connexion</h3>
+      <p data-i18n="Crée un compte sur cet appareil, ou connecte-toi avec un compte existant.">Crée un compte sur cet appareil, ou connecte-toi avec un compte existant.</p>
+      <div id="regConnexion"></div>
+    </section>
+    <section class="rubrique">
+      <h3 data-i18n="Profil">Profil</h3>
+      <p data-i18n="Ce que l'application sait de toi — et rien de plus.">Ce que l'application sait de toi — et rien de plus.</p>
+      <div id="regProfil"></div>
+    </section>
+    <section class="rubrique">
+      <h3 data-i18n="Compte local">Compte local</h3>
+      <div id="regCompte"></div>
+    </section>
+  </div>
 
-  <!-- Rubrique LANGUE — le choix de langue de l'INTERFACE. C'est ici que
-       l'utilisateur choisit sa langue, et elle reste la sienne quel que soit le
-       pays qu'il consulte ensuite. Voir la rubrique « Pays » juste après : le
-       pays ne change JAMAIS la langue, et la langue ne change JAMAIS le pays. -->
-  <section class="rubrique">
-    <h3 data-i18n="Langue">Langue</h3>
-    <p data-i18n="La langue de l'interface. Elle reste la tienne quel que soit le pays consulté.">La langue de l'interface. Elle reste la tienne quel que soit le pays consulté.</p>
-    <div id="regLangue"></div>
-  </section>
+  <div class="panneau" data-panneau="langue" role="tabpanel" hidden>
+    <section class="rubrique">
+      <h3 data-i18n="Langue">Langue</h3>
+      <p data-i18n="La langue de l'interface. Elle reste la tienne quel que soit le pays consulté.">La langue de l'interface. Elle reste la tienne quel que soit le pays consulté.</p>
+      <div id="regLangue"></div>
+    </section>
+  </div>
 
-  <section class="rubrique">
-    <h3 data-i18n="Profil">Profil</h3>
-    <p data-i18n="Ce que l'application sait de toi — et rien de plus.">Ce que l'application sait de toi — et rien de plus.</p>
-    <div id="regProfil"></div>
-  </section>
+  <div class="panneau" data-panneau="themes" role="tabpanel" hidden>
+    <section class="rubrique">
+      <h3 data-i18n="Thème et couleurs">Thème et couleurs</h3>
+      <p data-i18n="Dix thèmes. Le choix s'applique tout de suite et reste enregistré sur cet appareil.">Dix thèmes. Le choix s'applique tout de suite et reste enregistré sur cet appareil.</p>
+      <div class="themes" id="themes"></div>
+    </section>
+  </div>
 
-  <section class="rubrique">
-    <h3 data-i18n="Pays">Pays</h3>
-    <p data-i18n="Les offres affichées viennent de ce pays. Tu peux en changer quand tu veux : chaque pays proposé a ses propres sources.">Les offres affichées viennent de ce pays. Tu peux en changer quand tu veux : chaque pays proposé a ses propres sources.</p>
-    <div id="regPays"></div>
-  </section>
+  <div class="panneau" data-panneau="affichage" role="tabpanel" hidden>
+    <section class="rubrique">
+      <h3 data-i18n="Affichage">Affichage</h3>
+      <p data-i18n="Les mêmes réglages que la barre du haut, réunis ici.">Les mêmes réglages que la barre du haut, réunis ici.</p>
+      <div id="regAffichage"></div>
+    </section>
+    <section class="rubrique">
+      <h3 data-i18n="Pays">Pays</h3>
+      <p data-i18n="Les offres affichées viennent de ce pays. Tu peux en changer quand tu veux : chaque pays proposé a ses propres sources.">Les offres affichées viennent de ce pays. Tu peux en changer quand tu veux : chaque pays proposé a ses propres sources.</p>
+      <div id="regPays"></div>
+    </section>
+  </div>
 
-  <section class="rubrique">
-    <h3 data-i18n="Compte">Compte</h3>
-    <div id="regCompte"></div>
-  </section>
+  <div class="panneau" data-panneau="infos" role="tabpanel" hidden>
+    <section class="rubrique">
+      <h3 data-i18n="Sources et données">Sources et données</h3>
+      <p data-i18n="Les offres sont rassemblées depuis des flux publics (Dealabs, presse spécialisée, Google News). Aucune donnée n'est revendiquée : chaque offre renvoie à sa source, qui fait foi.">Les offres sont rassemblées depuis des flux publics (Dealabs, presse spécialisée, Google News). Aucune donnée n'est revendiquée : chaque offre renvoie à sa source, qui fait foi.</p>
+      <p data-i18n="Il n'est pas possible de mettre à jour les prix affichés en temps réel.">Il n'est pas possible de mettre à jour les prix affichés en temps réel.</p>
+      <p data-i18n="Les liens vers les marchands peuvent être affiliés : une commission peut être versée, sans changer le prix que tu paies.">Les liens vers les marchands peuvent être affiliés : une commission peut être versée, sans changer le prix que tu paies.</p>
+    </section>
+    <section class="rubrique">
+      <h3 data-i18n="Point de contact">Point de contact</h3>
+      <p data-i18n="Pour toute question sur les données, les sources ou une offre :">Pour toute question sur les données, les sources ou une offre :</p>
+      <p style="font-size:15px"><a href="mailto:info@kazendra.com">info@kazendra.com</a></p>
+    </section>
+  </div>
 </section>
 
 <!-- Verrou du compte local. Quand un compte existe sur cet appareil,

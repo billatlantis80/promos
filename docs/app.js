@@ -271,7 +271,7 @@ function dessinerConnexion() {
       </button>
     </p>
     <p class="note" style="font-size:12.5px;color:var(--doux)">
-      ${esc(t("Ces deux connexions demandent un identifiant d'application, qui appartient au propriétaire de l'application. Tant qu'il n'est pas renseigné, elles restent fermées — et le disent, plutôt que d'échouer en silence."))}
+      ${esc(t("Ces connexions demandent un identifiant d'application. Tant qu'il n'est pas renseigné, elles restent fermées."))}
     </p>`;
   $('connexionGoogle').addEventListener('click', () => annoncerConnexion('Google'));
   $('connexionFacebook').addEventListener('click', () => annoncerConnexion('Facebook'));
@@ -282,7 +282,7 @@ function annoncerConnexion(reseau) {
   const id = reseau === 'Google' ? window.KAZENDRA_GOOGLE_CLIENT_ID
                                  : window.KAZENDRA_FACEBOOK_APP_ID;
   if (typeof id === 'string' && id.trim()) return;   // renseigné : le branchement s'en occupe
-  alert(t("La connexion {r} n'est pas encore ouverte : il manque l'identifiant d'application de Kazendra. Tant qu'il n'est pas fourni, aucune donnée n'est demandée à {r} — c'est volontaire.",
+  alert(t("La connexion {r} n'est pas encore ouverte : il manque l'identifiant d'application.",
           { r: reseau }));
 }
 
@@ -1360,11 +1360,16 @@ function dessiner() {
     // La répartition Amazon / autres enseignes est un RÉGLAGE DE PROGRAMMATION
     // (le mélange se décide dans melanger(), et il est testé là-bas). L'afficher
     // obligeait l'utilisateur à lire un paramètre interne qui ne le concerne pas.
-    // L'en-tête ne garde donc que le nombre de bonnes promos et la date de MISE
-    // À JOUR — deux informations, pas trois.
-    $('comptes').innerHTML = `<b>${nb}</b> ${esc(t('bonnes promos'))}<br>${esc(t('mis à jour {n}', { n: ilYA(etat.meta.genereLe || new Date().toISOString()) }))}`;
+    // L'en-tête dit donc TROIS choses, dans cet ordre : le nombre de bonnes
+    // promos (ce qui est à l'écran), le total des promotions du catalogue
+    // (demande de B : « entre les deux, sur la deuxième ligne »), puis la date
+    // de mise à jour. Sans le total, « 2 415 » ne veut rien dire.
+    const totalPromos = etat.meta.totalOffres ?? '—';
+    $('comptes').innerHTML = `<b>${nb}</b> ${esc(t('bonnes promos'))}`
+      + `<br>${esc(t('{n} promotions', { n: totalPromos }))}`
+      + `<br>${esc(t('mis à jour {n}', { n: ilYA(etat.meta.genereLe || new Date().toISOString()) }))}`;
   } else {
-    $('comptes').innerHTML = `${etat.meta.totalOffres ?? '—'} ${esc(t('offres'))} · ${etat.meta.totalVeille ?? '—'} ${esc(t('veille'))}<br>${esc(t('{n} promotions', { n: etat.meta.totalOffres ?? '—' }))} · ${esc(t('mis à jour {n}', { n: ilYA(etat.meta.genereLe || new Date().toISOString()) }))}`;
+    $('comptes').innerHTML = `${etat.meta.totalOffres ?? '—'} ${esc(t('offres'))} · ${etat.meta.totalVeille ?? '—'} ${esc(t('veille'))}<br>${esc(t('mis à jour {n}', { n: ilYA(etat.meta.genereLe || new Date().toISOString()) }))}`;
   }
   $('fraicheur').textContent = t('Recensé le {n} — {m} entrées.', {
     n: new Date(etat.meta.genereLe || Date.now()).toLocaleString(locale()),
