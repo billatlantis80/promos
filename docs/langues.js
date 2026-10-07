@@ -87,6 +87,7 @@ const FR = {
   "Aucun favori pour l'instant. Touche l'étoile d'une offre pour la garder de côté.": "Aucun favori pour l'instant. Touche l'étoile d'une offre pour la garder de côté.",
   "Aucune bonne promo ici pour l'instant : nous n'affichons que des offres à prix réel — deux prix affichés quand la remise peut être démontrée, et pour les autres enseignes un prix réel avec le nom de la boutique.": "Aucune bonne promo ici pour l'instant : nous n'affichons que des offres à prix réel — deux prix affichés quand la remise peut être démontrée, et pour les autres enseignes un prix réel avec le nom de la boutique.",
   'bonnes promos': 'bonnes promos',
+  'enseignes & presse': 'enseignes & presse',
   'mis à jour {n}': 'mis à jour {n}',
   '{n} offres': '{n} offres',
   '{n} offre': '{n} offre',
@@ -275,6 +276,7 @@ const NL = {
   "Aucun favori pour l'instant. Touche l'étoile d'une offre pour la garder de côté.": 'Nog geen favorieten. Tik op de ster van een aanbieding om ze te bewaren.',
   "Aucune bonne promo ici pour l'instant : nous n'affichons que des offres à prix réel — deux prix affichés quand la remise peut être démontrée, et pour les autres enseignes un prix réel avec le nom de la boutique.": 'Hier is voorlopig geen goede deal: we tonen alleen aanbiedingen met een echte prijs — twee weergegeven prijzen wanneer de korting bewezen kan worden, en voor de andere winkels een echte prijs met de winkelnaam.',
   'bonnes promos': 'goede deals',
+  'enseignes & presse': 'winkels & pers',
   'mis à jour {n}': 'bijgewerkt {n}',
   '{n} offres': '{n} aanbiedingen',
   '{n} offre': '{n} aanbieding',
@@ -439,6 +441,7 @@ const DE = {
   "Aucun favori pour l'instant. Touche l'étoile d'une offre pour la garder de côté.": 'Noch keine Favoriten. Tippe auf den Stern eines Angebots, um es zu merken.',
   "Aucune bonne promo ici pour l'instant : nous n'affichons que des offres à prix réel — deux prix affichés quand la remise peut être démontrée, et pour les autres enseignes un prix réel avec le nom de la boutique.": 'Hier gibt es derzeit kein gutes Angebot: Wir zeigen nur Angebote mit echtem Preis — zwei Preise, wenn der Rabatt belegbar ist, und für die übrigen Händler einen echten Preis mit dem Ladenamen.',
   'bonnes promos': 'gute Angebote',
+  'enseignes & presse': 'Händler & Presse',
   'mis à jour {n}': 'aktualisiert {n}',
   '{n} offres': '{n} Angebote',
   '{n} offre': '{n} Angebot',
@@ -603,6 +606,7 @@ const EN = {
   "Aucun favori pour l'instant. Touche l'étoile d'une offre pour la garder de côté.": 'No favourites yet. Tap the star on an offer to save it.',
   "Aucune bonne promo ici pour l'instant : nous n'affichons que des offres à prix réel — deux prix affichés quand la remise peut être démontrée, et pour les autres enseignes un prix réel avec le nom de la boutique.": 'No good deal here for now: we only show offers with a real price — two prices shown when the discount can be proven, and for the other shops a real price with the shop name.',
   'bonnes promos': 'good deals',
+  'enseignes & presse': 'shops & press',
   'mis à jour {n}': 'updated {n}',
   '{n} offres': '{n} offers',
   '{n} offre': '{n} offer',
@@ -767,6 +771,7 @@ const ES = {
   "Aucun favori pour l'instant. Touche l'étoile d'une offre pour la garder de côté.": 'Aún no hay favoritos. Toca la estrella de una oferta para guardarla.',
   "Aucune bonne promo ici pour l'instant : nous n'affichons que des offres à prix réel — deux prix affichés quand la remise peut être démontrée, et pour les autres enseignes un prix réel avec le nom de la boutique.": 'Aquí no hay buenas ofertas por ahora: solo mostramos ofertas con precio real — dos precios mostrados cuando el descuento puede demostrarse, y para las demás tiendas un precio real con el nombre de la tienda.',
   'bonnes promos': 'buenas ofertas',
+  'enseignes & presse': 'tiendas y prensa',
   'mis à jour {n}': 'actualizado {n}',
   '{n} offres': '{n} ofertas',
   '{n} offre': '{n} oferta',
@@ -931,6 +936,7 @@ const IT = {
   "Aucun favori pour l'instant. Touche l'étoile d'une offre pour la garder de côté.": 'Nessun preferito per ora. Tocca la stella di una offerta per conservarla.',
   "Aucune bonne promo ici pour l'instant : nous n'affichons que des offres à prix réel — deux prix affichés quand la remise peut être démontrée, et pour les autres enseignes un prix réel avec le nom de la boutique.": 'Qui per ora nessuna buona offerta: mostriamo solo offerte con prezzo reale — due prezzi mostrati quando lo sconto è dimostrabile, e per gli altri negozi un prezzo reale con il nome del negozio.',
   'bonnes promos': 'buone offerte',
+  'enseignes & presse': 'negozi e stampa',
   'mis à jour {n}': 'aggiornato {n}',
   '{n} offres': '{n} offerte',
   '{n} offre': '{n} offerta',
@@ -1095,6 +1101,7 @@ const PT = {
   "Aucun favori pour l'instant. Touche l'étoile d'une offre pour la garder de côté.": 'Ainda sem favoritos. Toca na estrela de uma oferta para a guardar.',
   "Aucune bonne promo ici pour l'instant : nous n'affichons que des offres à prix réel — deux prix affichés quand la remise peut être démontrée, et pour les autres enseignes un prix réel avec le nom de la boutique.": 'Aqui não há boas ofertas para já: só mostramos ofertas com preço real — dois preços mostrados quando o desconto pode ser comprovado, e para as outras lojas um preço real com o nome da loja.',
   'bonnes promos': 'boas ofertas',
+  'enseignes & presse': 'lojas e imprensa',
   'mis à jour {n}': 'atualizado {n}',
   '{n} offres': '{n} ofertas',
   '{n} offre': '{n} oferta',
@@ -1259,6 +1266,7 @@ const PL = {
   "Aucun favori pour l'instant. Touche l'étoile d'une offre pour la garder de côté.": 'Brak ulubionych. Dotknij gwiazdki oferty, aby ją zapisać.',
   "Aucune bonne promo ici pour l'instant : nous n'affichons que des offres à prix réel — deux prix affichés quand la remise peut être démontrée, et pour les autres enseignes un prix réel avec le nom de la boutique.": 'Na razie nie ma tu dobrych okazji: pokazujemy tylko oferty z prawdziwą ceną — dwa pokazane ceny, gdy rabat da się udowodnić, a dla pozostałych sklepów prawdziwą cenę z nazwą sklepu.',
   'bonnes promos': 'dobre okazje',
+  'enseignes & presse': 'sklepy i prasa',
   'mis à jour {n}': 'zaktualizowano {n}',
   '{n} offres': '{n} ofert',
   '{n} offre': '{n} oferta',
@@ -1423,6 +1431,7 @@ const SV = {
   "Aucun favori pour l'instant. Touche l'étoile d'une offre pour la garder de côté.": 'Inga favoriter än. Tryck på stjärnan på ett erbjudande för att spara det.',
   "Aucune bonne promo ici pour l'instant : nous n'affichons que des offres à prix réel — deux prix affichés quand la remise peut être démontrée, et pour les autres enseignes un prix réel avec le nom de la boutique.": 'Här finns inget bra erbjudande just nu: vi visar bara erbjudanden med ett riktigt pris — två visade priser när rabatten kan bevisas, och för övriga butiker ett riktigt pris med butikens namn.',
   'bonnes promos': 'bra erbjudanden',
+  'enseignes & presse': 'butiker & press',
   'mis à jour {n}': 'uppdaterat {n}',
   '{n} offres': '{n} erbjudanden',
   '{n} offre': '{n} erbjudande',
@@ -1770,6 +1779,23 @@ export function interpole(texte, variables) {
   return String(texte).replace(/\{(\w+)\}/g, (m, k) => (variables[k] != null ? String(variables[k]) : m));
 }
 
+/* Clé NORMALISÉE : pour l'utilisateur, « Lire l’article » (apostrophe courbe) et
+ * « Lire l'article » (apostrophe droite) sont le MÊME mot. Défaut mesuré le
+ * 7/10 : le code écrit la courbe, les dictionnaires gardent la droite — la clé
+ * n'était donc pas trouvée, et le bouton restait en français SANS aucune erreur
+ * visible. On indexe chaque langue sur ses clés normalisées, et on cherche
+ * d'abord la clé exacte (rapide), puis la normalisée. */
+export const normaliseCle = (s) => String(s).replace(/[\u2018\u2019]/g, "'").replace(/\s+/g, ' ').trim();
+const INDEX_NORM = {};
+function indexNormalise(code) {
+  if (INDEX_NORM[code]) return INDEX_NORM[code];
+  const dico = (LANGUES[code] && LANGUES[code].textes) || {};
+  const m = {};
+  for (const [k, v] of Object.entries(dico)) m[normaliseCle(k)] = v;
+  INDEX_NORM[code] = m;
+  return m;
+}
+
 /**
  * Traduit une clé (le texte français) dans la langue courante.
  * Si la clé n'existe pas, elle est rendue TELLE QUELLE (français) : aucune
@@ -1777,7 +1803,9 @@ export function interpole(texte, variables) {
  */
 export function t(cle, variables) {
   const dico = LANGUES[langueCourante] && LANGUES[langueCourante].textes;
-  const brut = dico && Object.prototype.hasOwnProperty.call(dico, cle) ? dico[cle] : cle;
+  let brut = dico && Object.prototype.hasOwnProperty.call(dico, cle) ? dico[cle] : null;
+  if (brut == null) brut = indexNormalise(langueCourante)[normaliseCle(cle)];
+  if (brut == null) brut = cle;
   return interpole(brut, variables);
 }
 

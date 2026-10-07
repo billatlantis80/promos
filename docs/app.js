@@ -214,6 +214,7 @@ function dessinerReglages() {
     </p>`;
 
   dessinerProfil();
+  dessinerLangue();
   dessinerCompte();
   majThemes();
 }
@@ -231,6 +232,26 @@ function dessinerLangue() {
   $('langueReglages').innerHTML = languesDisponibles()
     .map((l) => '<option value="' + l.code + '">' + esc(l.nom) + '</option>').join('');
   $('langueReglages').value = langue();
+}
+
+/** Applique un changement de langue choisi par l'utilisateur.
+ *
+ *  Ordre : le moteur d'abord (mémoire + `document.lang`), puis le DOM statique,
+ *  puis tout ce que le JavaScript construit — onglets, bandeau, réglages, cartes.
+ *
+ *  ⚠ CE QU'ELLE NE FAIT PAS, et c'est la règle d'architecture : elle ne touche
+ *  NI le pays, NI les offres. Changer de langue ne change jamais le pays, et
+ *  changer de pays ne change jamais la langue — deux clés distinctes, deux choix
+ *  indépendants (testé par tests/i18n.test.mjs). */
+function changerLangue(code) {
+  if (!definirLangue(code)) return;   // code inconnu : on ne casse rien
+  traduireDOM();
+  dessinerLangue();
+  dessinerPuces();
+  dessinerBandeau();
+  dessinerReglages();
+  majOutils();
+  dessiner();
 }
 
 function dessinerProfil() {
@@ -836,7 +857,7 @@ function carte(o) {
     ? ''
     : (source
       ? `<div class="visuel" style="background-image:url('${source}')" role="img" aria-label=""></div>`
-      : `<div class="visuel">${esc(NOMS_CATEGORIES[o.categorie] || '')}</div>`);
+      : `<div class="visuel">${esc(NOMS_CATEGORIES[o.categorie] ? t(NOMS_CATEGORIES[o.categorie]) : '')}</div>`);
   // L'étoile « garder de côté » vit dans l'encadré de la carte, sur la ligne du
   // prix (voir plus bas) : jamais sur la photo, et sans toucher au bouton.
   const garde = estFavori(o.id);
@@ -847,7 +868,7 @@ function carte(o) {
     // Le score communautaire Dealabs : c'est LUI qui a servi à ne garder que
     // les meilleures offres. L'afficher rend la sélection visible et vérifiable.
     o.temperature != null ? `<span class="etiquette chaud" title="Score de la communauté Dealabs">${o.temperature}°</span>` : '',
-    `<span class="etiquette">${esc(NOMS_CATEGORIES[o.categorie] || o.categorie)}</span>`,
+    `<span class="etiquette">${esc(t(NOMS_CATEGORIES[o.categorie] || o.categorie))}</span>`,
     remiseMontrable(o) != null
       ? `<span class="etiquette remise${o.remiseCalculee ? ' calculee' : ''}" title="${o.remiseCalculee ? 'Pourcentage calculé entre deux prix réels' : 'Pourcentage annoncé par la source'}">${o.remiseCalculee ? '≈ ' : ''}-${remiseMontrable(o)} %</span>`
       : '',
@@ -889,11 +910,11 @@ function carte(o) {
   // Le bouton dit OÙ il emmène. « Voir l'offre » pour tout le monde obligeait
   // l'utilisateur à deviner s'il allait chez Amazon, chez Coolblue ou sur un
   // article de presse.
-  const libelle = article ? 'Lire l’article'
-    : (estAmazon(o) ? 'Acheter sur Amazon'
-      : (estOffreEnseigne(o) ? `Voir chez ${esc(o.marchand)}`
-        : (estBonPlanPresse(o) ? 'Lire le bon plan'
-          : (estBonneAffaire(o) ? 'Voir la bonne affaire' : 'Voir l’offre'))));
+  const libelle = article ? t("Lire l'article")
+    : (estAmazon(o) ? t('Acheter sur Amazon')
+      : (estOffreEnseigne(o) ? t('Voir chez {n}', { n: esc(o.marchand) })
+        : (estBonPlanPresse(o) ? t('Lire le bon plan')
+          : (estBonneAffaire(o) ? t('Voir la bonne affaire') : t("Voir l'offre")))));
   // Pour une offre sortie de la liste, on date la MISE DE CÔTÉ et non la
   // parution : c'est ce qui dit à l'utilisateur ce qu'il a sous les yeux.
   const quand = o.encoreEnListe === false
@@ -948,9 +969,9 @@ function dessinerPuces() {
   // disparaîtrait de la liste en laissant le filtre actif, et l'écran semblerait
   // vide sans qu'aucune commande ne dise pourquoi.
   if (etat.categorie !== 'tout' && !cats.includes(etat.categorie)) etat.categorie = 'tout';
-  const puces = [`<button class="puce${etat.categorie === 'tout' ? ' on' : ''}" data-cat="tout">Tout<span class="n">${offres.length}</span></button>`];
+  const puces = [`<button class="puce${etat.categorie === 'tout' ? ' on' : ''}" data-cat="tout">${esc(t('Tout'))}<span class="n">${offres.length}</span></button>`];
   for (const c of cats) {
-    puces.push(`<button class="puce${etat.categorie === c ? ' on' : ''}" data-cat="${esc(c)}">${esc(NOMS_CATEGORIES[c])}<span class="n">${parCat[c]}</span></button>`);
+    puces.push(`<button class="puce${etat.categorie === c ? ' on' : ''}" data-cat="${esc(c)}">${esc(t(NOMS_CATEGORIES[c]))}<span class="n">${parCat[c]}</span></button>`);
   }
   $('puces').innerHTML = puces.join('');
   $('puces').querySelectorAll('.puce').forEach((el) => el.addEventListener('click', () => {
@@ -996,8 +1017,8 @@ function optionsPays() {
   // Il portait auparavant le nombre de « bonnes affaires » (mesuré : 203 pour la
   // Belgique) — il annonce désormais le pays entier.
   const compte = compteParPays();
-  return [`<option value="tout">Tous les pays (${etat.offres.length})</option>`]
-    .concat(codesPays().map((c) => `<option value="${esc(c)}">${esc(NOMS_PAYS[c])} (${compte[c]})</option>`))
+  return [`<option value="tout">${esc(t('Tous les pays ({n})', { n: etat.offres.length }))}</option>`]
+    .concat(codesPays().map((c) => `<option value="${esc(c)}">${esc(t(NOMS_PAYS[c]))} (${compte[c]})</option>`))
     .join('');
 }
 
@@ -1124,7 +1145,7 @@ function dessiner() {
   }
   const reste = liste.length - etat.affichees;
   $('plus').hidden = reste <= 0;
-  $('plus').innerHTML = reste > 0 ? `<button id="btnPlus">Afficher ${Math.min(PAR_PAGE, reste)} offres de plus (${reste} restantes)</button>` : '';
+  $('plus').innerHTML = reste > 0 ? `<button id="btnPlus">${esc(t('Afficher {n} offres de plus ({r} restantes)', { n: Math.min(PAR_PAGE, reste), r: reste }))}</button>` : '';
   if (reste > 0) $('btnPlus').addEventListener('click', () => { etat.affichees += PAR_PAGE; dessiner(); });
 
   const total = etat.meta.total || etat.offres.length;
@@ -1142,11 +1163,14 @@ function dessiner() {
     const nb = melange.length;
     const nAmz = melange.filter(estAmazon).length;
     const pcAmz = nb ? Math.round((nAmz / nb) * 100) : 0;
-    $('comptes').innerHTML = `<b>${nb}</b> bonnes promos<br>≈ ${pcAmz} % Amazon · ${100 - pcAmz} % enseignes &amp; presse<br>mis à jour ${esc(ilYA(etat.meta.genereLe || new Date().toISOString()))}`;
+    $('comptes').innerHTML = `<b>${nb}</b> ${esc(t('bonnes promos'))}<br>≈ ${pcAmz} % Amazon · ${100 - pcAmz} % ${esc(t('enseignes & presse'))}<br>${esc(t('mis à jour {n}', { n: ilYA(etat.meta.genereLe || new Date().toISOString()) }))}`;
   } else {
-    $('comptes').innerHTML = `${etat.meta.totalOffres ?? '—'} offres · ${etat.meta.totalVeille ?? '—'} veille<br>mis à jour ${esc(ilYA(etat.meta.genereLe || new Date().toISOString()))}`;
+    $('comptes').innerHTML = `${etat.meta.totalOffres ?? '—'} ${esc(t('offres'))} · ${etat.meta.totalVeille ?? '—'} ${esc(t('veille'))}<br>${esc(t('mis à jour {n}', { n: ilYA(etat.meta.genereLe || new Date().toISOString()) }))}`;
   }
-  $('fraicheur').textContent = `Recensé le ${new Date(etat.meta.genereLe || Date.now()).toLocaleString('fr-FR')} — ${total} entrées.`;
+  $('fraicheur').textContent = t('Recensé le {n} — {m} entrées.', {
+    n: new Date(etat.meta.genereLe || Date.now()).toLocaleString(locale()),
+    m: total,
+  });
   // Les outils sont rafraîchis ICI, en fin de rendu, et pas seulement au
   // démarrage : le compteur de favoris et l'état du mode économie dépendent de
   // ce qui vient d'être dessiné.
@@ -1226,6 +1250,12 @@ function brancher() {
   // Réglages : le même choix, au même endroit que le reste.
   $('regPays').addEventListener('change', (e) => {
     if (e.target.id === 'paysReglages') choisirPays(e.target.value);
+  });
+  // Langue de l'INTERFACE : le choix de l'utilisateur, gardé à part du pays.
+  // Les deux listes vivent dans la même feuille Réglages et ne se parlent pas :
+  // changer l'une ne touche jamais l'autre.
+  $('regLangue').addEventListener('change', (e) => {
+    if (e.target.id === 'langueReglages') changerLangue(e.target.value);
   });
   document.querySelectorAll('.vue').forEach((b) => {
     b.addEventListener('click', () => appliquerVue(b.dataset.vue));
@@ -1455,6 +1485,14 @@ async function lancer() {
     $('vide').textContent = `Impossible de lire les offres (${e.message}). Lance le collecteur : node collecteur.mjs`;
     return;
   }
+  // La langue est lue AVANT tout dessin : chaque libellé construit par le
+  // JavaScript doit naître dans la bonne langue. Sinon la page s'affiche en
+  // français une fraction de seconde, puis se corrige sous les yeux de
+  // l'utilisateur — et l'en-tête, lui, resterait en français jusqu'au premier
+  // redessin complet.
+  chargerLangue();
+  traduireDOM();
+  try { document.documentElement.lang = langue(); } catch { /* rien */ }
   dessinerPuces();
   dessinerPays();
   dessinerBandeau();
