@@ -466,11 +466,20 @@ test('une catégorie que l’interface ne connaît pas retombe sur « Tout »', 
 });
 
 test('la question d’ouverture propose « tous les pays » EN PREMIER', () => {
-  const question = js.slice(js.indexOf('function demanderPays('), js.indexOf('function enregistrerPays('));
-  const iTout = question.indexOf('data-pays="tout"');
-  const iBoucle = question.indexOf('for (const c of codes)');
-  assert.ok(iTout >= 0, 'la question d’ouverture doit proposer « tous les pays »');
+  // Le dessin des deux listes est PARTAGÉ (htmlListePays) depuis le 08/10/2026 :
+  // la question d'ouverture ne fabrique plus sa liste. L'ordre se vérifie donc
+  // dans le module commun — et le fait qu'elle l'affiche bien, sans le refaire.
+  const debut = js.indexOf('function htmlListePays(');
+  assert.ok(debut > 0, 'htmlListePays() introuvable : les deux écrans doivent passer par lui');
+  const module = js.slice(debut, js.indexOf('function dessinerPays()', debut));
+  assert.ok(module.length > 200, `découpage du module invalide (${module.length} caractères)`);
+  const iTout = module.indexOf("item('tout'");
+  const iBoucle = module.indexOf('codesPays().map(');
+  assert.ok(iTout >= 0, 'la liste doit proposer « tous les pays »');
   assert.ok(iBoucle > iTout, `« Tous les pays d’Europe » doit précéder la liste des pays (positions ${iTout} / ${iBoucle})`);
+  const question = js.slice(js.indexOf('function demanderPays('), js.indexOf('function enregistrerPays('));
+  assert.match(question, /htmlListePays\(\{ conseille:/,
+    'la question d’ouverture doit appeler le module partagé, pas redessiner sa liste');
   // L'ancien lien, relégué sous la liste, ne doit pas survivre en double.
   assert.doesNotMatch(html, /paysPasser/, 'l’ancien lien du bas de liste doit avoir disparu de la page');
   assert.doesNotMatch(js, /paysPasser/, 'son écouteur doit avoir disparu du script');
@@ -700,8 +709,12 @@ test('les neuf langues s’affichent en liste, avec leur drapeau', () => {
 test('le pays se choisit dans une liste, pas dans un menu déroulant', () => {
   assert.doesNotMatch(js, /paysReglages/,
     'plus de menu déroulant pour le pays dans les réglages');
-  assert.match(js, /class="pays-liste/, 'les pays doivent être une liste');
-  assert.match(js, /class="pays-item/, 'chaque pays doit être un bouton de liste');
+  assert.match(js, /class="pays-liste pays-2col"/, 'les pays doivent être une liste');
+  // Le bouton porte ses classes par un tableau (« pays-item », plus « on » ou
+  // « conseille » selon l'écran) : c'est ce qui permet au MÊME module de servir
+  // la question d'ouverture et les réglages. On cherche donc la classe dans sa
+  // fabrique, pas une chaîne figée dans le gabarit.
+  assert.match(js, /\['pays-item'\]/, 'chaque pays doit être un bouton de liste');
   // La liste doit DIRE lequel est actif : un menu déroulant le montrait, une
   // liste ne le montre que si on l'écrit.
   assert.match(css, /\.pays-item\.on\s*\{/, 'le pays actif doit être mis en évidence');
@@ -709,19 +722,28 @@ test('le pays se choisit dans une liste, pas dans un menu déroulant', () => {
 });
 
 test('les pays portent leur drapeau et se partagent sur deux colonnes', () => {
-  // Demande de B : « Concernant le choix de préférence du pays il faut que le
-  // pays soit aussi avec le drapeau. Et partager sur deux colonnes pour gagner
-  // de la place. »
-  const bloc = js.slice(js.indexOf("const rp = $('regPays')"), js.indexOf('function choisirPays'));
-  assert.ok(bloc.length > 0, 'la rubrique Pays doit exister dans les réglages');
+  // Demandes de B : « il faut que le pays soit aussi avec le drapeau. Et partager
+  // sur deux colonnes pour gagner de la place » — puis, le 08/10/2026 : « il faut
+  // proposer le même module qui est dans les paramètres d'utilisateur avec les
+  // drapeaux, sur deux colonnes ». Les deux écrans passent donc par htmlListePays.
+  const debut = js.indexOf('function htmlListePays(');
+  assert.ok(debut > 0, 'le module de choix du pays doit exister');
+  const bloc = js.slice(debut, js.indexOf('function dessinerPays()', debut));
+  assert.ok(bloc.length > 200, `découpage du module invalide (${bloc.length} caractères)`);
   assert.match(bloc, /DRAPEAUX_PAYS\[String\(code\)\.toLowerCase\(\)\]/,
-    'chaque pays des réglages doit porter son drapeau — et la recherche doit être '
+    'chaque pays doit porter son drapeau — et la recherche doit être '
     + 'insensible à la casse : les codes du catalogue sont en MAJUSCULES (DE, GB, '
     + 'BE…) alors que la table est en minuscules. Sans le toLowerCase, douze pays '
     + 'sur treize s’affichaient SANS drapeau, et rien ne le disait.');
   assert.match(bloc, /class="pays-liste pays-2col"/, 'la liste des pays doit être sur deux colonnes');
   assert.match(css, /\.pays-liste\.pays-2col\s*\{[^}]*grid-template-columns:\s*repeat\(2/,
     'les deux colonnes doivent être écrites dans la feuille de style');
+  // Et les DEUX écrans s'en servent : les réglages marquent le pays retenu, la
+  // question d'ouverture marque le pays deviné.
+  assert.match(js, /htmlListePays\(\{ actif: etat\.pays \}\)/,
+    'l’onglet Réglages doit passer par le module partagé');
+  assert.match(js, /htmlListePays\(\{ conseille:/,
+    'la question d’ouverture doit passer par le module partagé');
   // Chaque pays du CATALOGUE doit avoir un drapeau. Sans cette vérification, un
   // pays ajouté demain apparaîtrait avec un trou à la place du drapeau — et
   // personne ne le verrait avant de regarder l'écran.
