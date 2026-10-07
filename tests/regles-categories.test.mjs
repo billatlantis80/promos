@@ -102,13 +102,59 @@ test('E1 — contrôles du partage : télé → High-tech, frigo → Électromé
   assert.equal(famille('Réfrigérateur Samsung 400 L', ''), 'electromenager', 'un frigo va en électroménager');
   assert.equal(famille('Tondeuse à gazon thermique', ''), 'bricolage', 'la tondeuse à gazon reste en bricolage');
   assert.equal(famille('Tondeuse à cheveux Wahl', ''), 'electromenager', 'la tondeuse à cheveux va en électroménager');
+  //  POINT 24 — arbitrage de B du 7/10 : la BROSSE À DENTS est un appareil, et
+  //  elle doit aller en ÉLECTROMÉNAGER (elle était en Beauté). « brosse à dents
+  //  kids » était le cas cité : sans ce déménagement, la règle d'ENFANT la
+  //  rangeait en jouets — mesuré, c'était la seule des 84 offres de brosses à
+  //  dents dans ce cas.
+  assert.equal(famille('Brosse à dents électrique Oral-B iO', ''), 'electromenager', 'la brosse à dents va en électroménager');
+  assert.equal(famille('Oral-B iO3 Duo Electric Toothbrushes, 2 Handles', ''), 'electromenager', 'brosse à dents en anglais');
+  assert.equal(famille('Philips Sonicare DiamondClean 9000 elektrische Zahnbürste', ''), 'electromenager', 'brosse à dents en allemand');
+  assert.equal(famille('Oral-B iO 3 Spazzolino Elettrico, 1 Testina', ''), 'electromenager', 'brosse à dents en italien');
   assert.equal(famille('Robot Tondeuse sans fil Dreame A1 Pro', ''), 'bricolage', 'un robot de tonte est une tondeuse à gazon');
+});
+
+test('point 26 — le partage se fait sur ÉLECTRIQUE, jamais sur la famille seule', () => {
+  // Demande de B, mot pour mot : « les brosses à dents électriques doivent être
+  // dans électroménager, les brosses à dents manuelles doivent être dans beauté.
+  // Même chose pour les rasoirs électriques […] Les rasoirs manuels et les lames
+  // doivent être dans beauté. »
+  // Le départage est la LONGUEUR du mot trouvé : un titre qui dit « électrique »
+  // l'emporte depuis la table électroménager ; sans ce mot, c'est Beauté.
+  const attendusElectro = [
+    'Brosse à dents électrique Oral-B iO Series 9',
+    'Oral-B iO3 Duo Electric Toothbrushes, 2 Handles',
+    'Philips Sonicare DiamondClean 9000 elektrische Zahnbürste',
+    'Oral-B iO 3 Spazzolino Elettrico, 1 Testina',
+    'Rasoir électrique Braun Series 7',
+    'Elektrorasierer Philips 5000 Series',
+    'Scheerapparaat Philips Series 3000',
+  ];
+  const attendusBeaute = [
+    'Brosse à dents manuelle bambou, lot de 4',
+    'Colgate Brosse à Dents Extra Clean, Lot de 4',
+    'Zahnbürste 4er Pack, weich',
+    'Scheermesjes Gillette Fusion 5, 8 stuks',
+    'Rasoir mécanique Gillette Mach3, un manche',
+    'Gillette Lames de Rasoir Homme Fusion 5, Pack de 16',
+    'Recharge rasoir Gillette Fusion 5, 8 cartouches',
+    'Rasierhobel Rasiermesser für Herren',
+    'Philips OneBlade Original 360-rakblad',
+  ];
+  const faux = [
+    ...attendusElectro.filter((t) => famille(t, '') !== 'electromenager').map((t) => `« ${t} » → ${famille(t, '')} (attendu Électroménager)`),
+    ...attendusBeaute.filter((t) => famille(t, '') !== 'beaute').map((t) => `« ${t} » → ${famille(t, '')} (attendu Beauté)`),
+  ];
+  assert.deepEqual(faux, [], `partage électrique/manuel mal appliqué :\n  ${faux.join('\n  ')}`);
+  // ⚠ Un appareil MANUEL nommé garde Beauté même avec un mot d'enfant : sans cet
+  // élargissement de l'exception, « brosse à dents enfant » repartait en jouets.
+  assert.equal(famille('Brosse à dents enfant souple 2-6 ans', ''), 'beaute', 'brosse manuelle d’enfant → Beauté');
+  assert.equal(famille('Rasoir enfant Gillette', ''), 'beaute', 'rasoir manuel d’enfant → Beauté');
 });
 
 test('règle 3 — l’électronique de beauté (hors cheveux et rasage) va en beauté', () => {
   const cas = [
     ['Épilateur Braun Silk-épil 9', ''],
-    ['Brosse à dents électrique Oral-B iO', ''],
     ['Depiladora Philips BRL130', 'espagnol'],
     ['Epilatore Philips', 'italien'],
     ['Ontharingsapparaat Philips', 'néerlandais'],

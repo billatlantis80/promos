@@ -16,10 +16,11 @@
  *
  * Ces tests couvrent trois choses distinctes, et c'est voulu :
  *   1. la règle marche dans chaque langue (une ligne PAR langue) ;
- *   2. un APPAREIL NOMMÉ, plus long, garde la priorité — c'est la consigne du
- *      plan (« si une famille d'appareil nommé est plus précise, le dire ») :
- *      une brosse à dents KIDS reste en Beauté, une tondeuse à cheveux d'enfant
- *      reste en Électroménager ;
+ *   2. un APPAREIL ÉLECTROMÉNAGER NOMMÉ l'emporte sur le marqueur d'enfant,
+ *      arbitrage de B du 7/10 : « pour les deux conflits tondeuse à cheveux
+ *      enfant et brosse à dents kids cela doit aller dans électroménager ».
+ *      Ailleurs le marqueur d'enfant reste souverain (un casque enfant est un
+ *      jouet) ;
  *   3. les FAUX POSITIFS mesurés restent dehors (l'anglais « kind » attrapé par
  *      l'allemand, le parfum « Good Girl », le chocolat Kinder, la montre
  *      « Orient Bambino »), et la borne d'âge écarte les « 15-24 ans » d'un
@@ -76,8 +77,9 @@ test('point 23 ÉTENDU — le marqueur ENFANT l’emporte sur TOUTES les catégo
   // DÉCISIF partout, pas seulement face à « tech ».
   assert.equal(famille('Casque audio enfant Bluetooth', ''), 'jouets', 'point 23 : casque ENFANT → jouets');
   assert.equal(famille('Téléviseur enfant LG 32 pouces', ''), 'jouets', 'point 23 : télé ENFANT → jouets');
-  assert.equal(famille('Brosse à dents électrique Oral-B Kids', ''), 'jouets', 'point 23 : marqueur enfant décisif, même en Beauté');
-  assert.equal(famille('Tondeuse à cheveux enfant Wahl', ''), 'jouets', 'point 23 : ⚠ CONFLIT assumé avec « tondeuse → Électroménager » — la consigne la plus récente gagne (signalé à B)');
+  // POINT 24 — arbitrage de B : ces deux-là sont des APPAREILS, donc Électro.
+  assert.equal(famille('Brosse à dents électrique Oral-B Kids', ''), 'electromenager', 'point 24 : appareil électroménager nommé → Électroménager');
+  assert.equal(famille('Tondeuse à cheveux enfant Wahl', ''), 'electromenager', 'point 24 : tondeuse à cheveux enfant → Électroménager');
   // …et un marqueur enfant « pur » (mot « jouet », garçon, fille) tranche aussi.
   assert.equal(famille('Vélo 3 à 6 ans pour enfant', ''), 'jouets');
   assert.equal(famille('Sac à dos fille motif licorne', ''), 'jouets');

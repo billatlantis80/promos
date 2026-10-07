@@ -19,10 +19,15 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import {
+  noterPrix, elaguerHistorique, appliquerAnalyse,
+} from './prix-historique.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DATA = path.join(__dirname, 'data');
 const FICHIER = path.join(DATA, 'offres.json');
+/** Historique des prix : NON publié (le site n'en reçoit que les conclusions). */
+const HISTORIQUE = path.join(DATA, 'historique-prix.json');
 const VERBEUX = process.argv.includes('--verbeux');
 /** Publication : écrit aussi le site statique (offres + VISUELS locaux) dans
  *  docs/, prêt pour GitHub Pages. Sans ce drapeau, on ne touche qu'aux
@@ -1367,8 +1372,50 @@ const MOTS_FORTS = {
     'seche-cheveux', 'seche cheveux', 'sechecheveux', 'haartrockner', 'haardroger', 'asciugacapelli', 'secador de pelo', 'suszarka do wlosow', 'harfon', 'fon',
     'lisseur', 'lisseur de cheveux', 'haarglatter', 'stijltang', 'piastra per capelli', 'plancha de pelo', 'prostownica', 'plattang', 'brosse soufflante',
     // Rasoirs et tondeuses (à cheveux/barbe/poils) — quittent beauté
-    'rasoir electrique', 'rasoir', 'elektrorasierer', 'scheerapparaat', 'maquina de afeitar', 'rasoio elettrico', 'golarka', 'rakapparat', 'maquina de barbear',
+    //  POINT 26 (7/10) — LE PARTAGE SE FAIT SUR « ÉLECTRIQUE » OU NON.
+    //   Demande de B : « les rasoirs électriques doivent être dans électroménager.
+    //   Les rasoirs manuels et les lames doivent être dans beauté ». Le mot NU
+    //   « rasoir » a donc QUITTÉ cette table pour celle de beauté : en français,
+    //   « Rasoir Gillette » est un rasoir manuel. Un titre électrique le dit —
+    //   « rasoir electrique » (17 caractères) bat « rasoir » (6) — et reste ici.
+    //   Même logique pour les formes génériques des autres langues.
+    'rasoir electrique', 'rasoir rechargeable', 'rasoir a batterie',
+    'electric razor', 'electric shaver', 'rechargeable shaver', 'rasierapparat',
+    'elektrorasierer', 'elektrischer rasierer', 'scheerapparaat', 'rasoio elettrico',
+    'golarka elektryczna', 'rakapparat', 'maquina de barbear eletrica', 'maquina de afeitar electrica',
     'tondeuse a cheveux', 'tondeuse a barbe', 'tondeuse pour barbe', 'tondeuse barbe', 'haarschneider', 'haartrimmer', 'clipper', 'tagliacapelli', 'maszynka do wlosow', 'harstrimmer',
+    //  POINT 24 (7/10) — LA BROSSE À DENTS ARRIVE ICI, DEPUIS « beauté ».
+    //   Demande de B : « pour les deux conflits tondeuse à cheveux enfant et
+    //   brosse à dents kids cela doit aller dans électroménager ». Elle reste un
+    //   APPAREIL de soin — le déménagement ne change que sa RUBRIQUE (Beauté →
+    //   Électroménager) et, par la même occasion, la protège de la règle
+    //   d'ENFANT : un appareil nommé l'emporte sur un mot de circonstance.
+    //   Contrôle négatif du déménagement : l'ÉPILATEUR et le MASSEUR, qui ne
+    //   sont pas des appareils ménagers, restent en Beauté — et « Pasta dental
+    //   infantil 6-13 años » reste un jouet, elle n'est pas une brosse.
+    //   Neuf langues, tout en sans-accents.
+    //  POINT 26 — MÊME PARTAGE : la brosse à dents ÉLECTRIQUE reste ici, la
+    //   brosse à dents MANUELLE part en Beauté (voir la table « beaute »).
+    //   « brosse a dents » seul a donc quitté cette table : en français, sans le
+    //   mot « électrique », c'est une brosse ordinaire.
+    //   ⚠ Les TÊTES et RECHARGES restent ici : elles n'existent que pour les
+    //   brosses électriques (« brossettes », « testine di ricambio »,
+    //   « cabezales de cepillo », « tandborsthuvuden »).
+    'brosse a dents electrique', 'brosse a dents rechargeable', 'brossettes',
+    'electric toothbrush', 'electric toothbrushes', 'sonic toothbrush', 'rechargeable toothbrush',
+    'elektrische zahnburste', 'elektrische tandenborstel', 'cepillo de dientes electrico',
+    'spazzolino elettrico', 'escova de dentes eletrica', 'szczoteczka elektryczna',
+    'eltandborste', 'tandborsthuvud', 'tandborsthuvuden', 'testine di ricambio', 'cabezales de cepillo',
+    //  « Elektrisk tandborste » s'écrit en DEUX mots (suédois, norvégien, danois) :
+    //  « eltandborste » ne l'attrape pas. Mesuré — huit brosses portant
+    //  « électrique » dans leur titre restaient en Beauté pour cette raison.
+    'elektrisk tandborste', 'elektrisk tannborste', 'elektrisk tandborste med',
+    //  ⚠ Suédois : « tandborste » — la brosse à dents ORDINAIRE — est passée en
+    //  Beauté au point 26, avec les autres formes génériques ; « eltandborste »
+    //  (électrique) reste ici. À la première passe, trois offres « Elektrisk
+    //  tandborste » (Philips Sonicare) étaient restées en Beauté faute de ce mot :
+    //  c'est ce manque qui a montré que le partage électrique/manuel devait être
+    //  explicite dans les DEUX tables, et non dans une seule.
     // Robots de cuisine (le mot NU « robot » reste dehors : il désigne aussi
     //  un jouet, et un jouet-robot ne doit pas partir en électroménager).
     'robot de cuisine', 'robot patissier', 'robot cuiseur', 'robot menager', 'robot aspirateur',
@@ -1505,11 +1552,74 @@ const MOTS_FORTS = {
     'hachoir', 'hachoir a legumes', 'eplucheur', 'eplucheur a legumes', 'eplucheur de fruits et legumes',
     'coupe legumes', 'mandoline', 'ciseaux de cuisine', 'ciseaux a viande', 'ciseaux a volaille',
     'distributeur dhuile', 'presse ail', 'rape a fromage', 'film alimentaire', 'sac de congelation',
+    //  POINT 25 (7/10) — CAPSULE POUR LAVE-VAISSELLE → MAISON. Demande de B :
+    //   « capsule pour lave-vaisselle doit aller dans maison ». C'est un
+    //   CONSOMMABLE, pas un appareil : le titre nomme bien le lave-vaisselle,
+    //   mais ce qu'on achète est le produit de lavage. La longueur fait le
+    //   partage — ces termes (26, 24, 23 caractères) battent « lave-vaisselle »
+    //   (13) qui, lui, désigne l'APPAREIL et reste en Électroménager. Sans cette
+    //   entrée, « Capsules pour lave-vaisselle x60 » partait en Électroménager
+    //   sur le seul nom de la machine.
+    'capsule pour lave-vaisselle', 'capsules pour lave-vaisselle', 'capsules lave-vaisselle',
+    'tablette pour lave-vaisselle', 'tablettes pour lave-vaisselle', 'tablettes lave-vaisselle',
+    'pastille pour lave-vaisselle', 'pastilles pour lave-vaisselle', 'pastilles lave-vaisselle',
+    'sel de lave-vaisselle', 'sel de lavage', 'produit de lavage vaisselle',
+    'dishwasher tablet', 'dishwasher tablets', 'geschirrspultabs', 'spultabs',
+    'vaatwastabletten', 'vaatwas tabletten', 'pastillas lavavajillas', 'pastiglie lavastoviglie',
+    'pastilhas maquina de lavar louca', 'tabletki do zmywarki', 'diskmaskinstabletter',
   ],
   // ÉLECTRONIQUE DE BEAUTÉ → beauté (soins de la personne, pas appareils ménagers)
   beaute: [
     'epilateur', 'epilator', 'epilierer', 'ontharingsapparaat', 'depiladora', 'epilatore', 'depilatore',
-    'brosse a dents electrique', 'brosse a dents', 'elektrische zahnburste', 'zahnburste', 'elektrische tandenborstel', 'cepillo de dientes electrico', 'spazzolino elettrico', 'szczoteczka elektryczna', 'eltandborste',
+    //  POINT 25 (7/10) — LAME DE RASOIR → BEAUTÉ. Demande de B : « Gillette lame
+    //   de rasoir doit aller dans beauté, car c'est un soin de beauté pour les
+    //   hommes et ce n'est pas électronique ». Le partage est net : le RASOIR
+    //   électrique est un APPAREIL (Électroménager, entrée « rasoir electrique »),
+    //   la LAME et la RECHARGE sont des consommables de soin — donc Beauté.
+    //   Ici encore, la longueur tranche : « lame de rasoir » (14) bat « rasoir »
+    //   (6), comme « recharge de rasoir » (18) le bat aussi.
+    'lame de rasoir', 'lames de rasoir', 'lame de rasoir de surete', 'recharge de rasoir', 'recharges de rasoir',
+    //  ⚠ Forme RÉELLE des titres, relevée sur les offres en stock : « Recharge
+    //   rasoir Gillette Fusion 5 » écrit « recharge rasoir » SANS « de ». Sans
+    //   cette ligne, le titre retombait sur le mot nu « rasoir » (Électroménager)
+    //   et la règle ne s'appliquait pas — mesuré, un cas sur les deux testés.
+    'recharge rasoir', 'recharges rasoir', 'lame rasoir', 'lames rasoir',
+    'tete de rasoir', 'tetes de rasoir', 'cartouche de rasoir', 'cartouches de rasoir', 'rasoir mecanique', 'rasoir de surete',
+    'razor blade', 'razor blades', 'razor blade refill', 'blade refill', 'rasierklinge', 'rasierklingen',
+    'scheermesje', 'scheermesjes', 'cuchilla de afeitar', 'cuchillas de afeitar', 'lama di rasoio', 'lamette da barba',
+    'lamina de barbear', 'lamina de barba', 'ostrze do golenia', 'rakblad',
+    //  POINT 26 (7/10) — CE QUI EST MANUEL VA EN BEAUTÉ.
+    //   Demande de B : « les brosses à dents manuelles doivent être dans beauté »
+    //   et « les rasoirs manuels et les lames doivent être dans beauté ». C'est
+    //   ici que tombent les formes GÉNÉRIQUES, celles qui ne disent pas
+    //   « électrique » : la longueur du mot trouvé fait le partage, et un titre
+    //   qui précise « électrique » l'emporte depuis l'autre table.
+    //   Neuf langues, tout en sans-accents.
+    'brosse a dents', 'brosse a dents manuelle', 'brosse a dents souple', 'brosse a dents enfant',
+    'toothbrush', 'toothbrushes', 'manual toothbrush', 'zahnburste', 'zahnbursten', 'handzahnburste',
+    'tandenborstel', 'tandenborstels', 'cepillo de dientes', 'spazzolino', 'spazzolino manuale',
+    'escova de dentes', 'szczoteczka do zebow', 'tandborste', 'tandborstar',
+    'rasoir', 'rasoir manuel', 'rasoir de securite', 'rasoir droit', 'rasoir a main',
+    'razor', 'manual razor', 'safety razor', 'rasierhobel', 'rasierer', 'scheermes', 'scheermesje',
+    'maquinilla de afeitar', 'rasoio', 'rasoio di sicurezza', 'aparelho de barbear', 'maszynka do golenia',
+    'rakhyvel',
+    //  ⚠ CAS MESURÉ, tranché par la consigne de B : « les lames doivent être dans
+    //  beauté ». « Philips OneBlade Original 360-rakblad » partait en
+    //  Électroménager parce que la GAMME « oneblade » (8 caractères) est plus
+    //  longue que le mot « rakblad » (7) : la règle de longueur donnait raison à
+    //  la gamme. Ce sont pourtant des LAMES DE RECHANGE — donc Beauté. On écrit
+    //  la locution entière (16 caractères), qui l'emporte sur la gamme seule :
+    //  « OneBlade » nu (l'appareil) reste en Électroménager, ses lames vont en
+    //  Beauté. C'est le seul cas de ce genre trouvé dans le stock.
+    'oneblade rakblad', 'oneblade blade', 'oneblade lame', 'oneblade replacement', 'oneblade lame de rechange',
+    //  ⚠ POINT 24 (7/10) — LA BROSSE À DENTS A DÉMÉNAGÉ EN ÉLECTROMÉNAGER.
+    //   Demande de B, mot pour mot : « pour les deux conflits tondeuse à cheveux
+    //   enfant et brosse à dents kids cela doit aller dans électroménager ».
+    //   La liste des neuf langues est donc passée dans la table « electromenager »
+    //   ci-dessus. C'est ce déménagement — et lui seul — qui empêche la règle
+    //   d'ENFANT de la happer : mesuré sur les 10 259 offres publiées,
+    //   « Sonic Electric Toothbrush for Adults and Kids » était la SEULE des
+    //   84 offres de brosses à dents à partir en « Jeux & jouets ».
     'soin du visage', 'appareil de massage', 'masseur', 'masseur facial',
     //  « lumea » (unité A6) : la gamme d'ÉPILATEURS IPL de Philips. Mesuré le
     //  7/10 : les Philips Lumea (ES/PT/IT) partaient en Bricolage sur la
@@ -1534,6 +1644,22 @@ const MOTS_FORTS = {
     'ordinateur portable', 'pc portable', 'laptop', 'notebook', 'ultrabook', 'chromebook',
     'tablette', 'tablet', 'tableta', 'tabletka', 'surfplatta',
     'televiseur', 'fernseher', 'televisie', 'televisor', 'televisore', 'telewizor', 'tv-apparat', 'smart tv', 'television',
+    //  POINT 25 (7/10) — VIDÉOPROJECTEUR ET RÉPÉTEUR WIFI → HIGH-TECH.
+    //   Demandes de B : « vidéoprojecteur doit aller dans high-tech » et
+    //   « répéteur wifi doit être dans high-tech et pas dans maison ». Les deux
+    //   sont des APPAREILS ÉLECTRONIQUES : ils n'avaient aucun mot propre, donc
+    //   ils tombaient dans la rubrique de la source ou dans « Maison » au titre
+    //   du foyer. Écrits ici, ils tranchent avant tout le reste.
+    //   ⚠ « projecteur » seul n'est PAS ici : un projecteur de chantier ou une
+    //   lampe projecteur ne sont pas du high-tech. On exige « video ».
+    'videoprojecteur', 'video-projecteur', 'video projecteur', 'projecteur video', 'projecteur full hd',
+    'beamer', 'proyector de video', 'proiettore', 'videoproiettore', 'projetor de video', 'projektor', 'videoprojektor',
+    //  Répéteur, point d'accès, réseau maillé : le prolongement du réseau
+    //  domestique. Le mot NU « wifi » reste dehors — il est trop large et
+    //  qualifie aussi bien une imprimante qu'une enceinte.
+    'repeteur wifi', 'repeteur wi-fi', 'repeteur de signal', 'extenseur wifi', 'amplificateur wifi',
+    'wifi repeater', 'wifi range extender', 'mesh wifi', 'wlan verstarker', 'wlan-repeater', 'wifi versterker',
+    'repetidor wifi', 'ripetitore wifi', 'repetidor de sinal', 'wzmacniacz wifi', 'wifi forstarkare',
     'montre connectee', 'smartwatch', 'apple watch', 'fitbit', 'garmin',
     'casque audio', 'casque bluetooth', 'ecouteurs', 'earbuds', 'airpods', 'kopfhorer', 'hoofdtelefoon', 'auriculares', 'cuffie', 'sluchawki', 'horlurar',
     'enceinte connectee', 'enceinte bluetooth', 'barre de son', 'soundbar', 'lautsprecher', 'luidspreker', 'altavoz', 'glosnik', 'hogtalare',
@@ -2124,6 +2250,49 @@ const ENFANT_HOMONYMES = /(good girl|orient bambino|kinder bueno|kinder schokola
 const marqueurEnfant = (texteBas) => !ENFANT_HOMONYMES.test(texteBas)
   && (MARQUEUR_ENFANT.test(texteBas) || ageEnfant(texteBas));
 
+/** L'APPAREIL ÉLECTROMÉNAGER NOMMÉ L'EMPORTE SUR LE MARQUEUR D'ENFANT.
+ *
+ *  Demande de B, 7/10, mot pour mot : « pour les deux conflits tondeuse à
+ *  cheveux enfant et brosse à dents kids cela doit aller dans électroménager ».
+ *
+ *  C'est la règle « les mots d'appareil priment » (déjà en vigueur ailleurs),
+ *  appliquée ici contre le marqueur d'enfant. Périmètre VOLONTAIREMENT limité à
+ *  l'électroménager : « tondeuse à cheveux enfant » et « brosse à dents kids »
+ *  sont des APPAREILS, pas des jouets. Ailleurs la règle d'enfant reste
+ *  souveraine — « ours en peluche enfant » et « casque enfant » restent des
+ *  jouets, l'audio et la peluche n'étant pas des appareils électroménagers.
+ *
+ *  L'exception ne joue QUE si les deux marques sont présentes (appareil
+ *  électroménager ET mot d'enfant) : elle ne peut donc pas détourner une offre
+ *  qui n'aurait rien d'un article d'enfant. */
+const appareilSoin = (texteBas) => {
+  const f = familleParMotFort(texteBas);
+  return f === 'electromenager' || f === 'beaute';
+};
+
+/** Le marqueur d'enfant est-il neutralisé par un APPAREIL DE SOIN nommé ?
+ *
+ *  POINT 26 — le périmètre s'élargit à Beauté, et pas seulement à
+ *  l'électroménager, depuis que B a partagé les deux familles : « les brosses à
+ *  dents manuelles doivent être dans beauté, les rasoirs manuels et les lames
+ *  doivent être dans beauté ». Sans cet élargissement, « Brosse à dents enfant »
+ *  (manuelle, donc Beauté) repartait en Jeux & jouets sur le seul mot
+ *  « enfant » — l'appareil nommé ne l'emportait plus. */
+const electroPrimme = (texteBas) => marqueurEnfant(texteBas) && appareilSoin(texteBas);
+
+/* UNE LAME N'EST PAS UN APPAREIL.
+ *
+ *  Consigne de B : « les rasoirs manuels et les lames doivent être dans beauté ».
+ *  Le partage par longueur ne suffit pas quand le titre nomme une GAMME d'appareil
+ *  à côté de la lame : mesuré, « Philips OneBlade Original 360-rakblad » partait
+ *  en Électroménager parce que « oneblade » (8 caractères) est plus long que
+ *  « rakblad » (7). Ce sont pourtant des lames de rechange.
+ *
+ *  On exige la locution ENTIÈRE (« lame de rasoir », « razor blade », « rakblad »,
+ *  « scheermesjes »…) : le mot « lame » seul n'y est pas, sinon un titre comme
+ *  « rasoir électrique, lame incluse » basculerait à tort. */
+const MOTS_LAME = /(lame[s]? de rasoir|lame[s]? rasoir|recharge[s]? (de )?rasoir|tete[s]? de rasoir|cartouche[s]? de rasoir|razor blade[s]?|blade refill|rasierklinge[n]?|cuchilla[s]? de afeitar|lama di rasoio|lamette da barba|ostrze do golenia|rakblad|scheermesje[s]?)/;
+
 /** La famille indiquée par un PRODUIT NOMMÉ (un appareil, un type de jeu…), ou
  *  null si le titre n'en nomme aucun.
  *
@@ -2190,6 +2359,15 @@ function famille(texte, categorieSource) {
     //  reste un logiciel — c'est la règle « jeu numérique ≠ jouet », plus
     //  ancienne et toujours valable. Sinon « LEGO Batman pour enfant (PS5) »
     //  deviendrait un jouet.
+    // POINT 24 — l'appareil ÉLECTROMÉNAGER NOMMÉ l'emporte sur le marqueur
+    //  d'enfant : « tondeuse à cheveux enfant » et « brosse à dents kids » sont
+    //  des appareils, pas des jouets (demande de B, 7/10).
+    //  L'appareil de soin nommé garde SA famille : « brosse à dents électrique
+    //  enfant » va en Électroménager, « brosse à dents enfant » (manuelle) en
+    //  Beauté. On rend donc `appareil`, qui porte déjà la bonne famille.
+    //  Une LAME l'emporte sur la gamme d'appareil qu'elle équipe (voir MOTS_LAME).
+    if (appareil === 'electromenager' && MOTS_LAME.test(bas)) return 'beaute';
+    if (electroPrimme(bas)) return appareil;
     if (appareil !== 'jouets' && marqueurEnfant(bas) && !estJeuNumerique(bas)) return 'jouets';
     return appareil;
   }
@@ -2236,7 +2414,10 @@ function famille(texte, categorieSource) {
   //  valable pour tous les pays. » Le marqueur enfant l'emporte donc sur
   //  n'importe quelle famille décidée par les mots OU par la rubrique de la
   //  source — sauf sur un JEU NUMÉRIQUE, qui reste un logiciel.
-  if (resultat !== 'jouets' && marqueurEnfant(bas) && !estJeuNumerique(bas)) return 'jouets';
+  //  Même exception qu'au point 24 : un appareil ÉLECTROMÉNAGER nommé garde sa
+  //  famille — soit que le titre le nomme, soit que la source l'ait rangé là.
+  if (resultat !== 'jouets' && marqueurEnfant(bas) && !estJeuNumerique(bas)
+    && !appareilSoin(bas) && resultat !== 'electromenager' && resultat !== 'beaute') return 'jouets';
   return resultat;
 }
 
@@ -3736,9 +3917,12 @@ async function publier(sortie) {
   fs.mkdirSync(dossierImg, { recursive: true });
 
   // 1. Le site lui-même : l'interface est copiée telle quelle.
-  for (const f of fs.readdirSync(path.join(__dirname, 'public'))) {
-    fs.copyFileSync(path.join(__dirname, 'public', f), path.join(DOSSIER_PUBLIE, f));
-  }
+  //    COPIE RÉCURSIVE, et pas fichier par fichier : depuis l'identité, public/
+  //    contient aussi un DOSSIER (fonts/). L'ancienne boucle appelait
+  //    copyFileSync sur un dossier, ce qui lève « EISDIR » et interrompait la
+  //    publication entière. cpSync fusionne en plus au lieu d'écraser : docs/img
+  //    (les visuels rapatriés) survit à la copie.
+  fs.cpSync(path.join(__dirname, 'public'), DOSSIER_PUBLIE, { recursive: true });
 
   // 2. Les visuels, nommés par l'empreinte de leur URL : jamais retéléchargés.
   //
@@ -4122,6 +4306,48 @@ async function principal() {
     connues.set(cle, fusion);
   }
 
+  // --- RÈGLE DU PRODUIT APPLIQUÉE AU STOCK, PAS SEULEMENT AU LECTEUR ---------
+  //  Défaut mesuré le 7/10, signalé par B : « je retrouve toujours des articles
+  //  Coolblue sans véritable promotion, pourquoi s'affichent-ils encore en aussi
+  //  grande quantité ? » Il avait raison. Le lecteur de page d'enseigne écarte
+  //  désormais les articles sans second prix (vérifié sur le HTML vivant : 5
+  //  gardés, 19 écartés sur la première page), MAIS les offres engrangées AVANT
+  //  la correction restaient dans le stock : la fusion ACCUMULE, une offre vue
+  //  une fois n'en sort jamais de son propre chef. Les huit pages Coolblue ont
+  //  bien été relues à 08:26 — et les 199 prix catalogue nus étaient toujours
+  //  là, avec leur date de première vue de 07:50.
+  //
+  //  On applique donc la règle au stock : une offre de page d'ENSEIGNE qui porte
+  //  un prix mais AUCUN prix de référence n'est pas une promotion, elle part.
+  //
+  //  ⚠ Périmètre volontairement étroit, et mesuré avant d'agir : 4 064 offres du
+  //  stock ont un prix sans second prix, dont 2 207 Amazon et 46 % de cartes de
+  //  veille et de presse où le bon plan est écrit dans le titre (« sconto del
+  //  69 % », « 80 % de réduction ») — celles-là ne sont PAS touchées, seules les
+  //  pages d'enseigne le sont. Les enseignes qui ne publient aucun prix
+  //  (prix == null) gardent leur carte « bonne affaire » : la règle ne vise que
+  //  le prix catalogue NU, jamais l'absence de prix.
+  const idsEnseigne = new Set(TOUTES_SOURCES.filter((s) => s.type === 'enseigne').map((s) => s.id));
+  let purgees = 0;
+  const purgeesParMarchand = {};
+  for (const [cle, o] of connues) {
+    if (!idsEnseigne.has(o.sourceId)) continue;
+    if (o.type !== 'offre' || o.prix == null || o.prixAvant) continue;
+    purgeesParMarchand[o.marchand] = (purgeesParMarchand[o.marchand] || 0) + 1;
+    connues.delete(cle);
+    purgees++;
+  }
+  if (purgees) {
+    console.log(`Règle des deux prix : ${purgees} offre(s) de page d'enseigne écartée(s) — prix catalogue sans prix de référence`);
+    journal.push({
+      source: 'regle-deux-prix',
+      ok: true,
+      ecartees: purgees,
+      parMarchand: purgeesParMarchand,
+      raison: 'une promotion sans deuxième prix n’est pas une promotion (pages d’enseigne)',
+    });
+  }
+
   const imagesGeneriques = new Set(existant.imagesGeneriques || []);
   const images = await enrichirVisuels(connues, imagesGeneriques);
   if (images.essais) {
@@ -4165,6 +4391,32 @@ async function principal() {
   // branchée. `decaper` (et non `decoderEntites`) parce que certaines sources
   // double-encodent.
   for (const o of offres) if (o.image) o.image = decaper(o.image);
+
+  // ---- HISTORIQUE DES PRIX (voir prix-historique.mjs) ----------------------
+  // On enregistre CE QU'ON VIENT DE VOIR avant de composer la sortie. C'est la
+  // seule partie de ce collecteur qui s'améliore en attendant : un jour non
+  // enregistré est un jour perdu définitivement, et sans recul on ne peut pas
+  // dire si un prix est réellement bas. Le fichier reste LOCAL — seules les
+  // conclusions (plus bas, prix habituel, verdict) partent dans offres.json.
+  let historique = { version: 1, jours: {} };
+  try {
+    if (fs.existsSync(HISTORIQUE)) {
+      const lu = JSON.parse(fs.readFileSync(HISTORIQUE, 'utf8'));
+      if (lu && typeof lu === 'object' && lu.jours && typeof lu.jours === 'object') {
+        historique = lu;
+      }
+    }
+  } catch {
+    // Fichier illisible ou corrompu : on repart d'un historique vide plutôt que
+    // d'abandonner la collecte — perdre l'historique ne doit jamais perdre les
+    // offres du jour.
+    historique = { version: 1, jours: {} };
+  }
+  const instantPrix = new Date().toISOString();
+  noterPrix(historique, offres, instantPrix);
+  elaguerHistorique(historique, instantPrix);
+  fs.writeFileSync(HISTORIQUE, JSON.stringify(historique));
+  const bilanPrix = appliquerAnalyse(historique, offres);
 
   const sortie = {
     genereLe: new Date().toISOString(),
@@ -4216,6 +4468,7 @@ async function principal() {
   // écrit EN PLUS le site (docs/), dont les visuels sont rapatriés sur place.
   fs.writeFileSync(FICHIER, JSON.stringify(sortie, null, 0));
   console.log(`√ ${offres.length} offres au total (${nouvelles} nouvelles, ${misesAJour} mises à jour, ${journal.filter((j) => !j.ok).length} source(s) en échec)`);
+  console.log(`  historique des prix : ${bilanPrix.avec} offre(s) analysée(s), ${bilanPrix.verdicts} verdict(s), ${Object.keys(historique.jours).length} jour(s) conservé(s)`);
   console.log(`  → ${FICHIER}`);
   if (PUBLIER) await publier(sortie);
 }

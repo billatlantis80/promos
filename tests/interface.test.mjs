@@ -19,6 +19,14 @@ import path from 'node:path';
 import vm from 'node:vm';
 import { fileURLToPath } from 'node:url';
 
+/* Les libellés de l'interface passent par t() depuis l'interface multilingue du
+ * 7/10. Le bac à sable ci-dessous doit donc fournir la VRAIE fonction : sans
+ * elle, dessinerPuces lève « t is not defined » — exactement le défaut que ce
+ * fichier existe pour attraper. On importe celle de public/langues.js plutôt
+ * qu'une doublure, pour que les onglets soient dessinés avec les vrais
+ * dictionnaires. */
+import { t } from '../public/langues.js';
+
 const ICI = path.dirname(fileURLToPath(import.meta.url));
 const lire = (f) => fs.readFileSync(path.join(ICI, '..', 'public', f), 'utf8');
 
@@ -195,6 +203,7 @@ function bacAPuces() {
     $: () => noeud,
     marquerPuce() {},
     dessiner() {},
+    t,
   });
   vm.runInContext([
     blocConstant('NOMS_CATEGORIES'),
@@ -225,6 +234,16 @@ const OFFRES_ESSAI = [
   { categorie: 'tech', pays: 'BE' }, { categorie: 'bricolage', pays: 'BE' },
 ];
 
+/** Les rubriques, dans l'ordre de l'application — relues DU FICHIER. */
+const CATS = [...blocConstant('ORDRE_CATEGORIES').matchAll(/'([a-z]+)'/g)].map((m) => m[1]);
+
+/** Complète un attendu avec les rubriques à 0.
+ *  Depuis la demande de B, la barre affiche TOUTES les rubriques dans TOUS les
+ *  pays : un attendu partiel ne décrit plus ce que l'écran montre. */
+function complet(partiel) {
+  return Object.fromEntries(['tout', ...CATS].map((c) => [c, partiel[c] || 0]));
+}
+
 test('les nombres des onglets comptent le pays choisi, pas le catalogue entier', () => {
   const { ctx, lire } = bacAPuces();
   ctx.etat = { offres: OFFRES_ESSAI, pays: 'tout', categorie: 'tout' };
@@ -232,7 +251,7 @@ test('les nombres des onglets comptent le pays choisi, pas le catalogue entier',
   ctx.dessinerPuces();
   assert.deepEqual(
     nombres(lire()),
-    { tout: 6, tech: 3, bricolage: 2, autre: 1 },
+    complet({ tout: 6, tech: 3, bricolage: 2, autre: 1 }),
     'tous pays : les nombres doivent couvrir les 6 offres',
   );
 
@@ -240,17 +259,33 @@ test('les nombres des onglets comptent le pays choisi, pas le catalogue entier',
   ctx.dessinerPuces();
   assert.deepEqual(
     nombres(lire()),
-    { tout: 2, tech: 1, bricolage: 1 },
-    'Belgique : « Tout » doit annoncer 2, pas 6 — et « Autres » (0 offre en BE) disparaît',
+    complet({ tout: 2, tech: 1, bricolage: 1 }),
+    'Belgique : « Tout » doit annoncer 2, pas 6',
   );
 
   ctx.etat.pays = 'FR';
   ctx.dessinerPuces();
   assert.deepEqual(
     nombres(lire()),
-    { tout: 4, tech: 2, bricolage: 1, autre: 1 },
+    complet({ tout: 4, tech: 2, bricolage: 1, autre: 1 }),
     'France : les nombres doivent revenir aux offres françaises',
   );
+});
+
+test('TOUTES les rubriques gardent leur onglet, même à 0 dans le pays', () => {
+  // Demande de B : l'onglet alimentaire existait en « Tous les pays » (69 offres)
+  // mais DISPARAISSAIT en Belgique, où aucune offre du rayon ne passe le seuil de
+  // « bonne promo ». Il l'a cherché à côté de « Mode » et « Maison » et ne l'a pas
+  // trouvé — sans aucun message, puisque l'onglet n'était pas dessiné.
+  const { ctx, lire } = bacAPuces();
+  ctx.etat = { offres: OFFRES_ESSAI, pays: 'BE', categorie: 'tout' };
+  ctx.dessinerPuces();
+  const n = nombres(lire());
+  for (const c of CATS) {
+    assert.ok(c in n, `« ${c} » doit avoir son onglet, même sans offre en Belgique`);
+  }
+  assert.equal(n.nourriture, 0, 'et son compteur doit dire la vérité : 0');
+  assert.equal(n.tech, 1, 'les rubriques fournies gardent leur vrai compte');
 });
 
 test('l’onglet « Autres » ferme toujours la marche', () => {
@@ -297,22 +332,19 @@ test('l’ordre des onglets est le MÊME dans tous les pays', () => {
     return [...lire().matchAll(/data-cat="([^"]+)"/g)].map((m) => m[1]).filter((c) => c !== 'tout');
   };
 
-  // L'ordre de référence, écrit À LA MAIN : c'est celui que la France affichait,
-  // et il ne doit plus dépendre des données.
+  // L'ordre de référence, écrit À LA MAIN dans l'application.
   const fr = onglets('FR');
-  assert.deepEqual(fr, ['tech', 'maison', 'mode', 'autre'], `France : ${fr.join(' > ')}`);
-  // En Belgique, « Maison » écrase « High-tech » par le nombre — et pourtant
-  // Maison passe APRÈS. C'est exactement ce que l'utilisateur demandait.
   const be = onglets('BE');
-  assert.deepEqual(be, ['tech', 'maison', 'autre'], `Belgique : ${be.join(' > ')}`);
-
-  assert.ok(fr.indexOf('tech') < fr.indexOf('maison'), 'High-tech avant Maison, en France');
-  assert.ok(be.indexOf('tech') < be.indexOf('maison'), 'High-tech avant Maison, en Belgique AUSSI');
-  // Et sur les onglets communs aux deux pays, l'ordre relatif est identique.
-  assert.deepEqual(
-    fr.filter((c) => be.includes(c)), be.filter((c) => fr.includes(c)),
-    'les onglets communs doivent garder le même ordre d’un pays à l’autre',
-  );
+  // Depuis la demande de B, la barre liste TOUTES les rubriques dans TOUS les
+  // pays : les deux listes doivent donc être identiques, et égales à l'ordre
+  // déclaré — plus aucune rubrique ne s'évapore en changeant de pays.
+  assert.deepEqual(fr, CATS, `France : ${fr.join(' > ')}`);
+  assert.deepEqual(be, CATS, `Belgique : ${be.join(' > ')}`);
+  assert.deepEqual(be, fr, 'la barre doit être identique d’un pays à l’autre');
+  assert.ok(fr.indexOf('tech') < fr.indexOf('maison'), 'High-tech avant Maison');
+  assert.equal(be.indexOf('tech'), fr.indexOf('tech'),
+    'la position de High-tech ne doit pas bouger d’un pays à l’autre');
+  assert.equal(CATS[CATS.length - 1], 'autre', '« Autres » ferme la marche');
 });
 
 test('une catégorie non prévue se range juste avant « Autres », jamais après', () => {
@@ -342,13 +374,16 @@ test('changer de pays replace aussi le surlignage et les onglets', () => {
   assert.match(brancher, /\$\('pays'\)\.addEventListener[\s\S]*?dessinerPuces\(\)/, 'le sélecteur de pays de la barre doit redessiner les onglets');
 });
 
-test('une catégorie absente du nouveau pays retombe sur « Tout »', () => {
-  // Sans ce repli, l'onglet choisi disparaîtrait de la liste en gardant le
-  // filtre actif : écran vide, et aucune commande pour en sortir visiblement.
+test('une catégorie que l’interface ne connaît pas retombe sur « Tout »', () => {
+  // Ce repli ne sert plus aux rubriques connues : depuis la demande de B, elles
+  // ont TOUTES un onglet dans tous les pays, même à 0. Il protège de la seule
+  // catégorie qui n'aurait pas de puce — une rubrique produite par le collecteur
+  // sans avoir été déclarée dans NOMS_CATEGORIES. Sélectionnée, elle laisserait
+  // l'écran filtré sur un onglet invisible : vide, et sans raison affichée.
   const { ctx } = bacAPuces();
-  ctx.etat = { offres: OFFRES_ESSAI, pays: 'BE', categorie: 'autre' };
+  ctx.etat = { offres: OFFRES_ESSAI, pays: 'BE', categorie: 'rayon-jamais-vu' };
   ctx.dessinerPuces();
-  assert.equal(ctx.etat.categorie, 'tout', 'un filtre devenu impossible doit retomber sur « Tout »');
+  assert.equal(ctx.etat.categorie, 'tout', 'un filtre sans onglet doit retomber sur « Tout »');
 });
 
 test('la question d’ouverture propose « tous les pays » EN PREMIER', () => {
@@ -382,5 +417,55 @@ test('l’onglet « Activité » existe, au même niveau que les autres rubrique
   const rangInconnue = ctx.rangCategorie('categorie-jamais-vue');
   assert.ok(rang >= 0, `« Activité » doit être connue de l’interface (rang ${rang})`);
   assert.ok(rang < rangInconnue, `« Activité » (rang ${rang}) doit passer avant une catégorie inconnue (rang ${rangInconnue})`);
+});
+
+test('le logo est le K de l’icône — bleu ET orange, jamais l’étiquette', () => {
+  // Décision de B : « Je veux garder la lettre K, je ne veux pas l'étiquette.
+  // Je veux le même K que dans l'image comme logo. Par contre tu peux utiliser
+  // la couleur. » Le K de l'icône n'est pas monochrome : il porte un ruban
+  // orange par-dessus une hampe bleue. Deux dégradés, donc — un seul serait
+  // un retour au K bleu uni qu'il n'a pas demandé.
+  const sansCommentaires = (t) => t.replace(/<!--[\s\S]*?-->/g, '');
+  for (const [nom, contenu] of [['index.html', html], ['favicon.svg', lire('favicon.svg')]]) {
+    assert.ok(contenu.includes('url(#bleu)'), `${nom} : le K doit garder sa partie bleue`);
+    assert.ok(contenu.includes('url(#orange)'), `${nom} : et sa partie orange`);
+    assert.match(contenu, /#DBA95F|#BD7B47/, `${nom} : l’orange du ruban doit être celui relevé`);
+    assert.ok(!contenu.includes('M11 8h5.5v24H11z'),
+      `${nom} : l’ancien K simplifié (rectangles) doit avoir disparu`);
+    assert.ok(!/étiquette|etiquette/i.test(sansCommentaires(contenu)),
+      `${nom} : aucune étiquette de prix dans le dessin`);
+  }
+  // Les deux fichiers doivent porter LE MÊME K : deux tracés divergents
+  // donneraient une icône d'onglet différente du logo de l'en-tête.
+  const traces = (t) => (t.match(/<path d="(M [^"]+)"/g) || []).sort();
+  assert.deepEqual(traces(html), traces(lire('favicon.svg')),
+    'l’en-tête et l’icône doivent dessiner exactement le même K');
+  assert.equal(traces(html).length, 2, 'le K se dessine en deux parties : bleue puis orange');
+});
+
+test('la phrase d’accroche n’est PAS sur la page — elle est réservée à la publicité', () => {
+  // Décision de B : « La phrase d'accroche ne doit pas être écrite sur la page
+  // internet. C'est la phrase d'accroche qu'on utilisera pour la publicité qu'on
+  // va générer plus tard. » Elle est donc retirée de l'écran, mais GARDÉE dans
+  // les dictionnaires : la jeter obligerait à la retrouver dans les 9 langues.
+  assert.ok(!/class="accroche"/.test(html),
+    'la phrase ne doit plus être affichée dans l’en-tête');
+  assert.ok(!html.includes('Découvrez les meilleures promotions'),
+    'la phrase ne doit apparaître nulle part dans la page');
+  assert.ok(!/\.accroche\s*\{/.test(css),
+    'son style doit avoir disparu avec elle');
+
+  // Elle reste disponible, traduite, pour la campagne à venir.
+  const langues = lire('langues.js');
+  const cles = langues.match(/'Découvrez les meilleures promotions':/g) || [];
+  assert.equal(cles.length, 9,
+    `la phrase doit rester traduite dans les 9 dictionnaires, or ${cles.length} la portent`);
+  for (const mot of ['Découvrez les meilleures promotions', 'Ontdek de beste aanbiedingen',
+                     'Entdecken Sie die besten Angebote', 'Discover the best deals',
+                     'Descubre las mejores ofertas', 'Scopri le migliori offerte',
+                     'Descubra as melhores promoções', 'Odkryj najlepsze okazje',
+                     'Upptäck de bästa erbjudandena']) {
+    assert.ok(langues.includes(`'${mot}'`), `traduction manquante : ${mot}`);
+  }
 });
 
