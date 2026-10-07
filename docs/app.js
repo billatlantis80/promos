@@ -1839,6 +1839,17 @@ let dejaLance = false;
 
 function montrerVerrou() {
   if (!C.compteEnregistre()) return;
+  // ON BRANCHE ICI, PAS SEULEMENT AU DÉMARRAGE.
+  // Défaut trouvé le 08/10/2026 en exerçant l'écran (et pas en le relisant) :
+  // brancherVerrou() n'était appelé que dans la branche de démarrage « un
+  // compte existe déjà ». Quelqu'un qui créait son compte PENDANT la session
+  // puis appuyait sur « Verrouiller maintenant » voyait donc l'écran de
+  // verrouillage s'afficher SANS AUCUN bouton branché : ni « Déverrouiller », ni
+  // « J'ai oublié mon mot de passe » ne répondaient. L'application était fermée
+  // jusqu'au prochain rechargement — et dans l'APK, jusqu'au prochain
+  // lancement. Le branchement est idempotent : l'appeler deux fois ne pose pas
+  // deux écouteurs.
+  brancherVerrou();
   $('titreVerrou').textContent = t('Bonjour {n}', { n: C.nomCompte() });
   $('verrouIntro').textContent = t("Entre ton mot de passe pour ouvrir l'application. Il n'est enregistré nulle part : si tu l'as oublié, personne ne pourra le retrouver, et la seule issue sera d'effacer le compte et les données de cet appareil.");
   $('verrouOublie').textContent = t("J'ai oublié mon mot de passe");
@@ -1850,8 +1861,14 @@ function montrerVerrou() {
 }
 
 let oublisArmes = false;
+/** Les écouteurs du verrou ne se posent qu'une fois. Sans ce drapeau,
+ *  montrerVerrou() — qui peut être appelé plusieurs fois — empilerait les
+ *  écouteurs, et « Déverrouiller » validerait deux fois le même mot de passe. */
+let verrouBranche = false;
 
 function brancherVerrou() {
+  if (verrouBranche) return;
+  verrouBranche = true;
   const valider = async () => {
     const r = await C.verifierMotDePasseCompte($('verrouMdp').value);
     if (!r.ok) {
