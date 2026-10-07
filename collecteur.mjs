@@ -564,7 +564,7 @@ export { MOTS_PROMO, motsPromo, ecarterTuiles, veilleParPays, lienReel, dedupliq
    (outils/verificateur-categories.mjs) et les tests rejouent `famille()` sur
    les offres publiées. Un contrôle qui recopierait la table des mots serait un
    contrôle qui vérifie sa propre copie — donc rien du tout. */
-export { famille, FAMILLES, MARQUES, MOTS_FORTS, CATEGORIES_SOURCES, categorieDeSource, sansAccents, sansNegations, offresEnseigne, offresAmazon, offresVenteFlash, offresGroupon, remiseCredibleSource, compterMots, remise, pourcentEcrit, SOURCES_VENTES_FLASH, SOURCES_ACTIVITES, prixReferenceEnseigne, estJeuNumerique, estSoin, ageEnfant, MOTS_A_FRONTIERE, exigeFrontiere, retirerTrompeurs };
+export { famille, FAMILLES, MARQUES, MOTS_FORTS, CATEGORIES_SOURCES, categorieDeSource, sansAccents, sansNegations, offresEnseigne, offresAmazon, offresVenteFlash, offresGroupon, remiseCredibleSource, compterMots, remise, pourcentEcrit, SOURCES_VENTES_FLASH, SOURCES_ACTIVITES, prixReferenceEnseigne, estJeuNumerique, estSoin, ageEnfant, MOTS_A_FRONTIERE, exigeFrontiere, retirerTrompeurs, estRepasDehors, preuveEpicerie };
 
 /** Recherches Google News : un flux par famille de produits. Gratuit, sans clé. */
 const RECHERCHES = [
@@ -696,32 +696,106 @@ const FAMILLES = {
     // sv
     'gor-det-sjalv', 'verktyg', 'borrmaskin', 'skruvmejsel', 'farg', 'tradgard', 'grasklippare', 'sag', 'stege',
   ],
-  //  MAISON — le MOBILIER, la DÉCO, le LINGE DE MAISON et le JARDIN.
-  //  Les APPAREILS MÉNAGERS (froid, cuisson, lavage, entretien, soin du linge
-  //  et des cheveux, climatisation) ne sont plus ici : ils sont dans la
-  //  famille « electromenager » juste après. Le partage demandé est celui-ci :
-  //  ce qui diffuse ou affiche une image (téléviseur, écran, enceinte) reste
-  //  en high-tech ; ce qui MEUBLE ou DÉCORE reste en maison ; l'appareil
-  //  ménager va en électroménager.
+  //  MAISON — la DÉCO, le LINGE DE MAISON, la CUISINE (ustensiles) et le JARDIN.
+  //  ⚠ Unité E6 : le MOBILIER n'est PLUS ici — il a sa propre famille
+  //  « meubles », juste après. Maison garde ce que B a demandé de garder :
+  //  la déco, le linge de maison (dont le LINGE DE LIT : matelas, couette,
+  //  oreiller, drap) et le jardin — y compris le mobilier de JARDIN
+  //  (« gartenmobel », « tuinmeubelen »), qui est du jardin, pas du salon.
   maison: [
     // fr
-    'maison', 'habitat', 'cuisine', 'literie', 'matelas', 'meuble', 'deco', 'piscine', 'barbecue', 'cocotte', 'poele', 'couette', 'oreiller', 'vaisselle',
+    'maison', 'habitat', 'cuisine', 'literie', 'matelas', 'deco', 'piscine', 'barbecue', 'cocotte', 'poele', 'couette', 'oreiller', 'vaisselle',
     // en
-    'home', 'kitchen', 'mattress', 'bedding', 'cookware', 'pan', 'duvet', 'pillow', 'furniture', 'decor', 'bed sheet',
+    'home', 'kitchen', 'mattress', 'bedding', 'cookware', 'pan', 'duvet', 'pillow', 'decor', 'bed sheet',
     // de
-    'haushalt', 'kuche', 'matratze', 'bettwaren', 'pfanne', 'bettdecke', 'kissen', 'mobel', 'deko', 'gartenmobel',
+    'haushalt', 'kuche', 'matratze', 'bettwaren', 'pfanne', 'bettdecke', 'kissen', 'deko', 'gartenmobel',
     // nl
-    'woning', 'huis', 'keuken', 'matras', 'beddengoed', 'dekbed', 'kussen', 'meubels', 'decoratie', 'tuinmeubelen',
+    'woning', 'huis', 'keuken', 'matras', 'beddengoed', 'dekbed', 'kussen', 'decoratie', 'tuinmeubelen',
     // es
-    'hogar', 'vivienda', 'colchon', 'ropa de cama', 'sarten', 'edredon', 'almohada', 'muebles', 'decoracion',
+    'hogar', 'vivienda', 'colchon', 'ropa de cama', 'sarten', 'edredon', 'almohada', 'decoracion',
     // it
-    'casa', 'materasso', 'biancheria', 'caffe', 'padella', 'piumino', 'cuscino', 'mobili', 'arredamento',
+    'casa', 'materasso', 'biancheria', 'caffe', 'padella', 'piumino', 'cuscino', 'arredamento',
     // pt
-    'cozinha', 'colchao', 'roupa de cama', 'frigideira', 'edredao', 'almofada', 'moveis', 'decoracao',
+    'cozinha', 'colchao', 'roupa de cama', 'frigideira', 'edredao', 'almofada', 'decoracao', 'tapete', 'cortina',
     // pl
-    'dom', 'kuchnia', 'materac', 'posciel', 'patelnia', 'koldra', 'poduszka', 'meble', 'dekoracje',
+    'dom', 'kuchnia', 'materac', 'posciel', 'patelnia', 'koldra', 'poduszka', 'dekoracje',
     // sv
-    'hem', 'kok', 'madrass', 'sangklader', 'stekpanna', 'tacke', 'kudde', 'mobler', 'inredning',
+    'hem', 'kok', 'madrass', 'sangklader', 'stekpanna', 'tacke', 'kudde', 'inredning',
+  ],
+  //  MEUBLES — le MOBILIER, et rien d'autre (demande de B, plan point 16 :
+  //  « canapé, table, chaise, lit, armoire, bureau, étagère, commode, buffet,
+  //  fauteuil »). Il sort de « maison », qui garde la déco, la literie et le
+  //  jardin. ⚠ Le MATELAS reste en maison/literie (point 16) : il est
+  //  VOLONTAIREMENT absent d'ici.
+  //
+  //  Règle d'écriture, apprise à la mesure : les mots de meuble qui sont aussi
+  //  des MOTS ORDINAIRES très fréquents sont pris ENTRE DEUX FRONTIÈRES (voir
+  //  MOTS_A_FRONTIERE) — sans quoi « mobilier » serait lu dans « immobilier »,
+  //  « cama » (lit, es) dans « cámara » (appareil photo) et « table » dans
+  //  « tablette ». Et les mots piégeux mesurés sont ÉCARTÉS :
+  //   « lit » seul   → « couette pour lit 2 personnes » n'est pas un meuble ;
+  //   « table » seul → « scie circulaire de table » est du bricolage ;
+  //   « bureau » seul→ « kit bureautique » n'est pas un meuble (frontière exigée) ;
+  //   « sang » (sv)  → « sangklader » (linge de lit) n'est pas un meuble ;
+  //   « mobili » (it) → la marque « Rebecca Mobili » vend des horloges murales :
+  //                     le mobili est GARDÉ (c'est « meubles » en italien) et
+  //                     c'est le NOM DE MARQUE qui est neutralisé, dans
+  //                     MOTS_TROMPEURS — « rebecca mobili ».
+  meubles: [
+    // fr
+    'canape', 'canape-lit', 'fauteuil', 'chaise', 'tabouret', 'armoire', 'commode', 'etagere', 'bibliotheque', 'buffet', 'meuble', 'mobilier', 'sommier', 'table basse', 'table a manger', 'table de chevet', 'table de nuit', 'buffet bas',
+    // en
+    'sofa', 'couch', 'armchair', 'wardrobe', 'bookcase', 'bookshelf', 'sideboard', 'nightstand', 'headboard', 'stool', 'bed frame', 'furniture', 'recliner', 'chaise longue', 'coffee table', 'dining table',
+    // de
+    'sofa', 'sessel', 'schrank', 'regal', 'kommode', 'sideboard', 'bettgestell', 'doppelbett', 'couch', 'sitzbank', 'schreibtisch', 'kleiderschrank', 'buecherregal', 'hocker', 'mobel', 'esszimmertisch',
+    // nl
+    'sofa', 'zitbank', 'stoel', 'kast', 'kledingkast', 'boekenkast', 'dressoir', 'meubel', 'salontafel', 'eettafel', 'nachtkastje', 'fauteuil',
+    // es
+    'sofa', 'sillon', 'butaca', 'armario', 'estanteria', 'comoda', 'aparador', 'mueble', 'escritorio', 'silla', 'mesa de comedor', 'mesa de noche', 'mesa de salon', 'somier', 'cama de matrimonio', 'litera',
+    // it
+    'divano', 'poltrona', 'armadio', 'libreria', 'cassettiera', 'credenza', 'mobili', 'tavolo', 'sedia', 'comodino', 'scaffale', 'madia',
+    // pt
+    'sofa', 'poltrona', 'armario', 'estante', 'comoda', 'aparador', 'movel', 'mobilia', 'escrivaninha', 'cadeira', 'roupeiro', 'mesa de jantar', 'mesa de cabeceira',
+    // pl
+    'sofa', 'kanapa', 'fotel', 'szafa', 'komoda', 'kredens', 'meble', 'biurko', 'stolik', 'krzeslo', 'szafka', 'lozko',
+    // sv
+    'soffa', 'fatolj', 'bokhylla', 'byra', 'skank', 'garderob', 'mobler', 'skrivbord', 'matbord', 'soffbord', 'nattduksbord', 'pall',
+  ],
+  //  NOURRITURE — l'ÉPICERIE SEULEMENT (demande de B, point 22). Le CABAS :
+  //  alimentation à cuisiner, supermarché, fruits et légumes, boissons, bière,
+  //  alcool. ⚠ Les REPAS PRIS DEHORS (restaurant, hamburger, brunch, menu,
+  //  buffet, à emporter) NE SONT PAS ici : ils restent en ACTIVITÉ, et la
+  //  fonction estRepasDehors() les y renvoie explicitement (voir famille()).
+  //
+  //  Règle d'écriture : aucun mot AMBIGU. Écartés à la mesure, et pour de
+  //  bonnes raisons mesurées :
+  //   « miel » → « Miele » (43 offres d'électroménager) : pris à frontière ;
+  //   « lait », « crème » → « mousseur de lait », « crème de jour » (cosmétique) ;
+  //   « fromage » → « râpe à fromage » (appareil) ;
+  //   « café » seul → « machine à café » ;
+  //   « baguette » → « baguette magique » ; « pain » → « pain de glace ».
+  //  Les marques de CHOCOLAT « kinder schokolade » et « kinder bueno » sont
+  //  déjà retirées par MOTS_TROMPEURS (elles partaient en jouets) — ne pas
+  //  ajouter « kinder » ici, ce serait rouvrir le défaut.
+  nourriture: [
+    // fr
+    'epicerie', 'alimentation', 'supermarche', 'chocolat', 'bonbons', 'confiserie', 'biscuits', 'cookies', 'conserve', 'confiture', 'cereales', 'muesli', 'farine', 'brioche', 'vinaigre', 'ketchup', 'mayonnaise', 'moutarde', 'nutella', 'pate a tartiner', 'chips', 'cacahuetes', 'amandes', 'miel', 'cafe en grains', 'cafe moulu', 'the vert', 'infusion', 'jus de fruits', 'eau minerale', 'biere', 'whisky', 'vodka', 'rhum', 'tequila', 'champagne', 'prosecco', 'vin rouge', 'vin blanc', 'vin rose', 'saucisson', 'charcuterie', 'legumes', 'pommes de terre', 'tomates', 'bananes', 'oranges', 'oeufs', 'pates alimentaires',
+    // en
+    'groceries', 'chocolate', 'chocolates', 'biscuits', 'custard', 'crisps', 'peanuts', 'almonds', 'muesli', 'flour', 'vinegar', 'ketchup', 'mayonnaise', 'mustard', 'nutella', 'red wine', 'white wine', 'beer', 'lager', 'whisky', 'whiskey', 'vodka', 'rum', 'tequila', 'champagne', 'prosecco', 'coffee beans', 'ground coffee', 'green tea', 'orange juice', 'mineral water', 'sausage', 'vegetables', 'potatoes', 'tomatoes', 'bananas', 'oranges', 'eggs',
+    // de
+    'lebensmittel', 'schokolade', 'kekse', 'brotchen', 'mehl', 'essig', 'senf', 'bier', 'wein', 'wodka', 'kaffeebohnen', 'orangensaft', 'mineralwasser', 'kase', 'wurst', 'gemuse', 'kartoffeln', 'tomaten', 'bananen', 'eier', 'nudeln', 'musli',
+    // nl
+    'levensmiddelen', 'boodschappen', 'chocolade', 'koekjes', 'meel', 'azijn', 'mosterd', 'bier', 'wijn', 'wodka', 'mineraalwater', 'kaas', 'worst', 'groenten', 'aardappelen', 'tomaten', 'bananen', 'eieren',
+    // es
+    'comestibles', 'galletas', 'harina', 'vinagre', 'mostaza', 'cerveza', 'vino', 'ron', 'zumo de naranja', 'agua mineral', 'queso', 'embutido', 'verduras', 'patatas', 'platanos', 'huevos',
+    // it
+    'alimentari', 'cioccolato', 'biscotti', 'farina', 'aceto', 'senape', 'birra', 'vino', 'succo d arancia', 'acqua minerale', 'formaggio', 'salumi', 'verdure', 'patate', 'pomodori', 'uova', 'cereali',
+    // pt
+    'alimentacao', 'bolachas', 'farinha', 'vinagre', 'mostarda', 'cerveja', 'vinho', 'sumo de laranja', 'agua mineral', 'queijo', 'chourico', 'legumes', 'batatas', 'tomates', 'bananas', 'ovos',
+    // pl
+    'spozywcze', 'czekolada', 'ciasteczka', 'chleb', 'maka', 'ocet', 'musztarda', 'piwo', 'wino', 'kawa ziarnista', 'sok pomaranczowy', 'woda mineralna', 'ser zolty', 'kielbasa', 'warzywa', 'owoce', 'ziemniaki', 'pomidory', 'banany', 'jajka', 'makaron', 'platki',
+    // sv
+    'livsmedel', 'choklad', 'kakor', 'brod', 'mjol', 'attika', 'senap', 'vin', 'apelsinjuice', 'mineralvatten', 'korv', 'gronsaker', 'potatis', 'tomater', 'bananer', 'agg', 'flingor',
   ],
   //  ÉLECTROMÉNAGER — les APPAREILS ménagers, et rien d'autre. Il prend le
   //  froid (frigo, congélateur), le lavage (lave-linge, lave-vaisselle,
@@ -930,7 +1004,12 @@ const CATEGORIES_SOURCES = [
   ['electromenager', 'electromenager'], ['haushaltsgerate', 'electromenager'],
   ['electrodomesticos', 'electromenager'], ['elettrodomestici', 'electromenager'],
   ['elektro', 'electromenager'], ['agd', 'electromenager'],
-  ['meuble', 'maison'], ['mobilier', 'maison'], ['interieur', 'maison'], ['inrichting', 'maison'],
+  // --- MEUBLES (unité E6 : le mobilier a désormais son onglet). Ces libellés
+  //  sont placés APRÈS « home »/« maison » : une enseigne qui dit « Home &
+  //  Living » reste en Maison, seule une rubrique qui NOMME le mobilier
+  //  (« Meubles », « Möbel ») bascule ici.
+  ['meuble', 'meubles'], ['mobilier', 'meubles'], ['mobel', 'meubles'],
+  ['interieur', 'maison'], ['inrichting', 'maison'],
   ['haushalt', 'maison'], ['kueche', 'maison'], ['kuche', 'maison'], ['koch', 'maison'],
   ['bricolage &', 'bricolage'],
   // --- BRICOLAGE
@@ -984,9 +1063,17 @@ const CATEGORIES_SOURCES = [
   ['culture', 'autre'], ['kultur', 'autre'], ['kultura', 'autre'], ['cinema', 'autre'], ['livres', 'autre'],
   ['divertissement', 'autre'], ['freizeit', 'autre'], ['rozrywka', 'autre'], ['ocio', 'autre'],
   ['voyage', 'autre'], ['reisen', 'autre'], ['travel', 'autre'], ['urlop', 'autre'], ['podroze', 'autre'],
-  ['alimentation', 'autre'], ['epicerie', 'autre'], ['groceries', 'autre'], ['lebensmittel', 'autre'],
-  ['spożywcze', 'autre'], ['artykuly', 'autre'], ['courses', 'autre'],
-  ['supermercado', 'autre'], ['alimentacion', 'autre'], ['boodschappen', 'autre'], ['voeding', 'autre'],
+  // --- NOURRITURE (unité E6). Ces libellés étaient classés « autre » avant
+  //  que l'onglet existe : ils disaient « ce n'est pas une de mes rubriques ».
+  //  Maintenant qu'il y a une rubrique, ils la DÉSIGNENT — et l'épicerie est
+  //  bien ce que ces libellés annoncent. ⚠ « artykuly » reste en « autre » :
+  //  c'est un fragment de « artykuły spożywcze » (denrées) MAIS aussi de
+  //  « artykuły gospodarstwa domowego » (articles ménagers) ; il ne prouve rien.
+  ['alimentation', 'nourriture'], ['epicerie', 'nourriture'], ['groceries', 'nourriture'],
+  ['lebensmittel', 'nourriture'], ['alimentari', 'nourriture'], ['alimentacao', 'nourriture'],
+  ['spożywcze', 'nourriture'], ['artykuly', 'autre'], ['courses', 'nourriture'],
+  ['supermercado', 'nourriture'], ['alimentacion', 'nourriture'], ['boodschappen', 'nourriture'],
+  ['voeding', 'nourriture'], ['comestibles', 'nourriture'], ['livsmedel', 'nourriture'],
   ['services', 'autre'], ['dienstleistungen', 'autre'], ['finanzen', 'autre'], ['versicherung', 'autre'],
   ['servicios', 'autre'], ['uslugi', 'autre'], ['subskrypcje', 'autre'], ['finanse', 'autre'],
   ['ubezpieczenia', 'autre'], ['geldzaken', 'autre'], ['verzekeringen', 'autre'], ['verzekering', 'autre'],
@@ -1070,6 +1157,11 @@ const MOTS_FORTS = {
     'lave-vaisselle', 'lavevaisselle', 'geschirrspuler', 'vaatwasser', 'lavastoviglie', 'lavavajillas', 'zmywarka', 'diskmaskin',
     'seche-linge', 'sechelinge', 'trockner', 'droger', 'asciugatrice', 'secadora', 'suszarka', 'torktumlare',
     'aspirateur', 'aspirateur balai', 'aspirateur robot', 'staubsauger', 'stofzuiger', 'aspirapolvere', 'aspirador', 'odkurzacz', 'dammsugare',
+    // Shampouineuse et nettoyeur vapeur : ce sont des APPAREILS, et ils nettoient
+    //  des MEUBLES — le mot « canapé » de leur titre ne doit donc pas les
+    //  envoyer en « meubles » (unité E6). Le nom d'appareil, plus long, tranche :
+    //  « shampouineuse » (13) bat « canape » (6).
+    'shampouineuse', 'nettoyeur vapeur', 'nettoyeur a vapeur', 'waschsauger', 'vaporetto',
     'micro-ondes', 'microondes', 'mikrowelle', 'microgolf', 'microonde', 'microondas', 'mikrofalowka', 'mikrovagsugn',
     'four encastrable', 'four electrique', 'backofen', 'ofen', 'forno', 'horno', 'piekarnik', 'ugn',
     'cafetiere', 'machine a cafe', 'kaffeemaschine', 'koffiezetapparaat', 'macchina del caffe', 'maquina de cafe', 'ekspres do kawy', 'kaffemaskin', 'espresso machine',
@@ -1092,6 +1184,60 @@ const MOTS_FORTS = {
     'robot de cuisine', 'robot patissier', 'robot cuiseur', 'robot menager', 'robot aspirateur',
     // Cuisson (four/plaques) — noms précis uniquement
     'cuisiniere', 'kochfeld', 'kookplaat', 'placa de cocina', 'piano cottura', 'plyta indukcyjna', 'koksspis',
+    // Petits appareils de préparation (unité E6) : mesuré, ces appareils
+    //  étaient tombés en « Nourriture » sur un mot d'aliment de leur titre
+    //  (« Kettle … green tea », « Émulsionneur de lait », « Cuiseur de Riz …
+    //  légumes »). Le nom de l'appareil tranche.
+    'kettle', 'espressomaskin', 'emulsionneur', 'mousseur de lait', 'mousseur a lait',
+    'cuiseur de riz', 'cuiseur vapeur', 'coupe legumes electrique', 'hachoir electrique',
+    'blender', 'mixeur', 'presse agrumes', 'machine a pain', 'yaourtiere',
+  ],
+  // MOBILIER NOMMÉ → meubles (unité E6).
+  //  Ce sont des PRODUITS NOMMÉS, au même titre qu'un appareil électroménager :
+  //  dès qu'un titre en porte un, c'est lui qui tranche — avant la marque et
+  //  avant la catégorie de la source. Sans cela, un canapé publié dans une
+  //  rubrique « Home & Living » serait resté en Maison : la règle n'accepte de
+  //  contredire une VRAIE rubrique de source qu'avec DEUX mots concordants.
+  //  ⚠ Les mots du plan (« table », « lit », « bureau ») sont VOLONTAIREMENT
+  //  remplacés par des locutions précises, parce que le mot nu a été MESURÉ
+  //  faux : « lit » → « couette pour lit » (linge), « table » → « scie
+  //  circulaire de table » (bricolage) et « tablette » (high-tech), « bureau »
+  //  → « kit bureautique » (rien à voir). Un meuble se nomme, il ne se devine
+  //  pas sur un mot ordinaire.
+  meubles: [
+    // fr
+    'canape', 'canape-lit', 'fauteuil', 'chaise', 'tabouret', 'armoire', 'commode', 'etagere', 'bibliotheque', 'buffet', 'sommier', 'table basse', 'table a manger', 'table de chevet', 'buffet bas',
+    // en
+    'sofa', 'couch', 'armchair', 'wardrobe', 'bookcase', 'bookshelf', 'sideboard', 'nightstand', 'headboard', 'bed frame', 'recliner', 'coffee table', 'dining table', 'furniture',
+    // de
+    'sessel', 'schrank', 'kommode', 'bettgestell', 'doppelbett', 'sitzbank', 'schreibtisch', 'kleiderschrank', 'buecherregal', 'hocker', 'esszimmertisch',
+    // nl
+    'zitbank', 'kledingkast', 'boekenkast', 'dressoir', 'salontafel', 'eettafel', 'nachtkastje',
+    // es
+    'sillon', 'butaca', 'armario', 'estanteria', 'comoda', 'aparador', 'escritorio', 'mesa de comedor', 'mesa de noche', 'mesa de salon', 'somier', 'litera',
+    // it
+    'divano', 'poltrona', 'armadio', 'libreria', 'cassettiera', 'credenza', 'comodino', 'scaffale', 'madia',
+    // pt
+    'armario', 'estante', 'comoda', 'aparador', 'escrivaninha', 'roupeiro', 'mesa de jantar', 'mesa de cabeceira',
+    // pl
+    'kanapa', 'fotel', 'szafa', 'komoda', 'kredens', 'biurko', 'stolik', 'krzeslo', 'szafka', 'lozko',
+    // sv
+    'soffa', 'fatolj', 'bokhylla', 'byra', 'skank', 'garderob', 'skrivbord', 'matbord', 'soffbord', 'nattduksbord',
+  ],
+  // USTENSILES DE CUISINE → maison (unité E6).
+  //  Pourquoi cette table existe : la famille « nourriture » contient des mots
+  //  d'ALIMENT très génériques (« legumes », « pommes de terre »), et ces mots
+  //  apparaissent AUSSI dans le titre de l'OUTIL qui les prépare — « Éplucheur à
+  //  Légumes », « Hachoir à Légumes », « Coupe Légumes », « Ciseaux à Viande ».
+  //  Mesuré sur les données publiées : 11 ustensiles de cuisine étaient tombés
+  //  en « Nourriture » sur le seul nom de l'aliment. Un produit NOMMÉ (l'outil)
+  //  doit trancher avant le mot d'aliment, exactement comme un appareil.
+  //  ⚠ Les outils ÉLECTRIQUES ont leur mot propre côté « electromenager »
+  //  (« hachoir electrique », « cuiseur de riz »…) et gagnent par la longueur.
+  maison: [
+    'hachoir', 'hachoir a legumes', 'eplucheur', 'eplucheur a legumes', 'eplucheur de fruits et legumes',
+    'coupe legumes', 'mandoline', 'ciseaux de cuisine', 'ciseaux a viande', 'ciseaux a volaille',
+    'distributeur dhuile', 'presse ail', 'rape a fromage', 'film alimentaire', 'sac de congelation',
   ],
   // ÉLECTRONIQUE DE BEAUTÉ → beauté (soins de la personne, pas appareils ménagers)
   beaute: [
@@ -1110,7 +1256,7 @@ const MOTS_FORTS = {
     'enceinte connectee', 'enceinte bluetooth', 'barre de son', 'soundbar', 'lautsprecher', 'luidspreker', 'altavoz', 'glosnik', 'hogtalare',
     'imprimante', 'drucker', 'printer', 'impressora', 'drukarka', 'skrivare',
     'appareil photo', 'appareil photo numerique', 'action cam', 'camera', 'camera de surveillance', 'fotocamera',
-    'drone', 'routeur', 'router', 'disque dur', 'ssd', 'nvme', 'carte graphique', 'barrette memoire',
+    'drone', 'routeur', 'router', 'disque dur', 'ssd', 'nvme', 'carte graphique', 'barrette memoire', 'ddr4', 'ddr5',
     'console de jeu', 'spielekonsole', 'spelcomputer', 'consola', 'konsola', 'spelkonsol', 'playstation', 'manette',
     'ecran d ordinateur', 'moniteur', 'monitor', 'ecran pc',
   ],
@@ -1189,11 +1335,11 @@ const MOTS_FORTS = {
     //  (Seul un JEU NUMÉRIQUE garde la priorité : voir JEU_NUMERIQUE.)
     'lego',
     // en
-    'board game', 'board games', 'card game', 'action figure', 'building blocks', 'jigsaw puzzle', 'plush toy', 'stuffed animal', 'model kit', 'toys',
+    'board game', 'board games', 'card game', 'action figure', 'building blocks', 'jigsaw puzzle', 'plush toy', 'stuffed animal', 'model kit', 'toys', 'teddy bear',
     // de
     'brettspiel', 'kartenspiel', 'bauklotze', 'spielfigur', 'kuscheltier', 'puppe', 'spielzeug', 'modellbausatz', 'puzzle',
     // nl
-    'bordspel', 'kaartspel', 'bouwblokken', 'speelgoed', 'knuffel', 'puzzel', 'legpuzzel', 'modelbouw',
+    'bordspel', 'kaartspel', 'bouwblokken', 'speelgoed', 'knuffel', 'puzzel', 'legpuzzel', 'modelbouw', 'teddybeer',
     // es
     //  « peluche » est absent ICI AUSSI : la comparaison ne connaît PAS la
     //  langue du titre. Le laisser en espagnol ferait matcher « élimination des
@@ -1361,7 +1507,48 @@ const MOTS_A_FRONTIERE = new Set(['auto', 'moto', 'tire', 'wagen', 'wiel', 'mota
   //   « chica » → « Chicago » (la ville, dans une offre de vols USA).
   //  Ces trois mots gardent leur sens quand ils sont un vrai mot (« for kids »,
   //  « child », « niñas y chicas ») : la frontière ne les retire pas.
-  'kind', 'barn', 'nina', 'nino', 'junge', 'kids', 'child', 'chica']);
+  'kind', 'barn', 'nina', 'nino', 'junge', 'kids', 'child', 'chica',
+  // E6 : mots de MEUBLES et d'ALIMENTATION qui, lus en sous-chaîne, attrapent
+  //  un mot ordinaire très fréquent. Chacun a été mesuré sur le catalogue :
+  //   « mobilier » → « immobilier » ; « mesa » (table, es/pt) → n'importe quoi ;
+  //   « cama » (lit, es) → « cámara » (appareil photo) ; « stol » (chaise, nl/sv)
+  //   → « pistol », « Stollen » ; « bord » (table, sv) → « Bordeaux », « bordure » ;
+  //   « regal » (étagère, de/pl) → « regalo » (cadeau, es) ; « sang » (lit, sv) →
+  //   « sangria », « sangklader » (linge de lit, qui doit rester en Maison) ;
+  //   « bett » (lit, de) → « Bettdecke » (couette), « Bettwäsche » (linge) ;
+  //   « tisch » (table, de) → « Tischdecke » (nappe) ; « tafel » (nl) idem ;
+  //   « kast » (armoire, nl) → « kastanje » (marron) ; « bed » (en) → « bedding » ;
+  //   « letto » (lit, it) → « lettore » (lecteur) ; « pall » (sv) → « pallone » ;
+  //   « miel » (miel, fr) → « Miele » (43 offres d'électroménager) ;
+  //   « brod » (pain, sv) → « broderie » ;
+  //   « lager » (bière, en/de) → « Lagerung » (stockage).
+  //
+  //  AJOUT MESURÉ le 6/10 au soir (contrôle de l'unité E6, 107 offres en
+  //  Meubles) — trois mots dont la lecture en sous-chaîne salissait la nouvelle
+  //  rubrique, comptés sur les données publiées :
+  //   « couch » (canapé, en) attrapait les COUCHES (24 offres, dont « BIOLANE
+  //     Couches Bébé », « Always Discreet ») et les casseroles « en inox
+  //     5 couches » : 20 offres de couches étaient en Meubles ;
+  //   « fotel » (fauteuil, pl) attrapait « FOTELIK samochodowy » (SIÈGE AUTO) —
+  //     le même piège que « siège auto enfant » de l'unité E4 ;
+  //   « mobili » (meubles, it) attrapait « immobilier » — le piège déjà connu
+  //     pour « mobilier », resté ouvert sur sa variante italienne.
+  'mobilier', 'mesa', 'cama', 'stol', 'bord', 'regal', 'sang', 'bett', 'tisch', 'tafel', 'kast', 'bed', 'letto', 'pall', 'miel', 'brod', 'lager',
+  'couch', 'fotel', 'mobili',
+  //  AJOUT MESURÉ le 6/10 (2e contrôle de l'unité E6, sur les données
+  //  publiées) — trois mots de PLUS dont la lecture en sous-chaîne salissait la
+  //  nouvelle rubrique :
+  //   « mobilia » (meubles, pt) attrapait l'ESPAGNOL « inmobiliarias » (agences
+  //     immobilières) : 2 articles de presse étaient en Meubles ;
+  //   « comoda » (commode, es) attrapait « cómodas » (confortables) — «
+  //     zapatillas cómodas » (baskets) partait en Meubles ;
+  //   « skrivbord » (bureau, sv) attrapait « Skrivbordsminne » (mémoire
+  //     « de bureau » d'un kit RAM Crucial) → une barrette DDR5 en Meubles.
+  //  La frontière n'enlève rien d'utile : « mobília », « cómoda » (singulier du
+  //  meuble) et « skrivbord » isolés continuent de matcher.
+  //   « kettle » (bouilloire, en) attrapait « Kettler » (rameur de fitness) et
+  //     « Kettlebell » (haltère) : 2 offres de SPORT étaient en Électroménager.
+  'mobilia', 'comoda', 'skrivbord', 'kettle']);
 
 /** Un mot-clé doit-il être lu entre deux frontières de mot ? */
 const exigeFrontiere = (m) => m.length <= 3 || MOTS_A_FRONTIERE.has(m);
@@ -1399,8 +1586,28 @@ const exigeFrontiere = (m) => m.length <= 3 || MOTS_A_FRONTIERE.has(m);
  *    « beach boys » (1) / « lost boys » (1) — le groupe « The Beach Boys » et
  *                     la B.O. « The Lost Boys » (vinyles) partaient en jouets
  *                     sur le mot « boys ».
+ *
+ *  E6 (rubriques MEUBLES et NOURRITURE) a ajouté les collisions MESURÉES
+ *  ci-dessous, sur les données publiées — chacune tirait une offre dans la
+ *  mauvaise des deux nouvelles rubriques :
+ *    « bookshelf speakers » (1) — des enceintes « Bookshelf Speakers » (Edifier)
+ *                     partaient en Meubles sur le mot « bookshelf » ;
+ *    « couch co-op / co op / coop » (1) — le jeu vidéo « LEGO City Undercover …
+ *                     Couch Co-Op » partait en Meubles sur le mot « couch »
+ *                     (« sofa » en anglais) ;
+ *    « podkladka na biurko » (1) — un tapis de souris « Podkładka na biurko »
+ *                     (Logitech) partait en Meubles sur le mot « biurko » ;
+ *    « accesorio de escritorio » (1) — une lampe Xbox « Accesorio de
+ *                     Escritorio » partait en Meubles sur « escritorio » ;
+ *    « libreria completa » (1) — une bibliothèque de SONS en ligne (« Libreria
+ *                     completa de Sonidos ») partait en Meubles sur « libreria » ;
+ *    « pour etagere » / « pour une etagere » — un set LEGO décrit comme
+ *                     « décoration 3D pour étagère » partait en Meubles (le mot
+ *                     de meuble battait la marque « lego » par la longueur) ;
+ *    « chaise romaine » (1) — une « chaise romaine » de FITNESS partait en
+ *                     Meubles sur le mot « chaise ».
  */
-const MOTS_TROMPEURS = /(^|[^a-z])(motorola|motoroli|motorole|motorolu|streifen|good girl|kinder schokolade|kinder bueno|orient bambino|beach boys|lost boys)([^a-z]|$)/g;
+const MOTS_TROMPEURS = /(^|[^a-z])(motorola|motoroli|motorole|motorolu|streifen|good girl|kinder schokolade|kinder bueno|orient bambino|beach boys|lost boys|rebecca mobili|bookshelf speakers|bookshelf speaker|couch co-op|couch co op|couch coop|podkladka na biurko|accesorio de escritorio|libreria completa|pour une etagere|pour etagere|chaise romaine)([^a-z]|$)/g;
 const retirerTrompeurs = (texte) => texte.replace(MOTS_TROMPEURS, '$1 $3');
 
 /** Les marqueurs d'un jeu NUMÉRIQUE — application, téléchargement… ou console.
@@ -1545,6 +1752,7 @@ function famille(texte, categorieSource) {
     if (n > score) { score = n; meilleur = fam; }
   }
   const parSource = categorieDeSource(categorieSource);
+  let resultat;
   if (parSource) {
     // « autre » n'est pas une affirmation, c'est une ABSENCE d'affirmation : la
     // source dit « ce n'est pas une de mes rubriques » (Culture, Voyage,
@@ -1552,24 +1760,30 @@ function famille(texte, categorieSource) {
     // « aspirapolvere » rangé en Culture resterait en « Autres » alors que le
     // titre dit exactement ce que c'est. Mesuré : 242 offres étaient dans ce
     // cas, faute de cette distinction.
-    if (parSource === 'autre') return meilleur !== 'autre' ? meilleur : 'autre';
-    // Face à une VRAIE rubrique de la source, il faut deux mots concordants
-    // pour la contredire : « Casque Moto Intégral » touche « casque » (tech) et
-    // « moto » (auto), un point chacun — la source tranche.
-    return score >= 2 && meilleur !== parSource ? meilleur : parSource;
+    resultat = (parSource === 'autre')
+      ? (meilleur !== 'autre' ? meilleur : 'autre')
+      // Face à une VRAIE rubrique de la source, il faut deux mots concordants
+      // pour la contredire : « Casque Moto Intégral » touche « casque » (tech) et
+      // « moto » (auto), un point chacun — la source tranche.
+      : (score >= 2 && meilleur !== parSource ? meilleur : parSource);
+  } else {
+    resultat = meilleur;
   }
-  if (meilleur !== 'autre') return meilleur;
-  // PLUS DE DERNIER RECOURS ICI, et c'est une correction, pas un oubli.
-  // La version précédente terminait par « si la categorieSource est le nom
-  // d'une de nos familles, on la prend ». Ce n'était pas une preuve : un nom de
-  // famille ne vient JAMAIS d'un marchand (ils publient leur propre vocabulaire
-  // — « Gaming », « Garten & Baumarkt »). Il vient de NOS requêtes de veille, ou
-  // d'une catégorie qu'on avait collée à tort sur une source (37 offres Coolblue
-  // rangées en high-tech, dont des robots de cuisine De'Longhi). Cette branche
-  // fabriquait donc des catégories que rien ne soutenait. Une offre dont ni la
-  // source ni le titre ne disent rien reste en « Autres » : c'est visible, et
-  // c'est vrai.
-  return 'autre';
+  // E6 — REPAS PRIS DEHORS ≠ CABAS (demande de B, plan point 22). Un titre qui
+  //  décrit un repas SERVI (« menu », « restaurant », « hamburger », « brunch »,
+  //  « buffet », « à emporter », « pour deux », « sur place ») et qui n'apporte
+  //  AUCUNE preuve d'épicerie (lot, pack, surgelé, x4, kg, litre, bouteille,
+  //  conserve, supermarché) n'est pas du cabas : c'est une SORTIE, et elle reste
+  //  en Activité. Le contrôle est placé APRÈS la source à dessein : il tranche
+  //  même contre une source qui aurait rangé l'offre dans une rubrique
+  //  alimentaire, parce que c'est exactement le partage demandé — le même
+  //  hamburger est un repas dehors, jamais de l'épicerie.
+  //  Il s'applique aussi à une offre que RIEN n'a classée (« Autres ») : un
+  //  « Menu burger à emporter » d'un article de presse est une sortie, et il n'y
+  //  a aucune raison de le laisser en « Autres » faute de mot-clé.
+  if ((resultat === 'nourriture' || resultat === 'autre')
+    && estRepasDehors(bas) && !preuveEpicerie(bas)) return 'activite';
+  return resultat;
 }
 
 /**
@@ -2430,6 +2644,66 @@ function estSoin(titre) {
   return MOTS_SOIN.some((m) => (SOIN_A_FRONTIERE.has(m)
     ? new RegExp('(^|[^a-z])' + m + '([^a-z]|$)').test(bas)
     : bas.includes(m)));
+}
+
+/** Les marqueurs d'un REPAS PRIS DEHORS — une SORTIE, pas un cabas.
+ *
+ *  Demande de B, plan point 22 : « tout ce qui est nourriture restaurant
+ *  hamburger, offre promotionnelle autour d'un repas doit rester dans
+ *  activité. L'onglet nourriture est pour exclusivement la nourriture à
+ *  cuisiner à la maison, nourriture de supermarché, boisson, bière, alcool,
+ *  légumes et fruits. »
+ *
+ *  Ce sont les mots qui TRANCHENT, ceux que B a nommés, plus les formes des
+ *  neuf langues du catalogue. Le texte est déjà désaccentué et minusculisé.
+ *
+ *  ⚠ MESURÉ le 6/10 au soir, première écriture SANS frontière : trois offres
+ *  étaient fausses et le vérificateur les a nommées —
+ *    « Calor - Pro Express … 5 réglages … Repassage » (le « repas » de
+ *    « re**pas**sage ») partait en Activité ;
+ *    « THORVALD 5 en 1 Équerre Menuisier » (« menu » de « menu**isier** ») aussi ;
+ *    « Dr. Oetker Ristorante Prosciutto Funghi Pizza 350g » (« Ristorante » de
+ *    la marque de pizza surgelée) quittait Nourriture à tort.
+ *  D'où la règle : tout marqueur est lu ENTRE DEUX FRONTIÈRES, comme les mots
+ *  des FAMILLES (voir compterMots). « maaltijdpakketten » (colis-repas de
+ *  supermarché, Jumbo) ne compte plus comme un repas servi : « maaltijd » y est
+ *  suivi d'une lettre, donc pas de frontière — c'est du cabas.
+ */
+const MOTS_REPAS_DEHORS = new RegExp(
+  '(^|[^a-z0-9])(' + [
+    'restaurant', 'restaurante', 'ristorante', 'restauracja', 'restaurang',
+    'menu', 'brunch', 'buffet', 'hamburger', 'burger', 'cheeseburger',
+    'steakhouse', 'taverne', 'bistro', 'bistrot', 'pizzeria', 'trattoria',
+    'sushi', 'couscous', 'tajine', 'paella', 'poulet frit', 'fried chicken',
+    'takeaway', 'take away', 'take-away', 'a emporter', 'pour deux', 'sur place',
+    'degustation', 'food truck', 'fast food', 'all you can eat', 'menu du jour',
+    'repas', 'mahlzeit', 'maaltijd', 'almuerzo', 'pranzo', 'jantar', 'diner',
+    'dejeuner',
+  ].join('|') + ')([^a-z0-9]|$)', 'i');
+
+/** Vrai si le titre décrit un repas SERVI (dehors), et non de l'épicerie. */
+function estRepasDehors(texteBas) {
+  return MOTS_REPAS_DEHORS.test(texteBas);
+}
+
+/** La PREUVE que l'offre est de l'ÉPICERIE (le cabas) et non un repas servi.
+ *
+ *  Mots de B : « lot, pack, surgelé, x4, kg, g, litre, bouteille, conserve,
+ *  supermarché ». Ils ne sont PAS une catégorie — ils ne classent rien tout
+ *  seuls : ils servent à lever le doute quand un mot de repas dehors est aussi
+ *  présent (« 24 x 33 cl » de bière reste du cabas, « bière pression pour
+ *  deux » reste une sortie).
+ *
+ *  Le GRAMME de B (« g ») est écrit `\d\s?g\b` — et non `\bg\b` : une lettre
+ *  seule attrape n'importe quoi. C'est ce qui sauve « Dr. Oetker Ristorante …
+ *  Pizza 350g » : le mot « Ristorante » crie « restaurant », mais « 350g »
+ *  prouve le paquet de supermarché, donc Nourriture.
+ */
+const MOTS_EPICERIE = /(\blot\b|\bx\s?\d|\d\s?x\b|multipack|\bpack\b|\bkg\b|\d\s?g\b|gramme|\bcl\b|\bml\b|\bl\b|litre|bouteille|conserve|surgel|paquet|sachet|boite|bocal|canette|dose|supermarch|boisson|dosen|blik|bidon)/i;
+
+/** Vrai si le titre prouve l'épicerie (le cabas). Voir MOTS_EPICERIE. */
+function preuveEpicerie(texteBas) {
+  return MOTS_EPICERIE.test(texteBas);
 }
 
 /* Le classement d'une offre, réduit à ses SEULS champs conservés (titre +

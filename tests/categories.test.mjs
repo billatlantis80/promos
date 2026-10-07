@@ -130,12 +130,17 @@ test('les catégories publiées par les marchands sont traduites, en toutes lang
     'Salud y belleza': 'beaute',
     'Zdrowie i uroda': 'beaute',
     'Health & Beauty': 'beaute',
+    // ÉPICERIE (unité E6) : ces libellés désignaient « ce n'est pas une de mes
+    // rubriques » tant que l'onglet Nourriture n'existait pas. Dès lors qu'il
+    // existe, ils le DÉSIGNENT — c'est bien du cabas de supermarché (demande de
+    // B, point 22). Avant E6 ils étaient testés « autre » ; c'est le seul
+    // attendu qui change.
+    'Supermercado y alimentación': 'nourriture',
+    Boodschappen: 'nourriture',
+    Groceries: 'nourriture',
     // Assumé « autre » : ces rubriques n'ont pas de famille chez nous, c'est un
     // choix — l'important est qu'elles soient RECONNUES comme telles, sinon
     // leurs offres partent en « Autres » par échec au lieu de par décision.
-    'Supermercado y alimentación': 'autre',
-    Boodschappen: 'autre',
-    Groceries: 'autre',
     Reizen: 'autre',
     'Finanse i ubezpieczenia': 'autre',
     'Kultura i rozrywka': 'autre',
@@ -190,6 +195,48 @@ test('aucune marque ambiguë n’est rangée dans une seule famille', () => {
     assert.ok(!toutes.includes(ambigue), `marque ambiguë rangée en dur : ${ambigue}`);
   }
   assert.ok(toutes.includes('samsung'), 'la marque « samsung » doit rester (décision assumée)');
+});
+
+test('E6 : MEUBLES sort de Maison, NOURRITURE = le cabas, les repas pris dehors restent en Activité', () => {
+  // Demande de B — onglets MEUBLES et NOURRITURE (plan, points 16 et 22).
+  //  Chaque attendu ci-dessous a été MESURÉ sur le classement réel avant d'être
+  //  écrit ici : aucun n'est deviné. Deux pièges du point 22 sont couverts —
+  //  un mot de CABAS (« vin rouge ») ne doit PAS voler un repas servi, et une
+  //  vraie preuve d'épicerie (« lot », « bouteilles ») garde le cabas en
+  //  Nourriture. La literie (couette, matelas, oreiller) RESTE en Maison : le
+  //  matelas n'est pas un meuble (point 16).
+  const cas = [
+    // --- MEUBLES : le mobilier nommé quitte Maison ---
+    ['Canapé d angle 3 places en tissu', 'meubles'],
+    ['Etagere murale en bois 4 niveaux', 'meubles'],
+    ['Sommier à lattes 140x200', 'meubles'],
+    ['Fauteuil de bureau ergonomique', 'meubles'],
+    ['Commode 6 tiroirs en chêne', 'meubles'],
+    ['Table basse en verre trempé', 'meubles'],
+    ['Chaise de salle à manger en bois massif', 'meubles'],
+    // --- Maison GARDE la literie ---
+    ['Couette pour lit 2 personnes', 'maison'],
+    ['Matelas à ressorts 160x200', 'maison'],
+    ['Oreiller mémoire de forme', 'maison'],
+    // --- NOURRITURE : le cabas, et lui seul ---
+    ['Chocolat noir 70% 200g', 'nourriture'],
+    ['Pack de 24 bières blondes 33cl', 'nourriture'],
+    ['Vin rouge Bordeaux 75cl', 'nourriture'],
+    ['Lot de 6 bouteilles de vin rouge Bordeaux', 'nourriture'],
+    // --- Les REPAS PRIS DEHORS restent en ACTIVITÉ, jamais en Nourriture ---
+    ['Menu burger à emporter pour deux', 'activite'],
+    ['Restaurant italien - menu 3 services', 'activite'],
+    ['Dîner spectacle au restaurant pour deux', 'activite'],
+    // Le mot de cabas (« vin rouge ») ne vole pas le repas servi : il n'y a
+    // aucune preuve d'épicerie, donc c'est une sortie.
+    ['Restaurant Le Gourmet - menu 3 services avec un verre de vin rouge', 'activite'],
+  ];
+  const rates = [];
+  for (const [titre, attendu] of cas) {
+    const obtenu = famille(titre, '');
+    if (obtenu !== attendu) rates.push(`« ${titre} » → ${obtenu} (attendu ${attendu})`);
+  }
+  assert.deepEqual(rates, [], `classement E6 :\n  ${rates.join('\n  ')}`);
 });
 
 test('le vérificateur de catégories passe sur les données réellement collectées', () => {
