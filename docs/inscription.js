@@ -54,11 +54,10 @@ export function adresseValide(texte) {
  * « inscrit » serait un mensonge : on dit « envoyée ». Le seul contrôle fiable
  * est le vôtre — ouvrir la feuille et voir la ligne apparaître.
  */
-export async function envoyerInscription({ email, prenom, langue, pays }) {
+export async function envoyerInscription({ email, langue, pays }) {
   if (!tableauConfigure()) return { ok: false, code: 'non-configure' };
   const corps = new URLSearchParams({
     email: String(email || '').trim().toLowerCase(),
-    prenom: String(prenom || '').trim(),
     langue: String(langue || ''),
     pays: String(pays || ''),
     source: 'kazendra',
@@ -87,11 +86,10 @@ export function inscriptionLocale() {
  *  pas savoir si le lien a été cliqué (elle ne peut pas lire la réponse du
  *  tableau Google). La seule source fiable du statut est la feuille de calcul —
  *  on ne prétend donc jamais, ici, qu'un compte est activé. */
-export function retenirInscription(email, prenom) {
+export function retenirInscription(email) {
   try {
     localStorage.setItem(CLE_INSCRIPTION, JSON.stringify({
       email: String(email || '').trim().toLowerCase(),
-      prenom: String(prenom || '').trim(),
       quand: new Date().toISOString(),
       statut: 'en-attente',
     }));

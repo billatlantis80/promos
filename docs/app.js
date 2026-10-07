@@ -552,10 +552,6 @@ function dessinerCompte() {
           <input id="cMail" type="email" maxlength="120" autocomplete="email" inputmode="email" placeholder="nom@exemple.be">
         </div>
         <div class="champ">
-          <label for="cPrenom">${esc(t('Prénom (facultatif)'))}</label>
-          <input id="cPrenom" type="text" maxlength="24" autocomplete="given-name">
-        </div>
-        <div class="champ">
           <label for="cMdp">${esc(t('Mot de passe'))}</label>
           <input id="cMdp" type="password" autocomplete="new-password" placeholder="${esc(t('8 caractères minimum'))}">
         </div>
@@ -1733,18 +1729,20 @@ function brancher() {
     }
 
     if (e.target.closest('#creerCompte')) {
-      // L'INSCRIPTION EST MAINTENANT UNE VRAIE INSCRIPTION : elle part vers le
-      // tableau Google de B (demande du 08/10 : « je pourrais avoir une base de
-      // données avec toutes les adresses mail »). Trois contrôles AVANT d'envoyer,
-      // parce qu'un envoi qui part avec une adresse fautive est un contact perdu
-      // que personne ne remarquera jamais :
+      // L'INSCRIPTION N'EST PAS UNE FICHE DE CLIENT : on demande l'adresse, et
+      // rien d'autre. Le prénom (facultatif) a été retiré le 08/10/2026 : un
+      // champ que l'inscrit peut laisser vide ne sert ni à l'inscrire, ni à lui
+      // écrire. L'e-mail se suffit à lui-même, et une case de moins est une
+      // hésitation de moins devant le formulaire.
+      //
+      // Trois contrôles AVANT d'envoyer, parce qu'un envoi qui part avec une
+      // adresse fautive est un contact perdu que personne ne remarquera jamais :
       //   1. l'adresse a la forme d'une adresse ;
       //   2. le consentement est coché — on n'inscrit personne d'office, c'est
       //      la moindre des choses, et c'est aussi ce que la loi demande ;
       //   3. le tableau est branché. S'il ne l'est pas, on le DIT au lieu de
       //      laisser croire à une inscription (règle de la maison).
       const mail = (($('cMail') || {}).value || '').trim();
-      const prenom = (($('cPrenom') || {}).value || '').trim();
       const m1 = ($('cMdp') || {}).value || '';
       const m2 = ($('cMdp2') || {}).value || '';
       const consentement = !!($('cConsent') || {}).checked;
@@ -1758,8 +1756,8 @@ function brancher() {
         dessinerCompte();
         return annonce(t("Ton compte est créé sur cet appareil. Le tableau n'est pas encore branché : ton adresse n'a pas été envoyée."), false);
       }
-      const envoi = await envoyerInscription({ email: mail, prenom, langue, pays: etat.pays });
-      if (envoi.ok) retenirInscription(mail, prenom);
+      const envoi = await envoyerInscription({ email: mail, langue, pays: etat.pays });
+      if (envoi.ok) retenirInscription(mail);
       dessinerCompte();
       // « ENVOYÉE », PAS « INSCRITE » : le tableau Google ne laisse pas la page
       // lire sa réponse (voir inscription.js). On annonce ce qu'on sait.
@@ -1774,7 +1772,7 @@ function brancher() {
     if (e.target.closest('#renvoyerConfirmation')) {
       const ins = inscriptionLocale();
       if (!ins || !ins.email) return;
-      const r = await envoyerInscription({ email: ins.email, prenom: ins.prenom, langue, pays: etat.pays });
+      const r = await envoyerInscription({ email: ins.email, langue, pays: etat.pays });
       return annonce(r.ok
         ? t('Un e-mail de confirmation part vers {n}. Ouvre-le et clique le lien pour activer ton compte.', { n: ins.email })
         : t("L'envoi n'a pas pu partir. Vérifie ta connexion, puis réessaie."), r.ok);
