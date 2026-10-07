@@ -152,19 +152,23 @@ test('le drapeau allemand porte bien ses TROIS bandes : noir, rouge, or', () => 
     `le drapeau allemand compte ${(de.match(/<rect/g) || []).length} rectangles, attendu 3`);
 });
 
-test('l’onglet Compte commence par l’inscription manuelle', () => {
+test('l’onglet Compte n’a qu’UNE rubrique de compte : inscription puis connexion', () => {
   const debut = HTML.indexOf('data-panneau="compte"');
   const fin = HTML.indexOf('data-panneau="langue"');
   const panneau = HTML.slice(debut, fin);
-  const position = (motif) => panneau.indexOf(motif);
-  assert.ok(position('Compte local') > -1, 'la section « Compte local » a disparu de l’onglet Compte');
-  assert.ok(position('Inscription et connexion') > -1, 'la section « Inscription et connexion » a disparu');
-  assert.ok(position('Compte local') < position('Inscription et connexion'),
-    'l’inscription manuelle doit venir AVANT la connexion Google/Facebook');
-  // Le formulaire lui-même, rendu par app.js, doit précéder les boutons sociaux.
-  const champs = APP.indexOf("id=\"cNom\"");
-  const google = APP.indexOf('connexionGoogle');
-  assert.ok(champs > -1 && google > -1);
+  const titres = [...panneau.matchAll(/<h3[^>]*>([^<]+)<\/h3>/g)].map((m) => m[1]);
+  // Demande de B : « pourquoi il y a un compte local et pourquoi il y a un
+  // compte inscription ». Deux blocs pour une seule chose. Il ne doit plus
+  // rester qu'un seul endroit où l'on crée un compte.
+  assert.deepEqual(titres, ['Inscription et connexion', 'Profil'],
+    `rubriques de l’onglet Compte = ${titres.join(' | ')}`);
+  // L'inscription MANUELLE (formulaire) doit précéder la connexion sociale.
+  const positionChamp = panneau.indexOf('id="regCompte"');
+  const positionSocial = panneau.indexOf('id="regConnexion"');
+  assert.ok(positionChamp > -1 && positionSocial > -1,
+    'les deux points d’entrée (#regCompte, #regConnexion) doivent être présents');
+  assert.ok(positionChamp < positionSocial,
+    'le formulaire d’inscription doit venir AVANT les boutons Google/Facebook');
 });
 
 test('l’onglet Informations commence par le point de contact', () => {

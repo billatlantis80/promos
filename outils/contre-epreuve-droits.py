@@ -94,18 +94,32 @@ cas(
     [9],
 )
 
-# --- Défaut 4 : l'ordre des onglets repart avec le social en tête. -----------
+# --- Défaut 4 : la connexion sociale repasse AVANT l'inscription manuelle. ----
+#  On inverse les deux points d'entrée dans la rubrique unique.
 cas(
     "onglet Compte : la connexion sociale repasse AVANT l'inscription manuelle",
     muter(
         "index.html",
+        '''      <div id="regCompte"></div>
+      <div id="regConnexion"></div>''',
+        '''      <div id="regConnexion"></div>
+      <div id="regCompte"></div>''',
+    ),
+    [6],
+)
+
+# --- Défaut 4 bis : un deuxième bloc de compte réapparaît. --------------------
+cas(
+    "onglet Compte : un deuxième bloc de compte réapparaît (« Compte local »)",
+    muter(
+        "index.html",
         '''    <section class="rubrique">
-      <h3 data-i18n="Compte local">Compte local</h3>
-      <div id="regCompte"></div>
-    </section>
-    <section class="rubrique">
       <h3 data-i18n="Inscription et connexion">Inscription et connexion</h3>''',
         '''    <section class="rubrique">
+      <h3 data-i18n="Compte local">Compte local</h3>
+      <div id="regCompteBis"></div>
+    </section>
+    <section class="rubrique">
       <h3 data-i18n="Inscription et connexion">Inscription et connexion</h3>''',
     ),
     [6],

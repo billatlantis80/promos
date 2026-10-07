@@ -107,18 +107,20 @@
     <button class="onglet" role="tab" data-onglet="infos" aria-selected="false" data-i18n="Informations">Informations</button>
   </div>
 
-  <!-- ORDRE DEMANDÉ PAR B (08/10/2026) : « il faut commencer par l'inscription
-       manuelle avec nom d'utilisateur et mot de passe. Ensuite mettre la
-       possibilité de connexion par Google et Facebook. »
-       Donc : COMPTE LOCAL -> connexion sociale -> profil. -->
+  <!-- UNE SEULE RUBRIQUE DE COMPTE (demande de B : « pourquoi il y a un compte
+       local et pourquoi il y a un compte inscription, pourquoi ce n'est pas
+       juste un compte inscription et connexions »).
+       Il y avait DEUX blocs : « Compte local » puis « Inscription et
+       connexion ». Deux titres pour une seule chose — créer un compte et s'y
+       connecter — et l'utilisateur ne savait pas lequel choisir. Ils sont
+       réunis : l'inscription manuelle vient en premier, la connexion sociale
+       juste après, dans le même bloc. Le compte reste LOCAL (il n'y a pas de
+       serveur) : c'est expliqué dans l'onglet Informations, pas ici. -->
   <div class="panneau" data-panneau="compte" role="tabpanel">
-    <section class="rubrique">
-      <h3 data-i18n="Compte local">Compte local</h3>
-      <div id="regCompte"></div>
-    </section>
     <section class="rubrique">
       <h3 data-i18n="Inscription et connexion">Inscription et connexion</h3>
       <p data-i18n="Crée un compte sur cet appareil, ou connecte-toi avec un compte existant.">Crée un compte sur cet appareil, ou connecte-toi avec un compte existant.</p>
+      <div id="regCompte"></div>
       <div id="regConnexion"></div>
     </section>
     <section class="rubrique">
