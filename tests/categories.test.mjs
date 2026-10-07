@@ -141,7 +141,9 @@ test('les catégories publiées par les marchands sont traduites, en toutes lang
     // Assumé « autre » : ces rubriques n'ont pas de famille chez nous, c'est un
     // choix — l'important est qu'elles soient RECONNUES comme telles, sinon
     // leurs offres partent en « Autres » par échec au lieu de par décision.
-    Reizen: 'autre',
+    //  « Reizen » (voyages, nl) N'EST PLUS « autre » : l'onglet VOYAGES existe
+    //  depuis l'unité E8, donc le libellé le DÉSIGNE au lieu de le nier.
+    Reizen: 'voyages',
     'Finanse i ubezpieczenia': 'autre',
     'Kultura i rozrywka': 'autre',
   };

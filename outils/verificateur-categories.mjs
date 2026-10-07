@@ -43,7 +43,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { famille, FAMILLES, MARQUES, MOTS_FORTS, categorieDeSource, sansAccents, sansNegations, classerOffre, compterMots, estJeuNumerique, estSoin, ageEnfant, retirerTrompeurs, estRepasDehors, preuveEpicerie } from '../collecteur.mjs';
+import { famille, FAMILLES, MARQUES, MOTS_FORTS, categorieDeSource, sansAccents, sansNegations, classerOffre, compterMots, estJeuNumerique, estSoin, ageEnfant, retirerTrompeurs, estRepasDehors, preuveEpicerie, destinationEtrangere, estForfaitVoyage } from '../collecteur.mjs';
 
 /* Tous les mots utilisables pour classer : listes de familles, marques ET mots
    d'appareil — mêmes tables que le collecteur, fusionnées comme lui. Juger sur
@@ -151,13 +151,19 @@ for (const o of offres) {
     // connaître, sinon il reproche au classement d'appliquer sa propre consigne
     // (mesuré : 10 offres ainsi accusées « sans preuve » à la première écriture).
     const repasActivite = cat === 'activite' && estRepasDehors(t) && !preuveEpicerie(t);
+    // Un VOYAGE classé par la DESTINATION à l'étranger ou par un FORFAIT nommé
+    // (unité E8, point 21) : la destination est la preuve elle-même, comme le
+    // soin ou le repas ci-dessus. Sans cette lecture, une offre rangée Voyages
+    // sur « zoo de Maubeuge » (destination France, offre belge) serait accusée
+    // « sans preuve » alors que le classement applique sa propre consigne.
+    const voyageGeo = cat === 'voyages' && (estForfaitVoyage(t) || Boolean(destinationEtrangere(t, o.pays)));
     // Rubrique IMPOSÉE par la page de la source (voir SOURCES_ACTIVITES) :
     // « Soin du visage au choix » est rangé en « Activité » parce que la page
     // dont il vient est une page de PRESTATIONS — un soin en institut n'est pas
     // un cosmétique. Le titre ne peut pas la contredire, pour la même raison
     // que pour les mots d'appareil : c'est l'ordre des règles, et il est voulu.
     const imposee = Boolean(o.categorieImposee);
-    if (!touche && !sourceOk && !numerique && !soinBeaute && !ageJouets && !repasActivite) {
+    if (!touche && !sourceOk && !numerique && !soinBeaute && !ageJouets && !repasActivite && !voyageGeo) {
       sansPreuve++;
       if (exemplesSansPreuve.length < 8) {
         exemplesSansPreuve.push({ pays: o.pays, cat, titre: String(o.titre || '').slice(0, 58), src: o.categorieSource });

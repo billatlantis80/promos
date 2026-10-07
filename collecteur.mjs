@@ -564,7 +564,7 @@ export { MOTS_PROMO, motsPromo, ecarterTuiles, veilleParPays, lienReel, dedupliq
    (outils/verificateur-categories.mjs) et les tests rejouent `famille()` sur
    les offres publiées. Un contrôle qui recopierait la table des mots serait un
    contrôle qui vérifie sa propre copie — donc rien du tout. */
-export { famille, FAMILLES, MARQUES, MOTS_FORTS, CATEGORIES_SOURCES, categorieDeSource, sansAccents, sansNegations, offresEnseigne, offresAmazon, offresVenteFlash, offresGroupon, remiseCredibleSource, compterMots, remise, pourcentEcrit, SOURCES_VENTES_FLASH, SOURCES_ACTIVITES, prixReferenceEnseigne, estJeuNumerique, estSoin, ageEnfant, MOTS_A_FRONTIERE, exigeFrontiere, retirerTrompeurs, estRepasDehors, preuveEpicerie };
+export { famille, FAMILLES, MARQUES, MOTS_FORTS, CATEGORIES_SOURCES, categorieDeSource, sansAccents, sansNegations, offresEnseigne, offresAmazon, offresVenteFlash, offresGroupon, remiseCredibleSource, compterMots, remise, pourcentEcrit, SOURCES_VENTES_FLASH, SOURCES_ACTIVITES, prixReferenceEnseigne, estJeuNumerique, estSoin, ageEnfant, MOTS_A_FRONTIERE, exigeFrontiere, retirerTrompeurs, estRepasDehors, preuveEpicerie, destinationEtrangere, estForfaitVoyage, DESTINATIONS, MOTS_FORFAIT_VOYAGE };
 
 /** Recherches Google News : un flux par famille de produits. Gratuit, sans clé. */
 const RECHERCHES = [
@@ -761,6 +761,76 @@ const FAMILLES = {
     // sv
     'soffa', 'fatolj', 'bokhylla', 'byra', 'skank', 'garderob', 'mobler', 'skrivbord', 'matbord', 'soffbord', 'nattduksbord', 'pall',
   ],
+  //  ANIMAUX — nourriture ET accessoires pour animaux (demande de B, point 18).
+  //  ⚠ La nourriture ANIMALE va ici, JAMAIS en « Nourriture » (qui reste
+  //  réservée à l'alimentation HUMAINE). On n'écrit que des locutions PRÉCISES :
+  //  les mots NUS « animal », « chat », « chien », « poisson », « oiseau » sont
+  //  MESURÉS faux en sous-chaîne — « cat » attrapait 128 offres (le vrai mot
+  //  « categorie », « certificat »…), « hund » 13 dans « Thunderbolt », « gato »
+  //  dans « Elgato », « hond » dans « Honda », « kot » dans « Bernkot », « cane »
+  //  dans « canette ». Les formes courtes ou glissantes sont en outre lues
+  //  ENTRE DEUX FRONTIÈRES (voir MOTS_A_FRONTIERE). Les accessoires piégeux
+  //  (« collier », « panier ») sont pris EN LOCUTION (« collier pour chien »),
+  //  pas seuls : un collier peut être un bijou, un panier un rangement.
+  animaux: [
+    // fr
+    'animalerie', 'croquettes pour chat', 'croquettes pour chien', 'croquettes pour chaton', 'patee pour chat', 'patee pour chien', 'litiere pour chat', 'litiere chat', 'bac a litiere', 'arbre a chat', 'griffoir', 'fontaine a eau pour chat', 'distributeur de croquettes', 'panier pour chien', 'laisse pour chien', 'collier pour chien', 'jouet pour chat', 'jouet pour chien', 'niche pour chien', 'cage pour oiseau', 'animal de compagnie', 'nourriture pour chat', 'nourriture pour chien', 'couchage pour chien', 'fontaine a eau pour animaux',
+    // en
+    'pet food', 'cat litter', 'litter box', 'dog food', 'cat food', 'dog bed', 'cat bed', 'cat tree', 'scratching post', 'pet carrier', 'bird cage', 'hamster cage', 'dog collar', 'cat collar', 'pet toy', 'dog leash', 'pet bed', 'fish tank', 'bird feeder', 'dog crate',
+    // de
+    'katzenfutter', 'hundefutter', 'katzenklo', 'katzenstreu', 'kratzbaum', 'hundebett', 'vogelkafig', 'hundenapf', 'hundeleine', 'hundehalsband', 'aquarium', 'tiernahrung', 'nagetierkafig', 'vogelfutter', 'katzenkorb', 'hundehuette', 'katzenzubehor', 'katzentoilette',
+    // nl
+    'kattenvoer', 'hondenvoer', 'kattenbak', 'kattenbakvulling', 'krabpaal', 'hondenmand', 'vogelkooi', 'hondenriem', 'halsband voor honden', 'kattenluik', 'hondenhok', 'vogelvoer', 'knaagdierkooi', 'kattenkrabpaal', 'hondenbench',
+    // es
+    //  singulier ET pluriel : « comida para perro » et « … para perros » sont
+    //  tous deux employés ; ne lister que le pluriel laissait passer le
+    //  singulier (mesuré : « comida para perro … 3 kg » tombait en « Autres »).
+    'comida para perros', 'comida para perro', 'comida para gatos', 'comida para gato', 'pienso para perros', 'pienso para perro', 'pienso para gatos', 'pienso para gato', 'arenero para gatos', 'arenero para gato', 'rascador para gatos', 'rascador para gato', 'cama para perros', 'cama para perro', 'cama para gatos', 'cama para gato', 'acuario', 'jaula para pajaros', 'transportin para mascotas', 'comedero para perros', 'comedero para perro', 'juguete para gatos', 'juguete para gato', 'collar para perros', 'collar para perro', 'correa para perros', 'correa para perro',
+    // it
+    'cibo per cani', 'cibo per cane', 'cibo per gatti', 'cibo per gatto', 'lettiera per gatti', 'lettiera per gatto', 'graffiatoio per gatti', 'graffiatoio per gatto', 'cuccia per cani', 'cuccia per cane', 'acquario', 'gabbia per uccelli', 'trasportino per animali', 'cibo per animali', 'guinzaglio per cani', 'guinzaglio per cane', 'collare per cani', 'collare per cane', 'tiragraffi', 'cuccia per gatti', 'cuccia per gatto', 'mangiatoia per animali',
+    // pt
+    'racao para caes', 'racao para cao', 'racao para gatos', 'racao para gato', 'areia para gatos', 'areia para gato', 'arranhador para gatos', 'arranhador para gato', 'cama para caes', 'cama para cao', 'cama para gato', 'aquario', 'gaiola para passaros', 'comedouro para', 'coleira para caes', 'coleira para cao', 'trela para caes', 'trela para cao', 'caixa de areia para gatos', 'brinquedo para gatos', 'brinquedo para gato', 'comida para animais', 'transportadora para animais',
+    // pl
+    //  « dla psa / dla kota » (génitif singulier) s'ajoute à « dla psow /
+    //  dla kotow » : « karma dla psa 15kg » ne matchait pas et tombait en Autres.
+    'karma dla psow', 'karma dla psa', 'karma dla kota', 'karma dla kotow', 'drapak dla kotow', 'drapak dla kota', 'legowisko dla psa', 'legowisko dla kota', 'akwarium', 'klatka dla ptakow', 'smycz dla psa', 'obroza dla psa', 'kuweta dla kota', 'pokarm dla zwierzat', 'dom dla kota', 'zabawka dla kota', 'zabawka dla psa', 'kocie legowisko',
+    // sv
+    'hundmat', 'kattmat', 'kattsand', 'klostrad', 'hundkoja', 'akvarium', 'fagelbur', 'hundkoppel', 'katthalsband', 'kattlada', 'fagelmat', 'gnagarbur', 'kattbadd', 'hundsang',
+  ],
+  //  VOYAGES — les FORFAITS qui emmènent AILLEURS (demande de B, points 19 et
+  //  21). Le partage avec « Activité » est GÉOGRAPHIQUE : une prestation faite
+  //  DANS le pays de l'offre reste en Activité ; ce qui emmène à l'ÉTRANGER va
+  //  ici. Un forfait (vol, séjour, croisière, nuits, location de voiture,
+  //  aller-retour) va en Voyages même si la destination n'est pas identifiable
+  //  (voir MOTS_FORFAIT_VOYAGE et classerOffre). ⚠ Les mots NUS « vol »,
+  //  « reis », « reise », « resa », « lot », « trip » sont mesurés faux en
+  //  sous-chaîne (129, 122… de bruit) : ils sont lus entre deux frontières.
+  voyages: [
+    // fr
+    'voyage', 'sejour', 'croisiere', 'city break', 'aller-retour', 'billet d avion', 'location de voiture', 'nuit d hotel', 'forfait voyage', 'vol sec', 'sejour tout compris', 'voyage organise', 'circuit touristique', 'week-end a l etranger', 'croisiere fluviale',
+    // en
+    'flight', 'round trip', 'return flight', 'package holiday', 'cruise', 'hotel stay', 'flight deal', 'holiday package', 'beach holiday', 'ski holiday', 'guided tour', 'sightseeing tour', 'all inclusive', 'weekend getaway', 'nights stay',
+    // de
+    'reise', 'urlaub', 'kreuzfahrt', 'flugreise', 'kurzreise', 'stadtereise', 'reiseangebot', 'hotelaufenthalt', 'rundreise', 'ferien', 'urlaubsreise', 'wellnessreise', 'flug',
+    // nl
+    'vakantie', 'reis', 'vlucht', 'cruise', 'stedentrip', 'vakantiehuis', 'vakantiepark', 'reisje', 'rondreis', 'vliegticket', 'hotelovernachting', 'zonvakantie',
+    // es
+    'viaje', 'vuelo', 'crucero', 'escapada', 'vuelos', 'paquete vacacional', 'estancia hotel', 'tour guiado', 'billete de avion', 'viaje organizado', 'resort todo incluido',
+    // it
+    'viaggio', 'volo', 'crociera', 'vacanza', 'pacchetto vacanza', 'tour guidato', 'biglietto aereo', 'soggiorno hotel', 'settimana bianca', 'viaggio organizzato',
+    // pt
+    'viagem', 'voo', 'cruzeiro', 'estadia', 'pacote de viagem', 'tour guiado', 'bilhete de aviao', 'viagem organizada', 'escapadinha',
+    // pl
+    // pl — ⚠ « podroz » RETIRÉ (mesuré le 7/10) : le radical polonais
+    //  « podróż » attrapait « podróży » et « podróżne » DANS DES PRODUITS
+    //  (« Bokserki … dla podróży », « etui podróżne » d'une brosse à dents) et
+    //  rangeait boxer et brosse à dents en VOYAGES. Les offres de voyage
+    //  polonaises sont déjà désignées par leur rayon de source (« Podróże » →
+    //  voyages, CATEGORIES_SOURCES) : le mot nu ne servait qu'à du bruit.
+    'wycieczka', 'rejs', 'wakacje', 'wyjazd', 'urlop', 'przelot', 'zakwaterowanie', 'wycieczka objazdowa', 'narty za granica',
+    // sv
+    'resa', 'flyg', 'kryssning', 'semester', 'utlandsresa', 'weekendresa', 'flygresa', 'hotellvistelse', 'paketresa', 'skidresa',
+  ],
   //  NOURRITURE — l'ÉPICERIE SEULEMENT (demande de B, point 22). Le CABAS :
   //  alimentation à cuisiner, supermarché, fruits et légumes, boissons, bière,
   //  alcool. ⚠ Les REPAS PRIS DEHORS (restaurant, hamburger, brunch, menu,
@@ -783,7 +853,7 @@ const FAMILLES = {
     // en
     'groceries', 'chocolate', 'chocolates', 'biscuits', 'custard', 'crisps', 'peanuts', 'almonds', 'muesli', 'flour', 'vinegar', 'ketchup', 'mayonnaise', 'mustard', 'nutella', 'red wine', 'white wine', 'beer', 'lager', 'whisky', 'whiskey', 'vodka', 'rum', 'tequila', 'champagne', 'prosecco', 'coffee beans', 'ground coffee', 'green tea', 'orange juice', 'mineral water', 'sausage', 'vegetables', 'potatoes', 'tomatoes', 'bananas', 'oranges', 'eggs',
     // de
-    'lebensmittel', 'schokolade', 'kekse', 'brotchen', 'mehl', 'essig', 'senf', 'bier', 'wein', 'wodka', 'kaffeebohnen', 'orangensaft', 'mineralwasser', 'kase', 'wurst', 'gemuse', 'kartoffeln', 'tomaten', 'bananen', 'eier', 'nudeln', 'musli',
+    'lebensmittel', 'schokolade', 'kekse', 'brotchen', 'mehl', 'essig', 'senf', 'bier', 'wein', 'wodka', 'kaffeebohnen', 'orangensaft', 'mineralwasser', 'kase', 'wurst', 'gemuse', 'kartoffeln', 'tomaten', 'bananen', 'eier', 'nudeln', 'musli', 'sirup',
     // nl
     'levensmiddelen', 'boodschappen', 'chocolade', 'koekjes', 'meel', 'azijn', 'mosterd', 'bier', 'wijn', 'wodka', 'mineraalwater', 'kaas', 'worst', 'groenten', 'aardappelen', 'tomaten', 'bananen', 'eieren',
     // es
@@ -1059,10 +1129,14 @@ const CATEGORIES_SOURCES = [
   ['salud y belleza', 'beaute'], ['zdrowie i uroda', 'beaute'], ['beauty', 'beaute'], ['beaute', 'beaute'],
   ['cosmetique', 'beaute'], ['cosmetica', 'beaute'], ['cosmetics', 'beaute'], ['kosmetik', 'beaute'],
   ['parfum', 'beaute'], ['soins', 'beaute'], ['drogisterij', 'beaute'], ['drogerie', 'beaute'],
-  // --- ASSUMÉ COMME « AUTRE » (ce n'est pas un défaut : c'est un choix)
+  // --- ASSUMÉ comme « AUTRE » (ce n'est pas un défaut : c'est un choix)
   ['culture', 'autre'], ['kultur', 'autre'], ['kultura', 'autre'], ['cinema', 'autre'], ['livres', 'autre'],
   ['divertissement', 'autre'], ['freizeit', 'autre'], ['rozrywka', 'autre'], ['ocio', 'autre'],
-  ['voyage', 'autre'], ['reisen', 'autre'], ['travel', 'autre'], ['urlop', 'autre'], ['podroze', 'autre'],
+  // --- VOYAGES (unité E8). Ces libellés étaient rangés « autre » tant que
+  //  l'onglet n'existait pas : la source disait « ce n'est pas une de mes
+  //  rubriques ». Maintenant qu'il existe, ils le DÉSIGNENT — un rayon
+  //  « Voyage » / « Reizen » est bien du voyage.
+  ['voyage', 'voyages'], ['reisen', 'voyages'], ['travel', 'voyages'], ['urlop', 'voyages'], ['podroze', 'voyages'], ['viajes', 'voyages'],
   // --- NOURRITURE (unité E6). Ces libellés étaient classés « autre » avant
   //  que l'onglet existe : ils disaient « ce n'est pas une de mes rubriques ».
   //  Maintenant qu'il y a une rubrique, ils la DÉSIGNENT — et l'épicerie est
@@ -1077,7 +1151,7 @@ const CATEGORIES_SOURCES = [
   ['services', 'autre'], ['dienstleistungen', 'autre'], ['finanzen', 'autre'], ['versicherung', 'autre'],
   ['servicios', 'autre'], ['uslugi', 'autre'], ['subskrypcje', 'autre'], ['finanse', 'autre'],
   ['ubezpieczenia', 'autre'], ['geldzaken', 'autre'], ['verzekeringen', 'autre'], ['verzekering', 'autre'],
-  ['reizen', 'autre'], ['vakantie', 'autre'], ['sante', 'autre'], ['gesundheit', 'autre'], ['health', 'autre'],
+  ['reizen', 'voyages'], ['vakantie', 'voyages'], ['sante', 'autre'], ['gesundheit', 'autre'], ['health', 'autre'],
 ];
 
 /** Marques et familles de produits, rattachées à LEUR rubrique.
@@ -1394,6 +1468,25 @@ const MOTS_FORTS = {
     // sv
     'flicka', 'flickor', 'pojke', 'pojkar', 'barn', 'barnen',
   ],
+  // ANIMAUX → animaux (unité E8). Le PRODUIT NOMMÉ primant, ces locutions
+  //  tranchent avant la marque et avant la catégorie de la source — c'est ce
+  //  qui garantit que la nourriture ANIMALE ne retombe pas en « Nourriture »
+  //  sur un mot d'aliment, ni un accessoire en « Maison ». Seuls des termes
+  //  PRÉCIS sont ici (jamais « croquettes » nu, qui peut être humain).
+  animaux: [
+    'croquettes pour chat', 'croquettes pour chien', 'litiere pour chat', 'arbre a chat', 'fontaine a eau pour chat',
+    'katzenfutter', 'hundefutter', 'kratzbaum', 'katzenklo', 'kattenvoer', 'hondenvoer', 'krabpaal', 'kattenbak',
+    'racao para caes', 'racao para gatos', 'areia para gatos', 'comida para perros', 'comida para gatos',
+    'pienso para perros', 'pienso para gatos', 'cibo per cani', 'cibo per gatti', 'lettiera per gatti', 'graffiatoio',
+    'acuario', 'acquario', 'aquario', 'akvarium', 'akwarium', 'aquarium', 'kattlada', 'hundkoja', 'fagelbur', 'klostrad',
+  ],
+  // VOYAGES → voyages (unité E8). Forfaits NOMMÉS : ils tranchent avant tout le
+  //  reste, y compris quand la destination n'est pas identifiable (point 21).
+  voyages: [
+    'billet d avion', 'location de voiture', 'nuit d hotel', 'city break', 'package holiday', 'round trip',
+    'return flight', 'kreuzfahrt', 'flugreise', 'paketresa', 'utlandsresa', 'wycieczka objazdowa',
+    'soggiorno hotel', 'pacchetto vacanza', 'soggiorno hotel', 'resort todo incluido',
+  ],
 };
 
 /** Normalisation de comparaison : accents, apostrophes, lettres spéciales.
@@ -1548,7 +1641,18 @@ const MOTS_A_FRONTIERE = new Set(['auto', 'moto', 'tire', 'wagen', 'wiel', 'mota
   //  meuble) et « skrivbord » isolés continuent de matcher.
   //   « kettle » (bouilloire, en) attrapait « Kettler » (rameur de fitness) et
   //     « Kettlebell » (haltère) : 2 offres de SPORT étaient en Électroménager.
-  'mobilia', 'comoda', 'skrivbord', 'kettle']);
+  'mobilia', 'comoda', 'skrivbord', 'kettle',
+  // E8 : mots de VOYAGES courts ou glissants, mesurés faux en sous-chaîne —
+  //  « reise » attrapait « Preise » (les prix, allemand), « reis » aussi,
+  //  « resa » attrapait « sorpresa », « volo » « volontario », « cruise »
+  //  « cruiser » (moto) et « cruise control » (auto). Ces mots restent dans
+  //  leur famille mais ne sont lus qu'entre deux frontières.
+  'reise', 'reis', 'resa', 'volo', 'cruise',
+  //  AJOUT MESURÉ le 7/10 (unité E8) : « eier » (œufs, de) attrapait « feiert »
+  //  (fête) — un film (« Union Kino … feiert 75. Geburtstag ») tombait en
+  //  Nourriture. Lu à frontière, « eier » isolé continue de matcher ; le
+  //  néerlandais « eieren » est une entrée distincte et n'est pas touché.
+  'eier']);
 
 /** Un mot-clé doit-il être lu entre deux frontières de mot ? */
 const exigeFrontiere = (m) => m.length <= 3 || MOTS_A_FRONTIERE.has(m);
@@ -1607,7 +1711,7 @@ const exigeFrontiere = (m) => m.length <= 3 || MOTS_A_FRONTIERE.has(m);
  *    « chaise romaine » (1) — une « chaise romaine » de FITNESS partait en
  *                     Meubles sur le mot « chaise ».
  */
-const MOTS_TROMPEURS = /(^|[^a-z])(motorola|motoroli|motorole|motorolu|streifen|good girl|kinder schokolade|kinder bueno|orient bambino|beach boys|lost boys|rebecca mobili|bookshelf speakers|bookshelf speaker|couch co-op|couch co op|couch coop|podkladka na biurko|accesorio de escritorio|libreria completa|pour une etagere|pour etagere|chaise romaine)([^a-z]|$)/g;
+const MOTS_TROMPEURS = /(^|[^a-z])(motorola|motoroli|motorole|motorolu|streifen|good girl|tom cruise|ideal voyage|kinder schokolade|kinder bueno|orient bambino|beach boys|lost boys|rebecca mobili|bookshelf speakers|bookshelf speaker|couch co-op|couch co op|couch coop|podkladka na biurko|accesorio de escritorio|libreria completa|pour une etagere|pour etagere|chaise romaine)([^a-z]|$)/g;
 const retirerTrompeurs = (texte) => texte.replace(MOTS_TROMPEURS, '$1 $3');
 
 /** Les marqueurs d'un jeu NUMÉRIQUE — application, téléchargement… ou console.
@@ -2373,7 +2477,12 @@ function offresGroupon(html, source) {
       // Le classement passe par classerOffre() — la MÊME fonction que le
       // reclassement et le vérificateur. Elle sait qu'une page imposée
       // « activité » peut contenir des SOINS, qui partent alors en Beauté.
-      categorie: classerOffre({ titre, categorieImposee: source.categorieImposee || null, categorieSource: source.categorie || 'groupon' }),
+      // ⚠ Le PAYS de l'offre doit être passé : le partage Activité/Voyages est
+      // GÉOGRAPHIQUE (point 21). Sans lui, `destinationEtrangere` ne peut pas
+      // reconnaître une destination qui est celle de l'offre elle-même —
+      // mesuré : « En bord de Meuse … » et « All-you-can-eat … in Gent »
+      // (Belgique) partaient en VOYAGES sur les mots « Meuse » et « Gent ».
+      categorie: classerOffre({ titre, pays: source.pays || 'BE', categorieImposee: source.categorieImposee || null, categorieSource: source.categorie || 'groupon' }),
       categorieSource: source.categorieImposee || source.categorie || 'groupon',
       // La rubrique vient de la PAGE, pas du titre : on le DIT sur l'offre, pour
       // que le reclassement ultérieur (classerOffre) et le vérificateur ne la
@@ -2706,6 +2815,87 @@ function preuveEpicerie(texteBas) {
   return MOTS_EPICERIE.test(texteBas);
 }
 
+/** Les DESTINATIONS — le partage GÉOGRAPHIQUE Activité / Voyages (point 21).
+ *
+ *  Ses mots : « les activités sont à faire dans le pays concerné et les voyages
+ *  concernent des pays à l'étranger ». Une prestation nommée dans un AUTRE pays
+ *  que celui de l'offre part donc en Voyages. On ne devine pas : on cherche un
+ *  nom de pays ou de ville CONNU, lu ENTRE DEUX FRONTIÈRES. La table est
+ *  volontairement PRUDENTE — les mots ambigus sont ÉCARTÉS parce que mesurés
+ *  faux : « nice » (l'adjectif anglais), « split », « cork » (le liège),
+ *  « island » (l'anglais), « china » (la porcelaine). Un nom propre piégeux ne
+ *  doit pas fabriquer un voyage.
+ *
+ *  ⚠ Obligation de mesure : le nombre de destinations NON identifiables est le
+ *  principal gisement d'erreurs — il est compté par `outils/mesure-e8.mjs` et
+ *  les cas ambigus (un hôtel DANS le pays de l'offre, un titre sans
+ *  destination) sont CITÉS au rapport, pas tus.
+ */
+const DESTINATIONS = {
+  FR: ['france', 'frankrijk', 'frankreich', 'francia', 'franca', 'francja', 'frankrike', 'paris', 'lyon', 'marseille', 'bordeaux', 'toulouse', 'strasbourg', 'lille', 'maubeuge', 'normandie', 'provence', 'bretagne', 'deauville', 'cannes', 'montpellier', 'rennes', 'nantes', 'cote d azur'],
+  BE: ['belgique', 'belgie', 'belgien', 'belgica', 'belgio', 'belgia', 'bruxelles', 'brussel', 'brussels', 'anvers', 'antwerpen', 'gand', 'gent', 'liege', 'luik', 'namur', 'charleroi', 'bruges', 'brugge', 'la louviere', 'ardennes', 'meuse'],
+  DE: ['allemagne', 'germany', 'deutschland', 'alemania', 'germania', 'niemcy', 'tyskland', 'berlin', 'munich', 'munchen', 'hambourg', 'hamburg', 'cologne', 'koln', 'francfort', 'frankfurt', 'stuttgart', 'dresde', 'dresden', 'baviere', 'bavaria', 'nuremberg'],
+  NL: ['pays-bas', 'pays bas', 'nederland', 'netherlands', 'niederlande', 'paises bajos', 'paesi bassi', 'holanda', 'nederlanderna', 'amsterdam', 'rotterdam', 'utrecht', 'la haye', 'den haag', 'eindhoven', 'maastricht'],
+  ES: ['espagne', 'spain', 'spanien', 'espana', 'spagna', 'hiszpania', 'madrid', 'barcelone', 'barcelona', 'valence', 'valencia', 'seville', 'sevilla', 'malaga', 'ibiza', 'canaries', 'tenerife', 'majorque', 'mallorca', 'benidorm', 'costa brava', 'costa del sol', 'andalousie', 'andalucia'],
+  IT: ['italie', 'italy', 'italien', 'italia', 'wlochy', 'rome', 'roma', 'milan', 'milano', 'venise', 'venezia', 'venecia', 'venice', 'florence', 'firenze', 'naples', 'napoli', 'turin', 'torino', 'sicile', 'sicilia', 'toscane', 'toscana'],
+  PT: ['portugal', 'portogallo', 'portugalsko', 'lisbonne', 'lisboa', 'lisbon', 'porto', 'algarve', 'madere', 'madeira', 'funchal'],
+  PL: ['pologne', 'poland', 'polen', 'polonia', 'polska', 'varsovie', 'warszawa', 'cracovie', 'krakow', 'wroclaw', 'gdansk'],
+  SE: ['suede', 'sweden', 'schweden', 'suecia', 'svezia', 'szwecja', 'sverige', 'stockholm', 'goteborg', 'malmo', 'gotland'],
+  GB: ['royaume-uni', 'royaume uni', 'angleterre', 'england', 'grossbritannien', 'reino unido', 'regno unito', 'wielka brytania', 'storbritannien', 'londres', 'london', 'manchester', 'edimbourg', 'edinburgh', 'ecosse', 'scotland', 'liverpool', 'birmingham', 'galles', 'wales'],
+  IE: ['irlande', 'ireland', 'irlanda', 'irlandia', 'dublin'],
+  AT: ['autriche', 'austria', 'osterreich', 'vienne', 'wien', 'vienna', 'salzbourg', 'salzburg', 'innsbruck', 'tyrol'],
+  CH: ['suisse', 'switzerland', 'schweiz', 'suiza', 'svizzera', 'zwitserland', 'szwajcaria', 'zurich', 'geneve', 'geneva', 'lucerne', 'lausanne', 'berne'],
+  GR: ['grece', 'greece', 'griechenland', 'grecia', 'grecja', 'grekland', 'athenes', 'athens', 'crete', 'creta', 'santorin', 'mykonos', 'rhodes', 'corfou'],
+  TR: ['turquie', 'turkey', 'turkei', 'turquia', 'turchia', 'turcja', 'istanbul', 'antalya', 'bodrum', 'cappadoce'],
+  MA: ['maroc', 'morocco', 'marokko', 'marruecos', 'marocco', 'marrakech', 'agadir', 'casablanca', 'fes'],
+  TN: ['tunisie', 'tunisia', 'tunesien', 'tunez', 'tunis', 'djerba', 'sousse', 'hammamet'],
+  EG: ['egypte', 'egypt', 'agypten', 'egipto', 'egitto', 'hurghada', 'charm el cheikh', 'louxor', 'louksor'],
+  TH: ['thailande', 'thailand', 'tailandia', 'tajlandia', 'bangkok', 'phuket', 'chiang mai'],
+  ID: ['indonesie', 'indonesia', 'indonesien', 'indonezja', 'bali', 'jakarta'],
+  PE: ['perou', 'peru', 'machu picchu', 'cusco'],
+  MX: ['mexique', 'mexico', 'mexiko', 'messico', 'meksyk', 'cancun', 'playa del carmen'],
+  US: ['etats-unis', 'etats unis', 'united states', 'vereinigte staaten', 'estados unidos', 'stati uniti', 'stany zjednoczone', 'new york', 'miami', 'las vegas', 'los angeles', 'chicago'],
+  AE: ['dubai', 'emirats arabes', 'emirados arabes'],
+  MV: ['maldives', 'malediven', 'maldivas', 'malediwy'],
+  CU: ['cuba', 'kuba', 'la havane', 'havana', 'varadero'],
+  DO: ['republique dominicaine', 'dominican republic', 'punta cana'],
+  CA: ['canada', 'kanada', 'montreal', 'toronto', 'quebec'],
+  JP: ['japon', 'japan', 'giappone', 'japonia', 'tokyo', 'kyoto', 'osaka'],
+  CN: ['chine', 'chiny', 'pekin', 'beijing', 'shanghai'],
+  VN: ['vietnam', 'wietnam', 'hanoi'],
+  IS: ['islande', 'iceland', 'islandia', 'islanda', 'reykjavik'],
+  NO: ['norvege', 'norway', 'norwegen', 'noruega', 'norvegia', 'norwegia', 'oslo', 'bergen'],
+  FI: ['finlande', 'finland', 'finnland', 'finlandia', 'helsinki', 'laponie', 'lapland'],
+  HR: ['croatie', 'croatia', 'kroatien', 'croacia', 'croazia', 'chorwacja', 'dubrovnik', 'zagreb'],
+  CZ: ['republique tcheque', 'czech republic', 'tschechien', 'chequia', 'repubblica ceca', 'czechy', 'prague', 'praha'],
+  HU: ['hongrie', 'hungary', 'ungarn', 'hungria', 'ungheria', 'wegry', 'budapest'],
+  DK: ['danemark', 'denmark', 'dinamarca', 'danimarca', 'dania', 'copenhague', 'copenhagen'],
+};
+
+/** Mots d'un FORFAIT de voyage (point 21) : ils suffisent à classer en Voyages
+ *  même quand la destination n'est pas identifiable dans le titre. */
+const MOTS_FORFAIT_VOYAGE = ['sejour', 'croisiere', 'city break', 'aller-retour', 'location de voiture', 'nuit d hotel', 'billet d avion', 'week-end a l etranger'];
+
+/** Le code pays d'une destination ÉTRANGÈRE nommée dans le titre, ou null.
+ *  `pays` est le pays de l'offre : une destination qui EST ce pays ne compte
+ *  pas (une prestation locale reste en Activité). */
+function destinationEtrangere(texteBas, pays) {
+  for (const [code, mots] of Object.entries(DESTINATIONS)) {
+    if (code === pays) continue;
+    for (const m of mots) {
+      if (new RegExp('(^|[^a-z0-9à-ÿ])' + m + '([^a-z0-9à-ÿ]|$)').test(texteBas)) return code;
+    }
+  }
+  return null;
+}
+
+/** Vrai si le titre décrit un FORFAIT de voyage (voir MOTS_FORFAIT_VOYAGE). */
+function estForfaitVoyage(texteBas) {
+  return MOTS_FORFAIT_VOYAGE.some((m) => (exigeFrontiere(m)
+    ? new RegExp('(^|[^a-zà-ÿ])' + m + '([^a-zà-ÿ]|$)').test(texteBas)
+    : texteBas.includes(m)));
+}
+
 /* Le classement d'une offre, réduit à ses SEULS champs conservés (titre +
  *  catégorie de source).
  *
@@ -2721,15 +2911,26 @@ export function classerOffre(o) {
   // elle ne vient pas d'une lecture du titre, elle vient du rayon que le
   // marchand a lui-même construit (voir SOURCES_ACTIVITES). La rejouer contre
   // le titre la déferait à chaque passage, en silence.
-  if (o.categorieImposee) {
+  if (o.categorieImposee === 'activite') {
     // EXCEPTION (demande de B, plan point 9) : la page « Activité » de Groupon
-    // mêle SORTIES et SOINS. Un soin de beauté, du corps ou du bien-être n'est
-    // PAS une sortie : quand le titre le nomme, l'offre part en BEAUTÉ. Le
-    // reste de la page — repas pris dehors (point 22), concerts, spectacles,
-    // parcs, zoo — reste en Activité.
-    if (o.categorieImposee === 'activite' && estSoin(o.titre)) return 'beaute';
-    return o.categorieImposee;
+    // mêle SORTIES, SOINS et VOYAGES.
+    //  1. Un soin de beauté, du corps ou du bien-être n'est PAS une sortie :
+    //     quand le titre le nomme, l'offre part en BEAUTÉ.
+    if (estSoin(o.titre)) return 'beaute';
+    const bas = retirerTrompeurs(sansNegations(sansAccents(String(o.titre || '')).toLowerCase()));
+    //  2. Un REPAS PRIS DEHORS reste en Activité (point 22), même quand la
+    //     cuisine est étrangère : « saveurs de la Grèce » est un dîner, pas un
+    //     voyage. Sinon un dîner grec à Bruxelles partait en Voyages.
+    if (estRepasDehors(bas) && !preuveEpicerie(bas)) return 'activite';
+    //  3. Un voyage — un FORFAIT nommé (séjour, croisière…), ou une prestation
+    //     dont la DESTINATION est à l'ÉTRANGER (partage géographique, point 21 :
+    //     « la même prestation change d'onglet selon la destination »).
+    if (estForfaitVoyage(bas) || destinationEtrangere(bas, o.pays)) return 'voyages';
+    //  4. Le reste — concerts, spectacles, zoo, parcs, restaurants — reste en
+    //     Activité.
+    return 'activite';
   }
+  if (o.categorieImposee) return o.categorieImposee;
   return famille(o.titre || '', o.categorieSource);
 }
 
