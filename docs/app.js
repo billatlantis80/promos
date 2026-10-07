@@ -6,6 +6,7 @@
  */
 import { lienAffilie, MENTION_AFFILIATION } from './affiliation.js';
 import * as C from './compte.js';
+import { t, chargerLangue, definirLangue, traduireDOM, languesDisponibles, langue, CLE_LANGUE, locale } from './langues.js';
 
 const $ = (id) => document.getElementById(id);
 
@@ -193,26 +194,43 @@ const NOMS_VUES = {
 
 /* ---------- Réglages ---------- */
 function dessinerReglages() {
-  $('themes').innerHTML = THEMES.map((t) => `
-    <button class="theme" data-theme-id="${t.id}" aria-pressed="false">
-      <span class="pastilles" aria-hidden="true"><i style="background:${t.fond}"></i><i style="background:${t.carte}"></i><i style="background:${t.accent}"></i></span>
-      <span class="nom">${t.nom}</span><span class="coche"></span>
+  // Le paramètre est renommé « th » : « t » est désormais la fonction de
+  // traduction importée — le masquer ici serait un piège silencieux.
+  $('themes').innerHTML = THEMES.map((th) => `
+    <button class="theme" data-theme-id="${th.id}" aria-pressed="false">
+      <span class="pastilles" aria-hidden="true"><i style="background:${th.fond}"></i><i style="background:${th.carte}"></i><i style="background:${th.accent}"></i></span>
+      <span class="nom">${esc(t(th.nom))}</span><span class="coche"></span>
     </button>`).join('');
 
   // Miroir des réglages de la barre du haut. Les boutons portent la classe
   // « vue » : appliquerVue() les allume tous, ici comme en haut — une seule
   // source de vérité, donc aucun risque de désaccord entre les deux endroits.
   $('regAffichage').innerHTML = `
-    <div class="vues" role="group" aria-label="Mode d'affichage">
-      ${VUES.map((v) => `<button class="vue" data-vue="${v}" title="${NOMS_VUES[v].etat}" aria-label="${NOMS_VUES[v].etat}">${NOMS_VUES[v].court}</button>`).join('')}
+    <div class="vues" role="group" aria-label="${esc(t("Mode d'affichage"))}">
+      ${VUES.map((v) => `<button class="vue" data-vue="${v}" title="${esc(t(NOMS_VUES[v].etat))}" aria-label="${esc(t(NOMS_VUES[v].etat))}">${NOMS_VUES[v].court}</button>`).join('')}
     </div>
     <p style="margin:12px 0 0">
-      <button class="outil" data-eco-miroir aria-pressed="false" title="Économie de données — aucun visuel téléchargé">Éco — aucun visuel téléchargé</button>
+      <button class="outil" data-eco-miroir aria-pressed="false" title="${esc(t('Économie de données — aucun visuel téléchargé'))}">${esc(t('Éco — aucun visuel téléchargé'))}</button>
     </p>`;
 
   dessinerProfil();
   dessinerCompte();
   majThemes();
+}
+
+/** Rubrique « Langue » : le sélecteur des 9 langues, avec leur NOM NATIF.
+    Écrit dans #regLangue (index.html). Le changement s'applique tout de suite
+    (voir changerLangue) et ne touche jamais au pays — deux clés distinctes. */
+function dessinerLangue() {
+  const rl = $('regLangue');
+  if (!rl) return;
+  if (!$('langueReglages')) {
+    rl.innerHTML = '<div class="champ"><select id="langueReglages" aria-label="'
+      + esc(t('Langue')) + '"></select></div>';
+  }
+  $('langueReglages').innerHTML = languesDisponibles()
+    .map((l) => '<option value="' + l.code + '">' + esc(l.nom) + '</option>').join('');
+  $('langueReglages').value = langue();
 }
 
 function dessinerProfil() {
