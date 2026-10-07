@@ -30,7 +30,7 @@ const BASE = DANS_APK ? HUB : '';
 
 const NOMS_CATEGORIES = {
   bricolage: 'Bricolage', maison: 'Maison', tech: 'High-tech',
-  electromenager: 'Électroménager', mode: 'Mode', bijoux: 'Bijoux',
+  electromenager: 'Électroménager', mode: 'Mode', bijoux: 'Montres & bijoux',
   meubles: 'Meubles', sport: 'Sport', jouets: 'Jeux & jouets', auto: 'Auto & moto',
   beaute: 'Beauté', nourriture: 'Nourriture', animaux: 'Animaux',
   voyages: 'Voyages', activite: 'Activité', autre: 'Autres',

@@ -995,38 +995,38 @@ const FAMILLES = {
     //  cela « élégant » les contient ; les cas non vestimentaires (gant de
     //  toilette, gants nitrile) sont en MOTS_TROMPEURS.
     // fr
-    'mode', 'vetement', 'chaussure', 'sneaker', 'sac', 'montre', 'lingerie', 'manteau', 'pull', 'jean', 'textile', 'robe', 'chemise', 'pantalon', 'basket', 'bottes', 'ceinture', 'portefeuille', 'pull-over',
+    'mode', 'vetement', 'chaussure', 'sneaker', 'sac', 'lingerie', 'manteau', 'pull', 'jean', 'textile', 'robe', 'chemise', 'pantalon', 'basket', 'bottes', 'ceinture', 'portefeuille', 'pull-over',
     'echarpe', 'casquette', 'bonnet', 'gant', 'gants', 'jupe', 'short', 'maillot', 'pyjama', 't-shirt', 'tee-shirt', 'sweat', 'blouson', 'veste', 'sandale', 'claquette', 'kimono', 'calecon',
     // en
-    'fashion', 'clothing', 'clothes', 'shoe', 'shoes', 'sneakers', 'handbag', 'watch', 'coat', 'jacket', 'jumper', 'jeans', 'apparel', 'dress', 'shirt', 'trousers', 'boots', 'belt', 'wallet', 'sweater',
+    'fashion', 'clothing', 'clothes', 'shoe', 'shoes', 'sneakers', 'handbag', 'coat', 'jacket', 'jumper', 'jeans', 'apparel', 'dress', 'shirt', 'trousers', 'boots', 'belt', 'wallet', 'sweater',
     'scarf', 'beanie', 'mitten', 'swimsuit', 'slipper', 'skirt', 'hoodie', 'boxer', 'trunks', 'underwear',
     'sweatshirt', 'pyjamas', 'sandals', 'flip flops',
     // de
-    'kleidung', 'schuh', 'schuhe', 'tasche', 'handtasche', 'uhr', 'mantel', 'jacke', 'pullover', 'textil', 'kleid', 'hemd', 'hose', 'stiefel', 'gurtel', 'portemonnaie', 'lederjacke', 'muetze', 'schal',
+    'kleidung', 'schuh', 'schuhe', 'tasche', 'handtasche', 'mantel', 'jacke', 'pullover', 'textil', 'kleid', 'hemd', 'hose', 'stiefel', 'gurtel', 'portemonnaie', 'lederjacke', 'muetze', 'schal',
     'handschuh', 'unterhose', 'unterwasche',
     'schlafanzug', 'sandalen', 'badeanzug',
     // nl
-    'kleding', 'schoen', 'schoenen', 'tas', 'handtas', 'horloge', 'jas', 'trui', 'jurk', 'hemd', 'broek', 'laarzen', 'riem', 'portemonnee',
+    'kleding', 'schoen', 'schoenen', 'tas', 'handtas', 'jas', 'trui', 'jurk', 'hemd', 'broek', 'laarzen', 'riem', 'portemonnee',
     'sjaal', 'muts', 'handschoen', 'onderbroek',
     'pyjama', 'sandalen', 'badpak',
     // es
-    'moda', 'ropa', 'zapato', 'zapatos', 'zapatilla', 'zapatillas', 'bolso', 'reloj', 'lenceria', 'abrigo', 'chaqueta', 'jersey', 'vaqueros', 'vestido', 'camisa', 'pantalon', 'botas', 'cinturon', 'cartera',
+    'moda', 'ropa', 'zapato', 'zapatos', 'zapatilla', 'zapatillas', 'bolso', 'lenceria', 'abrigo', 'chaqueta', 'jersey', 'vaqueros', 'vestido', 'camisa', 'pantalon', 'botas', 'cinturon', 'cartera',
     'guante', 'gorro', 'bufanda', 'falda',
     'camiseta', 'sudadera', 'sandalias', 'chanclas', 'banador', 'pijama',
     // it
-    'abbigliamento', 'scarpa', 'scarpe', 'borsa', 'orologio', 'intimo', 'cappotto', 'giacca', 'maglione', 'tessile', 'vestito', 'camicia', 'pantaloni', 'stivali', 'cintura', 'portafoglio',
+    'abbigliamento', 'scarpa', 'scarpe', 'borsa', 'intimo', 'cappotto', 'giacca', 'maglione', 'tessile', 'vestito', 'camicia', 'pantaloni', 'stivali', 'cintura', 'portafoglio',
     'sciarpa', 'cappello', 'guanti', 'gonna', 'mutande',
     'pigiama', 'maglietta', 'felpa', 'sandali', 'ciabatte',
     // pt
-    'roupa', 'sapato', 'sapatos', 'sapatilhas', 'mala', 'bolsa', 'relogio', 'casaco', 'camisola', 'ganga', 'vestuario', 'calcas', 'botas', 'cinto', 'carteira',
+    'roupa', 'sapato', 'sapatos', 'sapatilhas', 'mala', 'bolsa', 'casaco', 'camisola', 'ganga', 'vestuario', 'calcas', 'botas', 'cinto', 'carteira',
     'cachecol', 'luva', 'saia', 'cueca',
     'pijama', 'sandalias', 'chinelos', 'fato de banho',
     // pl
-    'odziez', 'but', 'buty', 'sneakersy', 'torba', 'torebka', 'zegarek', 'bielizna', 'plaszcz', 'kurtka', 'sweter', 'jeansy', 'tekstylia', 'sukienka', 'koszula', 'spodnie', 'kozaki', 'pasek', 'portfel',
+    'odziez', 'but', 'buty', 'sneakersy', 'torba', 'torebka', 'bielizna', 'plaszcz', 'kurtka', 'sweter', 'jeansy', 'tekstylia', 'sukienka', 'koszula', 'spodnie', 'kozaki', 'pasek', 'portfel',
     'szalik', 'czapka', 'rekawiczki', 'spodnica', 'majtki', 'bokserski',
     'pizama', 'sandaly', 'klapki', 'bluza', 'koszulka',
     // sv
-    'klader', 'sko', 'skor', 'vaska', 'handvaska', 'klocka', 'underklader', 'kappa', 'jacka', 'troja', 'tyg', 'klanning', 'skjorta', 'byxor', 'stovlar', 'balte', 'planbok',
+    'klader', 'sko', 'skor', 'vaska', 'handvaska', 'underklader', 'kappa', 'jacka', 'troja', 'tyg', 'klanning', 'skjorta', 'byxor', 'stovlar', 'balte', 'planbok',
     'halsduk', 'mossa', 'vantar', 'kjol',
     'pyjamas', 'sandaler', 'badklader',
   ],
@@ -1917,6 +1917,55 @@ const MOTS_FORTS = {
     //  frontières : les composés qui l'ont avalé ne comptent pas — « Lederarmband »
     //  (bracelet de montre, cuir), « Sportarmband » (Apple Watch).
     'armband',
+    //  ------------------------------------------------------------------
+    //  MONTRES (demande de B, 08/10/2026 : « on est parti pour montre et
+    //  bijoux »). La rubrique s'appelle désormais « Montres & bijoux » et les
+    //  montres y entrent — c'était le but de la renommée.
+    //
+    //  POURQUOI LES MONTRES CONNECTÉES SONT INCLUSES, ET PAS SEULEMENT LES
+    //  MONTRES CLASSIQUES. On a mesuré, et l'incohérence sautait aux yeux : les
+    //  titres d'Apple Watch disent « Montre connectée » — ils seraient donc
+    //  entrés — tandis que les Garmin et Samsung Galaxy Watch disent seulement
+    //  « Smartwatch », et seraient restés en High-tech. Deux objets identiques
+    //  dans deux onglets différents, exactement le genre d'incohérence que B
+    //  refuse. On prend donc la famille ENTIÈRE : classiques, connectées,
+    //  bracelets de montre.
+    //
+    //  MESURES (catalogue du 08/10, 11 522 offres) :
+    //   « montre »  37 offres, et ZÉRO faux positif — « démontre », « montrent »
+    //               et « démonstration » ont été cherchés : aucun ne sort. Le
+    //               mot est donc lu en sous-chaîne, sans frontière, ce qui garde
+    //               le pluriel « montres ».
+    //   « watch »  188 offres. Contient « smartwatch » et « watches » — voulu.
+    //               Deux parasites trouvés et NEUTRALISÉS par MOTS_TROMPEURS :
+    //               « watchdog » (un commutateur réseau) et « watching »
+    //               (« deals worth watching »). Sans cela, un switch Cudy
+    //               entrait dans la rubrique des montres.
+    //   « uhr »    3 caractères : lu entre frontières automatiquement, donc
+    //               « Fitness-Uhr » matche (le trait d'union est une frontière)
+    //               et « Uhrwerk » ne matche pas.
+    //   « zegarek » 22, « horloge » 15, « reloj » / « relojes », « orologio »,
+    //               « relogio », « klocka » : chacun vérifié, aucun parasite.
+    // fr
+    'montre', 'chronographe', 'bracelet',
+    // en
+    //  « watch » couvre « watches » et « smartwatch » ; « wristwatch » est
+    //  ajouté pour le singulier composé.
+    'watch', 'wristwatch', 'chronograph',
+    // de
+    'uhr', 'uhren', 'armbanduhr',
+    // nl
+    'horloge', 'polshorloge',
+    // es
+    'reloj', 'relojes', 'pulsera',
+    // it
+    'orologio', 'orologi', 'bracciale',
+    // pt
+    'relogio', 'relogios', 'pulseira',
+    // pl
+    'zegarek', 'zegarki', 'bransoletka',
+    // sv
+    'klocka', 'klockor',
   ],
 };
 
@@ -2221,7 +2270,7 @@ const exigeFrontiere = (m) => m.length <= 3 || MOTS_A_FRONTIERE.has(m);
  *                     un titre de VÊTEMENTS (« Character Clothing Incl. … Hot
  *                     Wheels, K-Pop »), qui doit rester en Mode.
  */
-const MOTS_TROMPEURS = /(^|[^a-z])(motorola|motoroli|motorole|motorolu|streifen|good girl|tom cruise|ideal voyage|kinder schokolade|kinder bueno|orient bambino|beach boys|lost boys|rebecca mobili|bookshelf speakers|bookshelf speaker|couch co-op|couch co op|couch coop|podkladka na biurko|accesorio de escritorio|libreria completa|pour une etagere|pour etagere|chaise romaine|babyliss|configuration|configuracion|configurazione|fargat|fargad|fargnattseende|flerfargstryck|fargdisplay|washing machine cleaner|k-pop|gant de toilette|gants nitrile|gant nitrile|no sweat|meias-finais|meias finais|meia-final|independiente|independientes)([^a-z]|$)/g;
+const MOTS_TROMPEURS = /(^|[^a-z])(motorola|motoroli|motorole|motorolu|streifen|good girl|tom cruise|ideal voyage|kinder schokolade|kinder bueno|orient bambino|beach boys|lost boys|rebecca mobili|bookshelf speakers|bookshelf speaker|couch co-op|couch co op|couch coop|podkladka na biurko|accesorio de escritorio|libreria completa|pour une etagere|pour etagere|chaise romaine|babyliss|configuration|configuracion|configurazione|fargat|fargad|fargnattseende|flerfargstryck|fargdisplay|washing machine cleaner|k-pop|gant de toilette|gants nitrile|gant nitrile|no sweat|meias-finais|meias finais|meia-final|independiente|independientes|watchdog|watching)([^a-z]|$)/g;
 const retirerTrompeurs = (texte) => texte.replace(MOTS_TROMPEURS, '$1 $3');
 
 /** Les marqueurs d'un jeu NUMÉRIQUE — application, téléchargement… ou console.
