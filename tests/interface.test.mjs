@@ -114,9 +114,12 @@ test('les deux icônes sont empilées et alignées sur le bouton de redirection'
   const dansEnvoi = contenuDiv(js, 'class="col-envoi"');
   assert.ok(dansIcones !== null, 'le bloc .col-icones doit se refermer');
   assert.ok(dansEnvoi !== null, 'le bloc .col-envoi doit se refermer');
+  // Les icônes sont À DROITE du bouton — demande de B : « l'icône partage et
+  // favoris doit être à droite ». Une inversion de l'ordre des colonnes remet
+  // les icônes à gauche : c'est exactement ce qu'on ne veut plus.
   assert.ok(
-    js.indexOf('class="col-icones"') < js.indexOf('class="col-envoi"'),
-    'la colonne d’icônes doit précéder le bouton de redirection',
+    js.indexOf('class="col-envoi"') < js.indexOf('class="col-icones"'),
+    'les deux icônes doivent être À DROITE du bouton de redirection',
   );
   assert.match(
     dansIcones, /\$\{etoile\}[\s\S]*class="partager"/,
@@ -148,12 +151,12 @@ test('les deux icônes sont empilées et alignées sur le bouton de redirection'
     js, /class="favori[^"]*enligne/,
     'la variante « enligne » n’a plus lieu d’être : l’étoile n’est plus dans la photo',
   );
-  // Le menu de partage était ancré à DROITE ; la colonne étant au bord gauche de
-  // la carte, il en sortait. Il s'ouvre maintenant vers la droite.
+  // La colonne d'icônes est au bord DROIT de la carte : le menu doit s'y ancrer
+  // à droite pour s'ouvrir vers l'INTÉRIEUR. Ancré à gauche, il sortirait.
   const menu = css.match(/^\.menu-partage \{([\s\S]*?)^\}/m);
   assert.ok(menu, 'la règle .menu-partage doit exister');
-  assert.match(menu[1], /left:\s*0/, 'le menu doit s’ouvrir vers la droite');
-  assert.doesNotMatch(menu[1], /right:\s*0/, 'ancré à droite, il sortirait de la carte');
+  assert.match(menu[1], /right:\s*0/, 'le menu doit s’ouvrir vers la gauche, dans la carte');
+  assert.doesNotMatch(menu[1], /left:\s*0/, 'ancré à gauche, il sortirait de la carte');
   // Le montant est groupé : sans ce groupe, le prix « avant » partirait à l'autre bout.
   assert.match(js, /class="montant"/, 'le montant doit être groupé dans un seul élément');
 });

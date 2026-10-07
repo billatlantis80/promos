@@ -944,10 +944,16 @@ function carte(o) {
       ${verdict ? `<p class="verdict v-${esc(o.verdict.code)}">${verdict}</p>` : ''}
       ${prix}
       <div class="bas">
-        <!-- Les DEUX ICÔNES, empilées : l'étoile puis le partage. Elles forment
-             une colonne de largeur fixe, donc l'une exactement au-dessus de
-             l'autre, et la colonne commence à la même hauteur que le bouton de
-             redirection qui les jouxte (voir .col-icones / .col-envoi). -->
+        <!-- Le bouton de redirection, et SOUS lui la mise à jour de l'offre. -->
+        <div class="col-envoi">
+          <a class="btn" href="${esc(lien)}" target="_blank" rel="noopener nofollow sponsored">${libelle}</a>
+          <span class="quand">${quand}</span>
+        </div>
+        <!-- Les DEUX ICÔNES, empilées À DROITE — demande de B : « l'icône
+             partage et favoris doit être à droite ». L'étoile puis le partage,
+             dans une colonne de largeur fixe : donc l'une exactement au-dessus
+             de l'autre, et son haut tombe à la même hauteur que le bouton de
+             redirection qui la jouxte (voir .col-icones / .col-envoi). -->
         <div class="col-icones">
           ${etoile}
           <div class="ligne-partage">
@@ -958,11 +964,6 @@ function carte(o) {
               </svg>
             </button>
           </div>
-        </div>
-        <!-- Le bouton de redirection, et SOUS lui la mise à jour de l'offre. -->
-        <div class="col-envoi">
-          <a class="btn" href="${esc(lien)}" target="_blank" rel="noopener nofollow sponsored">${libelle}</a>
-          <span class="quand">${quand}</span>
         </div>
       </div>
     </div>

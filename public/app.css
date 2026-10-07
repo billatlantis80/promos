@@ -244,11 +244,12 @@ body[data-eco="1"] .offre .visuel { display: none; }
   font-size: 19px; font-weight: 700; letter-spacing: -.3px;
 }
 .prix .avant { font-size: 12.5px; font-weight: 400; color: var(--doux); text-decoration: line-through; margin-left: 6px; }
-/* Le bas de l'encadré : à GAUCHE les deux icônes empilées (étoile au-dessus,
-   partage en dessous), à DROITE le rectangle de redirection et, SOUS lui, la
-   mise à jour de l'offre. Les deux colonnes démarrent à la même hauteur
-   (align-items: flex-start), donc les icônes sont alignées sur le rectangle.
-   margin-top: auto garde le bouton collé au bas d'une carte plus haute. */
+/* Le bas de l'encadré : à GAUCHE le rectangle de redirection et, SOUS lui, la
+   mise à jour de l'offre ; à DROITE les deux icônes empilées (étoile au-dessus,
+   partage en dessous) — demande de B : « l'icône partage et favoris doit être à
+   droite ». Les deux colonnes démarrent à la même hauteur (align-items:
+   flex-start), donc les icônes sont alignées sur le rectangle.
+   margin-top: auto garde le bas collé au pied d'une carte plus haute. */
 .offre .bas { margin-top: auto; display: flex; align-items: flex-start; gap: 8px; }
 .col-icones {
   flex: 0 0 auto; width: 34px;
@@ -268,9 +269,9 @@ body[data-eco="1"] .offre .visuel { display: none; }
    l'heure de parution : il ne doit pas concurrencer le bouton d'achat.
    Le titre et aria-label sont CONSERVÉS — sans eux, un lecteur d'écran
    annoncerait un bouton sans nom.
-   Le bouton vit désormais dans la colonne d'icônes, SOUS l'étoile : plus de
-   marge haute. Et le menu s'ouvre vers la DROITE (left: 0) — ancré à droite,
-   il sortait de la carte puisque la colonne est au bord gauche. */
+   Le bouton vit dans la colonne d'icônes, SOUS l'étoile : plus de marge haute.
+   La colonne étant désormais au bord DROIT de la carte, le menu s'ouvre vers la
+   GAUCHE (right: 0) ; ancré à gauche, il sortirait de la carte. */
 .ligne-partage { position: relative; display: flex; }
 .partager {
   display: inline-flex; align-items: center; justify-content: center;
@@ -282,7 +283,7 @@ body[data-eco="1"] .offre .visuel { display: none; }
 .partager:hover, .partager:focus-visible { color: var(--accent-2); border-color: var(--accent-2); }
 .col-envoi .btn { flex: 0 0 auto; }
 .menu-partage {
-  position: absolute; left: 0; bottom: calc(100% + 6px); z-index: 6;
+  position: absolute; right: 0; bottom: calc(100% + 6px); z-index: 6;
   display: flex; flex-direction: column; min-width: 158px;
   background: var(--carte); border: 1px solid var(--bord); border-radius: 10px;
   box-shadow: 0 8px 22px rgba(0,0,0,.20); overflow: hidden;

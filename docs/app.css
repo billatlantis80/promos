@@ -250,7 +250,7 @@ body[data-eco="1"] .offre .visuel { display: none; }
    droite ». Les deux colonnes démarrent à la même hauteur (align-items:
    flex-start), donc les icônes sont alignées sur le rectangle.
    margin-top: auto garde le bas collé au pied d'une carte plus haute. */
-.offre .bas { margin-top: auto; display: flex; align-items: center; gap: 8px; }
+.offre .bas { margin-top: auto; display: flex; align-items: flex-start; gap: 8px; }
 .col-icones {
   flex: 0 0 auto; width: 34px;
   display: flex; flex-direction: column; align-items: center; gap: 6px;
