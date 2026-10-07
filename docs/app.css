@@ -61,19 +61,20 @@ h1, h2, h3, h4, .marque b, .prix { font-family: var(--police-titre); }
 .barre { display: flex; gap: 8px; margin: 10px 0; align-items: stretch; }
 #recherche {
   flex: 1; min-width: 0; background: var(--carte); color: var(--texte);
-  border: 1px solid var(--bord); border-radius: 10px; padding: 10px 12px; font-size: 14px;
+  border: 1px solid var(--bord); border-radius: 10px; padding: 10px 10px; font-size: 14px;
 }
 /* Le texte d'aide est un peu plus petit que la saisie : sans cela, « Chercher un
    produit, un marchand… » débordait du champ et se faisait COUPER (« un
    marcha »). Défaut apparu le jour où l'identité a remplacé la police du système
-   par Open Sans, plus large à taille égale. */
-#recherche::placeholder { font-size: 13px; }
+   par Open Sans, plus large à taille égale. Le mot « marchand » et son ellipse
+   doivent tenir EN ENTIER : une phrase tronquée a l'air d'un bug. */
+#recherche::placeholder { font-size: 12.5px; }
 #recherche:focus { outline: 2px solid var(--anneau); outline-offset: -1px;}
 /* Le sélecteur de pays vit à côté de la recherche, pas dans la barre du bas :
    celle-ci est déjà pleine (tri, affichage, éco, favoris, réglages) et y ajouter
    un champ de plus écraserait tout le reste. */
 #pays {
-  flex: 0 0 auto; max-width: 46%;
+  flex: 0 0 auto; max-width: 42%;
   background: var(--carte); color: var(--texte); border: 1px solid var(--bord);
   border-radius: 10px; padding: 8px 6px; font-size: 13px;
 }
