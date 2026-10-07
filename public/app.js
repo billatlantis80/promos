@@ -1592,7 +1592,13 @@ function enregistrerPays() {
 
 function dessinerBandeau() {
   const b = $('bandeau');
-  const enLigne = !!(etat.meta && (etat.meta.amazon || etat.meta.reseaux));
+  // Le bandeau ne sert plus QU'À prévenir d'un vrai incident (liste hors ligne).
+  // Il portait aussi une note de travail — « À activer : l'identifiant
+  // d'affiliation n'est pas encore renseigné… » — qui s'affichait au VISITEUR :
+  // constaté à l'écran sur kazendra.com le 07/10/2026, retirée le jour même
+  // (demande de B : « il faut enlever ce message »). Un état interne du projet
+  // n'a rien à faire devant le public. L'information reste lisible dans le code
+  // et dans `affiliation.js` (`affiliationActive()`), pas à l'écran.
   const msgs = [];
   if (etat.meta && etat.meta.horsLigne) {
     // Libellés TRADUITS : c'étaient les deux dernières phrases françaises d'une
@@ -1602,7 +1608,6 @@ function dessinerBandeau() {
       : String(etat.meta.genereLe || '—');
     msgs.push(t("<b>Hors ligne</b> : le serveur des promos est injoignable. La liste ci-dessous est l'instantané embarqué du {n} ; les visuels ne sont pas disponibles.", { n: esc(quand) }));
   }
-  if (!enLigne) msgs.push(t("<b>À activer</b> : l'identifiant d'affiliation n'est pas encore renseigné (fichier <code>affiliation.js</code>). Les liens sortent donc en direct, sans commission."));
   if (msgs.length) { b.className = 'bandeau info on'; b.innerHTML = msgs.join('<br>'); }
   else { b.className = 'bandeau'; b.innerHTML = ''; }
 }
