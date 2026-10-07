@@ -69,15 +69,21 @@ test('E4 — une plage d’âge d’enfant suffit, une plage d’adultes non', (
   assert.notEqual(famille('Google GEMINI AI Pro na 18 miesięcy', ''), 'jouets');
 });
 
-test('E4 — un appareil NOMMÉ, plus précis, garde la priorité', () => {
-  // C'est la consigne du plan : si une famille d'appareil nommé est plus
-  // précise, on le dit plutôt que de la laisser écraser. Le mot d'appareil est
-  // plus long que le mot d'enfant, donc il l'emporte dans la table des MOTS
-  // FORTS.
-  assert.equal(famille('Brosse à dents électrique Oral-B Kids', ''), 'beaute', 'brosse à dents : Beauté');
-  assert.equal(famille('Casque audio enfant Bluetooth', ''), 'tech', 'casque : High-tech');
-  assert.equal(famille('Téléviseur enfant LG 32 pouces', ''), 'tech', 'une télé d’enfant reste High-tech');
-  assert.equal(famille('Tondeuse à cheveux enfant Wahl', ''), 'electromenager', 'tondeuse à cheveux : Électroménager');
+test('E4 + point 23 — le marqueur ENFANT l’emporte sur High-tech, et sur lui seul', () => {
+  // Le plan (E4) disait : « si une famille d'appareil nommé est plus précise, le
+  // DIRE plutôt que de la laisser écraser ». B a TRANCHÉ DEPUIS, explicitement :
+  // « tous les articles avec écrit jouet pour enfant ou avec un âge d'enfants ou
+  // avec écrit pour les enfants qui sont dans high-tech doivent être dans la
+  // catégorie jouets ». La consigne la plus récente gagne : le marqueur enfant
+  // passe donc DEVANT « tech » — et SEULEMENT devant « tech ».
+  assert.equal(famille('Casque audio enfant Bluetooth', ''), 'jouets', 'point 23 : casque ENFANT → jouets');
+  assert.equal(famille('Téléviseur enfant LG 32 pouces', ''), 'jouets', 'point 23 : télé ENFANT → jouets');
+  // Hors de « tech », la règle ne touche à rien : un appareil nommé garde la priorité.
+  assert.equal(famille('Brosse à dents électrique Oral-B Kids', ''), 'beaute', 'brosse à dents : Beauté (hors tech)');
+  assert.equal(famille('Tondeuse à cheveux enfant Wahl', ''), 'electromenager', 'tondeuse à cheveux : Électroménager (hors tech)');
+  // …et un produit high-tech SANS marqueur enfant reste High-tech.
+  assert.equal(famille('Casque audio Bluetooth Sony WH-1000XM5', ''), 'tech', 'sans marqueur enfant → High-tech');
+  assert.equal(famille('Téléviseur LG OLED 55 pouces', ''), 'tech', 'télé sans « enfant » → High-tech');
 });
 
 test('E4 — les faux positifs mesurés ne basculent pas en jouets', () => {

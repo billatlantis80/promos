@@ -145,6 +145,22 @@
     surgelé, x4, kg, g, litre, bouteille, conserve, supermarché*.
     ⚠ **Conséquence** : une offre de repas ne doit JAMAIS tomber en « Nourriture »
     sur le seul nom d'un plat — il faut la preuve qu'il s'agit d'épicerie.
+23. **TOUT ARTICLE À MARQUEUR ENFANT/JOUET ACTUELLEMENT EN HIGH-TECH PASSE EN
+    JEUX & JOUETS.** Ses mots : « tous les articles avec écrit jouet pour enfant
+    ou avec un âge d'enfants ou avec écrit pour les enfants qui sont dans
+    high-tech doivent être dans la catégorie jouets ».
+    **Marqueurs qui déclenchent** : *jouet*, *pour enfant*, *pour les enfants*,
+    *enfant*, *fille*, *garçon*, et **une tranche d'âge d'enfant** (« dès 3 ans »,
+    « 6-10 ans », « 8 ans et + », « 3+ »…). En **9 langues**.
+    ⚠ **Cible prioritaire et mesurable** : ces articles sont **aujourd'hui en
+    HIGH-TECH**. Ce n'est pas une hypothèse, c'est le défaut qu'il faut compter :
+    combien d'offres high-tech portent un marqueur enfant et basculent en jouets.
+    ⚠ **Cas de bonne foi à CITER, pas à cacher** : certains articles « pour
+    enfant » sont de vrais produits techniques — **montre connectée enfant,
+    tablette enfant, appareil photo enfant, drone enfant, talkie-walkie**. La
+    règle est explicite et **je l'applique**, mais ces cas doivent être **listés**
+    pour que B puisse trancher s'il change d'avis. Une règle appliquée en silence
+    est une règle qu'on découvre par surprise.
 
 ## 2. Règles de méthode — non négociables
 

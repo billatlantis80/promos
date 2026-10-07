@@ -1,0 +1,12 @@
+import fs from 'node:fs';
+import { classerOffre as avant } from '../.avant-collecteur.mjs';
+import { classerOffre as apres } from '../collecteur.mjs';
+const d = JSON.parse(fs.readFileSync('docs/offres.json','utf8'));
+const offres = Array.isArray(d)?d:d.offres;
+const o = offres.find(o => /Bosch Professional.*Multi-Cutter GOP 40-30/i.test(String(o.titre)));
+console.log('CLES:', Object.keys(o));
+console.log('titre:', JSON.stringify(o.titre));
+console.log('categorie:', o.categorie, '| source:', o.categorieSource, '| pays:', o.pays);
+for (const k of Object.keys(o)) if (/desc|detail|texte|resume/i.test(k)) console.log('  ', k, '=', JSON.stringify(String(o[k]).slice(0,200)));
+console.log('avant:', avant(o));
+console.log('apres:', apres(o));

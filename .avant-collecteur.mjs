@@ -217,31 +217,6 @@ const SOURCES_ENSEIGNES = [
   // (leur `robots.txt` dit `Allow: /`, `search=yes`), et une seule requête par
   // heure suffit à cette page.
   { id: 'groupon-be-goods', nom: 'Groupon', type: 'enseigne', pays: 'BE', langue: 'fr', reposMin: 60, viaCurl: true, url: 'https://www.groupon.be/goods' },
-
-  // COOLBLUE PAYS-BAS et ALLEMAGNE (unité B5) — même plateforme et même JSON-LD
-  // que Coolblue Belgique, déjà câblé : la page « offres » de l'enseigne dans
-  // SON pays. Aucune catégorie imposée (le titre décide), exactement comme la
-  // Belgique. Mesuré en B4 par DEUX relevés identiques : NL 10 offres à deux
-  // prix, DE 18. Le domaine est national (coolblue.nl / coolblue.de), pas un
-  // site étranger : un Néerlandais achète sur coolblue.nl.
-  { id: 'coolblue-nl-1', nom: 'Coolblue', type: 'enseigne', pays: 'NL', langue: 'nl', reposMin: 90, url: 'https://www.coolblue.nl/aanbieding' },
-  { id: 'coolblue-de-1', nom: 'Coolblue', type: 'enseigne', pays: 'DE', langue: 'de', reposMin: 90, url: 'https://www.coolblue.de/angebot' },
-
-  // ZOOPLUS — animaleries en ligne, chacune dans SON pays (rubrique Animaux).
-  // Le prix de référence est publié dans la `priceSpecification` de type
-  // `ListPrice`, que `referenceListe` sait lire. Mesuré en B4 par DEUX relevés
-  // identiques : DE chats 17, DE chiens 5, IT chats 29, SE chats 100.
-  // ⚠ Les pages FR et ES de Zooplus ont été mesurées INSTABLES (14→10 et
-  // 19→10) : elles ne sont PAS câblées ici.
-  // Rubrique IMPOSÉE « animaux » : la page ENTIÈRE est une animalerie (une
-  // catégorie « chats » ou « chiens », pas un accueil généraliste). Sans elle,
-  // les titres — des noms de marque sans mot animalier — tomberaient en
-  // « Autres », et la nourriture pour chats en « Nourriture » (interdit,
-  // point 18). C'est la nature de la page qui décide, comme pour Groupon.
-  { id: 'zooplus-de-chat', nom: 'Zooplus', type: 'enseigne', pays: 'DE', langue: 'de', reposMin: 120, categorieImposee: 'animaux', url: 'https://www.zooplus.de/shop/katzen/sonderangebote_katze' },
-  { id: 'zooplus-de-chien', nom: 'Zooplus', type: 'enseigne', pays: 'DE', langue: 'de', reposMin: 120, categorieImposee: 'animaux', url: 'https://www.zooplus.de/shop/hunde/sonderangebote_hund' },
-  { id: 'zooplus-it-chat', nom: 'Zooplus', type: 'enseigne', pays: 'IT', langue: 'it', reposMin: 120, categorieImposee: 'animaux', url: 'https://www.zooplus.it/shop/gatti/offerte_speciali_gatti' },
-  { id: 'zooplus-se-chat', nom: 'Zooplus', type: 'enseigne', pays: 'SE', langue: 'sv', reposMin: 120, categorieImposee: 'animaux', url: 'https://www.zooplus.se/specials/katt/specialerbjudanden/kattmat/81531' },
 ];
 
 /* ------------------------------------------------------------------ *
@@ -268,24 +243,6 @@ const SOURCES_ENSEIGNES = [
 const SOURCES_ACTIVITES = [
   { id: 'groupon-be-sale', nom: 'Groupon', type: 'groupon', pays: 'BE', langue: 'fr', reposMin: 60, viaCurl: true, categorieImposee: 'activite', url: 'https://www.groupon.be/fr/landing/sale' },
   { id: 'groupon-be-bonplan', nom: 'Groupon', type: 'groupon', pays: 'BE', langue: 'fr', reposMin: 60, viaCurl: true, categorieImposee: 'activite', url: 'https://www.groupon.be/fr/bon-plan' },
-
-  // SOCIAL DEAL (unité B5) — l'équivalent de Groupon pour les activités, mais
-  // LOCAL au pays : chaque pays sur SON domaine (`socialdeal.<tld>`), pas un
-  // site étranger. Trouvé et mesuré en B3 : DEUX relevés identiques par pays,
-  // contrôle négatif propre, deux prix RÉELS par carte dans le HTML servi (à
-  // la différence de wowcher/veepee, rendus en JavaScript).
-  //   ⚠ Le contenu mêle REPAS PRIS DEHORS, SOINS et SORTIES. Aucune
-  //   attribution en bloc : `offresSocialDeal` passe par `classerOffre`, qui
-  //   envoie un soin en Beauté, un repas pris dehors en Activité, et un forfait
-  //   ou une destination étrangère en Voyages (partage géographique, point 21).
-  //   ⚠ socialdeal.se répond mais ne publie AUCUNE carte (mesuré) : non câblé.
-  //   Seule plateforme d'activités hors Groupon trouvée : elle couvre 5 pays
-  //   (BE, NL, FR, DE, AT) là où l'Activité n'était portée que par la Belgique.
-  { id: 'socialdeal-be', nom: 'Social Deal', type: 'socialdeal', pays: 'BE', langue: 'fr', reposMin: 90, categorieImposee: 'activite', url: 'https://www.socialdeal.be' },
-  { id: 'socialdeal-nl', nom: 'Social Deal', type: 'socialdeal', pays: 'NL', langue: 'nl', reposMin: 90, categorieImposee: 'activite', url: 'https://www.socialdeal.nl' },
-  { id: 'socialdeal-fr', nom: 'Social Deal', type: 'socialdeal', pays: 'FR', langue: 'fr', reposMin: 90, categorieImposee: 'activite', url: 'https://www.socialdeal.fr' },
-  { id: 'socialdeal-de', nom: 'Social Deal', type: 'socialdeal', pays: 'DE', langue: 'de', reposMin: 90, categorieImposee: 'activite', url: 'https://www.socialdeal.de' },
-  { id: 'socialdeal-at', nom: 'Social Deal', type: 'socialdeal', pays: 'AT', langue: 'de', reposMin: 90, categorieImposee: 'activite', url: 'https://www.socialdeal.at' },
 ];
 
 /* ------------------------------------------------------------------ *
@@ -607,7 +564,7 @@ export { MOTS_PROMO, motsPromo, ecarterTuiles, veilleParPays, lienReel, dedupliq
    (outils/verificateur-categories.mjs) et les tests rejouent `famille()` sur
    les offres publiées. Un contrôle qui recopierait la table des mots serait un
    contrôle qui vérifie sa propre copie — donc rien du tout. */
-export { famille, FAMILLES, MARQUES, MOTS_FORTS, CATEGORIES_SOURCES, categorieDeSource, sansAccents, sansNegations, offresEnseigne, offresAmazon, offresVenteFlash, offresGroupon, offresSocialDeal, remiseCredibleSource, compterMots, remise, pourcentEcrit, SOURCES_VENTES_FLASH, SOURCES_ACTIVITES, prixReferenceEnseigne, estJeuNumerique, estSoin, ageEnfant, marqueurEnfant, MOTS_A_FRONTIERE, exigeFrontiere, retirerTrompeurs, estRepasDehors, preuveEpicerie, destinationEtrangere, estForfaitVoyage, DESTINATIONS, MOTS_FORFAIT_VOYAGE };
+export { famille, FAMILLES, MARQUES, MOTS_FORTS, CATEGORIES_SOURCES, categorieDeSource, sansAccents, sansNegations, offresEnseigne, offresAmazon, offresVenteFlash, offresGroupon, remiseCredibleSource, compterMots, remise, pourcentEcrit, SOURCES_VENTES_FLASH, SOURCES_ACTIVITES, prixReferenceEnseigne, estJeuNumerique, estSoin, ageEnfant, MOTS_A_FRONTIERE, exigeFrontiere, retirerTrompeurs, estRepasDehors, preuveEpicerie, destinationEtrangere, estForfaitVoyage, DESTINATIONS, MOTS_FORFAIT_VOYAGE };
 
 /** Recherches Google News : un flux par famille de produits. Gratuit, sans clé. */
 const RECHERCHES = [
@@ -748,15 +705,6 @@ const FAMILLES = {
   maison: [
     // fr
     'maison', 'habitat', 'cuisine', 'literie', 'matelas', 'deco', 'piscine', 'barbecue', 'cocotte', 'poele', 'couette', 'oreiller', 'vaisselle',
-    //  AJOUT MESURÉ le 7/10 (unité A7, audit de « Autres ») — petit mobilier
-    //  et entretien de la maison, mesurés en « Autres » sur les ventes flash
-    //  Amazon (aucune rubrique de source, donc un seul mot suffit) :
-    //   « bocaux » (3, ComSaf) → rangement de cuisine ; « boite a pain » (1) ;
-    //   « chiffon microfibre »/« lavette » (1, MR.SIGA) ; « paillasson » (2) ;
-    //   « guirlande » (1, LED). Mots FAIBLES : ils ne tranchent qu'en l'absence
-    //   de rubrique de source ou contre « Autres », jamais contre une vraie
-    //   rubrique du marchand.
-    'bocaux', 'boite a pain', 'chiffon microfibre', 'paillasson', 'guirlande',
     // en
     'home', 'kitchen', 'mattress', 'bedding', 'cookware', 'pan', 'duvet', 'pillow', 'decor', 'bed sheet',
     // de
@@ -970,60 +918,24 @@ const FAMILLES = {
     'dator', 'bildskarm', 'horlurar', 'tangentbord', 'mus', 'surfplatta', 'telefon', 'tv-apparat', 'skrivare', 'kamera', 'konsol', 'grafikkort', 'laddare', 'hogtalare', 'elektronik', 'datorer',
   ],
   mode: [
-    //  A8 — VÊTEMENTS ET ACCESSOIRES (demande de B : « les chaussettes et tout
-    //  autre vêtement → Mode »). Complément des tables dans les 9 langues.
-    //  Mesuré le 7/10 sur les offres publiées : les CHAUSSETTES étaient 7 hors
-    //  Mode (4 « Autres », 3 Sport — dont « Chaussettes Basses Homme Femme
-    //  10/20 Paires ») et les SOUS-VÊTEMENTS hors Mode étaient des « Trunks »
-    //  Calvin Klein en « Autres ». Les mots ajoutés sont groupés PAR LANGUE,
-    //  à la suite des mots d'origine de la même langue (un seul bloc par
-    //  langue : le vérificateur lit un compteur par langue, le dupliquer le
-    //  casserait). Les chaussettes, elles, sont en MOTS_FORTS (elles tranchent
-    //  seules) ; les sous-vêtements restent ici, en mots FAIBLES.
-    //  ⚠ Mots PIÉGEUX volontairement ÉCARTÉS, chacun mesuré :
-    //   « slip »     → attrape « non-slip » (tapis de souris, étui, pince) ;
-    //   « collant »  → attrape « collant = gluant » (jouets collants) ;
-    //   « want »     → attrape le domaine « want.nl » d'un article Lego ;
-    //   « rok »      → attrape 14 offres sans rapport ;
-    //   « maglia »   → manchette d'Apple Watch.
-    //  « gant »/« gants » sont lus ENTRE FRONTIÈRES (MOTS_A_FRONTIERE) : sans
-    //  cela « élégant » les contient ; les cas non vestimentaires (gant de
-    //  toilette, gants nitrile) sont en MOTS_TROMPEURS.
     // fr
     'mode', 'vetement', 'chaussure', 'sneaker', 'sac', 'bijou', 'montre', 'lingerie', 'manteau', 'pull', 'jean', 'textile', 'robe', 'chemise', 'pantalon', 'basket', 'bottes', 'ceinture', 'portefeuille', 'pull-over',
-    'echarpe', 'casquette', 'bonnet', 'gant', 'gants', 'jupe', 'short', 'maillot', 'pyjama', 't-shirt', 'tee-shirt', 'sweat', 'blouson', 'veste', 'sandale', 'claquette', 'kimono', 'calecon',
     // en
     'fashion', 'clothing', 'clothes', 'shoe', 'shoes', 'sneakers', 'handbag', 'jewel', 'jewellery', 'watch', 'coat', 'jacket', 'jumper', 'jeans', 'apparel', 'dress', 'shirt', 'trousers', 'boots', 'belt', 'wallet', 'sweater',
-    'scarf', 'beanie', 'mitten', 'swimsuit', 'slipper', 'skirt', 'hoodie', 'boxer', 'trunks', 'underwear',
-    'sweatshirt', 'pyjamas', 'sandals', 'flip flops',
     // de
     'kleidung', 'schuh', 'schuhe', 'tasche', 'handtasche', 'schmuck', 'uhr', 'mantel', 'jacke', 'pullover', 'textil', 'kleid', 'hemd', 'hose', 'stiefel', 'gurtel', 'portemonnaie', 'lederjacke', 'muetze', 'schal',
-    'handschuh', 'unterhose', 'unterwasche',
-    'schlafanzug', 'sandalen', 'badeanzug',
     // nl
     'kleding', 'schoen', 'schoenen', 'tas', 'handtas', 'sieraad', 'horloge', 'jas', 'trui', 'jurk', 'hemd', 'broek', 'laarzen', 'riem', 'portemonnee', 'sieraden',
-    'sjaal', 'muts', 'handschoen', 'onderbroek',
-    'pyjama', 'sandalen', 'badpak',
     // es
     'moda', 'ropa', 'zapato', 'zapatos', 'zapatilla', 'zapatillas', 'bolso', 'joya', 'reloj', 'lenceria', 'abrigo', 'chaqueta', 'jersey', 'vaqueros', 'vestido', 'camisa', 'pantalon', 'botas', 'cinturon', 'cartera',
-    'guante', 'gorro', 'bufanda', 'falda',
-    'camiseta', 'sudadera', 'sandalias', 'chanclas', 'banador', 'pijama',
     // it
     'abbigliamento', 'scarpa', 'scarpe', 'borsa', 'gioiello', 'orologio', 'intimo', 'cappotto', 'giacca', 'maglione', 'tessile', 'vestito', 'camicia', 'pantaloni', 'stivali', 'cintura', 'portafoglio',
-    'sciarpa', 'cappello', 'guanti', 'gonna', 'mutande',
-    'pigiama', 'maglietta', 'felpa', 'sandali', 'ciabatte',
     // pt
     'roupa', 'sapato', 'sapatos', 'sapatilhas', 'mala', 'bolsa', 'joia', 'relogio', 'casaco', 'camisola', 'ganga', 'vestuario', 'calcas', 'botas', 'cinto', 'carteira',
-    'cachecol', 'luva', 'saia', 'cueca',
-    'pijama', 'sandalias', 'chinelos', 'fato de banho',
     // pl
     'odziez', 'but', 'buty', 'sneakersy', 'torba', 'torebka', 'bizuteria', 'zegarek', 'bielizna', 'plaszcz', 'kurtka', 'sweter', 'jeansy', 'tekstylia', 'sukienka', 'koszula', 'spodnie', 'kozaki', 'pasek', 'portfel',
-    'szalik', 'czapka', 'rekawiczki', 'spodnica', 'majtki', 'bokserski',
-    'pizama', 'sandaly', 'klapki', 'bluza', 'koszulka',
     // sv
     'klader', 'sko', 'skor', 'vaska', 'handvaska', 'smycke', 'klocka', 'underklader', 'kappa', 'jacka', 'troja', 'tyg', 'klanning', 'skjorta', 'byxor', 'stovlar', 'balte', 'planbok',
-    'halsduk', 'mossa', 'vantar', 'kjol',
-    'pyjamas', 'sandaler', 'badklader',
   ],
   sport: [
     // fr
@@ -1048,11 +960,6 @@ const FAMILLES = {
   jouets: [
     // fr
     'jouet', 'jeu', 'lego', 'peluche', 'poupee', 'puzzle', 'jeux de societe', 'puericulture', 'bebe', 'enfant', 'poussette', 'figurine', 'circuit',
-    //  « hot wheels » (unité A6) : voitures MINIATURES de collection, un jouet.
-    //  Mot FAIBLE à dessein (et non MOTS_FORTS) : mesuré le 7/10, un titre de
-    //  VÊTEMENTS « Character Clothing Incl. … Hot Wheels » doit rester en Mode,
-    //  où la source le range. En faible, la source l'emporte ; en fort, non.
-    'hot wheels',
     // en
     'toy', 'toys', 'plush', 'doll', 'board game', 'kids', 'child', 'stroller', 'pram', 'building blocks', 'action figure',
     // de
@@ -1111,11 +1018,6 @@ const FAMILLES = {
   beaute: [
     // fr
     'beaute', 'parfum', 'cosmetique', 'soin', 'maquillage', 'cheveux', 'brosse a dents', 'creme', 'shampoing', 'gel douche', 'hygiene', 'epilateur', 'epilation',
-    //  AJOUT MESURÉ le 7/10 (A7) : « mascara » manquait — les Maybelline
-    //  « Lash Sensational Sky High » (GB/NL) restaient en « Autres ». Mot FAIBLE
-    //  (produit courant, peut voisiner une autre famille) ; il suffit contre
-    //  « Autres » et ne force jamais une rubrique de source.
-    'mascara',
     // en
     'beauty', 'perfume', 'fragrance', 'cosmetics', 'skincare', 'makeup', 'hair', 'toothbrush', 'cream', 'shampoo', 'shower gel', 'grooming', 'epilator',
     // de
@@ -1280,19 +1182,7 @@ const MARQUES = {
   tech: ['apple', 'iphone', 'ipad', 'macbook', 'airpods', 'imac', 'airtag', 'apple watch', 'samsung', 'galaxy', 'pixel', 'xiaomi', 'redmi', 'poco', 'oppo', 'oneplus', 'huawei', 'honor', 'playstation', 'nintendo', 'xbox', 'lenovo', 'asus', 'acer', 'alienware', 'razer', 'logitech', 'bose', 'jbl', 'sennheiser', 'anker', 'ugreen', 'nvidia', 'geforce', 'rtx', 'ryzen', 'kindle', 'chromecast', 'fire tv', 'garmin', 'fitbit', 'gopro', 'dji', 'roku', 'tcl', 'hisense', 'buds', 'boitier'],
   maison: ['ikea', 'pyrex', 'conforama'],
   electromenager: ['dyson', 'tefal', 'moulinex', 'delonghi', 'krups', 'nespresso', 'senseo', 'miele', 'whirlpool', 'magimix'],
-  bricolage: ['makita', 'einhell', 'ryobi', 'worx', 'karcher', 'gardena', 'wera', 'dewalt', 'metabo', 'hilti', 'fiskars', 'wolf garten', 'scheppach',
-    //  A6 : « wagner » (pistolets à peinture) — produit qui ne tenait, dans les
-    //  données, que sur une sous-chaîne lue par accident (« scie » ⊂ « ściennych »).
-    //  La frontière exigée pour « scie » le laissait partir en « Autres » ; la
-    //  marque le maintient en Bricolage.
-    //  A7 : « bosch professional » (la gamme OUTILLAGE ÉLECTRO-PORTATIF bleue).
-    //  ⚠ La marque nue « bosch » NE PEUT PAS être inscrite : le test
-    //  « aucune marque ambiguë rangée en dur » l'interdit (Bosch fait aussi des
-    //  lave-linge et des frigos). La gamme « Professional », elle, ne désigne
-    //  que l'outillage : mesuré le 7/10, elle ramène de « Autres » les perceuses,
-    //  meuleuses, scies et lasers Bosch Pro (BE/PL/SE) sans toucher à un seul
-    //  appareil ménager. « bosch auto » reste là aussi, pour les pièces auto.
-    'wagner', 'bosch professional'],
+  bricolage: ['makita', 'einhell', 'ryobi', 'worx', 'karcher', 'gardena', 'wera', 'dewalt', 'metabo', 'hilti', 'fiskars', 'wolf garten', 'scheppach'],
   sport: ['decathlon', 'quechua', 'btwin', 'orbea', 'canyon', 'specialized'],
   beaute: ['loreal', 'sephora', 'nivea', 'garnier', 'oral-b', 'gillette', 'neutrogena', 'douglas', 'braun silk'],
   jouets: ['lego', 'playmobil', 'hasbro', 'mattel', 'barbie', 'nerf', 'funko', 'schleich', 'ravensburger', 'asmodee'],
@@ -1331,12 +1221,6 @@ const MOTS_FORTS = {
     'tondeuse a gazon', 'robot tondeuse', 'tondeuse robot',
     'lawnmower', 'lawn mower', 'robot lawn mower', 'mower', 'rasenmaher', 'mahroboter',
     'grasmachine', 'robotmaaier', 'cortacesped', 'tosaerba', 'cortador de relva', 'kosiarka', 'grasklippare',
-    //  A8 : « cricut » — machine de découpe (loisirs créatifs / bricolage) dont
-    //  la DESCRIPTION énumère des projets (« … custom vinyl decals, t-shirts,
-    //  full color stickers »). Mesuré : le mot faible « t-shirt » (+ « shirt »)
-    //  la faisait passer en Mode. Produit NOMMÉ, il tranche : Bricolage. Précédent
-    //  identique : « sonicare », marque-produit placée en MOTS_FORTS par A7.
-    'cricut',
   ],
   // ÉLECTROMÉNAGER → electromenager (nouvel onglet, à côté de High-tech).
   //  Les appareils ménagers ne vont PLUS en « maison » : cette famille ne
@@ -1381,56 +1265,6 @@ const MOTS_FORTS = {
     'kettle', 'espressomaskin', 'emulsionneur', 'mousseur de lait', 'mousseur a lait',
     'cuiseur de riz', 'cuiseur vapeur', 'coupe legumes electrique', 'hachoir electrique',
     'blender', 'mixeur', 'presse agrumes', 'machine a pain', 'yaourtiere',
-    //  AJOUT MESURÉ le 7/10 (unité A6 : faux positifs démontrés en A5). Des
-    //  appareils NOMMÉS restaient dans une VRAIE rubrique de source parce que
-    //  leur mot manquait ou ne comptait qu'UN point (la source l'emportait) :
-    //   « washing machine » (en) → 3 lave-linge Hisense en « Maison » (GB) ;
-    //   « vacuum cleaner » (en)  → 2 aspirateurs Shark en « Bricolage » (GB) ;
-    //   « fusselrasierer » (de)  → 1 rasoir anti-peluches Philips en « Maison » ;
-    //   « zamrazarka » (pl)      → 1 congélateur Bomann en « Maison » ;
-    //   « shaver » (en)          → 1 rasoir Philips en « Beauté » (AT) ;
-    //   « cortabarbas » (es)     → 1 tondeuse Wahl en « Beauté » (ES).
-    'washing machine', 'vacuum cleaner', 'fusselrasierer', 'zamrazarka', 'shaver', 'cortabarbas',
-    //  « fohnborstel » (nl : brosse soufflante) : la BaByliss « Smooth Finish »
-    //  tombait en Jeux & jouets sur « baby » ⊂ BaByliss (défaut A3/A4).
-    'fohnborstel',
-    //  « oneblade » (unité A6) : la gamme de rasoirs/tondeuses Philips OneBlade.
-    //  Mesuré le 7/10 : les OneBlade ES/PT partaient en Bricolage sur « pila » ⊂
-    //  « depilación » — l'appareil NOMMÉ les ramène en Électroménager.
-    'oneblade',
-    //  « akkusauger » (de : aspirateur à batterie) : la sous-chaîne « akku » le
-    //  rangeait en Bricolage ; à frontière, c'est le nom de l'APPAREIL qui parle.
-    'akkusauger',
-    //  AJOUT MESURÉ le 7/10 (unité A7, audit de « Autres »). Des APPAREILS
-    //  ménagers NOMMÉS restaient en « Autres » parce que leur nom (allemand,
-    //  néerlandais, suédois, polonais, français) manquait aux tables — l'audit
-    //  de « Autres » les a listés par fréquence. Comptés sur les 9 574 offres
-    //  publiées (les chiffres entre parenthèses sont les occurrences en
-    //  « Autres » AVANT correction) :
-    //   « kaffeevollautomat » (6) → PHILIPS LatteGo 2200/3300/5400/5500, DE+AT ;
-    //   « dampfbügelstation » (2) → Philips PerfectCare 6000, DE+AT ;
-    //   « fensterputzroboter » (2) → ECOVACS WINBOT W2S/W3, AT ;
-    //   « saugroboter » (3) → dreame L40/L40s/X50s, DE (déjà « robot aspirateur ») ;
-    //   « nettoyeur de vitres » (1) → ECOVACS WINBOT W3, FR ;
-    //   « centrale vapeur » (2) → Calor Power Pro / Pro Express, FR ;
-    //   « machine a expresso » (1) → Bialetti Venus Induction, FR ;
-    //   « bodygroom »/« bodygroomer » (4) → Philips série 7000/5000, FR/NL/PL ;
-    //   « multiquick » (5) → Braun MultiQuick 5/7/9 (mélangeurs), BE ;
-    //   « ergomaster » (6) → Bosch ErgoMaster 4/6/8 (mélangeurs), BE ;
-    //   « pastamachine » (1) → Philips ProExtrude, NL ;
-    //   « aquaclean » (3) → filtres à eau Philips pour espresso, NL/SE/PL ;
-    //   « luftfuktare » (1) → Philips 3000 NanoCloud, SE ;
-    //   « nawilzacz » (1) → Philips série 2000, PL ;
-    //   « parownica » (1) → Philips série 1000, PL.
-    //  Ces mots sont des NOMS D'APPAREIL, pas des marques : ils gardent la même
-    //  sûreté que « haartrockner » ou « kaffeevollautomat » et sont pris en
-    //  entier (pas de sous-chaîne courte). Les titres de Coolblue réduits au
-    //  seul numéro de modèle (« Bosch WGB264ACFG i-DOS ») ne sont PAS traités
-    //  ici : aucun mot n'y nomme l'appareil, on ne devine pas (voir AUDIT-A7).
-    'kaffeevollautomat', 'dampfbugelstation', 'fensterputzroboter', 'saugroboter',
-    'nettoyeur de vitres', 'centrale vapeur', 'machine a expresso',
-    'bodygroom', 'bodygroomer', 'multiquick', 'ergomaster', 'pastamachine',
-    'aquaclean', 'luftfuktare', 'nawilzacz', 'parownica',
   ],
   // MOBILIER NOMMÉ → meubles (unité E6).
   //  Ce sont des PRODUITS NOMMÉS, au même titre qu'un appareil électroménager :
@@ -1463,33 +1297,6 @@ const MOTS_FORTS = {
     'kanapa', 'fotel', 'szafa', 'komoda', 'kredens', 'biurko', 'stolik', 'krzeslo', 'szafka', 'lozko',
     // sv
     'soffa', 'fatolj', 'bokhylla', 'byra', 'skank', 'garderob', 'skrivbord', 'matbord', 'soffbord', 'nattduksbord',
-    //  ⚠ « bureau » N'EST PAS ici, et c'est une MESURE de l'unité A7, pas un
-    //  oubli : essayé en mot FORT (avec frontière de mot), il déplaçait 28
-    //  offres de Maison vers Meubles — mais aussi, à tort, « Ordinateur de
-    //  Bureau » (high-tech), « déco 3D pour bureau » (un set LEGO), « tapis de
-    //  cuisine … bureau », « horloge murale … bureau », « kit d'outils …
-    //  bureau ». Le mot est un LIEU, pas toujours un meuble ; la frontière
-    //  n'y change rien. Retiré : un « bureau » réglable reste classé par sa
-    //  source (« Maison & Habitat ») ou reste en « Autres », jamais rangé au
-    //  hasard. Un vrai meuble se nomme (« etagere », « commode »…).
-  ],
-  // ALIMENTATION (ÉPICERIE) NOMMÉE → nourriture (unité A6).
-  //  Plusieurs produits d'épicerie de la source allemande « Lebensmittel &
-  //  Haushalt » (et de la source FR « Maison & Habitat ») restaient en
-  //  « Maison » : leur mot existait dans FAMILLES mais ne comptait qu'UN point,
-  //  insuffisant face à une vraie rubrique de source. Un aliment NOMMÉ est un
-  //  produit, comme un appareil : il tranche. Mesuré le 7/10 sur les 9 538
-  //  offres publiées (alcools, biscuits, chocolat, café en grains, pommes de
-  //  terre). ⚠ Un mot d'OUTIL garde la priorité par la LONGUEUR : « Éplucheur à
-  //  Légumes … Pommes de Terre » reste en Maison (« eplucheur a legumes », 18,
-  //  bat « pommes de terre », 15).
-  //  ⚠ « rum » est VOLONTAIREMENT ABSENT : en suédois « rum » signifie
-  //  « pièce » (« Bosch Dry 2000, Avfuktare, För rum upp till 24 m² » : un
-  //  déshumidificateur partait en Nourriture). La comparaison ignorant la
-  //  langue, un mot qui a un sens ordinaire ailleurs ne peut pas être un mot
-  //  FORT. « rhum » (fr) et « ron » (es) restent des mots faibles de FAMILLES.
-  nourriture: [
-    'schokolade', 'kekse', 'kaffeebohnen', 'whiskey', 'pommes de terre',
   ],
   // USTENSILES DE CUISINE → maison (unité E6).
   //  Pourquoi cette table existe : la famille « nourriture » contient des mots
@@ -1511,22 +1318,6 @@ const MOTS_FORTS = {
     'epilateur', 'epilator', 'epilierer', 'ontharingsapparaat', 'depiladora', 'epilatore', 'depilatore',
     'brosse a dents electrique', 'brosse a dents', 'elektrische zahnburste', 'zahnburste', 'elektrische tandenborstel', 'cepillo de dientes electrico', 'spazzolino elettrico', 'szczoteczka elektryczna', 'eltandborste',
     'soin du visage', 'appareil de massage', 'masseur', 'masseur facial',
-    //  « lumea » (unité A6) : la gamme d'ÉPILATEURS IPL de Philips. Mesuré le
-    //  7/10 : les Philips Lumea (ES/PT/IT) partaient en Bricolage sur la
-    //  sous-chaîne « pila » ⊂ « depilación » ; l'appareil NOMMÉ les ramène en
-    //  Beauté, comme « epilateur ».
-    'lumea',
-    //  AJOUT MESURÉ le 7/10 (unité A7, audit de « Autres »). Gammes d'APPAREILS
-    //  de soin NOMMÉES, restées en « Autres » faute de mot (comptées sur les
-    //  9 574 offres publiées) :
-    //   « sonicare » (4)  → têtes de brosse à dents Philips Sonicare, SE/NL/ES/PT ;
-    //   « smart ipl » (3) → épilateurs Braun Smart IPL Skin i-expert, BE ;
-    //   « reaura » (1)    → masque LED visage Philips ReAura, NL.
-    //  ⚠ Ce sont des NOMS DE GAMME d'APPAREIL DE SOIN, pas la marque ambiguë
-    //  « Philips » (interdite en dur : un seul mot de marque enverrait aussi ses
-    //  moniteurs et ses friteuses ici). La brosse à dents et l'épilateur sont
-    //  des soins de la personne, pas des appareils ménagers (point 9).
-    'sonicare', 'smart ipl', 'reaura',
   ],
   // APPAREIL TECHNIQUE → high-tech
   tech: [
@@ -1696,22 +1487,6 @@ const MOTS_FORTS = {
     'return flight', 'kreuzfahrt', 'flugreise', 'paketresa', 'utlandsresa', 'wycieczka objazdowa',
     'soggiorno hotel', 'pacchetto vacanza', 'soggiorno hotel', 'resort todo incluido',
   ],
-  // MODE — CHAUSSETTES (unité A8). Ce sont des PRODUITS NOMMÉS et sans
-  //  ambiguïté : ils tranchent avant la catégorie de la source. Mesuré le 7/10 :
-  //  « SukModen Men's Ankle Running Socks » et « Getry piłkarskie adidas Knee
-  //  Socks » étaient rangés en SPORT par la rubrique de la source et non par le
-  //  titre ; un mot fort les ramène en Mode. Le mot nu « sock » est lu entre
-  //  frontières (MOTS_A_FRONTIERE) pour ne pas attraper « socket ».
-  mode: [
-    'chaussette', 'sock', 'socks', 'socken', 'sokken', 'calcetin', 'calzino', 'calzini', 'meia', 'skarpet', 'strumpa', 'strumpor',
-    //  Pluriels mesurés absents (unité A8, complément des 9 langues) : une
-    //  chaussette se vend presque toujours au PLURIEL. Ajoutés explicitement
-    //  car « meia »/« skarpet » ne couvrent pas leur pluriel (le mot est lu
-    //  entre frontières : « meias » a un « s » qui rompt la frontière).
-    //  « meias » est protégé du sens « meias-finais » (demi-finales) par
-    //  MOTS_TROMPEURS. « sockor » = chaussettes (sv).
-    'calcetines', 'meias', 'skarpetki', 'sockor',
-  ],
 };
 
 /** Normalisation de comparaison : accents, apostrophes, lettres spéciales.
@@ -1877,49 +1652,7 @@ const MOTS_A_FRONTIERE = new Set(['auto', 'moto', 'tire', 'wagen', 'wiel', 'mota
   //  (fête) — un film (« Union Kino … feiert 75. Geburtstag ») tombait en
   //  Nourriture. Lu à frontière, « eier » isolé continue de matcher ; le
   //  néerlandais « eieren » est une entrée distincte et n'est pas touché.
-  'eier',
-  //  AJOUT MESURÉ le 7/10 (unité A6 : faux positifs démontrés en A3/A4) — des
-  //  mots faibles COURTS de la famille BRICOLAGE, lus en SOUS-CHAÎNE d'un mot
-  //  ordinaire d'une autre langue. Comptés sur les 9 538 offres publiées ; le
-  //  commentaire dit ce que la sous-chaîne attrapait à tort :
-  //   « brico »  → « inalámbricos » (barres de son Hisense, casques Skullcandy) ;
-  //   « pila » (scie, pl) → « de**pila**ción » (Philips Lumea), « em**pila**bles »
-  //     (rangements SONGMICS, pilulier), « reco**pila**ción » (listes de presse) ;
-  //   « scie »   → « **ści**emniana » (lampe Govee), « **ści**enny » (horloges
-  //     Seiko), « Pier**ście**ni » (livres Tolkien), « **Śró**dmieście »,
-  //     « li**ście** » (presse) ;
-  //   « akku »   → « **Akku**sauger » (aspirateur roborock), « **Akku**laufzeit »
-  //     (liseuse Kindle, tablette Fire Max) — l'aspirateur partait en bricolage ;
-  //   « sega » (scie, it) → « **Sega**fredo » (café en grains) ;
-  //   « ladder » → « b**ladder** » (protection TENA) ;
-  //   « tools »  → « **ToolS**pace » (balayette en bois).
-  //  Aucun de ces mots n'était utile en sous-chaîne : le mot ENTIER (« scie
-  //  circulaire », « Akku-Staubsauger », « piła ») continue de matcher, et les
-  //  composés à trait d'union aussi (le trait d'union est une frontière).
-  'brico', 'pila', 'scie', 'akku', 'sega', 'ladder', 'tools',
-  //  « lumea » (unité A6) : la gamme Philips Lumea est un mot FORT de Beauté,
-  //  mais lu en sous-chaîne il attrapait « P**lumea**u » — une « Brosse
-  //  Nettoyage Radiateur … Plumeau » partait en Beauté. À frontière, « Lumea »
-  //  isolé (« Philips Lumea serie 8000 ») continue de matcher.
-  'lumea',
-  //  AJOUT MESURÉ le 7/10 (unité A7) : « mascara », mot FORT de Beauté, attrapait
-  //  en sous-chaîne le PORTUGAIS « desmasca**ra** » (« unmask ») — mesuré :
-  //  « Black Friday: atenção ao teste dos 30 dias que desmascara falsos
-  //  descontos - Leak.pt », un article de presse, partait en Beauté. À
-  //  frontière, « Mascara » isolé (« Maybelline Mascara, Lash Sensational »)
-  //  continue de matcher, et le faux positif disparaît.
-  'mascara',
-  //  AJOUT MESURÉ le 7/10 (unité A8 — chaussettes, sous-vêtements, accessoires
-  //  → Mode). Quatre mots COURTS lus en sous-chaîne attrapaient un mot
-  //  ordinaire :
-  //   « sock »  → « socket » (prises, hubs USB) — « socks » suffit pour le
-  //     pluriel anglais, mais le singulier « sock » doit rester ;
-  //   « meia »  → « meia-… » (pt) : prudence sur un mot de 4 lettres ;
-  //   « gant »/« gants » → « élégant »/« élégants » (« Matelas Elegant Prime »,
-  //     « Silhouette élégante ») : 16 offres touchées à tort en sous-chaîne.
-  //  À frontière, « Socks », « Meia », « Gants de moto » continuent de matcher ;
-  //  « socket » et « élégant » non.
-  'sock', 'meia', 'gant', 'gants']);
+  'eier']);
 
 /** Un mot-clé doit-il être lu entre deux frontières de mot ? */
 const exigeFrontiere = (m) => m.length <= 3 || MOTS_A_FRONTIERE.has(m);
@@ -1977,28 +1710,8 @@ const exigeFrontiere = (m) => m.length <= 3 || MOTS_A_FRONTIERE.has(m);
  *                     de meuble battait la marque « lego » par la longueur) ;
  *    « chaise romaine » (1) — une « chaise romaine » de FITNESS partait en
  *                     Meubles sur le mot « chaise ».
- *
- *  A6 (faux positifs démontrés en A3/A4/A5) a ajouté les collisions MESURÉES
- *  ci-dessous, sur les 9 538 offres publiées :
- *    « babyliss »   — la marque BaByliss (sèche-cheveux, lisseur, brosse
- *                     soufflante) partait en Jeux & jouets sur « baby » ;
- *    « configuration » / « configuracion » / « configurazione » — la mention
- *                     « configuration facile » des Fire TV Stick (5 offres
- *                     BE/ES/IT) partait en jouets sur l'allemand « figur » ;
- *    « fargat », « fargad », « fargnattseende », « flerfargstryck »,
- *      « fargdisplay » (suédois : coloré/vision nocturne/impression
- *                     multicolore/écran couleur) faisaient tomber des lampes,
- *                     caméras et imprimantes en Bricolage sur la peinture
- *                     « färg » ; le mot ENTIER « färg » et le composé légitime
- *                     « färgspruta » (pistolet à peinture WAGNER) sont conservés ;
- *    « washing machine cleaner » — un PRODUIT D'ENTRETIEN (« Dr. Beckmann …
- *                     Washing Machine Cleaner ») partait en Électroménager sur
- *                     le mot-fort « washing machine » qui vise l'APPAREIL ;
- *    « k-pop »      — le néerlandais « pop » (poupée) attrapait « K-Pop » dans
- *                     un titre de VÊTEMENTS (« Character Clothing Incl. … Hot
- *                     Wheels, K-Pop »), qui doit rester en Mode.
  */
-const MOTS_TROMPEURS = /(^|[^a-z])(motorola|motoroli|motorole|motorolu|streifen|good girl|tom cruise|ideal voyage|kinder schokolade|kinder bueno|orient bambino|beach boys|lost boys|rebecca mobili|bookshelf speakers|bookshelf speaker|couch co-op|couch co op|couch coop|podkladka na biurko|accesorio de escritorio|libreria completa|pour une etagere|pour etagere|chaise romaine|babyliss|configuration|configuracion|configurazione|fargat|fargad|fargnattseende|flerfargstryck|fargdisplay|washing machine cleaner|k-pop|gant de toilette|gants nitrile|gant nitrile|no sweat|meias-finais|meias finais|meia-final)([^a-z]|$)/g;
+const MOTS_TROMPEURS = /(^|[^a-z])(motorola|motoroli|motorole|motorolu|streifen|good girl|tom cruise|ideal voyage|kinder schokolade|kinder bueno|orient bambino|beach boys|lost boys|rebecca mobili|bookshelf speakers|bookshelf speaker|couch co-op|couch co op|couch coop|podkladka na biurko|accesorio de escritorio|libreria completa|pour une etagere|pour etagere|chaise romaine)([^a-z]|$)/g;
 const retirerTrompeurs = (texte) => texte.replace(MOTS_TROMPEURS, '$1 $3');
 
 /** Les marqueurs d'un jeu NUMÉRIQUE — application, téléchargement… ou console.
@@ -2077,26 +1790,6 @@ function ageEnfant(texteBas) {
 }
 const POIDS_AGE_ENFANT = 6;   // même poids que le mot « enfant » (6 lettres)
 
-/* POINT 23 — ENFANT/JOUET PASSE AVANT HIGH-TECH (demande explicite de B).
- *
- *  Ses mots : « tous les articles avec écrit jouet pour enfant ou avec un âge
- *  d'enfants ou avec écrit pour les enfants qui sont dans high-tech doivent être
- *  dans la catégorie jouets ».
- *
- *  PÉRIMÈTRE VOLONTAIREMENT ÉTROIT : la règle ne s'applique QU'À une offre que
- *  le classement a mise en « tech ». Ailleurs elle ne décide rien — et c'est ce
- *  qui la rend sûre. Exemple de piège qu'elle évite ainsi : « barn » (suédois :
- *  enfant) est AUSSI l'anglais « grange » — mais une grange n'est pas du
- *  high-tech, donc elle ne peut pas être touchée ici.
- *
- *  Neuf langues, tout en SANS ACCENT (le texte est déjà passé par sansAccents) :
- *  garçon → garcon, mädchen → madchen, niño → nino.
- */
-const MARQUEUR_ENFANT = /\b(jouet|jouets|enfant|enfants|fille|filles|garcon|garcons|toy|toys|kid|kids|child|children|boy|girl|spielzeug|kind|kinder|junge|jungen|madchen|speelgoed|kinderen|jongen|meisje|juguete|juguetes|nino|ninos|nina|ninas|giocattolo|giocattoli|bambino|bambina|bambini|ragazzo|ragazza|brinquedo|brinquedos|crianca|criancas|menino|menina|zabawka|zabawki|dziecko|dzieci|chlopiec|dziewczynka|leksak|leksaker|barn|pojke|flicka)\b/;
-
-/** Un titre porte-t-il une marque d'ENFANT ou de JOUET ? (mot, ou plage d'âge) */
-const marqueurEnfant = (texteBas) => MARQUEUR_ENFANT.test(texteBas) || ageEnfant(texteBas);
-
 /** La famille indiquée par un PRODUIT NOMMÉ (un appareil, un type de jeu…), ou
  *  null si le titre n'en nomme aucun.
  *
@@ -2155,9 +1848,6 @@ function famille(texte, categorieSource) {
     // JEU_NUMERIQUE — le support nommé l'emporte, comme le produit nommé.
     // estJeuNumerique — le support nommé l'emporte, comme le produit nommé.
     if (appareil === 'jouets' && estJeuNumerique(bas)) return 'tech';
-    // Point 23 — un marqueur enfant/jouet l'emporte sur high-tech, même quand un
-    //  appareil a été NOMMÉ (« Tablette pour enfant », « Montre enfant »).
-    if (appareil === 'tech' && marqueurEnfant(bas)) return 'jouets';
     return appareil;
   }
   let meilleur = 'autre', score = 0;
@@ -2197,12 +1887,6 @@ function famille(texte, categorieSource) {
   //  a aucune raison de le laisser en « Autres » faute de mot-clé.
   if ((resultat === 'nourriture' || resultat === 'autre')
     && estRepasDehors(bas) && !preuveEpicerie(bas)) return 'activite';
-  // POINT 23 — DERNIER FILET : un marqueur ENFANT/JOUET l'emporte sur « tech »,
-  //  quelle que soit la route qui a mené là (mots du titre comme rubrique de la
-  //  source). Demande de B : « tous les articles avec écrit jouet pour enfant ou
-  //  avec un âge d'enfants ou avec écrit pour les enfants qui sont dans high-tech
-  //  doivent être dans la catégorie jouets ».
-  if (resultat === 'tech' && marqueurEnfant(bas)) return 'jouets';
   return resultat;
 }
 
@@ -2675,13 +2359,6 @@ function offresEnseigne(html, source) {
       remiseCalculee: rem ? rem.calculee : false,
       categorie: source.categorieImposee || famille(p.titre, source.categorie || ''),
       categorieSource: source.categorieImposee || source.categorie || 'enseigne',
-      // Rubrique IMPOSÉE par la page : elle doit survivre au reclassement des
-      // passages suivants, exactement comme pour Groupon. Sans ce champ,
-      // `classerOffre` rejugerait ces offres sur le SEUL titre — et Zooplus,
-      // dont les titres sont des noms de marque sans mot animalier, renverrait
-      // la nourriture pour chats en « Nourriture » et le reste en « Autres »,
-      // deux erreurs que B dénonce (points 14 et 18).
-      categorieImposee: source.categorieImposee || null,
       image: p.image,
       date: new Date().toISOString(),
       source: source.nom,
@@ -2741,22 +2418,11 @@ function versNumberCarte(texte) {
 /* ------------------------------------------------------------------ *
  *  GROUPON — lire une page de bons plans.
  *
- *  La même page est servie par Groupon en DEUX rendus DIFFÉRENTS, tirés au
- *  hasard par le même domaine (mesuré : `groupon.fr/bon-plan` 3 fois sur 4 en
- *  TanStack, 1 fois sur 4 en Next). Les deux portent les MÊMES bons plans :
- *
- *    • rendu Next.js → `<script id="__NEXT_DATA__">`, JSON valide. Les bons
- *      plans y sont des objets `StandardDealCard` portant `title`, `url`,
- *      `prices.price.amount` et `prices.strikeThroughPrice.amount`.
- *    • rendu TanStack → `<script class="$tsr">`, un flux JavaScript
- *      (`Object.assign(Object.create(null),{…})`, marqueurs `$R[n]`) qui N'EST
- *      PAS du JSON. Les mêmes `StandardDealCard` y sont présents, à l'identique.
- *
- *  Un lecteur qui ne connaît que le premier rend 0 offre — EN SILENCE — une fois
- *  sur trois au moins sur les pages françaises (voir AUDIT-B1.md). Le second
- *  lecteur `cartesGrouponTanStack` couvre l'autre rendu, sans jamais exécuter le
- *  JavaScript distant : il n'analyse que le sous-ensemble de données du flux.
- *
+ *  Deux formats selon la page, et le lecteur s'en accommode :
+ *    • `/fr/landing/sale`, `/fr/bon-plan` → le JSON d'une application Next.js,
+ *      dans `<script id="__NEXT_DATA__">`. Les bons plans y sont des objets
+ *      `StandardDealCard` portant `title`, `url`, `prices.price.amount` et
+ *      `prices.strikeThroughPrice.amount` — les DEUX prix, en centimes.
  *    • `/goods` (produits) → même JSON-LD standard que Coolblue, traité par
  *      offresEnseigne. Pas de code ici.
  *
@@ -2768,171 +2434,19 @@ function versNumberCarte(texte) {
  *  prix, jamais lue dans le titre — Groupon écrit « jusqu'à 50 % » dans
  *  certains titres, un maximum qui ne dit rien de l'offre affichée.
  * ------------------------------------------------------------------ */
-
-/** Index du `}` / `]` qui ferme le bloc ouvert à `debut`, chaînes ignorées
- *  (guillemets et échappements). -1 si le bloc ne se referme pas. */
-function finBlocJs(s, debut) {
-  let prof = 0;
-  for (let i = debut; i < s.length; i++) {
-    const c = s[i];
-    if (c === '"' || c === "'") {
-      const q = c;
-      i++;
-      while (i < s.length) {
-        if (s[i] === '\\') { i += 2; continue; }
-        if (s[i] === q) break;
-        i++;
-      }
-      continue;
-    }
-    if (c === '{' || c === '[') prof++;
-    else if (c === '}' || c === ']') { prof--; if (prof === 0) return i; }
-  }
-  return -1;
-}
-
-/** Analyseur du sous-ensemble JavaScript du flux TanStack : objets
- *  `Object.assign(Object.create(null),{…})`, tableaux, chaînes, nombres,
- *  `!0`/`!1`, `null`, et marqueurs `$R[n]` (définition `$R[n]=` puis
- *  réutilisation `$R[n]`). Ne lit que des DONNÉES ; n'exécute rien. */
-function parseurTanStack(src) {
-  const refs = new Map();
-  const n = src.length;
-  let i = 0;
-  const espaces = () => { while (i < n && /\s/.test(src[i])) i++; };
-  const chaine = () => {
-    const debut = i++;                       // src[debut] === '"'
-    let ech = false;
-    while (i < n) {
-      const c = src[i++];
-      if (ech) { ech = false; continue; }
-      if (c === '\\') { ech = true; continue; }
-      if (c === '"') break;
-    }
-    const brut = src.slice(debut, i);
-    try { return JSON.parse(brut); } catch { return brut.slice(1, -1); }
-  };
-  const nombre = () => {
-    const m = /^-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?/.exec(src.slice(i, i + 40));
-    if (!m) return null;
-    i += m[0].length;
-    return Number(m[0]);
-  };
-  function objet() {
-    espaces();
-    if (src.startsWith('Object.assign(', i)) {
-      i += 'Object.assign('.length;
-      const k = src.indexOf('Object.create(null)', i);
-      if (k >= 0) i = k + 'Object.create(null)'.length;
-      espaces();
-      if (src[i] === ',') i++;
-      espaces();
-    }
-    if (src[i] !== '{') throw new Error('accolade attendue à ' + i);
-    i++;
-    const o = {};
-    espaces();
-    while (i < n && src[i] !== '}') {
-      let cle;
-      if (src[i] === '"') cle = chaine();
-      else {
-        let j = i;
-        while (j < n && src[j] !== ':') j++;
-        cle = src.slice(i, j).trim();
-        i = j;
-      }
-      espaces();
-      if (src[i] === ':') i++;
-      o[cle] = valeur();
-      espaces();
-      if (src[i] === ',') i++;
-      espaces();
-    }
-    if (src[i] === '}') i++;
-    espaces();
-    if (src[i] === ')') i++;                 // ferme Object.assign(
-    return o;
-  }
-  function tableau() {
-    i++;                                     // '['
-    const a = [];
-    espaces();
-    while (i < n && src[i] !== ']') {
-      a.push(valeur());
-      espaces();
-      if (src[i] === ',') i++;
-      espaces();
-    }
-    if (src[i] === ']') i++;
-    return a;
-  }
-  function valeur() {
-    espaces();
-    const m = /^\$R\[(\d+)\]/.exec(src.slice(i, i + 20));
-    if (m) {
-      const num = Number(m[1]);
-      i += m[0].length;
-      espaces();
-      if (src[i] === '=') { i++; const v = valeur(); refs.set(num, v); return v; }
-      return refs.has(num) ? refs.get(num) : null;
-    }
-    if (src.startsWith('Object.assign(', i)) return objet();
-    if (src[i] === '{') return objet();
-    if (src[i] === '[') return tableau();
-    if (src[i] === '"') return chaine();
-    if (src.startsWith('!0', i)) { i += 2; return true; }
-    if (src.startsWith('!1', i)) { i += 2; return false; }
-    if (src.startsWith('null', i)) { i += 4; return null; }
-    if (src.startsWith('true', i)) { i += 4; return true; }
-    if (src.startsWith('false', i)) { i += 5; return false; }
-    if (src[i] === '-' || /\d/.test(src[i])) return nombre();
-    throw new Error('valeur illisible à ' + i + ' : ' + JSON.stringify(src.slice(i, i + 24)));
-  }
-  return { valeur };
-}
-
-/** Cartes d'un rendu TanStack : on isole chaque `StandardDealCard` par
- *  appariement d'accolades (chaque carte est autonome dans le flux — mesuré :
- *  autant de `$R[n]=` que de `$R[n]`, aucune référence externe) et on la relit
- *  seule. Une carte illisible est ignorée, jamais devinée. */
-function cartesGrouponTanStack(html) {
-  const s = String(html);
-  const cartes = [];
-  const lit = '{__typename:"StandardDealCard"';
-  let idx = 0;
-  while (true) {
-    const debut = s.indexOf(lit, idx);
-    if (debut < 0) break;
-    const fin = finBlocJs(s, debut);
-    if (fin < 0) break;
-    try { cartes.push(parseurTanStack(s.slice(debut, fin + 1)).valeur()); } catch { /* carte illisible : ignorée */ }
-    idx = fin + 1;
-  }
-  return cartes;
-}
-
-/** Rend la liste des `StandardDealCard`, quel que soit le rendu servi. */
-function cartesGroupon(html) {
-  const texte = String(html);
-  const bloc = texte.match(/<script id="__NEXT_DATA__"[^>]*>([\s\S]*?)<\/script>/i);
-  if (bloc) {
-    let data = null;
-    try { data = JSON.parse(bloc[1]); } catch { data = null; }
-    const cartes = [];
-    if (data) (function parcourir(o) {
-      if (!o || typeof o !== 'object') return;
-      if (o.__typename === 'StandardDealCard') cartes.push(o);
-      for (const v of Object.values(o)) parcourir(v);
-    })(data);
-    if (cartes.length) return cartes;
-  }
-  try { return cartesGrouponTanStack(texte); } catch { return []; }
-}
-
 function offresGroupon(html, source) {
   const out = [];
   const vus = new Set();
-  const cartes = cartesGroupon(html);
+  const bloc = String(html).match(/<script id="__NEXT_DATA__"[^>]*>([\s\S]*?)<\/script>/i);
+  if (!bloc) return out;
+  let data;
+  try { data = JSON.parse(bloc[1]); } catch { return out; }
+  const cartes = [];
+  (function parcourir(o) {
+    if (!o || typeof o !== 'object') return;
+    if (o.__typename === 'StandardDealCard') cartes.push(o);
+    for (const v of Object.values(o)) parcourir(v);
+  })(data);
   const centimes = (o) => (o && Number.isFinite(o.amount) ? Math.round(o.amount) / 100 : null);
   for (const c of cartes) {
     const prix = centimes(c.prices && c.prices.price);
@@ -2979,88 +2493,6 @@ function offresGroupon(html, source) {
       // que le titre.
       categorieImposee: source.categorieImposee || null,
       image: /^https?:\/\//i.test(image) ? image : '',
-      date: new Date().toISOString(),
-      source: source.nom,
-      sourceId: source.id,
-      pays: source.pays || 'BE',
-    });
-  }
-  return out;
-}
-
-/* ------------------------------------------------------------------ *
- *  SOCIAL DEAL — les activités, hors Groupon (unités B3/B5).
- *
- *  Seule plateforme d'activités, hors Groupon, trouvée qui publie DEUX prix
- *  RÉELS dans le HTML SERVI (les autres sont rendues en JavaScript ou n'ont
- *  qu'un seul prix — voir AUDIT-B3.md). Chaque carte porte sa référence et son
- *  prix demandé dans deux balises à classes explicites :
- *
- *      <div class="original-price"><span class="price">€30</span></div>
- *      <span class="current-price">€19<sub>,90</sub></span>
- *
- *  ⚠ Les CENTIMES sont dans un `<sub>` (« €19<sub>,90</sub> ») : on retire les
- *  balises AVANT de lire le nombre, sinon « €19 » serait pris pour 19 € au lieu
- *  de 19,90 €. Le format du prix diffère aussi selon le pays — « €19,90 » en
- *  Belgique, « 136,90€ » en France : le lecteur accepte les deux ordres.
- *
- *  Deux prix RÉELS, et rien d'autre : une carte sans référence (« Gratis », bons
- *  cadeaux à prix unique) ne produit AUCUNE promotion et est écartée. Le
- *  garde-fou de vraisemblance s'applique comme partout.
- * ------------------------------------------------------------------ */
-function nombreSocialDeal(texte) {
-  // On retire les balises (« €19<sub>,90</sub> » → « €19 ,90 »), puis on lit le
-  // premier nombre, séparateur décimal « , » ou « . ».
-  const s = String(texte || '').replace(/<[^>]*>/g, ' ').replace(/\u00a0|\u202f/g, ' ').trim();
-  const m = s.match(/(\d[\d\s]*)(?:[.,](\d{1,2}))?/);
-  if (!m) return null;
-  const entier = Number(m[1].replace(/\s/g, ''));
-  const cents = m[2] ? Number('0.' + m[2]) : 0;
-  const v = entier + cents;
-  return Number.isFinite(v) && v > 0 && v < 100000 ? Math.round(v * 100) / 100 : null;
-}
-
-function offresSocialDeal(html, source) {
-  const out = [];
-  const vus = new Set();
-  const texte = String(html);
-  // Un bloc « original-price » suivi, dans la même carte, d'un « current-price ».
-  const re = /<div class="original-price">([\s\S]*?)<\/div>[\s\S]{0,240}?<span class="current-price">([\s\S]*?)<\/span>/g;
-  for (const m of texte.matchAll(re)) {
-    const refTxt = (m[1].match(/<span class="price">([\s\S]*?)<\/span>/) || [])[1];
-    const prix = nombreSocialDeal(m[2]);
-    const avant = referenceVraisemblable(prix, nombreSocialDeal(refTxt));
-    if (!remiseCredibleSource(prix, avant)) continue;
-    // Titre et lien : le titre (`<h4>`) et l'adresse de la fiche (`/deals/…`)
-    // sont AVANT le bloc de prix, dans la même carte. On prend les plus proches.
-    const fenetre = texte.slice(Math.max(0, m.index - 6000), m.index);
-    const h4 = [...fenetre.matchAll(/<h4>([\s\S]*?)<\/h4>/g)].pop();
-    const a = [...fenetre.matchAll(/<a\s+href="(https?:\/\/[^"]*\/deals\/[^"]+)"/g)].pop();
-    if (!h4 || !a) continue;
-    const titre = nettoyer(h4[1]);
-    const lien = a[1];
-    if (!titre) continue;
-    const cle = lien.toLowerCase();
-    if (vus.has(cle)) continue;
-    vus.add(cle);
-    out.push({
-      id: 's' + Buffer.from(lien.split('').reverse().join('')).toString('base64url').slice(0, 14),
-      type: 'offre',
-      titre: titre.slice(0, 220),
-      lienMarchand: lien,
-      lienPage: lien,
-      marchand: source.nom,
-      prix,
-      prixAvant: avant,
-      remise: Math.round(((avant - prix) / avant) * 100),
-      remiseCalculee: true,
-      // Même chemin de classement que Groupon : `classerOffre` sait qu'une page
-      // « activité » peut contenir des SOINS (→ Beauté) et des REPAS pris
-      // dehors (→ Activité), et que le partage avec Voyages est GÉOGRAPHIQUE.
-      categorie: classerOffre({ titre, pays: source.pays || 'BE', categorieImposee: source.categorieImposee || null, categorieSource: source.categorie || 'socialdeal' }),
-      categorieSource: source.categorieImposee || source.categorie || 'socialdeal',
-      categorieImposee: source.categorieImposee || null,
-      image: '',
       date: new Date().toISOString(),
       source: source.nom,
       sourceId: source.id,
@@ -3559,13 +2991,6 @@ async function collecterSource(source) {
       const offres = offresGroupon(corps, source);
       journal.push({ source: source.id, ok: true, items: 0, retenues: offres.length });
       if (VERBEUX) console.log(`  ${source.id} : ${offres.length} bon(s) plan(s) ${source.categorieImposee || ''}`);
-      return offres;
-    }
-    // Activités hors Groupon (Social Deal) : deux prix en clair dans le HTML.
-    if (source.type === 'socialdeal') {
-      const offres = offresSocialDeal(corps, source);
-      journal.push({ source: source.id, ok: true, items: 0, retenues: offres.length });
-      if (VERBEUX) console.log(`  ${source.id} : ${offres.length} activité(s) Social Deal ${source.pays}`);
       return offres;
     }
     // Ventes flash du jour : la page les embarque en JSON, on les y lit.

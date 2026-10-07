@@ -1,0 +1,10 @@
+import { readFileSync } from 'node:fs';
+const d = JSON.parse(readFileSync('/tmp/pub-offres.json','utf8'));
+const o = d.offres;
+const c = {};
+for (const x of o) c[x.categorie] = (c[x.categorie]||0)+1;
+console.log('PUBLIE genereLe', d.genereLe, 'offres', o.length);
+console.log('tech', c.tech, '| electromenager', c.electromenager, '| jouets', c.jouets, '| activite', c.activite, '| autre', c.autre);
+console.log('--- vrais TV en tech ---');
+const n = s => (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+for (const x of o.filter(x=>x.categorie==='tech' && /(televiseur|fernseher|smart ?tv|oled|qled|\btv\b)/.test(n(x.titre))).slice(0,6)) console.log('  ', x.pays,'|', x.titre.slice(0,95));
