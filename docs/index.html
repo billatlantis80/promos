@@ -107,7 +107,15 @@
     <button class="onglet" role="tab" data-onglet="infos" aria-selected="false" data-i18n="Informations">Informations</button>
   </div>
 
+  <!-- ORDRE DEMANDÉ PAR B (08/10/2026) : « il faut commencer par l'inscription
+       manuelle avec nom d'utilisateur et mot de passe. Ensuite mettre la
+       possibilité de connexion par Google et Facebook. »
+       Donc : COMPTE LOCAL -> connexion sociale -> profil. -->
   <div class="panneau" data-panneau="compte" role="tabpanel">
+    <section class="rubrique">
+      <h3 data-i18n="Compte local">Compte local</h3>
+      <div id="regCompte"></div>
+    </section>
     <section class="rubrique">
       <h3 data-i18n="Inscription et connexion">Inscription et connexion</h3>
       <p data-i18n="Crée un compte sur cet appareil, ou connecte-toi avec un compte existant.">Crée un compte sur cet appareil, ou connecte-toi avec un compte existant.</p>
@@ -117,10 +125,6 @@
       <h3 data-i18n="Profil">Profil</h3>
       <p data-i18n="Ce que l'application sait de toi — et rien de plus.">Ce que l'application sait de toi — et rien de plus.</p>
       <div id="regProfil"></div>
-    </section>
-    <section class="rubrique">
-      <h3 data-i18n="Compte local">Compte local</h3>
-      <div id="regCompte"></div>
     </section>
   </div>
 
@@ -158,8 +162,22 @@
        descendre ici (08/10/2026) : « elle ne doit pas y apparaître car elle
        doit apparaître dans informations dans les paramètres ». Il garde son
        identifiant #prixReleves, écrit par app.js — sans lui, l'horodatage du
-       relevé disparaîtrait de l'application. -->
+       relevé disparaîtrait de l'application.
+
+       ORDRE DEMANDÉ PAR B : « Point de contact doit être le premier paragraphe
+       de l'onglet informations. » Il est donc en TÊTE. Suivent les textes du
+       compte descendus de l'onglet Compte (rendus par app.js dans #regDroits),
+       puis les sources, puis les prix. -->
   <div class="panneau" data-panneau="infos" role="tabpanel" hidden>
+    <section class="rubrique">
+      <h3 data-i18n="Point de contact">Point de contact</h3>
+      <p data-i18n="Pour toute question sur les données, les sources ou une offre :">Pour toute question sur les données, les sources ou une offre :</p>
+      <p style="font-size:15px"><a href="mailto:info@kazendra.com">info@kazendra.com</a></p>
+    </section>
+    <section class="rubrique">
+      <h3 data-i18n="Tes données, tes droits">Tes données, tes droits</h3>
+      <div id="regDroits"></div>
+    </section>
     <section class="rubrique">
       <h3 data-i18n="Sources et données">Sources et données</h3>
       <p data-i18n="Les offres sont rassemblées depuis des flux publics (Dealabs, presse spécialisée, Google News). Aucune donnée n'est revendiquée : chaque offre renvoie à sa source, qui fait foi.">Les offres sont rassemblées depuis des flux publics (Dealabs, presse spécialisée, Google News). Aucune donnée n'est revendiquée : chaque offre renvoie à sa source, qui fait foi.</p>
@@ -171,11 +189,6 @@
       <p data-i18n="Il n'est pas possible de mettre à jour les prix affichés en temps réel.">Il n'est pas possible de mettre à jour les prix affichés en temps réel.</p>
       <p id="prixReleves"></p>
       <p data-i18n="Frais de port : indiqués par le marchand au moment de la commande.">Frais de port : indiqués par le marchand au moment de la commande.</p>
-    </section>
-    <section class="rubrique">
-      <h3 data-i18n="Point de contact">Point de contact</h3>
-      <p data-i18n="Pour toute question sur les données, les sources ou une offre :">Pour toute question sur les données, les sources ou une offre :</p>
-      <p style="font-size:15px"><a href="mailto:info@kazendra.com">info@kazendra.com</a></p>
     </section>
   </div>
 </section>

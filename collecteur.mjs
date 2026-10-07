@@ -995,38 +995,38 @@ const FAMILLES = {
     //  cela « élégant » les contient ; les cas non vestimentaires (gant de
     //  toilette, gants nitrile) sont en MOTS_TROMPEURS.
     // fr
-    'mode', 'vetement', 'chaussure', 'sneaker', 'sac', 'bijou', 'montre', 'lingerie', 'manteau', 'pull', 'jean', 'textile', 'robe', 'chemise', 'pantalon', 'basket', 'bottes', 'ceinture', 'portefeuille', 'pull-over',
+    'mode', 'vetement', 'chaussure', 'sneaker', 'sac', 'montre', 'lingerie', 'manteau', 'pull', 'jean', 'textile', 'robe', 'chemise', 'pantalon', 'basket', 'bottes', 'ceinture', 'portefeuille', 'pull-over',
     'echarpe', 'casquette', 'bonnet', 'gant', 'gants', 'jupe', 'short', 'maillot', 'pyjama', 't-shirt', 'tee-shirt', 'sweat', 'blouson', 'veste', 'sandale', 'claquette', 'kimono', 'calecon',
     // en
-    'fashion', 'clothing', 'clothes', 'shoe', 'shoes', 'sneakers', 'handbag', 'jewel', 'jewellery', 'watch', 'coat', 'jacket', 'jumper', 'jeans', 'apparel', 'dress', 'shirt', 'trousers', 'boots', 'belt', 'wallet', 'sweater',
+    'fashion', 'clothing', 'clothes', 'shoe', 'shoes', 'sneakers', 'handbag', 'watch', 'coat', 'jacket', 'jumper', 'jeans', 'apparel', 'dress', 'shirt', 'trousers', 'boots', 'belt', 'wallet', 'sweater',
     'scarf', 'beanie', 'mitten', 'swimsuit', 'slipper', 'skirt', 'hoodie', 'boxer', 'trunks', 'underwear',
     'sweatshirt', 'pyjamas', 'sandals', 'flip flops',
     // de
-    'kleidung', 'schuh', 'schuhe', 'tasche', 'handtasche', 'schmuck', 'uhr', 'mantel', 'jacke', 'pullover', 'textil', 'kleid', 'hemd', 'hose', 'stiefel', 'gurtel', 'portemonnaie', 'lederjacke', 'muetze', 'schal',
+    'kleidung', 'schuh', 'schuhe', 'tasche', 'handtasche', 'uhr', 'mantel', 'jacke', 'pullover', 'textil', 'kleid', 'hemd', 'hose', 'stiefel', 'gurtel', 'portemonnaie', 'lederjacke', 'muetze', 'schal',
     'handschuh', 'unterhose', 'unterwasche',
     'schlafanzug', 'sandalen', 'badeanzug',
     // nl
-    'kleding', 'schoen', 'schoenen', 'tas', 'handtas', 'sieraad', 'horloge', 'jas', 'trui', 'jurk', 'hemd', 'broek', 'laarzen', 'riem', 'portemonnee', 'sieraden',
+    'kleding', 'schoen', 'schoenen', 'tas', 'handtas', 'horloge', 'jas', 'trui', 'jurk', 'hemd', 'broek', 'laarzen', 'riem', 'portemonnee',
     'sjaal', 'muts', 'handschoen', 'onderbroek',
     'pyjama', 'sandalen', 'badpak',
     // es
-    'moda', 'ropa', 'zapato', 'zapatos', 'zapatilla', 'zapatillas', 'bolso', 'joya', 'reloj', 'lenceria', 'abrigo', 'chaqueta', 'jersey', 'vaqueros', 'vestido', 'camisa', 'pantalon', 'botas', 'cinturon', 'cartera',
+    'moda', 'ropa', 'zapato', 'zapatos', 'zapatilla', 'zapatillas', 'bolso', 'reloj', 'lenceria', 'abrigo', 'chaqueta', 'jersey', 'vaqueros', 'vestido', 'camisa', 'pantalon', 'botas', 'cinturon', 'cartera',
     'guante', 'gorro', 'bufanda', 'falda',
     'camiseta', 'sudadera', 'sandalias', 'chanclas', 'banador', 'pijama',
     // it
-    'abbigliamento', 'scarpa', 'scarpe', 'borsa', 'gioiello', 'orologio', 'intimo', 'cappotto', 'giacca', 'maglione', 'tessile', 'vestito', 'camicia', 'pantaloni', 'stivali', 'cintura', 'portafoglio',
+    'abbigliamento', 'scarpa', 'scarpe', 'borsa', 'orologio', 'intimo', 'cappotto', 'giacca', 'maglione', 'tessile', 'vestito', 'camicia', 'pantaloni', 'stivali', 'cintura', 'portafoglio',
     'sciarpa', 'cappello', 'guanti', 'gonna', 'mutande',
     'pigiama', 'maglietta', 'felpa', 'sandali', 'ciabatte',
     // pt
-    'roupa', 'sapato', 'sapatos', 'sapatilhas', 'mala', 'bolsa', 'joia', 'relogio', 'casaco', 'camisola', 'ganga', 'vestuario', 'calcas', 'botas', 'cinto', 'carteira',
+    'roupa', 'sapato', 'sapatos', 'sapatilhas', 'mala', 'bolsa', 'relogio', 'casaco', 'camisola', 'ganga', 'vestuario', 'calcas', 'botas', 'cinto', 'carteira',
     'cachecol', 'luva', 'saia', 'cueca',
     'pijama', 'sandalias', 'chinelos', 'fato de banho',
     // pl
-    'odziez', 'but', 'buty', 'sneakersy', 'torba', 'torebka', 'bizuteria', 'zegarek', 'bielizna', 'plaszcz', 'kurtka', 'sweter', 'jeansy', 'tekstylia', 'sukienka', 'koszula', 'spodnie', 'kozaki', 'pasek', 'portfel',
+    'odziez', 'but', 'buty', 'sneakersy', 'torba', 'torebka', 'zegarek', 'bielizna', 'plaszcz', 'kurtka', 'sweter', 'jeansy', 'tekstylia', 'sukienka', 'koszula', 'spodnie', 'kozaki', 'pasek', 'portfel',
     'szalik', 'czapka', 'rekawiczki', 'spodnica', 'majtki', 'bokserski',
     'pizama', 'sandaly', 'klapki', 'bluza', 'koszulka',
     // sv
-    'klader', 'sko', 'skor', 'vaska', 'handvaska', 'smycke', 'klocka', 'underklader', 'kappa', 'jacka', 'troja', 'tyg', 'klanning', 'skjorta', 'byxor', 'stovlar', 'balte', 'planbok',
+    'klader', 'sko', 'skor', 'vaska', 'handvaska', 'klocka', 'underklader', 'kappa', 'jacka', 'troja', 'tyg', 'klanning', 'skjorta', 'byxor', 'stovlar', 'balte', 'planbok',
     'halsduk', 'mossa', 'vantar', 'kjol',
     'pyjamas', 'sandaler', 'badklader',
   ],
@@ -1195,7 +1195,15 @@ const CATEGORIES_SOURCES = [
   ['mode &', 'mode'], ['mode', 'mode'], ['fashion', 'mode'], ['moda', 'mode'], ['moda y', 'mode'],
   ['odziez', 'mode'], ['kleidung', 'mode'], ['kleding', 'mode'], ['textile', 'mode'], ['tekstylia', 'mode'],
   ['accessoires', 'mode'], ['accessories', 'mode'], ['accesorios', 'mode'], ['akcesoria', 'mode'],
-  ['chaussures', 'mode'], ['sacs', 'mode'], ['bijoux', 'mode'], ['klader', 'mode'], ['abbigliamento', 'mode'],
+  ['chaussures', 'mode'], ['sacs', 'mode'], ['klader', 'mode'], ['abbigliamento', 'mode'],
+  // --- BIJOUX (rubrique ajoutée à la demande de B)
+  //  Une source qui publie sa propre rubrique « Bijoux » la garde : elle est
+  //  passée de « mode » à « bijoux ». Les autres libellés de bijouterie
+  //  rencontrés sont ajoutés ici dans les langues où ils apparaissent.
+  ['bijoux', 'bijoux'], ['bijouterie', 'bijoux'], ['sieraden', 'bijoux'], ['sieraad', 'bijoux'],
+  ['schmuck', 'bijoux'], ['gioielli', 'bijoux'], ['gioielleria', 'bijoux'], ['joyeria', 'bijoux'],
+  ['joalharia', 'bijoux'], ['bizuteria', 'bijoux'], ['smycken', 'bijoux'], ['jewellery', 'bijoux'],
+  ['jewelry', 'bijoux'], ['watches & jewellery', 'bijoux'], ['montres & bijoux', 'bijoux'],
   // --- SPORT
   ['sport & outdoor', 'sport'], ['sports & plein air', 'sport'], ['sports & outdoors', 'sport'],
   ['sport & vrije tijd', 'sport'], ['sport & outdoor', 'sport'], ['sport i turystyka', 'sport'],
@@ -1838,6 +1846,78 @@ const MOTS_FORTS = {
     //  MOTS_TROMPEURS. « sockor » = chaussettes (sv).
     'calcetines', 'meias', 'skarpetki', 'sockor',
   ],
+  // BIJOUX (rubrique ajoutée à la demande de B : « il faut rajouter une rubrique
+  //  bijoux, en plus de mode »).
+  //
+  //  POURQUOI DES MOTS FORTS ET PAS DES MOTS FAIBLES. Les bijoux étaient des
+  //  mots FAIBLES de « mode » ('bijou', 'schmuck', 'joya'…). Un mot faible ne
+  //  tranche que s'il gagne à la majorité : dès qu'un titre disait « montre »
+  //  ou « sac », le bijou repassait en Mode. Or c'est un PRODUIT NOMMÉ — une
+  //  bague est une bague — et la règle du projet veut que le produit nommé
+  //  tranche le premier. Les bijoux sont donc montés en MOTS_FORTS, et les mots
+  //  faibles correspondants ont quitté la table de « mode ».
+  //
+  //  CHAQUE MOT A ÉTÉ MESURÉ sur les 11 479 offres du catalogue avant d'entrer
+  //  (outils/mesure-mots-bijoux.mjs). Ce que la mesure a montré, et qui a fait
+  //  ÉCARTER des mots qui paraissaient évidents :
+  //   « bracelet »  46 offres, dont la quasi-totalité sont des BRACELETS DE
+  //                 MONTRE (« Bracelet Sport » d'Apple Watch, cuir de Lip) ;
+  //   « bague »     attrapait « baguette » (un grille-pain) ;
+  //   « broche »    attrapait « embroché » (un menu) ;
+  //   « parure »    attrapait « parure de lit » (literie) ;
+  //   « jonc »      attrapait « jonc de mer » (un panier) ;
+  //   « alliance »  sens figuré (« l'alliance pour une peau éclatante ») ;
+  //   « medaille »  désigne une récompense sportive, pas un bijou ;
+  //   « pendant »   (en) attrapait « pendant les soldes » — 18 offres ;
+  //   « anhanger »  (de) attrapait « Fahrradanhänger » (remorque) ;
+  //   « kette »     (de) attrapait « Vierkantkette » (chaîne antivol) ;
+  //   « reif »      (de) attrapait « Reifen » (pneus) ;
+  //   « oorbel »    (nl) attrapait « Doorbell » (sonnette !) ;
+  //   « pendiente » (es) attrapait « Independiente » — réglé par MOTS_TROMPEURS ;
+  //   « anillo »    (es) attrapait « El Señor de los Anillos » et « Tempranillo » ;
+  //   « anello »    (it) attrapait « Maranello » — lu entre frontières ;
+  //   « anel »      (pt) attrapait « panel » / « painel » — lu entre frontières ;
+  //   « colar »     (pt) attrapait « escolar » ;
+  //   « bracciale » (it) et « pulsera » (es) désignent AUSSI un bracelet de
+  //                 montre / de suivi d'activité — écartés comme « bracelet ».
+  //
+  //  Les mots gardés sont ceux qui n'ont qu'UN sens sur le catalogue. Là où un
+  //  sens parasite est un mot entier (« anello » dans « Maranello » n'en est pas
+  //  un, « collar » dans « Collared » non plus), le mot est lu ENTRE FRONTIÈRES
+  //  — voir MOTS_A_FRONTIERE. On préfère une rubrique PLUS PETITE et sûre à une
+  //  rubrique gonflée de montres et de pneus.
+  bijoux: [
+    // fr
+    'bijou', 'bijoux', 'collier', 'pendentif', 'boucle d oreille', 'gourmette',
+    // en
+    //  « jewel »/« jewels » en plus de « jewellery »/« jewelry » : le mot a été
+    //  RETIRÉ de la table « mode » en même temps que les autres mots de bijou.
+    //  Sans lui, « Evry Jewels Discount Code » — un vrai article de bijouterie —
+    //  ne matchait plus RIEN et tombait en « Autres ». Mesuré : c'était le seul
+    //  déplacement non voulu du changement, sur 11 479 offres.
+    'jewel', 'jewels', 'jewellery', 'jewelry', 'necklace', 'earring', 'earrings', 'brooch', 'bangle', 'locket',
+    // de
+    'schmuck', 'halskette', 'ohrring', 'ohrringe', 'brosche',
+    // nl
+    'sieraad', 'sieraden', 'halssnoer', 'ketting',
+    // es
+    'joya', 'joyas', 'joyeria', 'pendiente', 'pendientes', 'gargantilla', 'collar',
+    // it
+    'gioiello', 'gioielli', 'gioielleria', 'collana', 'orecchino', 'orecchini', 'ciondolo', 'spilla', 'anello',
+    // pt
+    'joia', 'joias', 'joalharia', 'pulseira', 'brinco', 'brincos', 'pingente', 'anel',
+    // pl
+    'bizuteria', 'naszyjnik', 'bransoletka', 'kolczyk', 'kolczyki', 'pierscionek', 'wisiorek', 'broszka',
+    // sv
+    'smycke', 'smycken', 'halsband',
+    //  « armband » vaut « bracelet » en ALLEMAND, en NÉERLANDAIS et en SUÉDOIS.
+    //  Le mot est UNE fois : les mots partagés entre langues sont écrits une
+    //  seule fois (le vérificateur lit un compteur par langue et un doublon le
+    //  casserait — voir la note de la table « mode » plus haut). Il est lu entre
+    //  frontières : les composés qui l'ont avalé ne comptent pas — « Lederarmband »
+    //  (bracelet de montre, cuir), « Sportarmband » (Apple Watch).
+    'armband',
+  ],
 };
 
 /** Normalisation de comparaison : accents, apostrophes, lettres spéciales.
@@ -2045,7 +2125,24 @@ const MOTS_A_FRONTIERE = new Set(['auto', 'moto', 'tire', 'wagen', 'wiel', 'mota
   //     « Silhouette élégante ») : 16 offres touchées à tort en sous-chaîne.
   //  À frontière, « Socks », « Meia », « Gants de moto » continuent de matcher ;
   //  « socket » et « élégant » non.
-  'sock', 'meia', 'gant', 'gants']);
+  'sock', 'meia', 'gant', 'gants',
+  // BIJOUX — mots dont le sens de bijou est un MOT ENTIER, mais qui, lus en
+  //  sous-chaîne, se cachent dans un mot ordinaire. Chacun est mesuré sur le
+  //  catalogue (outils/mesure-mots-bijoux.mjs), et l'écart est criant :
+  //   « anello » (it, bague)  → « MaraNELLO » (modèle de voiture, dans un titre
+  //      de café en capsules) ; à frontière, « Anello » continue de matcher ;
+  //   « anel »   (pt, anneau) → « pANEL » (écran, batterie portable) : 31 offres
+  //      touchées à tort en sous-chaîne, aucune n'a de bijou ;
+  //   « armband » (de/nl/sv)  → « Lederarmband », « Sportarmband » : un bracelet
+  //      de MONTRE. À frontière, l'« armband » seul (bijou) reste lu, le composé
+  //      non — c'est précisément le partage voulu ;
+  //   « ketting » (nl)        → « krokkettendag » (journée du croque) ; le vrai
+  //      « Ketting » de Swarovski, lui, est un mot entier ;
+  //   « halsband » (sv)       → un collier peut être un collier de CHIEN ; lu
+  //      entre frontières, on évite au moins les composés ;
+  //   « collar » (es, collier) → « Collared Zip Front Jacket » (veste à col) ;
+  //      le vrai « Collar Multicharms » de SINGULARU reste lu.
+  'anello', 'anel', 'armband', 'ketting', 'halsband', 'collar']);
 
 /** Un mot-clé doit-il être lu entre deux frontières de mot ? */
 const exigeFrontiere = (m) => m.length <= 3 || MOTS_A_FRONTIERE.has(m);
@@ -2124,7 +2221,7 @@ const exigeFrontiere = (m) => m.length <= 3 || MOTS_A_FRONTIERE.has(m);
  *                     un titre de VÊTEMENTS (« Character Clothing Incl. … Hot
  *                     Wheels, K-Pop »), qui doit rester en Mode.
  */
-const MOTS_TROMPEURS = /(^|[^a-z])(motorola|motoroli|motorole|motorolu|streifen|good girl|tom cruise|ideal voyage|kinder schokolade|kinder bueno|orient bambino|beach boys|lost boys|rebecca mobili|bookshelf speakers|bookshelf speaker|couch co-op|couch co op|couch coop|podkladka na biurko|accesorio de escritorio|libreria completa|pour une etagere|pour etagere|chaise romaine|babyliss|configuration|configuracion|configurazione|fargat|fargad|fargnattseende|flerfargstryck|fargdisplay|washing machine cleaner|k-pop|gant de toilette|gants nitrile|gant nitrile|no sweat|meias-finais|meias finais|meia-final)([^a-z]|$)/g;
+const MOTS_TROMPEURS = /(^|[^a-z])(motorola|motoroli|motorole|motorolu|streifen|good girl|tom cruise|ideal voyage|kinder schokolade|kinder bueno|orient bambino|beach boys|lost boys|rebecca mobili|bookshelf speakers|bookshelf speaker|couch co-op|couch co op|couch coop|podkladka na biurko|accesorio de escritorio|libreria completa|pour une etagere|pour etagere|chaise romaine|babyliss|configuration|configuracion|configurazione|fargat|fargad|fargnattseende|flerfargstryck|fargdisplay|washing machine cleaner|k-pop|gant de toilette|gants nitrile|gant nitrile|no sweat|meias-finais|meias finais|meia-final|independiente|independientes)([^a-z]|$)/g;
 const retirerTrompeurs = (texte) => texte.replace(MOTS_TROMPEURS, '$1 $3');
 
 /** Les marqueurs d'un jeu NUMÉRIQUE — application, téléchargement… ou console.

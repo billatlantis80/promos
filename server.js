@@ -122,7 +122,15 @@ const server = http.createServer((req, res) => {
 
   const PUBLIC = path.join(RACINE, 'public');
   const DOCS = path.join(RACINE, 'docs');
-  const rel = url.pathname === '/' ? 'index.html' : url.pathname.replace(/^\/+/, '');
+  // Un dossier vaut son index.html. GitHub Pages le fait (et redirige même
+  // /admin vers /admin/), le service local ne le faisait pas : le panneau
+  // d'administration répondait 404 ici pendant qu'il fonctionnerait en ligne.
+  // Un serveur de test qui ne se comporte pas comme la cible fait perdre plus
+  // de temps qu'il n'en fait gagner.
+  let chemin = url.pathname;
+  if (chemin === '/') chemin = '/index.html';
+  else if (chemin.endsWith('/')) chemin += 'index.html';
+  const rel = chemin.replace(/^\/+/, '');
   // Trois familles de fichiers, chacune dans son dossier :
   //   - data/offres.json vit un cran au-dessus de public/ : autorisé nommément ;
   //   - les visuels publiés vivent dans docs/img/ : les offres publiées les
@@ -132,6 +140,11 @@ const server = http.createServer((req, res) => {
   //   - tout le reste vient de public/.
   let fichier;
   if (rel === 'data/offres.json') fichier = DONNEES;
+  // Le site publié sert le catalogue à la RACINE (/offres.json) : c'est ce que
+  // lit le panneau d'administration, depuis /admin/. Sans cette ligne, le
+  // panneau s'ouvrait sur un tableau de bord VIDE en local alors qu'il
+  // fonctionnerait en ligne — le pire des deux mondes pour mettre au point.
+  else if (rel === 'offres.json') fichier = DONNEES;
   else if (rel.startsWith('img/')) fichier = path.normalize(path.join(DOCS, rel));
   else fichier = path.normalize(path.join(PUBLIC, rel));
 

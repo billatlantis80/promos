@@ -1899,6 +1899,7 @@ const EXTRA = {
     'Thème et affichage': 'Thème et affichage',
     'Le nombre à droite de chaque pays est son nombre d\'offres.': 'Le nombre à droite de chaque pays est son nombre d\'offres.',
 'date inconnue': 'date inconnue',
+    'Créer un compte sur cet appareil': 'Créer un compte sur cet appareil',
   },
   nl: {
     'Pourcentage calculé entre deux prix réels': 'Percentage berekend tussen twee echte prijzen',
@@ -1924,6 +1925,7 @@ const EXTRA = {
     'Thème et affichage': 'Thema en weergave',
     'Le nombre à droite de chaque pays est son nombre d\'offres.': 'Het getal rechts van elk land is het aantal aanbiedingen.',
 'date inconnue': 'onbekende datum',
+    'Créer un compte sur cet appareil': 'Een account aanmaken op dit toestel',
   },
   de: {
     'Pourcentage calculé entre deux prix réels': 'Prozentsatz berechnet zwischen zwei echten Preisen',
@@ -1949,6 +1951,7 @@ const EXTRA = {
     'Thème et affichage': 'Design und Anzeige',
     'Le nombre à droite de chaque pays est son nombre d\'offres.': 'Die Zahl rechts neben jedem Land ist seine Anzahl Angebote.',
 'date inconnue': 'unbekanntes Datum',
+    'Créer un compte sur cet appareil': 'Ein Konto auf diesem Gerät erstellen',
   },
   en: {
     'Pourcentage calculé entre deux prix réels': 'Percentage calculated between two real prices',
@@ -1974,6 +1977,7 @@ const EXTRA = {
     'Thème et affichage': 'Theme and display',
     'Le nombre à droite de chaque pays est son nombre d\'offres.': 'The number to the right of each country is its number of deals.',
 'date inconnue': 'unknown date',
+    'Créer un compte sur cet appareil': 'Create an account on this device',
   },
   es: {
     'Pourcentage calculé entre deux prix réels': 'Porcentaje calculado entre dos precios reales',
@@ -1999,6 +2003,7 @@ const EXTRA = {
     'Thème et affichage': 'Tema y visualización',
     'Le nombre à droite de chaque pays est son nombre d\'offres.': 'El número a la derecha de cada país es su número de ofertas.',
 'date inconnue': 'fecha desconocida',
+    'Créer un compte sur cet appareil': 'Crear una cuenta en este dispositivo',
   },
   it: {
     'Pourcentage calculé entre deux prix réels': 'Percentuale calcolata tra due prezzi reali',
@@ -2024,6 +2029,7 @@ const EXTRA = {
     'Thème et affichage': 'Tema e visualizzazione',
     'Le nombre à droite de chaque pays est son nombre d\'offres.': 'Il numero a destra di ogni paese è il suo numero di offerte.',
 'date inconnue': 'data sconosciuta',
+    'Créer un compte sur cet appareil': 'Creare un account su questo dispositivo',
   },
   pt: {
     'Pourcentage calculé entre deux prix réels': 'Percentagem calculada entre dois preços reais',
@@ -2049,6 +2055,7 @@ const EXTRA = {
     'Thème et affichage': 'Tema e visualização',
     'Le nombre à droite de chaque pays est son nombre d\'offres.': 'O número à direita de cada país é o seu número de promoções.',
 'date inconnue': 'data desconhecida',
+    'Créer un compte sur cet appareil': 'Criar uma conta neste dispositivo',
   },
   pl: {
     'Pourcentage calculé entre deux prix réels': 'Procent obliczony między dwiema prawdziwymi cenami',
@@ -2074,6 +2081,7 @@ const EXTRA = {
     'Thème et affichage': 'Motyw i wyświetlanie',
     'Le nombre à droite de chaque pays est son nombre d\'offres.': 'Liczba po prawej stronie każdego kraju to liczba jego ofert.',
 'date inconnue': 'nieznana data',
+    'Créer un compte sur cet appareil': 'Utwórz konto na tym urządzeniu',
   },
   sv: {
     'Pourcentage calculé entre deux prix réels': 'Procent beräknat mellan två riktiga priser',
@@ -2099,6 +2107,7 @@ const EXTRA = {
     'Thème et affichage': 'Tema och visning',
     'Le nombre à droite de chaque pays est son nombre d\'offres.': 'Siffran till höger om varje land är dess antal erbjudanden.',
 'date inconnue': 'okänt datum',
+    'Créer un compte sur cet appareil': 'Skapa ett konto på den här enheten',
   },
 };
 

@@ -52,11 +52,27 @@ import { famille, FAMILLES, MARQUES, MOTS_FORTS, categorieDeSource, sansAccents,
    Original : marques comprises — mêmes listes que
    le collecteur, fusionnées comme lui. Le vérificateur doit juger sur
    EXACTEMENT ce sur quoi le collecteur décide : sinon il inventerait des
-   défauts (« cette offre n'a aucune preuve ») là où la marque en était une. */
+   défauts (« cette offre n'a aucune preuve ») là où la marque en était une.
+
+   ⚠ DÉFAUT CORRIGÉ (rubrique « Bijoux ») : la table était construite en
+   parcourant les SEULES clés de FAMILLES. Une famille qui n'existe QUE par ses
+   mots forts — c'est le cas de « bijoux », monté en MOTS_FORTS sans aucun mot
+   faible — n'obtenait donc AUCUNE entrée ici. Résultat : ses 17 offres étaient
+   déclarées « rangées sans aucune preuve », alors que la preuve (le mot
+   « armband », « kolczyki », « earrings »…) était bien dans le titre. Le
+   contrôle accusait le classement d'un défaut qui n'existait pas.
+
+   On parcourt maintenant l'UNION des clés des trois tables. Une famille qui
+   n'a que des mots forts est jugée sur eux ; une famille qui n'a que des
+   marques aussi. */
+const CLES_FAMILLES = [...new Set([
+  ...Object.keys(FAMILLES), ...Object.keys(MARQUES), ...Object.keys(MOTS_FORTS),
+])];
 const MOTS_TOUS = Object.fromEntries(
-  Object.entries(FAMILLES).map(([f, mots]) => [
+  CLES_FAMILLES.map((f) => [
     f,
-    [...mots, ...(MARQUES[f] || []), ...(MOTS_FORTS[f] || [])].map((m) => sansAccents(m).toLowerCase()),
+    [...(FAMILLES[f] || []), ...(MARQUES[f] || []), ...(MOTS_FORTS[f] || [])]
+      .map((m) => sansAccents(m).toLowerCase()),
   ]),
 );
 

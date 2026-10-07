@@ -17,7 +17,19 @@ import subprocess
 SOURCE = '/opt/data/webdev/projects/promos'
 BANC = '/tmp/kaz2/banc'
 PUB = f'{BANC}/public'
-TESTS = sorted(glob.glob(f'{BANC}/tests/*.test.mjs'))
+# TOUS les fichiers de test, où qu'ils soient et sous n'importe lequel des motifs
+# que « node --test » ramasse tout seul. Deux corrections successives ont été
+# nécessaires, et les deux pour la même raison : le banc SILENCIEUSEMENT plus
+# petit que le projet.
+#   1. on ne prenait que tests/*.test.mjs — or outils/test-rattachement-pays.mjs
+#      est un fichier de test rangé ailleurs.
+#   2. l'ajouter au motif « *.test.mjs » ne suffisait pas : ce nom-là finit par
+#      « -pays.mjs », c'est le motif « test-*.mjs » qui le ramasse.
+# Un contrôle qui tourne sur un jeu plus petit que le vrai ne dit pas qu'il est
+# incomplet : il affiche « 0 défaut raté ». D'où le garde-fou plus bas, qui
+# COMPARE le nombre de tests du banc à celui du projet et refuse de se taire.
+MOTIFS = ('tests/*.test.mjs', 'tests/test-*.mjs', 'outils/*.test.mjs', 'outils/test-*.mjs')
+TESTS = sorted({f for m in MOTIFS for f in glob.glob(f'{BANC}/{m}')})
 FICHIERS = [f'{PUB}/app.css', f'{PUB}/app.js', f'{PUB}/langues.js', f'{PUB}/index.html']
 
 if os.path.isdir(BANC):
@@ -47,11 +59,57 @@ def inverse_colonnes(t):
              .replace('class="col-TMP"', 'class="col-icones"', 1))
 
 
+def _deplace_section(t, ancre_interne):
+    """Sort de `t` la section de rubrique qui contient `ancre_interne`.
+
+    Rend (section, reste). Sert aux contre-epreuves qui doivent DEPLACER une
+    rubrique : renommer un titre ne change pas l'ordre, et un controle d'ordre
+    ne verrait rien — le defaut passerait pour un succes."""
+    i = t.index(ancre_interne)
+    debut = t.rindex('<section class="rubrique">', 0, i)
+    fin = t.index('</section>', i) + len('</section>')
+    return t[debut:fin], t[:debut] + t[fin:]
+
+
+def themes_avant_pays(t):
+    """Remet la rubrique Themes AVANT celle du pays : c'est l'ordre inverse de
+    la demande (« les themes en premier […] le pays a la fin »)."""
+    bloc, reste = _deplace_section(t, '<div class="themes" id="themes"></div>')
+    j = reste.index('<div id="regPays"></div>')
+    k = reste.rindex('<section class="rubrique">', 0, j)
+    return reste[:k] + bloc + '\n    ' + reste[k:]
+
+
+def themes_apres_pays(t):
+    """Pousse la rubrique Themes APRES celle du pays : la demande etait
+    Themes -> Affichage -> Pays, celle-ci la casse par le bas."""
+    bloc, reste = _deplace_section(t, '<div class="themes" id="themes"></div>')
+    j = reste.index('<div id="regPays"></div>')
+    fin = reste.index('</section>', j) + len('</section>')
+    return reste[:fin] + '\n    ' + bloc + reste[fin:]
+
+
 for f in FICHIERS:
     shutil.copy(f, SAUV[f])
 
 base = lance()
-print(f'etat initial : {base[0]} reussis, {base[1]} echoues\n')
+print(f'etat initial : {base[0]} reussis, {base[1]} echoues')
+
+# --- Garde-fou : le banc doit lancer AUTANT de tests que le projet ------------
+# Sans cette comparaison, une liste de fichiers incomplete se contente de faire
+# tourner moins de tests, et affiche « defauts rates : 0 ». C'est exactement le
+# mensonge qu'on veut rendre impossible.
+vrai = subprocess.run(['node', '--test'], cwd=SOURCE, capture_output=True, text=True)
+m = re.search(r'# tests (\d+)', vrai.stdout)
+if not m:
+    print('!! impossible de compter les tests du projet : garde-fou inoperant')
+elif int(m.group(1)) != base[0]:
+    print(f'!! BANC INCOMPLET : {base[0]} tests au banc contre {m.group(1)} au projet.')
+    print('   Les defauts rates annonces plus bas ne veulent rien dire. On arrete la.')
+    raise SystemExit(2)
+else:
+    print(f'garde-fou : le banc lance bien les {base[0]} tests du projet')
+print()
 
 essais = [
     ('css', 'icones desalignees (flex-start -> center)',
@@ -77,10 +135,38 @@ essais = [
      f'{PUB}/index.html',
      remplace('<b class="marque-nom">KAZENDRA</b>',
               '<b class="marque-nom"><span class="k-mot">K</span>AZENDRA</b>')),
-    ('css', 'le degrade du mot repasse en diagonale',
+    ('css', 'le degrade du mot est reintroduit',
      f'{PUB}/app.css',
-     remplace('linear-gradient(90deg, var(--mot-deg-1)',
-              'linear-gradient(135deg, var(--mot-deg-1)')),
+     remplace('.marque-nom {\n  color: inherit;\n}',
+              '.marque-nom {\n  background-image: linear-gradient(90deg, #025479, #e59038);\n'
+              '  -webkit-background-clip: text; background-clip: text;\n'
+              '  color: transparent;\n}')),
+    ('js', 'le total de l en-tete repasse sur meta.totalOffres',
+     f'{PUB}/app.js',
+     remplace('const totalPromos = etat.offres.length;',
+              'const totalPromos = etat.meta.totalOffres;')),
+    ('index', 'l onglet Themes redevient separe de l Affichage',
+     f'{PUB}/index.html',
+     remplace('<button class="onglet" role="tab" data-onglet="affichage"',
+              '<button class="onglet" role="tab" data-onglet="themes"')),
+    ('index', 'les themes remontent AVANT le pays',
+     f'{PUB}/index.html', themes_avant_pays),
+    ('js', 'la liste des langues perd sa classe',
+     f'{PUB}/app.js',
+     remplace('class="langues" role="radiogroup"', 'class="langues2" role="radiogroup"')),
+    ('js', 'le drapeau polonais disparait',
+     f'{PUB}/app.js',
+     remplace('  pl: \'<rect width="24" height="16" fill="#ffffff"/>'
+              '<rect y="8" width="24" height="8" fill="#DC143C"/>\',', '')),
+    ('js', 'le pays des reglages redevient un menu deroulant',
+     f'{PUB}/app.js',
+     remplace('rp.innerHTML = \'<div class="pays-liste pays-2col">\'',
+              'rp.innerHTML = \'<div class="champ"><select id="paysReglages"></select></div>\'')),
+    ('js', 'la recherche de drapeau redevient sensible a la casse',
+     f'{PUB}/app.js',
+     remplace('DRAPEAUX_PAYS[String(code).toLowerCase()]', 'DRAPEAUX_PAYS[code]')),
+    ('index', 'les themes repassent APRES le pays',
+     f'{PUB}/index.html', themes_apres_pays),
 ]
 
 rates = 0

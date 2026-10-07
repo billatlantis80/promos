@@ -46,6 +46,32 @@ test('l’en-tête garde trois lignes : promos, total, mise à jour', () => {
     'le total doit venir APRÈS les bonnes promos et AVANT la mise à jour');
 });
 
+test('le total de l’en-tête est celui de « Tous les pays »', () => {
+  // Demande de B (08/10/2026) : « Ce chiffre doit tout simplement correspondre
+  // au total qui est indiqué dans tous les pays. » Le sélecteur de pays annonce
+  // « Tous les pays (N) », N valant etat.offres.length. La deuxième ligne de
+  // l'en-tête doit lire EXACTEMENT la même source. Jusqu'ici elle lisait
+  // meta.totalOffres, qui ne compte que les promotions « vraies » : deux
+  // nombres différents s'affichaient donc côte à côte pour la même grandeur
+  // (9 782 dans l'en-tête contre 11 325 dans le sélecteur) — l'utilisateur a vu
+  // l'écart et l'a signalé.
+  const i = js.indexOf("if (etat.portee === 'promos')");
+  assert.ok(i > 0, 'la branche « bonnes promos » doit exister');
+  const bloc = js.slice(i, js.indexOf('} else {', i));
+  assert.match(bloc, /const totalPromos = etat\.offres\.length;/,
+    'le total doit venir du même compteur que « Tous les pays »');
+  // On contrôle le CODE, pas la prose : le commentaire qui explique la
+  // correction nomme « meta.totalOffres », et un simple recherche de mot
+  // accusait donc le fichier juste. Les commentaires sont retirés d'abord.
+  const code = bloc.replace(/\/\*[\s\S]*?\*\//g, '').replace(/^[ \t]*\/\/.*$/gm, '');
+  assert.doesNotMatch(code, /totalOffres/,
+    'meta.totalOffres ne compte pas tous les pays : plus sur cette ligne');
+  // Et le sélecteur doit bien compter cette liste-là, sinon le contrôle
+  // ci-dessus se contenterait de comparer l'en-tête à une autre source.
+  assert.match(js, /t\('Tous les pays \(\{n\}\)', \{ n: etat\.offres\.length \}\)/,
+    'le sélecteur de pays doit compter la même liste');
+});
+
 test('le mélange 60/40 n’a pas été supprimé du programme', () => {
   // Ce qui disparaît, c'est l'AFFICHAGE — pas la règle. Le mélange reste.
   assert.match(js, /melanger\(dedoublonner\(etat\.offres\.filter\(estBonnePromo\)\)\)/,

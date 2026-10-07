@@ -241,6 +241,7 @@ function dessinerReglages() {
   dessinerConnexion();
   dessinerLangue();
   dessinerCompte();
+  dessinerDroits();
   majThemes();
 }
 
@@ -432,27 +433,59 @@ function dessinerProfil() {
     </div>`;
 }
 
-/** Bloc « tes droits » : ce qui est gardé, où, et comment tout reprendre ou tout
-    effacer. Obligatoire pour la publication, et utile même sans obligation. */
+/** Blocs de l'onglet INFORMATIONS : le compte expliqué, puis les droits.
+ *
+ *  Ces textes vivaient dans l'onglet COMPTE, AU-DESSUS du formulaire
+ *  d'inscription. B les a fait descendre ici (08/10/2026) :
+ *   « Ce texte si : Aucun compte sur cet appareil / Ce compte ne crée rien en
+ *     ligne […] Ce qu'il ne fera jamais […] Dois aller dans informations »
+ *   « ce texte aussi : Tes données, tes droits […] Dois aller dans
+ *     informations également »
+ *  Ils EXPLIQUENT le modèle ; leur place n'est pas au-dessus d'un formulaire
+ *  qu'ils n'aident pas à remplir.
+ *
+ *  La phrase sur les liens affiliés N'EST PLUS ICI : elle est déjà dans
+ *  « Sources et données », juste sous la phrase qui décrit les sources qu'elle
+ *  commente. Elle existait en DOUBLE (une version ici, une autre là) — une
+ *  phrase recopiée à deux endroits finit toujours par diverger. Une seule
+ *  mention, à l'endroit qui parle des liens : c'est ça, l'intégration.
+ */
 function blocDroits() {
+  const f = C.ficheCompte();
+  // Le titre « Aucun compte sur cet appareil » n'est posé QUE s'il n'y a pas de
+  // compte : sous un compte existant, il serait faux. Les deux paragraphes,
+  // eux, restent vrais dans les deux cas — ils décrivent le modèle, pas l'état.
+  const titre = f ? '' : `<h4>${esc(t('Aucun compte sur cet appareil'))}</h4>`;
+  // ⚠ DÉFAUT CORRIGÉ — CES TEXTES N'ÉTAIENT PAS TRADUITS.
+  //  Constaté à l'écran, pas dans le code : avec l'interface en anglais, ce bloc
+  //  restait EN FRANÇAIS au milieu des autres phrases. Cause : il est construit
+  //  ici, en JavaScript, et ses phrases étaient écrites en clair dans le gabarit
+  //  — jamais passées à t(). Les traductions existaient pourtant dans les neuf
+  //  dictionnaires : elles avaient été préparées puis jamais BRANCHÉES.
+  //  Un texte en clair dans un gabarit est invisible au moteur : il ne se
+  //  plaint pas, il s'affiche dans la mauvaise langue. Chaque phrase passe
+  //  maintenant par t(). Voir tests/droits.test.mjs, qui refuse toute phrase de
+  //  ce bloc qui ne serait pas branchée.
   return `
+    <div class="carte-bloc">
+      ${titre}
+      <p>${esc(t("Ce compte ne crée rien en ligne : il n'y a pas de serveur. Il protège l'accès à l'application (favoris, réglages) sur ce téléphone, et donne un nom au porteur des données."))}</p>
+      <p>${esc(t("Ce qu'il ne fera jamais, pour que tu ne l'attendes pas : retrouver tes favoris sur un autre appareil, ni te rendre un mot de passe oublié. Le mot de passe n'est pas enregistré — seulement une empreinte calculée à partir de lui."))}</p>
+    </div>
     <div class="carte-bloc" style="margin-top:12px">
-      <h4>${esc(t('Tes données, tes droits'))}</h4>
-      <p>Ce qui est conservé sur cet appareil : le nom d'utilisateur, une empreinte
-         du mot de passe (jamais le mot de passe), le prénom affiché, tes favoris
-         et tes réglages. <b>Rien n'est envoyé</b> : il n'y a ni serveur, ni
-         traqueur, ni cookie publicitaire.</p>
+      <p>${esc(t("Ce qui est conservé sur cet appareil : le nom d'utilisateur, une empreinte du mot de passe (jamais le mot de passe), le prénom affiché, tes favoris et tes réglages."))} <b>${esc(t("Rien n'est envoyé"))}</b>${esc(t(" : il n'y a ni serveur, ni traqueur, ni cookie publicitaire."))}</p>
       <ul>
-        <li><b>Voir et emporter</b> : « Télécharger mes données » produit un fichier
-            lisible qui contient tout.</li>
-        <li><b>Effacer</b> : « Supprimer mon compte » retire le compte et les
-            données de cet appareil, sans délai et sans avoir à demander à personne.</li>
-        <li><b>Durée</b> : jusqu'à ce que tu supprimes. Aucune copie n'existe ailleurs.</li>
+        <li><b>${esc(t('Voir et emporter'))}</b> : ${esc(t('« Télécharger mes données » produit un fichier lisible qui contient tout.'))}</li>
+        <li><b>${esc(t('Effacer'))}</b> : ${esc(t('« Supprimer mon compte » retire le compte et les données de cet appareil, sans délai et sans avoir à demander à personne.'))}</li>
+        <li><b>${esc(t('Durée'))}</b> : ${esc(t("jusqu'à ce que tu supprimes. Aucune copie n'existe ailleurs."))}</li>
       </ul>
-      <p style="margin-top:8px">Les liens vers les marchands peuvent être affiliés :
-         l'application peut alors toucher une commission, <b>sans changer le prix
-         que tu paies</b>.</p>
     </div>`;
+}
+
+/** Verse les blocs ci-dessus dans l'onglet Informations. */
+function dessinerDroits() {
+  const rd = $('regDroits');
+  if (rd) rd.innerHTML = blocDroits();
 }
 
 const dateLisible = (iso) => {
@@ -463,13 +496,14 @@ const dateLisible = (iso) => {
 function dessinerCompte() {
   const f = C.ficheCompte();
   if (!f) {
+    // Le formulaire d'INSCRIPTION MANUELLE passe en premier — c'est la demande
+    // de B : « il faut commencer par l'inscription manuelle avec nom
+    // d'utilisateur et mot de passe ». Les paragraphes d'explication qui le
+    // précédaient sont partis dans l'onglet Informations (voir blocDroits) :
+    // ici, on ne garde que ce qui sert à remplir le formulaire.
     $('regCompte').innerHTML = `
       <div class="carte-bloc">
-        <h4>${esc(t('Aucun compte sur cet appareil'))}</h4>
-        <p>Ce compte <b>ne crée rien en ligne</b> : il n'y a pas de serveur. Il
-           protège l'accès à l'application (favoris, réglages) sur ce téléphone,
-           et donne un nom au porteur des données.</p>
-        <p>${t("Ce qu'il ne fera jamais, pour que tu ne l'attendes pas : retrouver tes favoris sur un autre appareil, ni te rendre un mot de passe oublié. Le mot de passe n'est pas enregistré — seulement une empreinte calculée à partir de lui.")}</p>
+        <h4>${esc(t('Créer un compte sur cet appareil'))}</h4>
         <div class="champ">
           <label for="cNom">${esc(t("Nom d'utilisateur"))}</label>
           <input id="cNom" type="text" maxlength="24" autocomplete="username" placeholder="${esc(t('3 à 24 caractères'))}">
@@ -484,8 +518,7 @@ function dessinerCompte() {
         </div>
         <p class="annonce" id="cAnnonce"></p>
         <p style="margin:0"><button class="enregistrer" id="creerCompte">${esc(t('Créer mon compte'))}</button></p>
-      </div>
-      ${blocDroits()}`;
+      </div>`;
     return;
   }
   $('regCompte').innerHTML = `
@@ -513,8 +546,7 @@ function dessinerCompte() {
         <button class="outil" id="exporterDonnees">Télécharger mes données</button>
         <button class="outil danger" id="supprimerCompte">${esc(t('Supprimer mon compte'))}</button>
       </div>
-    </div>
-    ${blocDroits()}`;
+    </div>`;
 }
 
 /** Export RGPD : tout ce que l'application garde, dans un seul fichier lisible. */

@@ -7,6 +7,7 @@
 import { lienAffilie, MENTION_AFFILIATION, siteAmazon } from './affiliation.js';
 import * as C from './compte.js';
 import { t, chargerLangue, definirLangue, traduireDOM, languesDisponibles, langue, CLE_LANGUE, locale } from './langues.js';
+import { noterVisite } from './trafic.js';
 
 const $ = (id) => document.getElementById(id);
 
@@ -29,7 +30,7 @@ const BASE = DANS_APK ? HUB : '';
 
 const NOMS_CATEGORIES = {
   bricolage: 'Bricolage', maison: 'Maison', tech: 'High-tech',
-  electromenager: 'Électroménager', mode: 'Mode',
+  electromenager: 'Électroménager', mode: 'Mode', bijoux: 'Bijoux',
   meubles: 'Meubles', sport: 'Sport', jouets: 'Jeux & jouets', auto: 'Auto & moto',
   beaute: 'Beauté', nourriture: 'Nourriture', animaux: 'Animaux',
   voyages: 'Voyages', activite: 'Activité', autre: 'Autres',
@@ -51,7 +52,7 @@ const NOMS_CATEGORIES = {
  * Une catégorie inconnue (ajoutée par le collecteur sans passer par ici) se
  * range juste avant « Autres » — jamais au milieu et jamais en tête.
  */
-const ORDRE_CATEGORIES = ['tech', 'electromenager', 'meubles', 'maison', 'mode', 'auto', 'jouets', 'sport', 'bricolage', 'beaute', 'nourriture', 'animaux', 'voyages', 'activite', 'autre'];
+const ORDRE_CATEGORIES = ['tech', 'electromenager', 'meubles', 'maison', 'mode', 'bijoux', 'auto', 'jouets', 'sport', 'bricolage', 'beaute', 'nourriture', 'animaux', 'voyages', 'activite', 'autre'];
 
 /** Rang d'affichage d'une catégorie : un entier, ou « juste avant Autres ». */
 function rangCategorie(c) {
@@ -240,6 +241,7 @@ function dessinerReglages() {
   dessinerConnexion();
   dessinerLangue();
   dessinerCompte();
+  dessinerDroits();
   majThemes();
 }
 
@@ -286,19 +288,111 @@ function annoncerConnexion(reseau) {
           { r: reseau }));
 }
 
-/** Rubrique « Langue » : le sélecteur des 9 langues, avec leur NOM NATIF.
-    Écrit dans #regLangue (index.html). Le changement s'applique tout de suite
-    (voir changerLangue) et ne touche jamais au pays — deux clés distinctes. */
+/** Drapeaux des 9 langues, dessinés en VECTORIEL.
+ *
+ *  Pourquoi pas les emoji (🇫🇷) : Windows ne les dessine pas — il affiche les
+ *  deux lettres « FR » dans un petit carré. Sur une application qui vise toute
+ *  l'Europe, un drapeau qui devient du texte selon la machine n'est pas
+ *  acceptable. Ces tracés-là s'affichent identiquement partout, à toute taille,
+ *  et ne coûtent aucune requête réseau (un fichier image par drapeau = 9
+ *  téléchargements de plus sur un forfait mobile — contraire à la règle
+ *  d'économie de données).
+ *
+ *  Chaque drapeau fait 24 × 16, les proportions réelles d'un drapeau. */
+const DRAPEAUX = {
+  fr: '<rect width="24" height="16" fill="#ffffff"/><rect width="8" height="16" fill="#002395"/>'
+    + '<rect x="16" width="8" height="16" fill="#ED2939"/>',
+  nl: '<rect width="24" height="16" fill="#ffffff"/><rect width="24" height="5.4" fill="#AE1C28"/>'
+    + '<rect y="10.6" width="24" height="5.4" fill="#21468B"/>',
+  //  ALLEMAGNE — DÉFAUT CORRIGÉ (signalé par B : « le drapeau de l'Allemagne ne
+  //  correspond pas, il faut vérifier les couleurs »).
+  //  Le drapeau allemand est NOIR, ROUGE et OR — trois bandes. Le tracé portait
+  //  bien le noir en haut et l'or en bas, mais la bande du MILIEU restait le
+  //  fond blanc, jamais recouverte : la bande rouge était tout simplement
+  //  ABSENTE. On lisait donc un drapeau noir-blanc-or, qui n'existe pas.
+  //  Défaut invisible à la relecture du code — les trois rectangles semblaient
+  //  là — et criant à l'écran dès qu'on regarde la liste des langues.
+  //  Codes officiels : noir #000000, rouge #DD0000, or #FFCE00.
+  de: '<rect width="24" height="16" fill="#DD0000"/><rect width="24" height="5.34" fill="#000000"/>'
+    + '<rect y="10.66" width="24" height="5.34" fill="#FFCE00"/>',
+  en: '<rect width="24" height="16" fill="#012169"/>'
+    + '<path d="M0 0 24 16M24 0 0 16" stroke="#ffffff" stroke-width="3.4"/>'
+    + '<path d="M0 0 24 16M24 0 0 16" stroke="#C8102E" stroke-width="1.5"/>'
+    + '<path d="M12 0V16M0 8H24" stroke="#ffffff" stroke-width="5.4"/>'
+    + '<path d="M12 0V16M0 8H24" stroke="#C8102E" stroke-width="3"/>',
+  es: '<rect width="24" height="16" fill="#F1BF00"/><rect width="24" height="4" fill="#AA151B"/>'
+    + '<rect y="12" width="24" height="4" fill="#AA151B"/>',
+  it: '<rect width="24" height="16" fill="#ffffff"/><rect width="8" height="16" fill="#009246"/>'
+    + '<rect x="16" width="8" height="16" fill="#CE2B37"/>',
+  pt: '<rect width="24" height="16" fill="#FF0000"/><rect width="9.6" height="16" fill="#006600"/>'
+    + '<circle cx="9.6" cy="8" r="3.4" fill="#FFD700"/><circle cx="9.6" cy="8" r="1.7" fill="#CE1126"/>',
+  pl: '<rect width="24" height="16" fill="#ffffff"/><rect y="8" width="24" height="8" fill="#DC143C"/>',
+  sv: '<rect width="24" height="16" fill="#006AA7"/><rect x="7.5" width="3" height="16" fill="#FECC00"/>'
+    + '<rect y="7" width="24" height="3" fill="#FECC00"/>',
+};
+
+/** Drapeau de l'Europe : bleu à douze étoiles d'or.
+ *  Les douze étoiles sont POSÉES EN CERCLE par calcul, pas écrites à la main :
+ *  douze coordonnées recopiées finissent toujours par dériver, et un drapeau
+ *  européen à onze étoiles est une faute qui se voit. */
+const DRAPEAU_EUROPE = (() => {
+  const points = [];
+  for (let i = 0; i < 12; i += 1) {
+    const a = (i * 30 - 90) * Math.PI / 180;
+    points.push(`<use href="#etoileEu" x="${(12 + 5.1 * Math.cos(a)).toFixed(2)}"`
+      + ` y="${(8 + 5.1 * Math.sin(a)).toFixed(2)}"/>`);
+  }
+  return '<defs><path id="etoileEu" d="M0-1.55 L.36-.48 L1.48-.48 L.58,.18 L.91,1.25'
+    + ' L0,.6 L-.91,1.25 L-.58,.18 L-1.48-.48 L-.36-.48 Z" fill="#FFCC00"/></defs>'
+    + '<rect width="24" height="16" fill="#003399"/>' + points.join('');
+})();
+
+/** Drapeaux des PAYS du catalogue. Ce sont ceux des offres, pas ceux des
+ *  langues : un Suédois lit les offres de Suède (sv <-> se), un anglophone
+ *  celles du Royaume-Uni (en <-> gb), et l'Autriche, la Belgique et l'Irlande
+ *  n'ont pas de langue à elles dans l'interface. B a demandé que le pays soit
+ *  « aussi avec le drapeau » : sans table dédiée, ces trois-là n'en auraient
+ *  pas, et la liste aurait des trous. */
+const DRAPEAUX_PAYS = {
+  tout: DRAPEAU_EUROPE,
+  fr: DRAPEAUX.fr, nl: DRAPEAUX.nl, de: DRAPEAUX.de, es: DRAPEAUX.es,
+  it: DRAPEAUX.it, pt: DRAPEAUX.pt, pl: DRAPEAUX.pl,
+  gb: DRAPEAUX.en, se: DRAPEAUX.sv,
+  at: '<rect width="24" height="16" fill="#ffffff"/><rect width="24" height="5.4" fill="#ED2939"/>'
+    + '<rect y="10.6" width="24" height="5.4" fill="#ED2939"/>',
+  be: '<rect width="24" height="16" fill="#FDDA24"/><rect width="8" height="16" fill="#000000"/>'
+    + '<rect x="16" width="8" height="16" fill="#EF3340"/>',
+  ie: '<rect width="24" height="16" fill="#ffffff"/><rect width="8" height="16" fill="#169B62"/>'
+    + '<rect x="16" width="8" height="16" fill="#FF883E"/>',
+};
+
+/** Rubrique « Langue » : les 9 langues en LISTE, drapeau + nom natif.
+ *
+ *  Demande de B : « Pour la partie des langues tu peux utiliser plus de place
+ *  dans l'onglet en mettant les drapeaux des pays avec la langue à côté. » Plus
+ *  de menu déroulant, donc : « Pas besoin de menu déroulant. Il y a suffisamment
+ *  de place. » Un menu déroulant cachait huit langues sur neuf derrière un clic ;
+ *  ici les neuf sont visibles d'un coup, et on voit laquelle est active.
+ *
+ *  Le changement s'applique tout de suite (voir changerLangue) et ne touche
+ *  JAMAIS au pays — deux clés distinctes. */
 function dessinerLangue() {
   const rl = $('regLangue');
   if (!rl) return;
-  if (!$('langueReglages')) {
-    rl.innerHTML = '<div class="champ"><select id="langueReglages" aria-label="'
-      + esc(t('Langue')) + '"></select></div>';
-  }
-  $('langueReglages').innerHTML = languesDisponibles()
-    .map((l) => '<option value="' + l.code + '">' + esc(l.nom) + '</option>').join('');
-  $('langueReglages').value = langue();
+  const choix = langue();
+  rl.innerHTML = `<p class="aide-reglages">${esc(t('Choisis la langue de l’interface'))}</p>`
+    + '<div class="langues" role="radiogroup" aria-label="' + esc(t('Langue')) + '">'
+    + languesDisponibles().map((l) => `
+      <button class="langue${l.code === choix ? ' on' : ''}" data-langue="${esc(l.code)}"
+              role="radio" aria-checked="${l.code === choix}" type="button">
+        <span class="drap" aria-hidden="true"><svg viewBox="0 0 24 16">${DRAPEAUX[l.code] || ''}</svg></span>
+        <span class="nom-langue">${esc(l.nom)}</span>
+        <span class="coche" aria-hidden="true">${l.code === choix ? '✓' : ''}</span>
+      </button>`).join('')
+    + '</div>';
+  rl.querySelectorAll('.langue').forEach((b) => {
+    b.addEventListener('click', () => changerLangue(b.dataset.langue));
+  });
 }
 
 /** Applique un changement de langue choisi par l'utilisateur.
@@ -339,27 +433,59 @@ function dessinerProfil() {
     </div>`;
 }
 
-/** Bloc « tes droits » : ce qui est gardé, où, et comment tout reprendre ou tout
-    effacer. Obligatoire pour la publication, et utile même sans obligation. */
+/** Blocs de l'onglet INFORMATIONS : le compte expliqué, puis les droits.
+ *
+ *  Ces textes vivaient dans l'onglet COMPTE, AU-DESSUS du formulaire
+ *  d'inscription. B les a fait descendre ici (08/10/2026) :
+ *   « Ce texte si : Aucun compte sur cet appareil / Ce compte ne crée rien en
+ *     ligne […] Ce qu'il ne fera jamais […] Dois aller dans informations »
+ *   « ce texte aussi : Tes données, tes droits […] Dois aller dans
+ *     informations également »
+ *  Ils EXPLIQUENT le modèle ; leur place n'est pas au-dessus d'un formulaire
+ *  qu'ils n'aident pas à remplir.
+ *
+ *  La phrase sur les liens affiliés N'EST PLUS ICI : elle est déjà dans
+ *  « Sources et données », juste sous la phrase qui décrit les sources qu'elle
+ *  commente. Elle existait en DOUBLE (une version ici, une autre là) — une
+ *  phrase recopiée à deux endroits finit toujours par diverger. Une seule
+ *  mention, à l'endroit qui parle des liens : c'est ça, l'intégration.
+ */
 function blocDroits() {
+  const f = C.ficheCompte();
+  // Le titre « Aucun compte sur cet appareil » n'est posé QUE s'il n'y a pas de
+  // compte : sous un compte existant, il serait faux. Les deux paragraphes,
+  // eux, restent vrais dans les deux cas — ils décrivent le modèle, pas l'état.
+  const titre = f ? '' : `<h4>${esc(t('Aucun compte sur cet appareil'))}</h4>`;
+  // ⚠ DÉFAUT CORRIGÉ — CES TEXTES N'ÉTAIENT PAS TRADUITS.
+  //  Constaté à l'écran, pas dans le code : avec l'interface en anglais, ce bloc
+  //  restait EN FRANÇAIS au milieu des autres phrases. Cause : il est construit
+  //  ici, en JavaScript, et ses phrases étaient écrites en clair dans le gabarit
+  //  — jamais passées à t(). Les traductions existaient pourtant dans les neuf
+  //  dictionnaires : elles avaient été préparées puis jamais BRANCHÉES.
+  //  Un texte en clair dans un gabarit est invisible au moteur : il ne se
+  //  plaint pas, il s'affiche dans la mauvaise langue. Chaque phrase passe
+  //  maintenant par t(). Voir tests/droits.test.mjs, qui refuse toute phrase de
+  //  ce bloc qui ne serait pas branchée.
   return `
+    <div class="carte-bloc">
+      ${titre}
+      <p>${esc(t("Ce compte ne crée rien en ligne : il n'y a pas de serveur. Il protège l'accès à l'application (favoris, réglages) sur ce téléphone, et donne un nom au porteur des données."))}</p>
+      <p>${esc(t("Ce qu'il ne fera jamais, pour que tu ne l'attendes pas : retrouver tes favoris sur un autre appareil, ni te rendre un mot de passe oublié. Le mot de passe n'est pas enregistré — seulement une empreinte calculée à partir de lui."))}</p>
+    </div>
     <div class="carte-bloc" style="margin-top:12px">
-      <h4>${esc(t('Tes données, tes droits'))}</h4>
-      <p>Ce qui est conservé sur cet appareil : le nom d'utilisateur, une empreinte
-         du mot de passe (jamais le mot de passe), le prénom affiché, tes favoris
-         et tes réglages. <b>Rien n'est envoyé</b> : il n'y a ni serveur, ni
-         traqueur, ni cookie publicitaire.</p>
+      <p>${esc(t("Ce qui est conservé sur cet appareil : le nom d'utilisateur, une empreinte du mot de passe (jamais le mot de passe), le prénom affiché, tes favoris et tes réglages."))} <b>${esc(t("Rien n'est envoyé"))}</b>${esc(t(" : il n'y a ni serveur, ni traqueur, ni cookie publicitaire."))}</p>
       <ul>
-        <li><b>Voir et emporter</b> : « Télécharger mes données » produit un fichier
-            lisible qui contient tout.</li>
-        <li><b>Effacer</b> : « Supprimer mon compte » retire le compte et les
-            données de cet appareil, sans délai et sans avoir à demander à personne.</li>
-        <li><b>Durée</b> : jusqu'à ce que tu supprimes. Aucune copie n'existe ailleurs.</li>
+        <li><b>${esc(t('Voir et emporter'))}</b> : ${esc(t('« Télécharger mes données » produit un fichier lisible qui contient tout.'))}</li>
+        <li><b>${esc(t('Effacer'))}</b> : ${esc(t('« Supprimer mon compte » retire le compte et les données de cet appareil, sans délai et sans avoir à demander à personne.'))}</li>
+        <li><b>${esc(t('Durée'))}</b> : ${esc(t("jusqu'à ce que tu supprimes. Aucune copie n'existe ailleurs."))}</li>
       </ul>
-      <p style="margin-top:8px">Les liens vers les marchands peuvent être affiliés :
-         l'application peut alors toucher une commission, <b>sans changer le prix
-         que tu paies</b>.</p>
     </div>`;
+}
+
+/** Verse les blocs ci-dessus dans l'onglet Informations. */
+function dessinerDroits() {
+  const rd = $('regDroits');
+  if (rd) rd.innerHTML = blocDroits();
 }
 
 const dateLisible = (iso) => {
@@ -370,13 +496,14 @@ const dateLisible = (iso) => {
 function dessinerCompte() {
   const f = C.ficheCompte();
   if (!f) {
+    // Le formulaire d'INSCRIPTION MANUELLE passe en premier — c'est la demande
+    // de B : « il faut commencer par l'inscription manuelle avec nom
+    // d'utilisateur et mot de passe ». Les paragraphes d'explication qui le
+    // précédaient sont partis dans l'onglet Informations (voir blocDroits) :
+    // ici, on ne garde que ce qui sert à remplir le formulaire.
     $('regCompte').innerHTML = `
       <div class="carte-bloc">
-        <h4>${esc(t('Aucun compte sur cet appareil'))}</h4>
-        <p>Ce compte <b>ne crée rien en ligne</b> : il n'y a pas de serveur. Il
-           protège l'accès à l'application (favoris, réglages) sur ce téléphone,
-           et donne un nom au porteur des données.</p>
-        <p>${t("Ce qu'il ne fera jamais, pour que tu ne l'attendes pas : retrouver tes favoris sur un autre appareil, ni te rendre un mot de passe oublié. Le mot de passe n'est pas enregistré — seulement une empreinte calculée à partir de lui.")}</p>
+        <h4>${esc(t('Créer un compte sur cet appareil'))}</h4>
         <div class="champ">
           <label for="cNom">${esc(t("Nom d'utilisateur"))}</label>
           <input id="cNom" type="text" maxlength="24" autocomplete="username" placeholder="${esc(t('3 à 24 caractères'))}">
@@ -391,8 +518,7 @@ function dessinerCompte() {
         </div>
         <p class="annonce" id="cAnnonce"></p>
         <p style="margin:0"><button class="enregistrer" id="creerCompte">${esc(t('Créer mon compte'))}</button></p>
-      </div>
-      ${blocDroits()}`;
+      </div>`;
     return;
   }
   $('regCompte').innerHTML = `
@@ -420,8 +546,7 @@ function dessinerCompte() {
         <button class="outil" id="exporterDonnees">Télécharger mes données</button>
         <button class="outil danger" id="supprimerCompte">${esc(t('Supprimer mon compte'))}</button>
       </div>
-    </div>
-    ${blocDroits()}`;
+    </div>`;
 }
 
 /** Export RGPD : tout ce que l'application garde, dans un seul fichier lisible. */
@@ -1230,13 +1355,33 @@ function dessinerPays() {
 
   const rp = $('regPays');
   if (rp) {
-    if (!$('paysReglages')) {
-      rp.innerHTML = '<div class="champ"><label for="paysReglages">' + esc(t('Pays des offres')) + '</label>'
-        + '<select id="paysReglages"></select></div>'
-        + '<p style="margin:0;font-size:12.5px;color:var(--doux)">Seuls des pays d’Europe sont proposés : les trajets restent courts.</p>';
-    }
-    $('paysReglages').innerHTML = optionsPays();
-    $('paysReglages').value = etat.pays;
+    // En LISTE, plus en menu déroulant (demande de B : « Pas besoin de menu
+    // déroulant. Il y a suffisamment de place »). Chaque pays montre le nombre
+    // d'offres qu'il apporte : un pays vide n'est pas proposé, sinon on
+    // offrirait un filtre qui vide l'écran — l'utilisateur croirait à une panne.
+    const compteP = compteParPays();
+    const item = (code, libelle, n) => `
+      <button class="pays-item${etat.pays === code ? ' on' : ''}" data-pays="${esc(code)}" type="button"
+              aria-pressed="${etat.pays === code}">
+        <span class="drap" aria-hidden="true"><svg viewBox="0 0 24 16">${DRAPEAUX_PAYS[String(code).toLowerCase()] || ''}</svg></span>
+        <b>${esc(libelle)}</b><span class="n">${esc(n.toLocaleString(locale()))}</span>
+      </button>`;
+    // Le NOMBRE SEUL, sans le mot « offres » : sur deux colonnes, « Royaume-Uni
+    // 1664 offres » ne tenait pas et le nom se faisait couper (« Royaume-… »).
+    // Ce que le nombre compte est dit juste au-dessus, en toutes lettres — on
+    // préfère une phrase claire à un mot répété treize fois qui mange la place.
+    // SUR DEUX COLONNES (demande de B : « et partager sur deux colonnes pour
+    // gagner de la place »). La classe « pays-2col » est ce qui distingue cette
+    // liste de celle de la question d'ouverture, qui reste sur une colonne : là
+    // -bas on DÉCOUVRE, ici on RÈGLE, et les lignes y sont plus larges.
+    rp.innerHTML = '<div class="pays-liste pays-2col">'
+      + item('tout', t("Tous les pays d'Europe"), etat.offres.length)
+      + codes.map((c) => item(c, t(NOMS_PAYS[c]), compteP[c])).join('')
+      + '</div>'
+      + '<p style="margin:10px 0 0;font-size:12.5px;color:var(--doux)">Seuls des pays d’Europe sont proposés : les trajets restent courts.</p>';
+    rp.querySelectorAll('.pays-item').forEach((b) => {
+      b.addEventListener('click', () => choisirPays(b.dataset.pays));
+    });
   }
 }
 
@@ -1364,7 +1509,14 @@ function dessiner() {
     // promos (ce qui est à l'écran), le total des promotions du catalogue
     // (demande de B : « entre les deux, sur la deuxième ligne »), puis la date
     // de mise à jour. Sans le total, « 2 415 » ne veut rien dire.
-    const totalPromos = etat.meta.totalOffres ?? '—';
+    // Le total de la DEUXIÈME ligne est celui de « Tous les pays (N) », tel
+    // qu'affiché dans le sélecteur de pays — demande de B : « Ce chiffre doit
+    // tout simplement correspondre au total qui est indiqué dans tous les
+    // pays. » On lit donc EXACTEMENT la même source que le sélecteur
+    // (etat.offres.length), et non meta.totalOffres : ce dernier ne compte que
+    // les promotions vraies et laissait deux nombres différents à l'écran pour
+    // la même grandeur (9782 dans l'en-tête contre 11325 dans le sélecteur).
+    const totalPromos = etat.offres.length;
     $('comptes').innerHTML = `<b>${nb}</b> ${esc(t('bonnes promos'))}`
       + `<br>${esc(t('{n} promotions', { n: totalPromos }))}`
       + `<br>${esc(t('mis à jour {n}', { n: ilYA(etat.meta.genereLe || new Date().toISOString()) }))}`;
@@ -1457,16 +1609,12 @@ function brancher() {
     const b = e.target.closest('.pays-item');
     if (b) choisirPays(b.dataset.pays);
   });
-  // Réglages : le même choix, au même endroit que le reste.
-  $('regPays').addEventListener('change', (e) => {
-    if (e.target.id === 'paysReglages') choisirPays(e.target.value);
-  });
-  // Langue de l'INTERFACE : le choix de l'utilisateur, gardé à part du pays.
-  // Les deux listes vivent dans la même feuille Réglages et ne se parlent pas :
-  // changer l'une ne touche jamais l'autre.
-  $('regLangue').addEventListener('change', (e) => {
-    if (e.target.id === 'langueReglages') changerLangue(e.target.value);
-  });
+  // Réglages : les listes sont dessinées par dessinerPays() / dessinerLangue(),
+  // qui posent elles-mêmes l'écouteur sur chaque bouton. Les deux `change` qui
+  // s'en occupaient auparavant sont partis avec les menus déroulants qu'ils
+  // servaient : ils guettaient des identifiants qui n'existent plus. Du code
+  // mort qui surveille un élément absent ne casse rien — il ment sur ce qui est
+  // réellement branché, et fait croire que le réglage passe encore par là.
   document.querySelectorAll('.vue').forEach((b) => {
     b.addEventListener('click', () => appliquerVue(b.dataset.vue));
   });
@@ -1720,6 +1868,15 @@ async function lancer() {
   dessinerBandeau();
   dessiner();
   demanderPays();     // première ouverture : on demande le pays, une fois
+  // Relevé de trafic, en DERNIER : à ce point la langue et le pays sont
+  // connus, donc le relevé dit quelque chose de vrai. Le noter plus tôt
+  // inscrirait « pays inconnu » pour tout le monde. Un seul relevé par
+  // session, et l'envoi au relais ne bloque jamais l'affichage (voir trafic.js).
+  noterVisite({
+    pays: etat.pays,
+    langue: langue(),
+    relais: (() => { try { return localStorage.getItem('kazendra.relais') || ''; } catch { return ''; } })(),
+  });
 }
 
 /**

@@ -503,59 +503,84 @@ test('le logo est le logotype fourni : carré arrondi, K détouré, dégradé', 
   assert.deepEqual(dansPage, dansOnglet,
     'l’en-tête et l’icône d’onglet doivent dessiner exactement le même logo');
   for (const [nom, contenu] of [['index.html', html], ['favicon.svg', lire('favicon.svg')]]) {
-    assert.ok(contenu.includes('#1B3C69'), `${nom} : le bleu nuit du carré, relevé sur la source`);
-    assert.ok(contenu.includes('#2682AD'), `${nom} : le bleu clair du carré`);
     assert.ok(contenu.includes('<defs>'), `${nom} : les dégradés doivent être définis`);
-    // Le K finit sur un VERT franc : c'est la signature du logotype. Sur une
-    // icône de 26 px, un dégradé remplacé par un aplat bleu ne se verrait pas —
-    // ici, si.
-    const gradK = contenu.match(/<linearGradient id="gK"[\s\S]*?<\/linearGradient>/);
-    assert.ok(gradK, `${nom} : le dégradé du K doit exister`);
-    const teintes = [...gradK[0].matchAll(/stop-color="#([0-9A-F]{6})"/g)].map((m) => m[1]);
-    assert.ok(teintes.length >= 3,
-      `${nom} : le dégradé du K doit être gradué, or ${teintes.length} arrêt(s)`);
-    const fin = teintes[teintes.length - 1];
-    const vert = [0, 2, 4].map((i) => parseInt(fin.slice(i, i + 2), 16));
-    assert.ok(vert[1] > vert[2] && vert[1] > 120,
-      `${nom} : le K doit finir sur un vert franc, or #${fin}`);
+    // Le logo est celui fourni le 08/10/2026 : le K en rubans sur une PASTILLE
+    // CLAIRE. Quatre dégradés, un par élément — la pastille, la hampe, la jambe
+    // et le ruban orange. On les exige tous les quatre : un seul oublié, et une
+    // partie du dessin devient invisible ou noire.
+    for (const id of ['gpastille', 'ghampe', 'gjambe', 'gorange']) {
+      assert.ok(contenu.includes(`id="${id}"`), `${nom} : le dégradé « ${id} » doit exister`);
+    }
+    const stops = (id) => {
+      const bloc = contenu.match(new RegExp(`<linearGradient id="${id}"[\\s\\S]*?</linearGradient>`));
+      assert.ok(bloc, `${nom} : « ${id} » doit être un dégradé`);
+      const t = [...bloc[0].matchAll(/stop-color="#([0-9A-F]{6})"/g)].map((m) => m[1]);
+      assert.ok(t.length >= 2, `${nom} : « ${id} » doit avoir au moins deux arrêts`);
+      return t.map((h) => [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16)));
+    };
+    // La pastille est CLAIRE : c'est ce qui fait tenir le K. Trois canaux
+    // élevés sur TOUS les arrêts — un arrêt sombre la transformerait en carré
+    // foncé, et le K bleu disparaîtrait dedans.
+    for (const c of stops('gpastille')) {
+      assert.ok(Math.min(...c) > 200,
+        `${nom} : la pastille doit rester claire, or rgb(${c.join(',')})`);
+    }
+    // Le ruban est ORANGE : le rouge nettement au-dessus du bleu, sur chaque arrêt.
+    for (const c of stops('gorange')) {
+      assert.ok(c[0] - c[2] > 60,
+        `${nom} : le ruban doit être orange, or rgb(${c.join(',')})`);
+    }
+    // Les deux bleus sont BLEUS : le bleu au-dessus du rouge.
+    for (const id of ['ghampe', 'gjambe']) {
+      for (const c of stops(id)) {
+        assert.ok(c[2] > c[0], `${nom} : « ${id} » doit être bleu, or rgb(${c.join(',')})`);
+      }
+    }
+    // Le dessin doit être un CARRE ARRONDI : sans le galbe, l'icône redevient un
+    // carré à angles droits — visible à l'œil, invisible si on ne le dit pas.
+    assert.match(contenu, /rx="[1-9][0-9.]*"/,
+      `${nom} : la pastille doit avoir des coins arrondis`);
     assert.ok(!contenu.includes('M11 8h5.5v24H11z'),
       `${nom} : l’ancien K simplifié (rectangles) doit avoir disparu`);
+    assert.ok(!contenu.includes('#1B3C69'),
+      `${nom} : l’ancien carré bleu-vert ne doit plus être là`);
     assert.ok(!/étiquette|etiquette/i.test(contenu.replace(/<!--[\s\S]*?-->/g, '')),
       `${nom} : aucune étiquette de prix dans le dessin`);
   }
-  // TOUT le mot KAZENDRA porte le dégradé, de GAUCHE à DROITE — demande de B :
-  // « de gauche vers la droite pour le dégradé. Le dégradé est pour le mot
-  // Kazendra. » Un dégradé diagonal, ou limité à la seule lettre K, serait un
-  // retour en arrière.
+  // Le mot KAZENDRA portait un dégradé bleu -> orange, de gauche à droite
+  // (demande de B le 07/10 : « Le dégradé est pour le mot Kazendra »). B a
+  // demandé de l'ENLEVER le 08/10 : « Tu peux enlever le dégradé ». Ce contrôle
+  // garde donc désormais l'INVERSE de ce qu'il gardait : aucun dégradé ne doit
+  // revenir, ni sur le mot ni sous forme de variables --mot-deg-* restées dans
+  // la feuille.
   assert.match(html, /<b class="marque-nom">KAZENDRA<\/b>/,
-    'le mot entier doit porter le dégradé, pas une seule lettre');
-  const mot = css.match(/^\.marque-nom \{([\s\S]*?)^\}/m);
+    'le mot doit rester porté par un élément unique');
+  const mot = css.match(/\.marque-nom\s*\{([^}]*)\}/);
   assert.ok(mot, 'la règle .marque-nom doit exister');
-  assert.match(mot[1], /background-clip:\s*text/,
-    'le mot doit être rempli par le dégradé');
-  assert.match(mot[1], /linear-gradient\(\s*90deg/,
-    'le dégradé doit aller de gauche à droite');
-  assert.doesNotMatch(mot[1], /linear-gradient\(\s*(?:45|1[0-9]{2})deg/,
-    'un dégradé diagonal n’est pas ce qui a été demandé');
-  // Les COULEURS viennent du logo : le bleu #025479 (hampe et ruban bleu) et
-  // l'orange #E59038 (ruban orange). La structure ne change pas — même sens,
-  // gauche -> droite — et l'accroche non plus.
-  assert.match(css, /--mot-deg-1:\s*#4c93c4/, 'déclinaison prévue pour en-tête sombre');
-  assert.match(css, /--mot-deg-2:\s*#f2a24e/, 'l’arrivée doit être l’orange du logo');
-  assert.match(css, /--mot-deg-1:\s*#025479/, 'déclinaison exacte pour en-tête clair');
-  assert.match(css, /--mot-deg-2:\s*#e59038/, 'l’orange exact du logo, sur fond clair');
-  // Le dégradé doit être LISIBLE sur l'en-tête sombre : le bleu nuit du thème
-  // est #0d3b5b, la teinte de départ doit s'en détacher.
-  const sombre = css.match(/\.marque \{ --mot-deg-1:\s*#([0-9a-f]{6})/i);
-  assert.ok(sombre, 'la déclinaison sombre doit définir une teinte de départ');
-  const c = [0, 2, 4].map((i) => parseInt(sombre[1].slice(i, i + 2), 16));
+  assert.doesNotMatch(mot[1], /gradient/,
+    'le dégradé du mot doit avoir disparu');
+  assert.doesNotMatch(mot[1], /background-clip\s*:\s*text/,
+    'plus de remplissage par dégradé : le mot est en aplat');
+  assert.doesNotMatch(css, /--mot-deg-[12]/,
+    'les teintes du dégradé ne doivent plus traîner dans la feuille');
+  assert.match(mot[1], /color:\s*inherit/,
+    'l’aplat doit suivre la couleur de l’en-tête, donc le thème');
+  // Contraste MESURÉ, pas supposé. L'aplat étant « inherit », sa lisibilité
+  // repose entièrement sur le couple texte/fond de chaque en-tête. On mesure le
+  // cas le plus tendu : le thème « kazendra », dont l'en-tête est le bleu nuit
+  // #0d3b5b et où le mot est explicitement blanc. Un mot bleu sur en-tête bleu
+  // disparaîtrait sans la moindre erreur.
+  const tete = css.match(/html\[data-theme="kazendra"\]\s*\{[\s\S]*?--tete:\s*#([0-9a-f]{6})/i);
+  assert.ok(tete, 'l’en-tête du thème « kazendra » doit définir sa teinte');
+  assert.match(css, /\.marque b \{ color: #ffffff; \}/,
+    'sur l’en-tête bleu nuit, le mot doit être blanc (sinon il s’y noie)');
   const lum = (v) => { const s = v / 255;
     return s <= 0.03928 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4); };
-  const lMot = 0.2126 * lum(c[0]) + 0.7152 * lum(c[1]) + 0.0722 * lum(c[2]);
-  const lTete = 0.2126 * lum(13) + 0.7152 * lum(59) + 0.0722 * lum(91); // #0d3b5b
-  const contraste = (lMot + 0.05) / (lTete + 0.05);
-  assert.ok(contraste >= 3,
-    `le début du mot doit rester lisible sur l’en-tête (#0d3b5b) : ${contraste.toFixed(2)}:1`);
+  const clair = (hex) => { const c = [0, 2, 4].map((i) => parseInt(hex.slice(i, i + 2), 16));
+    return 0.2126 * lum(c[0]) + 0.7152 * lum(c[1]) + 0.0722 * lum(c[2]); };
+  const contraste = (clair('ffffff') + 0.05) / (clair(tete[1]) + 0.05);
+  assert.ok(contraste >= 4.5,
+    `le mot en aplat doit rester lisible sur son en-tête (#${tete[1]}) : ${contraste.toFixed(2)}:1`);
 });
 
 test('la phrase d’accroche est sur la page, dans les 9 langues', () => {
@@ -585,5 +610,172 @@ test('la phrase d’accroche est sur la page, dans les 9 langues', () => {
   const pub = langues.match(/'Découvrez les meilleures promotions':/g) || [];
   assert.equal(pub.length, 9,
     `la phrase de publicité doit rester traduite, or ${pub.length} la portent`);
+});
+
+test('les réglages tiennent en quatre onglets, « Thème et affichage » réunis', () => {
+  // B a d'abord demandé de regrouper thèmes et affichage, puis a rectifié
+  // (08/10/2026) : « On va plutôt appeler l'onglet thème et affichage, on va
+  // mettre les thèmes en premier, le choix de l'encadrement en deuxième […]
+  // Cette dernière partie doit se trouver à la fin ». Trois choses peuvent
+  // casser séparément : le NOMBRE d'onglets, leur ORDRE, et l'ordre INTERNE.
+  const onglets = [...html.matchAll(/data-onglet="([a-z]+)"/g)].map((m) => m[1]);
+  assert.deepEqual(onglets, ['compte', 'langue', 'affichage', 'infos'],
+    `onglets attendus dans cet ordre, trouvé « ${onglets.join(', ')} »`);
+  const panneaux = [...html.matchAll(/data-panneau="([a-z]+)"/g)].map((m) => m[1]);
+  assert.deepEqual(panneaux, onglets,
+    'chaque onglet doit avoir son panneau, dans le même ordre');
+  assert.ok(!html.includes('data-panneau="themes"'),
+    'le panneau « themes » doit avoir disparu : il est fusionné');
+  // L'ordre INTERNE, dans l'ordre demandé : Thèmes d'abord, puis l'affichage,
+  // puis le pays EN DERNIER.
+  const debut = html.indexOf('data-panneau="affichage"');
+  const bloc = html.slice(debut, html.indexOf('data-panneau="infos"', debut));
+  const iAff = bloc.indexOf('id="regAffichage"');
+  const iPays = bloc.indexOf('id="regPays"');
+  const iThem = bloc.indexOf('id="themes"');
+  assert.ok(iThem > 0, 'le bloc des thèmes doit être dans le compartiment fusionné');
+  assert.ok(iAff > iThem, 'l’affichage doit venir APRÈS les thèmes');
+  assert.ok(iPays > iAff, 'le pays doit venir EN DERNIER, après l’affichage');
+  // Le libellé de l'onglet, exactement celui demandé.
+  assert.match(html, /data-i18n="Thème et affichage">Thème et affichage</,
+    'l’onglet doit s’appeler « Thème et affichage »');
+  assert.ok(!html.includes('Affichage et thèmes'),
+    'l’ancien libellé ne doit plus traîner nulle part');
+});
+
+test('les neuf langues s’affichent en liste, avec leur drapeau', () => {
+  // Demande de B : « tu peux utiliser plus de place dans l'onglet en mettant les
+  // drapeaux des pays avec la langue à côté » et « Pas besoin de menu déroulant.
+  // Il y a suffisamment de place. »
+  const langues = lire('langues.js');
+  const codes = [...langues.matchAll(/\{ code: '([a-z]{2})', nom:/g)].map((m) => m[1]);
+  assert.equal(codes.length, 9, `neuf langues attendues, trouvé ${codes.length}`);
+  for (const c of codes) {
+    // Chaque drapeau est un DESSIN. Un drapeau manquant laisserait un trou dans
+    // la liste — visible à l'œil, invisible dans les tests s'ils ne le disent pas.
+    assert.match(js, new RegExp(`^  ${c}: '<rect`, 'm'),
+      `le drapeau « ${c} » doit être dessiné dans DRAPEAUX`);
+  }
+  assert.doesNotMatch(js, /langueReglages/,
+    'plus de menu déroulant pour la langue : les neuf doivent être visibles');
+  assert.match(js, /class="langues" role="radiogroup"/,
+    'la liste des langues doit exister');
+  // Le libellé du nouveau compartiment fusionné doit être traduit partout.
+  const cles = langues.match(/'Thème et affichage':/g) || [];
+  assert.equal(cles.length, 9,
+    `« Thème et affichage » doit être traduit dans les 9 langues, or ${cles.length}`);
+  assert.ok(!langues.includes("'Affichage et thèmes':"),
+    'l’ancien libellé ne doit pas rester dans les dictionnaires : deux clés pour '
+    + 'le même onglet, et plus personne ne sait laquelle fait foi');
+  // Les clés du nouveau parcours d'inscription aussi.
+  for (const mot of ['Adresse e-mail', 'Se connecter', 'Créer un compte',
+                     'Ton adresse e-mail', 'Déjà inscrit ? Connecte-toi',
+                     'Nouveau ici ? Inscris-toi', 'Choisis la langue de l’interface']) {
+    const n = (langues.match(new RegExp(`'${mot.replace(/[.?]/g, '\\$&')}':`, 'g')) || []).length;
+    assert.equal(n, 9, `« ${mot} » doit être traduit dans les 9 langues, or ${n}`);
+  }
+});
+
+test('le pays se choisit dans une liste, pas dans un menu déroulant', () => {
+  assert.doesNotMatch(js, /paysReglages/,
+    'plus de menu déroulant pour le pays dans les réglages');
+  assert.match(js, /class="pays-liste/, 'les pays doivent être une liste');
+  assert.match(js, /class="pays-item/, 'chaque pays doit être un bouton de liste');
+  // La liste doit DIRE lequel est actif : un menu déroulant le montrait, une
+  // liste ne le montre que si on l'écrit.
+  assert.match(css, /\.pays-item\.on\s*\{/, 'le pays actif doit être mis en évidence');
+  assert.match(css, /\.langue\.on\s*\{/, 'la langue active doit être mise en évidence');
+});
+
+test('les pays portent leur drapeau et se partagent sur deux colonnes', () => {
+  // Demande de B : « Concernant le choix de préférence du pays il faut que le
+  // pays soit aussi avec le drapeau. Et partager sur deux colonnes pour gagner
+  // de la place. »
+  const bloc = js.slice(js.indexOf("const rp = $('regPays')"), js.indexOf('function choisirPays'));
+  assert.ok(bloc.length > 0, 'la rubrique Pays doit exister dans les réglages');
+  assert.match(bloc, /DRAPEAUX_PAYS\[String\(code\)\.toLowerCase\(\)\]/,
+    'chaque pays des réglages doit porter son drapeau — et la recherche doit être '
+    + 'insensible à la casse : les codes du catalogue sont en MAJUSCULES (DE, GB, '
+    + 'BE…) alors que la table est en minuscules. Sans le toLowerCase, douze pays '
+    + 'sur treize s’affichaient SANS drapeau, et rien ne le disait.');
+  assert.match(bloc, /class="pays-liste pays-2col"/, 'la liste des pays doit être sur deux colonnes');
+  assert.match(css, /\.pays-liste\.pays-2col\s*\{[^}]*grid-template-columns:\s*repeat\(2/,
+    'les deux colonnes doivent être écrites dans la feuille de style');
+  // Chaque pays du CATALOGUE doit avoir un drapeau. Sans cette vérification, un
+  // pays ajouté demain apparaîtrait avec un trou à la place du drapeau — et
+  // personne ne le verrait avant de regarder l'écran.
+  // Plusieurs drapeaux tiennent sur une même ligne : on ne peut donc pas
+  // ancrer la recherche au début de ligne, sinon on n'en compterait qu'un par
+  // ligne — trois au lieu de neuf, et le test crierait au loup.
+  const pays = [...js.matchAll(/([a-z]{2}): DRAPEAUX\./g)].map((m) => m[1]);
+  assert.ok(pays.length >= 9, `table de drapeaux trop maigre : ${pays.join(', ')}`);
+  for (const c of ['at', 'be', 'ie', 'gb', 'se']) {
+    assert.match(js, new RegExp(`\\b${c}: (DRAPEAUX\\.|'<rect)`),
+      `le drapeau du pays « ${c} » manque : l’Autriche, la Belgique et l’Irlande `
+      + `n’ont pas de langue propre, le Royaume-Uni et la Suède portent un autre code`);
+  }
+  // L'Europe entière a droit à son drapeau comme les autres pays.
+  assert.match(js, /tout: DRAPEAU_EUROPE/, '« Tous les pays d’Europe » doit avoir un drapeau');
+  assert.match(js, /i < 12;/, 'le drapeau européen doit porter DOUZE étoiles');
+});
+
+test('le bloc « Prix et disponibilité » est dans Informations, plus en bas de page', () => {
+  // Demande de B (08/10/2026) : « Toutes ces parties-là se trouve en bas du
+  // site, elle ne doit pas y apparaître car elle doit apparaître dans
+  // informations dans les paramètres. »
+  const pied = html.slice(html.indexOf('<footer class="pied">'), html.indexOf('</footer>'));
+  assert.ok(pied.length > 0, 'le pied de page doit exister');
+  for (const reste of ['Prix et disponibilité', 'mentions-prix', 'prixReleves',
+                       'Frais de port', 'flux publics']) {
+    assert.ok(!pied.includes(reste),
+      `« ${reste} » ne doit plus être dans le pied de page`);
+  }
+  // Le compartiment Informations va du panneau jusqu'au VERROU du compte, qui
+  // le suit dans le fichier. On borne là : sans borne, la recherche attraperait
+  // aussi le pied de page — et le test dirait « c'est bien dans Informations »
+  // en lisant exactement l'endroit d'où l'on vient de le retirer.
+  const debut = html.indexOf('data-panneau="infos"');
+  assert.ok(debut > 0, 'le compartiment Informations doit exister');
+  const panneau = html.slice(debut, html.indexOf('class="verrou"', debut));
+  for (const attendu of ['Prix et disponibilité', 'id="prixReleves"', 'Frais de port']) {
+    assert.ok(panneau.includes(attendu),
+      `« ${attendu} » doit se trouver dans l’onglet Informations`);
+  }
+  // #prixReleves est écrit par app.js : sans l'élément, l'horodatage du relevé
+  // disparaîtrait de l'application. On vérifie les DEUX côtés.
+  assert.match(js, /\$\('prixReleves'\)/, 'app.js doit continuer d’écrire l’horodatage');
+});
+
+test('le panneau d’administration impose [hidden]', () => {
+  // Défaut mesuré (08/10/2026) : l'écran de connexion du panneau restait
+  // AFFICHÉ AU-DESSUS du panneau ouvert. Cause : la règle `#verrou{display:flex}`
+  // écrase l'attribut `hidden`, qui ne vaut que `display:none` sans « !important ».
+  // On pouvait lire les deux écrans à la fois, et rien dans le code ne le disait.
+  const admin = lire('admin/index.html');
+  assert.match(admin, /\[hidden\]\s*\{\s*display:\s*none\s*!important/,
+    'la feuille du panneau doit forcer [hidden] { display:none !important }');
+  // Et le panneau doit être une application à part, pas un onglet du site.
+  assert.match(admin, /data-vue="origines"/,
+    'l’onglet Origines doit exister dans le panneau');
+  for (const id of ['mOriginePays', 'mOrigineSources', 'mMuettes', 'mCandidats']) {
+    assert.ok(admin.includes(`id="${id}"`), `le bloc « ${id} » doit exister`);
+  }
+  assert.match(admin, /noindex/, 'le panneau ne doit pas être indexé');
+});
+
+test('les trois modes d’affichage ne sont plus dans un grand cadre', () => {
+  // Demande de B : « il faut minimiser le grand rectangle qui entoure les trois
+  // possibilités. Il faut que ce soit plus propre. » Le cadre, c'était la règle
+  // .vues elle-même : fond, bordure et marge intérieure autour des trois boutons.
+  const regle = css.match(/\.vues\s*\{([^}]*)\}/);
+  assert.ok(regle, 'la règle .vues doit exister');
+  assert.doesNotMatch(regle[1], /background/,
+    'le cadre autour des trois modes doit avoir disparu (fond)');
+  assert.doesNotMatch(regle[1], /border/,
+    'le cadre autour des trois modes doit avoir disparu (bordure)');
+  assert.doesNotMatch(regle[1], /padding/,
+    'le cadre autour des trois modes doit avoir disparu (marge intérieure)');
+  // Mais chaque mode doit rester un bouton visible et cliquable.
+  assert.match(css, /\.vue\.on\s*\{/, 'le mode actif doit rester mis en évidence');
 });
 

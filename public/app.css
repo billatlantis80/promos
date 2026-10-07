@@ -64,16 +64,16 @@ h1, h2, h3, h4, .marque b, .prix { font-family: var(--police-titre); }
 /* Le mot et l'accroche, empiles : l'accroche est SOUS le nom, comme sur le
    logotype fourni. */
 .marque-txt { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
-/* TOUT le mot KAZENDRA porte le dégradé du logo, de GAUCHE à DROITE (demande
-   de B : « de gauche vers la droite pour le dégradé. Le dégradé est pour le mot
-   Kazendra. »). Les COULEURS suivent le logo : bleu -> orange. Deux
-   déclinaisons, comme pour tout logo : les teintes exactes du logotype sur fond
-   clair, une version éclaircie sur fond sombre — sinon le bleu du logo
-   disparaît dans l'en-tête bleu nuit, et le mot avec lui. */
+/* Le mot KAZENDRA portait un dégradé bleu -> orange, de gauche à droite
+   (« Le dégradé est pour le mot Kazendra »). B a demandé de l'ENLEVER le
+   08/10/2026 : « Tu peux enlever le dégradé ». Le mot est désormais en APLAT,
+   de la couleur du texte de l'en-tête — blanc sur les neuf en-têtes sombres,
+   encre sur les trois thèmes clairs.
+   « inherit » et non une teinte figée : la couleur suit donc DÉJÀ le thème.
+   Une teinte en dur aurait obligé à re-mesurer le contraste sur les douze
+   thèmes, et à maintenir une déclinaison « sombre / clair » comme avant. */
 .marque-nom {
-  background-image: linear-gradient(90deg, var(--mot-deg-1) 0%, var(--mot-deg-2) 100%);
-  -webkit-background-clip: text; background-clip: text;
-  color: transparent; -webkit-text-fill-color: transparent;
+  color: inherit;
 }
 .accroche {
   font-size: 9.5px; font-weight: 600; letter-spacing: .55px;
@@ -119,15 +119,18 @@ h1, h2, h3, h4, .marque b, .prix { font-family: var(--police-titre); }
 .outil.on { background: var(--accent); border-color: var(--accent); color: var(--sur-accent); font-weight: 600; }
 .outil .n { font-size: 11px; opacity: .85; }
 /* Sélecteur d'affichage : trois boutons, l'actif en orange. */
-.vues {
-  display: flex; gap: 2px; flex: 0 0 auto;
-  background: var(--carte); border: 1px solid var(--bord); border-radius: 10px; padding: 2px;
-}
+/* Les trois modes d'affichage. Le GRAND CADRE qui les entourait est retiré
+   (demande de B : « il faut minimiser le grand rectangle qui entoure les trois
+   possibilités. Il faut que ce soit plus propre »). Chaque mode se présente
+   comme un bouton ordinaire, de la même famille que les autres réglages : plus
+   de boîte dans la boîte, qui mangeait de la place et alourdissait la ligne. */
+.vues { display: inline-flex; gap: 6px; flex: 0 0 auto; }
 .vue {
-  background: transparent; border: 0; color: var(--doux); cursor: pointer;
-  font-size: 15px; line-height: 1; padding: 8px 8px; border-radius: 8px;
+  background: var(--carte-2); border: 1px solid var(--bord); color: var(--doux);
+  cursor: pointer; font-size: 15px; line-height: 1; padding: 9px 13px; border-radius: 9px;
 }
-.vue.on { background: var(--accent); color: var(--sur-accent); }
+.vue:hover { border-color: var(--accent-2); }
+.vue.on { background: var(--accent); border-color: var(--accent); color: var(--sur-accent); font-weight: 700; }
 .puces { display: flex; gap: 6px; overflow-x: auto; padding: 0 0 10px; scrollbar-width: none; }
 .puces::-webkit-scrollbar { display: none; }
 .puce {
@@ -362,17 +365,9 @@ html[data-theme="kazendra"] {
 }
 html[data-theme="kazendra"] .marque,
 html[data-theme="kazendra"] .marque b { color: #ffffff; }
-/* Dégradé du mot. Les couleurs sont celles du LOGO (bleu du ruban et de la
-   hampe #025479, orange du ruban #E59038) — la structure ne change pas : même
-   sens, de gauche à droite ; même accroche.
-   Par défaut la déclinaison pour en-tête SOMBRE (9 thèmes sur 12) : éclaircie,
-   le bleu foncé du logo disparaîtrait sinon dans le bleu nuit. Mesuré 3,5:1 au
-   départ et 5,6:1 à l'arrivée sur #0d3b5b, au-dessus du seuil de 3:1 des grands
-   textes. Les trois thèmes à en-tête clair portent les teintes EXACTES. */
-.marque { --mot-deg-1: #4c93c4; --mot-deg-2: #f2a24e; }
-html[data-theme="clair"], html[data-theme="sable"], html[data-theme="aube"] {
-  --mot-deg-1: #025479; --mot-deg-2: #e59038;
-}
+/* (Le dégradé du mot — et ses deux déclinaisons « en-tête sombre » et
+   « en-tête clair » — a été retiré le 08/10/2026 : le mot est en aplat. Ne pas
+   réintroduire --mot-deg-*, la feuille n'en a plus besoin.) */
 html[data-theme="kazendra"] .marque b { letter-spacing: 1.3px; font-weight: 800; }
 html[data-theme="kazendra"] .comptes { color: rgba(255, 255, 255, .78); }
 /* Ici --accent est l'ORANGE vif (boutons, badges), donc trop clair pour servir
@@ -543,6 +538,46 @@ html[data-theme="contraste"] {
 .pays-item span { font-size: 12px; color: var(--doux); }
 .pays-item.conseille { border-color: var(--accent); }
 .pays-item:hover { border-color: var(--accent-2); }
+/* Pays ACTIF dans les réglages. La liste remplace un menu déroulant (demande de
+   B), donc elle doit dire lequel est choisi aussi clairement qu'un <select> le
+   ferait — même langage visuel que la langue active. */
+.pays-item.on { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; font-weight: 600; }
+/* La liste des pays des RÉGLAGES, sur deux colonnes, chacune avec son drapeau
+   (demande de B : « il faut que le pays soit aussi avec le drapeau. Et partager
+   sur deux colonnes pour gagner de la place »). « pays-2col » est un
+   MODIFICATEUR : la question d'ouverture garde sa liste d'origine, sur une
+   colonne, avec ses grandes lignes — là-bas on choisit pour la première fois,
+   ici on règle. */
+.pays-liste.pays-2col { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+@media (min-width: 620px) { .pays-liste.pays-2col { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.pays-2col .pays-item { align-items: center; padding: 9px 10px; font-size: 13px; gap: 7px; }
+.pays-2col .pays-item b { flex: 1 1 auto; min-width: 0; font-size: 12.5px; }
+.pays-2col .pays-item .n { flex: 0 0 auto; font-size: 11.5px; }
+
+/* ---------- Langues : drapeau + nom natif, en liste ----------
+   Demande de B : « mettre les drapeaux des pays avec la langue à côté » et
+   « pas besoin de menu déroulant ». Neuf langues tiennent sur deux colonnes,
+   toutes visibles d'un coup : un menu déroulant en cachait huit sur neuf. */
+.aide-reglages { margin: 0 0 10px; font-size: 12.5px; color: var(--doux); }
+.langues { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.langue {
+  display: flex; align-items: center; gap: 9px;
+  padding: 10px 11px; cursor: pointer; text-align: left;
+  background: var(--carte-2); color: var(--texte);
+  border: 1px solid var(--bord); border-radius: 11px;
+  font: inherit; font-size: 14px;
+}
+.langue:hover { border-color: var(--accent-2); }
+.langue.on { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; font-weight: 600; }
+/* Le drapeau est un DESSIN, pas une image : aucune requête réseau (règle
+   d'économie de données), et le même rendu sur toutes les machines — les emoji
+   drapeaux se transforment en lettres « FR » sous Windows. Le liseré est
+   nécessaire : un drapeau à bandes blanches (Pologne) se confondrait sinon avec
+   la carte claire des thèmes lumineux. */
+.drap { flex: 0 0 auto; display: block; line-height: 0; }
+.drap svg { display: block; width: 27px; height: 18px; border-radius: 3px; box-shadow: 0 0 0 1px rgba(0, 0, 0, .2); }
+.nom-langue { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.langue .coche { color: var(--accent); flex: 0 0 auto; }
 /* Bouton qui ressemble à un lien : pour les actions de secours (mot de passe
    oublié), on ne veut pas qu'elles aient l'air d'une action principale. */
 .lien-bouton {
