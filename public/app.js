@@ -434,6 +434,7 @@ function changerLangue(code) {
   dessinerPuces();
   dessinerBandeau();
   dessinerReglages();
+  preparerOeils();   // le libellé de l'œil est une phrase traduite
   majOutils();
   dessiner();
 }
@@ -536,6 +537,76 @@ const dateLisible = (iso) => {
   catch { return 'date inconnue'; }
 };
 
+/** Les deux dessins de l'œil (Material). ŒIL OUVERT = le mot de passe est
+ *  CACHÉ (l'œil propose de le voir) ; ŒIL BARRÉ = il est VISIBLE (l'œil propose
+ *  de le cacher). Le dessin dit donc l'état, pas l'action — c'est la convention
+ *  des navigateurs et des gestionnaires de mots de passe. */
+const OEIL_OUVERT = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">'
+  + '<path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5'
+  + 'c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5'
+  + '-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>';
+const OEIL_BARRE = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">'
+  + '<path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26'
+  + ' 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16'
+  + 'C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12'
+  + 'c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73'
+  + ' 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3'
+  + ' .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5'
+  + ' 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"/></svg>';
+
+/** Un champ de mot de passe AVEC l'œil. Un seul gabarit pour les quatre champs :
+ *  recopier la même structure quatre fois, c'est quatre occasions de la casser. */
+function champMotDePasse(id, libelle, options = {}) {
+  const auto = options.autocomplete ? ` autocomplete="${options.autocomplete}"` : '';
+  const place = options.placeholder ? ` placeholder="${esc(t(options.placeholder))}"` : '';
+  const dit = esc(t('Montrer le mot de passe'));
+  return `
+        <div class="champ">
+          <label for="${id}">${esc(t(libelle))}</label>
+          <div class="avec-oeil">
+            <input id="${id}" type="password"${auto}${place}>
+            <button type="button" class="oeil" data-oeil="${id}" aria-pressed="false" aria-label="${dit}" title="${dit}">${OEIL_OUVERT}</button>
+          </div>
+        </div>`;
+}
+
+/** Montre ou cache le texte d'un champ de mot de passe.
+ *
+ *  On REPLACE le curseur à la fin après la bascule : changer le type d'un champ
+ *  fait perdre la position de saisie dans plusieurs navigateurs, et le curseur
+ *  repart à zéro au milieu d'un mot de passe déjà tapé. */
+function basculerOeil(bouton) {
+  const champ = document.getElementById(bouton.dataset.oeil);
+  if (!champ) return;
+  const caché = champ.type === 'password';
+  champ.type = caché ? 'text' : 'password';
+  appliquerOeil(bouton);
+  const fin = champ.value.length;
+  champ.focus();
+  try { champ.setSelectionRange(fin, fin); } catch { /* champs sans sélection */ }
+}
+
+/** Met le dessin et le libellé de l'œil en accord avec l'état RÉEL du champ. */
+function appliquerOeil(bouton) {
+  const champ = document.getElementById(bouton.dataset.oeil);
+  const visible = !!champ && champ.type === 'text';
+  const dit = t(visible ? 'Cacher le mot de passe' : 'Montrer le mot de passe');
+  bouton.innerHTML = visible ? OEIL_BARRE : OEIL_OUVERT;
+  bouton.setAttribute('aria-pressed', visible ? 'true' : 'false');
+  bouton.setAttribute('aria-label', dit);
+  bouton.setAttribute('title', dit);
+}
+
+/** Rattrape tous les yeux de la page — y compris celui écrit dans index.html.
+ *  Appelé au démarrage et à chaque changement de langue : le libellé est une
+ *  phrase traduite, il doit suivre la langue comme les autres. */
+function preparerOeils() {
+  for (const b of document.querySelectorAll('.oeil')) {
+    if (!b.querySelector('svg')) b.innerHTML = OEIL_OUVERT;
+    appliquerOeil(b);
+  }
+}
+
 function dessinerCompte() {
   const f = C.ficheCompte();
   if (!f) {
@@ -557,14 +628,8 @@ function dessinerCompte() {
           <label for="cMail">${esc(t('Adresse e-mail'))}</label>
           <input id="cMail" type="email" maxlength="120" autocomplete="email" inputmode="email" placeholder="nom@exemple.be">
         </div>
-        <div class="champ">
-          <label for="cMdp">${esc(t('Mot de passe'))}</label>
-          <input id="cMdp" type="password" autocomplete="new-password" placeholder="${esc(t('8 caractères minimum'))}">
-        </div>
-        <div class="champ">
-          <label for="cMdp2">${esc(t('Répète le mot de passe'))}</label>
-          <input id="cMdp2" type="password" autocomplete="new-password">
-        </div>
+${champMotDePasse('cMdp', 'Mot de passe', { autocomplete: 'new-password', placeholder: '8 caractères minimum' })}
+${champMotDePasse('cMdp2', 'Répète le mot de passe', { autocomplete: 'new-password' })}
         <label class="consentement" style="display:flex;gap:9px;align-items:flex-start;margin:12px 0 4px;font-size:13.5px;line-height:1.45;cursor:pointer">
           <input id="cConsent" type="checkbox" style="margin-top:2px;flex:0 0 auto;width:16px;height:16px;accent-color:var(--accent)">
           <span>${esc(t('Je veux recevoir les bons plans par e-mail. Désinscription en un clic.'))}</span>
@@ -585,14 +650,8 @@ function dessinerCompte() {
         </span>
       </div>
       <p>${t("Ce compte vit sur cet appareil uniquement. Il protège l'accès à l'application et ne synchronise rien. Seule l'adresse de ton inscription est envoyée, pour recevoir les bons plans.")}</p>
-      <div class="champ">
-        <label for="cAncien">${esc(t('Mot de passe actuel'))}</label>
-        <input id="cAncien" type="password" autocomplete="current-password">
-      </div>
-      <div class="champ">
-        <label for="cNouveau">${esc(t('Nouveau mot de passe'))}</label>
-        <input id="cNouveau" type="password" autocomplete="new-password">
-      </div>
+${champMotDePasse('cAncien', 'Mot de passe actuel', { autocomplete: 'current-password' })}
+${champMotDePasse('cNouveau', 'Nouveau mot de passe', { autocomplete: 'new-password' })}
       <p class="annonce" id="cAnnonce"></p>
       <div class="compte-actions">
         <button class="enregistrer" id="changerMdp">${esc(t('Changer le mot de passe'))}</button>
@@ -1699,6 +1758,16 @@ function brancher() {
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && !$('feuille').hidden) fermerReglages();
   });
+  // LE PETIT ŒIL : un seul écouteur pour toute la page. Il couvre le formulaire
+  // d'inscription, le changement de mot de passe ET l'écran de verrouillage.
+  // Un écouteur par bouton aurait été à refaire à chaque redessin du panneau —
+  // et le jour où on l'oublie, le bouton reste là, inerte.
+  document.addEventListener('click', (e) => {
+    const b = e.target.closest('.oeil');
+    if (!b) return;
+    e.preventDefault();       // un bouton dans un gabarit ne doit rien valider
+    basculerOeil(b);
+  });
   // Thèmes : écouteur délégué sur la grille (dix vignettes, un seul écouteur).
   $('themes').addEventListener('click', (e) => {
     const b = e.target.closest('.theme');
@@ -1987,6 +2056,10 @@ async function lancer() {
   // redessin complet.
   chargerLangue();
   traduireDOM();
+  // Le dessin et le libellé des yeux : posés une fois la langue lue, et avant
+  // tout affichage — celui de l'écran de verrouillage est écrit dans
+  // index.html, il attend d'être complété.
+  preparerOeils();
   try { document.documentElement.lang = langue(); } catch { /* rien */ }
   // Feuille Réglages et rubrique COMPTE : toutes deux construites par le
   // JavaScript, donc traduireDOM() ne les rattrape pas. Dessinées trop tôt —

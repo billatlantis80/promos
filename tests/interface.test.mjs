@@ -166,8 +166,23 @@ test('chaque élément lu par le script existe dans la page', () => {
   // Certains éléments sont CRÉÉS par le script (le bouton « afficher plus ») :
   // on les accepte aussi, sinon le contrôle crie au loup sur du code correct.
   const idsFabriques = new Set([...js.matchAll(/\bid="([^"]+)"/g)].map((m) => m[1]));
+  // ET DEPUIS LE 08/10/2026, CERTAINS IDENTIFIANTS SONT PASSÉS EN ARGUMENT. Les
+  // quatre champs de mot de passe viennent désormais d'un seul gabarit
+  // (`champMotDePasse('cMdp', …)`) qui écrit `id="${…}"` : l'identifiant
+  // n'apparaît plus en clair dans la page fabriquée, et ce contrôle les
+  // déclarait « absents ». On collecte donc, de façon GÉNÉRALE, le premier
+  // argument de toute fonction qui fabrique un identifiant — pas seulement ce
+  // gabarit-là : un contrôle qui ne connaît qu'un cas ne vaut que pour un cas.
+  const idsPasses = new Set();
+  for (const f of js.matchAll(/function\s+(\w+)\s*\([^)]*\)\s*\{([\s\S]*?)\n\}/g)) {
+    if (!f[2].includes('id="${')) continue;
+    for (const a of js.matchAll(new RegExp(`\\b${f[1]}\\('([A-Za-z0-9_-]+)'`, 'g'))) {
+      idsPasses.add(a[1]);
+    }
+  }
   const idsScript = [...js.matchAll(/\$\('([^']+)'\)/g)].map((m) => m[1]);
-  const manquants = [...new Set(idsScript)].filter((id) => !idsPage.has(id) && !idsFabriques.has(id));
+  const manquants = [...new Set(idsScript)]
+    .filter((id) => !idsPage.has(id) && !idsFabriques.has(id) && !idsPasses.has(id));
   assert.deepEqual(manquants, [], `identifiants absents de index.html : ${manquants.join(', ')}`);
 });
 
