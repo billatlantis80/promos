@@ -92,19 +92,30 @@
      app.js (thèmes, affichage, profil, compte, pays, langue) pour ne pas
      dupliquer les réglages de la barre du haut — une seule source de vérité. -->
 <section class="feuille" id="feuille" role="dialog" aria-modal="true" aria-labelledby="titreReglages" hidden>
-  <div class="feuille-tete">
-    <h2 id="titreReglages" data-i18n="Réglages">Réglages</h2>
-    <button class="fermer" id="fermer" data-i18n="Fermer">Fermer</button>
-  </div>
+  <!-- UN SEUL BLOC COLLANT (défaut trouvé le 08/10/2026, signalé par B : « la
+       partie anglaise superpose la partie bleue de réglage […] le blanc ne
+       passe pas sur le bleu »). Le bandeau et la barre d'onglets étaient DEUX
+       éléments collants à `top: 0` dans le même compartiment : la barre des
+       onglets, blanche et d'un rang plus haut (z-index 2), RECOUVRAIT le
+       bandeau bleu (z-index 1) dès qu'on faisait défiler. Le titre « Réglages »
+       disparaissait sous les onglets.
+       Un seul bloc collant rend ce recouvrement IMPOSSIBLE : le bandeau et ses
+       onglets restent solidaires, comme l'en-tête de la page principale. -->
+  <div class="feuille-haut">
+    <div class="feuille-tete">
+      <h2 id="titreReglages" data-i18n="Réglages">Réglages</h2>
+      <button class="fermer" id="fermer" data-i18n="Fermer">Fermer</button>
+    </div>
 
-  <!-- COMPARTIMENTS. Les réglages tenaient en une seule colonne si longue qu'on
-       n'y trouvait plus rien : chaque famille a maintenant son onglet, et un
-       seul est ouvert à la fois. -->
-  <div class="onglets" role="tablist" aria-label="Réglages" id="ongletsReglages">
-    <button class="onglet" role="tab" data-onglet="compte" aria-selected="true" data-i18n="Compte">Compte</button>
-    <button class="onglet" role="tab" data-onglet="langue" aria-selected="false" data-i18n="Langue">Langue</button>
-    <button class="onglet" role="tab" data-onglet="affichage" aria-selected="false" data-i18n="Thème et affichage">Thème et affichage</button>
-    <button class="onglet" role="tab" data-onglet="infos" aria-selected="false" data-i18n="Informations">Informations</button>
+    <!-- COMPARTIMENTS. Les réglages tenaient en une seule colonne si longue
+         qu'on n'y trouvait plus rien : chaque famille a maintenant son onglet,
+         et un seul est ouvert à la fois. -->
+    <div class="onglets" role="tablist" aria-label="Réglages" id="ongletsReglages">
+      <button class="onglet" role="tab" data-onglet="compte" aria-selected="true" data-i18n="Compte">Compte</button>
+      <button class="onglet" role="tab" data-onglet="langue" aria-selected="false" data-i18n="Langue">Langue</button>
+      <button class="onglet" role="tab" data-onglet="affichage" aria-selected="false" data-i18n="Thème et affichage">Thème et affichage</button>
+      <button class="onglet" role="tab" data-onglet="infos" aria-selected="false" data-i18n="Informations">Informations</button>
+    </div>
   </div>
 
   <!-- UNE SEULE RUBRIQUE DE COMPTE (demande de B : « pourquoi il y a un compte

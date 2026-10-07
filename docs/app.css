@@ -450,10 +450,29 @@ html[data-theme="contraste"] {
   background: var(--fond); padding: 0 12px 48px;
 }
 .feuille[hidden] { display: none; }
-.feuille-tete {
-  position: sticky; top: 0; z-index: 1; margin: 0 -12px 6px; padding: 12px;
+/* UN SEUL BLOC COLLANT POUR LE HAUT DES RÉGLAGES.
+   Défaut mesuré au navigateur, dans le thème de marque : `.feuille-tete` ET
+   `.onglets` étaient tous deux `position: sticky; top: 0`. Au défilement, les
+   deux se collaient au même endroit, et la barre des onglets — blanche, avec un
+   `z-index` supérieur — passait PAR-DESSUS le bandeau bleu. Le titre
+   « Réglages » disparaissait sous les onglets. Ce n'est pas un problème de
+   couleur : c'est un problème d'ordre d'empilement, et aucune couleur ne le
+   corrige.
+   Le remède n'est pas de jouer sur les z-index — ce serait reculer le défaut
+   d'un cran, et le prochain élément collant le ramènerait. On ne garde qu'UN
+   seul bloc collant, qui contient le bandeau ET ses onglets : ils deviennent
+   solidaires, comme l'en-tête de la page principale, et le recouvrement devient
+   impossible par construction. La hauteur du bandeau n'a plus à être connue :
+   elle change avec la police et avec la langue (« Thème et affichage » est plus
+   long que « Theme and display »), et un `top` en pixels codé en dur se
+   tromperait un jour sur deux. */
+.feuille-haut {
+  position: sticky; top: 0; z-index: 2;
   background: var(--tete); backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--bord);
+  margin: 0 -12px; padding: 0 12px;
+}
+.feuille-tete {
+  margin: 0; padding: 12px 0;
   display: flex; align-items: center; justify-content: space-between; gap: 10px;
 }
 /* LE TITRE DU BANDEAU PREND --sur-tete, ET NON --texte. Le bandeau a un fond
@@ -598,10 +617,12 @@ html[data-theme="contraste"] {
 /* ---------- Réglages en onglets ----------
    Les réglages étaient une seule colonne si longue qu'on n'y trouvait plus
    rien. Chaque famille a son onglet ; la barre reste collée en haut du
-   compartiment pour qu'on sache toujours où l'on est. */
+   compartiment pour qu'on sache toujours où l'on est — mais c'est `.feuille-haut`
+   qui la porte et qui colle. Voir le commentaire de ce bloc plus haut : deux
+   éléments collants au même endroit finissent par se recouvrir. */
 .onglets {
   display: flex; gap: 6px; overflow-x: auto; padding: 4px 0 10px;
-  position: sticky; top: 0; background: var(--fond); z-index: 2;
+  position: static; background: transparent;
   border-bottom: 1px solid var(--bord);
 }
 .onglet {
