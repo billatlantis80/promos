@@ -303,8 +303,17 @@ const DRAPEAUX = {
     + '<rect x="16" width="8" height="16" fill="#ED2939"/>',
   nl: '<rect width="24" height="16" fill="#ffffff"/><rect width="24" height="5.4" fill="#AE1C28"/>'
     + '<rect y="10.6" width="24" height="5.4" fill="#21468B"/>',
-  de: '<rect width="24" height="16" fill="#ffffff"/><rect width="24" height="5.4" fill="#000000"/>'
-    + '<rect y="10.6" width="24" height="5.4" fill="#FFCE00"/>',
+  //  ALLEMAGNE — DÉFAUT CORRIGÉ (signalé par B : « le drapeau de l'Allemagne ne
+  //  correspond pas, il faut vérifier les couleurs »).
+  //  Le drapeau allemand est NOIR, ROUGE et OR — trois bandes. Le tracé portait
+  //  bien le noir en haut et l'or en bas, mais la bande du MILIEU restait le
+  //  fond blanc, jamais recouverte : la bande rouge était tout simplement
+  //  ABSENTE. On lisait donc un drapeau noir-blanc-or, qui n'existe pas.
+  //  Défaut invisible à la relecture du code — les trois rectangles semblaient
+  //  là — et criant à l'écran dès qu'on regarde la liste des langues.
+  //  Codes officiels : noir #000000, rouge #DD0000, or #FFCE00.
+  de: '<rect width="24" height="16" fill="#DD0000"/><rect width="24" height="5.34" fill="#000000"/>'
+    + '<rect y="10.66" width="24" height="5.34" fill="#FFCE00"/>',
   en: '<rect width="24" height="16" fill="#012169"/>'
     + '<path d="M0 0 24 16M24 0 0 16" stroke="#ffffff" stroke-width="3.4"/>'
     + '<path d="M0 0 24 16M24 0 0 16" stroke="#C8102E" stroke-width="1.5"/>'
