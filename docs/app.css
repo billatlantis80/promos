@@ -64,11 +64,13 @@ h1, h2, h3, h4, .marque b, .prix { font-family: var(--police-titre); }
 /* Le mot et l'accroche, empiles : l'accroche est SOUS le nom, comme sur le
    logotype fourni. */
 .marque-txt { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
-/* La lettre K du mot porte le degrade du logo. Le logo a deux declinaisons,
-   comme tout logo : le degrade d'origine sur fond clair, une version eclaircie
-   sur fond sombre — sinon le bleu fonce du logo disparait dans l'en-tete. */
-.k-mot {
-  background-image: linear-gradient(135deg, var(--k-mot-1) 0%, var(--k-mot-2) 100%);
+/* TOUT le mot KAZENDRA porte le dégradé du logo, de GAUCHE à DROITE (demande
+   de B : « de gauche vers la droite pour le dégradé. Le dégradé est pour le mot
+   Kazendra. »). Deux déclinaisons, comme pour tout logo : les teintes exactes
+   du logotype sur fond clair, une version éclaircie sur fond sombre — sinon le
+   bleu foncé du logo disparaît dans l'en-tête bleu nuit, et le mot avec lui. */
+.marque-nom {
+  background-image: linear-gradient(90deg, var(--mot-deg-1) 0%, var(--mot-deg-2) 100%);
   -webkit-background-clip: text; background-clip: text;
   color: transparent; -webkit-text-fill-color: transparent;
 }
@@ -358,12 +360,15 @@ html[data-theme="kazendra"] {
 }
 html[data-theme="kazendra"] .marque,
 html[data-theme="kazendra"] .marque b { color: #ffffff; }
-/* Degrade de la lettre K du mot. Par defaut la declinaison pour en-tete
-   SOMBRE (9 themes sur 12) ; les trois themes a en-tete clair reprennent le
-   degrade exact du logo. */
-.k-mot, .marque { --k-mot-1: #4c86b4; --k-mot-2: #5fb290; }
+/* Dégradé du mot. Par défaut la déclinaison pour en-tête SOMBRE (9 thèmes sur
+   12) : éclaircie, pour que le mot entier reste lisible — mesuré 3,8:1 au
+   départ et 5,9:1 à l'arrivée sur le bleu nuit (#0d3b5b), au-dessus du seuil de
+   3:1 des grands textes. Et les deux teintes sont assez éloignées pour que le
+   trajet gauche -> droite se voie : à #5fb290 il restait trop discret à l'œil.
+   Les trois thèmes à en-tête clair reprennent les teintes EXACTES du logotype. */
+.marque { --mot-deg-1: #5a9ac8; --mot-deg-2: #6ec9a0; }
 html[data-theme="clair"], html[data-theme="sable"], html[data-theme="aube"] {
-  --k-mot-1: #1f4473; --k-mot-2: #5fb290;
+  --mot-deg-1: #223a5f; --mot-deg-2: #6aad8f;
 }
 html[data-theme="kazendra"] .marque b { letter-spacing: 1.3px; font-weight: 800; }
 html[data-theme="kazendra"] .comptes { color: rgba(255, 255, 255, .78); }
