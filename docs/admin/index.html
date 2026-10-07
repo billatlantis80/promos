@@ -498,6 +498,13 @@ function brancher() {
 async function ouvrir() {
   document.getElementById('verrou').hidden = true;
   document.getElementById('panneau').hidden = false;
+  // LES BRANCHEMENTS, ET PAS SEULEMENT LE DESSIN. La version précédente
+  // dessinait tout mais n'appelait jamais brancher() : les cinq onglets
+  // s'affichaient, et aucun ne basculait ; le bouton d'export était là, et ne
+  // faisait rien. Rien à l'écran ne le disait — le défaut ne se voyait qu'en
+  // CLIQUANT. C'est exactement pour ça qu'on exerce l'artefact au lieu de le
+  // regarder.
+  brancher();
   const r = relais();
   try {
     const rep = await fetch('../offres.json', { cache: 'no-store' });

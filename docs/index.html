@@ -86,18 +86,6 @@
 <footer class="pied">
   <p id="mention"></p>
   <p class="fresque" id="fraicheur"></p>
-  <!-- Mentions de prix OBLIGATOIRES (conditions du programme Partenaires
-       Amazon) : elles doivent figurer sur chaque page, avec l'horodatage du
-       relevé et les frais de port. Elles ne sont pas décoratives — leur
-       absence fait refuser une demande, puis fermer un compte. -->
-  <section class="mentions-prix" id="mentionsPrix">
-    <h2 data-i18n="Prix et disponibilité">Prix et disponibilité</h2>
-    <p data-i18n="Les prix indiqués peuvent avoir augmenté depuis leur relevé. Le prix affiché sur le site du marchand au moment de l'achat prévaut.">Les prix indiqués peuvent avoir augmenté depuis leur relevé. Le prix affiché sur le site du marchand au moment de l'achat prévaut.</p>
-    <p data-i18n="Il n'est pas possible de mettre à jour les prix affichés en temps réel.">Il n'est pas possible de mettre à jour les prix affichés en temps réel.</p>
-    <p id="prixReleves"></p>
-    <p data-i18n="Frais de port : indiqués par le marchand au moment de la commande.">Frais de port : indiqués par le marchand au moment de la commande.</p>
-  </section>
-  <p class="note" data-i18n="Les offres sont rassemblées depuis des flux publics (Dealabs, presse spécialisée, Google News). Aucune donnée n'est revendiquée : chaque offre renvoie à sa source, qui fait foi.">Les offres sont rassemblées depuis des flux publics (Dealabs, presse spécialisée, Google News). Aucune donnée n'est revendiquée : chaque offre renvoie à sa source, qui fait foi.</p>
 </footer>
 
 <!-- Réglages : feuille plein écran. Le contenu des rubriques est construit par
@@ -115,7 +103,7 @@
   <div class="onglets" role="tablist" aria-label="Réglages" id="ongletsReglages">
     <button class="onglet" role="tab" data-onglet="compte" aria-selected="true" data-i18n="Compte">Compte</button>
     <button class="onglet" role="tab" data-onglet="langue" aria-selected="false" data-i18n="Langue">Langue</button>
-    <button class="onglet" role="tab" data-onglet="affichage" aria-selected="false" data-i18n="Affichage et thèmes">Affichage et thèmes</button>
+    <button class="onglet" role="tab" data-onglet="affichage" aria-selected="false" data-i18n="Thème et affichage">Thème et affichage</button>
     <button class="onglet" role="tab" data-onglet="infos" aria-selected="false" data-i18n="Informations">Informations</button>
   </div>
 
@@ -144,12 +132,15 @@
     </section>
   </div>
 
-  <!-- « Affichage » et « Thèmes » ne font plus qu'un onglet (demande de B :
-       « Tu peux regrouper thèmes et affichage, l'affichage au-dessus et les
-       thèmes en bas car ils prennent plus de place »). L'ordre est celui-là :
-       Affichage, puis Pays — qui commande ce qui est montré —, puis les Thèmes,
-       qui ne changent que l'habillage. -->
+  <!-- ORDRE DEMANDÉ PAR B (08/10/2026) : « on va mettre les thèmes en premier,
+       le choix de l'encadrement en deuxième […] Cette dernière partie [le pays]
+       doit se trouver à la fin de ce paramétrage ». Thèmes -> Affichage -> Pays. -->
   <div class="panneau" data-panneau="affichage" role="tabpanel" hidden>
+    <section class="rubrique">
+      <h3 data-i18n="Thème et couleurs">Thème et couleurs</h3>
+      <p data-i18n="Dix thèmes. Le choix s'applique tout de suite et reste enregistré sur cet appareil.">Dix thèmes. Le choix s'applique tout de suite et reste enregistré sur cet appareil.</p>
+      <div class="themes" id="themes"></div>
+    </section>
     <section class="rubrique">
       <h3 data-i18n="Affichage">Affichage</h3>
       <p data-i18n="Les mêmes réglages que la barre du haut, réunis ici.">Les mêmes réglages que la barre du haut, réunis ici.</p>
@@ -160,19 +151,25 @@
       <p data-i18n="Les offres affichées viennent de ce pays. Tu peux en changer quand tu veux : chaque pays proposé a ses propres sources.">Les offres affichées viennent de ce pays. Tu peux en changer quand tu veux : chaque pays proposé a ses propres sources.</p>
       <div id="regPays"></div>
     </section>
-    <section class="rubrique">
-      <h3 data-i18n="Thème et couleurs">Thème et couleurs</h3>
-      <p data-i18n="Dix thèmes. Le choix s'applique tout de suite et reste enregistré sur cet appareil.">Dix thèmes. Le choix s'applique tout de suite et reste enregistré sur cet appareil.</p>
-      <div class="themes" id="themes"></div>
-    </section>
   </div>
 
+  <!-- Le bloc « Prix et disponibilité » vivait en BAS DU SITE. B l'a fait
+       descendre ici (08/10/2026) : « elle ne doit pas y apparaître car elle
+       doit apparaître dans informations dans les paramètres ». Il garde son
+       identifiant #prixReleves, écrit par app.js — sans lui, l'horodatage du
+       relevé disparaîtrait de l'application. -->
   <div class="panneau" data-panneau="infos" role="tabpanel" hidden>
     <section class="rubrique">
       <h3 data-i18n="Sources et données">Sources et données</h3>
       <p data-i18n="Les offres sont rassemblées depuis des flux publics (Dealabs, presse spécialisée, Google News). Aucune donnée n'est revendiquée : chaque offre renvoie à sa source, qui fait foi.">Les offres sont rassemblées depuis des flux publics (Dealabs, presse spécialisée, Google News). Aucune donnée n'est revendiquée : chaque offre renvoie à sa source, qui fait foi.</p>
-      <p data-i18n="Il n'est pas possible de mettre à jour les prix affichés en temps réel.">Il n'est pas possible de mettre à jour les prix affichés en temps réel.</p>
       <p data-i18n="Les liens vers les marchands peuvent être affiliés : une commission peut être versée, sans changer le prix que tu paies.">Les liens vers les marchands peuvent être affiliés : une commission peut être versée, sans changer le prix que tu paies.</p>
+    </section>
+    <section class="rubrique">
+      <h3 data-i18n="Prix et disponibilité">Prix et disponibilité</h3>
+      <p data-i18n="Les prix indiqués peuvent avoir augmenté depuis leur relevé. Le prix affiché sur le site du marchand au moment de l'achat prévaut.">Les prix indiqués peuvent avoir augmenté depuis leur relevé. Le prix affiché sur le site du marchand au moment de l'achat prévaut.</p>
+      <p data-i18n="Il n'est pas possible de mettre à jour les prix affichés en temps réel.">Il n'est pas possible de mettre à jour les prix affichés en temps réel.</p>
+      <p id="prixReleves"></p>
+      <p data-i18n="Frais de port : indiqués par le marchand au moment de la commande.">Frais de port : indiqués par le marchand au moment de la commande.</p>
     </section>
     <section class="rubrique">
       <h3 data-i18n="Point de contact">Point de contact</h3>
