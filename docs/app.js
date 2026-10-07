@@ -447,7 +447,7 @@ function dessinerProfil() {
     </div>
     <p style="margin:0 0 12px"><button class="enregistrer" id="enregistrerProfil">${esc(t('Enregistrer'))}</button></p>
     <div class="ligne-profil">
-      <span class="avatar" id="avatar" title="Aperçu">${esc(initiale())}</span>
+      <span class="avatar" id="avatar" title="${esc(t('Aperçu'))}">${esc(initiale())}</span>
       <span>${nom ? t('Bonjour {n}', { n: esc(nom) }) : esc(t('Aucun prénom enregistré'))}<br><span style="font-size:12.5px;color:var(--doux)">${esc(t('Gardé sur cet appareil uniquement. Effacé avec les données du site.'))}</span></span>
     </div>`;
 }
@@ -595,9 +595,9 @@ function dessinerCompte() {
       </div>
       <p class="annonce" id="cAnnonce"></p>
       <div class="compte-actions">
-        <button class="enregistrer" id="changerMdp">Changer le mot de passe</button>
-        <button class="outil" id="verrouiller">Verrouiller maintenant</button>
-        <button class="outil" id="exporterDonnees">Télécharger mes données</button>
+        <button class="enregistrer" id="changerMdp">${esc(t('Changer le mot de passe'))}</button>
+        <button class="outil" id="verrouiller">${esc(t('Verrouiller maintenant'))}</button>
+        <button class="outil" id="exporterDonnees">${esc(t('Télécharger mes données'))}</button>
         <button class="outil danger" id="supprimerCompte">${esc(t('Supprimer mon compte'))}</button>
       </div>
       ${blocInscription()}
@@ -1434,7 +1434,9 @@ function dessinerPays() {
       + item('tout', t("Tous les pays d'Europe"), etat.offres.length)
       + codes.map((c) => item(c, t(NOMS_PAYS[c]), compteP[c])).join('')
       + '</div>'
-      + '<p style="margin:10px 0 0;font-size:12.5px;color:var(--doux)">Seuls des pays d’Europe sont proposés : les trajets restent courts.</p>';
+      + '<p style="margin:10px 0 0;font-size:12.5px;color:var(--doux)">'
+      + esc(t("Seuls des pays d'Europe sont proposés : les trajets restent courts."))
+      + '</p>';
     rp.querySelectorAll('.pays-item').forEach((b) => {
       b.addEventListener('click', () => choisirPays(b.dataset.pays));
     });
@@ -1531,8 +1533,8 @@ function dessiner() {
   if (!liste.length && etat.portee === 'promos' && !etat.favoris) {
     // Rien à montrer dans ce rayon ou ce pays : on le DIT, et on ouvre une porte
     // plutôt que de laisser un écran vide sans issue.
-    $('vide').innerHTML = 'Aucune <b>bonne promo</b> ici pour l’instant : nous n’affichons que des offres à prix réel — deux prix affichés quand la remise peut être démontrée, et pour les autres enseignes un prix réel avec le nom de la boutique.'
-      + '<br><button id="voirTout">Voir toutes les offres</button>';
+    $('vide').innerHTML = esc(t("Aucune bonne promo ici pour l'instant : nous n'affichons que des offres à prix réel — deux prix affichés quand la remise peut être démontrée, et pour les autres enseignes un prix réel avec le nom de la boutique."))
+      + '<br><button id="voirTout">' + esc(t('Voir toutes les offres')) + '</button>';
     $('voirTout').addEventListener('click', () => {
       etat.portee = 'tout'; etat.tri = 'remise';
       $('tri').value = 'tout';
