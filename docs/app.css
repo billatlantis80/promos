@@ -18,16 +18,30 @@
   --tete: rgba(12, 13, 16, .94);
   --sur-accent: #1b1206;
   --rayon: 14px;
+  /* Polices de l'identité (voir fonts.css). Deux variables : les onze thèmes
+     en héritent sans avoir à les redéfinir. */
+  --police-titre: "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --police-texte: "Open Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  /* --anneau : l'anneau de focus des champs. Par défaut l'accent ; un thème
+     dont l'accent est trop clair pour se détacher du bord du champ peut le
+     durcir (c'est le cas du thème « kazendra », voir plus bas). */
+  --anneau: var(--accent);
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
 body {
   background: var(--fond);
   color: var(--texte);
-  font: 15px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--police-texte);
+  font-size: 15px;
+  line-height: 1.45;
   -webkit-font-smoothing: antialiased;
   padding-bottom: 40px;
 }
+
+/* Titres en Montserrat (identité). Le PRIX est traité comme un titre : dans une
+   carte de promo, c'est lui qu'on lit en premier — d'où sa présence ici. */
+h1, h2, h3, h4, .marque b, .prix { font-family: var(--police-titre); }
 
 /* ---------- En-tête ---------- */
 .tete {
@@ -40,13 +54,16 @@ body {
 .tete-in { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
 .marque { display: flex; align-items: center; gap: 8px; font-size: 17px; letter-spacing: .2px; }
 .pastille { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 12px var(--accent); }
+/* Le logo de marque : un carré arrondi bleu et le K blanc. Taille fixe pour que
+   l'en-tête ne bouge pas d'un pixel quand la police système change. */
+.logo { width: 22px; height: 22px; display: block; border-radius: 5px; flex: 0 0 auto; }
 .comptes { color: var(--doux); font-size: 12px; text-align: right; }
 .barre { display: flex; gap: 8px; margin: 10px 0; align-items: stretch; }
 #recherche {
   flex: 1; min-width: 0; background: var(--carte); color: var(--texte);
   border: 1px solid var(--bord); border-radius: 10px; padding: 10px 12px; font-size: 14px;
 }
-#recherche:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+#recherche:focus { outline: 2px solid var(--anneau); outline-offset: -1px;}
 /* Le sélecteur de pays vit à côté de la recherche, pas dans la barre du bas :
    celle-ci est déjà pleine (tri, affichage, éco, favoris, réglages) et y ajouter
    un champ de plus écraserait tout le reste. */
@@ -55,7 +72,7 @@ body {
   background: var(--carte); color: var(--texte); border: 1px solid var(--bord);
   border-radius: 10px; padding: 8px 6px; font-size: 13px;
 }
-#pays:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+#pays:focus { outline: 2px solid var(--anneau); outline-offset: -1px;}
 #paysReglages {
   width: 100%; background: var(--carte); color: var(--texte);
   border: 1px solid var(--bord); border-radius: 10px; padding: 10px 8px; font-size: 14px;
@@ -228,13 +245,68 @@ body[data-eco="1"] .offre .visuel { display: none; }
 .pied p { margin: 0 0 8px; }
 .pied .note { opacity: .8; }
 
+/* Mentions de prix obligatoires (programme Partenaires) : lisibles et jamais
+   repliées — une mention cachée ne satisfait pas la condition. */
+.mentions-prix { margin: 10px 0; padding: 10px 12px; border: 1px solid var(--bord); border-radius: 10px; }
+.mentions-prix h2 { margin: 0 0 6px; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: var(--texte); opacity: .9; }
+.mentions-prix p { margin: 0 0 6px; }
+.mentions-prix p:last-child { margin-bottom: 0; }
+#prixReleves { font-weight: 600; color: var(--texte); opacity: .95; }
+
+/* Le VERDICT de la promo : une PHRASE, pas une pastille décorative. Elle vient
+   d'un historique réellement relevé — quand il n'y en a pas, elle ne s'affiche
+   pas du tout, plutôt que d'afficher du vide. */
+.verdict { margin: 6px 0 0; font-size: 12px; line-height: 1.35; color: var(--doux); }
+.verdict::before { content: '◆ '; }
+.verdict.v-bonPlanRare { color: var(--accent); font-weight: 700; }
+.verdict.v-sousPrixHabituel { color: var(--accent); }
+.verdict.v-remiseVerifiee { opacity: .85; }
+.verdict.v-referenceDouteuse,
+.verdict.v-incoherent { color: var(--accent-2); font-weight: 700; }
+
 /* ============================================================
-   THÈMES — dix palettes
+   THÈMES — onze palettes
    Chaque thème ne fait que REdéfinir des variables : aucune règle de mise en
    page n'y touche. Changer de thème ne peut donc rien casser dans la carte, la
    grille ou les boutons. Le thème vit sur <html data-theme="…"> et « nuit »
    reste le défaut si rien n'a été choisi.
    ============================================================ */
+/* Thème de MARQUE — l'identité Kazendra.
+   Interface CLAIRE : fond blanc pur, cartes gris très clair, en-tête bleu nuit
+   (celui de la planche). Son texte est forcé en clair : sans cela le --texte
+   sombre du thème clair deviendrait illisible dessus.
+
+   PALETTE RELEVÉE PAR MESURE sur la planche, pas recopiée : les codes imprimés
+   sur la planche sont illisibles et CONTREDISENT leurs propres pastilles (ils
+   annoncent un vert et un cramoisi là où la planche dessine du bleu et de
+   l'orange). Les pastilles ont donc été échantillonnées : #2A93C1, #EB912D,
+   #2A689C, #0D3B5B, #B96C2A.
+
+   Chaque couple texte/fond est MESURÉ (seuil WCAG AA = 4,5:1) :
+     orange vif #EB912D porte du BLEU NUIT, jamais du blanc ...... 4,81:1
+       (blanc sur cet orange = 2,44:1 — insuffisant, mesuré puis écarté)
+     ambre #A85B10 sur carte ..................................... 4,78:1
+     bleu acier #2A689C sur carte ................................ 5,60:1
+     vert #1B7F4B 4,76:1 · rouge #C0392B 5,16:1 · doux 4,86:1
+   L'anneau de focus est durci en ambre : l'orange vif ne tient que 2,2:1
+   contre le bord des champs, sous le seuil de 3:1 des éléments d'interface. */
+html[data-theme="kazendra"] {
+  --fond: #ffffff; --carte: #f8f9fa; --carte-2: #eef2f6; --bord: #dce4ec;
+  --texte: #16324a; --doux: #5b7085;
+  --accent: #eb912d; --accent-2: #a85b10;
+  --vert: #1b7f4b; --rouge: #c0392b;
+  --tete: #0d3b5b; --sur-accent: #0d3b5b;
+  --anneau: #a85b10;
+}
+html[data-theme="kazendra"] .marque,
+html[data-theme="kazendra"] .marque b { color: #ffffff; }
+html[data-theme="kazendra"] .marque b { letter-spacing: 1.3px; font-weight: 800; }
+html[data-theme="kazendra"] .comptes { color: rgba(255, 255, 255, .78); }
+/* Ici --accent est l'ORANGE vif (boutons, badges), donc trop clair pour servir
+   de couleur de TEXTE sur fond blanc : les verdicts passent au bleu acier et à
+   l'ambre, tous deux mesurés au-dessus du seuil. */
+html[data-theme="kazendra"] .verdict.v-bonPlanRare,
+html[data-theme="kazendra"] .verdict.v-sousPrixHabituel { color: #2a689c; }
 html[data-theme="nuit"] {
   --fond: #0c0d10; --carte: #14161b; --carte-2: #1a1d24; --bord: #262a33;
   --texte: #eceef3; --doux: #9aa1ae;
@@ -346,7 +418,7 @@ html[data-theme="contraste"] {
   background: var(--carte); color: var(--texte); border: 1px solid var(--bord);
   border-radius: 10px; padding: 10px 12px; font-size: 15px;
 }
-.champ input:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+.champ input:focus { outline: 2px solid var(--anneau); outline-offset: -1px;}
 .enregistrer {
   background: var(--accent); color: var(--sur-accent); border: 0; border-radius: 11px;
   padding: 11px 16px; font-size: 15px; font-weight: 600; cursor: pointer;

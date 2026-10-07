@@ -6,13 +6,35 @@
  * intégré au code, JAMAIS demandé à l'utilisateur final : celui-ci voit
  * simplement un bouton « Voir l'offre » qui lui ouvre le marchand.
  *
- * Tant qu'un identifiant est vide, le lien part SANS identifiant — jamais de
- * lien cassé, jamais de faux paramètre. Remplir les deux constantes ci-dessous
- * suffit à activer la rémunération, sans toucher au reste du code.
+ * POURQUOI UN IDENTIFIANT PAR MARCHÉ — et pas un seul :
+ * Amazon délivre un identifiant de suivi DISTINCT pour chaque programme
+ * national (amazon.fr, amazon.de, amazon.com.be…). Un identifiant français
+ * posé sur un lien allemand ne rapporte rien — le programme allemand ne le
+ * reconnaît pas. Ce fichier ne portait avant qu'UNE constante unique
+ * (AMAZON_TAG) : un seul pays était monétisable, tous les autres liens
+ * partaient en clair. C'est ce que la table ci-dessous corrige.
+ *
+ * Règle de sûreté conservée, et même renforcée : tant qu'un marché n'a pas
+ * d'identifiant, ses liens partent SANS tag — jamais de lien cassé, jamais de
+ * paramètre faux, et JAMAIS l'identifiant d'un autre pays sur son lien.
  */
 
-/* 1. Amazon Partenaires — coller TON identifiant de suivi, ex. « monid-21 ». */
-export const AMAZON_TAG = '';
+/* 1. Amazon Partenaires — UN identifiant PAR marché.
+      Coller ici l'identifiant de suivi fourni par chaque programme national.
+      Laisser vide tant que le programme n'est pas ouvert : les liens de ce
+      pays sortiront alors en direct, sans commission. */
+export const AMAZON_TAGS = {
+  'amazon.fr': '',      // France
+  'amazon.de': '',      // Allemagne
+  'amazon.it': '',      // Italie
+  'amazon.es': '',      // Espagne
+  'amazon.nl': '',      // Pays-Bas
+  'amazon.com.be': '',  // Belgique — notre marché
+  'amazon.co.uk': '',   // Royaume-Uni
+  'amazon.ie': '',      // Irlande
+  'amazon.se': '',      // Suède
+  'amazon.pl': '',      // Pologne
+};
 
 /* 2. Réseaux d'affiliation (Awin, Effiliation, Kwanko…) : un modèle de lien
       contenant {url} = l'adresse du marchand. Couvre les enseignes qui n'ont
@@ -21,16 +43,47 @@ export const RESEAUX = [
   // { nom: 'Awin', modele: 'https://www.awin1.com/cread.php?awinmid=XXXX&awinaffid=YYYY&ued={url}' },
 ];
 
-/* Marchands dont le lien peut porter le tag Amazon. */
+/* Marchands dont le lien peut porter un tag Amazon. */
 const EST_AMAZON = /(^|\.)amazon\./i;
 
-/** Ajoute l'identifiant Amazon sans jamais écraser un paramétrage existant. */
+/** Hôte d'une adresse : minuscules, sans « www. ». '' si l'adresse est illisible. */
+function hote(url) {
+  try {
+    return new URL(url).hostname.toLowerCase().replace(/^www\./, '');
+  } catch { return ''; }
+}
+
+/**
+ * Le marché Amazon auquel appartient une adresse, ou '' si aucun ne correspond.
+ * On retient la clé LA PLUS LONGUE qui corresponde : si « amazon.com » devenait
+ * un jour une clé, « amazon.com.be » doit continuer de l'emporter — sinon la
+ * Belgique serait servie par l'identifiant du mauvais programme.
+ */
+export function marcheDe(url) {
+  const h = hote(url);
+  if (!h) return '';
+  let trouve = '';
+  for (const dom of Object.keys(AMAZON_TAGS)) {
+    if ((h === dom || h.endsWith('.' + dom)) && dom.length > trouve.length) trouve = dom;
+  }
+  return trouve;
+}
+
+/** Les marchés réellement ouverts (identifiant renseigné). */
+export function marchesAmazonActifs() {
+  return Object.keys(AMAZON_TAGS).filter((d) => String(AMAZON_TAGS[d] || '').trim());
+}
+
+/** Ajoute l'identifiant DU BON marché, sans jamais écraser un tag existant. */
 function habillerAmazon(url) {
-  if (!AMAZON_TAG) return url;
+  const dom = marcheDe(url);
+  if (!dom) return url;                                   // Amazon sans marché connu : on ne touche pas
+  const tag = String(AMAZON_TAGS[dom] || '').trim();
+  if (!tag) return url;                                   // marché non ouvert : lien direct, jamais de faux tag
   try {
     const u = new URL(url);
-    if (u.searchParams.has('tag')) return url;          // déjà tagué : on n'y touche pas
-    u.searchParams.set('tag', AMAZON_TAG);
+    if (u.searchParams.has('tag')) return url;            // déjà tagué : on n'y touche pas
+    u.searchParams.set('tag', tag);
     return u.toString();
   } catch { return url; }
 }
@@ -58,7 +111,9 @@ export function lienAffilie(url, marchand = '') {
 }
 
 /** Vrai dès qu'au moins une source de rémunération est configurée. */
-export const affiliationActive = () => !!AMAZON_TAG || RESEAUX.some((r) => r && r.modele && r.modele.includes('{url}'));
+export const affiliationActive = () =>
+  marchesAmazonActifs().length > 0
+  || RESEAUX.some((r) => r && r.modele && r.modele.includes('{url}'));
 
 /** Mention légale : obligatoire (DGCCRF + stores), et non négociable. */
 export const MENTION_AFFILIATION = affiliationActive()
