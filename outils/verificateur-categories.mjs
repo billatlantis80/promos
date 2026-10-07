@@ -43,7 +43,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { famille, FAMILLES, MARQUES, MOTS_FORTS, categorieDeSource, sansAccents, sansNegations, classerOffre, compterMots, estJeuNumerique, estSoin, ageEnfant, retirerTrompeurs, estRepasDehors, preuveEpicerie, destinationEtrangere, estForfaitVoyage } from '../collecteur.mjs';
+import { famille, FAMILLES, MARQUES, MOTS_FORTS, categorieDeSource, sansAccents, sansNegations, classerOffre, compterMots, estJeuNumerique, estSoin, ageEnfant, marqueurEnfant, retirerTrompeurs, estRepasDehors, preuveEpicerie, destinationEtrangere, estForfaitVoyage } from '../collecteur.mjs';
 
 /* Tous les mots utilisables pour classer : listes de familles, marques ET mots
    d'appareil — mêmes tables que le collecteur, fusionnées comme lui. Juger sur
@@ -144,7 +144,12 @@ for (const o of offres) {
     // jouets sur sa seule plage d'âge (« Pasta dental 6-13 años ») n'est donc
     // pas « sans preuve » — le contrôle doit lire la même règle que le
     // classement.
-    const ageJouets = cat === 'jouets' && ageEnfant(t);
+    //  POINT 23 ÉTENDU : la règle n'est plus « l'âge seul » mais « tout marqueur
+    //  d'enfant ou de jouet » (mot jouet/enfant/fille/garçon, ou plage d'âge) —
+    //  B l'a étendue à TOUTES les catégories. Le contrôle doit lire la MÊME
+    //  règle que le classement, sinon il reproche au classement d'appliquer sa
+    //  propre consigne (cas mesurés : « Étagère à jouets », « Arbre à chat »).
+    const ageJouets = cat === 'jouets' && marqueurEnfant(t);
     // Un REPAS PRIS DEHORS classé en Activité (unité E6, demande de B point 22) :
     // « Whopper Jr … Menü », « Chicken McNuggets … restaurants » — le repas servi
     // est la preuve elle-même, comme le soin ci-dessus. Le contrôle doit la

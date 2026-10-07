@@ -2092,7 +2092,23 @@ const POIDS_AGE_ENFANT = 6;   // même poids que le mot « enfant » (6 lettres)
  *  Neuf langues, tout en SANS ACCENT (le texte est déjà passé par sansAccents) :
  *  garçon → garcon, mädchen → madchen, niño → nino.
  */
-const MARQUEUR_ENFANT = /\b(jouet|jouets|enfant|enfants|fille|filles|garcon|garcons|toy|toys|kid|kids|child|children|boy|girl|spielzeug|kinder|junge|jungen|madchen|speelgoed|kinderen|jongen|meisje|juguete|juguetes|nino|ninos|nina|ninas|giocattolo|giocattoli|bambino|bambina|bambini|ragazzo|ragazza|brinquedo|brinquedos|crianca|criancas|menino|menina|zabawka|zabawki|dziecko|dzieci|chlopiec|dziewczynka|leksak|leksaker|barn|pojke|flicka)\b/;
+const MARQUEUR_ENFANT = /\b(jouet|jouets|enfant|enfants|fille|filles|garcon|garcons|toy|toys|kid|kids|child|children|boy|girl|spielzeug|junge|jungen|madchen|speelgoed|kinderen|jongen|meisje|juguete|juguetes|nino|ninos|nina|ninas|giocattolo|giocattoli|bambino|bambina|bambini|ragazzo|ragazza|brinquedo|brinquedos|crianca|criancas|menino|menina|zabawka|zabawki|dziecko|dzieci|chlopiec|dziewczynka|leksak|leksaker|barn|pojke|flicka)\b/;
+
+/* HOMONYMES MESURÉS — à retirer AVANT de lire le marqueur d'enfant.
+ *
+ *  Étendre la règle à toutes les catégories rend le marqueur DÉCISIF là où il
+ *  n'était qu'un point parmi d'autres. Mesuré le 7/10 : les 6 seules offres que
+ *  l'extension déplaçait étaient TOUTES des homonymes, aucune un jouet —
+ *
+ *    « Kinder Schokolade » et « Kinder bueno »  → la marque de chocolat ;
+ *    « Carolina Herrera Good Girl »             → le nom d'un parfum ;
+ *    « Orient Bambino »                         → le nom d'une ligne de montres.
+ *
+ *  D'où : « kinder » retiré de la liste (l'allemand garde « junge », « madchen »
+ *  et « spielzeug »), et les locutions ci-dessous écartées. Le mot italien
+ *  « bambino » reste, lui : seul le nom de la montre est visé.
+ *  La liste s'allonge sur PREUVE — un cas réel cité, et son test. */
+const ENFANT_HOMONYMES = /(good girl|orient bambino|kinder bueno|kinder schokolade)/;
 
 /* ⚠ « kind » (allemand : enfant) est VOLONTAIREMENT ABSENT de la liste.
  *
@@ -2103,8 +2119,10 @@ const MARQUEUR_ENFANT = /\b(jouet|jouets|enfant|enfants|fille|filles|garcon|garc
  *  collision de marque (« Kinder » chocolat) est déjà traitée plus haut par
  *  MOTS_TROMPEURS, et c'est un test qui la garde. */
 
-/** Un titre porte-t-il une marque d'ENFANT ou de JOUET ? (mot, ou plage d'âge) */
-const marqueurEnfant = (texteBas) => MARQUEUR_ENFANT.test(texteBas) || ageEnfant(texteBas);
+/** Un titre porte-t-il une marque d'ENFANT ou de JOUET ? (mot, ou plage d'âge)
+ *  Les homonymes mesurés (parfum, chocolat, montre) sont écartés avant lecture. */
+const marqueurEnfant = (texteBas) => !ENFANT_HOMONYMES.test(texteBas)
+  && (MARQUEUR_ENFANT.test(texteBas) || ageEnfant(texteBas));
 
 /** La famille indiquée par un PRODUIT NOMMÉ (un appareil, un type de jeu…), ou
  *  null si le titre n'en nomme aucun.
@@ -2164,9 +2182,15 @@ function famille(texte, categorieSource) {
     // JEU_NUMERIQUE — le support nommé l'emporte, comme le produit nommé.
     // estJeuNumerique — le support nommé l'emporte, comme le produit nommé.
     if (appareil === 'jouets' && estJeuNumerique(bas)) return 'tech';
-    // Point 23 — un marqueur enfant/jouet l'emporte sur high-tech, même quand un
-    //  appareil a été NOMMÉ (« Tablette pour enfant », « Montre enfant »).
-    if (appareil === 'tech' && marqueurEnfant(bas)) return 'jouets';
+    // Point 23 — un marqueur enfant/jouet l'emporte sur TOUTE autre famille.
+    //  Demande de B, explicitement étendue : « dès qu'il y a le mot jouet pour
+    //  enfant garçon et fille ou la catégorie d'âge qui correspond aux enfants,
+    //  doit être mis dans jeu et jouet. Cela est valable pour tous les pays. »
+    //  ⚠ Seule exception conservée : un JEU NUMÉRIQUE (application, PS5, Steam)
+    //  reste un logiciel — c'est la règle « jeu numérique ≠ jouet », plus
+    //  ancienne et toujours valable. Sinon « LEGO Batman pour enfant (PS5) »
+    //  deviendrait un jouet.
+    if (appareil !== 'jouets' && marqueurEnfant(bas) && !estJeuNumerique(bas)) return 'jouets';
     return appareil;
   }
   let meilleur = 'autre', score = 0;
@@ -2206,12 +2230,13 @@ function famille(texte, categorieSource) {
   //  a aucune raison de le laisser en « Autres » faute de mot-clé.
   if ((resultat === 'nourriture' || resultat === 'autre')
     && estRepasDehors(bas) && !preuveEpicerie(bas)) return 'activite';
-  // POINT 23 — DERNIER FILET : un marqueur ENFANT/JOUET l'emporte sur « tech »,
-  //  quelle que soit la route qui a mené là (mots du titre comme rubrique de la
-  //  source). Demande de B : « tous les articles avec écrit jouet pour enfant ou
-  //  avec un âge d'enfants ou avec écrit pour les enfants qui sont dans high-tech
-  //  doivent être dans la catégorie jouets ».
-  if (resultat === 'tech' && marqueurEnfant(bas)) return 'jouets';
+  // POINT 23 — DERNIER FILET, ÉTENDU À TOUTES LES CATÉGORIES. Demande de B :
+  //  « dès qu'il y a le mot jouet pour enfant garçon et fille ou la catégorie
+  //  d'âge qui correspond aux enfants, doit être mis dans jeu et jouet. Cela est
+  //  valable pour tous les pays. » Le marqueur enfant l'emporte donc sur
+  //  n'importe quelle famille décidée par les mots OU par la rubrique de la
+  //  source — sauf sur un JEU NUMÉRIQUE, qui reste un logiciel.
+  if (resultat !== 'jouets' && marqueurEnfant(bas) && !estJeuNumerique(bas)) return 'jouets';
   return resultat;
 }
 
@@ -2627,6 +2652,19 @@ function offresEnseigne(html, source) {
     const prix = versNombre(off && off.price);
     const lien = String(o.url || (off && (off.url || off['@id'])) || '').trim();
     if (!o.name || prix == null) return;
+    // RÈGLE DU PRODUIT, appliquée à la source : « une promotion sans deuxième
+    //  prix n'est pas une promotion ». Mesuré le 7/10 : la page « offres » de
+    //  Coolblue liste 246 articles, dont 199 SANS aucun prix de référence — des
+    //  prix catalogue nus (Miele Guard M1 à 279 €, Galaxy Watch 9 à 367 €…).
+    //  Les afficher en masse noie les 47 VRAIES remises et fait perdre au site
+    //  ce qui fait sa valeur. On ne garde donc que ce qui a un avant/après.
+    //  (Les enseignes qui ne publient AUCUN prix — Bol, Tesco, Argos… — ne
+    //  passent pas par ici : elles relèvent de l'étage « bonne affaire ».)
+    const avant = referenceVraisemblable(prix,
+      versNombre((off && (off.highPrice || off.listPrice)) || o.highPrice)
+      ?? referenceListe(off)
+      ?? reference.get(nettoyer(o.name)) ?? null);
+    if (avant == null) return;
     const cle = (lien || String(o.name)).toLowerCase();
     if (vus.has(cle)) return;
     vus.add(cle);
@@ -2634,14 +2672,11 @@ function offresEnseigne(html, source) {
       titre: nettoyer(o.name),
       prix,
       // Quatre sources possibles pour le prix de référence, dans l'ordre de
-      // fiabilité : les champs `highPrice`/`listPrice` du JSON-LD, la
+      // fiabilité : les `highPrice`/`listPrice` du JSON-LD, la
       // `priceSpecification` de type `ListPrice` (là où Groupon écrit « au lieu
       // de »), puis la charge interne de la page (Coolblue). Le garde-fou de
       // vraisemblance s'applique en dernier, à la valeur retenue.
-      prixAvant: referenceVraisemblable(prix,
-        versNombre((off && (off.highPrice || off.listPrice)) || o.highPrice)
-        ?? referenceListe(off)
-        ?? reference.get(nettoyer(o.name)) ?? null),
+      prixAvant: avant,
       lien: lien || source.url,
       image: /^https?:\/\//i.test(image) ? image : '',
       marque: typeof o.brand === 'object' && o.brand ? String(o.brand.name || '') : String(o.brand || ''),

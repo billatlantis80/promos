@@ -69,21 +69,23 @@ test('E4 — une plage d’âge d’enfant suffit, une plage d’adultes non', (
   assert.notEqual(famille('Google GEMINI AI Pro na 18 miesięcy', ''), 'jouets');
 });
 
-test('E4 + point 23 — le marqueur ENFANT l’emporte sur High-tech, et sur lui seul', () => {
-  // Le plan (E4) disait : « si une famille d'appareil nommé est plus précise, le
-  // DIRE plutôt que de la laisser écraser ». B a TRANCHÉ DEPUIS, explicitement :
-  // « tous les articles avec écrit jouet pour enfant ou avec un âge d'enfants ou
-  // avec écrit pour les enfants qui sont dans high-tech doivent être dans la
-  // catégorie jouets ». La consigne la plus récente gagne : le marqueur enfant
-  // passe donc DEVANT « tech » — et SEULEMENT devant « tech ».
+test('point 23 ÉTENDU — le marqueur ENFANT l’emporte sur TOUTES les catégories', () => {
+  // B a étendu sa consigne : « dès qu'il y a le mot jouet pour enfant garçon et
+  // fille ou la catégorie d'âge qui correspond aux enfants, doit être mis dans
+  // jeu et jouet. Cela est valable pour tous les pays. » Le marqueur est donc
+  // DÉCISIF partout, pas seulement face à « tech ».
   assert.equal(famille('Casque audio enfant Bluetooth', ''), 'jouets', 'point 23 : casque ENFANT → jouets');
   assert.equal(famille('Téléviseur enfant LG 32 pouces', ''), 'jouets', 'point 23 : télé ENFANT → jouets');
-  // Hors de « tech », la règle ne touche à rien : un appareil nommé garde la priorité.
-  assert.equal(famille('Brosse à dents électrique Oral-B Kids', ''), 'beaute', 'brosse à dents : Beauté (hors tech)');
-  assert.equal(famille('Tondeuse à cheveux enfant Wahl', ''), 'electromenager', 'tondeuse à cheveux : Électroménager (hors tech)');
-  // …et un produit high-tech SANS marqueur enfant reste High-tech.
+  assert.equal(famille('Brosse à dents électrique Oral-B Kids', ''), 'jouets', 'point 23 : marqueur enfant décisif, même en Beauté');
+  assert.equal(famille('Tondeuse à cheveux enfant Wahl', ''), 'jouets', 'point 23 : ⚠ CONFLIT assumé avec « tondeuse → Électroménager » — la consigne la plus récente gagne (signalé à B)');
+  // …et un marqueur enfant « pur » (mot « jouet », garçon, fille) tranche aussi.
+  assert.equal(famille('Vélo 3 à 6 ans pour enfant', ''), 'jouets');
+  assert.equal(famille('Sac à dos fille motif licorne', ''), 'jouets');
+  // …mais un produit high-tech SANS marqueur enfant reste High-tech.
   assert.equal(famille('Casque audio Bluetooth Sony WH-1000XM5', ''), 'tech', 'sans marqueur enfant → High-tech');
   assert.equal(famille('Téléviseur LG OLED 55 pouces', ''), 'tech', 'télé sans « enfant » → High-tech');
+  // …et un JEU NUMÉRIQUE pour enfant reste un logiciel (règle plus ancienne).
+  assert.equal(famille('LEGO Batman pour enfant (PS5)', ''), 'tech', 'jeu numérique → logiciel, pas jouet');
 });
 
 test('E4 — les faux positifs mesurés ne basculent pas en jouets', () => {
