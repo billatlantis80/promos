@@ -91,3 +91,35 @@ Artefacts (`/opt/data/android-build/sortie/`) :
 
 `git rev-parse HEAD` = `git rev-parse origin/main` = **`bec46b0d…`** → publié et
 synchronisé. `bash bin/tester.sh` → **185/185**, 0 échec.
+
+## Passage de sauvetage FINAL du 2026-10-07 ~05:46 UTC (session neuve, dernier passage de la nuit)
+
+À **05:45 UTC**, il restait **0 passage** avant 05:45 (c'est le **32ᵉ et dernier**
+passage du cron de nuit, `next_run_at` = 2026-10-07T22:00) → **règle de
+sauvetage** appliquée : saut direct à la phase **D**. La publication est déjà
+synchronisée (`docs/offres.json` `genereLe` **2026-10-07T05:45:18.975Z**,
+**9 949 offres** ; `git rev-parse HEAD` = `git rev-parse origin/main` =
+**`cee0a9c3…`**, 0 devant/0 derrière). À l'ouverture, `verifier-apk.mjs` était
+**conforme 20/20** mais l'instantané embarqué accusait **14 min** de retard
+(9 919 / 9 949, écart **30**). Chaîne rejouée pour livrer l'instantané frais :
+
+1. `preparer-promos.sh` → `donnees.js` **7 617 216 o** (instantané 9 949).
+2. `compiler-promos.sh` → `BUILD SUCCESSFUL in 15s`.
+3. `signer-promos.sh` → `SIGN_OK`, signature **`f15debcfe9a43f8b…`** conservée.
+4. `node outils/verifier-apk.mjs` → **20/20 contrôles verts** (10 APK + 10 AAB),
+   dont *octet par octet* ✓, *instantané 0 min* ✓, **9 949 / 9 949 (écart 0)** ✓,
+   *signature `f15debc…`* ✓.
+
+Artefacts (`/opt/data/android-build/sortie/`) :
+
+| Fichier | Octets | SHA-256 |
+|---|---|---|
+| `promos.apk` | 1 758 761 | `029e30ecd2267b316258288780c1532bd09b35db20e2d39f4c7fdc2a73bde1e9` |
+| `promos.aab` | 1 753 234 | `eb532854261455db1ced42f3720e37c73db227d50740a9b6f4f285e964659541` |
+
+`bash bin/tester.sh` → **185/185**, 0 échec. **Rien à corriger** : D1/D2 étaient
+déjà faits ; ce passage a rafraîchi l'artefact livré au plus proche du site.
+Unités restantes (dites, pas tues) : **B7–B12** (sources Meubles/Nourriture/
+Animaux/Voyages par pays, couverture) et **C1–C12** (traductions 9 langues) —
+sacrifiées pour livrer un site publié **et** un APK vérifié avant le rapport de
+06:00.
