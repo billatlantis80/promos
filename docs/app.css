@@ -228,6 +228,14 @@ body[data-eco="1"] .offre .visuel { display: none; }
 .pied p { margin: 0 0 8px; }
 .pied .note { opacity: .8; }
 
+/* Mentions de prix obligatoires (programme Partenaires) : lisibles et jamais
+   repliées — une mention cachée ne satisfait pas la condition. */
+.mentions-prix { margin: 10px 0; padding: 10px 12px; border: 1px solid var(--bord); border-radius: 10px; }
+.mentions-prix h2 { margin: 0 0 6px; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: var(--texte); opacity: .9; }
+.mentions-prix p { margin: 0 0 6px; }
+.mentions-prix p:last-child { margin-bottom: 0; }
+#prixReleves { font-weight: 600; color: var(--texte); opacity: .95; }
+
 /* ============================================================
    THÈMES — dix palettes
    Chaque thème ne fait que REdéfinir des variables : aucune règle de mise en

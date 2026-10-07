@@ -1186,6 +1186,12 @@ function dessiner() {
     n: new Date(etat.meta.genereLe || Date.now()).toLocaleString(locale()),
     m: total,
   });
+  // HORODATAGE EXIGÉ par les conditions Partenaires : la date du relevé doit
+  // accompagner l'affichage des prix. On affiche celle des DONNÉES, jamais
+  // l'heure de la visite — c'est la seule qui soit honnête.
+  $('prixReleves').textContent = t('Prix relevés le {d}.', {
+    d: new Date(etat.meta.genereLe || Date.now()).toLocaleString(locale()),
+  });
   // Les outils sont rafraîchis ICI, en fin de rendu, et pas seulement au
   // démarrage : le compteur de favoris et l'état du mode économie dépendent de
   // ce qui vient d'être dessiné.
