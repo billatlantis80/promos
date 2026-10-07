@@ -314,10 +314,7 @@ function dessinerCompte() {
         <p>Ce compte <b>ne crée rien en ligne</b> : il n'y a pas de serveur. Il
            protège l'accès à l'application (favoris, réglages) sur ce téléphone,
            et donne un nom au porteur des données.</p>
-        <p>Ce qu'il ne fera jamais, pour que tu ne l'attendes pas : retrouver tes
-           favoris sur un autre appareil, ni te rendre un mot de passe oublié. Le
-           mot de passe n'est pas enregistré — seulement une empreinte calculée à
-           partir de lui.</p>
+        <p>${t("Ce qu'il ne fera jamais, pour que tu ne l'attendes pas : retrouver tes favoris sur un autre appareil, ni te rendre un mot de passe oublié. Le mot de passe n'est pas enregistré — seulement une empreinte calculée à partir de lui.")}</p>
         <div class="champ">
           <label for="cNom">${esc(t("Nom d'utilisateur"))}</label>
           <input id="cNom" type="text" maxlength="24" autocomplete="username" placeholder="${esc(t('3 à 24 caractères'))}">
@@ -345,8 +342,7 @@ function dessinerCompte() {
           <span class="quand">compte local créé le ${dateLisible(f.cree)} · ${esc(f.algorithme || 'PBKDF2-SHA256')} ${f.tours ? `(${f.tours} tours)` : ''}</span>
         </span>
       </div>
-      <p>Ce compte vit sur cet appareil uniquement. Il protège l'accès à
-         l'application ; il ne synchronise rien et ne se connecte à rien.</p>
+      <p>${t("Ce compte vit sur cet appareil uniquement. Il protège l'accès à l'application ; il ne synchronise rien et ne se connecte à rien.")}</p>
       <div class="champ">
         <label for="cAncien">${esc(t('Mot de passe actuel'))}</label>
         <input id="cAncien" type="password" autocomplete="current-password">
@@ -1489,8 +1485,9 @@ async function lancer() {
   // couleurs par défaut puis bascule sous les yeux de l'utilisateur.
   appliquerTheme(themeEnregistre() || THEME_DEFAUT);
   chargerProfil();
-  dessinerReglages();               // construit le contenu de la feuille Réglages
   appliquerVue(vueEnregistree());   // avant tout rendu : aucun clignotement de mode
+  // La feuille Réglages est dessinée PLUS BAS, après la lecture de la langue :
+  // elle est construite par le JavaScript, donc traduireDOM() ne la rattrape pas.
   chargerFavoris();
   // Pays : AUCUN choix par défaut. À la première ouverture, la question est
   // posée (voir demanderPays) ; ensuite on relit le choix mémorisé. On ne décide
@@ -1529,6 +1526,13 @@ async function lancer() {
   chargerLangue();
   traduireDOM();
   try { document.documentElement.lang = langue(); } catch { /* rien */ }
+  // Feuille Réglages et rubrique COMPTE : toutes deux construites par le
+  // JavaScript, donc traduireDOM() ne les rattrape pas. Dessinées trop tôt —
+  // c'était le cas, la feuille était bâtie avant la lecture de la langue — elles
+  // restaient en FRANÇAIS dans les neuf langues, sans la moindre erreur. Le
+  // commentaire ci-dessus disait déjà la règle ; l'ordre des appels la violait.
+  dessinerReglages();
+  dessinerCompte();
   dessinerPuces();
   dessinerPays();
   dessinerBandeau();
@@ -1542,7 +1546,9 @@ async function lancer() {
  * rien. Sans compte, l'application s'ouvre normalement.
  */
 function demarrer() {
-  dessinerCompte();                 // construit la rubrique dès l'ouverture
+  // La rubrique compte est dessinée dans lancer(), après la lecture de la
+  // langue : le texte est construit en JavaScript, donc il doit naître dans la
+  // bonne langue (traduireDOM ne rattrape que le HTML statique).
   if (C.compteEnregistre()) {
     brancherVerrou();
     montrerVerrou();
