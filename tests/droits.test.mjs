@@ -51,17 +51,17 @@ function corpsBlocDroits() {
    contrôlée — la liste est donc le cœur du test, pas un détail. */
 const PHRASES = [
   'Aucun compte sur cet appareil',
-  "Ce compte ne crée rien en ligne : il n'y a pas de serveur. Il protège l'accès à l'application (favoris, réglages) sur ce téléphone, et donne un nom au porteur des données.",
+  "Ce compte vit sur cet appareil et nulle part ailleurs : il protège l'accès à l'application (favoris, réglages) sur ce téléphone. Une seule chose peut sortir de l'appareil, et seulement si tu la demandes : l'adresse de ton inscription.",
   "Ce qu'il ne fera jamais, pour que tu ne l'attendes pas : retrouver tes favoris sur un autre appareil, ni te rendre un mot de passe oublié. Le mot de passe n'est pas enregistré — seulement une empreinte calculée à partir de lui.",
   "Ce qui est conservé sur cet appareil : le nom d'utilisateur, une empreinte du mot de passe (jamais le mot de passe), le prénom affiché, tes favoris et tes réglages.",
-  "Rien n'est envoyé",
-  " : il n'y a ni serveur, ni traqueur, ni cookie publicitaire.",
+  "Rien n'est envoyé, sauf l'adresse de ton inscription",
+  " : ni traqueur, ni cookie publicitaire. Ton compte, lui, ne quitte pas cet appareil.",
   'Voir et emporter',
   '« Télécharger mes données » produit un fichier lisible qui contient tout.',
   'Effacer',
-  '« Supprimer mon compte » retire le compte et les données de cet appareil, sans délai et sans avoir à demander à personne.',
+  "« Supprimer mon compte » retire le compte et les données de cet appareil, sans délai et sans avoir à demander à personne. L'adresse de ton inscription, elle, se retire depuis l'e-mail reçu.",
   'Durée',
-  "jusqu'à ce que tu supprimes. Aucune copie n'existe ailleurs.",
+  "jusqu'à ce que tu supprimes. Tes favoris et tes réglages n'existent nulle part ailleurs ; l'adresse de ton inscription reste chez le responsable du site jusqu'à ta désinscription.",
 ];
 
 test('chaque phrase du bloc des droits passe par le moteur de traduction', () => {

@@ -15,7 +15,7 @@
      --sur-accent : couleur du texte posé SUR la couleur d'accent. Un accent
      clair demande du texte sombre, un accent sombre demande du texte clair :
      sans cette variable, un thème à accent foncé donnait du texte illisible. */
-  --tete: rgba(12, 13, 16, .94);
+  --tete: rgba(12, 13, 16, .94); --sur-tete: #eceef3;
   --sur-accent: #1b1206;
   --rayon: 14px;
   /* Polices de l'identité (voir fonts.css). Deux variables : les onze thèmes
@@ -360,7 +360,7 @@ html[data-theme="kazendra"] {
   --texte: #16324a; --doux: #5b7085;
   --accent: #eb912d; --accent-2: #a85b10;
   --vert: #1b7f4b; --rouge: #c0392b;
-  --tete: #0d3b5b; --sur-accent: #0d3b5b;
+  --tete: #0d3b5b; --sur-accent: #0d3b5b; --sur-tete: #ffffff;
   --anneau: #a85b10;
 }
 html[data-theme="kazendra"] .marque,
@@ -379,37 +379,37 @@ html[data-theme="nuit"] {
   --fond: #0c0d10; --carte: #14161b; --carte-2: #1a1d24; --bord: #262a33;
   --texte: #eceef3; --doux: #9aa1ae;
   --accent: #ff8a3d; --accent-2: #ffd166;
-  --tete: rgba(12, 13, 16, .94); --sur-accent: #1b1206;
+  --tete: rgba(12, 13, 16, .94); --sur-accent: #1b1206; --sur-tete: #eceef3;
 }
 html[data-theme="ardoise"] {
   --fond: #0e1418; --carte: #131c21; --carte-2: #18242b; --bord: #22333c;
   --texte: #e6eef2; --doux: #93a6b1;
   --accent: #35c6e0; --accent-2: #8be9fd;
-  --tete: rgba(14, 20, 24, .94); --sur-accent: #04222a;
+  --tete: rgba(14, 20, 24, .94); --sur-accent: #04222a; --sur-tete: #e6eef2;
 }
 html[data-theme="foret"] {
   --fond: #0d130f; --carte: #121b14; --carte-2: #17241a; --bord: #243526;
   --texte: #e8f0e6; --doux: #9bb098;
   --accent: #7ed957; --accent-2: #d9f99d;
-  --tete: rgba(13, 19, 15, .94); --sur-accent: #10230a;
+  --tete: rgba(13, 19, 15, .94); --sur-accent: #10230a; --sur-tete: #e8f0e6;
 }
 html[data-theme="bordeaux"] {
   --fond: #140d10; --carte: #1d1317; --carte-2: #251820; --bord: #3a2430;
   --texte: #f2e9ec; --doux: #b09aa4;
   --accent: #e0567a; --accent-2: #ffd166;
-  --tete: rgba(20, 13, 16, .94); --sur-accent: #2a0714;
+  --tete: rgba(20, 13, 16, .94); --sur-accent: #2a0714; --sur-tete: #f2e9ec;
 }
 html[data-theme="violette"] {
   --fond: #100d18; --carte: #181326; --carte-2: #201a30; --bord: #2f2545;
   --texte: #ece8f7; --doux: #a79ec2;
   --accent: #b06bff; --accent-2: #ff7ae0;
-  --tete: rgba(16, 13, 24, .94); --sur-accent: #17072b;
+  --tete: rgba(16, 13, 24, .94); --sur-accent: #17072b; --sur-tete: #ece8f7;
 }
 html[data-theme="ocean"] {
   --fond: #08111d; --carte: #0e1a2b; --carte-2: #132238; --bord: #1d3350;
   --texte: #e6eefb; --doux: #8fa4c2;
   --accent: #38bdf8; --accent-2: #5eead4;
-  --tete: rgba(8, 17, 29, .94); --sur-accent: #04202f;
+  --tete: rgba(8, 17, 29, .94); --sur-accent: #04202f; --sur-tete: #e6eefb;
 }
 /* Thèmes clairs : l'accent doit rester assez sombre pour que le texte posé
    dessus soit lisible, et --accent-2 (étoile gardée, remise calculée) doit
@@ -420,26 +420,26 @@ html[data-theme="clair"] {
   /* #c04d0a et non un orange vif : mesuré 4,88:1 avec le texte blanc du bouton
      et 4,51:1 contre le fond — les deux au-dessus du seuil de lisibilité. */
   --accent: #c04d0a; --accent-2: #b25b00;
-  --tete: rgba(245, 246, 248, .94); --sur-accent: #ffffff;
+  --tete: rgba(245, 246, 248, .94); --sur-accent: #ffffff; --sur-tete: #14161b;
 }
 html[data-theme="sable"] {
   --fond: #faf6ef; --carte: #ffffff; --carte-2: #f2ece1; --bord: #e2d9c9;
   --texte: #2a241d; --doux: #7a6d5c;
   --accent: #a3671a; --accent-2: #8a5a12;
-  --tete: rgba(250, 246, 239, .94); --sur-accent: #ffffff;
+  --tete: rgba(250, 246, 239, .94); --sur-accent: #ffffff; --sur-tete: #2a241d;
 }
 html[data-theme="aube"] {
   --fond: #fdf3f7; --carte: #ffffff; --carte-2: #f7e9f0; --bord: #ecd7e3;
   --texte: #2b1b23; --doux: #806b76;
   --accent: #c72c72; --accent-2: #9c2b60;
-  --tete: rgba(253, 243, 247, .94); --sur-accent: #ffffff;
+  --tete: rgba(253, 243, 247, .94); --sur-accent: #ffffff; --sur-tete: #2b1b23;
 }
 /* Contraste : pensée pour la lisibilité extrême (malvoyance, plein soleil). */
 html[data-theme="contraste"] {
   --fond: #000000; --carte: #0a0a0a; --carte-2: #171717; --bord: #6b6b6b;
   --texte: #ffffff; --doux: #d8d8d8;
   --accent: #ffd700; --accent-2: #ffff00;
-  --tete: rgba(0, 0, 0, .96); --sur-accent: #000000;
+  --tete: rgba(0, 0, 0, .96); --sur-accent: #000000; --sur-tete: #ffffff;
 }
 
 /* ============================================================
@@ -450,13 +450,37 @@ html[data-theme="contraste"] {
   background: var(--fond); padding: 0 12px 48px;
 }
 .feuille[hidden] { display: none; }
-.feuille-tete {
-  position: sticky; top: 0; z-index: 1; margin: 0 -12px 6px; padding: 12px;
+/* UN SEUL BLOC COLLANT POUR LE HAUT DES RÉGLAGES.
+   Défaut mesuré au navigateur, dans le thème de marque : `.feuille-tete` ET
+   `.onglets` étaient tous deux `position: sticky; top: 0`. Au défilement, les
+   deux se collaient au même endroit, et la barre des onglets — blanche, avec un
+   `z-index` supérieur — passait PAR-DESSUS le bandeau bleu. Le titre
+   « Réglages » disparaissait sous les onglets. Ce n'est pas un problème de
+   couleur : c'est un problème d'ordre d'empilement, et aucune couleur ne le
+   corrige.
+   Le remède n'est pas de jouer sur les z-index — ce serait reculer le défaut
+   d'un cran, et le prochain élément collant le ramènerait. On ne garde qu'UN
+   seul bloc collant, qui contient le bandeau ET ses onglets : ils deviennent
+   solidaires, comme l'en-tête de la page principale, et le recouvrement devient
+   impossible par construction. La hauteur du bandeau n'a plus à être connue :
+   elle change avec la police et avec la langue (« Thème et affichage » est plus
+   long que « Theme and display »), et un `top` en pixels codé en dur se
+   tromperait un jour sur deux. */
+.feuille-haut {
+  position: sticky; top: 0; z-index: 2;
   background: var(--tete); backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--bord);
+  margin: 0 -12px; padding: 0 12px;
+}
+.feuille-tete {
+  margin: 0; padding: 12px 0;
   display: flex; align-items: center; justify-content: space-between; gap: 10px;
 }
-.feuille-tete h2 { margin: 0; font-size: 18px; }
+/* LE TITRE DU BANDEAU PREND --sur-tete, ET NON --texte. Le bandeau a un fond
+   pris dans --tete, qui n'a rien à voir avec le fond de la page : dans le thème
+   « kazendra », --tete est bleu nuit (#0D3B5B) alors que --texte est bleu foncé
+   (#16324A). Sans ce jeton, « Réglages » s'écrivait bleu foncé sur bleu nuit —
+   relevé au navigateur, illisible. Un test mesure les onze thèmes. */
+.feuille-tete h2 { margin: 0; font-size: 18px; color: var(--sur-tete); }
 .fermer {
   background: var(--carte); color: var(--texte); border: 1px solid var(--bord);
   border-radius: 10px; padding: 8px 14px; font-size: 14px; cursor: pointer;
@@ -593,10 +617,12 @@ html[data-theme="contraste"] {
 /* ---------- Réglages en onglets ----------
    Les réglages étaient une seule colonne si longue qu'on n'y trouvait plus
    rien. Chaque famille a son onglet ; la barre reste collée en haut du
-   compartiment pour qu'on sache toujours où l'on est. */
+   compartiment pour qu'on sache toujours où l'on est — mais c'est `.feuille-haut`
+   qui la porte et qui colle. Voir le commentaire de ce bloc plus haut : deux
+   éléments collants au même endroit finissent par se recouvrir. */
 .onglets {
   display: flex; gap: 6px; overflow-x: auto; padding: 4px 0 10px;
-  position: sticky; top: 0; background: var(--fond); z-index: 2;
+  position: static; background: transparent;
   border-bottom: 1px solid var(--bord);
 }
 .onglet {

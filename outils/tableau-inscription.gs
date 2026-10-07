@@ -32,6 +32,9 @@
  *      sans ce renvoi, l'inscrit serait bloqué pour toujours).
  *      Adresse « confirmée » -> ne fait rien, et le dit.
  *   4. Sur clic du lien -> passe la ligne en « confirmé » et affiche une page.
+ *   5. Sur clic du lien de desinscription -> passe la ligne en « desinscrit ».
+ *      Chaque e-mail porte ce lien : la case cochee sur le site promet
+ *      « Desinscription en un clic », et cette promesse doit se realiser.
  *
  * LE VERROU (LockService) N'EST PAS DÉCORATIF. Deux navigateurs peuvent envoyer
  * au même instant ; sans verrou, les deux lisent « dernière ligne = 5 » et
@@ -39,9 +42,13 @@
  */
 
 var NOM_FEUILLE = 'Inscriptions';
-var TITRES = ['Date', 'E-mail', 'Prénom', 'Langue', 'Pays', 'Source', 'Jeton', 'Statut', 'Confirmé le'];
+var TITRES = ['Date', 'E-mail', 'Langue', 'Pays', 'Source', 'Jeton', 'Statut', 'Confirmé le'];
 
-var COL = { DATE: 1, MAIL: 2, PRENOM: 3, LANGUE: 4, PAYS: 5, SOURCE: 6, JETON: 7, STATUT: 8, CONFIRME: 9 };
+/* PAS DE COLONNE « Prénom ». Le formulaire ne le demande plus (retiré le
+   08/10/2026) : une colonne que rien ne remplit jamais est une colonne qu'on
+   finit par croire remplie. Ce qui identifie un inscrit, ce qui sert à lui
+   écrire et ce qui prouve son accord, c'est son adresse — elle seule. */
+var COL = { DATE: 1, MAIL: 2, LANGUE: 3, PAYS: 4, SOURCE: 5, JETON: 6, STATUT: 7, CONFIRME: 8 };
 
 /* Les messages envoyés et affichés, dans les neuf langues du site. Le vocabulaire
    est celui du quotidien, pas celui d'un service informatique. */
@@ -50,47 +57,47 @@ var TEXTES = {
     bouton: 'Pour activer ton compte, clique simplement sur ce lien :',
     oubli: "Si tu n'es pas à l'origine de cette demande, ignore ce message : sans clic, rien ne sera activé.",
     sign: 'À bientôt, Kazendra', pageTitre: 'Compte activé',
-    pageTexte: 'Ton inscription est confirmée. Tu recevras les bons plans.', pageInconnu: "Ce lien n'est pas valable." },
+    pageTexte: 'Ton inscription est confirmée. Tu recevras les bons plans.', pageInconnu: "Ce lien n'est pas valable.", desinscrire: 'Se désinscrire', pageStopTitre: 'Désinscription faite', pageStop: 'Tu ne recevras plus les bons plans. Ton adresse a été retirée de la liste.' },
   nl: { sujet: 'Bevestig je inschrijving — Kazendra', intro: 'Je hebt gevraagd om de koopjes van Kazendra te ontvangen.',
     bouton: 'Klik gewoon op deze link om je account te activeren:',
     oubli: 'Als je dit niet hebt aangevraagd, negeer dit bericht: zonder klik wordt er niets geactiveerd.',
     sign: 'Tot binnenkort, Kazendra', pageTitre: 'Account geactiveerd',
-    pageTexte: 'Je inschrijving is bevestigd. Je ontvangt de koopjes.', pageInconnu: 'Deze link is niet geldig.' },
+    pageTexte: 'Je inschrijving is bevestigd. Je ontvangt de koopjes.', pageInconnu: 'Deze link is niet geldig.', desinscrire: 'Uitschrijven', pageStopTitre: 'Uitgeschreven', pageStop: 'Je ontvangt geen koopjes meer. Je adres is van de lijst gehaald.' },
   de: { sujet: 'Bestätige deine Anmeldung — Kazendra', intro: 'Du hast darum gebeten, die Angebote von Kazendra zu erhalten.',
     bouton: 'Klicke einfach auf diesen Link, um dein Konto zu aktivieren:',
     oubli: 'Wenn du das nicht angefragt hast, ignoriere diese Nachricht: ohne Klick wird nichts aktiviert.',
     sign: 'Bis bald, Kazendra', pageTitre: 'Konto aktiviert',
-    pageTexte: 'Deine Anmeldung ist bestätigt. Du erhältst die Angebote.', pageInconnu: 'Dieser Link ist nicht gültig.' },
+    pageTexte: 'Deine Anmeldung ist bestätigt. Du erhältst die Angebote.', pageInconnu: 'Dieser Link ist nicht gültig.', desinscrire: 'Abmelden', pageStopTitre: 'Abmeldung erledigt', pageStop: 'Du erhältst keine Angebote mehr. Deine Adresse wurde aus der Liste entfernt.' },
   en: { sujet: 'Confirm your sign-up — Kazendra', intro: 'You asked to receive the Kazendra deals.',
     bouton: 'To activate your account, simply click this link:',
     oubli: 'If you did not ask for this, ignore this message: without a click, nothing is activated.',
     sign: 'See you soon, Kazendra', pageTitre: 'Account activated',
-    pageTexte: 'Your sign-up is confirmed. You will receive the deals.', pageInconnu: 'This link is not valid.' },
+    pageTexte: 'Your sign-up is confirmed. You will receive the deals.', pageInconnu: 'This link is not valid.', desinscrire: 'Unsubscribe', pageStopTitre: 'Unsubscribed', pageStop: 'You will no longer receive the deals. Your address has been removed from the list.' },
   es: { sujet: 'Confirma tu inscripción — Kazendra', intro: 'Has pedido recibir las ofertas de Kazendra.',
     bouton: 'Para activar tu cuenta, haz clic en este enlace:',
     oubli: 'Si no has solicitado esto, ignora este mensaje: sin clic, no se activa nada.',
     sign: 'Hasta pronto, Kazendra', pageTitre: 'Cuenta activada',
-    pageTexte: 'Tu inscripción está confirmada. Recibirás las ofertas.', pageInconnu: 'Este enlace no es válido.' },
+    pageTexte: 'Tu inscripción está confirmada. Recibirás las ofertas.', pageInconnu: 'Este enlace no es válido.', desinscrire: 'Darse de baja', pageStopTitre: 'Baja realizada', pageStop: 'Ya no recibirás las ofertas. Tu dirección se ha quitado de la lista.' },
   it: { sujet: 'Conferma la tua iscrizione — Kazendra', intro: 'Hai chiesto di ricevere le offerte di Kazendra.',
     bouton: 'Per attivare il tuo account, clicca semplicemente su questo link:',
     oubli: 'Se non hai richiesto tu questo, ignora il messaggio: senza clic non si attiva nulla.',
     sign: 'A presto, Kazendra', pageTitre: 'Account attivato',
-    pageTexte: 'La tua iscrizione è confermata. Riceverai le offerte.', pageInconnu: 'Questo link non è valido.' },
+    pageTexte: 'La tua iscrizione è confermata. Riceverai le offerte.', pageInconnu: 'Questo link non è valido.', desinscrire: 'Disiscriviti', pageStopTitre: 'Disiscrizione fatta', pageStop: 'Non riceverai più le offerte. Il tuo indirizzo è stato tolto dalla lista.' },
   pt: { sujet: 'Confirma a tua inscrição — Kazendra', intro: 'Pediste para receber as promoções da Kazendra.',
     bouton: 'Para ativar a tua conta, clica simplesmente nesta ligação:',
     oubli: 'Se não foste tu a pedir, ignora esta mensagem: sem clique nada é ativado.',
     sign: 'Até breve, Kazendra', pageTitre: 'Conta ativada',
-    pageTexte: 'A tua inscrição está confirmada. Vais receber as promoções.', pageInconnu: 'Esta ligação não é válida.' },
+    pageTexte: 'A tua inscrição está confirmada. Vais receber as promoções.', pageInconnu: 'Esta ligação não é válida.', desinscrire: 'Desinscrever', pageStopTitre: 'Desinscrição feita', pageStop: 'Já não vais receber as promoções. O teu endereço foi retirado da lista.' },
   pl: { sujet: 'Potwierdź zapis — Kazendra', intro: 'Poprosiłeś o otrzymywanie okazji Kazendra.',
     bouton: 'Aby aktywować konto, kliknij po prostu ten link:',
     oubli: 'Jeśli to nie ty, zignoruj tę wiadomość: bez kliknięcia nic nie zostanie aktywowane.',
     sign: 'Do zobaczenia, Kazendra', pageTitre: 'Konto aktywowane',
-    pageTexte: 'Twój zapis jest potwierdzony. Będziesz otrzymywać okazje.', pageInconnu: 'Ten link jest nieprawidłowy.' },
+    pageTexte: 'Twój zapis jest potwierdzony. Będziesz otrzymywać okazje.', pageInconnu: 'Ten link jest nieprawidłowy.', desinscrire: 'Wypisz się', pageStopTitre: 'Wypisano', pageStop: 'Nie będziesz już otrzymywać okazji. Twój adres został usunięty z listy.' },
   sv: { sujet: 'Bekräfta din anmälan — Kazendra', intro: 'Du bad om att få Kazendras erbjudanden.',
     bouton: 'Klicka bara på den här länken för att aktivera ditt konto:',
     oubli: 'Om du inte begärde detta, ignorera meddelandet: utan ett klick aktiveras inget.',
     sign: 'Vi ses snart, Kazendra', pageTitre: 'Konto aktiverat',
-    pageTexte: 'Din anmälan är bekräftad. Du kommer att få erbjudandena.', pageInconnu: 'Den här länken är inte giltig.' },
+    pageTexte: 'Din anmälan är bekräftad. Du kommer att få erbjudandena.', pageInconnu: 'Den här länken är inte giltig.', desinscrire: 'Avregistrera', pageStopTitre: 'Avregistrerad', pageStop: 'Du kommer inte längre att få erbjudandena. Din adress har tagits bort från listan.' },
 };
 
 function textes(langue) {
@@ -149,11 +156,15 @@ function repondre(texte) {
 }
 
 /** Envoie l'e-mail de confirmation. Renvoie true si l'envoi a été accepté. */
-function envoyerConfirmation(adresse, prenom, langue, jeton) {
+function envoyerConfirmation(adresse, langue, jeton) {
   var t = textes(langue);
   var lien = ScriptApp.getService().getUrl() + '?jeton=' + encodeURIComponent(jeton);
+  // LE LIEN DE DESINSCRIPTION EST DANS LE PREMIER MESSAGE. La case cochee sur le
+  // site promet « Desinscription en un clic » : la promesse doit se realiser
+  // dans le message qu'on recoit, pas dans un rappel que personne n'ouvre.
+  var lienStop = ScriptApp.getService().getUrl() + '?desinscrire=' + encodeURIComponent(jeton);
   var corps = [
-    (prenom ? 'Bonjour ' + prenom + ',' : 'Bonjour,'),
+    'Bonjour,',
     '',
     t.intro,
     '',
@@ -161,6 +172,8 @@ function envoyerConfirmation(adresse, prenom, langue, jeton) {
     lien,
     '',
     t.oubli,
+    '',
+    t.desinscrire + ' : ' + lienStop,
     '',
     t.sign,
   ].join('\n');
@@ -197,11 +210,11 @@ function doPost(e) {
     if (ligne === 0) {
       var jeton = nouveauJeton();
       feuille.appendRow([
-        new Date(), adresse, String(d.prenom || '').slice(0, 60), langue,
+        new Date(), adresse, langue,
         String(d.pays || '').slice(0, 5), String(d.source || '').slice(0, 40),
         jeton, 'en attente', '',
       ]);
-      var parti = envoyerConfirmation(adresse, String(d.prenom || ''), langue, jeton);
+      var parti = envoyerConfirmation(adresse, langue, jeton);
       return repondre(parti ? 'en attente, e-mail envoye' : 'en attente, e-mail NON envoye');
     }
 
@@ -214,7 +227,7 @@ function doPost(e) {
     // bloqué définitivement — et il n'aurait aucun moyen de le signaler.
     var jeton2 = String(feuille.getRange(ligne, COL.JETON).getValue() || '') || nouveauJeton();
     feuille.getRange(ligne, COL.JETON).setValue(jeton2);
-    var reparti = envoyerConfirmation(adresse, String(feuille.getRange(ligne, COL.PRENOM).getValue() || ''), langue, jeton2);
+    var reparti = envoyerConfirmation(adresse, langue, jeton2);
     return repondre(reparti ? 'renvoye' : 'renvoi NON envoye');
   } catch (err) {
     return repondre('erreur: ' + err);
@@ -228,6 +241,22 @@ function doGet(e) {
   var jeton = ((e && e.parameter) || {}).jeton || '';
   var texte, titre;
   try {
+    // DESINSCRIPTION — un clic, depuis le lien present dans chaque e-mail.
+    // La ligne n'est PAS supprimee : elle passe en « desinscrit ». C'est la
+    // trace de l'accord ET de son retrait — et sans elle, un nouvel envoi
+    // recreerait la ligne, donc re-inscrirait quelqu'un qui n'a rien redemande.
+    var stop = ((e && e.parameter) || {}).desinscrire || '';
+    if (stop) {
+      var feuilleStop = feuilleInscriptions();
+      var ligneStop = ligneDuJeton(feuilleStop, stop);
+      if (ligneStop === 0) {
+        return pageHtml('Lien non valable',
+                        "Ce lien de desinscription n'est pas valable.", false);
+      }
+      var ts = textes(String(feuilleStop.getRange(ligneStop, COL.LANGUE).getValue() || 'en'));
+      feuilleStop.getRange(ligneStop, COL.STATUT).setValue('désinscrit');
+      return pageHtml(ts.pageStopTitre, ts.pageStop, true);
+    }
     var feuille = feuilleInscriptions();
     var ligne = ligneDuJeton(feuille, jeton);
     if (ligne === 0) {

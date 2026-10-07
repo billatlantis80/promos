@@ -69,7 +69,11 @@ test('le formulaire demande une ADRESSE, plus un nom d’utilisateur', () => {
   assert.ok(/id="cMail"[^>]*type="email"/.test(APP),
     'le champ d’inscription doit être un champ e-mail (id="cMail" type="email")');
   assert.ok(APP.includes('id="cConsent"'), 'la case de consentement a disparu');
-  assert.ok(APP.includes('id="cPrenom"'), 'le champ prénom a disparu');
+  // Le prénom FACULTATIF a été retiré le 08/10/2026 : un champ qui peut rester
+  // vide ne servait ni à inscrire, ni à écrire. Ce test exigeait l'INVERSE
+  // avant — il verrouillait donc le champ que B a fait disparaître.
+  assert.ok(!APP.includes('cPrenom'),
+    'le champ prénom facultatif est revenu dans le formulaire d’inscription');
   // Le nom d'utilisateur n'a plus de raison d'être : c'est l'adresse qui
   // identifie l'inscrit, et c'est elle qu'on envoie.
   assert.ok(!APP.includes('id="cNom"'),
@@ -109,10 +113,9 @@ test('l’annonce parle de l’e-mail de confirmation, jamais d’un compte acti
   }
 });
 
-test('les 6 nouvelles phrases existent dans les 9 langues', () => {
+test('les nouvelles phrases de l’inscription existent dans les 9 langues', () => {
   const SRC = LANGUES_SRC.replace(/\\"/g, '"');
   const phrases = [
-    'Prénom (facultatif)',
     "Cette adresse e-mail n'est pas valide.",
     "Coche la case pour recevoir les bons plans : sans ton accord, on ne t'inscrit pas.",
     "Ton compte est créé sur cet appareil. Le tableau n'est pas encore branché : ton adresse n'a pas été envoyée.",
@@ -198,10 +201,98 @@ test('le récepteur Google refuse les doublons et vérifie l’adresse', () => {
   assert.ok(/d\.email/.test(gs), 'le récepteur doit lire le champ « email »');
 });
 
+test('le désistement se fait en un clic, comme la case le promet', () => {
+  // La case cochée sur le site annonce, dans les neuf langues : « Désinscription
+  // en un clic. » Or l'e-mail de confirmation ne portait AUCUN lien de
+  // désinscription : on promettait un geste qui n'existait pas. Ce test tient
+  // les trois morceaux ensemble — sans le lien, la promesse est un mensonge ;
+  // sans le traitement, le lien ne fait rien ; sans le statut, l'inscrit reste
+  // dans la liste et reçoit quand même.
+  const gs = lire('outils/tableau-inscription.gs');
+
+  // 1. Le lien est dans le corps de l'e-mail, donc dans CHAQUE message reçu.
+  assert.ok(/lienStop/.test(gs),
+    'l’e-mail de confirmation doit porter un lien de désinscription');
+  assert.ok(/desinscrire=' \+ encodeURIComponent/.test(gs),
+    'le lien de désinscription doit porter le jeton, sinon il désinscrirait n’importe qui');
+  assert.ok(/t\.desinscrire/.test(gs),
+    'le libellé du lien doit venir des textes traduits, pas d’une chaîne en clair');
+
+  // 2. Le clic est traité : sans cela, le lien mène à la page d'activation.
+  assert.ok(/desinscrire\) \|\| ''/.test(gs) || /\.desinscrire \|\| ''/.test(gs),
+    'doGet doit lire le paramètre « desinscrire »');
+  assert.ok(/'désinscrit'/.test(gs),
+    'le clic doit ranger la ligne en « désinscrit »');
+
+  // 3. La ligne n'est pas supprimée : elle est la trace de l'accord ET de son
+  //    retrait. Supprimée, un nouvel envoi recréerait la ligne et réinscrirait
+  //    quelqu'un qui n'a rien redemandé.
+  assert.ok(!/deleteRow|deleteRows/.test(gs),
+    'la désinscription ne doit pas supprimer la ligne, seulement changer son statut');
+
+  // 4. Les trois phrases existent dans les neuf langues.
+  for (const cle of ['desinscrire:', 'pageStopTitre:', 'pageStop:']) {
+    const n = (gs.match(new RegExp(cle, 'g')) || []).length;
+    assert.equal(n, 9, `« ${cle} » doit être traduit dans les 9 langues, or ${n}`);
+  }
+});
+
 test('le site charge le module d’inscription', () => {
   assert.ok(/from '\.\/inscription\.js'/.test(APP),
     'app.js doit importer inscription.js');
   const html = HTML;
   assert.ok(!/KAZENDRA_TABLEAU_URL\s*=/.test(html),
     'l’adresse du tableau se règle dans inscription.js, pas dans index.html');
+});
+
+test('le prénom facultatif a disparu PARTOUT — pas seulement à l’écran', () => {
+  // Retirer un champ de l'écran ne suffit pas : s'il reste une colonne dans le
+  // tableau, une valeur dans le message envoyé, ou une traduction dans les neuf
+  // langues, la chose continue d'exister quelque part — et quelqu'un la
+  // rebranchera un jour en croyant qu'elle sert.
+  const INS = lire('public/inscription.js');
+  const GS = lire('outils/tableau-inscription.gs');
+
+  // 1. Rien dans ce que la page envoie.
+  assert.ok(!/prenom/i.test(INS),
+    'inscription.js ne doit plus transporter de prénom (champ de formulaire, envoi ou mémoire locale)');
+
+  // 2. Rien dans le tableau : ni colonne, ni case dans la ligne écrite.
+  assert.ok(!/Prénom/.test(GS.split('/* PAS DE COLONNE')[0]),
+    'les titres de colonnes du tableau ne doivent plus contenir « Prénom »');
+  assert.ok(!/d\.prenom/.test(GS),
+    'le récepteur ne doit plus lire un champ « prenom » que personne n’envoie');
+  assert.ok(!/COL\.PRENOM/.test(GS),
+    'plus aucune colonne PRENOM : les rangs des colonnes suivantes ont changé, un reste les décalerait');
+
+  // 3. Rien dans les dictionnaires : une clé que plus personne n'appelle est une
+  //    traduction figée que quelqu'un finira par « corriger » sans comprendre.
+  const n = (LANGUES_SRC.match(/'Prénom \(facultatif\)':/g) || []).length;
+  assert.equal(n, 0,
+    `« Prénom (facultatif) » doit être retiré des 9 dictionnaires, or il en reste ${n}`);
+
+  // 4. La colonne retirée ne doit pas laisser un trou : la ligne écrite compte
+  //    autant de cases que le tableau a de colonnes. Le découpage respecte les
+  //    parenthèses : « slice(0, 5) » contient une virgule qui n'est PAS une
+  //    séparation de cases — compter naïvement donnait un faux décalage.
+  const cases = (txt) => {
+    // La VIRGULE FINALE de JavaScript (« jeton, '', ») n'est pas une case de
+    // plus : ce test comptait 9 cases pour 8 colonnes à cause d'elle. On
+    // l'enlève avant de compter.
+    txt = txt.replace(/,\s*$/, '');
+    let n = 0, prof = 0, q = null, dedans = false;
+    for (const c of txt) {
+      if (q) { if (c === q) q = null; continue; }
+      if (c === "'" || c === '"') { q = c; dedans = true; continue; }
+      if (c === '(' || c === '[') prof++;
+      else if (c === ')' || c === ']') prof--;
+      else if (c === ',' && prof === 0) n++;
+      else if (!/\s/.test(c)) dedans = true;
+    }
+    return dedans ? n + 1 : 0;
+  };
+  const titres = cases(GS.match(/var TITRES = \[([^\]]+)\]/)[1]);
+  const ligne = cases(GS.match(/feuille\.appendRow\(\[([\s\S]*?)\]\);/)[1]);
+  assert.equal(ligne, titres,
+    `la ligne écrite a ${ligne} cases pour ${titres} colonnes : le tableau serait décalé`);
 });

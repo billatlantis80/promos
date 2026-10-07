@@ -447,7 +447,7 @@ function dessinerProfil() {
     </div>
     <p style="margin:0 0 12px"><button class="enregistrer" id="enregistrerProfil">${esc(t('Enregistrer'))}</button></p>
     <div class="ligne-profil">
-      <span class="avatar" id="avatar" title="Aperçu">${esc(initiale())}</span>
+      <span class="avatar" id="avatar" title="${esc(t('Aperçu'))}">${esc(initiale())}</span>
       <span>${nom ? t('Bonjour {n}', { n: esc(nom) }) : esc(t('Aucun prénom enregistré'))}<br><span style="font-size:12.5px;color:var(--doux)">${esc(t('Gardé sur cet appareil uniquement. Effacé avec les données du site.'))}</span></span>
     </div>`;
 }
@@ -488,15 +488,15 @@ function blocDroits() {
   return `
     <div class="carte-bloc">
       ${titre}
-      <p>${esc(t("Ce compte ne crée rien en ligne : il n'y a pas de serveur. Il protège l'accès à l'application (favoris, réglages) sur ce téléphone, et donne un nom au porteur des données."))}</p>
+      <p>${esc(t("Ce compte vit sur cet appareil et nulle part ailleurs : il protège l'accès à l'application (favoris, réglages) sur ce téléphone. Une seule chose peut sortir de l'appareil, et seulement si tu la demandes : l'adresse de ton inscription."))}</p>
       <p>${esc(t("Ce qu'il ne fera jamais, pour que tu ne l'attendes pas : retrouver tes favoris sur un autre appareil, ni te rendre un mot de passe oublié. Le mot de passe n'est pas enregistré — seulement une empreinte calculée à partir de lui."))}</p>
     </div>
     <div class="carte-bloc" style="margin-top:12px">
-      <p>${esc(t("Ce qui est conservé sur cet appareil : le nom d'utilisateur, une empreinte du mot de passe (jamais le mot de passe), le prénom affiché, tes favoris et tes réglages."))} <b>${esc(t("Rien n'est envoyé"))}</b>${esc(t(" : il n'y a ni serveur, ni traqueur, ni cookie publicitaire."))}</p>
+      <p>${esc(t("Ce qui est conservé sur cet appareil : le nom d'utilisateur, une empreinte du mot de passe (jamais le mot de passe), le prénom affiché, tes favoris et tes réglages."))} <b>${esc(t("Rien n'est envoyé, sauf l'adresse de ton inscription"))}</b>${esc(t(" : ni traqueur, ni cookie publicitaire. Ton compte, lui, ne quitte pas cet appareil."))}</p>
       <ul>
         <li><b>${esc(t('Voir et emporter'))}</b> : ${esc(t('« Télécharger mes données » produit un fichier lisible qui contient tout.'))}</li>
-        <li><b>${esc(t('Effacer'))}</b> : ${esc(t('« Supprimer mon compte » retire le compte et les données de cet appareil, sans délai et sans avoir à demander à personne.'))}</li>
-        <li><b>${esc(t('Durée'))}</b> : ${esc(t("jusqu'à ce que tu supprimes. Aucune copie n'existe ailleurs."))}</li>
+        <li><b>${esc(t('Effacer'))}</b> : ${esc(t("« Supprimer mon compte » retire le compte et les données de cet appareil, sans délai et sans avoir à demander à personne. L'adresse de ton inscription, elle, se retire depuis l'e-mail reçu."))}</li>
+        <li><b>${esc(t('Durée'))}</b> : ${esc(t("jusqu'à ce que tu supprimes. Tes favoris et tes réglages n'existent nulle part ailleurs ; l'adresse de ton inscription reste chez le responsable du site jusqu'à ta désinscription."))}</li>
       </ul>
     </div>`;
 }
@@ -539,21 +539,23 @@ const dateLisible = (iso) => {
 function dessinerCompte() {
   const f = C.ficheCompte();
   if (!f) {
+    // PLUS DE TITRE « Créer un compte sur cet appareil » (retiré le 08/10/2026,
+    // demande de B : « ne doit plus être d'actualité car je récupère l'adresse
+    // mail »). La phrase était devenue fausse — l'adresse ne reste pas sur
+    // l'appareil, elle part vers le tableau — et elle n'avait plus de métier :
+    // la rubrique au-dessus s'appelle déjà « Inscription et connexion », et le
+    // bouton en dessous dit déjà « Créer mon compte ». Un titre qui répète le
+    // bouton ET se trompe sur la portée ne rend service à personne.
+    //
     // Le formulaire d'INSCRIPTION MANUELLE passe en premier — c'est la demande
-    // de B : « il faut commencer par l'inscription manuelle avec nom
-    // d'utilisateur et mot de passe ». Les paragraphes d'explication qui le
-    // précédaient sont partis dans l'onglet Informations (voir blocDroits) :
-    // ici, on ne garde que ce qui sert à remplir le formulaire.
+    // de B : « il faut commencer par l'inscription manuelle ». Les paragraphes
+    // d'explication qui le précédaient sont partis dans l'onglet Informations
+    // (voir blocDroits) : ici, on ne garde que ce qui sert à remplir.
     $('regCompte').innerHTML = `
       <div class="carte-bloc">
-        <h4>${esc(t('Créer un compte sur cet appareil'))}</h4>
         <div class="champ">
           <label for="cMail">${esc(t('Adresse e-mail'))}</label>
           <input id="cMail" type="email" maxlength="120" autocomplete="email" inputmode="email" placeholder="nom@exemple.be">
-        </div>
-        <div class="champ">
-          <label for="cPrenom">${esc(t('Prénom (facultatif)'))}</label>
-          <input id="cPrenom" type="text" maxlength="24" autocomplete="given-name">
         </div>
         <div class="champ">
           <label for="cMdp">${esc(t('Mot de passe'))}</label>
@@ -582,7 +584,7 @@ function dessinerCompte() {
           <span class="quand">compte local créé le ${dateLisible(f.cree)} · ${esc(f.algorithme || 'PBKDF2-SHA256')} ${f.tours ? `(${f.tours} tours)` : ''}</span>
         </span>
       </div>
-      <p>${t("Ce compte vit sur cet appareil uniquement. Il protège l'accès à l'application ; il ne synchronise rien et ne se connecte à rien.")}</p>
+      <p>${t("Ce compte vit sur cet appareil uniquement. Il protège l'accès à l'application et ne synchronise rien. Seule l'adresse de ton inscription est envoyée, pour recevoir les bons plans.")}</p>
       <div class="champ">
         <label for="cAncien">${esc(t('Mot de passe actuel'))}</label>
         <input id="cAncien" type="password" autocomplete="current-password">
@@ -593,9 +595,9 @@ function dessinerCompte() {
       </div>
       <p class="annonce" id="cAnnonce"></p>
       <div class="compte-actions">
-        <button class="enregistrer" id="changerMdp">Changer le mot de passe</button>
-        <button class="outil" id="verrouiller">Verrouiller maintenant</button>
-        <button class="outil" id="exporterDonnees">Télécharger mes données</button>
+        <button class="enregistrer" id="changerMdp">${esc(t('Changer le mot de passe'))}</button>
+        <button class="outil" id="verrouiller">${esc(t('Verrouiller maintenant'))}</button>
+        <button class="outil" id="exporterDonnees">${esc(t('Télécharger mes données'))}</button>
         <button class="outil danger" id="supprimerCompte">${esc(t('Supprimer mon compte'))}</button>
       </div>
       ${blocInscription()}
@@ -607,7 +609,8 @@ function exporterDonnees() {
   const paquet = {
     application: 'Promos',
     exporteLe: new Date().toISOString(),
-    avertissement: "Tout ce que l'application conserve sur cet appareil. Rien n'a été envoyé nulle part — il n'y a pas de serveur.",
+    avertissement: "Tout ce que l'application conserve sur cet appareil. La seule chose qui ait pu en "
+                 + "sortir est l'adresse de ton inscription, et seulement si tu l'as demandée.",
     compte: C.ficheCompte(),
     profil: { ...profil },
     favoris,
@@ -1431,7 +1434,9 @@ function dessinerPays() {
       + item('tout', t("Tous les pays d'Europe"), etat.offres.length)
       + codes.map((c) => item(c, t(NOMS_PAYS[c]), compteP[c])).join('')
       + '</div>'
-      + '<p style="margin:10px 0 0;font-size:12.5px;color:var(--doux)">Seuls des pays d’Europe sont proposés : les trajets restent courts.</p>';
+      + '<p style="margin:10px 0 0;font-size:12.5px;color:var(--doux)">'
+      + esc(t("Seuls des pays d'Europe sont proposés : les trajets restent courts."))
+      + '</p>';
     rp.querySelectorAll('.pays-item').forEach((b) => {
       b.addEventListener('click', () => choisirPays(b.dataset.pays));
     });
@@ -1528,8 +1533,8 @@ function dessiner() {
   if (!liste.length && etat.portee === 'promos' && !etat.favoris) {
     // Rien à montrer dans ce rayon ou ce pays : on le DIT, et on ouvre une porte
     // plutôt que de laisser un écran vide sans issue.
-    $('vide').innerHTML = 'Aucune <b>bonne promo</b> ici pour l’instant : nous n’affichons que des offres à prix réel — deux prix affichés quand la remise peut être démontrée, et pour les autres enseignes un prix réel avec le nom de la boutique.'
-      + '<br><button id="voirTout">Voir toutes les offres</button>';
+    $('vide').innerHTML = esc(t("Aucune bonne promo ici pour l'instant : nous n'affichons que des offres à prix réel — deux prix affichés quand la remise peut être démontrée, et pour les autres enseignes un prix réel avec le nom de la boutique."))
+      + '<br><button id="voirTout">' + esc(t('Voir toutes les offres')) + '</button>';
     $('voirTout').addEventListener('click', () => {
       etat.portee = 'tout'; etat.tri = 'remise';
       $('tri').value = 'tout';
@@ -1539,8 +1544,8 @@ function dessiner() {
     });
   } else {
     $('vide').textContent = etat.favoris
-      ? 'Aucun favori pour l’instant. Touche l’étoile d’une offre pour la garder de côté.'
-      : 'Aucune offre ne correspond à ce filtre.';
+      ? t("Aucun favori pour l'instant. Touche l'étoile d'une offre pour la garder de côté.")
+      : t('Aucune offre ne correspond à ce filtre.');
   }
   const reste = liste.length - etat.affichees;
   $('plus').hidden = reste <= 0;
@@ -1733,18 +1738,20 @@ function brancher() {
     }
 
     if (e.target.closest('#creerCompte')) {
-      // L'INSCRIPTION EST MAINTENANT UNE VRAIE INSCRIPTION : elle part vers le
-      // tableau Google de B (demande du 08/10 : « je pourrais avoir une base de
-      // données avec toutes les adresses mail »). Trois contrôles AVANT d'envoyer,
-      // parce qu'un envoi qui part avec une adresse fautive est un contact perdu
-      // que personne ne remarquera jamais :
+      // L'INSCRIPTION N'EST PAS UNE FICHE DE CLIENT : on demande l'adresse, et
+      // rien d'autre. Le prénom (facultatif) a été retiré le 08/10/2026 : un
+      // champ que l'inscrit peut laisser vide ne sert ni à l'inscrire, ni à lui
+      // écrire. L'e-mail se suffit à lui-même, et une case de moins est une
+      // hésitation de moins devant le formulaire.
+      //
+      // Trois contrôles AVANT d'envoyer, parce qu'un envoi qui part avec une
+      // adresse fautive est un contact perdu que personne ne remarquera jamais :
       //   1. l'adresse a la forme d'une adresse ;
       //   2. le consentement est coché — on n'inscrit personne d'office, c'est
       //      la moindre des choses, et c'est aussi ce que la loi demande ;
       //   3. le tableau est branché. S'il ne l'est pas, on le DIT au lieu de
       //      laisser croire à une inscription (règle de la maison).
       const mail = (($('cMail') || {}).value || '').trim();
-      const prenom = (($('cPrenom') || {}).value || '').trim();
       const m1 = ($('cMdp') || {}).value || '';
       const m2 = ($('cMdp2') || {}).value || '';
       const consentement = !!($('cConsent') || {}).checked;
@@ -1758,8 +1765,8 @@ function brancher() {
         dessinerCompte();
         return annonce(t("Ton compte est créé sur cet appareil. Le tableau n'est pas encore branché : ton adresse n'a pas été envoyée."), false);
       }
-      const envoi = await envoyerInscription({ email: mail, prenom, langue, pays: etat.pays });
-      if (envoi.ok) retenirInscription(mail, prenom);
+      const envoi = await envoyerInscription({ email: mail, langue, pays: etat.pays });
+      if (envoi.ok) retenirInscription(mail);
       dessinerCompte();
       // « ENVOYÉE », PAS « INSCRITE » : le tableau Google ne laisse pas la page
       // lire sa réponse (voir inscription.js). On annonce ce qu'on sait.
@@ -1774,7 +1781,7 @@ function brancher() {
     if (e.target.closest('#renvoyerConfirmation')) {
       const ins = inscriptionLocale();
       if (!ins || !ins.email) return;
-      const r = await envoyerInscription({ email: ins.email, prenom: ins.prenom, langue, pays: etat.pays });
+      const r = await envoyerInscription({ email: ins.email, langue, pays: etat.pays });
       return annonce(r.ok
         ? t('Un e-mail de confirmation part vers {n}. Ouvre-le et clique le lien pour activer ton compte.', { n: ins.email })
         : t("L'envoi n'a pas pu partir. Vérifie ta connexion, puis réessaie."), r.ok);
@@ -1805,7 +1812,7 @@ function brancher() {
       const b = e.target.closest('#supprimerCompte');
       if (!suppressionArmee) {
         suppressionArmee = true;
-        b.textContent = 'Appuie encore pour confirmer';
+        b.textContent = t('Appuie encore pour confirmer');
         setTimeout(() => {
           suppressionArmee = false;
           if (document.body.contains(b)) b.textContent = t('Supprimer mon compte');
@@ -1832,9 +1839,20 @@ let dejaLance = false;
 
 function montrerVerrou() {
   if (!C.compteEnregistre()) return;
+  // ON BRANCHE ICI, PAS SEULEMENT AU DÉMARRAGE.
+  // Défaut trouvé le 08/10/2026 en exerçant l'écran (et pas en le relisant) :
+  // brancherVerrou() n'était appelé que dans la branche de démarrage « un
+  // compte existe déjà ». Quelqu'un qui créait son compte PENDANT la session
+  // puis appuyait sur « Verrouiller maintenant » voyait donc l'écran de
+  // verrouillage s'afficher SANS AUCUN bouton branché : ni « Déverrouiller », ni
+  // « J'ai oublié mon mot de passe » ne répondaient. L'application était fermée
+  // jusqu'au prochain rechargement — et dans l'APK, jusqu'au prochain
+  // lancement. Le branchement est idempotent : l'appeler deux fois ne pose pas
+  // deux écouteurs.
+  brancherVerrou();
   $('titreVerrou').textContent = t('Bonjour {n}', { n: C.nomCompte() });
-  $('verrouIntro').textContent = "Entre ton mot de passe pour ouvrir l'application. Il n'est enregistré nulle part : si tu l'as oublié, personne ne pourra le retrouver, et la seule issue sera d'effacer le compte et les données de cet appareil.";
-  $('verrouOublie').textContent = 'J’ai oublié mon mot de passe';
+  $('verrouIntro').textContent = t("Entre ton mot de passe pour ouvrir l'application. Il n'est enregistré nulle part : si tu l'as oublié, personne ne pourra le retrouver, et la seule issue sera d'effacer le compte et les données de cet appareil.");
+  $('verrouOublie').textContent = t("J'ai oublié mon mot de passe");
   oublisArmes = false;
   $('verrouErreur').hidden = true;
   $('verrou').hidden = false;
@@ -1843,8 +1861,14 @@ function montrerVerrou() {
 }
 
 let oublisArmes = false;
+/** Les écouteurs du verrou ne se posent qu'une fois. Sans ce drapeau,
+ *  montrerVerrou() — qui peut être appelé plusieurs fois — empilerait les
+ *  écouteurs, et « Déverrouiller » validerait deux fois le même mot de passe. */
+let verrouBranche = false;
 
 function brancherVerrou() {
+  if (verrouBranche) return;
+  verrouBranche = true;
   const valider = async () => {
     const r = await C.verifierMotDePasseCompte($('verrouMdp').value);
     if (!r.ok) {
@@ -1863,8 +1887,8 @@ function brancherVerrou() {
   $('verrouOublie').addEventListener('click', () => {
     if (!oublisArmes) {
       oublisArmes = true;
-      $('verrouIntro').textContent = "Sans serveur, aucun mot de passe ne peut être retrouvé : personne ne le connaît, il n'est pas enregistré. Deux issues seulement — tu te souviens, ou on efface. Effacer supprime le compte ET les données (favoris, réglages) de cet appareil, définitivement.";
-      $('verrouOublie').textContent = 'Effacer le compte et les données (appuie encore)';
+      $('verrouIntro').textContent = t("Sans serveur, aucun mot de passe ne peut être retrouvé : personne ne le connaît, il n'est pas enregistré. Deux issues seulement — tu te souviens, ou on efface. Effacer supprime le compte ET les données (favoris, réglages) de cet appareil, définitivement.");
+      $('verrouOublie').textContent = t("Effacer le compte et les données (appuie encore)");
       return;
     }
     C.supprimerCompte();

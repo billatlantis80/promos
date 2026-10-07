@@ -29,13 +29,22 @@ PUB = f'{BANC}/public'
 # incomplet : il affiche « 0 défaut raté ». D'où le garde-fou plus bas, qui
 # COMPARE le nombre de tests du banc à celui du projet et refuse de se taire.
 MOTIFS = ('tests/*.test.mjs', 'tests/test-*.mjs', 'outils/*.test.mjs', 'outils/test-*.mjs')
-TESTS = sorted({f for m in MOTIFS for f in glob.glob(f'{BANC}/{m}')})
-FICHIERS = [f'{PUB}/app.css', f'{PUB}/app.js', f'{PUB}/langues.js', f'{PUB}/index.html']
+FICHIERS = [f'{PUB}/app.css', f'{PUB}/app.js', f'{PUB}/langues.js', f'{PUB}/index.html',
+            f'{BANC}/outils/tableau-inscription.gs']
 
 if os.path.isdir(BANC):
     shutil.rmtree(BANC)
 shutil.copytree(SOURCE, BANC,
                 ignore=shutil.ignore_patterns('.git', 'node_modules'))
+
+# LA LISTE DES TESTS SE CALCULE ICI, PAS AVANT LA COPIE. Troisieme defaut du
+# meme genre, et le plus vicieux : la liste etait construite avant que la copie
+# n'existe, donc sur les fichiers de la copie PRECEDENTE. Le banc tournait sur
+# un jeu de tests perime — et quand le projet gagnait des tests, le garde-fou
+# ci-dessous refusait de conclure, en accusant le banc d'etre incomplet alors
+# que c'etait l'inventaire qui etait vieux. Mesure : 249 tests au banc pour 272
+# au projet, sans qu'un seul fichier ne manque.
+TESTS = sorted({f for m in MOTIFS for f in glob.glob(f'{BANC}/{m}')})
 print(f'banc d essai : {BANC} (copie du projet, les fichiers reels ne sont pas touches)')
 
 SAUV = {f: f + '.sauv' for f in FICHIERS}
@@ -87,6 +96,50 @@ def themes_apres_pays(t):
     j = reste.index('<div id="regPays"></div>')
     fin = reste.index('</section>', j) + len('</section>')
     return reste[:fin] + '\n    ' + bloc + reste[fin:]
+
+
+def champ_prenom_revient(t):
+    """Remet le champ « Prenom (facultatif) » dans le formulaire d'inscription.
+
+    Retire le 08/10/2026 sur demande de B : un champ qui peut rester vide ne
+    sert ni a inscrire, ni a ecrire. Si quelqu'un le rebranche un jour, il faut
+    que le banc le dise — sinon le meme menage sera a refaire."""
+    return t.replace(
+        "          <label for=\"cMdp\">",
+        "          <label for=\"cPrenom\">${esc(t('Prénom (facultatif)'))}</label>\n"
+        "          <input id=\"cPrenom\" type=\"text\" maxlength=\"24\">\n"
+        "        </div>\n        <div class=\"champ\">\n"
+        "          <label for=\"cMdp\">", 1)
+
+
+def colonne_prenom_revient(t):
+    """Remet la colonne « Prenom » dans les titres du tableau.
+
+    L'effet est mesurable : la ligne ecrite garde 8 cases pour 9 colonnes, et
+    tout ce qui suit le prenom (langue, pays, jeton, statut) est decale d'un
+    rang. Le tableau reste lisible — et faux."""
+    return t.replace("var TITRES = ['Date', 'E-mail', 'Langue'",
+                     "var TITRES = ['Date', 'E-mail', 'Prénom', 'Langue']", 1)
+
+
+def cle_prenom_partout(t):
+    """Remet la cle « Prenom (facultatif) » dans les NEUF dictionnaires.
+
+    Mutation volontairement invisible : les neuf langues restent alignees, donc
+    les controles de coherence ne voient rien. Seule la traduction est morte —
+    plus aucun code ne l'appelle. C'est exactement ce qu'on veut attraper :
+    une cle que quelqu'un finira par « corriger » sans comprendre pourquoi
+    elle est la.
+
+    L'ANCRE A ETE RECALEE le 08/10/2026 : elle visait « Créer un compte sur cet
+    appareil », une cle que la même journée a fait disparaitre. Le banc a alors
+    annonce « ANCRE INTROUVABLE » au lieu de faire semblant — c'est exactement
+    ce qu'on lui demande, et c'est pour ca qu'il faut le relancer apres chaque
+    menage : une contre-epreuve qui ne trouve plus son ancre ne prouve plus
+    rien."""
+    return t.replace("'Inscris-toi pour recevoir les bons plans, ou connecte-toi si tu as déjà un compte.':",
+                     "'Prénom (facultatif)': 'X',\n    "
+                     "'Inscris-toi pour recevoir les bons plans, ou connecte-toi si tu as déjà un compte.':")
 
 
 for f in FICHIERS:
@@ -167,6 +220,23 @@ essais = [
      remplace('DRAPEAUX_PAYS[String(code).toLowerCase()]', 'DRAPEAUX_PAYS[code]')),
     ('index', 'les themes repassent APRES le pays',
      f'{PUB}/index.html', themes_apres_pays),
+    ('js', 'le champ prenom facultatif revient dans le formulaire',
+     f'{PUB}/app.js', champ_prenom_revient),
+    ('gs', 'la colonne Prenom revient et decale tout le tableau',
+     f'{BANC}/outils/tableau-inscription.gs', colonne_prenom_revient),
+    ('langues', 'la cle du prenom revient, morte, dans les neuf langues',
+     f'{PUB}/langues.js', cle_prenom_partout),
+    ('css', 'la barre d onglets redevient collante par-dessus le bandeau',
+     f'{PUB}/app.css',
+     remplace('position: static; background: transparent;',
+              'position: sticky; top: 0; background: var(--fond); z-index: 2;')),
+    ('index', 'le bloc collant des reglages perd son nom',
+     f'{PUB}/index.html',
+     remplace('<div class="feuille-haut">', '<div class="entete-reglages">')),
+    ('js', 'l ecran de verrouillage n est plus branche quand on l affiche',
+     f'{PUB}/app.js',
+     remplace("""  brancherVerrou();
+  $('titreVerrou')""", "  $('titreVerrou')")),
 ]
 
 rates = 0
