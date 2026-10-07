@@ -123,8 +123,13 @@ function appliquerVue(v) {
    attribut. Chaque vignette des réglages montre les trois couleurs qui comptent
    (fond, carte, accent) — un aperçu, pas une devinette. */
 const CLE_THEME = 'promos.theme';
-const THEME_DEFAUT = 'nuit';
+/* Le thème de MARQUE est le défaut : c'est l'identité de la planche.
+   Sa palette a été RELEVÉE par mesure sur les pastilles (les codes imprimés
+   étaient illisibles — artefacts JPEG) : bleu clair #2692C1, orange #E99535,
+   bleu moyen #2A689A, bleu nuit #0E3A59, terre cuite #B66C2D. */
+const THEME_DEFAUT = 'kazendra';
 const THEMES = [
+  { id: 'kazendra', nom: 'Kazendra', fond: '#f4f7fa', carte: '#ffffff', accent: '#2a689a' },
   { id: 'nuit', nom: 'Nuit', fond: '#0c0d10', carte: '#14161b', accent: '#ff8a3d' },
   { id: 'ardoise', nom: 'Ardoise', fond: '#0e1418', carte: '#131c21', accent: '#35c6e0' },
   { id: 'foret', nom: 'Forêt', fond: '#0d130f', carte: '#121b14', accent: '#7ed957' },
@@ -912,6 +917,10 @@ function carte(o) {
     ? `${euros(o.prix)}${o.prixAvant ? `<span class="avant">${euros(o.prixAvant)}</span>` : ''}`
     : '';
   const prix = montant ? `<div class="prix"><span class="montant">${montant}</span></div>` : '';
+  // Le VERDICT de la promo — ce que l'HISTORIQUE DES PRIX permet d'affirmer.
+  // Il reste vide quand on n'a pas assez de recul : un badge inventé serait
+  // pire que pas de badge du tout.
+  const verdict = texteVerdict(o);
   const lien = lienAffilie(o.lienMarchand || o.lienPage, o.marchand);
   const article = o.type === 'article';
   // Le bouton dit OÙ il emmène. « Voir l'offre » pour tout le monde obligeait
@@ -932,6 +941,7 @@ function carte(o) {
     <div class="corps">
       <h3>${esc(o.titre)}</h3>
       <div class="ligne">${etiquettes}</div>
+      ${verdict ? `<p class="verdict v-${esc(o.verdict.code)}">${verdict}</p>` : ''}
       ${prix}
       <div class="espace-fav">${etoile}</div>
       <div class="bas">
@@ -1539,3 +1549,26 @@ function demarrer() {
 }
 
 demarrer();
+/**
+ * Le verdict d'une offre, en clair — ou '' quand il n'y a rien à dire.
+ * Chaque phrase est traduite ; aucune n'est construite par concaténation.
+ */
+function texteVerdict(o) {
+  const v = o && o.verdict;
+  if (!v || !v.code) return '';
+  const jours = o.analyse ? o.analyse.jours : '';
+  switch (v.code) {
+    case 'bonPlanRare':
+      return esc(t('Bon plan rare — le plus bas relevé en {n} jours.', { n: v.jours ?? jours }));
+    case 'sousPrixHabituel':
+      return esc(t('{p} % sous son prix habituel.', { p: v.pct }));
+    case 'referenceDouteuse':
+      return esc(t('Prix barré jamais constaté en {n} jours de relevés.', { n: jours }));
+    case 'incoherent':
+      return esc(t('Prix incohérent : le prix demandé dépasse le prix barré.'));
+    case 'remiseVerifiee':
+      return esc(t('Remise vérifiée sur deux prix réels.'));
+    default:
+      return '';   // 'inconnu' : on ne dit rien plutôt que de meubler
+  }
+}
