@@ -4,7 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0c0d10">
-<title>Promos — toutes les offres au même endroit</title>
+<!-- Le titre de l'onglet est un texte visible : il est traduit par le moteur
+     (voir langues.js + traduireDOM dans app.js). -->
+<title data-i18n="Promos — toutes les offres au même endroit">Promos — toutes les offres au même endroit</title>
 <link rel="stylesheet" href="app.css">
 </head>
 <body>
@@ -15,37 +17,40 @@
     <div class="comptes" id="comptes">chargement…</div>
   </div>
   <div class="barre">
-    <input id="recherche" type="search" placeholder="Chercher un produit, un marchand…" autocomplete="off">
+    <input id="recherche" type="search" placeholder="Chercher un produit, un marchand…" autocomplete="off"
+           data-i18n-placeholder="Chercher un produit, un marchand…">
     <!-- Le pays va à côté de la recherche : « quoi » et « où ». Chaque pays
          affiché a de VRAIES sources derrière lui (voir collecteur.mjs) — un
-         sélecteur sans source ne filtrerait rien, il mentirait. -->
-    <select id="pays" aria-label="Pays des offres"></select>
+         sélecteur sans source ne filtrerait rien, il mentirait.
+         ATTENTION : le pays est INDÉPENDANT de la langue (décision
+         d'architecture) — voir la rubrique « Langue » plus bas. -->
+    <select id="pays" aria-label="Pays des offres" data-i18n-aria-label="Pays des offres"></select>
   </div>
   <div class="outils">
     <!-- Le premier choix n'est pas un TRI mais une PORTÉE : « Bonnes promos »
          est ce que l'application montre À LA BASE — les promos à DEUX PRIX
          RÉELS, plus les bons plans des autres enseignes (prix réel affiché +
          nom de la boutique). Les autres choix élargissent au catalogue entier,
-         pour qui veut tout voir.
-         Le libellé ne dit PLUS la proportion Amazon / enseignes : c'est un
-         réglage interne, pas un choix offert à l'utilisateur — il lisait ce
-         « 60 % / 40 % » comme un bouton à activer. La composition réellement
-         atteinte reste affichée en clair dans l'en-tête, où elle est un fait
-         mesuré, pas une case à cocher. -->
-    <select id="tri" aria-label="Portée des résultats">
-      <option value="promos">Bonnes promos</option>
-      <option value="tout">Toutes les offres</option>
-      <option value="recent">Plus récentes</option>
-      <option value="prix">Prix croissant</option>
+         pour qui veut tout voir. -->
+    <select id="tri" aria-label="Portée des résultats" data-i18n-aria-label="Portée des résultats">
+      <option value="promos" data-i18n="Bonnes promos">Bonnes promos</option>
+      <option value="tout" data-i18n="Toutes les offres">Toutes les offres</option>
+      <option value="recent" data-i18n="Plus récentes">Plus récentes</option>
+      <option value="prix" data-i18n="Prix croissant">Prix croissant</option>
     </select>
-    <div class="vues" id="vues" role="group" aria-label="Mode d'affichage">
-      <button class="vue" data-vue="grille" aria-label="Tableau : deux offres côte à côte" title="Tableau — deux offres côte à côte">&#9638;</button>
-      <button class="vue" data-vue="liste" aria-label="Liste : une offre par ligne, grand visuel" title="Liste — une offre par ligne">&#9636;</button>
-      <button class="vue" data-vue="compacte" aria-label="Compacte : vignette et texte serrés" title="Compacte — beaucoup d'offres à l'écran">&#9776;</button>
+    <div class="vues" id="vues" role="group" aria-label="Mode d'affichage" data-i18n-aria-label="Mode d'affichage">
+      <button class="vue" data-vue="grille" aria-label="Tableau : deux offres côte à côte" title="Tableau — deux offres côte à côte"
+              data-i18n-aria-label="Tableau : deux offres côte à côte" data-i18n-title="Tableau — deux offres côte à côte">&#9638;</button>
+      <button class="vue" data-vue="liste" aria-label="Liste : une offre par ligne, grand visuel" title="Liste — une offre par ligne"
+              data-i18n-aria-label="Liste : une offre par ligne, grand visuel" data-i18n-title="Liste — une offre par ligne">&#9636;</button>
+      <button class="vue" data-vue="compacte" aria-label="Compacte : vignette et texte serrés" title="Compacte — beaucoup d'offres à l'écran"
+              data-i18n-aria-label="Compacte : vignette et texte serrés" data-i18n-title="Compacte — beaucoup d'offres à l'écran">&#9776;</button>
     </div>
-    <button class="outil" id="eco" aria-pressed="false" title="Économie de données — aucun visuel téléchargé">Éco</button>
-    <button class="outil" id="fav" aria-pressed="false" title="Mes favoris">&#9733;<span class="n" id="nFav"></span></button>
-    <button class="outil" id="reglages" aria-haspopup="dialog" aria-expanded="false" title="Réglages — thème et couleurs, affichage, profil, compte">&#9881;</button>
+    <button class="outil" id="eco" aria-pressed="false" title="Économie de données — aucun visuel téléchargé"
+            data-i18n-title="Économie de données — aucun visuel téléchargé" data-i18n="Éco">Éco</button>
+    <button class="outil" id="fav" aria-pressed="false" title="Mes favoris" data-i18n-title="Mes favoris">&#9733;<span class="n" id="nFav"></span></button>
+    <button class="outil" id="reglages" aria-haspopup="dialog" aria-expanded="false" title="Réglages — thème et couleurs, affichage, profil, compte"
+            data-i18n-title="Réglages — thème et couleurs, affichage, profil, compte">&#9881;</button>
   </div>
   <nav class="puces" id="puces"></nav>
 </header>
@@ -53,51 +58,61 @@
 <main>
   <div id="bandeau" class="bandeau"></div>
   <section id="liste" class="grille"></section>
-  <p id="vide" class="vide" hidden>Aucune offre ne correspond à ce filtre.</p>
+  <p id="vide" class="vide" hidden data-i18n="Aucune offre ne correspond à ce filtre.">Aucune offre ne correspond à ce filtre.</p>
   <p id="plus" class="plus" hidden></p>
 </main>
 
 <footer class="pied">
   <p id="mention"></p>
   <p class="fresque" id="fraicheur"></p>
-  <p class="note">Les offres sont rassemblées depuis des flux publics (Dealabs, presse spécialisée, Google News). Aucune donnée n'est revendiquée : chaque offre renvoie à sa source, qui fait foi.</p>
+  <p class="note" data-i18n="Les offres sont rassemblées depuis des flux publics (Dealabs, presse spécialisée, Google News). Aucune donnée n'est revendiquée : chaque offre renvoie à sa source, qui fait foi.">Les offres sont rassemblées depuis des flux publics (Dealabs, presse spécialisée, Google News). Aucune donnée n'est revendiquée : chaque offre renvoie à sa source, qui fait foi.</p>
 </footer>
 
 <!-- Réglages : feuille plein écran. Le contenu des rubriques est construit par
-     app.js (thèmes, affichage, profil, compte) pour ne pas dupliquer les
-     réglages de la barre du haut — une seule source de vérité. -->
+     app.js (thèmes, affichage, profil, compte, pays, langue) pour ne pas
+     dupliquer les réglages de la barre du haut — une seule source de vérité. -->
 <section class="feuille" id="feuille" role="dialog" aria-modal="true" aria-labelledby="titreReglages" hidden>
   <div class="feuille-tete">
-    <h2 id="titreReglages">Réglages</h2>
-    <button class="fermer" id="fermer">Fermer</button>
+    <h2 id="titreReglages" data-i18n="Réglages">Réglages</h2>
+    <button class="fermer" id="fermer" data-i18n="Fermer">Fermer</button>
   </div>
 
   <section class="rubrique">
-    <h3>Thème et couleurs</h3>
-    <p>Dix thèmes. Le choix s'applique tout de suite et reste enregistré sur cet appareil.</p>
+    <h3 data-i18n="Thème et couleurs">Thème et couleurs</h3>
+    <p data-i18n="Dix thèmes. Le choix s'applique tout de suite et reste enregistré sur cet appareil.">Dix thèmes. Le choix s'applique tout de suite et reste enregistré sur cet appareil.</p>
     <div class="themes" id="themes"></div>
   </section>
 
   <section class="rubrique">
-    <h3>Affichage</h3>
-    <p>Les mêmes réglages que la barre du haut, réunis ici.</p>
+    <h3 data-i18n="Affichage">Affichage</h3>
+    <p data-i18n="Les mêmes réglages que la barre du haut, réunis ici.">Les mêmes réglages que la barre du haut, réunis ici.</p>
     <div id="regAffichage"></div>
   </section>
 
+  <!-- Rubrique LANGUE — le choix de langue de l'INTERFACE. C'est ici que
+       l'utilisateur choisit sa langue, et elle reste la sienne quel que soit le
+       pays qu'il consulte ensuite. Voir la rubrique « Pays » juste après : le
+       pays ne change JAMAIS la langue, et la langue ne change JAMAIS le pays. -->
   <section class="rubrique">
-    <h3>Profil</h3>
-    <p>Ce que l'application sait de toi — et rien de plus.</p>
+    <h3 data-i18n="Langue">Langue</h3>
+    <p data-i18n="La langue de l'interface. Elle reste la tienne quel que soit le pays consulté.">La langue de l'interface. Elle reste la tienne quel que soit le pays consulté.</p>
+    <div id="regLangue"></div>
+  </section>
+
+  <section class="rubrique">
+    <h3 data-i18n="Profil">Profil</h3>
+    <p data-i18n="Ce que l'application sait de toi — et rien de plus.">Ce que l'application sait de toi — et rien de plus.</p>
     <div id="regProfil"></div>
   </section>
 
   <section class="rubrique">
-    <h3>Pays</h3>
-    <p>Les offres affichées viennent de ce pays. Tu peux en changer quand tu veux : chaque pays proposé a ses propres sources.</p>
+    <h3 data-i18n="Pays">Pays</h3>
+    <p data-i18n="Les offres affichées viennent de ce pays. Tu peux en changer quand tu veux : chaque pays proposé a ses propres sources.">Les offres affichées viennent de ce pays. Tu peux en changer quand tu veux : chaque pays proposé a ses propres sources.</p>
     <div id="regPays"></div>
   </section>
 
   <section class="rubrique">
-    <h3>Compte</h3>
+    <h3 data-i18n="Compte">Compte</h3>
     <div id="regCompte"></div>
   </section>
 </section>
@@ -108,15 +123,15 @@
      ne peut le retrouver — c'est écrit ici, avant la saisie. -->
 <section class="verrou" id="verrou" role="dialog" aria-modal="true" aria-labelledby="titreVerrou" hidden>
   <div class="verrou-boite">
-    <h2 id="titreVerrou">Compte local</h2>
-    <p class="verrou-intro" id="verrouIntro">Entre ton mot de passe pour ouvrir l’application. Il n’est enregistré nulle part : si tu l’as oublié, personne ne pourra le retrouver, et la seule issue sera d’effacer le compte et les données de cet appareil.</p>
+    <h2 id="titreVerrou" data-i18n="Compte local">Compte local</h2>
+    <p class="verrou-intro" id="verrouIntro" data-i18n="Entre ton mot de passe pour ouvrir l'application. Il n'est enregistré nulle part : si tu l'as oublié, personne ne pourra le retrouver, et la seule issue sera d'effacer le compte et les données de cet appareil.">Entre ton mot de passe pour ouvrir l'application. Il n'est enregistré nulle part : si tu l'as oublié, personne ne pourra le retrouver, et la seule issue sera d'effacer le compte et les données de cet appareil.</p>
     <div class="champ">
-      <label for="verrouMdp">Mot de passe</label>
+      <label for="verrouMdp" data-i18n="Mot de passe">Mot de passe</label>
       <input id="verrouMdp" type="password" autocomplete="current-password">
     </div>
     <p class="verrou-erreur" id="verrouErreur" role="alert" hidden></p>
-    <p><button class="enregistrer" id="verrouOk">Déverrouiller</button></p>
-    <p><button class="lien-bouton" id="verrouOublie">J’ai oublié mon mot de passe</button></p>
+    <p><button class="enregistrer" id="verrouOk" data-i18n="Déverrouiller">Déverrouiller</button></p>
+    <p><button class="lien-bouton" id="verrouOublie" data-i18n="J'ai oublié mon mot de passe">J'ai oublié mon mot de passe</button></p>
   </div>
 </section>
 
@@ -125,8 +140,8 @@
      vraies sources derrière lui — on ne propose pas un pays vide. -->
 <section class="modale" id="paysDemande" role="dialog" aria-modal="true" aria-labelledby="titrePaysDemande" hidden>
   <div class="modale-boite">
-    <h2 id="titrePaysDemande">Où fais-tu tes achats ?</h2>
-    <p class="modale-intro">Choisis ton pays : l’application n’affichera que les offres de chez toi, et seulement des pays d’Europe — de vrais marchands, à côté de toi. Tu pourras changer d’avis dans les réglages.</p>
+    <h2 id="titrePaysDemande" data-i18n="Où fais-tu tes achats ?">Où fais-tu tes achats ?</h2>
+    <p class="modale-intro" data-i18n="Choisis ton pays : l'application n'affichera que les offres de chez toi, et seulement des pays d'Europe — de vrais marchands, à côté de toi. Tu pourras changer d'avis dans les réglages.">Choisis ton pays : l'application n'affichera que les offres de chez toi, et seulement des pays d'Europe — de vrais marchands, à côté de toi. Tu pourras changer d'avis dans les réglages.</p>
     <div class="pays-liste" id="paysListe"></div>
   </div>
 </section>
