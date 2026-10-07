@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
+  <!-- Icône Kazendra : le K de l'en-tête, bras montant en flèche. Même tracé que
+       le SVG de la page, pour qu'il n'existe qu'une seule définition du logo. -->
+  <rect width="40" height="40" rx="9" fill="#ffffff"/>
+  <g transform="translate(-1.2 0)">
+    <path d="M11 8h5.5v24H11z" fill="#0d3b5b"/>
+    <path d="M16.5 19.5h6l9 12.5h-6z" fill="#0d3b5b"/>
+    <path d="M15.6 21.6 25.1 12.1 28.9 15.9 19.4 25.4z" fill="#eb912d"/>
+    <path d="M24 11 30.5 10.5 30 17z" fill="#eb912d"/>
+  </g>
+</svg>

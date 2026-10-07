@@ -3,23 +3,37 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#0c0d10">
+<meta name="theme-color" content="#0d3b5b">
 <!-- Le titre de l'onglet est un texte visible : il est traduit par le moteur
      (voir langues.js + traduireDOM dans app.js). -->
-<title data-i18n="Promos — toutes les offres au même endroit">Promos — toutes les offres au même endroit</title>
+<title data-i18n="Kazendra — Les meilleures promotions">Kazendra — Les meilleures promotions</title>
+<!-- L'icône du site : le même K que l'en-tête, en vectoriel (net à toute taille,
+     et rien à télécharger de plus). -->
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<!-- Polices de l'identité, SERVIES EN LOCAL (voir fonts.css) : aucune requête
+     vers Google, donc aucune donnée d'utilisateur transmise à un tiers. -->
+<link rel="stylesheet" href="fonts.css">
 <link rel="stylesheet" href="app.css">
 </head>
 <body>
 
 <header class="tete">
   <div class="tete-in">
-    <!-- Marque : le K de la planche d'identité, reconstruit en SVG. Le fichier
-         vectoriel officiel devra le remplacer pour un tracé exact. -->
+    <!-- Marque : le K de la planche d'identité. Le bras montant du K est une
+         FLÈCHE qui monte (pointe en haut à droite), et toutes les arêtes sont
+         des angles vifs — c'est la description de la planche, refaite en SVG.
+         Le fichier vectoriel officiel devra remplacer ce tracé pour être
+         exactement le vôtre. Carré BLANC et K bleu nuit : sur l'en-tête bleu
+         nuit, un carré bleu disparaîtrait. -->
     <div class="marque">
       <svg class="logo" viewBox="0 0 40 40" aria-hidden="true" focusable="false">
-        <rect width="40" height="40" rx="9" fill="#2a689a"/>
-        <path d="M12.6 8.6h4.5v9.2l8.8-9.2h5.9l-8.6 9L32.9 31h-5.7l-6.5-10-3.6 3.6V31h-4.5z" fill="#ffffff"/>
-        <path d="M30.4 8.6 36.6 13 30.4 17.4z" fill="#e99535"/>
+        <rect width="40" height="40" rx="9" fill="#ffffff"/>
+        <g transform="translate(-1.2 0)">
+          <path d="M11 8h5.5v24H11z" fill="#0d3b5b"/>
+          <path d="M16.5 19.5h6l9 12.5h-6z" fill="#0d3b5b"/>
+          <path d="M15.6 21.6 25.1 12.1 28.9 15.9 19.4 25.4z" fill="#eb912d"/>
+          <path d="M24 11 30.5 10.5 30 17z" fill="#eb912d"/>
+        </g>
       </svg>
       <b>KAZENDRA</b>
     </div>
