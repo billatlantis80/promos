@@ -4,7 +4,7 @@
  * Principe : ne JAMAIS maquiller une offre. Une remise calculée est marquée
  * comme telle ; sans remise chiffrée, on affiche l'offre sans étiquette.
  */
-import { lienAffilie, MENTION_AFFILIATION } from './affiliation.js';
+import { lienAffilie, MENTION_AFFILIATION, siteAmazon } from './affiliation.js';
 import * as C from './compte.js';
 import { t, chargerLangue, definirLangue, traduireDOM, languesDisponibles, langue, CLE_LANGUE, locale } from './langues.js';
 
@@ -925,9 +925,13 @@ function carte(o) {
   const article = o.type === 'article';
   // Le bouton dit OÙ il emmène. « Voir l'offre » pour tout le monde obligeait
   // l'utilisateur à deviner s'il allait chez Amazon, chez Coolblue ou sur un
-  // article de presse.
+  // article de presse. Pour Amazon, on nomme en plus LE SITE de destination
+  // (« Amazon.fr », « Amazon.com.be », « Amazon.de »…) : la même phrase envoyait
+  // vers dix marchés différents sans que rien ne dise lequel. Le site vient du
+  // lien réel ; s'il est illisible, on garde l'ancien libellé générique.
+  const site = siteAmazon(o.lienMarchand || o.lienPage);
   const libelle = article ? t("Lire l'article")
-    : (estAmazon(o) ? t('Acheter sur Amazon')
+    : (estAmazon(o) ? (site ? t('Acheter sur {site}', { site }) : t('Acheter sur Amazon'))
       : (estOffreEnseigne(o) ? t('Voir chez {n}', { n: esc(o.marchand) })
         : (estBonPlanPresse(o) ? t('Lire le bon plan')
           : (estBonneAffaire(o) ? t('Voir la bonne affaire') : t("Voir l'offre")))));

@@ -69,6 +69,25 @@ export function marcheDe(url) {
   return trouve;
 }
 
+/**
+ * Le NOM DU SITE Amazon visé par une adresse — « Amazon.com.be », « Amazon.fr »,
+ * « Amazon.de »… ou '' si l'adresse ne mène pas à Amazon.
+ *
+ * Le bouton disait « Acheter sur Amazon » sans dire OÙ. Or la même phrase
+ * envoyait vers dix marchés différents (Belgique, France, Allemagne, Italie…) :
+ * un utilisateur belge ne pouvait pas savoir s'il allait commander chez
+ * Amazon.com.be ou sur un site étranger, ni dans quelle langue il serait reçu.
+ *
+ * Le site est prélevé sur le LIEN RÉEL, jamais déduit du nom du marchand : c'est
+ * la destination qui compte, et elle seule est vérifiable.
+ */
+export function siteAmazon(url) {
+  const h = hote(url);
+  if (!h || !EST_AMAZON.test(h)) return '';
+  // « amazon.com.be » -> « Amazon.com.be », « amazon.co.uk » -> « Amazon.co.uk »
+  return 'Amazon' + h.slice('amazon'.length);
+}
+
 /** Les marchés réellement ouverts (identifiant renseigné). */
 export function marchesAmazonActifs() {
   return Object.keys(AMAZON_TAGS).filter((d) => String(AMAZON_TAGS[d] || '').trim());
