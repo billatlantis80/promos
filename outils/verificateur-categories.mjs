@@ -163,7 +163,14 @@ for (const o of offres) {
     // un cosmétique. Le titre ne peut pas la contredire, pour la même raison
     // que pour les mots d'appareil : c'est l'ordre des règles, et il est voulu.
     const imposee = Boolean(o.categorieImposee);
-    if (!touche && !sourceOk && !numerique && !soinBeaute && !ageJouets && !repasActivite && !voyageGeo) {
+    // Une rubrique IMPOSÉE est une preuve à part entière : c'est la NATURE de
+    // la page qui la décide (une animalerie reste une animalerie, même si ses
+    // titres sont des noms de marque : « Applaws », « Gourmet Gold »…). Le
+    // contrôle « contredite » ci-dessous l'admettait déjà ; le contrôle « sans
+    // preuve » l'oubliait — et accusait à tort les pages Zooplus (unité B5) et
+    // Groupon. On lit ici la même règle que le classement, comme pour le soin,
+    // le repas pris dehors et le voyage.
+    if (!touche && !sourceOk && !imposee && !numerique && !soinBeaute && !ageJouets && !repasActivite && !voyageGeo) {
       sansPreuve++;
       if (exemplesSansPreuve.length < 8) {
         exemplesSansPreuve.push({ pays: o.pays, cat, titre: String(o.titre || '').slice(0, 58), src: o.categorieSource });

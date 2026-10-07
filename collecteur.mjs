@@ -217,6 +217,31 @@ const SOURCES_ENSEIGNES = [
   // (leur `robots.txt` dit `Allow: /`, `search=yes`), et une seule requête par
   // heure suffit à cette page.
   { id: 'groupon-be-goods', nom: 'Groupon', type: 'enseigne', pays: 'BE', langue: 'fr', reposMin: 60, viaCurl: true, url: 'https://www.groupon.be/goods' },
+
+  // COOLBLUE PAYS-BAS et ALLEMAGNE (unité B5) — même plateforme et même JSON-LD
+  // que Coolblue Belgique, déjà câblé : la page « offres » de l'enseigne dans
+  // SON pays. Aucune catégorie imposée (le titre décide), exactement comme la
+  // Belgique. Mesuré en B4 par DEUX relevés identiques : NL 10 offres à deux
+  // prix, DE 18. Le domaine est national (coolblue.nl / coolblue.de), pas un
+  // site étranger : un Néerlandais achète sur coolblue.nl.
+  { id: 'coolblue-nl-1', nom: 'Coolblue', type: 'enseigne', pays: 'NL', langue: 'nl', reposMin: 90, url: 'https://www.coolblue.nl/aanbieding' },
+  { id: 'coolblue-de-1', nom: 'Coolblue', type: 'enseigne', pays: 'DE', langue: 'de', reposMin: 90, url: 'https://www.coolblue.de/angebot' },
+
+  // ZOOPLUS — animaleries en ligne, chacune dans SON pays (rubrique Animaux).
+  // Le prix de référence est publié dans la `priceSpecification` de type
+  // `ListPrice`, que `referenceListe` sait lire. Mesuré en B4 par DEUX relevés
+  // identiques : DE chats 17, DE chiens 5, IT chats 29, SE chats 100.
+  // ⚠ Les pages FR et ES de Zooplus ont été mesurées INSTABLES (14→10 et
+  // 19→10) : elles ne sont PAS câblées ici.
+  // Rubrique IMPOSÉE « animaux » : la page ENTIÈRE est une animalerie (une
+  // catégorie « chats » ou « chiens », pas un accueil généraliste). Sans elle,
+  // les titres — des noms de marque sans mot animalier — tomberaient en
+  // « Autres », et la nourriture pour chats en « Nourriture » (interdit,
+  // point 18). C'est la nature de la page qui décide, comme pour Groupon.
+  { id: 'zooplus-de-chat', nom: 'Zooplus', type: 'enseigne', pays: 'DE', langue: 'de', reposMin: 120, categorieImposee: 'animaux', url: 'https://www.zooplus.de/shop/katzen/sonderangebote_katze' },
+  { id: 'zooplus-de-chien', nom: 'Zooplus', type: 'enseigne', pays: 'DE', langue: 'de', reposMin: 120, categorieImposee: 'animaux', url: 'https://www.zooplus.de/shop/hunde/sonderangebote_hund' },
+  { id: 'zooplus-it-chat', nom: 'Zooplus', type: 'enseigne', pays: 'IT', langue: 'it', reposMin: 120, categorieImposee: 'animaux', url: 'https://www.zooplus.it/shop/gatti/offerte_speciali_gatti' },
+  { id: 'zooplus-se-chat', nom: 'Zooplus', type: 'enseigne', pays: 'SE', langue: 'sv', reposMin: 120, categorieImposee: 'animaux', url: 'https://www.zooplus.se/specials/katt/specialerbjudanden/kattmat/81531' },
 ];
 
 /* ------------------------------------------------------------------ *
@@ -243,6 +268,24 @@ const SOURCES_ENSEIGNES = [
 const SOURCES_ACTIVITES = [
   { id: 'groupon-be-sale', nom: 'Groupon', type: 'groupon', pays: 'BE', langue: 'fr', reposMin: 60, viaCurl: true, categorieImposee: 'activite', url: 'https://www.groupon.be/fr/landing/sale' },
   { id: 'groupon-be-bonplan', nom: 'Groupon', type: 'groupon', pays: 'BE', langue: 'fr', reposMin: 60, viaCurl: true, categorieImposee: 'activite', url: 'https://www.groupon.be/fr/bon-plan' },
+
+  // SOCIAL DEAL (unité B5) — l'équivalent de Groupon pour les activités, mais
+  // LOCAL au pays : chaque pays sur SON domaine (`socialdeal.<tld>`), pas un
+  // site étranger. Trouvé et mesuré en B3 : DEUX relevés identiques par pays,
+  // contrôle négatif propre, deux prix RÉELS par carte dans le HTML servi (à
+  // la différence de wowcher/veepee, rendus en JavaScript).
+  //   ⚠ Le contenu mêle REPAS PRIS DEHORS, SOINS et SORTIES. Aucune
+  //   attribution en bloc : `offresSocialDeal` passe par `classerOffre`, qui
+  //   envoie un soin en Beauté, un repas pris dehors en Activité, et un forfait
+  //   ou une destination étrangère en Voyages (partage géographique, point 21).
+  //   ⚠ socialdeal.se répond mais ne publie AUCUNE carte (mesuré) : non câblé.
+  //   Seule plateforme d'activités hors Groupon trouvée : elle couvre 5 pays
+  //   (BE, NL, FR, DE, AT) là où l'Activité n'était portée que par la Belgique.
+  { id: 'socialdeal-be', nom: 'Social Deal', type: 'socialdeal', pays: 'BE', langue: 'fr', reposMin: 90, categorieImposee: 'activite', url: 'https://www.socialdeal.be' },
+  { id: 'socialdeal-nl', nom: 'Social Deal', type: 'socialdeal', pays: 'NL', langue: 'nl', reposMin: 90, categorieImposee: 'activite', url: 'https://www.socialdeal.nl' },
+  { id: 'socialdeal-fr', nom: 'Social Deal', type: 'socialdeal', pays: 'FR', langue: 'fr', reposMin: 90, categorieImposee: 'activite', url: 'https://www.socialdeal.fr' },
+  { id: 'socialdeal-de', nom: 'Social Deal', type: 'socialdeal', pays: 'DE', langue: 'de', reposMin: 90, categorieImposee: 'activite', url: 'https://www.socialdeal.de' },
+  { id: 'socialdeal-at', nom: 'Social Deal', type: 'socialdeal', pays: 'AT', langue: 'de', reposMin: 90, categorieImposee: 'activite', url: 'https://www.socialdeal.at' },
 ];
 
 /* ------------------------------------------------------------------ *
@@ -564,7 +607,7 @@ export { MOTS_PROMO, motsPromo, ecarterTuiles, veilleParPays, lienReel, dedupliq
    (outils/verificateur-categories.mjs) et les tests rejouent `famille()` sur
    les offres publiées. Un contrôle qui recopierait la table des mots serait un
    contrôle qui vérifie sa propre copie — donc rien du tout. */
-export { famille, FAMILLES, MARQUES, MOTS_FORTS, CATEGORIES_SOURCES, categorieDeSource, sansAccents, sansNegations, offresEnseigne, offresAmazon, offresVenteFlash, offresGroupon, remiseCredibleSource, compterMots, remise, pourcentEcrit, SOURCES_VENTES_FLASH, SOURCES_ACTIVITES, prixReferenceEnseigne, estJeuNumerique, estSoin, ageEnfant, MOTS_A_FRONTIERE, exigeFrontiere, retirerTrompeurs, estRepasDehors, preuveEpicerie, destinationEtrangere, estForfaitVoyage, DESTINATIONS, MOTS_FORFAIT_VOYAGE };
+export { famille, FAMILLES, MARQUES, MOTS_FORTS, CATEGORIES_SOURCES, categorieDeSource, sansAccents, sansNegations, offresEnseigne, offresAmazon, offresVenteFlash, offresGroupon, offresSocialDeal, remiseCredibleSource, compterMots, remise, pourcentEcrit, SOURCES_VENTES_FLASH, SOURCES_ACTIVITES, prixReferenceEnseigne, estJeuNumerique, estSoin, ageEnfant, MOTS_A_FRONTIERE, exigeFrontiere, retirerTrompeurs, estRepasDehors, preuveEpicerie, destinationEtrangere, estForfaitVoyage, DESTINATIONS, MOTS_FORFAIT_VOYAGE };
 
 /** Recherches Google News : un flux par famille de produits. Gratuit, sans clé. */
 const RECHERCHES = [
@@ -2603,6 +2646,13 @@ function offresEnseigne(html, source) {
       remiseCalculee: rem ? rem.calculee : false,
       categorie: source.categorieImposee || famille(p.titre, source.categorie || ''),
       categorieSource: source.categorieImposee || source.categorie || 'enseigne',
+      // Rubrique IMPOSÉE par la page : elle doit survivre au reclassement des
+      // passages suivants, exactement comme pour Groupon. Sans ce champ,
+      // `classerOffre` rejugerait ces offres sur le SEUL titre — et Zooplus,
+      // dont les titres sont des noms de marque sans mot animalier, renverrait
+      // la nourriture pour chats en « Nourriture » et le reste en « Autres »,
+      // deux erreurs que B dénonce (points 14 et 18).
+      categorieImposee: source.categorieImposee || null,
       image: p.image,
       date: new Date().toISOString(),
       source: source.nom,
@@ -2900,6 +2950,88 @@ function offresGroupon(html, source) {
       // que le titre.
       categorieImposee: source.categorieImposee || null,
       image: /^https?:\/\//i.test(image) ? image : '',
+      date: new Date().toISOString(),
+      source: source.nom,
+      sourceId: source.id,
+      pays: source.pays || 'BE',
+    });
+  }
+  return out;
+}
+
+/* ------------------------------------------------------------------ *
+ *  SOCIAL DEAL — les activités, hors Groupon (unités B3/B5).
+ *
+ *  Seule plateforme d'activités, hors Groupon, trouvée qui publie DEUX prix
+ *  RÉELS dans le HTML SERVI (les autres sont rendues en JavaScript ou n'ont
+ *  qu'un seul prix — voir AUDIT-B3.md). Chaque carte porte sa référence et son
+ *  prix demandé dans deux balises à classes explicites :
+ *
+ *      <div class="original-price"><span class="price">€30</span></div>
+ *      <span class="current-price">€19<sub>,90</sub></span>
+ *
+ *  ⚠ Les CENTIMES sont dans un `<sub>` (« €19<sub>,90</sub> ») : on retire les
+ *  balises AVANT de lire le nombre, sinon « €19 » serait pris pour 19 € au lieu
+ *  de 19,90 €. Le format du prix diffère aussi selon le pays — « €19,90 » en
+ *  Belgique, « 136,90€ » en France : le lecteur accepte les deux ordres.
+ *
+ *  Deux prix RÉELS, et rien d'autre : une carte sans référence (« Gratis », bons
+ *  cadeaux à prix unique) ne produit AUCUNE promotion et est écartée. Le
+ *  garde-fou de vraisemblance s'applique comme partout.
+ * ------------------------------------------------------------------ */
+function nombreSocialDeal(texte) {
+  // On retire les balises (« €19<sub>,90</sub> » → « €19 ,90 »), puis on lit le
+  // premier nombre, séparateur décimal « , » ou « . ».
+  const s = String(texte || '').replace(/<[^>]*>/g, ' ').replace(/\u00a0|\u202f/g, ' ').trim();
+  const m = s.match(/(\d[\d\s]*)(?:[.,](\d{1,2}))?/);
+  if (!m) return null;
+  const entier = Number(m[1].replace(/\s/g, ''));
+  const cents = m[2] ? Number('0.' + m[2]) : 0;
+  const v = entier + cents;
+  return Number.isFinite(v) && v > 0 && v < 100000 ? Math.round(v * 100) / 100 : null;
+}
+
+function offresSocialDeal(html, source) {
+  const out = [];
+  const vus = new Set();
+  const texte = String(html);
+  // Un bloc « original-price » suivi, dans la même carte, d'un « current-price ».
+  const re = /<div class="original-price">([\s\S]*?)<\/div>[\s\S]{0,240}?<span class="current-price">([\s\S]*?)<\/span>/g;
+  for (const m of texte.matchAll(re)) {
+    const refTxt = (m[1].match(/<span class="price">([\s\S]*?)<\/span>/) || [])[1];
+    const prix = nombreSocialDeal(m[2]);
+    const avant = referenceVraisemblable(prix, nombreSocialDeal(refTxt));
+    if (!remiseCredibleSource(prix, avant)) continue;
+    // Titre et lien : le titre (`<h4>`) et l'adresse de la fiche (`/deals/…`)
+    // sont AVANT le bloc de prix, dans la même carte. On prend les plus proches.
+    const fenetre = texte.slice(Math.max(0, m.index - 6000), m.index);
+    const h4 = [...fenetre.matchAll(/<h4>([\s\S]*?)<\/h4>/g)].pop();
+    const a = [...fenetre.matchAll(/<a\s+href="(https?:\/\/[^"]*\/deals\/[^"]+)"/g)].pop();
+    if (!h4 || !a) continue;
+    const titre = nettoyer(h4[1]);
+    const lien = a[1];
+    if (!titre) continue;
+    const cle = lien.toLowerCase();
+    if (vus.has(cle)) continue;
+    vus.add(cle);
+    out.push({
+      id: 's' + Buffer.from(lien.split('').reverse().join('')).toString('base64url').slice(0, 14),
+      type: 'offre',
+      titre: titre.slice(0, 220),
+      lienMarchand: lien,
+      lienPage: lien,
+      marchand: source.nom,
+      prix,
+      prixAvant: avant,
+      remise: Math.round(((avant - prix) / avant) * 100),
+      remiseCalculee: true,
+      // Même chemin de classement que Groupon : `classerOffre` sait qu'une page
+      // « activité » peut contenir des SOINS (→ Beauté) et des REPAS pris
+      // dehors (→ Activité), et que le partage avec Voyages est GÉOGRAPHIQUE.
+      categorie: classerOffre({ titre, pays: source.pays || 'BE', categorieImposee: source.categorieImposee || null, categorieSource: source.categorie || 'socialdeal' }),
+      categorieSource: source.categorieImposee || source.categorie || 'socialdeal',
+      categorieImposee: source.categorieImposee || null,
+      image: '',
       date: new Date().toISOString(),
       source: source.nom,
       sourceId: source.id,
@@ -3398,6 +3530,13 @@ async function collecterSource(source) {
       const offres = offresGroupon(corps, source);
       journal.push({ source: source.id, ok: true, items: 0, retenues: offres.length });
       if (VERBEUX) console.log(`  ${source.id} : ${offres.length} bon(s) plan(s) ${source.categorieImposee || ''}`);
+      return offres;
+    }
+    // Activités hors Groupon (Social Deal) : deux prix en clair dans le HTML.
+    if (source.type === 'socialdeal') {
+      const offres = offresSocialDeal(corps, source);
+      journal.push({ source: source.id, ok: true, items: 0, retenues: offres.length });
+      if (VERBEUX) console.log(`  ${source.id} : ${offres.length} activité(s) Social Deal ${source.pays}`);
       return offres;
     }
     // Ventes flash du jour : la page les embarque en JSON, on les y lit.

@@ -42,10 +42,11 @@ test('chaque source a une adresse et un type connus', () => {
     // Les lectures possibles, énumérées ici pour qu'on ne puisse pas en ajouter
     // une en silence : un flux (« dealabs », « presse » — des <item> à
     // découper), une PAGE d'enseigne (« enseigne » — un JSON-LD à lire), une
-    // page de bons plans embarqués en JSON (« groupon »), ou une page Amazon
-    // (« amazon », « flash »). Chacune a son lecteur, et un type non listé
-    // enverrait la page au mauvais lecteur — donc zéro offre, sans erreur.
-    assert.ok(['dealabs', 'presse', 'enseigne', 'groupon', 'amazon', 'flash'].includes(s.type), `${s.id} : type inconnu (${s.type})`);
+    // page de bons plans embarqués en JSON (« groupon »), une page d'activités
+    // à deux prix en HTML (« socialdeal »), ou une page Amazon (« amazon »,
+    // « flash »). Chacune a son lecteur, et un type non listé enverrait la page
+    // au mauvais lecteur — donc zéro offre, sans erreur.
+    assert.ok(['dealabs', 'presse', 'enseigne', 'groupon', 'socialdeal', 'amazon', 'flash'].includes(s.type), `${s.id} : type inconnu (${s.type})`);
     assert.ok(s.id && s.nom, `${s.id} : identifiant ou nom manquant`);
   }
 });
