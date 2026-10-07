@@ -2092,7 +2092,16 @@ const POIDS_AGE_ENFANT = 6;   // même poids que le mot « enfant » (6 lettres)
  *  Neuf langues, tout en SANS ACCENT (le texte est déjà passé par sansAccents) :
  *  garçon → garcon, mädchen → madchen, niño → nino.
  */
-const MARQUEUR_ENFANT = /\b(jouet|jouets|enfant|enfants|fille|filles|garcon|garcons|toy|toys|kid|kids|child|children|boy|girl|spielzeug|kind|kinder|junge|jungen|madchen|speelgoed|kinderen|jongen|meisje|juguete|juguetes|nino|ninos|nina|ninas|giocattolo|giocattoli|bambino|bambina|bambini|ragazzo|ragazza|brinquedo|brinquedos|crianca|criancas|menino|menina|zabawka|zabawki|dziecko|dzieci|chlopiec|dziewczynka|leksak|leksaker|barn|pojke|flicka)\b/;
+const MARQUEUR_ENFANT = /\b(jouet|jouets|enfant|enfants|fille|filles|garcon|garcons|toy|toys|kid|kids|child|children|boy|girl|spielzeug|kinder|junge|jungen|madchen|speelgoed|kinderen|jongen|meisje|juguete|juguetes|nino|ninos|nina|ninas|giocattolo|giocattoli|bambino|bambina|bambini|ragazzo|ragazza|brinquedo|brinquedos|crianca|criancas|menino|menina|zabawka|zabawki|dziecko|dzieci|chlopiec|dziewczynka|leksak|leksaker|barn|pojke|flicka)\b/;
+
+/* ⚠ « kind » (allemand : enfant) est VOLONTAIREMENT ABSENT de la liste.
+ *
+ *  Mesuré le 7/10 : un article de presse réel — « The Best Amazon Prime Day
+ *  Headphone Deals for Every KIND of Listener » — partait en « Jeux & jouets »
+ *  parce que l'anglais « kind » (sorte, genre) rencontrait l'allemand « Kind »
+ *  (enfant). Le pluriel allemand « kinder » reste, lui, dans la liste : une
+ *  collision de marque (« Kinder » chocolat) est déjà traitée plus haut par
+ *  MOTS_TROMPEURS, et c'est un test qui la garde. */
 
 /** Un titre porte-t-il une marque d'ENFANT ou de JOUET ? (mot, ou plage d'âge) */
 const marqueurEnfant = (texteBas) => MARQUEUR_ENFANT.test(texteBas) || ageEnfant(texteBas);
