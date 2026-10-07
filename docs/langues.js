@@ -1820,6 +1820,9 @@ const EXTRA = {
     "Renvoyer l'e-mail de confirmation": "Renvoyer l'e-mail de confirmation",
     'ou': 'ou',
     "Ton accord pour les bons plans est noté : il s'appliquera à l'adresse de ton compte {r}.": "Ton accord pour les bons plans est noté : il s'appliquera à l'adresse de ton compte {r}.",
+    '({n} tours)': '({n} tours)',
+    'Certains liens de cette page sont des liens affiliés : si tu achètes, une commission nous est versée par le marchand. Le prix que tu paies ne change pas.': 'Certains liens de cette page sont des liens affiliés : si tu achètes, une commission nous est versée par le marchand. Le prix que tu paies ne change pas.',
+    "Cette version ne contient pas encore d'identifiant d'affiliation : les liens sortants sont directs, sans commission.": 'Cette version ne contient pas encore d\'identifiant d\'affiliation : les liens sortants sont directs, sans commission.',
   },
   nl: {
     'Pourcentage calculé entre deux prix réels': 'Percentage berekend tussen twee echte prijzen',
@@ -1847,6 +1850,9 @@ const EXTRA = {
     "Renvoyer l'e-mail de confirmation": 'Bevestigingsmail opnieuw versturen',
     'ou': 'of',
     "Ton accord pour les bons plans est noté : il s'appliquera à l'adresse de ton compte {r}.": 'Je akkoord voor de koopjes is genoteerd: het geldt voor het adres van je {r}-account.',
+    '({n} tours)': '({n} rondes)',
+    'Certains liens de cette page sont des liens affiliés : si tu achètes, une commission nous est versée par le marchand. Le prix que tu paies ne change pas.': 'Sommige links op deze pagina zijn affiliatielinks: als je koopt, keert de handelaar ons een commissie uit. De prijs die je betaalt verandert niet.',
+    "Cette version ne contient pas encore d'identifiant d'affiliation : les liens sortants sont directs, sans commission.": 'Deze versie bevat nog geen affiliatie-ID: de uitgaande links zijn direct, zonder commissie.',
   },
   de: {
     'Pourcentage calculé entre deux prix réels': 'Prozentsatz berechnet zwischen zwei echten Preisen',
@@ -1874,6 +1880,9 @@ const EXTRA = {
     "Renvoyer l'e-mail de confirmation": 'Bestätigungs-E-Mail erneut senden',
     'ou': 'oder',
     "Ton accord pour les bons plans est noté : il s'appliquera à l'adresse de ton compte {r}.": 'Deine Zustimmung zu den Angeboten ist vermerkt: Sie gilt für die Adresse deines {r}-Kontos.',
+    '({n} tours)': '({n} Runden)',
+    'Certains liens de cette page sont des liens affiliés : si tu achètes, une commission nous est versée par le marchand. Le prix que tu paies ne change pas.': 'Einige Links auf dieser Seite sind Affiliate-Links: Wenn du kaufst, zahlt uns der Händler eine Provision. Der Preis, den du zahlst, ändert sich nicht.',
+    "Cette version ne contient pas encore d'identifiant d'affiliation : les liens sortants sont directs, sans commission.": 'Diese Version enthält noch keine Affiliate-ID: Die ausgehenden Links führen direkt, ohne Provision.',
   },
   en: {
     'Pourcentage calculé entre deux prix réels': 'Percentage calculated between two real prices',
@@ -1901,6 +1910,9 @@ const EXTRA = {
     "Renvoyer l'e-mail de confirmation": 'Resend the confirmation email',
     'ou': 'or',
     "Ton accord pour les bons plans est noté : il s'appliquera à l'adresse de ton compte {r}.": 'Your consent for the deals is noted: it will apply to your {r} account address.',
+    '({n} tours)': '({n} rounds)',
+    'Certains liens de cette page sont des liens affiliés : si tu achètes, une commission nous est versée par le marchand. Le prix que tu paies ne change pas.': 'Some links on this page are affiliate links: if you buy, the merchant pays us a commission. The price you pay does not change.',
+    "Cette version ne contient pas encore d'identifiant d'affiliation : les liens sortants sont directs, sans commission.": 'This version does not yet contain an affiliate ID: outgoing links are direct, with no commission.',
   },
   es: {
     'Pourcentage calculé entre deux prix réels': 'Porcentaje calculado entre dos precios reales',
@@ -1928,6 +1940,9 @@ const EXTRA = {
     "Renvoyer l'e-mail de confirmation": 'Reenviar el correo de confirmación',
     'ou': 'o',
     "Ton accord pour les bons plans est noté : il s'appliquera à l'adresse de ton compte {r}.": 'Tu consentimiento para las ofertas queda anotado: se aplicará a la dirección de tu cuenta de {r}.',
+    '({n} tours)': '({n} rondas)',
+    'Certains liens de cette page sont des liens affiliés : si tu achètes, une commission nous est versée par le marchand. Le prix que tu paies ne change pas.': 'Algunos enlaces de esta página son enlaces de afiliación: si compras, el comercio nos paga una comisión. El precio que pagas no cambia.',
+    "Cette version ne contient pas encore d'identifiant d'affiliation : les liens sortants sont directs, sans commission.": 'Esta versión aún no contiene un identificador de afiliación: los enlaces salientes son directos, sin comisión.',
   },
   it: {
     'Pourcentage calculé entre deux prix réels': 'Percentuale calcolata tra due prezzi reali',
@@ -1955,6 +1970,9 @@ const EXTRA = {
     "Renvoyer l'e-mail de confirmation": "Invia di nuovo l'e-mail di conferma",
     'ou': 'o',
     "Ton accord pour les bons plans est noté : il s'appliquera à l'adresse de ton compte {r}.": "Il tuo consenso per le offerte è annotato: si applicherà all'indirizzo del tuo account {r}.",
+    '({n} tours)': '({n} round)',
+    'Certains liens de cette page sont des liens affiliés : si tu achètes, une commission nous est versée par le marchand. Le prix que tu paies ne change pas.': 'Alcuni link di questa pagina sono link di affiliazione: se acquisti, il negozio ci versa una commissione. Il prezzo che paghi non cambia.',
+    "Cette version ne contient pas encore d'identifiant d'affiliation : les liens sortants sont directs, sans commission.": 'Questa versione non contiene ancora un identificativo di affiliazione: i link in uscita sono diretti, senza commissione.',
   },
   pt: {
     'Pourcentage calculé entre deux prix réels': 'Percentagem calculada entre dois preços reais',
@@ -1982,6 +2000,9 @@ const EXTRA = {
     "Renvoyer l'e-mail de confirmation": 'Reenviar o e-mail de confirmação',
     'ou': 'ou',
     "Ton accord pour les bons plans est noté : il s'appliquera à l'adresse de ton compte {r}.": 'O teu consentimento para as promoções está anotado: vai aplicar-se ao endereço da tua conta {r}.',
+    '({n} tours)': '({n} rondas)',
+    'Certains liens de cette page sont des liens affiliés : si tu achètes, une commission nous est versée par le marchand. Le prix que tu paies ne change pas.': 'Alguns links desta página são links de afiliação: se comprares, o comerciante paga-nos uma comissão. O preço que pagas não muda.',
+    "Cette version ne contient pas encore d'identifiant d'affiliation : les liens sortants sont directs, sans commission.": 'Esta versão ainda não contém um identificador de afiliação: os links de saída são diretos, sem comissão.',
   },
   pl: {
     'Pourcentage calculé entre deux prix réels': 'Procent obliczony między dwiema prawdziwymi cenami',
@@ -2009,6 +2030,9 @@ const EXTRA = {
     "Renvoyer l'e-mail de confirmation": 'Wyślij ponownie e-mail potwierdzający',
     'ou': 'lub',
     "Ton accord pour les bons plans est noté : il s'appliquera à l'adresse de ton compte {r}.": 'Twoja zgoda na okazje została odnotowana: będzie dotyczyć adresu twojego konta {r}.',
+    '({n} tours)': '({n} rund)',
+    'Certains liens de cette page sont des liens affiliés : si tu achètes, une commission nous est versée par le marchand. Le prix que tu paies ne change pas.': 'Niektóre linki na tej stronie to linki afiliacyjne: jeśli kupisz, sprzedawca wypłaca nam prowizję. Cena, którą płacisz, nie zmienia się.',
+    "Cette version ne contient pas encore d'identifiant d'affiliation : les liens sortants sont directs, sans commission.": 'Ta wersja nie zawiera jeszcze identyfikatora afiliacyjnego: linki wychodzące są bezpośrednie, bez prowizji.',
   },
   sv: {
     'Pourcentage calculé entre deux prix réels': 'Procent beräknat mellan två riktiga priser',
@@ -2036,6 +2060,9 @@ const EXTRA = {
     "Renvoyer l'e-mail de confirmation": 'Skicka bekräftelsemejlet igen',
     'ou': 'eller',
     "Ton accord pour les bons plans est noté : il s'appliquera à l'adresse de ton compte {r}.": 'Ditt samtycke till erbjudandena är noterat: det gäller adressen till ditt {r}-konto.',
+    '({n} tours)': '({n} rundor)',
+    'Certains liens de cette page sont des liens affiliés : si tu achètes, une commission nous est versée par le marchand. Le prix que tu paies ne change pas.': 'Vissa länkar på den här sidan är affiliatelänkar: om du köper betalar handlaren oss en provision. Priset du betalar ändras inte.',
+    "Cette version ne contient pas encore d'identifiant d'affiliation : les liens sortants sont directs, sans commission.": 'Den här versionen innehåller ännu inget affiliate-ID: de utgående länkarna är direkta, utan provision.',
   },
 };
 
