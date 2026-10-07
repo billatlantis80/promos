@@ -242,28 +242,36 @@ function dessinerReglages() {
     </p>`;
 
   dessinerProfil();
-  dessinerConnexion();
   dessinerLangue();
   dessinerCompte();
   dessinerDroits();
   majThemes();
 }
 
-/** Rubrique « Inscription et connexion ».
+/** Les boutons Google et Facebook, rendus DANS l'encadré de l'inscription.
  *
- *  Google et Facebook demandent un IDENTIFIANT D'APPLICATION (client ID), qui
- *  appartient au propriétaire de l'application — jamais à nous. Tant qu'il n'est
- *  pas renseigné, le bouton ne fait pas semblant : il dit ce qui manque, au lieu
- *  d'ouvrir une fenêtre qui échouerait.
+ *  Demande de B (08/10/2026) : « L'inscription avec Google et Facebook doivent
+ *  être dans l'encadrement de inscription car si il sélectionne ces deux moyens
+ *  d'inscription ils doivent aussi choisir si ils s'inscrivent à la newsletter ».
+ *
+ *  Deux raisons, et la seconde est la vraie :
+ *   1. Trois façons de créer un compte dans un seul cadre, séparées par un
+ *      « ou » : on voit d'un coup d'œil que c'est la même chose.
+ *   2. LA CASE DES BONS PLANS EST DANS CE CADRE, DONC ELLE VAUT POUR LES TROIS
+ *      CHEMINS. Hors du cadre, elle n'aurait concerné que l'inscription
+ *      manuelle, et quelqu'un qui passe par Google n'aurait jamais vu qu'il
+ *      pouvait — ou ne pouvait pas — recevoir la newsletter.
  */
-function dessinerConnexion() {
-  const rc = $('regConnexion');
-  if (!rc) return;
-  const pret = (id) => typeof id === 'string' && id.trim().length > 0;
+function blocConnexion() {
   const style = 'width:100%;display:flex;align-items:center;justify-content:center;gap:9px;'
     + 'padding:11px 12px;border-radius:11px;font:inherit;font-weight:600;font-size:14px;'
     + 'cursor:pointer;text-decoration:none;border:1px solid var(--bord)';
-  rc.innerHTML = `
+  return `
+    <div style="display:flex;align-items:center;gap:10px;margin:16px 0 12px;color:var(--doux);font-size:12.5px">
+      <span style="flex:1;height:1px;background:var(--bord)"></span>
+      <span>${esc(t('ou'))}</span>
+      <span style="flex:1;height:1px;background:var(--bord)"></span>
+    </div>
     <p>
       <button class="connexion" id="connexionGoogle" style="${style};background:#fff;color:#1f1f1f">
         <svg viewBox="0 0 48 48" aria-hidden="true" style="width:18px;height:18px"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
@@ -279,17 +287,24 @@ function dessinerConnexion() {
     <p class="note" style="font-size:12.5px;color:var(--doux)">
       ${esc(t("Ces connexions demandent un identifiant d'application. Tant qu'il n'est pas renseigné, elles restent fermées."))}
     </p>`;
-  $('connexionGoogle').addEventListener('click', () => annoncerConnexion('Google'));
-  $('connexionFacebook').addEventListener('click', () => annoncerConnexion('Facebook'));
 }
 
-/** Sans identifiant d'application, on EXPLIQUE au lieu de faire semblant. */
-function annoncerConnexion(reseau) {
+/** Ce qu'il faut dire à qui clique Google ou Facebook — ou null si la connexion
+ *  est réellement branchée (identifiant d'application renseigné).
+ *
+ *  LE CHOIX DES BONS PLANS FAIT PARTIE DE LA RÉPONSE. La case est dans le même
+ *  encadré que les boutons, donc elle s'applique aussi à ces deux chemins. Le
+ *  silence serait pire que l'absence : quelqu'un qui coche et clique Google
+ *  croirait s'être inscrit aux bons plans. On le lui dit.
+ */
+function messageConnexion(reseau, veuxLettres) {
   const id = reseau === 'Google' ? window.KAZENDRA_GOOGLE_CLIENT_ID
                                  : window.KAZENDRA_FACEBOOK_APP_ID;
-  if (typeof id === 'string' && id.trim()) return;   // renseigné : le branchement s'en occupe
-  alert(t("La connexion {r} n'est pas encore ouverte : il manque l'identifiant d'application.",
-          { r: reseau }));
+  if (typeof id === 'string' && id.trim()) return null;   // renseigné : le branchement s'en occupe
+  const base = t("La connexion {r} n'est pas encore ouverte : il manque l'identifiant d'application.", { r: reseau });
+  return veuxLettres
+    ? `${base} ${t("Ton accord pour les bons plans est noté : il s'appliquera à l'adresse de ton compte {r}.", { r: reseau })}`
+    : base;
 }
 
 /** Drapeaux des 9 langues, dessinés en VECTORIEL.
@@ -554,6 +569,7 @@ function dessinerCompte() {
         </label>
         <p class="annonce" id="cAnnonce"></p>
         <p style="margin:0"><button class="enregistrer" id="creerCompte">${esc(t('Créer mon compte'))}</button></p>
+        ${blocConnexion()}
       </div>`;
     return;
   }
@@ -1703,6 +1719,18 @@ function brancher() {
       a.textContent = msg;
       a.style.color = ok ? 'var(--vert)' : 'var(--accent-2)';
     };
+
+    // GOOGLE ET FACEBOOK SONT DANS LE MÊME ENCADRÉ QUE LE FORMULAIRE, donc la
+    // case des bons plans les concerne aussi. On annonce donc, pour eux comme
+    // pour l'inscription manuelle, ce que devient le choix des bons plans :
+    // quelqu'un qui coche puis clique Google doit savoir que son accord a été
+    // lu, et quelqu'un qui n'a pas coché doit savoir qu'il ne recevra rien.
+    if (e.target.closest('#connexionGoogle') || e.target.closest('#connexionFacebook')) {
+      const reseau = e.target.closest('#connexionGoogle') ? 'Google' : 'Facebook';
+      const msg = messageConnexion(reseau, !!($('cConsent') || {}).checked);
+      if (msg) return annonce(msg);
+      return;
+    }
 
     if (e.target.closest('#creerCompte')) {
       // L'INSCRIPTION EST MAINTENANT UNE VRAIE INSCRIPTION : elle part vers le

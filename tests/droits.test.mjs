@@ -162,13 +162,48 @@ test('l’onglet Compte n’a qu’UNE rubrique de compte : inscription puis con
   // rester qu'un seul endroit où l'on crée un compte.
   assert.deepEqual(titres, ['Inscription et connexion', 'Profil'],
     `rubriques de l’onglet Compte = ${titres.join(' | ')}`);
-  // L'inscription MANUELLE (formulaire) doit précéder la connexion sociale.
-  const positionChamp = panneau.indexOf('id="regCompte"');
-  const positionSocial = panneau.indexOf('id="regConnexion"');
-  assert.ok(positionChamp > -1 && positionSocial > -1,
-    'les deux points d’entrée (#regCompte, #regConnexion) doivent être présents');
-  assert.ok(positionChamp < positionSocial,
-    'le formulaire d’inscription doit venir AVANT les boutons Google/Facebook');
+  // L'inscription MANUELLE (formulaire) doit précéder la connexion sociale, ET
+  // les deux doivent tenir dans le MÊME encadré — c'est la demande de B, et pas
+  // seulement une question de mise en page : la case des bons plans est dans ce
+  // cadre, donc elle vaut aussi pour Google et Facebook.
+  //
+  // ⚠ DÉFAUT CORRIGÉ DANS CE TEST : il exigeait un second point de rendu
+  //  `#regConnexion`, placé HORS de l'encadré. C'était justement ce que B a
+  //  signalé. Il n'y a plus qu'un seul point de rendu, et le test le vérifie.
+  assert.ok(panneau.includes('id="regCompte"'), 'le point de rendu du compte a disparu');
+  assert.ok(!panneau.includes('id="regConnexion"'),
+    'un rendu est ressorti hors de l’encadré : la case des bons plans ne vaudrait plus pour Google/Facebook');
+  // Dans app.js, les boutons sociaux sont rendus par blocConnexion(), appelé
+  // DANS le gabarit du formulaire. Le gabarit vit dans dessinerCompte(), très
+  // loin du gestionnaire de clic : on découpe donc la FONCTION, pas une fenêtre
+  // autour du gestionnaire (la première version de ce test cherchait au mauvais
+  // endroit et ne trouvait rien).
+  const gabarit = APP.slice(APP.indexOf('function dessinerCompte()'), APP.indexOf('function exporterDonnees()'));
+  assert.ok(gabarit.length > 500, `découpage du gabarit invalide (${gabarit.length} caractères)`);
+  assert.ok(gabarit.includes('${blocConnexion()}'),
+    'blocConnexion() doit être appelé dans le gabarit du formulaire, pas ailleurs');
+  assert.ok(APP.includes('function blocConnexion()'), 'blocConnexion() a disparu');
+  assert.ok(!APP.includes('dessinerConnexion'),
+    'dessinerConnexion() rendait hors de l’encadré : elle doit avoir disparu');
+  // L'ordre demandé, dans le gabarit : e-mail, consentement, bouton d'inscription,
+  // PUIS les deux boutons sociaux. Attention : le gabarit ne contient PAS
+  // `id="connexionGoogle"` — les boutons sont dessinés par blocConnexion(), qui
+  // est une AUTRE fonction. La première version du test cherchait l'identifiant
+  // ici et ne le trouvait donc jamais.
+  const ordre = ['id="cMail"', 'id="cConsent"', 'id="creerCompte"', '${blocConnexion()}'];
+  let precedent = -1;
+  for (const marque of ordre) {
+    const i = gabarit.indexOf(marque);
+    assert.ok(i > -1, `${marque} introuvable dans le gabarit du formulaire`);
+    assert.ok(i > precedent, `${marque} n’est pas dans l’ordre attendu`);
+    precedent = i;
+  }
+  // Et blocConnexion() dessine bien les deux boutons, l'un avant l'autre.
+  const bloc = APP.slice(APP.indexOf('function blocConnexion()'), APP.indexOf('function messageConnexion('));
+  assert.ok(bloc.indexOf('id="connexionGoogle"') > -1 && bloc.indexOf('id="connexionFacebook"') > -1,
+    'les deux boutons doivent être dessinés par blocConnexion()');
+  assert.ok(bloc.indexOf('id="connexionGoogle"') < bloc.indexOf('id="connexionFacebook"'),
+    'Google doit venir avant Facebook, comme partout ailleurs');
 });
 
 test('l’onglet Informations commence par le point de contact', () => {

@@ -1911,6 +1911,8 @@ const EXTRA = {
     "Renvoyer l'e-mail de confirmation": "Renvoyer l'e-mail de confirmation",
     'Ce lien a déjà été utilisé : ton inscription est confirmée.': 'Ce lien a déjà été utilisé : ton inscription est confirmée.',
     'Ton inscription est confirmée. Tu recevras les bons plans.': 'Ton inscription est confirmée. Tu recevras les bons plans.',
+    'ou': 'ou',
+    "Ton accord pour les bons plans est noté : il s'appliquera à l'adresse de ton compte {r}.": "Ton accord pour les bons plans est noté : il s'appliquera à l'adresse de ton compte {r}.",
   },
   nl: {
     'Pourcentage calculé entre deux prix réels': 'Percentage berekend tussen twee echte prijzen',
@@ -1948,6 +1950,8 @@ const EXTRA = {
     "Renvoyer l'e-mail de confirmation": 'Bevestigingsmail opnieuw versturen',
     'Ce lien a déjà été utilisé : ton inscription est confirmée.': 'Deze link is al gebruikt: je inschrijving is bevestigd.',
     'Ton inscription est confirmée. Tu recevras les bons plans.': 'Je inschrijving is bevestigd. Je ontvangt de koopjes.',
+    'ou': 'of',
+    "Ton accord pour les bons plans est noté : il s'appliquera à l'adresse de ton compte {r}.": 'Je akkoord voor de koopjes is genoteerd: het geldt voor het adres van je {r}-account.',
   },
   de: {
     'Pourcentage calculé entre deux prix réels': 'Prozentsatz berechnet zwischen zwei echten Preisen',
@@ -1985,6 +1989,8 @@ const EXTRA = {
     "Renvoyer l'e-mail de confirmation": 'Bestätigungs-E-Mail erneut senden',
     'Ce lien a déjà été utilisé : ton inscription est confirmée.': 'Dieser Link wurde bereits benutzt: Deine Anmeldung ist bestätigt.',
     'Ton inscription est confirmée. Tu recevras les bons plans.': 'Deine Anmeldung ist bestätigt. Du erhältst die Angebote.',
+    'ou': 'oder',
+    "Ton accord pour les bons plans est noté : il s'appliquera à l'adresse de ton compte {r}.": 'Deine Zustimmung zu den Angeboten ist vermerkt: Sie gilt für die Adresse deines {r}-Kontos.',
   },
   en: {
     'Pourcentage calculé entre deux prix réels': 'Percentage calculated between two real prices',
@@ -2022,6 +2028,8 @@ const EXTRA = {
     "Renvoyer l'e-mail de confirmation": 'Resend the confirmation email',
     'Ce lien a déjà été utilisé : ton inscription est confirmée.': 'This link has already been used: your sign-up is confirmed.',
     'Ton inscription est confirmée. Tu recevras les bons plans.': 'Your sign-up is confirmed. You will receive the deals.',
+    'ou': 'or',
+    "Ton accord pour les bons plans est noté : il s'appliquera à l'adresse de ton compte {r}.": 'Your consent for the deals is noted: it will apply to your {r} account address.',
   },
   es: {
     'Pourcentage calculé entre deux prix réels': 'Porcentaje calculado entre dos precios reales',
@@ -2059,6 +2067,8 @@ const EXTRA = {
     "Renvoyer l'e-mail de confirmation": 'Reenviar el correo de confirmación',
     'Ce lien a déjà été utilisé : ton inscription est confirmée.': 'Este enlace ya se ha usado: tu inscripción está confirmada.',
     'Ton inscription est confirmée. Tu recevras les bons plans.': 'Tu inscripción está confirmada. Recibirás las ofertas.',
+    'ou': 'o',
+    "Ton accord pour les bons plans est noté : il s'appliquera à l'adresse de ton compte {r}.": 'Tu consentimiento para las ofertas queda anotado: se aplicará a la dirección de tu cuenta de {r}.',
   },
   it: {
     'Pourcentage calculé entre deux prix réels': 'Percentuale calcolata tra due prezzi reali',
@@ -2096,6 +2106,8 @@ const EXTRA = {
     "Renvoyer l'e-mail de confirmation": "Invia di nuovo l'e-mail di conferma",
     'Ce lien a déjà été utilisé : ton inscription est confirmée.': 'Questo link è già stato usato: la tua iscrizione è confermata.',
     'Ton inscription est confirmée. Tu recevras les bons plans.': 'La tua iscrizione è confermata. Riceverai le offerte.',
+    'ou': 'o',
+    "Ton accord pour les bons plans est noté : il s'appliquera à l'adresse de ton compte {r}.": "Il tuo consenso per le offerte è annotato: si applicherà all'indirizzo del tuo account {r}.",
   },
   pt: {
     'Pourcentage calculé entre deux prix réels': 'Percentagem calculada entre dois preços reais',
@@ -2133,6 +2145,8 @@ const EXTRA = {
     "Renvoyer l'e-mail de confirmation": 'Reenviar o e-mail de confirmação',
     'Ce lien a déjà été utilisé : ton inscription est confirmée.': 'Esta ligação já foi usada: a tua inscrição está confirmada.',
     'Ton inscription est confirmée. Tu recevras les bons plans.': 'A tua inscrição está confirmada. Vais receber as promoções.',
+    'ou': 'ou',
+    "Ton accord pour les bons plans est noté : il s'appliquera à l'adresse de ton compte {r}.": 'O teu consentimento para as promoções está anotado: vai aplicar-se ao endereço da tua conta {r}.',
   },
   pl: {
     'Pourcentage calculé entre deux prix réels': 'Procent obliczony między dwiema prawdziwymi cenami',
@@ -2170,6 +2184,8 @@ const EXTRA = {
     "Renvoyer l'e-mail de confirmation": 'Wyślij ponownie e-mail potwierdzający',
     'Ce lien a déjà été utilisé : ton inscription est confirmée.': 'Ten link został już użyty: twój zapis jest potwierdzony.',
     'Ton inscription est confirmée. Tu recevras les bons plans.': 'Twój zapis jest potwierdzony. Będziesz otrzymywać okazje.',
+    'ou': 'lub',
+    "Ton accord pour les bons plans est noté : il s'appliquera à l'adresse de ton compte {r}.": 'Twoja zgoda na okazje została odnotowana: będzie dotyczyć adresu twojego konta {r}.',
   },
   sv: {
     'Pourcentage calculé entre deux prix réels': 'Procent beräknat mellan två riktiga priser',
@@ -2207,6 +2223,8 @@ const EXTRA = {
     "Renvoyer l'e-mail de confirmation": 'Skicka bekräftelsemejlet igen',
     'Ce lien a déjà été utilisé : ton inscription est confirmée.': 'Den här länken har redan använts: din anmälan är bekräftad.',
     'Ton inscription est confirmée. Tu recevras les bons plans.': 'Din anmälan är bekräftad. Du kommer att få erbjudandena.',
+    'ou': 'eller',
+    "Ton accord pour les bons plans est noté : il s'appliquera à l'adresse de ton compte {r}.": 'Ditt samtycke till erbjudandena är noterat: det gäller adressen till ditt {r}-konto.',
   },
 };
 
