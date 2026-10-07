@@ -8,6 +8,10 @@ import { lienAffilie, MENTION_AFFILIATION, siteAmazon } from './affiliation.js';
 import * as C from './compte.js';
 import { t, chargerLangue, definirLangue, traduireDOM, languesDisponibles, langue, CLE_LANGUE, locale } from './langues.js';
 import { noterVisite } from './trafic.js';
+import {
+  envoyerInscription, adresseValide, tableauConfigure,
+  inscriptionLocale, retenirInscription, oublierInscription,
+} from './inscription.js';
 
 const $ = (id) => document.getElementById(id);
 
@@ -505,8 +509,12 @@ function dessinerCompte() {
       <div class="carte-bloc">
         <h4>${esc(t('Créer un compte sur cet appareil'))}</h4>
         <div class="champ">
-          <label for="cNom">${esc(t("Nom d'utilisateur"))}</label>
-          <input id="cNom" type="text" maxlength="24" autocomplete="username" placeholder="${esc(t('3 à 24 caractères'))}">
+          <label for="cMail">${esc(t('Adresse e-mail'))}</label>
+          <input id="cMail" type="email" maxlength="120" autocomplete="email" inputmode="email" placeholder="nom@exemple.be">
+        </div>
+        <div class="champ">
+          <label for="cPrenom">${esc(t('Prénom (facultatif)'))}</label>
+          <input id="cPrenom" type="text" maxlength="24" autocomplete="given-name">
         </div>
         <div class="champ">
           <label for="cMdp">${esc(t('Mot de passe'))}</label>
@@ -516,6 +524,10 @@ function dessinerCompte() {
           <label for="cMdp2">${esc(t('Répète le mot de passe'))}</label>
           <input id="cMdp2" type="password" autocomplete="new-password">
         </div>
+        <label class="consentement" style="display:flex;gap:9px;align-items:flex-start;margin:12px 0 4px;font-size:13.5px;line-height:1.45;cursor:pointer">
+          <input id="cConsent" type="checkbox" style="margin-top:2px;flex:0 0 auto;width:16px;height:16px;accent-color:var(--accent)">
+          <span>${esc(t('Je veux recevoir les bons plans par e-mail. Désinscription en un clic.'))}</span>
+        </label>
         <p class="annonce" id="cAnnonce"></p>
         <p style="margin:0"><button class="enregistrer" id="creerCompte">${esc(t('Créer mon compte'))}</button></p>
       </div>`;
@@ -1668,13 +1680,39 @@ function brancher() {
     };
 
     if (e.target.closest('#creerCompte')) {
-      const nom = ($('cNom') || {}).value || '';
+      // L'INSCRIPTION EST MAINTENANT UNE VRAIE INSCRIPTION : elle part vers le
+      // tableau Google de B (demande du 08/10 : « je pourrais avoir une base de
+      // données avec toutes les adresses mail »). Trois contrôles AVANT d'envoyer,
+      // parce qu'un envoi qui part avec une adresse fautive est un contact perdu
+      // que personne ne remarquera jamais :
+      //   1. l'adresse a la forme d'une adresse ;
+      //   2. le consentement est coché — on n'inscrit personne d'office, c'est
+      //      la moindre des choses, et c'est aussi ce que la loi demande ;
+      //   3. le tableau est branché. S'il ne l'est pas, on le DIT au lieu de
+      //      laisser croire à une inscription (règle de la maison).
+      const mail = (($('cMail') || {}).value || '').trim();
+      const prenom = (($('cPrenom') || {}).value || '').trim();
       const m1 = ($('cMdp') || {}).value || '';
       const m2 = ($('cMdp2') || {}).value || '';
+      const consentement = !!($('cConsent') || {}).checked;
+      if (!adresseValide(mail)) return annonce(t("Cette adresse e-mail n'est pas valide."));
+      if (!consentement) return annonce(t("Coche la case pour recevoir les bons plans : sans ton accord, on ne t'inscrit pas."));
       if (m1 !== m2) return annonce(t('Les deux mots de passe ne sont pas identiques.'));
-      const r = await C.creerCompte(nom, m1);
+      const r = await C.creerCompte(mail, m1);
+      if (!r.ok) return annonce(r.message);
+      if (!tableauConfigure()) {
+        // Compte local créé, mais rien n'est parti : on le dit, on ne le cache pas.
+        dessinerCompte();
+        return annonce(t("Ton compte est créé sur cet appareil. Le tableau n'est pas encore branché : ton adresse n'a pas été envoyée."), false);
+      }
+      const envoi = await envoyerInscription({ email: mail, prenom, langue, pays: etat.pays });
+      if (envoi.ok) retenirInscription(mail, prenom);
       dessinerCompte();
-      return annonce(r.ok ? t('Compte « {n} » créé sur cet appareil.', { n: r.nom }) : r.message, r.ok);
+      // « ENVOYÉE », PAS « INSCRITE » : le tableau Google ne laisse pas la page
+      // lire sa réponse (voir inscription.js). On annonce ce qu'on sait.
+      return annonce(envoi.ok
+        ? t("Ton adresse est envoyée. Elle apparaîtra dans ta feuille : c'est elle qui fait foi.")
+        : t("L'envoi n'a pas pu partir. Vérifie ta connexion, puis réessaie."), envoi.ok);
     }
 
     if (e.target.closest('#changerMdp')) {
