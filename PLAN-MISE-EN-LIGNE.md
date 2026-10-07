@@ -24,6 +24,15 @@ Règle du projet : on n'annonce pas un chiffre qu'on ne peut pas prouver.
 - Réserver : **`.app`** (le domaine de l'application), **`.be`** (le pays), **`.eu`** (l'Europe).
   Coût : ordre de 10–15 €/an par extension — **NON VÉRIFIÉ**, à confirmer chez le registraire.
 - Brancher le domaine sur GitHub Pages (fichier `CNAME` + DNS) : gratuit.
+  **Fait de mon côté le 07/10/2026 :** les 5 domaines sont chez OVH (`ns111/dns111.ovh.net`)
+  et pointent encore sur la page d'attente OVH (`kazendra.com` = 404 « Site not installed »).
+  Un dépôt **projet** avec son propre domaine perso est servi **à la racine** du domaine
+  (preuve : `electron/electronjs.org-old`, CNAME `electron.atom.io`, `html_url`
+  `https://electron.atom.io/`) → le site vivra sur `https://kazendra.com/`, pas `/promos/`.
+  À faire à la main par l'utilisateur : zone DNS de kazendra.com → retirer A `51.91.236.255`
+  et AAAA `2001:41d0:301::29`, poser 4 × A `185.199.108-111.153` ; www → CNAME
+  `billatlantis80.github.io`. **Ne pas toucher MX/SPF** (courrier `info@kazendra.com`).
+  Marche à suivre détaillée : `DNS-KAZENDRA.md`.
 - Fixer l'`applicationId` **avant** tout dépôt.
 
 ## ÉTAPE 2 — La marque  (protéger AVANT de publier)
