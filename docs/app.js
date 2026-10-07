@@ -488,15 +488,15 @@ function blocDroits() {
   return `
     <div class="carte-bloc">
       ${titre}
-      <p>${esc(t("Ce compte ne crée rien en ligne : il n'y a pas de serveur. Il protège l'accès à l'application (favoris, réglages) sur ce téléphone, et donne un nom au porteur des données."))}</p>
+      <p>${esc(t("Ce compte vit sur cet appareil et nulle part ailleurs : il protège l'accès à l'application (favoris, réglages) sur ce téléphone. Une seule chose peut sortir de l'appareil, et seulement si tu la demandes : l'adresse de ton inscription."))}</p>
       <p>${esc(t("Ce qu'il ne fera jamais, pour que tu ne l'attendes pas : retrouver tes favoris sur un autre appareil, ni te rendre un mot de passe oublié. Le mot de passe n'est pas enregistré — seulement une empreinte calculée à partir de lui."))}</p>
     </div>
     <div class="carte-bloc" style="margin-top:12px">
-      <p>${esc(t("Ce qui est conservé sur cet appareil : le nom d'utilisateur, une empreinte du mot de passe (jamais le mot de passe), le prénom affiché, tes favoris et tes réglages."))} <b>${esc(t("Rien n'est envoyé"))}</b>${esc(t(" : il n'y a ni serveur, ni traqueur, ni cookie publicitaire."))}</p>
+      <p>${esc(t("Ce qui est conservé sur cet appareil : le nom d'utilisateur, une empreinte du mot de passe (jamais le mot de passe), le prénom affiché, tes favoris et tes réglages."))} <b>${esc(t("Rien n'est envoyé, sauf l'adresse de ton inscription"))}</b>${esc(t(" : ni traqueur, ni cookie publicitaire. Ton compte, lui, ne quitte pas cet appareil."))}</p>
       <ul>
         <li><b>${esc(t('Voir et emporter'))}</b> : ${esc(t('« Télécharger mes données » produit un fichier lisible qui contient tout.'))}</li>
-        <li><b>${esc(t('Effacer'))}</b> : ${esc(t('« Supprimer mon compte » retire le compte et les données de cet appareil, sans délai et sans avoir à demander à personne.'))}</li>
-        <li><b>${esc(t('Durée'))}</b> : ${esc(t("jusqu'à ce que tu supprimes. Aucune copie n'existe ailleurs."))}</li>
+        <li><b>${esc(t('Effacer'))}</b> : ${esc(t("« Supprimer mon compte » retire le compte et les données de cet appareil, sans délai et sans avoir à demander à personne. L'adresse de ton inscription, elle, se retire depuis l'e-mail reçu."))}</li>
+        <li><b>${esc(t('Durée'))}</b> : ${esc(t("jusqu'à ce que tu supprimes. Tes favoris et tes réglages n'existent nulle part ailleurs ; l'adresse de ton inscription reste chez le responsable du site jusqu'à ta désinscription."))}</li>
       </ul>
     </div>`;
 }
@@ -584,7 +584,7 @@ function dessinerCompte() {
           <span class="quand">compte local créé le ${dateLisible(f.cree)} · ${esc(f.algorithme || 'PBKDF2-SHA256')} ${f.tours ? `(${f.tours} tours)` : ''}</span>
         </span>
       </div>
-      <p>${t("Ce compte vit sur cet appareil uniquement. Il protège l'accès à l'application ; il ne synchronise rien et ne se connecte à rien.")}</p>
+      <p>${t("Ce compte vit sur cet appareil uniquement. Il protège l'accès à l'application et ne synchronise rien. Seule l'adresse de ton inscription est envoyée, pour recevoir les bons plans.")}</p>
       <div class="champ">
         <label for="cAncien">${esc(t('Mot de passe actuel'))}</label>
         <input id="cAncien" type="password" autocomplete="current-password">
@@ -609,7 +609,8 @@ function exporterDonnees() {
   const paquet = {
     application: 'Promos',
     exporteLe: new Date().toISOString(),
-    avertissement: "Tout ce que l'application conserve sur cet appareil. Rien n'a été envoyé nulle part — il n'y a pas de serveur.",
+    avertissement: "Tout ce que l'application conserve sur cet appareil. La seule chose qui ait pu en "
+                 + "sortir est l'adresse de ton inscription, et seulement si tu l'as demandée.",
     compte: C.ficheCompte(),
     profil: { ...profil },
     favoris,
