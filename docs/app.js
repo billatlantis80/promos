@@ -267,13 +267,13 @@ function dessinerProfil() {
   const nom = profil.prenom.trim();
   $('regProfil').innerHTML = `
     <div class="champ">
-      <label for="prenom">Prénom affiché</label>
-      <input id="prenom" type="text" maxlength="24" autocomplete="given-name" placeholder="Ton prénom" value="${esc(nom)}">
+      <label for="prenom">${esc(t('Prénom affiché'))}</label>
+      <input id="prenom" type="text" maxlength="24" autocomplete="given-name" placeholder="${esc(t('Ton prénom'))}" value="${esc(nom)}">
     </div>
-    <p style="margin:0 0 12px"><button class="enregistrer" id="enregistrerProfil">Enregistrer</button></p>
+    <p style="margin:0 0 12px"><button class="enregistrer" id="enregistrerProfil">${esc(t('Enregistrer'))}</button></p>
     <div class="ligne-profil">
       <span class="avatar" id="avatar" title="Aperçu">${esc(initiale())}</span>
-      <span>${nom ? `Bonjour ${esc(nom)}` : 'Aucun prénom enregistré'}<br><span style="font-size:12.5px;color:var(--doux)">Gardé sur cet appareil uniquement. Effacé avec les données du site.</span></span>
+      <span>${nom ? t('Bonjour {n}', { n: esc(nom) }) : esc(t('Aucun prénom enregistré'))}<br><span style="font-size:12.5px;color:var(--doux)">${esc(t('Gardé sur cet appareil uniquement. Effacé avec les données du site.'))}</span></span>
     </div>`;
 }
 
@@ -282,7 +282,7 @@ function dessinerProfil() {
 function blocDroits() {
   return `
     <div class="carte-bloc" style="margin-top:12px">
-      <h4>Tes données, tes droits</h4>
+      <h4>${esc(t('Tes données, tes droits'))}</h4>
       <p>Ce qui est conservé sur cet appareil : le nom d'utilisateur, une empreinte
          du mot de passe (jamais le mot de passe), le prénom affiché, tes favoris
          et tes réglages. <b>Rien n'est envoyé</b> : il n'y a ni serveur, ni
@@ -310,7 +310,7 @@ function dessinerCompte() {
   if (!f) {
     $('regCompte').innerHTML = `
       <div class="carte-bloc">
-        <h4>Aucun compte sur cet appareil</h4>
+        <h4>${esc(t('Aucun compte sur cet appareil'))}</h4>
         <p>Ce compte <b>ne crée rien en ligne</b> : il n'y a pas de serveur. Il
            protège l'accès à l'application (favoris, réglages) sur ce téléphone,
            et donne un nom au porteur des données.</p>
@@ -319,19 +319,19 @@ function dessinerCompte() {
            mot de passe n'est pas enregistré — seulement une empreinte calculée à
            partir de lui.</p>
         <div class="champ">
-          <label for="cNom">Nom d'utilisateur</label>
-          <input id="cNom" type="text" maxlength="24" autocomplete="username" placeholder="3 à 24 caractères">
+          <label for="cNom">${esc(t("Nom d'utilisateur"))}</label>
+          <input id="cNom" type="text" maxlength="24" autocomplete="username" placeholder="${esc(t('3 à 24 caractères'))}">
         </div>
         <div class="champ">
-          <label for="cMdp">Mot de passe</label>
-          <input id="cMdp" type="password" autocomplete="new-password" placeholder="8 caractères minimum">
+          <label for="cMdp">${esc(t('Mot de passe'))}</label>
+          <input id="cMdp" type="password" autocomplete="new-password" placeholder="${esc(t('8 caractères minimum'))}">
         </div>
         <div class="champ">
-          <label for="cMdp2">Répète le mot de passe</label>
+          <label for="cMdp2">${esc(t('Répète le mot de passe'))}</label>
           <input id="cMdp2" type="password" autocomplete="new-password">
         </div>
         <p class="annonce" id="cAnnonce"></p>
-        <p style="margin:0"><button class="enregistrer" id="creerCompte">Créer mon compte</button></p>
+        <p style="margin:0"><button class="enregistrer" id="creerCompte">${esc(t('Créer mon compte'))}</button></p>
       </div>
       ${blocDroits()}`;
     return;
@@ -348,11 +348,11 @@ function dessinerCompte() {
       <p>Ce compte vit sur cet appareil uniquement. Il protège l'accès à
          l'application ; il ne synchronise rien et ne se connecte à rien.</p>
       <div class="champ">
-        <label for="cAncien">Mot de passe actuel</label>
+        <label for="cAncien">${esc(t('Mot de passe actuel'))}</label>
         <input id="cAncien" type="password" autocomplete="current-password">
       </div>
       <div class="champ">
-        <label for="cNouveau">Nouveau mot de passe</label>
+        <label for="cNouveau">${esc(t('Nouveau mot de passe'))}</label>
         <input id="cNouveau" type="password" autocomplete="new-password">
       </div>
       <p class="annonce" id="cAnnonce"></p>
@@ -360,7 +360,7 @@ function dessinerCompte() {
         <button class="enregistrer" id="changerMdp">Changer le mot de passe</button>
         <button class="outil" id="verrouiller">Verrouiller maintenant</button>
         <button class="outil" id="exporterDonnees">Télécharger mes données</button>
-        <button class="outil danger" id="supprimerCompte">Supprimer mon compte</button>
+        <button class="outil danger" id="supprimerCompte">${esc(t('Supprimer mon compte'))}</button>
       </div>
     </div>
     ${blocDroits()}`;
@@ -874,41 +874,41 @@ function carte(o) {
   // prix (voir plus bas) : jamais sur la photo, et sans toucher au bouton.
   const garde = estFavori(o.id);
   const etoile = `<button class="favori${garde ? ' on' : ''}" data-id="${esc(o.id)}" aria-pressed="${garde}"
-            title="${garde ? 'Retirer des favoris' : 'Garder de côté'}">&#9733;</button>`;
+            title="${esc(garde ? t('Retirer des favoris') : t('Garder de côté'))}">&#9733;</button>`;
   const etiquettes = [
     o.marchand ? `<span class="etiquette marchand">${esc(o.marchand)}</span>` : '',
     // Le score communautaire Dealabs : c'est LUI qui a servi à ne garder que
     // les meilleures offres. L'afficher rend la sélection visible et vérifiable.
-    o.temperature != null ? `<span class="etiquette chaud" title="Score de la communauté Dealabs">${o.temperature}°</span>` : '',
+    o.temperature != null ? `<span class="etiquette chaud" title="${esc(t('Score de la communauté Dealabs'))}">${o.temperature}°</span>` : '',
     `<span class="etiquette">${esc(t(NOMS_CATEGORIES[o.categorie] || o.categorie))}</span>`,
     remiseMontrable(o) != null
-      ? `<span class="etiquette remise${o.remiseCalculee ? ' calculee' : ''}" title="${o.remiseCalculee ? 'Pourcentage calculé entre deux prix réels' : 'Pourcentage annoncé par la source'}">${o.remiseCalculee ? '≈ ' : ''}-${remiseMontrable(o)} %</span>`
+      ? `<span class="etiquette remise${o.remiseCalculee ? ' calculee' : ''}" title="${esc(o.remiseCalculee ? t('Pourcentage calculé entre deux prix réels') : t('Pourcentage annoncé par la source'))}">${o.remiseCalculee ? '≈ ' : ''}-${remiseMontrable(o)} %</span>`
       : '',
     // Une offre d'enseigne SANS remise chiffrée : on le DIT. Laisser croire à
     // un pourcentage qu'on n'a pas pu vérifier serait exactement le défaut
     // qu'on a passé la journée à corriger.
     (estOffreEnseigne(o) && !estPromoVerifiee(o))
-      ? `<span class="etiquette" title="Prix réel et marchand affichés ; cette enseigne ne publie pas de prix barré, donc aucune remise n'est chiffrée.">prix réel</span>`
+      ? `<span class="etiquette" title="${esc(t("Prix réel et marchand affichés ; cette enseigne ne publie pas de prix barré, donc aucune remise n'est chiffrée."))}">${esc(t('prix réel'))}</span>`
       : '',
     // Un article de PRESSE est nommé comme tel. Le compter comme une enseigne
     // ferait croire que « Le Parisien » vend des écouteurs ; le taire priverait
     // l'utilisateur d'un vrai bon plan (« 96 € au lieu de 179 € »).
     (estBonPlanPresse(o) && !estPromoVerifiee(o))
-      ? `<span class="etiquette" title="Bon plan relevé par la presse : prix réel affiché et remise annoncée par l’article.">presse</span>`
+      ? `<span class="etiquette" title="${esc(t("Bon plan relevé par la presse : prix réel affiché et remise annoncée par l'article."))}">${esc(t('presse'))}</span>`
       : '',
     // Une BONNE AFFAIRE : l'enseigne ne publie pas ses prix, donc nous n'en
     // affichons aucun — ni prix, ni pourcentage. Le badge le dit franchement
     // plutôt que de laisser croire à une carte cassée.
     estBonneAffaire(o)
-      ? `<span class="etiquette affaire" title="Bon plan relayé par la communauté : cette enseigne ne publie pas ses prix, donc aucun prix — ni remise — n’est affiché.">bonne affaire</span>`
+      ? `<span class="etiquette affaire" title="${esc(t("Bon plan relayé par la communauté : cette enseigne ne publie pas ses prix, donc aucun prix — ni remise — n'est affiché."))}">${esc(t('bonne affaire'))}</span>`
       : '',
     // Ce que l'utilisateur gagne, en euros. C'est le chiffre qui décide d'un
     // achat — « économise 60 € » parle plus que « -67 % ».
     (o.prix != null && o.prixAvant != null && o.prixAvant > o.prix)
-      ? `<span class="etiquette econ" title="Économie par rapport au prix de référence">économise ${euros(o.prixAvant - o.prix)}</span>`
+      ? `<span class="etiquette econ" title="${esc(t('Économie par rapport au prix de référence'))}">${esc(t('économise {n}', { n: euros(o.prixAvant - o.prix) }))}</span>`
       : '',
     o.encoreEnListe === false
-      ? `<span class="etiquette perime" title="Cette offre n'est plus dans la liste du jour : le prix affiché est celui du moment où tu l'as gardée de côté.">n’est plus dans la liste</span>`
+      ? `<span class="etiquette perime" title="${esc(t("Cette offre n'est plus dans la liste du jour : le prix affiché est celui du moment où tu l'as gardée de côté."))}">${esc(t("n'est plus dans la liste"))}</span>`
       : '',
   ].filter(Boolean).join('');
   // Le montant est groupé dans un seul élément : sans ce groupe, le prix
@@ -938,7 +938,7 @@ function carte(o) {
   // Pour une offre sortie de la liste, on date la MISE DE CÔTÉ et non la
   // parution : c'est ce qui dit à l'utilisateur ce qu'il a sous les yeux.
   const quand = o.encoreEnListe === false
-    ? `gardée ${esc(ilYA(o.misDeCote))}`
+    ? t('gardée {n}', { n: esc(ilYA(o.misDeCote)) })
     : esc(ilYA(o.date));
   return `<article class="offre">
     ${visuel}
@@ -1059,7 +1059,7 @@ function dessinerPays() {
   const rp = $('regPays');
   if (rp) {
     if (!$('paysReglages')) {
-      rp.innerHTML = '<div class="champ"><label for="paysReglages">Pays des offres</label>'
+      rp.innerHTML = '<div class="champ"><label for="paysReglages">' + esc(t('Pays des offres')) + '</label>'
         + '<select id="paysReglages"></select></div>'
         + '<p style="margin:0;font-size:12.5px;color:var(--doux)">Seuls des pays d’Europe sont proposés : les trajets restent courts.</p>';
     }
@@ -1255,7 +1255,7 @@ function basculerFavori(id) {
     const garde = estFavori(id);
     b.classList.toggle('on', garde);
     b.setAttribute('aria-pressed', garde ? 'true' : 'false');
-    b.title = garde ? 'Retirer des favoris' : 'Garder de côté';
+    b.title = garde ? t('Retirer des favoris') : t('Garder de côté');
   }
 }
 
@@ -1345,21 +1345,21 @@ function brancher() {
       const nom = ($('cNom') || {}).value || '';
       const m1 = ($('cMdp') || {}).value || '';
       const m2 = ($('cMdp2') || {}).value || '';
-      if (m1 !== m2) return annonce('Les deux mots de passe ne sont pas identiques.');
+      if (m1 !== m2) return annonce(t('Les deux mots de passe ne sont pas identiques.'));
       const r = await C.creerCompte(nom, m1);
       dessinerCompte();
-      return annonce(r.ok ? `Compte « ${r.nom} » créé sur cet appareil.` : r.message, r.ok);
+      return annonce(r.ok ? t('Compte « {n} » créé sur cet appareil.', { n: r.nom }) : r.message, r.ok);
     }
 
     if (e.target.closest('#changerMdp')) {
       const r = await C.changerMotDePasse(($('cAncien') || {}).value || '', ($('cNouveau') || {}).value || '');
       dessinerCompte();
-      return annonce(r.ok ? 'Mot de passe changé.' : r.message, r.ok);
+      return annonce(r.ok ? t('Mot de passe changé.') : r.message, r.ok);
     }
 
     if (e.target.closest('#exporterDonnees')) {
       exporterDonnees();
-      return annonce('Fichier « promos-mes-donnees.json » généré.', true);
+      return annonce(t('Fichier « promos-mes-donnees.json » généré.'), true);
     }
 
     if (e.target.closest('#verrouiller')) {
@@ -1379,15 +1379,15 @@ function brancher() {
         b.textContent = 'Appuie encore pour confirmer';
         setTimeout(() => {
           suppressionArmee = false;
-          if (document.body.contains(b)) b.textContent = 'Supprimer mon compte';
+          if (document.body.contains(b)) b.textContent = t('Supprimer mon compte');
         }, 8000);
-        return annonce('Le compte ET les données de cet appareil seront effacés. Sans serveur, rien ne pourra être restauré.');
+        return annonce(t('Le compte ET les données de cet appareil seront effacés. Sans serveur, rien ne pourra être restauré.'));
       }
       suppressionArmee = false;
       C.supprimerCompte();
       effacerTout();
       dessinerCompte();
-      return annonce('Compte et données effacés de cet appareil.', true);
+      return annonce(t('Compte et données effacés de cet appareil.'), true);
     }
   });
 }
@@ -1398,7 +1398,7 @@ let dejaLance = false;
 
 function montrerVerrou() {
   if (!C.compteEnregistre()) return;
-  $('titreVerrou').textContent = `Bonjour ${C.nomCompte()}`;
+  $('titreVerrou').textContent = t('Bonjour {n}', { n: C.nomCompte() });
   $('verrouIntro').textContent = "Entre ton mot de passe pour ouvrir l'application. Il n'est enregistré nulle part : si tu l'as oublié, personne ne pourra le retrouver, et la seule issue sera d'effacer le compte et les données de cet appareil.";
   $('verrouOublie').textContent = 'J’ai oublié mon mot de passe';
   oublisArmes = false;
