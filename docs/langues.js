@@ -59,6 +59,19 @@ const LOCALES = {
  * de référence. Tous les autres dictionnaires doivent avoir EXACTEMENT ces clés.
  * ------------------------------------------------------------------------- */
 const FR = {
+  'Les liens vers les marchands peuvent être affiliés : une commission peut être versée, sans changer le prix que tu paies.': 'Les liens vers les marchands peuvent être affiliés : une commission peut être versée, sans changer le prix que tu paies.',
+  'Pour toute question sur les données, les sources ou une offre :': 'Pour toute question sur les données, les sources ou une offre :',
+  'Point de contact': 'Point de contact',
+  'Sources et données': 'Sources et données',
+  "La connexion {r} n'est pas encore ouverte : il manque l'identifiant d'application.": "La connexion {r} n'est pas encore ouverte : il manque l'identifiant d'application.",
+  "Ces connexions demandent un identifiant d'application. Tant qu'il n'est pas renseigné, elles restent fermées.": "Ces connexions demandent un identifiant d'application. Tant qu'il n'est pas renseigné, elles restent fermées.",
+  'Se connecter avec Facebook': 'Se connecter avec Facebook',
+  'Se connecter avec Google': 'Se connecter avec Google',
+  'Crée un compte sur cet appareil, ou connecte-toi avec un compte existant.': 'Crée un compte sur cet appareil, ou connecte-toi avec un compte existant.',
+  'Inscription et connexion': 'Inscription et connexion',
+  'Informations': 'Informations',
+  'Thèmes': 'Thèmes',
+  '{n} promotions': '{n} promotions',
   'Les meilleures promotions': 'Les meilleures promotions',
   // — Titre de l'onglet / en-tête —
   'Kazendra — Les meilleures promotions': 'Kazendra — Les meilleures promotions',
@@ -275,6 +288,19 @@ const FR = {
  * NEDERLANDS — priorité 1 (la Belgique compte francophones ET néerlandophones)
  * =========================================================================== */
 const NL = {
+  'Les liens vers les marchands peuvent être affiliés : une commission peut être versée, sans changer le prix que tu paies.': 'Links naar winkels kunnen affiliate-links zijn: er kan een commissie worden betaald, zonder de prijs te veranderen.',
+  'Pour toute question sur les données, les sources ou une offre :': 'Voor vragen over de gegevens, de bronnen of een aanbieding:',
+  'Point de contact': 'Contact',
+  'Sources et données': 'Bronnen en gegevens',
+  "La connexion {r} n'est pas encore ouverte : il manque l'identifiant d'application.": 'Inloggen met {r} is nog niet open: de app-ID ontbreekt.',
+  "Ces connexions demandent un identifiant d'application. Tant qu'il n'est pas renseigné, elles restent fermées.": 'Deze aanmeldingen vragen een app-ID. Zolang die ontbreekt, blijven ze gesloten.',
+  'Se connecter avec Facebook': 'Inloggen met Facebook',
+  'Se connecter avec Google': 'Inloggen met Google',
+  'Crée un compte sur cet appareil, ou connecte-toi avec un compte existant.': 'Maak een account op dit toestel aan, of log in met een bestaand account.',
+  'Inscription et connexion': 'Registreren en inloggen',
+  'Informations': 'Informatie',
+  'Thèmes': "Thema's",
+  '{n} promotions': '{n} aanbiedingen',
   'Les meilleures promotions': 'De beste aanbiedingen',
   'Kazendra — Les meilleures promotions': 'Kazendra — De beste aanbiedingen',
   'Découvrez les meilleures promotions': 'Ontdek de beste aanbiedingen',
@@ -459,6 +485,19 @@ const NL = {
  * DEUTSCH
  * =========================================================================== */
 const DE = {
+  'Les liens vers les marchands peuvent être affiliés : une commission peut être versée, sans changer le prix que tu paies.': 'Links zu Händlern können Affiliate-Links sein: Es kann eine Provision gezahlt werden, ohne den Preis zu ändern.',
+  'Pour toute question sur les données, les sources ou une offre :': 'Bei Fragen zu den Daten, den Quellen oder einem Angebot:',
+  'Point de contact': 'Kontakt',
+  'Sources et données': 'Quellen und Daten',
+  "La connexion {r} n'est pas encore ouverte : il manque l'identifiant d'application.": 'Die Anmeldung über {r} ist noch nicht offen: die App-ID fehlt.',
+  "Ces connexions demandent un identifiant d'application. Tant qu'il n'est pas renseigné, elles restent fermées.": 'Diese Anmeldungen benötigen eine App-ID. Solange sie fehlt, bleiben sie geschlossen.',
+  'Se connecter avec Facebook': 'Mit Facebook anmelden',
+  'Se connecter avec Google': 'Mit Google anmelden',
+  'Crée un compte sur cet appareil, ou connecte-toi avec un compte existant.': 'Erstelle ein Konto auf diesem Gerät oder melde dich mit einem bestehenden Konto an.',
+  'Inscription et connexion': 'Registrierung und Anmeldung',
+  'Informations': 'Informationen',
+  'Thèmes': 'Designs',
+  '{n} promotions': '{n} Angebote',
   'Les meilleures promotions': 'Die besten Angebote',
   'Kazendra — Les meilleures promotions': 'Kazendra — Die besten Angebote',
   'Découvrez les meilleures promotions': 'Entdecken Sie die besten Angebote',
@@ -643,6 +682,19 @@ const DE = {
  * ENGLISH
  * =========================================================================== */
 const EN = {
+  'Les liens vers les marchands peuvent être affiliés : une commission peut être versée, sans changer le prix que tu paies.': 'Links to merchants may be affiliate links: a commission may be paid, without changing the price you pay.',
+  'Pour toute question sur les données, les sources ou une offre :': 'For any question about the data, the sources or an offer:',
+  'Point de contact': 'Contact',
+  'Sources et données': 'Sources and data',
+  "La connexion {r} n'est pas encore ouverte : il manque l'identifiant d'application.": '{r} sign-in is not open yet: the application ID is missing.',
+  "Ces connexions demandent un identifiant d'application. Tant qu'il n'est pas renseigné, elles restent fermées.": 'These sign-ins need an application ID. Until it is provided, they stay closed.',
+  'Se connecter avec Facebook': 'Sign in with Facebook',
+  'Se connecter avec Google': 'Sign in with Google',
+  'Crée un compte sur cet appareil, ou connecte-toi avec un compte existant.': 'Create an account on this device, or sign in with an existing account.',
+  'Inscription et connexion': 'Sign-up and login',
+  'Informations': 'Information',
+  'Thèmes': 'Themes',
+  '{n} promotions': '{n} deals',
   'Les meilleures promotions': 'The best deals',
   'Kazendra — Les meilleures promotions': 'Kazendra — The best deals',
   'Découvrez les meilleures promotions': 'Discover the best deals',
@@ -827,6 +879,19 @@ const EN = {
  * ESPAÑOL
  * =========================================================================== */
 const ES = {
+  'Les liens vers les marchands peuvent être affiliés : une commission peut être versée, sans changer le prix que tu paies.': 'Los enlaces a comercios pueden ser de afiliación: puede pagarse una comisión, sin cambiar el precio.',
+  'Pour toute question sur les données, les sources ou une offre :': 'Para cualquier pregunta sobre los datos, las fuentes o una oferta:',
+  'Point de contact': 'Contacto',
+  'Sources et données': 'Fuentes y datos',
+  "La connexion {r} n'est pas encore ouverte : il manque l'identifiant d'application.": 'El inicio de sesión con {r} aún no está abierto: falta el ID de aplicación.',
+  "Ces connexions demandent un identifiant d'application. Tant qu'il n'est pas renseigné, elles restent fermées.": 'Estos inicios de sesión necesitan un ID de aplicación. Mientras falte, permanecen cerrados.',
+  'Se connecter avec Facebook': 'Iniciar sesión con Facebook',
+  'Se connecter avec Google': 'Iniciar sesión con Google',
+  'Crée un compte sur cet appareil, ou connecte-toi avec un compte existant.': 'Crea una cuenta en este dispositivo o inicia sesión con una cuenta existente.',
+  'Inscription et connexion': 'Registro e inicio de sesión',
+  'Informations': 'Información',
+  'Thèmes': 'Temas',
+  '{n} promotions': '{n} ofertas',
   'Les meilleures promotions': 'Las mejores ofertas',
   'Kazendra — Les meilleures promotions': 'Kazendra — Las mejores ofertas',
   'Découvrez les meilleures promotions': 'Descubre las mejores ofertas',
@@ -1011,6 +1076,19 @@ const ES = {
  * ITALIANO
  * =========================================================================== */
 const IT = {
+  'Les liens vers les marchands peuvent être affiliés : une commission peut être versée, sans changer le prix que tu paies.': 'I link ai negozi possono essere di affiliazione: può essere pagata una commissione, senza cambiare il prezzo.',
+  'Pour toute question sur les données, les sources ou une offre :': "Per qualsiasi domanda sui dati, sulle fonti o su un'offerta:",
+  'Point de contact': 'Contatto',
+  'Sources et données': 'Fonti e dati',
+  "La connexion {r} n'est pas encore ouverte : il manque l'identifiant d'application.": "L'accesso con {r} non è ancora aperto: manca l'ID applicazione.",
+  "Ces connexions demandent un identifiant d'application. Tant qu'il n'est pas renseigné, elles restent fermées.": 'Questi accessi richiedono un ID applicazione. Finché manca, restano chiusi.',
+  'Se connecter avec Facebook': 'Accedi con Facebook',
+  'Se connecter avec Google': 'Accedi con Google',
+  'Crée un compte sur cet appareil, ou connecte-toi avec un compte existant.': 'Crea un account su questo dispositivo, o accedi con un account esistente.',
+  'Inscription et connexion': 'Registrazione e accesso',
+  'Informations': 'Informazioni',
+  'Thèmes': 'Temi',
+  '{n} promotions': '{n} offerte',
   'Les meilleures promotions': 'Le migliori offerte',
   'Kazendra — Les meilleures promotions': 'Kazendra — Le migliori offerte',
   'Découvrez les meilleures promotions': 'Scopri le migliori offerte',
@@ -1195,6 +1273,19 @@ const IT = {
  * PORTUGUÊS
  * =========================================================================== */
 const PT = {
+  'Les liens vers les marchands peuvent être affiliés : une commission peut être versée, sans changer le prix que tu paies.': 'Os links para lojas podem ser de afiliação: pode ser paga uma comissão, sem alterar o preço.',
+  'Pour toute question sur les données, les sources ou une offre :': 'Para qualquer questão sobre os dados, as fontes ou uma oferta:',
+  'Point de contact': 'Contacto',
+  'Sources et données': 'Fontes e dados',
+  "La connexion {r} n'est pas encore ouverte : il manque l'identifiant d'application.": 'O início de sessão com {r} ainda não está aberto: falta o ID de aplicação.',
+  "Ces connexions demandent un identifiant d'application. Tant qu'il n'est pas renseigné, elles restent fermées.": 'Estes inícios de sessão precisam de um ID de aplicação. Enquanto faltar, ficam fechados.',
+  'Se connecter avec Facebook': 'Iniciar sessão com o Facebook',
+  'Se connecter avec Google': 'Iniciar sessão com o Google',
+  'Crée un compte sur cet appareil, ou connecte-toi avec un compte existant.': 'Cria uma conta neste dispositivo ou inicia sessão com uma conta existente.',
+  'Inscription et connexion': 'Registo e início de sessão',
+  'Informations': 'Informação',
+  'Thèmes': 'Temas',
+  '{n} promotions': '{n} promoções',
   'Les meilleures promotions': 'As melhores promoções',
   'Kazendra — Les meilleures promotions': 'Kazendra — As melhores promoções',
   'Découvrez les meilleures promotions': 'Descubra as melhores promoções',
@@ -1379,6 +1470,19 @@ const PT = {
  * POLSKI
  * =========================================================================== */
 const PL = {
+  'Les liens vers les marchands peuvent être affiliés : une commission peut être versée, sans changer le prix que tu paies.': 'Linki do sklepów mogą być linkami afiliacyjnymi: może być wypłacona prowizja, bez zmiany ceny.',
+  'Pour toute question sur les données, les sources ou une offre :': 'W razie pytań o dane, źródła lub ofertę:',
+  'Point de contact': 'Kontakt',
+  'Sources et données': 'Źródła i dane',
+  "La connexion {r} n'est pas encore ouverte : il manque l'identifiant d'application.": 'Logowanie przez {r} nie jest jeszcze otwarte: brakuje identyfikatora aplikacji.',
+  "Ces connexions demandent un identifiant d'application. Tant qu'il n'est pas renseigné, elles restent fermées.": 'Te logowania wymagają identyfikatora aplikacji. Dopóki go nie ma, pozostają zamknięte.',
+  'Se connecter avec Facebook': 'Zaloguj się przez Facebook',
+  'Se connecter avec Google': 'Zaloguj się przez Google',
+  'Crée un compte sur cet appareil, ou connecte-toi avec un compte existant.': 'Utwórz konto na tym urządzeniu lub zaloguj się istniejącym kontem.',
+  'Inscription et connexion': 'Rejestracja i logowanie',
+  'Informations': 'Informacje',
+  'Thèmes': 'Motywy',
+  '{n} promotions': '{n} okazje',
   'Les meilleures promotions': 'Najlepsze okazje',
   'Kazendra — Les meilleures promotions': 'Kazendra — Najlepsze promocje',
   'Découvrez les meilleures promotions': 'Odkryj najlepsze okazje',
@@ -1563,6 +1667,19 @@ const PL = {
  * SVENSKA
  * =========================================================================== */
 const SV = {
+  'Les liens vers les marchands peuvent être affiliés : une commission peut être versée, sans changer le prix que tu paies.': 'Länkar till butiker kan vara affiliatelänkar: en provision kan betalas, utan att priset ändras.',
+  'Pour toute question sur les données, les sources ou une offre :': 'Vid frågor om uppgifterna, källorna eller ett erbjudande:',
+  'Point de contact': 'Kontakt',
+  'Sources et données': 'Källor och data',
+  "La connexion {r} n'est pas encore ouverte : il manque l'identifiant d'application.": 'Inloggning med {r} är inte öppen än: app-ID saknas.',
+  "Ces connexions demandent un identifiant d'application. Tant qu'il n'est pas renseigné, elles restent fermées.": 'Dessa inloggningar kräver ett app-ID. Så länge det saknas förblir de stängda.',
+  'Se connecter avec Facebook': 'Logga in med Facebook',
+  'Se connecter avec Google': 'Logga in med Google',
+  'Crée un compte sur cet appareil, ou connecte-toi avec un compte existant.': 'Skapa ett konto på den här enheten eller logga in med ett befintligt konto.',
+  'Inscription et connexion': 'Registrering och inloggning',
+  'Informations': 'Information',
+  'Thèmes': 'Teman',
+  '{n} promotions': '{n} erbjudanden',
   'Les meilleures promotions': 'De bästa erbjudandena',
   'Kazendra — Les meilleures promotions': 'Kazendra — De bästa erbjudandena',
   'Découvrez les meilleures promotions': 'Upptäck de bästa erbjudandena',

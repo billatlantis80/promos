@@ -555,3 +555,26 @@ html[data-theme="contraste"] {
 .compte-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 0; }
 .danger { color: var(--accent-2); border-color: var(--accent-2); }
 
+/* ---------- Réglages en onglets ----------
+   Les réglages étaient une seule colonne si longue qu'on n'y trouvait plus
+   rien. Chaque famille a son onglet ; la barre reste collée en haut du
+   compartiment pour qu'on sache toujours où l'on est. */
+.onglets {
+  display: flex; gap: 6px; overflow-x: auto; padding: 4px 0 10px;
+  position: sticky; top: 0; background: var(--fond); z-index: 2;
+  border-bottom: 1px solid var(--bord);
+}
+.onglet {
+  flex: 0 0 auto; padding: 8px 13px; border-radius: 999px; cursor: pointer;
+  background: var(--carte); border: 1px solid var(--bord); color: var(--doux);
+  font: inherit; font-size: 13.5px; font-weight: 600;
+}
+.onglet.on { background: var(--accent); border-color: var(--accent); color: var(--sur-accent); }
+.panneau { padding-top: 4px; }
+.panneau[hidden] { display: none; }
+.connexion:hover, .connexion:focus-visible { filter: brightness(.94); }
+
+/* Les icônes d'Android : même taille et même graisse que dans la barre
+   d'état, pour qu'on les reconnaisse au premier coup d'œil. */
+.outil svg, .favori svg { width: 18px; height: 18px; fill: currentColor; display: block; }
+.favori svg { width: 17px; height: 17px; }
