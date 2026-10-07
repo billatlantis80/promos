@@ -960,6 +960,11 @@ const FAMILLES = {
   jouets: [
     // fr
     'jouet', 'jeu', 'lego', 'peluche', 'poupee', 'puzzle', 'jeux de societe', 'puericulture', 'bebe', 'enfant', 'poussette', 'figurine', 'circuit',
+    //  « hot wheels » (unité A6) : voitures MINIATURES de collection, un jouet.
+    //  Mot FAIBLE à dessein (et non MOTS_FORTS) : mesuré le 7/10, un titre de
+    //  VÊTEMENTS « Character Clothing Incl. … Hot Wheels » doit rester en Mode,
+    //  où la source le range. En faible, la source l'emporte ; en fort, non.
+    'hot wheels',
     // en
     'toy', 'toys', 'plush', 'doll', 'board game', 'kids', 'child', 'stroller', 'pram', 'building blocks', 'action figure',
     // de
@@ -1182,7 +1187,12 @@ const MARQUES = {
   tech: ['apple', 'iphone', 'ipad', 'macbook', 'airpods', 'imac', 'airtag', 'apple watch', 'samsung', 'galaxy', 'pixel', 'xiaomi', 'redmi', 'poco', 'oppo', 'oneplus', 'huawei', 'honor', 'playstation', 'nintendo', 'xbox', 'lenovo', 'asus', 'acer', 'alienware', 'razer', 'logitech', 'bose', 'jbl', 'sennheiser', 'anker', 'ugreen', 'nvidia', 'geforce', 'rtx', 'ryzen', 'kindle', 'chromecast', 'fire tv', 'garmin', 'fitbit', 'gopro', 'dji', 'roku', 'tcl', 'hisense', 'buds', 'boitier'],
   maison: ['ikea', 'pyrex', 'conforama'],
   electromenager: ['dyson', 'tefal', 'moulinex', 'delonghi', 'krups', 'nespresso', 'senseo', 'miele', 'whirlpool', 'magimix'],
-  bricolage: ['makita', 'einhell', 'ryobi', 'worx', 'karcher', 'gardena', 'wera', 'dewalt', 'metabo', 'hilti', 'fiskars', 'wolf garten', 'scheppach'],
+  bricolage: ['makita', 'einhell', 'ryobi', 'worx', 'karcher', 'gardena', 'wera', 'dewalt', 'metabo', 'hilti', 'fiskars', 'wolf garten', 'scheppach',
+    //  A6 : « wagner » (pistolets à peinture) — produit qui ne tenait, dans les
+    //  données, que sur une sous-chaîne lue par accident (« scie » ⊂ « ściennych »).
+    //  La frontière exigée pour « scie » le laissait partir en « Autres » ; la
+    //  marque le maintient en Bricolage.
+    'wagner'],
   sport: ['decathlon', 'quechua', 'btwin', 'orbea', 'canyon', 'specialized'],
   beaute: ['loreal', 'sephora', 'nivea', 'garnier', 'oral-b', 'gillette', 'neutrogena', 'douglas', 'braun silk'],
   jouets: ['lego', 'playmobil', 'hasbro', 'mattel', 'barbie', 'nerf', 'funko', 'schleich', 'ravensburger', 'asmodee'],
@@ -1265,6 +1275,26 @@ const MOTS_FORTS = {
     'kettle', 'espressomaskin', 'emulsionneur', 'mousseur de lait', 'mousseur a lait',
     'cuiseur de riz', 'cuiseur vapeur', 'coupe legumes electrique', 'hachoir electrique',
     'blender', 'mixeur', 'presse agrumes', 'machine a pain', 'yaourtiere',
+    //  AJOUT MESURÉ le 7/10 (unité A6 : faux positifs démontrés en A5). Des
+    //  appareils NOMMÉS restaient dans une VRAIE rubrique de source parce que
+    //  leur mot manquait ou ne comptait qu'UN point (la source l'emportait) :
+    //   « washing machine » (en) → 3 lave-linge Hisense en « Maison » (GB) ;
+    //   « vacuum cleaner » (en)  → 2 aspirateurs Shark en « Bricolage » (GB) ;
+    //   « fusselrasierer » (de)  → 1 rasoir anti-peluches Philips en « Maison » ;
+    //   « zamrazarka » (pl)      → 1 congélateur Bomann en « Maison » ;
+    //   « shaver » (en)          → 1 rasoir Philips en « Beauté » (AT) ;
+    //   « cortabarbas » (es)     → 1 tondeuse Wahl en « Beauté » (ES).
+    'washing machine', 'vacuum cleaner', 'fusselrasierer', 'zamrazarka', 'shaver', 'cortabarbas',
+    //  « fohnborstel » (nl : brosse soufflante) : la BaByliss « Smooth Finish »
+    //  tombait en Jeux & jouets sur « baby » ⊂ BaByliss (défaut A3/A4).
+    'fohnborstel',
+    //  « oneblade » (unité A6) : la gamme de rasoirs/tondeuses Philips OneBlade.
+    //  Mesuré le 7/10 : les OneBlade ES/PT partaient en Bricolage sur « pila » ⊂
+    //  « depilación » — l'appareil NOMMÉ les ramène en Électroménager.
+    'oneblade',
+    //  « akkusauger » (de : aspirateur à batterie) : la sous-chaîne « akku » le
+    //  rangeait en Bricolage ; à frontière, c'est le nom de l'APPAREIL qui parle.
+    'akkusauger',
   ],
   // MOBILIER NOMMÉ → meubles (unité E6).
   //  Ce sont des PRODUITS NOMMÉS, au même titre qu'un appareil électroménager :
@@ -1298,6 +1328,24 @@ const MOTS_FORTS = {
     // sv
     'soffa', 'fatolj', 'bokhylla', 'byra', 'skank', 'garderob', 'skrivbord', 'matbord', 'soffbord', 'nattduksbord',
   ],
+  // ALIMENTATION (ÉPICERIE) NOMMÉE → nourriture (unité A6).
+  //  Plusieurs produits d'épicerie de la source allemande « Lebensmittel &
+  //  Haushalt » (et de la source FR « Maison & Habitat ») restaient en
+  //  « Maison » : leur mot existait dans FAMILLES mais ne comptait qu'UN point,
+  //  insuffisant face à une vraie rubrique de source. Un aliment NOMMÉ est un
+  //  produit, comme un appareil : il tranche. Mesuré le 7/10 sur les 9 538
+  //  offres publiées (alcools, biscuits, chocolat, café en grains, pommes de
+  //  terre). ⚠ Un mot d'OUTIL garde la priorité par la LONGUEUR : « Éplucheur à
+  //  Légumes … Pommes de Terre » reste en Maison (« eplucheur a legumes », 18,
+  //  bat « pommes de terre », 15).
+  //  ⚠ « rum » est VOLONTAIREMENT ABSENT : en suédois « rum » signifie
+  //  « pièce » (« Bosch Dry 2000, Avfuktare, För rum upp till 24 m² » : un
+  //  déshumidificateur partait en Nourriture). La comparaison ignorant la
+  //  langue, un mot qui a un sens ordinaire ailleurs ne peut pas être un mot
+  //  FORT. « rhum » (fr) et « ron » (es) restent des mots faibles de FAMILLES.
+  nourriture: [
+    'schokolade', 'kekse', 'kaffeebohnen', 'whiskey', 'pommes de terre',
+  ],
   // USTENSILES DE CUISINE → maison (unité E6).
   //  Pourquoi cette table existe : la famille « nourriture » contient des mots
   //  d'ALIMENT très génériques (« legumes », « pommes de terre »), et ces mots
@@ -1318,6 +1366,11 @@ const MOTS_FORTS = {
     'epilateur', 'epilator', 'epilierer', 'ontharingsapparaat', 'depiladora', 'epilatore', 'depilatore',
     'brosse a dents electrique', 'brosse a dents', 'elektrische zahnburste', 'zahnburste', 'elektrische tandenborstel', 'cepillo de dientes electrico', 'spazzolino elettrico', 'szczoteczka elektryczna', 'eltandborste',
     'soin du visage', 'appareil de massage', 'masseur', 'masseur facial',
+    //  « lumea » (unité A6) : la gamme d'ÉPILATEURS IPL de Philips. Mesuré le
+    //  7/10 : les Philips Lumea (ES/PT/IT) partaient en Bricolage sur la
+    //  sous-chaîne « pila » ⊂ « depilación » ; l'appareil NOMMÉ les ramène en
+    //  Beauté, comme « epilateur ».
+    'lumea',
   ],
   // APPAREIL TECHNIQUE → high-tech
   tech: [
@@ -1652,7 +1705,31 @@ const MOTS_A_FRONTIERE = new Set(['auto', 'moto', 'tire', 'wagen', 'wiel', 'mota
   //  (fête) — un film (« Union Kino … feiert 75. Geburtstag ») tombait en
   //  Nourriture. Lu à frontière, « eier » isolé continue de matcher ; le
   //  néerlandais « eieren » est une entrée distincte et n'est pas touché.
-  'eier']);
+  'eier',
+  //  AJOUT MESURÉ le 7/10 (unité A6 : faux positifs démontrés en A3/A4) — des
+  //  mots faibles COURTS de la famille BRICOLAGE, lus en SOUS-CHAÎNE d'un mot
+  //  ordinaire d'une autre langue. Comptés sur les 9 538 offres publiées ; le
+  //  commentaire dit ce que la sous-chaîne attrapait à tort :
+  //   « brico »  → « inalámbricos » (barres de son Hisense, casques Skullcandy) ;
+  //   « pila » (scie, pl) → « de**pila**ción » (Philips Lumea), « em**pila**bles »
+  //     (rangements SONGMICS, pilulier), « reco**pila**ción » (listes de presse) ;
+  //   « scie »   → « **ści**emniana » (lampe Govee), « **ści**enny » (horloges
+  //     Seiko), « Pier**ście**ni » (livres Tolkien), « **Śró**dmieście »,
+  //     « li**ście** » (presse) ;
+  //   « akku »   → « **Akku**sauger » (aspirateur roborock), « **Akku**laufzeit »
+  //     (liseuse Kindle, tablette Fire Max) — l'aspirateur partait en bricolage ;
+  //   « sega » (scie, it) → « **Sega**fredo » (café en grains) ;
+  //   « ladder » → « b**ladder** » (protection TENA) ;
+  //   « tools »  → « **ToolS**pace » (balayette en bois).
+  //  Aucun de ces mots n'était utile en sous-chaîne : le mot ENTIER (« scie
+  //  circulaire », « Akku-Staubsauger », « piła ») continue de matcher, et les
+  //  composés à trait d'union aussi (le trait d'union est une frontière).
+  'brico', 'pila', 'scie', 'akku', 'sega', 'ladder', 'tools',
+  //  « lumea » (unité A6) : la gamme Philips Lumea est un mot FORT de Beauté,
+  //  mais lu en sous-chaîne il attrapait « P**lumea**u » — une « Brosse
+  //  Nettoyage Radiateur … Plumeau » partait en Beauté. À frontière, « Lumea »
+  //  isolé (« Philips Lumea serie 8000 ») continue de matcher.
+  'lumea']);
 
 /** Un mot-clé doit-il être lu entre deux frontières de mot ? */
 const exigeFrontiere = (m) => m.length <= 3 || MOTS_A_FRONTIERE.has(m);
@@ -1710,8 +1787,28 @@ const exigeFrontiere = (m) => m.length <= 3 || MOTS_A_FRONTIERE.has(m);
  *                     de meuble battait la marque « lego » par la longueur) ;
  *    « chaise romaine » (1) — une « chaise romaine » de FITNESS partait en
  *                     Meubles sur le mot « chaise ».
+ *
+ *  A6 (faux positifs démontrés en A3/A4/A5) a ajouté les collisions MESURÉES
+ *  ci-dessous, sur les 9 538 offres publiées :
+ *    « babyliss »   — la marque BaByliss (sèche-cheveux, lisseur, brosse
+ *                     soufflante) partait en Jeux & jouets sur « baby » ;
+ *    « configuration » / « configuracion » / « configurazione » — la mention
+ *                     « configuration facile » des Fire TV Stick (5 offres
+ *                     BE/ES/IT) partait en jouets sur l'allemand « figur » ;
+ *    « fargat », « fargad », « fargnattseende », « flerfargstryck »,
+ *      « fargdisplay » (suédois : coloré/vision nocturne/impression
+ *                     multicolore/écran couleur) faisaient tomber des lampes,
+ *                     caméras et imprimantes en Bricolage sur la peinture
+ *                     « färg » ; le mot ENTIER « färg » et le composé légitime
+ *                     « färgspruta » (pistolet à peinture WAGNER) sont conservés ;
+ *    « washing machine cleaner » — un PRODUIT D'ENTRETIEN (« Dr. Beckmann …
+ *                     Washing Machine Cleaner ») partait en Électroménager sur
+ *                     le mot-fort « washing machine » qui vise l'APPAREIL ;
+ *    « k-pop »      — le néerlandais « pop » (poupée) attrapait « K-Pop » dans
+ *                     un titre de VÊTEMENTS (« Character Clothing Incl. … Hot
+ *                     Wheels, K-Pop »), qui doit rester en Mode.
  */
-const MOTS_TROMPEURS = /(^|[^a-z])(motorola|motoroli|motorole|motorolu|streifen|good girl|tom cruise|ideal voyage|kinder schokolade|kinder bueno|orient bambino|beach boys|lost boys|rebecca mobili|bookshelf speakers|bookshelf speaker|couch co-op|couch co op|couch coop|podkladka na biurko|accesorio de escritorio|libreria completa|pour une etagere|pour etagere|chaise romaine)([^a-z]|$)/g;
+const MOTS_TROMPEURS = /(^|[^a-z])(motorola|motoroli|motorole|motorolu|streifen|good girl|tom cruise|ideal voyage|kinder schokolade|kinder bueno|orient bambino|beach boys|lost boys|rebecca mobili|bookshelf speakers|bookshelf speaker|couch co-op|couch co op|couch coop|podkladka na biurko|accesorio de escritorio|libreria completa|pour une etagere|pour etagere|chaise romaine|babyliss|configuration|configuracion|configurazione|fargat|fargad|fargnattseende|flerfargstryck|fargdisplay|washing machine cleaner|k-pop)([^a-z]|$)/g;
 const retirerTrompeurs = (texte) => texte.replace(MOTS_TROMPEURS, '$1 $3');
 
 /** Les marqueurs d'un jeu NUMÉRIQUE — application, téléchargement… ou console.
