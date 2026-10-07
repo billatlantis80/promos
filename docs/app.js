@@ -1364,7 +1364,14 @@ function dessiner() {
     // promos (ce qui est à l'écran), le total des promotions du catalogue
     // (demande de B : « entre les deux, sur la deuxième ligne »), puis la date
     // de mise à jour. Sans le total, « 2 415 » ne veut rien dire.
-    const totalPromos = etat.meta.totalOffres ?? '—';
+    // Le total de la DEUXIÈME ligne est celui de « Tous les pays (N) », tel
+    // qu'affiché dans le sélecteur de pays — demande de B : « Ce chiffre doit
+    // tout simplement correspondre au total qui est indiqué dans tous les
+    // pays. » On lit donc EXACTEMENT la même source que le sélecteur
+    // (etat.offres.length), et non meta.totalOffres : ce dernier ne compte que
+    // les promotions vraies et laissait deux nombres différents à l'écran pour
+    // la même grandeur (9782 dans l'en-tête contre 11325 dans le sélecteur).
+    const totalPromos = etat.offres.length;
     $('comptes').innerHTML = `<b>${nb}</b> ${esc(t('bonnes promos'))}`
       + `<br>${esc(t('{n} promotions', { n: totalPromos }))}`
       + `<br>${esc(t('mis à jour {n}', { n: ilYA(etat.meta.genereLe || new Date().toISOString()) }))}`;
