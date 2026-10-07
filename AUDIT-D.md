@@ -67,3 +67,27 @@ Les phases **B6–B12** (sources Meubles/Nourriture/Animaux/Voyages par pays,
 couverture) et **C1–C12** (traductions des 9 langues) restent **non faites** —
 la règle de sauvetage a sacrifié ces unités pour livrer un site publié **et** un
 APK **vérifié**. Le rapport du matin le dira.
+
+## Passage de sauvetage du 2026-10-07 ~05:31 UTC (session neuve)
+
+À **05:30 UTC**, il restait **moins de 3 passages** avant 05:45 → **règle de
+sauvetage** appliquée derechef : saut direct à la phase **D**. La publication
+est continue (cron toutes les 5 min) et était déjà synchronisée ; mais l'APK/AAB
+embarquaient encore l'instantané de **9 869** offres du passage de 05:02, tandis
+que le site publié en comptait **9 919** (dérive mesurée). Chaîne rejouée :
+
+1. `preparer-promos.sh` → `INSTANTANE_OK 9919 offres, 7402 Ko`.
+2. `compiler-promos.sh` → `BUILD SUCCESSFUL in 14s`.
+3. `signer-promos.sh` → `SIGN_OK`, signature **`f15debcfe9a43f8b…`** conservée.
+4. `node outils/verifier-apk.mjs` → **20/20 contrôles verts** (10 APK + 10 AAB),
+   dont *octet par octet* ✓, *instantané 0 min* ✓, **9 919 / 9 919 (écart 0)** ✓.
+
+Artefacts (`/opt/data/android-build/sortie/`) :
+
+| Fichier | Octets | SHA-256 |
+|---|---|---|
+| `promos.apk` | 1 750 569 | `fbb23b21883d29cf3142cdf2adf9e5f2b9a97377a31aac35b75f5a31f025996d` |
+| `promos.aab` | 1 747 701 | `e447ba7b055de9608cdee06a4c9499236caeacda9f6f61c133444073a88d9059` |
+
+`git rev-parse HEAD` = `git rev-parse origin/main` = **`bec46b0d…`** → publié et
+synchronisé. `bash bin/tester.sh` → **185/185**, 0 échec.
