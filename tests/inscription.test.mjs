@@ -119,7 +119,7 @@ test('les nouvelles phrases de l’inscription existent dans les 9 langues', () 
     "Cette adresse e-mail n'est pas valide.",
     "Coche la case pour recevoir les bons plans : sans ton accord, on ne t'inscrit pas.",
     "Ton compte est créé sur cet appareil. Le tableau n'est pas encore branché : ton adresse n'a pas été envoyée.",
-    "Ton adresse est envoyée. Elle apparaîtra dans ta feuille : c'est elle qui fait foi.",
+    "Un e-mail de confirmation part vers {n}. Ouvre-le et clique le lien pour activer ton compte.",
     "L'envoi n'a pas pu partir. Vérifie ta connexion, puis réessaie.",
   ];
   for (const p of phrases) {

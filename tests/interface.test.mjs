@@ -682,10 +682,16 @@ test('les neuf langues s’affichent en liste, avec leur drapeau', () => {
   assert.ok(!langues.includes("'Affichage et thèmes':"),
     'l’ancien libellé ne doit pas rester dans les dictionnaires : deux clés pour '
     + 'le même onglet, et plus personne ne sait laquelle fait foi');
-  // Les clés du nouveau parcours d'inscription aussi.
-  for (const mot of ['Adresse e-mail', 'Se connecter', 'Créer un compte',
-                     'Ton adresse e-mail', 'Déjà inscrit ? Connecte-toi',
-                     'Nouveau ici ? Inscris-toi', 'Choisis la langue de l’interface']) {
+  // Les clés du parcours d'inscription RÉELLEMENT affiché. La liste contenait
+  // « Se connecter », « Créer un compte », « Ton adresse e-mail », « Déjà
+  // inscrit ? Connecte-toi » et « Nouveau ici ? Inscris-toi » : cinq clés que
+  // l'interface n'appelait plus depuis la refonte de l'encadré d'inscription
+  // (un seul encadré, « Créer mon compte », pas de bascule inscription/
+  // connexion). Le test vérifiait la présence au dictionnaire, jamais l'usage —
+  // il protégeait donc du vide. Remplacées le 08/10/2026 par les libellés que
+  // l'écran porte vraiment.
+  for (const mot of ['Adresse e-mail', 'Créer mon compte', 'Répète le mot de passe',
+                     'Choisis la langue de l’interface']) {
     const n = (langues.match(new RegExp(`'${mot.replace(/[.?]/g, '\\$&')}':`, 'g')) || []).length;
     assert.equal(n, 9, `« ${mot} » doit être traduit dans les 9 langues, or ${n}`);
   }

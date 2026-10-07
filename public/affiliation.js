@@ -134,7 +134,14 @@ export const affiliationActive = () =>
   marchesAmazonActifs().length > 0
   || RESEAUX.some((r) => r && r.modele && r.modele.includes('{url}'));
 
-/** Mention légale : obligatoire (DGCCRF + stores), et non négociable. */
-export const MENTION_AFFILIATION = affiliationActive()
-  ? "Certains liens de cette page sont des liens affiliés : si tu achètes, une commission nous est versée par le marchand. Le prix que tu paies ne change pas."
-  : "Cette version ne contient pas encore d'identifiant d'affiliation : les liens sortants sont directs, sans commission.";
+/** Mention légale : obligatoire (DGCCRF + stores), et non négociable.
+ *
+ *  Deux phrases selon que l'affiliation est ouverte ou non. Elles sont livrées
+ *  NUES, en français (la clé du dictionnaire EST le texte français) : c'est
+ *  app.js qui les passe à t() pour l'affichage, parce que ce fichier-ci reste
+ *  SANS DÉPENDANCE — son test l'évalue tel quel, et un `import` y casserait le
+ *  chargeur. Défaut corrigé le 08/10/2026 : la mention était une constante
+ *  figée au chargement, en français, affichée telle quelle dans les 9 langues.
+ */
+export const MENTION_AFFILIATION_ACTIVE = "Certains liens de cette page sont des liens affiliés : si tu achètes, une commission nous est versée par le marchand. Le prix que tu paies ne change pas.";
+export const MENTION_AFFILIATION_INACTIVE = "Cette version ne contient pas encore d'identifiant d'affiliation : les liens sortants sont directs, sans commission.";

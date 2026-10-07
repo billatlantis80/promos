@@ -4,7 +4,7 @@
  * Principe : ne JAMAIS maquiller une offre. Une remise calculée est marquée
  * comme telle ; sans remise chiffrée, on affiche l'offre sans étiquette.
  */
-import { lienAffilie, MENTION_AFFILIATION, siteAmazon } from './affiliation.js';
+import { lienAffilie, affiliationActive, MENTION_AFFILIATION_ACTIVE, MENTION_AFFILIATION_INACTIVE, siteAmazon } from './affiliation.js';
 import * as C from './compte.js';
 import { t, chargerLangue, definirLangue, traduireDOM, languesDisponibles, langue, CLE_LANGUE, locale } from './langues.js';
 import { noterVisite } from './trafic.js';
@@ -414,6 +414,20 @@ function dessinerLangue() {
   });
 }
 
+/** La mention d'affiliation du pied de page, dans la langue courante.
+ *  Elle n'était posée qu'UNE fois, au démarrage : après une bascule de langue,
+ *  le pied de page restait dans la langue précédente. Elle est désormais
+ *  redessinée comme le reste de l'interface. */
+function dessinerMention() {
+  const p = $('mention');
+  if (!p) return;
+  // Les deux phrases viennent d'affiliation.js, en français (ce sont les clés du
+  // dictionnaire) ; c'est ICI qu'elles passent à t(), avec le reste du rendu.
+  p.textContent = t(affiliationActive()
+    ? MENTION_AFFILIATION_ACTIVE
+    : MENTION_AFFILIATION_INACTIVE);
+}
+
 /** Applique un changement de langue choisi par l'utilisateur.
  *
  *  Ordre : le moteur d'abord (mémoire + `document.lang`), puis le DOM statique,
@@ -435,6 +449,7 @@ function changerLangue(code) {
   dessinerBandeau();
   dessinerReglages();
   preparerOeils();   // le libellé de l'œil est une phrase traduite
+  dessinerMention(); // la mention d'affiliation est une phrase traduite
   majOutils();
   dessiner();
 }
@@ -533,8 +548,14 @@ function dessinerDroits() {
 }
 
 const dateLisible = (iso) => {
-  try { return new Date(iso).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }); }
-  catch { return 'date inconnue'; }
+  // La date suit la LANGUE de l'utilisateur, pas un format figé : « 8 oktober
+  // 2026 » pour un lecteur néerlandais, « 8 octobre 2026 » pour un francophone.
+  // Le repli était écrit en clair (« date inconnue ») : la phrase existait dans
+  // les 9 dictionnaires sans que personne ne l'appelle, donc elle s'affichait en
+  // français dans toutes les langues. Corrigé le 08/10/2026 en même temps que le
+  // ménage des clés mortes — c'est la sonde qui l'a mis au jour.
+  try { return new Date(iso).toLocaleDateString(locale(), { day: 'numeric', month: 'long', year: 'numeric' }); }
+  catch { return t('date inconnue'); }
 };
 
 /** Les deux dessins de l'œil (Material). ŒIL OUVERT = le mot de passe est
@@ -646,7 +667,7 @@ ${champMotDePasse('cMdp2', 'Répète le mot de passe', { autocomplete: 'new-pass
         <span class="avatar">${esc(f.nom.slice(0, 1).toUpperCase())}</span>
         <span>
           <span class="qui">${esc(f.nom)}</span><br>
-          <span class="quand">compte local créé le ${dateLisible(f.cree)} · ${esc(f.algorithme || 'PBKDF2-SHA256')} ${f.tours ? `(${f.tours} tours)` : ''}</span>
+          <span class="quand">${esc(t('compte local créé le {n}', { n: dateLisible(f.cree) }))} · ${esc(f.algorithme || 'PBKDF2-SHA256')} ${f.tours ? esc(t('({n} tours)', { n: f.tours })) : ''}</span>
         </span>
       </div>
       <p>${t("Ce compte vit sur cet appareil uniquement. Il protège l'accès à l'application et ne synchronise rien. Seule l'adresse de ton inscription est envoyée, pour recevoir les bons plans.")}</p>
@@ -2011,7 +2032,7 @@ async function chargerDonnees() {
 }
 
 async function lancer() {
-  $('mention').textContent = MENTION_AFFILIATION;
+  dessinerMention();
   // Thème et profil AVANT le premier rendu : sinon l'écran s'affiche aux
   // couleurs par défaut puis bascule sous les yeux de l'utilisateur.
   appliquerTheme(themeEnregistre() || THEME_DEFAUT);
@@ -2044,9 +2065,9 @@ async function lancer() {
     etat.meta.marches = aff.marchesAmazonActifs();
     etat.meta.reseaux = (aff.RESEAUX || []).length > 0;
   } catch (e) {
-    $('comptes').textContent = 'données indisponibles';
+    $('comptes').textContent = t('données indisponibles');
     $('vide').hidden = false;
-    $('vide').textContent = `Impossible de lire les offres (${e.message}). Lance le collecteur : node collecteur.mjs`;
+    $('vide').textContent = t('Impossible de lire les offres ({n}). Lance le collecteur : node collecteur.mjs', { n: e.message });
     return;
   }
   // La langue est lue AVANT tout dessin : chaque libellé construit par le
