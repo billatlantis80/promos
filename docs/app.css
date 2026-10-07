@@ -585,12 +585,15 @@ html[data-theme="contraste"] {
    B), donc elle doit dire lequel est choisi aussi clairement qu'un <select> le
    ferait — même langage visuel que la langue active. */
 .pays-item.on { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; font-weight: 600; }
-/* La liste des pays des RÉGLAGES, sur deux colonnes, chacune avec son drapeau
-   (demande de B : « il faut que le pays soit aussi avec le drapeau. Et partager
-   sur deux colonnes pour gagner de la place »). « pays-2col » est un
-   MODIFICATEUR : la question d'ouverture garde sa liste d'origine, sur une
-   colonne, avec ses grandes lignes — là-bas on choisit pour la première fois,
-   ici on règle. */
+/* La liste des pays, sur deux colonnes, chacune avec son drapeau (demande de B :
+   « il faut que le pays soit aussi avec le drapeau. Et partager sur deux
+   colonnes pour gagner de la place »).
+   « pays-2col » est désormais porté par le module PARTAGÉ : la question
+   d'ouverture et l'onglet Réglages affichent la MÊME liste, au même dessin
+   (demande de B du 08/10/2026 : « il faut proposer le même module qui est dans
+   les paramètres d'utilisateur avec les drapeaux, sur deux colonnes »).
+   Auparavant, seule la liste des Réglages avait cette classe : celle d'ouverture
+   restait sur une colonne, sans drapeau, avec « 1 664 offres » écrit en clair. */
 .pays-liste.pays-2col { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
 @media (min-width: 620px) { .pays-liste.pays-2col { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 .pays-2col .pays-item { align-items: center; padding: 9px 10px; font-size: 13px; gap: 7px; }

@@ -1481,6 +1481,48 @@ function optionsPays() {
     proposerait un filtre qui vide l'écran, et l'utilisateur croirait l'app en
     panne. Les offres antérieures au filtre n'ont pas de pays : elles viennent de
     sources françaises, donc elles comptent pour la France. */
+/** LE MODULE DE CHOIX DU PAYS — un seul dessin, servi aux DEUX endroits.
+ *
+ *  Demande de B (08/10/2026) : « lors de l'introduction de l'application tu
+ *  demandes le pays où l'utilisateur cherche ses promotions, il faut proposer le
+ *  même module qui est dans les paramètres d'utilisateur avec les drapeaux, sur
+ *  deux colonnes. »
+ *
+ *  Les deux listes étaient écrites SÉPARÉMENT. Celle d'ouverture n'avait pas de
+ *  drapeau, tenait sur une colonne, et écrivait « 1 664 offres » là où les
+ *  Réglages affichaient « 1 664 ». Deux dessins du même choix finissent toujours
+ *  par diverger — c'est pourquoi il n'y en a plus qu'un, appelé deux fois.
+ *
+ *  @param {object} options
+ *    `actif`     : le pays retenu      → marqué « on »      (Réglages)
+ *    `conseille` : le pays deviné      → marqué « conseille » (question d'ouverture)
+ */
+function htmlListePays({ actif = null, conseille = null } = {}) {
+  const compte = compteParPays();
+  const item = (code, libelle, n) => {
+    const classes = ['pays-item'];
+    if (actif === code) classes.push('on');
+    if (conseille === code) classes.push('conseille');
+    return `
+      <button class="${classes.join(' ')}" data-pays="${esc(code)}" type="button"
+              aria-pressed="${actif === code}">
+        <span class="drap" aria-hidden="true"><svg viewBox="0 0 24 16">${DRAPEAUX_PAYS[String(code).toLowerCase()] || ''}</svg></span>
+        <b>${esc(libelle)}</b><span class="n">${esc(n.toLocaleString(locale()))}</span>
+      </button>`;
+  };
+  // Le NOMBRE SEUL, sans le mot « offres » : sur deux colonnes, « Royaume-Uni
+  // 1 664 offres » ne tient pas et le nom se fait couper (« Royaume-… »). Ce que
+  // le nombre compte est dit juste en dessous, en toutes lettres — les deux
+  // écrans portent cette phrase d'aide.
+  // « Tous les pays d'Europe » vient EN PREMIER : c'est l'échappatoire, et une
+  // échappatoire qu'on doit chercher en bas de liste n'en est plus une. Il est
+  // présenté comme les pays : même dessin, même geste, rien à part.
+  return '<div class="pays-liste pays-2col">'
+    + item('tout', t("Tous les pays d'Europe"), etat.offres.length)
+    + codesPays().map((c) => item(c, t(NOMS_PAYS[c]), compte[c] || 0)).join('')
+    + '</div>';
+}
+
 function dessinerPays() {
   const codes = codesPays();
   $('pays').innerHTML = optionsPays();
@@ -1495,25 +1537,9 @@ function dessinerPays() {
     // déroulant. Il y a suffisamment de place »). Chaque pays montre le nombre
     // d'offres qu'il apporte : un pays vide n'est pas proposé, sinon on
     // offrirait un filtre qui vide l'écran — l'utilisateur croirait à une panne.
-    const compteP = compteParPays();
-    const item = (code, libelle, n) => `
-      <button class="pays-item${etat.pays === code ? ' on' : ''}" data-pays="${esc(code)}" type="button"
-              aria-pressed="${etat.pays === code}">
-        <span class="drap" aria-hidden="true"><svg viewBox="0 0 24 16">${DRAPEAUX_PAYS[String(code).toLowerCase()] || ''}</svg></span>
-        <b>${esc(libelle)}</b><span class="n">${esc(n.toLocaleString(locale()))}</span>
-      </button>`;
-    // Le NOMBRE SEUL, sans le mot « offres » : sur deux colonnes, « Royaume-Uni
-    // 1664 offres » ne tenait pas et le nom se faisait couper (« Royaume-… »).
-    // Ce que le nombre compte est dit juste au-dessus, en toutes lettres — on
-    // préfère une phrase claire à un mot répété treize fois qui mange la place.
-    // SUR DEUX COLONNES (demande de B : « et partager sur deux colonnes pour
-    // gagner de la place »). La classe « pays-2col » est ce qui distingue cette
-    // liste de celle de la question d'ouverture, qui reste sur une colonne : là
-    // -bas on DÉCOUVRE, ici on RÈGLE, et les lignes y sont plus larges.
-    rp.innerHTML = '<div class="pays-liste pays-2col">'
-      + item('tout', t("Tous les pays d'Europe"), etat.offres.length)
-      + codes.map((c) => item(c, t(NOMS_PAYS[c]), compteP[c])).join('')
-      + '</div>'
+    // Le module est PARTAGÉ avec la question d'ouverture (htmlListePays) : une
+    // seule fabrique de bouton, donc deux écrans qui ne peuvent pas diverger.
+    rp.innerHTML = htmlListePays({ actif: etat.pays })
       + '<p style="margin:10px 0 0;font-size:12.5px;color:var(--doux)">'
       + esc(t("Seuls des pays d'Europe sont proposés : les trajets restent courts."))
       + '</p>';
@@ -1543,30 +1569,20 @@ function demanderPays() {
   let enregistre = null;
   try { enregistre = localStorage.getItem(CLE_PAYS); } catch { /* mode privé */ }
   if (enregistre) return;
-  const codes = codesPays();
-  if (!codes.length) return;                 // pas de données : rien à demander
-  // Même chiffre que le sélecteur de la barre du haut : TOUTES les offres du
-  // pays (voir optionsPays), et non le seul nombre de « bonnes affaires ». Deux
-  // listes du même choix ne peuvent pas annoncer deux nombres différents.
-  const compte = compteParPays();
+  if (!codesPays().length) return;           // pas de données : rien à demander
   const suggere = paysDetecte();
-  // « Tous les pays d'Europe » vient EN PREMIER : c'est l'échappatoire, et une
-  // échappatoire qu'on doit chercher en bas de liste n'en est plus une. Il est
-  // présenté comme les pays : même apparence, même geste, rien à part.
-  //  ⚠ Libellés TRADUITS. Défaut vu sur la capture d'écran du 7/10 : la fenêtre
-  //  « Wo kaufst du ein? » était bien en allemand, mais sa liste de pays restait
-  //  « Allemagne / Royaume-Uni / Belgique ». C'est pourtant la PREMIÈRE fenêtre
-  //  que voit un nouvel utilisateur : elle ne doit pas être à moitié traduite.
-  const items = [`<button class="pays-item" data-pays="tout">
-      <b>${esc(t("Tous les pays d'Europe"))}</b><span>${esc(t('{n} offres', { n: etat.offres.length }))}</span>
-    </button>`];
-  for (const c of codes) {
-    const n = compte[c] || 0;
-    items.push(`<button class="pays-item${c === suggere ? ' conseille' : ''}" data-pays="${esc(c)}">
-      <b>${esc(t(NOMS_PAYS[c]))}</b><span>${esc(t(n > 1 ? '{n} offres' : '{n} offre', { n }))}</span>
-    </button>`);
-  }
-  $('paysListe').innerHTML = items.join('');
+  // LE MÊME MODULE QUE LES RÉGLAGES (htmlListePays) : drapeaux dessinés et deux
+  // colonnes. Demande de B (08/10/2026) : « il faut proposer le même module qui
+  // est dans les paramètres d'utilisateur avec les drapeaux, sur deux colonnes ».
+  // Seule différence : ici le pays DEVINÉ d'après la langue de l'appareil est
+  // marqué « conseille » — on propose, on ne décide pas à la place de personne.
+  //
+  //  ⚠ Libellés TRADUITS, et c'est la PREMIÈRE fenêtre que voit un nouvel
+  //  utilisateur. Défaut vu sur la capture du 7/10 : la fenêtre « Wo kaufst du
+  //  ein? » était en allemand, mais sa liste restait « Allemagne / Royaume-Uni /
+  //  Belgique ». Comme le dessin est partagé, la traduction l'est aussi : les
+  //  noms passent par t(NOMS_PAYS[c]) dans le module commun.
+  $('paysListe').innerHTML = htmlListePays({ conseille: suggere });
   $('paysDemande').hidden = false;
 }
 
