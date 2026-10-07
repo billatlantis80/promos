@@ -28,7 +28,7 @@ const $ = (id) => document.getElementById(id);
  * (window.DONNEES) — les visuels, eux, manquent alors, et les cartes gardent
  * leur fond neutre. Mieux vaut une liste figée qu'un écran vide.
  */
-const HUB = 'https://billatlantis80.github.io/promos/';
+const HUB = 'https://kazendra.com/';
 const DANS_APK = location.hostname === 'appassets.androidplatform.net';
 const BASE = DANS_APK ? HUB : '';
 
