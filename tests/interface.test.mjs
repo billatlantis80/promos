@@ -53,10 +53,13 @@ test('la feuille de style ne perd aucun bloc de carte', () => {
   assert.match(css, /^\.favori \{/m, 'le style du bouton favori doit être présent');
 });
 
-test('l’étoile des favoris est dans l’encadré, jamais sur la photo', () => {
-  // Elle a d'abord flotté en haut à gauche du visuel (position:absolute), où elle
-  // recouvrait la photo — et le titre en économie de données. Elle est maintenant
-  // posée sur la ligne du prix, dans l'encadré, entre le prix et le bouton.
+test('les deux icônes sont empilées et alignées sur le bouton de redirection', () => {
+  // Demande de B (07/10/2026) : « il faut aligner l'icône favoris et en dessous
+  // l'icône partager, les deux icônes doivent être alignées l'une au-dessus de
+  // l'autre, et aligné avec le rectangle qui redirige vers le site où il y a la
+  // promotion. L'affichage de la mise à jour doit être en dessous de ce cadran. »
+  // L'étoile a d'abord flotté en haut à gauche du visuel (position:absolute), où
+  // elle recouvrait la photo : ça ne doit jamais revenir.
   const favori = css.match(/^\.favori \{([\s\S]*?)^\}/m);
   assert.ok(favori, 'la règle .favori doit exister');
   assert.doesNotMatch(
@@ -65,27 +68,77 @@ test('l’étoile des favoris est dans l’encadré, jamais sur la photo', () =>
   );
   assert.match(
     favori[1], /flex:\s*0 0 auto/,
-    'l’étoile ne doit pas se laisser comprimer par le bouton',
+    'l’étoile ne doit pas se laisser comprimer',
   );
-  // L'étoile vit dans un bandeau dédié, dans l'encadré, entre le prix et le bouton :
-  // c'est l'espace vide de la carte. Elle ne doit donc ni être dans la photo, ni
-  // collée au prix, ni comprimer le bouton.
-  const espace = css.match(/^\.espace-fav \{([\s\S]*?)^\}/m);
-  assert.ok(espace, 'la règle .espace-fav doit exister');
-  assert.match(espace[1], /flex:\s*1 1 auto/, 'le bandeau doit absorber l’espace libre de la carte');
-  assert.match(espace[1], /min-height:\s*30px/, 'le bandeau ne doit jamais être plus court que l’étoile');
-  // Le bouton ne colle plus au bas par une marge automatique : c'est le bandeau
-  // qui prend le mou, sinon il n'aurait jamais d'espace à occuper.
-  assert.doesNotMatch(
-    css, /\.offre \.bas \{[^}]*margin-top:\s*auto/,
-    'la marge automatique du bas empêcherait le bandeau de récupérer l’espace libre',
-  );
-  // Le montant est groupé : sans ce groupe, le prix « avant » partirait à l'autre bout.
-  assert.match(js, /class="montant"/, 'le montant doit être groupé dans un seul élément');
+
+  // La colonne d'icônes : une VRAIE colonne, largeur fixe, icônes centrées sur
+  // le même axe — c'est ce qui les met exactement l'une au-dessus de l'autre.
+  const col = css.match(/^\.col-icones \{([\s\S]*?)^\}/m);
+  assert.ok(col, 'la règle .col-icones doit exister');
+  assert.match(col[1], /flex-direction:\s*column/, 'les deux icônes doivent être empilées');
+  assert.match(col[1], /align-items:\s*center/, 'les deux icônes doivent partager le même axe');
+  assert.match(col[1], /width:\s*34px/, 'la colonne garde une largeur fixe');
+
+  // Le bas de carte aligne les deux colonnes par le HAUT. Sans align-items:
+  // flex-start, la colonne d'icônes — plus haute que le bouton — se centrerait
+  // et les icônes glisseraient par rapport au rectangle de redirection.
   assert.match(
-    js,
-    /<div class="espace-fav">\$\{etoile\}<\/div>\s*\n\s*<div class="bas">/,
-    'l’étoile doit être dans un bandeau placé entre le prix et le bouton',
+    css, /\.offre \.bas \{[^}]*align-items:\s*flex-start/,
+    'les icônes doivent être alignées sur le haut du rectangle de redirection',
+  );
+  assert.match(
+    css, /\.offre \.bas \{[^}]*margin-top:\s*auto/,
+    'le bas doit rester collé au pied d’une carte plus haute',
+  );
+
+  // Le contenu d'un <div class="…"> jusqu'à sa balise fermante APPARIÉE.
+  // Un simple indexOf('</div>') s'arrêterait au premier div imbriqué — et un
+  // simple « A avant B » dans le fichier ne dit rien de l'APPARTENANCE : la
+  // contre-épreuve du 07/10/2026 a justement laissé passer une mise à jour
+  // déplacée HORS du bloc. On compte donc les balises.
+  const contenuDiv = (src, marqueur) => {
+    const i = src.indexOf(marqueur);
+    if (i < 0) return null;
+    const debut = src.indexOf('>', i) + 1;
+    const re = /<div\b|<\/div>/g;
+    re.lastIndex = debut;
+    let prof = 1;
+    let m;
+    while ((m = re.exec(src))) {
+      prof += m[0] === '</div>' ? -1 : 1;
+      if (prof === 0) return src.slice(debut, m.index);
+    }
+    return null;
+  };
+  const dansIcones = contenuDiv(js, 'class="col-icones"');
+  const dansEnvoi = contenuDiv(js, 'class="col-envoi"');
+  assert.ok(dansIcones !== null, 'le bloc .col-icones doit se refermer');
+  assert.ok(dansEnvoi !== null, 'le bloc .col-envoi doit se refermer');
+  assert.ok(
+    js.indexOf('class="col-icones"') < js.indexOf('class="col-envoi"'),
+    'la colonne d’icônes doit précéder le bouton de redirection',
+  );
+  assert.match(
+    dansIcones, /\$\{etoile\}[\s\S]*class="partager"/,
+    'l’étoile doit venir AVANT le partage dans la colonne d’icônes',
+  );
+  assert.ok(dansIcones.includes('${etoile}'),
+    'l’étoile doit être DANS la colonne d’icônes, pas ailleurs');
+  assert.match(
+    dansIcones, /class="ligne-partage"/,
+    'le partage doit rester dans un .ligne-partage : le menu s’y accroche',
+  );
+  assert.match(
+    dansEnvoi, /class="btn"[\s\S]*class="quand"/,
+    'la mise à jour doit être SOUS le rectangle de redirection',
+  );
+  assert.ok(dansEnvoi.includes('class="quand"'),
+    'la mise à jour doit être DANS le bloc de redirection, sous le bouton');
+  assert.ok(!dansIcones.includes('class="quand"'),
+    'la mise à jour n’a rien à faire dans la colonne d’icônes');
+  assert.doesNotMatch(
+    js, /class="espace-fav"/,
+    'l’ancien bandeau entre le prix et le bouton ne doit plus exister',
   );
   assert.doesNotMatch(
     js, /class="prix">[\s\S]{0,120}\$\{etoile\}/,
@@ -95,6 +148,14 @@ test('l’étoile des favoris est dans l’encadré, jamais sur la photo', () =>
     js, /class="favori[^"]*enligne/,
     'la variante « enligne » n’a plus lieu d’être : l’étoile n’est plus dans la photo',
   );
+  // Le menu de partage était ancré à DROITE ; la colonne étant au bord gauche de
+  // la carte, il en sortait. Il s'ouvre maintenant vers la droite.
+  const menu = css.match(/^\.menu-partage \{([\s\S]*?)^\}/m);
+  assert.ok(menu, 'la règle .menu-partage doit exister');
+  assert.match(menu[1], /left:\s*0/, 'le menu doit s’ouvrir vers la droite');
+  assert.doesNotMatch(menu[1], /right:\s*0/, 'ancré à droite, il sortirait de la carte');
+  // Le montant est groupé : sans ce groupe, le prix « avant » partirait à l'autre bout.
+  assert.match(js, /class="montant"/, 'le montant doit être groupé dans un seul élément');
 });
 
 test('chaque élément lu par le script existe dans la page', () => {
@@ -419,53 +480,78 @@ test('l’onglet « Activité » existe, au même niveau que les autres rubrique
   assert.ok(rang < rangInconnue, `« Activité » (rang ${rang}) doit passer avant une catégorie inconnue (rang ${rangInconnue})`);
 });
 
-test('le logo est le K de l’icône — bleu ET orange, jamais l’étiquette', () => {
-  // Décision de B : « Je veux garder la lettre K, je ne veux pas l'étiquette.
-  // Je veux le même K que dans l'image comme logo. Par contre tu peux utiliser
-  // la couleur. » Le K de l'icône n'est pas monochrome : il porte un ruban
-  // orange par-dessus une hampe bleue. Deux dégradés, donc — un seul serait
-  // un retour au K bleu uni qu'il n'a pas demandé.
-  const sansCommentaires = (t) => t.replace(/<!--[\s\S]*?-->/g, '');
+test('le logo est le logotype fourni : carré arrondi, K détouré, dégradé', () => {
+  // B a fourni le logotype définitif le 07/10/2026 : « Peux-tu remplacer par ce
+  // logo très exactement. » On vérifie que l'icône de l'en-tête et favicon.svg
+  // portent le MÊME dessin — deux tracés divergents donneraient une icône
+  // d'onglet différente du logo de l'en-tête — et que les couleurs employées
+  // sont celles RELEVÉES sur l'image, pas des approximations.
+  const traces = (t) => (t.match(/<path d="([^"]+)"/g) || []).sort();
+  const dansPage = traces(html);
+  const dansOnglet = traces(lire('favicon.svg'));
+  assert.ok(dansPage.length >= 3,
+    `l’icône se dessine en plusieurs calques (carré, K blanc, remplissage, pistes), or ${dansPage.length} tracé(s)`);
+  assert.deepEqual(dansPage, dansOnglet,
+    'l’en-tête et l’icône d’onglet doivent dessiner exactement le même logo');
   for (const [nom, contenu] of [['index.html', html], ['favicon.svg', lire('favicon.svg')]]) {
-    assert.ok(contenu.includes('url(#bleu)'), `${nom} : le K doit garder sa partie bleue`);
-    assert.ok(contenu.includes('url(#orange)'), `${nom} : et sa partie orange`);
-    assert.match(contenu, /#DBA95F|#BD7B47/, `${nom} : l’orange du ruban doit être celui relevé`);
+    assert.ok(contenu.includes('#1B3C69'), `${nom} : le bleu nuit du carré, relevé sur la source`);
+    assert.ok(contenu.includes('#2682AD'), `${nom} : le bleu clair du carré`);
+    assert.ok(contenu.includes('<defs>'), `${nom} : les dégradés doivent être définis`);
+    // Le K finit sur un VERT franc : c'est la signature du logotype. Sur une
+    // icône de 26 px, un dégradé remplacé par un aplat bleu ne se verrait pas —
+    // ici, si.
+    const gradK = contenu.match(/<linearGradient id="gK"[\s\S]*?<\/linearGradient>/);
+    assert.ok(gradK, `${nom} : le dégradé du K doit exister`);
+    const teintes = [...gradK[0].matchAll(/stop-color="#([0-9A-F]{6})"/g)].map((m) => m[1]);
+    assert.ok(teintes.length >= 3,
+      `${nom} : le dégradé du K doit être gradué, or ${teintes.length} arrêt(s)`);
+    const fin = teintes[teintes.length - 1];
+    const vert = [0, 2, 4].map((i) => parseInt(fin.slice(i, i + 2), 16));
+    assert.ok(vert[1] > vert[2] && vert[1] > 120,
+      `${nom} : le K doit finir sur un vert franc, or #${fin}`);
     assert.ok(!contenu.includes('M11 8h5.5v24H11z'),
       `${nom} : l’ancien K simplifié (rectangles) doit avoir disparu`);
-    assert.ok(!/étiquette|etiquette/i.test(sansCommentaires(contenu)),
+    assert.ok(!/étiquette|etiquette/i.test(contenu.replace(/<!--[\s\S]*?-->/g, '')),
       `${nom} : aucune étiquette de prix dans le dessin`);
   }
-  // Les deux fichiers doivent porter LE MÊME K : deux tracés divergents
-  // donneraient une icône d'onglet différente du logo de l'en-tête.
-  const traces = (t) => (t.match(/<path d="(M [^"]+)"/g) || []).sort();
-  assert.deepEqual(traces(html), traces(lire('favicon.svg')),
-    'l’en-tête et l’icône doivent dessiner exactement le même K');
-  assert.equal(traces(html).length, 2, 'le K se dessine en deux parties : bleue puis orange');
+  // Le mot : sa lettre K porte le dégradé du logo — « pour le mot kazendra il
+  // faut le même dégradé que dans le logo, dans la lettre K ». Les sept autres
+  // lettres prennent la couleur du thème, sinon le mot disparaîtrait sur les
+  // trois thèmes à en-tête clair.
+  assert.match(html, /<span class="k-mot">K<\/span>AZENDRA/,
+    'la lettre K du mot doit être isolée pour porter le dégradé');
+  assert.match(css, /\.k-mot \{[\s\S]*?background-clip:\s*text/,
+    'la lettre K doit être remplie par le dégradé du logo');
+  assert.match(css, /--k-mot-1:\s*#4c86b4/, 'déclinaison prévue pour en-tête sombre');
+  assert.match(css, /--k-mot-1:\s*#1f4473/, 'déclinaison exacte pour en-tête clair');
 });
 
-test('la phrase d’accroche n’est PAS sur la page — elle est réservée à la publicité', () => {
-  // Décision de B : « La phrase d'accroche ne doit pas être écrite sur la page
-  // internet. C'est la phrase d'accroche qu'on utilisera pour la publicité qu'on
-  // va générer plus tard. » Elle est donc retirée de l'écran, mais GARDÉE dans
-  // les dictionnaires : la jeter obligerait à la retrouver dans les 9 langues.
-  assert.ok(!/class="accroche"/.test(html),
-    'la phrase ne doit plus être affichée dans l’en-tête');
-  assert.ok(!html.includes('Découvrez les meilleures promotions'),
-    'la phrase ne doit apparaître nulle part dans la page');
-  assert.ok(!/\.accroche\s*\{/.test(css),
-    'son style doit avoir disparu avec elle');
-
-  // Elle reste disponible, traduite, pour la campagne à venir.
+test('la phrase d’accroche est sur la page, dans les 9 langues', () => {
+  // B l'avait fait retirer le 7/10 (« ne doit pas être écrite sur la page »),
+  // puis l'a fait REMETTRE le même jour : « tu peux laisser la phrase d'accroche
+  // sur le site internet, les meilleures promotions ». Elle est donc affichée,
+  // sous le nom — exactement comme sur le logotype qu'il a fourni.
+  assert.match(
+    html,
+    /<span class="accroche" data-i18n="Les meilleures promotions">Les meilleures promotions<\/span>/,
+    'l’accroche doit être affichée et portée par le mécanisme de traduction',
+  );
+  assert.match(css, /\.accroche\s*\{/, 'son style doit exister');
   const langues = lire('langues.js');
-  const cles = langues.match(/'Découvrez les meilleures promotions':/g) || [];
+  const cles = langues.match(/'Les meilleures promotions':/g) || [];
   assert.equal(cles.length, 9,
-    `la phrase doit rester traduite dans les 9 dictionnaires, or ${cles.length} la portent`);
-  for (const mot of ['Découvrez les meilleures promotions', 'Ontdek de beste aanbiedingen',
-                     'Entdecken Sie die besten Angebote', 'Discover the best deals',
-                     'Descubre las mejores ofertas', 'Scopri le migliori offerte',
-                     'Descubra as melhores promoções', 'Odkryj najlepsze okazje',
-                     'Upptäck de bästa erbjudandena']) {
+    `la phrase doit être traduite dans les 9 dictionnaires, or ${cles.length} la portent`);
+  for (const mot of ['Les meilleures promotions', 'De beste aanbiedingen',
+                     'Die besten Angebote', 'The best deals',
+                     'Las mejores ofertas', 'Le migliori offerte',
+                     'As melhores promoções', 'Najlepsze okazje',
+                     'De bästa erbjudandena']) {
     assert.ok(langues.includes(`'${mot}'`), `traduction manquante : ${mot}`);
   }
+  // L'ancienne phrase, plus longue, reste disponible pour la campagne : la
+  // jeter obligerait à la retrouver dans les 9 langues le jour de la publicité.
+  const pub = langues.match(/'Découvrez les meilleures promotions':/g) || [];
+  assert.equal(pub.length, 9,
+    `la phrase de publicité doit rester traduite, or ${pub.length} la portent`);
 });
 

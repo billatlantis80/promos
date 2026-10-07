@@ -59,6 +59,7 @@ const LOCALES = {
  * de référence. Tous les autres dictionnaires doivent avoir EXACTEMENT ces clés.
  * ------------------------------------------------------------------------- */
 const FR = {
+  'Les meilleures promotions': 'Les meilleures promotions',
   // — Titre de l'onglet / en-tête —
   'Kazendra — Les meilleures promotions': 'Kazendra — Les meilleures promotions',
   // PHRASE D'ACCROCHE — RÉSERVÉE À LA PUBLICITÉ, PAS AFFICHÉE DANS LA PAGE.
@@ -274,6 +275,7 @@ const FR = {
  * NEDERLANDS — priorité 1 (la Belgique compte francophones ET néerlandophones)
  * =========================================================================== */
 const NL = {
+  'Les meilleures promotions': 'De beste aanbiedingen',
   'Kazendra — Les meilleures promotions': 'Kazendra — De beste aanbiedingen',
   'Découvrez les meilleures promotions': 'Ontdek de beste aanbiedingen',
   'Chercher un produit, un marchand…': 'Zoek een product, een winkel…',
@@ -457,6 +459,7 @@ const NL = {
  * DEUTSCH
  * =========================================================================== */
 const DE = {
+  'Les meilleures promotions': 'Die besten Angebote',
   'Kazendra — Les meilleures promotions': 'Kazendra — Die besten Angebote',
   'Découvrez les meilleures promotions': 'Entdecken Sie die besten Angebote',
   'Chercher un produit, un marchand…': 'Produkt oder Händler suchen…',
@@ -640,6 +643,7 @@ const DE = {
  * ENGLISH
  * =========================================================================== */
 const EN = {
+  'Les meilleures promotions': 'The best deals',
   'Kazendra — Les meilleures promotions': 'Kazendra — The best deals',
   'Découvrez les meilleures promotions': 'Discover the best deals',
   'Chercher un produit, un marchand…': 'Search for a product, a merchant…',
@@ -823,6 +827,7 @@ const EN = {
  * ESPAÑOL
  * =========================================================================== */
 const ES = {
+  'Les meilleures promotions': 'Las mejores ofertas',
   'Kazendra — Les meilleures promotions': 'Kazendra — Las mejores ofertas',
   'Découvrez les meilleures promotions': 'Descubre las mejores ofertas',
   'Chercher un produit, un marchand…': 'Buscar un producto, una tienda…',
@@ -1006,6 +1011,7 @@ const ES = {
  * ITALIANO
  * =========================================================================== */
 const IT = {
+  'Les meilleures promotions': 'Le migliori offerte',
   'Kazendra — Les meilleures promotions': 'Kazendra — Le migliori offerte',
   'Découvrez les meilleures promotions': 'Scopri le migliori offerte',
   'Chercher un produit, un marchand…': 'Cerca un prodotto, un negozio…',
@@ -1189,6 +1195,7 @@ const IT = {
  * PORTUGUÊS
  * =========================================================================== */
 const PT = {
+  'Les meilleures promotions': 'As melhores promoções',
   'Kazendra — Les meilleures promotions': 'Kazendra — As melhores promoções',
   'Découvrez les meilleures promotions': 'Descubra as melhores promoções',
   'Chercher un produit, un marchand…': 'Procurar um produto, uma loja…',
@@ -1372,6 +1379,7 @@ const PT = {
  * POLSKI
  * =========================================================================== */
 const PL = {
+  'Les meilleures promotions': 'Najlepsze okazje',
   'Kazendra — Les meilleures promotions': 'Kazendra — Najlepsze promocje',
   'Découvrez les meilleures promotions': 'Odkryj najlepsze okazje',
   'Chercher un produit, un marchand…': 'Szukaj produktu, sklepu…',
@@ -1555,6 +1563,7 @@ const PL = {
  * SVENSKA
  * =========================================================================== */
 const SV = {
+  'Les meilleures promotions': 'De bästa erbjudandena',
   'Kazendra — Les meilleures promotions': 'Kazendra — De bästa erbjudandena',
   'Découvrez les meilleures promotions': 'Upptäck de bästa erbjudandena',
   'Chercher un produit, un marchand…': 'Sök efter en produkt, en butik…',

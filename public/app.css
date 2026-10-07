@@ -56,7 +56,26 @@ h1, h2, h3, h4, .marque b, .prix { font-family: var(--police-titre); }
 .pastille { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 12px var(--accent); }
 /* Le logo de marque : un carré arrondi bleu et le K blanc. Taille fixe pour que
    l'en-tête ne bouge pas d'un pixel quand la police système change. */
-.logo { width: 22px; height: 22px; display: block; border-radius: 5px; flex: 0 0 auto; }
+/* L'icone EST deja un carre arrondi : pas de border-radius, il rognerait son
+   propre galbe. 26 px et non 22 : a 22 px le liseré blanc et les pistes se
+   noient (mesure faite sur les rendus). */
+.logo { width: 26px; height: 26px; display: block; flex: 0 0 auto; }
+
+/* Le mot et l'accroche, empiles : l'accroche est SOUS le nom, comme sur le
+   logotype fourni. */
+.marque-txt { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+/* La lettre K du mot porte le degrade du logo. Le logo a deux declinaisons,
+   comme tout logo : le degrade d'origine sur fond clair, une version eclaircie
+   sur fond sombre — sinon le bleu fonce du logo disparait dans l'en-tete. */
+.k-mot {
+  background-image: linear-gradient(135deg, var(--k-mot-1) 0%, var(--k-mot-2) 100%);
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent; -webkit-text-fill-color: transparent;
+}
+.accroche {
+  font-size: 9.5px; font-weight: 600; letter-spacing: .55px;
+  text-transform: uppercase; opacity: .72; white-space: nowrap;
+}
 .comptes { color: var(--doux); font-size: 12px; text-align: right; }
 .barre { display: flex; gap: 8px; margin: 10px 0; align-items: stretch; }
 #recherche {
@@ -223,31 +242,34 @@ body[data-eco="1"] .offre .visuel { display: none; }
   font-size: 19px; font-weight: 700; letter-spacing: -.3px;
 }
 .prix .avant { font-size: 12.5px; font-weight: 400; color: var(--doux); text-decoration: line-through; margin-left: 6px; }
-/* Bandeau de l'étoile « garder de côté » : il occupe l'espace libre de l'encadré,
-   entre le prix et le bouton — c'est là qu'il y a de la place. Comme il absorbe
-   la hauteur disponible, l'étoile se centre dans le vide SANS allonger la carte
-   quand elle a du mou ; les marges négatives annulent les deux gouttières du
-   corps pour ne rien décaler d'autre. */
-.espace-fav {
-  flex: 1 1 auto; min-height: 30px;
-  display: flex; align-items: center; justify-content: flex-end;
-  margin: -8px 0;
+/* Le bas de l'encadré : à GAUCHE les deux icônes empilées (étoile au-dessus,
+   partage en dessous), à DROITE le rectangle de redirection et, SOUS lui, la
+   mise à jour de l'offre. Les deux colonnes démarrent à la même hauteur
+   (align-items: flex-start), donc les icônes sont alignées sur le rectangle.
+   margin-top: auto garde le bouton collé au bas d'une carte plus haute. */
+.offre .bas { margin-top: auto; display: flex; align-items: flex-start; gap: 8px; }
+.col-icones {
+  flex: 0 0 auto; width: 34px;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
 }
-.offre .bas { margin-top: 0; display: flex; align-items: center; gap: 8px; }
+.col-envoi { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
 .btn {
   flex: 1; text-align: center; text-decoration: none; font-size: 14px; font-weight: 600;
   padding: 10px 12px; border-radius: 11px; background: var(--accent); color: var(--sur-accent);
 }
 .btn.ghost { background: transparent; color: var(--doux); border: 1px solid var(--bord); flex: 0 0 auto; font-weight: 500; }
-.quand { font-size: 11.5px; color: var(--doux); }
+.quand { font-size: 11.5px; color: var(--doux); text-align: center; }
 
 /* ---------- Partage d'une offre ----------
    L'ICÔNE SEULE, sans mot : c'est la flèche de partage que Facebook et WhatsApp
    emploient, tout le monde la reconnaît. Le bouton reste rond et discret sous
    l'heure de parution : il ne doit pas concurrencer le bouton d'achat.
    Le titre et aria-label sont CONSERVÉS — sans eux, un lecteur d'écran
-   annoncerait un bouton sans nom. */
-.ligne-partage { position: relative; display: flex; justify-content: flex-end; margin-top: 6px; }
+   annoncerait un bouton sans nom.
+   Le bouton vit désormais dans la colonne d'icônes, SOUS l'étoile : plus de
+   marge haute. Et le menu s'ouvre vers la DROITE (left: 0) — ancré à droite,
+   il sortait de la carte puisque la colonne est au bord gauche. */
+.ligne-partage { position: relative; display: flex; }
 .partager {
   display: inline-flex; align-items: center; justify-content: center;
   width: 34px; height: 34px; padding: 0;
@@ -256,8 +278,9 @@ body[data-eco="1"] .offre .visuel { display: none; }
 }
 .partager svg { width: 19px; height: 19px; fill: currentColor; display: block; }
 .partager:hover, .partager:focus-visible { color: var(--accent-2); border-color: var(--accent-2); }
+.col-envoi .btn { flex: 0 0 auto; }
 .menu-partage {
-  position: absolute; right: 0; bottom: calc(100% + 6px); z-index: 6;
+  position: absolute; left: 0; bottom: calc(100% + 6px); z-index: 6;
   display: flex; flex-direction: column; min-width: 158px;
   background: var(--carte); border: 1px solid var(--bord); border-radius: 10px;
   box-shadow: 0 8px 22px rgba(0,0,0,.20); overflow: hidden;
@@ -335,6 +358,13 @@ html[data-theme="kazendra"] {
 }
 html[data-theme="kazendra"] .marque,
 html[data-theme="kazendra"] .marque b { color: #ffffff; }
+/* Degrade de la lettre K du mot. Par defaut la declinaison pour en-tete
+   SOMBRE (9 themes sur 12) ; les trois themes a en-tete clair reprennent le
+   degrade exact du logo. */
+.k-mot, .marque { --k-mot-1: #4c86b4; --k-mot-2: #5fb290; }
+html[data-theme="clair"], html[data-theme="sable"], html[data-theme="aube"] {
+  --k-mot-1: #1f4473; --k-mot-2: #5fb290;
+}
 html[data-theme="kazendra"] .marque b { letter-spacing: 1.3px; font-weight: 800; }
 html[data-theme="kazendra"] .comptes { color: rgba(255, 255, 255, .78); }
 /* Ici --accent est l'ORANGE vif (boutons, badges), donc trop clair pour servir
