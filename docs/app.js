@@ -6,6 +6,7 @@
  */
 import { lienAffilie, MENTION_AFFILIATION } from './affiliation.js';
 import * as C from './compte.js';
+import { t, chargerLangue, definirLangue, traduireDOM, languesDisponibles, langue, CLE_LANGUE, locale } from './langues.js';
 
 const $ = (id) => document.getElementById(id);
 
@@ -193,26 +194,68 @@ const NOMS_VUES = {
 
 /* ---------- Réglages ---------- */
 function dessinerReglages() {
-  $('themes').innerHTML = THEMES.map((t) => `
-    <button class="theme" data-theme-id="${t.id}" aria-pressed="false">
-      <span class="pastilles" aria-hidden="true"><i style="background:${t.fond}"></i><i style="background:${t.carte}"></i><i style="background:${t.accent}"></i></span>
-      <span class="nom">${t.nom}</span><span class="coche"></span>
+  // Le paramètre est renommé « th » : « t » est désormais la fonction de
+  // traduction importée — le masquer ici serait un piège silencieux.
+  $('themes').innerHTML = THEMES.map((th) => `
+    <button class="theme" data-theme-id="${th.id}" aria-pressed="false">
+      <span class="pastilles" aria-hidden="true"><i style="background:${th.fond}"></i><i style="background:${th.carte}"></i><i style="background:${th.accent}"></i></span>
+      <span class="nom">${esc(t(th.nom))}</span><span class="coche"></span>
     </button>`).join('');
 
   // Miroir des réglages de la barre du haut. Les boutons portent la classe
   // « vue » : appliquerVue() les allume tous, ici comme en haut — une seule
   // source de vérité, donc aucun risque de désaccord entre les deux endroits.
   $('regAffichage').innerHTML = `
-    <div class="vues" role="group" aria-label="Mode d'affichage">
-      ${VUES.map((v) => `<button class="vue" data-vue="${v}" title="${NOMS_VUES[v].etat}" aria-label="${NOMS_VUES[v].etat}">${NOMS_VUES[v].court}</button>`).join('')}
+    <div class="vues" role="group" aria-label="${esc(t("Mode d'affichage"))}">
+      ${VUES.map((v) => `<button class="vue" data-vue="${v}" title="${esc(t(NOMS_VUES[v].etat))}" aria-label="${esc(t(NOMS_VUES[v].etat))}">${NOMS_VUES[v].court}</button>`).join('')}
     </div>
     <p style="margin:12px 0 0">
-      <button class="outil" data-eco-miroir aria-pressed="false" title="Économie de données — aucun visuel téléchargé">Éco — aucun visuel téléchargé</button>
+      <button class="outil" data-eco-miroir aria-pressed="false" title="${esc(t('Économie de données — aucun visuel téléchargé'))}">${esc(t('Éco — aucun visuel téléchargé'))}</button>
     </p>`;
 
   dessinerProfil();
+  dessinerLangue();
   dessinerCompte();
   majThemes();
+}
+
+/** Rubrique « Langue » : le sélecteur des 9 langues, avec leur NOM NATIF.
+    Écrit dans #regLangue (index.html). Le changement s'applique tout de suite
+    (voir changerLangue) et ne touche jamais au pays — deux clés distinctes. */
+function dessinerLangue() {
+  const rl = $('regLangue');
+  if (!rl) return;
+  if (!$('langueReglages')) {
+    rl.innerHTML = '<div class="champ"><select id="langueReglages" aria-label="'
+      + esc(t('Langue')) + '"></select></div>';
+  }
+  $('langueReglages').innerHTML = languesDisponibles()
+    .map((l) => '<option value="' + l.code + '">' + esc(l.nom) + '</option>').join('');
+  $('langueReglages').value = langue();
+}
+
+/** Applique un changement de langue choisi par l'utilisateur.
+ *
+ *  Ordre : le moteur d'abord (mémoire + `document.lang`), puis le DOM statique,
+ *  puis tout ce que le JavaScript construit — onglets, bandeau, réglages, cartes.
+ *
+ *  ⚠ CE QU'ELLE NE FAIT PAS, et c'est la règle d'architecture : elle ne touche
+ *  NI le pays, NI les offres. Changer de langue ne change jamais le pays, et
+ *  changer de pays ne change jamais la langue — deux clés distinctes, deux choix
+ *  indépendants (testé par tests/i18n.test.mjs). */
+function changerLangue(code) {
+  if (!definirLangue(code)) return;   // code inconnu : on ne casse rien
+  traduireDOM();
+  dessinerLangue();
+  // Les noms de pays et le nombre d'offres par pays sont des LIBELLÉS : sans ce
+  // redessin, le sélecteur gardait « Tous les pays (10070) / Allemagne (1539) »
+  // en français au milieu d'une interface allemande — mesuré dans le navigateur.
+  dessinerPays();
+  dessinerPuces();
+  dessinerBandeau();
+  dessinerReglages();
+  majOutils();
+  dessiner();
 }
 
 function dessinerProfil() {
@@ -428,9 +471,12 @@ const euros = (v) => (v == null ? '' : (Math.round(v * 100) / 100).toLocaleStrin
 function ilYA(iso) {
   const mn = Math.round((Date.now() - new Date(iso).getTime()) / 60000);
   if (!Number.isFinite(mn)) return '';
-  if (mn < 60) return `il y a ${Math.max(1, mn)} min`;
-  if (mn < 1440) return `il y a ${Math.round(mn / 60)} h`;
-  return `il y a ${Math.round(mn / 1440)} j`;
+  // Les trois âges relatifs passent par le dictionnaire : sans cela l'en-tête
+  // allemand affichait « aktualisiert il y a 7 min » — mesuré dans le navigateur
+  // le 7/10, la seule ligne restée française d'un bandeau par ailleurs traduit.
+  if (mn < 60) return t('il y a {n} min', { n: Math.max(1, mn) });
+  if (mn < 1440) return t('il y a {n} h', { n: Math.round(mn / 60) });
+  return t('il y a {n} j', { n: Math.round(mn / 1440) });
 }
 
 /* ---- Ce qu'est une BONNE promotion, et pourquoi ce n'est pas un avis ----
@@ -818,7 +864,7 @@ function carte(o) {
     ? ''
     : (source
       ? `<div class="visuel" style="background-image:url('${source}')" role="img" aria-label=""></div>`
-      : `<div class="visuel">${esc(NOMS_CATEGORIES[o.categorie] || '')}</div>`);
+      : `<div class="visuel">${esc(NOMS_CATEGORIES[o.categorie] ? t(NOMS_CATEGORIES[o.categorie]) : '')}</div>`);
   // L'étoile « garder de côté » vit dans l'encadré de la carte, sur la ligne du
   // prix (voir plus bas) : jamais sur la photo, et sans toucher au bouton.
   const garde = estFavori(o.id);
@@ -829,7 +875,7 @@ function carte(o) {
     // Le score communautaire Dealabs : c'est LUI qui a servi à ne garder que
     // les meilleures offres. L'afficher rend la sélection visible et vérifiable.
     o.temperature != null ? `<span class="etiquette chaud" title="Score de la communauté Dealabs">${o.temperature}°</span>` : '',
-    `<span class="etiquette">${esc(NOMS_CATEGORIES[o.categorie] || o.categorie)}</span>`,
+    `<span class="etiquette">${esc(t(NOMS_CATEGORIES[o.categorie] || o.categorie))}</span>`,
     remiseMontrable(o) != null
       ? `<span class="etiquette remise${o.remiseCalculee ? ' calculee' : ''}" title="${o.remiseCalculee ? 'Pourcentage calculé entre deux prix réels' : 'Pourcentage annoncé par la source'}">${o.remiseCalculee ? '≈ ' : ''}-${remiseMontrable(o)} %</span>`
       : '',
@@ -871,11 +917,11 @@ function carte(o) {
   // Le bouton dit OÙ il emmène. « Voir l'offre » pour tout le monde obligeait
   // l'utilisateur à deviner s'il allait chez Amazon, chez Coolblue ou sur un
   // article de presse.
-  const libelle = article ? 'Lire l’article'
-    : (estAmazon(o) ? 'Acheter sur Amazon'
-      : (estOffreEnseigne(o) ? `Voir chez ${esc(o.marchand)}`
-        : (estBonPlanPresse(o) ? 'Lire le bon plan'
-          : (estBonneAffaire(o) ? 'Voir la bonne affaire' : 'Voir l’offre'))));
+  const libelle = article ? t("Lire l'article")
+    : (estAmazon(o) ? t('Acheter sur Amazon')
+      : (estOffreEnseigne(o) ? t('Voir chez {n}', { n: esc(o.marchand) })
+        : (estBonPlanPresse(o) ? t('Lire le bon plan')
+          : (estBonneAffaire(o) ? t('Voir la bonne affaire') : t("Voir l'offre")))));
   // Pour une offre sortie de la liste, on date la MISE DE CÔTÉ et non la
   // parution : c'est ce qui dit à l'utilisateur ce qu'il a sous les yeux.
   const quand = o.encoreEnListe === false
@@ -930,9 +976,9 @@ function dessinerPuces() {
   // disparaîtrait de la liste en laissant le filtre actif, et l'écran semblerait
   // vide sans qu'aucune commande ne dise pourquoi.
   if (etat.categorie !== 'tout' && !cats.includes(etat.categorie)) etat.categorie = 'tout';
-  const puces = [`<button class="puce${etat.categorie === 'tout' ? ' on' : ''}" data-cat="tout">Tout<span class="n">${offres.length}</span></button>`];
+  const puces = [`<button class="puce${etat.categorie === 'tout' ? ' on' : ''}" data-cat="tout">${esc(t('Tout'))}<span class="n">${offres.length}</span></button>`];
   for (const c of cats) {
-    puces.push(`<button class="puce${etat.categorie === c ? ' on' : ''}" data-cat="${esc(c)}">${esc(NOMS_CATEGORIES[c])}<span class="n">${parCat[c]}</span></button>`);
+    puces.push(`<button class="puce${etat.categorie === c ? ' on' : ''}" data-cat="${esc(c)}">${esc(t(NOMS_CATEGORIES[c]))}<span class="n">${parCat[c]}</span></button>`);
   }
   $('puces').innerHTML = puces.join('');
   $('puces').querySelectorAll('.puce').forEach((el) => el.addEventListener('click', () => {
@@ -978,8 +1024,8 @@ function optionsPays() {
   // Il portait auparavant le nombre de « bonnes affaires » (mesuré : 203 pour la
   // Belgique) — il annonce désormais le pays entier.
   const compte = compteParPays();
-  return [`<option value="tout">Tous les pays (${etat.offres.length})</option>`]
-    .concat(codesPays().map((c) => `<option value="${esc(c)}">${esc(NOMS_PAYS[c])} (${compte[c]})</option>`))
+  return [`<option value="tout">${esc(t('Tous les pays ({n})', { n: etat.offres.length }))}</option>`]
+    .concat(codesPays().map((c) => `<option value="${esc(c)}">${esc(t(NOMS_PAYS[c]))} (${compte[c]})</option>`))
     .join('');
 }
 
@@ -1038,13 +1084,17 @@ function demanderPays() {
   // « Tous les pays d'Europe » vient EN PREMIER : c'est l'échappatoire, et une
   // échappatoire qu'on doit chercher en bas de liste n'en est plus une. Il est
   // présenté comme les pays : même apparence, même geste, rien à part.
+  //  ⚠ Libellés TRADUITS. Défaut vu sur la capture d'écran du 7/10 : la fenêtre
+  //  « Wo kaufst du ein? » était bien en allemand, mais sa liste de pays restait
+  //  « Allemagne / Royaume-Uni / Belgique ». C'est pourtant la PREMIÈRE fenêtre
+  //  que voit un nouvel utilisateur : elle ne doit pas être à moitié traduite.
   const items = [`<button class="pays-item" data-pays="tout">
-      <b>Tous les pays d’Europe</b><span>${etat.offres.length} offres</span>
+      <b>${esc(t("Tous les pays d'Europe"))}</b><span>${esc(t('{n} offres', { n: etat.offres.length }))}</span>
     </button>`];
   for (const c of codes) {
     const n = compte[c] || 0;
     items.push(`<button class="pays-item${c === suggere ? ' conseille' : ''}" data-pays="${esc(c)}">
-      <b>${esc(NOMS_PAYS[c])}</b><span>${n} offre${n > 1 ? 's' : ''}</span>
+      <b>${esc(t(NOMS_PAYS[c]))}</b><span>${esc(t(n > 1 ? '{n} offres' : '{n} offre', { n }))}</span>
     </button>`);
   }
   $('paysListe').innerHTML = items.join('');
@@ -1060,10 +1110,14 @@ function dessinerBandeau() {
   const enLigne = !!(etat.meta && (etat.meta.amazon || etat.meta.reseaux));
   const msgs = [];
   if (etat.meta && etat.meta.horsLigne) {
-    const quand = etat.meta.genereLe ? new Date(etat.meta.genereLe).toLocaleString('fr-FR') : 'date inconnue';
-    msgs.push(`<b>Hors ligne</b> : le serveur des promos est injoignable. La liste ci-dessous est l'instantané embarqué du ${esc(quand)} ; les visuels ne sont pas disponibles.`);
+    // Libellés TRADUITS : c'étaient les deux dernières phrases françaises d'une
+    // interface par ailleurs traduite (relevé sur la capture du 7/10).
+    const quand = etat.meta.genereLe
+      ? new Date(etat.meta.genereLe).toLocaleString(locale())
+      : String(etat.meta.genereLe || '—');
+    msgs.push(t("<b>Hors ligne</b> : le serveur des promos est injoignable. La liste ci-dessous est l'instantané embarqué du {n} ; les visuels ne sont pas disponibles.", { n: esc(quand) }));
   }
-  if (!enLigne) msgs.push(`<b>À activer</b> : l'identifiant d'affiliation n'est pas encore renseigné (fichier <code>affiliation.js</code>). Les liens sortent donc en direct, sans commission.`);
+  if (!enLigne) msgs.push(t("<b>À activer</b> : l'identifiant d'affiliation n'est pas encore renseigné (fichier <code>affiliation.js</code>). Les liens sortent donc en direct, sans commission."));
   if (msgs.length) { b.className = 'bandeau info on'; b.innerHTML = msgs.join('<br>'); }
   else { b.className = 'bandeau'; b.innerHTML = ''; }
 }
@@ -1106,7 +1160,7 @@ function dessiner() {
   }
   const reste = liste.length - etat.affichees;
   $('plus').hidden = reste <= 0;
-  $('plus').innerHTML = reste > 0 ? `<button id="btnPlus">Afficher ${Math.min(PAR_PAGE, reste)} offres de plus (${reste} restantes)</button>` : '';
+  $('plus').innerHTML = reste > 0 ? `<button id="btnPlus">${esc(t('Afficher {n} offres de plus ({r} restantes)', { n: Math.min(PAR_PAGE, reste), r: reste }))}</button>` : '';
   if (reste > 0) $('btnPlus').addEventListener('click', () => { etat.affichees += PAR_PAGE; dessiner(); });
 
   const total = etat.meta.total || etat.offres.length;
@@ -1124,11 +1178,14 @@ function dessiner() {
     const nb = melange.length;
     const nAmz = melange.filter(estAmazon).length;
     const pcAmz = nb ? Math.round((nAmz / nb) * 100) : 0;
-    $('comptes').innerHTML = `<b>${nb}</b> bonnes promos<br>≈ ${pcAmz} % Amazon · ${100 - pcAmz} % enseignes &amp; presse<br>mis à jour ${esc(ilYA(etat.meta.genereLe || new Date().toISOString()))}`;
+    $('comptes').innerHTML = `<b>${nb}</b> ${esc(t('bonnes promos'))}<br>≈ ${pcAmz} % Amazon · ${100 - pcAmz} % ${esc(t('enseignes & presse'))}<br>${esc(t('mis à jour {n}', { n: ilYA(etat.meta.genereLe || new Date().toISOString()) }))}`;
   } else {
-    $('comptes').innerHTML = `${etat.meta.totalOffres ?? '—'} offres · ${etat.meta.totalVeille ?? '—'} veille<br>mis à jour ${esc(ilYA(etat.meta.genereLe || new Date().toISOString()))}`;
+    $('comptes').innerHTML = `${etat.meta.totalOffres ?? '—'} ${esc(t('offres'))} · ${etat.meta.totalVeille ?? '—'} ${esc(t('veille'))}<br>${esc(t('mis à jour {n}', { n: ilYA(etat.meta.genereLe || new Date().toISOString()) }))}`;
   }
-  $('fraicheur').textContent = `Recensé le ${new Date(etat.meta.genereLe || Date.now()).toLocaleString('fr-FR')} — ${total} entrées.`;
+  $('fraicheur').textContent = t('Recensé le {n} — {m} entrées.', {
+    n: new Date(etat.meta.genereLe || Date.now()).toLocaleString(locale()),
+    m: total,
+  });
   // Les outils sont rafraîchis ICI, en fin de rendu, et pas seulement au
   // démarrage : le compteur de favoris et l'état du mode économie dépendent de
   // ce qui vient d'être dessiné.
@@ -1208,6 +1265,12 @@ function brancher() {
   // Réglages : le même choix, au même endroit que le reste.
   $('regPays').addEventListener('change', (e) => {
     if (e.target.id === 'paysReglages') choisirPays(e.target.value);
+  });
+  // Langue de l'INTERFACE : le choix de l'utilisateur, gardé à part du pays.
+  // Les deux listes vivent dans la même feuille Réglages et ne se parlent pas :
+  // changer l'une ne touche jamais l'autre.
+  $('regLangue').addEventListener('change', (e) => {
+    if (e.target.id === 'langueReglages') changerLangue(e.target.value);
   });
   document.querySelectorAll('.vue').forEach((b) => {
     b.addEventListener('click', () => appliquerVue(b.dataset.vue));
@@ -1437,6 +1500,14 @@ async function lancer() {
     $('vide').textContent = `Impossible de lire les offres (${e.message}). Lance le collecteur : node collecteur.mjs`;
     return;
   }
+  // La langue est lue AVANT tout dessin : chaque libellé construit par le
+  // JavaScript doit naître dans la bonne langue. Sinon la page s'affiche en
+  // français une fraction de seconde, puis se corrige sous les yeux de
+  // l'utilisateur — et l'en-tête, lui, resterait en français jusqu'au premier
+  // redessin complet.
+  chargerLangue();
+  traduireDOM();
+  try { document.documentElement.lang = langue(); } catch { /* rien */ }
   dessinerPuces();
   dessinerPays();
   dessinerBandeau();
