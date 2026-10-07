@@ -1544,8 +1544,8 @@ function dessiner() {
     });
   } else {
     $('vide').textContent = etat.favoris
-      ? 'Aucun favori pour l’instant. Touche l’étoile d’une offre pour la garder de côté.'
-      : 'Aucune offre ne correspond à ce filtre.';
+      ? t("Aucun favori pour l'instant. Touche l'étoile d'une offre pour la garder de côté.")
+      : t('Aucune offre ne correspond à ce filtre.');
   }
   const reste = liste.length - etat.affichees;
   $('plus').hidden = reste <= 0;
@@ -1812,7 +1812,7 @@ function brancher() {
       const b = e.target.closest('#supprimerCompte');
       if (!suppressionArmee) {
         suppressionArmee = true;
-        b.textContent = 'Appuie encore pour confirmer';
+        b.textContent = t('Appuie encore pour confirmer');
         setTimeout(() => {
           suppressionArmee = false;
           if (document.body.contains(b)) b.textContent = t('Supprimer mon compte');
@@ -1840,8 +1840,8 @@ let dejaLance = false;
 function montrerVerrou() {
   if (!C.compteEnregistre()) return;
   $('titreVerrou').textContent = t('Bonjour {n}', { n: C.nomCompte() });
-  $('verrouIntro').textContent = "Entre ton mot de passe pour ouvrir l'application. Il n'est enregistré nulle part : si tu l'as oublié, personne ne pourra le retrouver, et la seule issue sera d'effacer le compte et les données de cet appareil.";
-  $('verrouOublie').textContent = 'J’ai oublié mon mot de passe';
+  $('verrouIntro').textContent = t("Entre ton mot de passe pour ouvrir l'application. Il n'est enregistré nulle part : si tu l'as oublié, personne ne pourra le retrouver, et la seule issue sera d'effacer le compte et les données de cet appareil.");
+  $('verrouOublie').textContent = t("J'ai oublié mon mot de passe");
   oublisArmes = false;
   $('verrouErreur').hidden = true;
   $('verrou').hidden = false;
@@ -1870,8 +1870,8 @@ function brancherVerrou() {
   $('verrouOublie').addEventListener('click', () => {
     if (!oublisArmes) {
       oublisArmes = true;
-      $('verrouIntro').textContent = "Sans serveur, aucun mot de passe ne peut être retrouvé : personne ne le connaît, il n'est pas enregistré. Deux issues seulement — tu te souviens, ou on efface. Effacer supprime le compte ET les données (favoris, réglages) de cet appareil, définitivement.";
-      $('verrouOublie').textContent = 'Effacer le compte et les données (appuie encore)';
+      $('verrouIntro').textContent = t("Sans serveur, aucun mot de passe ne peut être retrouvé : personne ne le connaît, il n'est pas enregistré. Deux issues seulement — tu te souviens, ou on efface. Effacer supprime le compte ET les données (favoris, réglages) de cet appareil, définitivement.");
+      $('verrouOublie').textContent = t("Effacer le compte et les données (appuie encore)");
       return;
     }
     C.supprimerCompte();
