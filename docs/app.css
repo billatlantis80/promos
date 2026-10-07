@@ -511,6 +511,25 @@ html[data-theme="contraste"] {
   border-radius: 10px; padding: 10px 12px; font-size: 15px;
 }
 .champ input:focus { outline: 2px solid var(--anneau); outline-offset: -1px;}
+
+/* ---------- Le petit œil des mots de passe ----------
+   Demande de B : « une fois tapé on ne voit que des étoiles et pas les lettres,
+   on ne sait pas vérifier si les mots de passe sont identiques. »
+   Le bouton est POSÉ DANS le champ, à droite, et non à côté : il ne prend pas
+   de place dans la colonne, et il reste au bord droit quelle que soit la
+   longueur du mot de passe. Le champ lui réserve sa largeur (padding-right),
+   sinon un mot de passe long passerait sous l'icône. */
+.avec-oeil { position: relative; display: flex; }
+.avec-oeil input { flex: 1; min-width: 0; padding-right: 44px; }
+.oeil {
+  position: absolute; right: 4px; top: 50%; transform: translateY(-50%);
+  display: flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px; padding: 0; cursor: pointer;
+  background: none; border: 0; border-radius: 8px; color: var(--doux);
+}
+.oeil:hover { color: var(--texte); background: var(--carte-2); }
+.oeil:focus-visible { outline: 2px solid var(--anneau); outline-offset: -2px; }
+.oeil svg { width: 20px; height: 20px; display: block; fill: currentColor; }
 .enregistrer {
   background: var(--accent); color: var(--sur-accent); border: 0; border-radius: 11px;
   padding: 11px 16px; font-size: 15px; font-weight: 600; cursor: pointer;

@@ -219,7 +219,12 @@
     <p class="verrou-intro" id="verrouIntro" data-i18n="Entre ton mot de passe pour ouvrir l'application. Il n'est enregistré nulle part : si tu l'as oublié, personne ne pourra le retrouver, et la seule issue sera d'effacer le compte et les données de cet appareil.">Entre ton mot de passe pour ouvrir l'application. Il n'est enregistré nulle part : si tu l'as oublié, personne ne pourra le retrouver, et la seule issue sera d'effacer le compte et les données de cet appareil.</p>
     <div class="champ">
       <label for="verrouMdp" data-i18n="Mot de passe">Mot de passe</label>
-      <input id="verrouMdp" type="password" autocomplete="current-password">
+      <div class="avec-oeil">
+        <input id="verrouMdp" type="password" autocomplete="current-password">
+        <!-- Le dessin et le libellé sont posés par preparerOeils() : une seule
+             source pour les six yeux de l'application, y compris celui-ci. -->
+        <button type="button" class="oeil" data-oeil="verrouMdp" aria-pressed="false"></button>
+      </div>
     </div>
     <p class="verrou-erreur" id="verrouErreur" role="alert" hidden></p>
     <p><button class="enregistrer" id="verrouOk" data-i18n="Déverrouiller">Déverrouiller</button></p>
