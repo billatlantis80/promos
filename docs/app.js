@@ -4,8 +4,9 @@
  * Principe : ne JAMAIS maquiller une offre. Une remise calculée est marquée
  * comme telle ; sans remise chiffrée, on affiche l'offre sans étiquette.
  */
-import { lienAffilie, MENTION_AFFILIATION } from './affiliation.js';
+import { lienAffilie, MENTION_AFFILIATION, siteAmazon } from './affiliation.js';
 import * as C from './compte.js';
+import { t, chargerLangue, definirLangue, traduireDOM, languesDisponibles, langue, CLE_LANGUE, locale } from './langues.js';
 
 const $ = (id) => document.getElementById(id);
 
@@ -122,8 +123,13 @@ function appliquerVue(v) {
    attribut. Chaque vignette des réglages montre les trois couleurs qui comptent
    (fond, carte, accent) — un aperçu, pas une devinette. */
 const CLE_THEME = 'promos.theme';
-const THEME_DEFAUT = 'nuit';
+/* Le thème de MARQUE est le défaut : c'est l'identité de la planche.
+   Sa palette a été RELEVÉE par mesure sur les pastilles (les codes imprimés
+   étaient illisibles — artefacts JPEG) : bleu clair #2692C1, orange #E99535,
+   bleu moyen #2A689A, bleu nuit #0E3A59, terre cuite #B66C2D. */
+const THEME_DEFAUT = 'kazendra';
 const THEMES = [
+  { id: 'kazendra', nom: 'Kazendra', fond: '#f4f7fa', carte: '#ffffff', accent: '#2a689a' },
   { id: 'nuit', nom: 'Nuit', fond: '#0c0d10', carte: '#14161b', accent: '#ff8a3d' },
   { id: 'ardoise', nom: 'Ardoise', fond: '#0e1418', carte: '#131c21', accent: '#35c6e0' },
   { id: 'foret', nom: 'Forêt', fond: '#0d130f', carte: '#121b14', accent: '#7ed957' },
@@ -193,39 +199,81 @@ const NOMS_VUES = {
 
 /* ---------- Réglages ---------- */
 function dessinerReglages() {
-  $('themes').innerHTML = THEMES.map((t) => `
-    <button class="theme" data-theme-id="${t.id}" aria-pressed="false">
-      <span class="pastilles" aria-hidden="true"><i style="background:${t.fond}"></i><i style="background:${t.carte}"></i><i style="background:${t.accent}"></i></span>
-      <span class="nom">${t.nom}</span><span class="coche"></span>
+  // Le paramètre est renommé « th » : « t » est désormais la fonction de
+  // traduction importée — le masquer ici serait un piège silencieux.
+  $('themes').innerHTML = THEMES.map((th) => `
+    <button class="theme" data-theme-id="${th.id}" aria-pressed="false">
+      <span class="pastilles" aria-hidden="true"><i style="background:${th.fond}"></i><i style="background:${th.carte}"></i><i style="background:${th.accent}"></i></span>
+      <span class="nom">${esc(t(th.nom))}</span><span class="coche"></span>
     </button>`).join('');
 
   // Miroir des réglages de la barre du haut. Les boutons portent la classe
   // « vue » : appliquerVue() les allume tous, ici comme en haut — une seule
   // source de vérité, donc aucun risque de désaccord entre les deux endroits.
   $('regAffichage').innerHTML = `
-    <div class="vues" role="group" aria-label="Mode d'affichage">
-      ${VUES.map((v) => `<button class="vue" data-vue="${v}" title="${NOMS_VUES[v].etat}" aria-label="${NOMS_VUES[v].etat}">${NOMS_VUES[v].court}</button>`).join('')}
+    <div class="vues" role="group" aria-label="${esc(t("Mode d'affichage"))}">
+      ${VUES.map((v) => `<button class="vue" data-vue="${v}" title="${esc(t(NOMS_VUES[v].etat))}" aria-label="${esc(t(NOMS_VUES[v].etat))}">${NOMS_VUES[v].court}</button>`).join('')}
     </div>
     <p style="margin:12px 0 0">
-      <button class="outil" data-eco-miroir aria-pressed="false" title="Économie de données — aucun visuel téléchargé">Éco — aucun visuel téléchargé</button>
+      <button class="outil" data-eco-miroir aria-pressed="false" title="${esc(t('Économie de données — aucun visuel téléchargé'))}">${esc(t('Éco — aucun visuel téléchargé'))}</button>
     </p>`;
 
   dessinerProfil();
+  dessinerLangue();
   dessinerCompte();
   majThemes();
+}
+
+/** Rubrique « Langue » : le sélecteur des 9 langues, avec leur NOM NATIF.
+    Écrit dans #regLangue (index.html). Le changement s'applique tout de suite
+    (voir changerLangue) et ne touche jamais au pays — deux clés distinctes. */
+function dessinerLangue() {
+  const rl = $('regLangue');
+  if (!rl) return;
+  if (!$('langueReglages')) {
+    rl.innerHTML = '<div class="champ"><select id="langueReglages" aria-label="'
+      + esc(t('Langue')) + '"></select></div>';
+  }
+  $('langueReglages').innerHTML = languesDisponibles()
+    .map((l) => '<option value="' + l.code + '">' + esc(l.nom) + '</option>').join('');
+  $('langueReglages').value = langue();
+}
+
+/** Applique un changement de langue choisi par l'utilisateur.
+ *
+ *  Ordre : le moteur d'abord (mémoire + `document.lang`), puis le DOM statique,
+ *  puis tout ce que le JavaScript construit — onglets, bandeau, réglages, cartes.
+ *
+ *  ⚠ CE QU'ELLE NE FAIT PAS, et c'est la règle d'architecture : elle ne touche
+ *  NI le pays, NI les offres. Changer de langue ne change jamais le pays, et
+ *  changer de pays ne change jamais la langue — deux clés distinctes, deux choix
+ *  indépendants (testé par tests/i18n.test.mjs). */
+function changerLangue(code) {
+  if (!definirLangue(code)) return;   // code inconnu : on ne casse rien
+  traduireDOM();
+  dessinerLangue();
+  // Les noms de pays et le nombre d'offres par pays sont des LIBELLÉS : sans ce
+  // redessin, le sélecteur gardait « Tous les pays (10070) / Allemagne (1539) »
+  // en français au milieu d'une interface allemande — mesuré dans le navigateur.
+  dessinerPays();
+  dessinerPuces();
+  dessinerBandeau();
+  dessinerReglages();
+  majOutils();
+  dessiner();
 }
 
 function dessinerProfil() {
   const nom = profil.prenom.trim();
   $('regProfil').innerHTML = `
     <div class="champ">
-      <label for="prenom">Prénom affiché</label>
-      <input id="prenom" type="text" maxlength="24" autocomplete="given-name" placeholder="Ton prénom" value="${esc(nom)}">
+      <label for="prenom">${esc(t('Prénom affiché'))}</label>
+      <input id="prenom" type="text" maxlength="24" autocomplete="given-name" placeholder="${esc(t('Ton prénom'))}" value="${esc(nom)}">
     </div>
-    <p style="margin:0 0 12px"><button class="enregistrer" id="enregistrerProfil">Enregistrer</button></p>
+    <p style="margin:0 0 12px"><button class="enregistrer" id="enregistrerProfil">${esc(t('Enregistrer'))}</button></p>
     <div class="ligne-profil">
       <span class="avatar" id="avatar" title="Aperçu">${esc(initiale())}</span>
-      <span>${nom ? `Bonjour ${esc(nom)}` : 'Aucun prénom enregistré'}<br><span style="font-size:12.5px;color:var(--doux)">Gardé sur cet appareil uniquement. Effacé avec les données du site.</span></span>
+      <span>${nom ? t('Bonjour {n}', { n: esc(nom) }) : esc(t('Aucun prénom enregistré'))}<br><span style="font-size:12.5px;color:var(--doux)">${esc(t('Gardé sur cet appareil uniquement. Effacé avec les données du site.'))}</span></span>
     </div>`;
 }
 
@@ -234,7 +282,7 @@ function dessinerProfil() {
 function blocDroits() {
   return `
     <div class="carte-bloc" style="margin-top:12px">
-      <h4>Tes données, tes droits</h4>
+      <h4>${esc(t('Tes données, tes droits'))}</h4>
       <p>Ce qui est conservé sur cet appareil : le nom d'utilisateur, une empreinte
          du mot de passe (jamais le mot de passe), le prénom affiché, tes favoris
          et tes réglages. <b>Rien n'est envoyé</b> : il n'y a ni serveur, ni
@@ -262,28 +310,25 @@ function dessinerCompte() {
   if (!f) {
     $('regCompte').innerHTML = `
       <div class="carte-bloc">
-        <h4>Aucun compte sur cet appareil</h4>
+        <h4>${esc(t('Aucun compte sur cet appareil'))}</h4>
         <p>Ce compte <b>ne crée rien en ligne</b> : il n'y a pas de serveur. Il
            protège l'accès à l'application (favoris, réglages) sur ce téléphone,
            et donne un nom au porteur des données.</p>
-        <p>Ce qu'il ne fera jamais, pour que tu ne l'attendes pas : retrouver tes
-           favoris sur un autre appareil, ni te rendre un mot de passe oublié. Le
-           mot de passe n'est pas enregistré — seulement une empreinte calculée à
-           partir de lui.</p>
+        <p>${t("Ce qu'il ne fera jamais, pour que tu ne l'attendes pas : retrouver tes favoris sur un autre appareil, ni te rendre un mot de passe oublié. Le mot de passe n'est pas enregistré — seulement une empreinte calculée à partir de lui.")}</p>
         <div class="champ">
-          <label for="cNom">Nom d'utilisateur</label>
-          <input id="cNom" type="text" maxlength="24" autocomplete="username" placeholder="3 à 24 caractères">
+          <label for="cNom">${esc(t("Nom d'utilisateur"))}</label>
+          <input id="cNom" type="text" maxlength="24" autocomplete="username" placeholder="${esc(t('3 à 24 caractères'))}">
         </div>
         <div class="champ">
-          <label for="cMdp">Mot de passe</label>
-          <input id="cMdp" type="password" autocomplete="new-password" placeholder="8 caractères minimum">
+          <label for="cMdp">${esc(t('Mot de passe'))}</label>
+          <input id="cMdp" type="password" autocomplete="new-password" placeholder="${esc(t('8 caractères minimum'))}">
         </div>
         <div class="champ">
-          <label for="cMdp2">Répète le mot de passe</label>
+          <label for="cMdp2">${esc(t('Répète le mot de passe'))}</label>
           <input id="cMdp2" type="password" autocomplete="new-password">
         </div>
         <p class="annonce" id="cAnnonce"></p>
-        <p style="margin:0"><button class="enregistrer" id="creerCompte">Créer mon compte</button></p>
+        <p style="margin:0"><button class="enregistrer" id="creerCompte">${esc(t('Créer mon compte'))}</button></p>
       </div>
       ${blocDroits()}`;
     return;
@@ -297,14 +342,13 @@ function dessinerCompte() {
           <span class="quand">compte local créé le ${dateLisible(f.cree)} · ${esc(f.algorithme || 'PBKDF2-SHA256')} ${f.tours ? `(${f.tours} tours)` : ''}</span>
         </span>
       </div>
-      <p>Ce compte vit sur cet appareil uniquement. Il protège l'accès à
-         l'application ; il ne synchronise rien et ne se connecte à rien.</p>
+      <p>${t("Ce compte vit sur cet appareil uniquement. Il protège l'accès à l'application ; il ne synchronise rien et ne se connecte à rien.")}</p>
       <div class="champ">
-        <label for="cAncien">Mot de passe actuel</label>
+        <label for="cAncien">${esc(t('Mot de passe actuel'))}</label>
         <input id="cAncien" type="password" autocomplete="current-password">
       </div>
       <div class="champ">
-        <label for="cNouveau">Nouveau mot de passe</label>
+        <label for="cNouveau">${esc(t('Nouveau mot de passe'))}</label>
         <input id="cNouveau" type="password" autocomplete="new-password">
       </div>
       <p class="annonce" id="cAnnonce"></p>
@@ -312,7 +356,7 @@ function dessinerCompte() {
         <button class="enregistrer" id="changerMdp">Changer le mot de passe</button>
         <button class="outil" id="verrouiller">Verrouiller maintenant</button>
         <button class="outil" id="exporterDonnees">Télécharger mes données</button>
-        <button class="outil danger" id="supprimerCompte">Supprimer mon compte</button>
+        <button class="outil danger" id="supprimerCompte">${esc(t('Supprimer mon compte'))}</button>
       </div>
     </div>
     ${blocDroits()}`;
@@ -428,9 +472,12 @@ const euros = (v) => (v == null ? '' : (Math.round(v * 100) / 100).toLocaleStrin
 function ilYA(iso) {
   const mn = Math.round((Date.now() - new Date(iso).getTime()) / 60000);
   if (!Number.isFinite(mn)) return '';
-  if (mn < 60) return `il y a ${Math.max(1, mn)} min`;
-  if (mn < 1440) return `il y a ${Math.round(mn / 60)} h`;
-  return `il y a ${Math.round(mn / 1440)} j`;
+  // Les trois âges relatifs passent par le dictionnaire : sans cela l'en-tête
+  // allemand affichait « aktualisiert il y a 7 min » — mesuré dans le navigateur
+  // le 7/10, la seule ligne restée française d'un bandeau par ailleurs traduit.
+  if (mn < 60) return t('il y a {n} min', { n: Math.max(1, mn) });
+  if (mn < 1440) return t('il y a {n} h', { n: Math.round(mn / 60) });
+  return t('il y a {n} j', { n: Math.round(mn / 1440) });
 }
 
 /* ---- Ce qu'est une BONNE promotion, et pourquoi ce n'est pas un avis ----
@@ -818,46 +865,46 @@ function carte(o) {
     ? ''
     : (source
       ? `<div class="visuel" style="background-image:url('${source}')" role="img" aria-label=""></div>`
-      : `<div class="visuel">${esc(NOMS_CATEGORIES[o.categorie] || '')}</div>`);
+      : `<div class="visuel">${esc(NOMS_CATEGORIES[o.categorie] ? t(NOMS_CATEGORIES[o.categorie]) : '')}</div>`);
   // L'étoile « garder de côté » vit dans l'encadré de la carte, sur la ligne du
   // prix (voir plus bas) : jamais sur la photo, et sans toucher au bouton.
   const garde = estFavori(o.id);
   const etoile = `<button class="favori${garde ? ' on' : ''}" data-id="${esc(o.id)}" aria-pressed="${garde}"
-            title="${garde ? 'Retirer des favoris' : 'Garder de côté'}">&#9733;</button>`;
+            title="${esc(garde ? t('Retirer des favoris') : t('Garder de côté'))}">&#9733;</button>`;
   const etiquettes = [
     o.marchand ? `<span class="etiquette marchand">${esc(o.marchand)}</span>` : '',
     // Le score communautaire Dealabs : c'est LUI qui a servi à ne garder que
     // les meilleures offres. L'afficher rend la sélection visible et vérifiable.
-    o.temperature != null ? `<span class="etiquette chaud" title="Score de la communauté Dealabs">${o.temperature}°</span>` : '',
-    `<span class="etiquette">${esc(NOMS_CATEGORIES[o.categorie] || o.categorie)}</span>`,
+    o.temperature != null ? `<span class="etiquette chaud" title="${esc(t('Score de la communauté Dealabs'))}">${o.temperature}°</span>` : '',
+    `<span class="etiquette">${esc(t(NOMS_CATEGORIES[o.categorie] || o.categorie))}</span>`,
     remiseMontrable(o) != null
-      ? `<span class="etiquette remise${o.remiseCalculee ? ' calculee' : ''}" title="${o.remiseCalculee ? 'Pourcentage calculé entre deux prix réels' : 'Pourcentage annoncé par la source'}">${o.remiseCalculee ? '≈ ' : ''}-${remiseMontrable(o)} %</span>`
+      ? `<span class="etiquette remise${o.remiseCalculee ? ' calculee' : ''}" title="${esc(o.remiseCalculee ? t('Pourcentage calculé entre deux prix réels') : t('Pourcentage annoncé par la source'))}">${o.remiseCalculee ? '≈ ' : ''}-${remiseMontrable(o)} %</span>`
       : '',
     // Une offre d'enseigne SANS remise chiffrée : on le DIT. Laisser croire à
     // un pourcentage qu'on n'a pas pu vérifier serait exactement le défaut
     // qu'on a passé la journée à corriger.
     (estOffreEnseigne(o) && !estPromoVerifiee(o))
-      ? `<span class="etiquette" title="Prix réel et marchand affichés ; cette enseigne ne publie pas de prix barré, donc aucune remise n'est chiffrée.">prix réel</span>`
+      ? `<span class="etiquette" title="${esc(t("Prix réel et marchand affichés ; cette enseigne ne publie pas de prix barré, donc aucune remise n'est chiffrée."))}">${esc(t('prix réel'))}</span>`
       : '',
     // Un article de PRESSE est nommé comme tel. Le compter comme une enseigne
     // ferait croire que « Le Parisien » vend des écouteurs ; le taire priverait
     // l'utilisateur d'un vrai bon plan (« 96 € au lieu de 179 € »).
     (estBonPlanPresse(o) && !estPromoVerifiee(o))
-      ? `<span class="etiquette" title="Bon plan relevé par la presse : prix réel affiché et remise annoncée par l’article.">presse</span>`
+      ? `<span class="etiquette" title="${esc(t("Bon plan relevé par la presse : prix réel affiché et remise annoncée par l'article."))}">${esc(t('presse'))}</span>`
       : '',
     // Une BONNE AFFAIRE : l'enseigne ne publie pas ses prix, donc nous n'en
     // affichons aucun — ni prix, ni pourcentage. Le badge le dit franchement
     // plutôt que de laisser croire à une carte cassée.
     estBonneAffaire(o)
-      ? `<span class="etiquette affaire" title="Bon plan relayé par la communauté : cette enseigne ne publie pas ses prix, donc aucun prix — ni remise — n’est affiché.">bonne affaire</span>`
+      ? `<span class="etiquette affaire" title="${esc(t("Bon plan relayé par la communauté : cette enseigne ne publie pas ses prix, donc aucun prix — ni remise — n'est affiché."))}">${esc(t('bonne affaire'))}</span>`
       : '',
     // Ce que l'utilisateur gagne, en euros. C'est le chiffre qui décide d'un
     // achat — « économise 60 € » parle plus que « -67 % ».
     (o.prix != null && o.prixAvant != null && o.prixAvant > o.prix)
-      ? `<span class="etiquette econ" title="Économie par rapport au prix de référence">économise ${euros(o.prixAvant - o.prix)}</span>`
+      ? `<span class="etiquette econ" title="${esc(t('Économie par rapport au prix de référence'))}">${esc(t('économise {n}', { n: euros(o.prixAvant - o.prix) }))}</span>`
       : '',
     o.encoreEnListe === false
-      ? `<span class="etiquette perime" title="Cette offre n'est plus dans la liste du jour : le prix affiché est celui du moment où tu l'as gardée de côté.">n’est plus dans la liste</span>`
+      ? `<span class="etiquette perime" title="${esc(t("Cette offre n'est plus dans la liste du jour : le prix affiché est celui du moment où tu l'as gardée de côté."))}">${esc(t("n'est plus dans la liste"))}</span>`
       : '',
   ].filter(Boolean).join('');
   // Le montant est groupé dans un seul élément : sans ce groupe, le prix
@@ -866,34 +913,120 @@ function carte(o) {
     ? `${euros(o.prix)}${o.prixAvant ? `<span class="avant">${euros(o.prixAvant)}</span>` : ''}`
     : '';
   const prix = montant ? `<div class="prix"><span class="montant">${montant}</span></div>` : '';
+  // Le VERDICT de la promo — ce que l'HISTORIQUE DES PRIX permet d'affirmer.
+  // Il reste vide quand on n'a pas assez de recul : un badge inventé serait
+  // pire que pas de badge du tout.
+  const verdict = texteVerdict(o);
   const lien = lienAffilie(o.lienMarchand || o.lienPage, o.marchand);
   const article = o.type === 'article';
   // Le bouton dit OÙ il emmène. « Voir l'offre » pour tout le monde obligeait
   // l'utilisateur à deviner s'il allait chez Amazon, chez Coolblue ou sur un
-  // article de presse.
-  const libelle = article ? 'Lire l’article'
-    : (estAmazon(o) ? 'Acheter sur Amazon'
-      : (estOffreEnseigne(o) ? `Voir chez ${esc(o.marchand)}`
-        : (estBonPlanPresse(o) ? 'Lire le bon plan'
-          : (estBonneAffaire(o) ? 'Voir la bonne affaire' : 'Voir l’offre'))));
+  // article de presse. Pour Amazon, on nomme en plus LE SITE de destination
+  // (« Amazon.fr », « Amazon.com.be », « Amazon.de »…) : la même phrase envoyait
+  // vers dix marchés différents sans que rien ne dise lequel. Le site vient du
+  // lien réel ; s'il est illisible, on garde l'ancien libellé générique.
+  const site = siteAmazon(o.lienMarchand || o.lienPage);
+  const libelle = article ? t("Lire l'article")
+    : (estAmazon(o) ? (site ? t('Acheter sur {site}', { site }) : t('Acheter sur Amazon'))
+      : (estOffreEnseigne(o) ? t('Voir chez {n}', { n: esc(o.marchand) })
+        : (estBonPlanPresse(o) ? t('Lire le bon plan')
+          : (estBonneAffaire(o) ? t('Voir la bonne affaire') : t("Voir l'offre")))));
   // Pour une offre sortie de la liste, on date la MISE DE CÔTÉ et non la
   // parution : c'est ce qui dit à l'utilisateur ce qu'il a sous les yeux.
   const quand = o.encoreEnListe === false
-    ? `gardée ${esc(ilYA(o.misDeCote))}`
+    ? t('gardée {n}', { n: esc(ilYA(o.misDeCote)) })
     : esc(ilYA(o.date));
   return `<article class="offre">
     ${visuel}
     <div class="corps">
       <h3>${esc(o.titre)}</h3>
       <div class="ligne">${etiquettes}</div>
+      ${verdict ? `<p class="verdict v-${esc(o.verdict.code)}">${verdict}</p>` : ''}
       ${prix}
       <div class="espace-fav">${etoile}</div>
       <div class="bas">
         <a class="btn" href="${esc(lien)}" target="_blank" rel="noopener nofollow sponsored">${libelle}</a>
         <span class="quand">${quand}</span>
       </div>
+      <div class="ligne-partage">
+        <button class="partager" data-id="${esc(o.id)}" title="${esc(t('Partager cette offre'))}"
+                aria-label="${esc(t('Partager cette offre'))}">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M14 9V5l7 7-7 7v-4.1c-5 0-8.5 1.6-11 5.1 1-5 4-10 11-11z"/>
+          </svg>
+        </button>
+      </div>
     </div>
   </article>`;
+}
+
+/* ============================================================
+   PARTAGE D'UNE OFFRE
+   Trois voies, dans cet ordre — aucune ne marche partout :
+     1. le PONT ANDROID : dans l'application, c'est la SEULE qui ouvre la vraie
+        feuille de partage du téléphone (WhatsApp, Messenger, Gmail…). Un WebView
+        n'implémente PAS navigator.share : sans ce pont, le bouton ne ferait
+        strictement rien, sans la moindre erreur.
+     2. navigator.share : la feuille du navigateur, là où elle existe.
+     3. les LIENS DIRECTS : WhatsApp, e-mail, et copier le lien — de vrais liens
+        qui fonctionnent partout, même sans aucune API de partage.
+   ============================================================ */
+
+/** Le lien partagé porte l'identifiant du marché visé, comme le bouton. */
+function lienPartage(o) {
+  return lienAffilie(o.lienMarchand || o.lienPage, o.marchand);
+}
+
+/** Ce qu'on écrit à l'ami : le titre, le prix s'il est connu, et le lien. */
+function textePartage(o, lien) {
+  const prix = o.prix != null ? '\n' + euros(o.prix) : '';
+  return o.titre + prix + '\n' + lien;
+}
+
+function partagerOffre(id, bouton) {
+  const o = etat.offres.find((x) => String(x.id) === String(id));
+  if (!o) return;
+  const lien = lienPartage(o);
+  const texte = textePartage(o, lien);
+  if (window.AndroidPartage && typeof window.AndroidPartage.partager === 'function') {
+    try { window.AndroidPartage.partager(o.titre, texte, lien); return; } catch (e) { /* on essaie la suite */ }
+  }
+  if (navigator.share) {
+    navigator.share({ title: o.titre, text: texte, url: lien }).catch(() => { /* l'utilisateur a refusé */ });
+    return;
+  }
+  ouvrirMenuPartage(o.titre, texte, lien, bouton);
+}
+
+function fermerMenuPartage() {
+  const m = document.getElementById('menuPartage');
+  if (m) m.remove();
+}
+
+/** Le repli : de vrais liens, qui marchent sans la moindre API de partage. */
+function ouvrirMenuPartage(titre, texte, lien, bouton) {
+  fermerMenuPartage();
+  const menu = document.createElement('div');
+  menu.className = 'menu-partage';
+  menu.id = 'menuPartage';
+  const corps = encodeURIComponent(texte);
+  menu.innerHTML = `
+    <a href="https://wa.me/?text=${corps}" target="_blank" rel="noopener">WhatsApp</a>
+    <a href="mailto:?subject=${encodeURIComponent(titre)}&body=${corps}">E-mail</a>
+    <button type="button" class="copier" data-lien="${esc(lien)}">${esc(t('Copier le lien'))}</button>`;
+  const ligne = bouton && bouton.closest('.ligne-partage');
+  (ligne || document.body).appendChild(menu);
+  menu.addEventListener('click', async (e) => {
+    const c = e.target.closest('.copier');
+    if (!c) return;
+    try {
+      await navigator.clipboard.writeText(c.dataset.lien);
+      c.textContent = t('Lien copié');
+      c.disabled = true;
+    } catch (err) {
+      // Pas de presse-papiers : on laisse le libellé, l'utilisateur verra.
+    }
+  });
 }
 
 /** Les offres du pays choisi — la base sur laquelle on annonce des nombres.
@@ -921,18 +1054,30 @@ function dessinerPuces() {
   const offres = offresDuPays();
   const parCat = {};
   for (const o of offres) parCat[o.categorie] = (parCat[o.categorie] || 0) + 1;
-  // L'ORDRE est celui d'ORDRE_CATEGORIES — jamais le nombre d'offres. Trier par
-  // fréquence faisait danser les onglets d'un pays à l'autre : « High-tech » et
-  // « Maison » échangeaient leur place selon le pays consulté.
-  const cats = Object.keys(parCat).filter((c) => NOMS_CATEGORIES[c])
+  // TOUTES les rubriques sont désormais affichées, TOUJOURS, dans l'ordre fixe
+  // d'ORDRE_CATEGORIES — même celles qui n'ont aucune offre dans le pays.
+  //
+  // Elles étaient filtrées sur le contenu du pays : « Alimentation » existait en
+  // « Tous les pays » (69 offres) mais DISPARAISSAIT en Belgique, où aucune offre
+  // alimentaire ne passe le seuil de « bonne promo ». Résultat : B a cherché
+  // l'onglet à côté de « Mode » et « Maison » et ne l'a pas trouvé — sans aucun
+  // message, puisque l'onglet n'était simplement pas dessiné.
+  //
+  // Une barre dont le contenu change selon le pays oblige à relire et à chercher.
+  // Une rubrique vide s'affiche à 0 : l'écran dit la vérité, et l'utilisateur qui
+  // clique dessus reçoit le message « aucune offre » au lieu d'un onglet absent.
+  const cats = Object.keys(NOMS_CATEGORIES).filter((c) => ORDRE_CATEGORIES.includes(c))
     .sort((a, b) => rangCategorie(a) - rangCategorie(b));
-  // Une catégorie choisie absente du pays retombe sur « Tout » : sinon l'onglet
-  // disparaîtrait de la liste en laissant le filtre actif, et l'écran semblerait
-  // vide sans qu'aucune commande ne dise pourquoi.
+  // Garde-fou conservé : une catégorie INCONNUE de NOMS_CATEGORIES (ajoutée par le
+  // collecteur sans passer par ici) n'a pas de puce. Si elle était sélectionnée,
+  // l'écran resterait filtré sur un onglet invisible — donc vide, sans raison
+  // affichée. On retombe sur « Tout ».
   if (etat.categorie !== 'tout' && !cats.includes(etat.categorie)) etat.categorie = 'tout';
-  const puces = [`<button class="puce${etat.categorie === 'tout' ? ' on' : ''}" data-cat="tout">Tout<span class="n">${offres.length}</span></button>`];
+  const puces = [`<button class="puce${etat.categorie === 'tout' ? ' on' : ''}" data-cat="tout">${esc(t('Tout'))}<span class="n">${offres.length}</span></button>`];
   for (const c of cats) {
-    puces.push(`<button class="puce${etat.categorie === c ? ' on' : ''}" data-cat="${esc(c)}">${esc(NOMS_CATEGORIES[c])}<span class="n">${parCat[c]}</span></button>`);
+    // `|| 0` est INDISPENSABLE : sans lui, une rubrique vide afficherait
+    // « undefined » à la place du compte — le compteur est lu comme un nombre.
+    puces.push(`<button class="puce${etat.categorie === c ? ' on' : ''}" data-cat="${esc(c)}">${esc(t(NOMS_CATEGORIES[c]))}<span class="n">${parCat[c] || 0}</span></button>`);
   }
   $('puces').innerHTML = puces.join('');
   $('puces').querySelectorAll('.puce').forEach((el) => el.addEventListener('click', () => {
@@ -978,8 +1123,8 @@ function optionsPays() {
   // Il portait auparavant le nombre de « bonnes affaires » (mesuré : 203 pour la
   // Belgique) — il annonce désormais le pays entier.
   const compte = compteParPays();
-  return [`<option value="tout">Tous les pays (${etat.offres.length})</option>`]
-    .concat(codesPays().map((c) => `<option value="${esc(c)}">${esc(NOMS_PAYS[c])} (${compte[c]})</option>`))
+  return [`<option value="tout">${esc(t('Tous les pays ({n})', { n: etat.offres.length }))}</option>`]
+    .concat(codesPays().map((c) => `<option value="${esc(c)}">${esc(t(NOMS_PAYS[c]))} (${compte[c]})</option>`))
     .join('');
 }
 
@@ -999,7 +1144,7 @@ function dessinerPays() {
   const rp = $('regPays');
   if (rp) {
     if (!$('paysReglages')) {
-      rp.innerHTML = '<div class="champ"><label for="paysReglages">Pays des offres</label>'
+      rp.innerHTML = '<div class="champ"><label for="paysReglages">' + esc(t('Pays des offres')) + '</label>'
         + '<select id="paysReglages"></select></div>'
         + '<p style="margin:0;font-size:12.5px;color:var(--doux)">Seuls des pays d’Europe sont proposés : les trajets restent courts.</p>';
     }
@@ -1038,13 +1183,17 @@ function demanderPays() {
   // « Tous les pays d'Europe » vient EN PREMIER : c'est l'échappatoire, et une
   // échappatoire qu'on doit chercher en bas de liste n'en est plus une. Il est
   // présenté comme les pays : même apparence, même geste, rien à part.
+  //  ⚠ Libellés TRADUITS. Défaut vu sur la capture d'écran du 7/10 : la fenêtre
+  //  « Wo kaufst du ein? » était bien en allemand, mais sa liste de pays restait
+  //  « Allemagne / Royaume-Uni / Belgique ». C'est pourtant la PREMIÈRE fenêtre
+  //  que voit un nouvel utilisateur : elle ne doit pas être à moitié traduite.
   const items = [`<button class="pays-item" data-pays="tout">
-      <b>Tous les pays d’Europe</b><span>${etat.offres.length} offres</span>
+      <b>${esc(t("Tous les pays d'Europe"))}</b><span>${esc(t('{n} offres', { n: etat.offres.length }))}</span>
     </button>`];
   for (const c of codes) {
     const n = compte[c] || 0;
     items.push(`<button class="pays-item${c === suggere ? ' conseille' : ''}" data-pays="${esc(c)}">
-      <b>${esc(NOMS_PAYS[c])}</b><span>${n} offre${n > 1 ? 's' : ''}</span>
+      <b>${esc(t(NOMS_PAYS[c]))}</b><span>${esc(t(n > 1 ? '{n} offres' : '{n} offre', { n }))}</span>
     </button>`);
   }
   $('paysListe').innerHTML = items.join('');
@@ -1060,10 +1209,14 @@ function dessinerBandeau() {
   const enLigne = !!(etat.meta && (etat.meta.amazon || etat.meta.reseaux));
   const msgs = [];
   if (etat.meta && etat.meta.horsLigne) {
-    const quand = etat.meta.genereLe ? new Date(etat.meta.genereLe).toLocaleString('fr-FR') : 'date inconnue';
-    msgs.push(`<b>Hors ligne</b> : le serveur des promos est injoignable. La liste ci-dessous est l'instantané embarqué du ${esc(quand)} ; les visuels ne sont pas disponibles.`);
+    // Libellés TRADUITS : c'étaient les deux dernières phrases françaises d'une
+    // interface par ailleurs traduite (relevé sur la capture du 7/10).
+    const quand = etat.meta.genereLe
+      ? new Date(etat.meta.genereLe).toLocaleString(locale())
+      : String(etat.meta.genereLe || '—');
+    msgs.push(t("<b>Hors ligne</b> : le serveur des promos est injoignable. La liste ci-dessous est l'instantané embarqué du {n} ; les visuels ne sont pas disponibles.", { n: esc(quand) }));
   }
-  if (!enLigne) msgs.push(`<b>À activer</b> : l'identifiant d'affiliation n'est pas encore renseigné (fichier <code>affiliation.js</code>). Les liens sortent donc en direct, sans commission.`);
+  if (!enLigne) msgs.push(t("<b>À activer</b> : l'identifiant d'affiliation n'est pas encore renseigné (fichier <code>affiliation.js</code>). Les liens sortent donc en direct, sans commission."));
   if (msgs.length) { b.className = 'bandeau info on'; b.innerHTML = msgs.join('<br>'); }
   else { b.className = 'bandeau'; b.innerHTML = ''; }
 }
@@ -1106,29 +1259,36 @@ function dessiner() {
   }
   const reste = liste.length - etat.affichees;
   $('plus').hidden = reste <= 0;
-  $('plus').innerHTML = reste > 0 ? `<button id="btnPlus">Afficher ${Math.min(PAR_PAGE, reste)} offres de plus (${reste} restantes)</button>` : '';
+  $('plus').innerHTML = reste > 0 ? `<button id="btnPlus">${esc(t('Afficher {n} offres de plus ({r} restantes)', { n: Math.min(PAR_PAGE, reste), r: reste }))}</button>` : '';
   if (reste > 0) $('btnPlus').addEventListener('click', () => { etat.affichees += PAR_PAGE; dessiner(); });
 
   const total = etat.meta.total || etat.offres.length;
   // L'en-tête dit ce qui est À L'ÉCRAN, pas la taille du catalogue : annoncer
   // « 2 027 offres » au-dessus de 315 lignes ferait croire à un affichage cassé.
   if (etat.portee === 'promos') {
-    // Ce que l'en-tête annonce = ce que la liste contient, mélange compris, et
-    // la PROPORTION est écrite noir sur blanc : l'utilisateur voit pourquoi
-    // Amazon est majoritaire, et d'où viennent les autres lignes. Le nombre de
-    // pays était juste, mais muet sur la composition — c'était ça, le problème
-    // de compréhension des paramètres de recherche.
-    // Dédoublonné, comme la liste : le nombre annoncé doit être atteignable en
-    // faisant défiler l'écran.
+    // Ce que l'en-tête annonce = ce que la liste contient. Dédoublonné, comme la
+    // liste : le nombre annoncé doit être atteignable en faisant défiler l'écran.
     const melange = melanger(dedoublonner(etat.offres.filter(estBonnePromo)));
     const nb = melange.length;
-    const nAmz = melange.filter(estAmazon).length;
-    const pcAmz = nb ? Math.round((nAmz / nb) * 100) : 0;
-    $('comptes').innerHTML = `<b>${nb}</b> bonnes promos<br>≈ ${pcAmz} % Amazon · ${100 - pcAmz} % enseignes &amp; presse<br>mis à jour ${esc(ilYA(etat.meta.genereLe || new Date().toISOString()))}`;
+    // La répartition Amazon / autres enseignes est un RÉGLAGE DE PROGRAMMATION
+    // (le mélange se décide dans melanger(), et il est testé là-bas). L'afficher
+    // obligeait l'utilisateur à lire un paramètre interne qui ne le concerne pas.
+    // L'en-tête ne garde donc que le nombre de bonnes promos et la date de MISE
+    // À JOUR — deux informations, pas trois.
+    $('comptes').innerHTML = `<b>${nb}</b> ${esc(t('bonnes promos'))}<br>${esc(t('mis à jour {n}', { n: ilYA(etat.meta.genereLe || new Date().toISOString()) }))}`;
   } else {
-    $('comptes').innerHTML = `${etat.meta.totalOffres ?? '—'} offres · ${etat.meta.totalVeille ?? '—'} veille<br>mis à jour ${esc(ilYA(etat.meta.genereLe || new Date().toISOString()))}`;
+    $('comptes').innerHTML = `${etat.meta.totalOffres ?? '—'} ${esc(t('offres'))} · ${etat.meta.totalVeille ?? '—'} ${esc(t('veille'))}<br>${esc(t('mis à jour {n}', { n: ilYA(etat.meta.genereLe || new Date().toISOString()) }))}`;
   }
-  $('fraicheur').textContent = `Recensé le ${new Date(etat.meta.genereLe || Date.now()).toLocaleString('fr-FR')} — ${total} entrées.`;
+  $('fraicheur').textContent = t('Recensé le {n} — {m} entrées.', {
+    n: new Date(etat.meta.genereLe || Date.now()).toLocaleString(locale()),
+    m: total,
+  });
+  // HORODATAGE EXIGÉ par les conditions Partenaires : la date du relevé doit
+  // accompagner l'affichage des prix. On affiche celle des DONNÉES, jamais
+  // l'heure de la visite — c'est la seule qui soit honnête.
+  $('prixReleves').textContent = t('Prix relevés le {d}.', {
+    d: new Date(etat.meta.genereLe || Date.now()).toLocaleString(locale()),
+  });
   // Les outils sont rafraîchis ICI, en fin de rendu, et pas seulement au
   // démarrage : le compteur de favoris et l'état du mode économie dépendent de
   // ce qui vient d'être dessiné.
@@ -1178,7 +1338,7 @@ function basculerFavori(id) {
     const garde = estFavori(id);
     b.classList.toggle('on', garde);
     b.setAttribute('aria-pressed', garde ? 'true' : 'false');
-    b.title = garde ? 'Retirer des favoris' : 'Garder de côté';
+    b.title = garde ? t('Retirer des favoris') : t('Garder de côté');
   }
 }
 
@@ -1209,6 +1369,12 @@ function brancher() {
   $('regPays').addEventListener('change', (e) => {
     if (e.target.id === 'paysReglages') choisirPays(e.target.value);
   });
+  // Langue de l'INTERFACE : le choix de l'utilisateur, gardé à part du pays.
+  // Les deux listes vivent dans la même feuille Réglages et ne se parlent pas :
+  // changer l'une ne touche jamais l'autre.
+  $('regLangue').addEventListener('change', (e) => {
+    if (e.target.id === 'langueReglages') changerLangue(e.target.value);
+  });
   document.querySelectorAll('.vue').forEach((b) => {
     b.addEventListener('click', () => appliquerVue(b.dataset.vue));
   });
@@ -1220,10 +1386,13 @@ function brancher() {
     majOutils();
     dessiner();
   });
-  // Étoile : écouteur délégué — les cartes sont recréées à chaque rendu.
+  // Étoile et partage : écouteurs délégués — les cartes sont recréées à chaque rendu.
   $('liste').addEventListener('click', (e) => {
     const b = e.target.closest('.favori');
-    if (b) basculerFavori(b.dataset.id);
+    if (b) { basculerFavori(b.dataset.id); return; }
+    const p = e.target.closest('.partager');
+    if (p) { partagerOffre(p.dataset.id, p); return; }
+    if (!e.target.closest('#menuPartage')) fermerMenuPartage();
   });
 
   // --- Réglages ---
@@ -1262,21 +1431,21 @@ function brancher() {
       const nom = ($('cNom') || {}).value || '';
       const m1 = ($('cMdp') || {}).value || '';
       const m2 = ($('cMdp2') || {}).value || '';
-      if (m1 !== m2) return annonce('Les deux mots de passe ne sont pas identiques.');
+      if (m1 !== m2) return annonce(t('Les deux mots de passe ne sont pas identiques.'));
       const r = await C.creerCompte(nom, m1);
       dessinerCompte();
-      return annonce(r.ok ? `Compte « ${r.nom} » créé sur cet appareil.` : r.message, r.ok);
+      return annonce(r.ok ? t('Compte « {n} » créé sur cet appareil.', { n: r.nom }) : r.message, r.ok);
     }
 
     if (e.target.closest('#changerMdp')) {
       const r = await C.changerMotDePasse(($('cAncien') || {}).value || '', ($('cNouveau') || {}).value || '');
       dessinerCompte();
-      return annonce(r.ok ? 'Mot de passe changé.' : r.message, r.ok);
+      return annonce(r.ok ? t('Mot de passe changé.') : r.message, r.ok);
     }
 
     if (e.target.closest('#exporterDonnees')) {
       exporterDonnees();
-      return annonce('Fichier « promos-mes-donnees.json » généré.', true);
+      return annonce(t('Fichier « promos-mes-donnees.json » généré.'), true);
     }
 
     if (e.target.closest('#verrouiller')) {
@@ -1296,15 +1465,15 @@ function brancher() {
         b.textContent = 'Appuie encore pour confirmer';
         setTimeout(() => {
           suppressionArmee = false;
-          if (document.body.contains(b)) b.textContent = 'Supprimer mon compte';
+          if (document.body.contains(b)) b.textContent = t('Supprimer mon compte');
         }, 8000);
-        return annonce('Le compte ET les données de cet appareil seront effacés. Sans serveur, rien ne pourra être restauré.');
+        return annonce(t('Le compte ET les données de cet appareil seront effacés. Sans serveur, rien ne pourra être restauré.'));
       }
       suppressionArmee = false;
       C.supprimerCompte();
       effacerTout();
       dessinerCompte();
-      return annonce('Compte et données effacés de cet appareil.', true);
+      return annonce(t('Compte et données effacés de cet appareil.'), true);
     }
   });
 }
@@ -1315,7 +1484,7 @@ let dejaLance = false;
 
 function montrerVerrou() {
   if (!C.compteEnregistre()) return;
-  $('titreVerrou').textContent = `Bonjour ${C.nomCompte()}`;
+  $('titreVerrou').textContent = t('Bonjour {n}', { n: C.nomCompte() });
   $('verrouIntro').textContent = "Entre ton mot de passe pour ouvrir l'application. Il n'est enregistré nulle part : si tu l'as oublié, personne ne pourra le retrouver, et la seule issue sera d'effacer le compte et les données de cet appareil.";
   $('verrouOublie').textContent = 'J’ai oublié mon mot de passe';
   oublisArmes = false;
@@ -1406,8 +1575,9 @@ async function lancer() {
   // couleurs par défaut puis bascule sous les yeux de l'utilisateur.
   appliquerTheme(themeEnregistre() || THEME_DEFAUT);
   chargerProfil();
-  dessinerReglages();               // construit le contenu de la feuille Réglages
   appliquerVue(vueEnregistree());   // avant tout rendu : aucun clignotement de mode
+  // La feuille Réglages est dessinée PLUS BAS, après la lecture de la langue :
+  // elle est construite par le JavaScript, donc traduireDOM() ne la rattrape pas.
   chargerFavoris();
   // Pays : AUCUN choix par défaut. À la première ouverture, la question est
   // posée (voir demanderPays) ; ensuite on relit le choix mémorisé. On ne décide
@@ -1429,7 +1599,8 @@ async function lancer() {
     etat.offres = (d.offres || []).filter((o) => o.lienPage || o.lienMarchand);
     etat.meta = { ...d, amazon: false, reseaux: false };
     const aff = await import('./affiliation.js');
-    etat.meta.amazon = !!aff.AMAZON_TAG;
+    etat.meta.amazon = aff.marchesAmazonActifs().length > 0;
+    etat.meta.marches = aff.marchesAmazonActifs();
     etat.meta.reseaux = (aff.RESEAUX || []).length > 0;
   } catch (e) {
     $('comptes').textContent = 'données indisponibles';
@@ -1437,6 +1608,21 @@ async function lancer() {
     $('vide').textContent = `Impossible de lire les offres (${e.message}). Lance le collecteur : node collecteur.mjs`;
     return;
   }
+  // La langue est lue AVANT tout dessin : chaque libellé construit par le
+  // JavaScript doit naître dans la bonne langue. Sinon la page s'affiche en
+  // français une fraction de seconde, puis se corrige sous les yeux de
+  // l'utilisateur — et l'en-tête, lui, resterait en français jusqu'au premier
+  // redessin complet.
+  chargerLangue();
+  traduireDOM();
+  try { document.documentElement.lang = langue(); } catch { /* rien */ }
+  // Feuille Réglages et rubrique COMPTE : toutes deux construites par le
+  // JavaScript, donc traduireDOM() ne les rattrape pas. Dessinées trop tôt —
+  // c'était le cas, la feuille était bâtie avant la lecture de la langue — elles
+  // restaient en FRANÇAIS dans les neuf langues, sans la moindre erreur. Le
+  // commentaire ci-dessus disait déjà la règle ; l'ordre des appels la violait.
+  dessinerReglages();
+  dessinerCompte();
   dessinerPuces();
   dessinerPays();
   dessinerBandeau();
@@ -1450,7 +1636,9 @@ async function lancer() {
  * rien. Sans compte, l'application s'ouvre normalement.
  */
 function demarrer() {
-  dessinerCompte();                 // construit la rubrique dès l'ouverture
+  // La rubrique compte est dessinée dans lancer(), après la lecture de la
+  // langue : le texte est construit en JavaScript, donc il doit naître dans la
+  // bonne langue (traduireDOM ne rattrape que le HTML statique).
   if (C.compteEnregistre()) {
     brancherVerrou();
     montrerVerrou();
@@ -1461,3 +1649,26 @@ function demarrer() {
 }
 
 demarrer();
+/**
+ * Le verdict d'une offre, en clair — ou '' quand il n'y a rien à dire.
+ * Chaque phrase est traduite ; aucune n'est construite par concaténation.
+ */
+function texteVerdict(o) {
+  const v = o && o.verdict;
+  if (!v || !v.code) return '';
+  const jours = o.analyse ? o.analyse.jours : '';
+  switch (v.code) {
+    case 'bonPlanRare':
+      return esc(t('Bon plan rare — le plus bas relevé en {n} jours.', { n: v.jours ?? jours }));
+    case 'sousPrixHabituel':
+      return esc(t('{p} % sous son prix habituel.', { p: v.pct }));
+    case 'referenceDouteuse':
+      return esc(t('Prix barré jamais constaté en {n} jours de relevés.', { n: jours }));
+    case 'incoherent':
+      return esc(t('Prix incohérent : le prix demandé dépasse le prix barré.'));
+    case 'remiseVerifiee':
+      return esc(t('Remise vérifiée sur deux prix réels.'));
+    default:
+      return '';   // 'inconnu' : on ne dit rien plutôt que de meubler
+  }
+}

@@ -61,6 +61,7 @@ const LOCALES = {
 const FR = {
   // — Titre de l'onglet / en-tête —
   'Kazendra — Les meilleures promotions': 'Kazendra — Les meilleures promotions',
+  'Découvrez les meilleures promotions': 'Découvrez les meilleures promotions',
   'Chercher un produit, un marchand…': 'Chercher un produit, un marchand…',
   'Pays des offres': 'Pays des offres',
   'Portée des résultats': 'Portée des résultats',
@@ -118,7 +119,7 @@ const FR = {
   'Jeux & jouets': 'Jeux & jouets',
   'Auto & moto': 'Auto & moto',
   'Beauté': 'Beauté',
-  'Nourriture': 'Nourriture',
+  'Nourriture': 'Alimentation',
   'Animaux': 'Animaux',
   'Voyages': 'Voyages',
   'Activité': 'Activité',
@@ -269,6 +270,7 @@ const FR = {
  * =========================================================================== */
 const NL = {
   'Kazendra — Les meilleures promotions': 'Kazendra — De beste aanbiedingen',
+  'Découvrez les meilleures promotions': 'Ontdek de beste aanbiedingen',
   'Chercher un produit, un marchand…': 'Zoek een product, een winkel…',
   'Pays des offres': 'Land van de aanbiedingen',
   'Portée des résultats': 'Bereik van de resultaten',
@@ -451,6 +453,7 @@ const NL = {
  * =========================================================================== */
 const DE = {
   'Kazendra — Les meilleures promotions': 'Kazendra — Die besten Angebote',
+  'Découvrez les meilleures promotions': 'Entdecken Sie die besten Angebote',
   'Chercher un produit, un marchand…': 'Produkt oder Händler suchen…',
   'Pays des offres': 'Land der Angebote',
   'Portée des résultats': 'Umfang der Ergebnisse',
@@ -633,6 +636,7 @@ const DE = {
  * =========================================================================== */
 const EN = {
   'Kazendra — Les meilleures promotions': 'Kazendra — The best deals',
+  'Découvrez les meilleures promotions': 'Discover the best deals',
   'Chercher un produit, un marchand…': 'Search for a product, a merchant…',
   'Pays des offres': 'Country of the offers',
   'Portée des résultats': 'Scope of the results',
@@ -815,6 +819,7 @@ const EN = {
  * =========================================================================== */
 const ES = {
   'Kazendra — Les meilleures promotions': 'Kazendra — Las mejores ofertas',
+  'Découvrez les meilleures promotions': 'Descubre las mejores ofertas',
   'Chercher un produit, un marchand…': 'Buscar un producto, una tienda…',
   'Pays des offres': 'País de las ofertas',
   'Portée des résultats': 'Alcance de los resultados',
@@ -997,6 +1002,7 @@ const ES = {
  * =========================================================================== */
 const IT = {
   'Kazendra — Les meilleures promotions': 'Kazendra — Le migliori offerte',
+  'Découvrez les meilleures promotions': 'Scopri le migliori offerte',
   'Chercher un produit, un marchand…': 'Cerca un prodotto, un negozio…',
   'Pays des offres': 'Paese delle offerte',
   'Portée des résultats': 'Ambito dei risultati',
@@ -1179,6 +1185,7 @@ const IT = {
  * =========================================================================== */
 const PT = {
   'Kazendra — Les meilleures promotions': 'Kazendra — As melhores promoções',
+  'Découvrez les meilleures promotions': 'Descubra as melhores promoções',
   'Chercher un produit, un marchand…': 'Procurar um produto, uma loja…',
   'Pays des offres': 'País das ofertas',
   'Portée des résultats': 'Âmbito dos resultados',
@@ -1361,6 +1368,7 @@ const PT = {
  * =========================================================================== */
 const PL = {
   'Kazendra — Les meilleures promotions': 'Kazendra — Najlepsze promocje',
+  'Découvrez les meilleures promotions': 'Odkryj najlepsze okazje',
   'Chercher un produit, un marchand…': 'Szukaj produktu, sklepu…',
   'Pays des offres': 'Kraj ofert',
   'Portée des résultats': 'Zakres wyników',
@@ -1543,6 +1551,7 @@ const PL = {
  * =========================================================================== */
 const SV = {
   'Kazendra — Les meilleures promotions': 'Kazendra — De bästa erbjudandena',
+  'Découvrez les meilleures promotions': 'Upptäck de bästa erbjudandena',
   'Chercher un produit, un marchand…': 'Sök efter en produkt, en butik…',
   'Pays des offres': 'Erbjudandenas land',
   'Portée des résultats': 'Resultatens omfattning',
