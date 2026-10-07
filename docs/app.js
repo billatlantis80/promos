@@ -943,18 +943,27 @@ function carte(o) {
       <div class="ligne">${etiquettes}</div>
       ${verdict ? `<p class="verdict v-${esc(o.verdict.code)}">${verdict}</p>` : ''}
       ${prix}
-      <div class="espace-fav">${etoile}</div>
       <div class="bas">
-        <a class="btn" href="${esc(lien)}" target="_blank" rel="noopener nofollow sponsored">${libelle}</a>
-        <span class="quand">${quand}</span>
-      </div>
-      <div class="ligne-partage">
-        <button class="partager" data-id="${esc(o.id)}" title="${esc(t('Partager cette offre'))}"
-                aria-label="${esc(t('Partager cette offre'))}">
-          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-            <path d="M14 9V5l7 7-7 7v-4.1c-5 0-8.5 1.6-11 5.1 1-5 4-10 11-11z"/>
-          </svg>
-        </button>
+        <!-- Les DEUX ICÔNES, empilées : l'étoile puis le partage. Elles forment
+             une colonne de largeur fixe, donc l'une exactement au-dessus de
+             l'autre, et la colonne commence à la même hauteur que le bouton de
+             redirection qui les jouxte (voir .col-icones / .col-envoi). -->
+        <div class="col-icones">
+          ${etoile}
+          <div class="ligne-partage">
+            <button class="partager" data-id="${esc(o.id)}" title="${esc(t('Partager cette offre'))}"
+                    aria-label="${esc(t('Partager cette offre'))}">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M14 9V5l7 7-7 7v-4.1c-5 0-8.5 1.6-11 5.1 1-5 4-10 11-11z"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <!-- Le bouton de redirection, et SOUS lui la mise à jour de l'offre. -->
+        <div class="col-envoi">
+          <a class="btn" href="${esc(lien)}" target="_blank" rel="noopener nofollow sponsored">${libelle}</a>
+          <span class="quand">${quand}</span>
+        </div>
       </div>
     </div>
   </article>`;
