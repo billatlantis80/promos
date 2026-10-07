@@ -66,9 +66,10 @@ h1, h2, h3, h4, .marque b, .prix { font-family: var(--police-titre); }
 .marque-txt { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
 /* TOUT le mot KAZENDRA porte le dégradé du logo, de GAUCHE à DROITE (demande
    de B : « de gauche vers la droite pour le dégradé. Le dégradé est pour le mot
-   Kazendra. »). Deux déclinaisons, comme pour tout logo : les teintes exactes
-   du logotype sur fond clair, une version éclaircie sur fond sombre — sinon le
-   bleu foncé du logo disparaît dans l'en-tête bleu nuit, et le mot avec lui. */
+   Kazendra. »). Les COULEURS suivent le logo : bleu -> orange. Deux
+   déclinaisons, comme pour tout logo : les teintes exactes du logotype sur fond
+   clair, une version éclaircie sur fond sombre — sinon le bleu du logo
+   disparaît dans l'en-tête bleu nuit, et le mot avec lui. */
 .marque-nom {
   background-image: linear-gradient(90deg, var(--mot-deg-1) 0%, var(--mot-deg-2) 100%);
   -webkit-background-clip: text; background-clip: text;
@@ -361,15 +362,16 @@ html[data-theme="kazendra"] {
 }
 html[data-theme="kazendra"] .marque,
 html[data-theme="kazendra"] .marque b { color: #ffffff; }
-/* Dégradé du mot. Par défaut la déclinaison pour en-tête SOMBRE (9 thèmes sur
-   12) : éclaircie, pour que le mot entier reste lisible — mesuré 3,8:1 au
-   départ et 5,9:1 à l'arrivée sur le bleu nuit (#0d3b5b), au-dessus du seuil de
-   3:1 des grands textes. Et les deux teintes sont assez éloignées pour que le
-   trajet gauche -> droite se voie : à #5fb290 il restait trop discret à l'œil.
-   Les trois thèmes à en-tête clair reprennent les teintes EXACTES du logotype. */
-.marque { --mot-deg-1: #5a9ac8; --mot-deg-2: #6ec9a0; }
+/* Dégradé du mot. Les couleurs sont celles du LOGO (bleu du ruban et de la
+   hampe #025479, orange du ruban #E59038) — la structure ne change pas : même
+   sens, de gauche à droite ; même accroche.
+   Par défaut la déclinaison pour en-tête SOMBRE (9 thèmes sur 12) : éclaircie,
+   le bleu foncé du logo disparaîtrait sinon dans le bleu nuit. Mesuré 3,5:1 au
+   départ et 5,6:1 à l'arrivée sur #0d3b5b, au-dessus du seuil de 3:1 des grands
+   textes. Les trois thèmes à en-tête clair portent les teintes EXACTES. */
+.marque { --mot-deg-1: #4c93c4; --mot-deg-2: #f2a24e; }
 html[data-theme="clair"], html[data-theme="sable"], html[data-theme="aube"] {
-  --mot-deg-1: #223a5f; --mot-deg-2: #6aad8f;
+  --mot-deg-1: #025479; --mot-deg-2: #e59038;
 }
 html[data-theme="kazendra"] .marque b { letter-spacing: 1.3px; font-weight: 800; }
 html[data-theme="kazendra"] .comptes { color: rgba(255, 255, 255, .78); }

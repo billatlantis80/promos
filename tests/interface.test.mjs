@@ -531,8 +531,13 @@ test('le logo est le logotype fourni : carré arrondi, K détouré, dégradé', 
     'le dégradé doit aller de gauche à droite');
   assert.doesNotMatch(mot[1], /linear-gradient\(\s*(?:45|1[0-9]{2})deg/,
     'un dégradé diagonal n’est pas ce qui a été demandé');
-  assert.match(css, /--mot-deg-1:\s*#5a9ac8/, 'déclinaison prévue pour en-tête sombre');
-  assert.match(css, /--mot-deg-1:\s*#223a5f/, 'déclinaison exacte pour en-tête clair');
+  // Les COULEURS viennent du logo : le bleu #025479 (hampe et ruban bleu) et
+  // l'orange #E59038 (ruban orange). La structure ne change pas — même sens,
+  // gauche -> droite — et l'accroche non plus.
+  assert.match(css, /--mot-deg-1:\s*#4c93c4/, 'déclinaison prévue pour en-tête sombre');
+  assert.match(css, /--mot-deg-2:\s*#f2a24e/, 'l’arrivée doit être l’orange du logo');
+  assert.match(css, /--mot-deg-1:\s*#025479/, 'déclinaison exacte pour en-tête clair');
+  assert.match(css, /--mot-deg-2:\s*#e59038/, 'l’orange exact du logo, sur fond clair');
   // Le dégradé doit être LISIBLE sur l'en-tête sombre : le bleu nuit du thème
   // est #0d3b5b, la teinte de départ doit s'en détacher.
   const sombre = css.match(/\.marque \{ --mot-deg-1:\s*#([0-9a-f]{6})/i);
