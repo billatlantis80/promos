@@ -486,6 +486,30 @@ function blocDroits() {
     </div>`;
 }
 
+/** Ligne d'inscription dans la fiche du compte : où en est l'adresse, et de quoi
+ *  la relancer.
+ *
+ *  LE STATUT AFFICHÉ EST TOUJOURS « en attente de confirmation », et c'est
+ *  volontaire : la page ne peut pas savoir si le lien de l'e-mail a été cliqué
+ *  (voir inscription.js). Seule la feuille de calcul porte le statut réel. On
+ *  préfère afficher « en attente » à quelqu'un qui a déjà confirmé — il peut
+ *  vérifier dans sa feuille — plutôt que d'annoncer une activation qu'on n'a pas
+ *  constatée.
+ *
+ *  LE BOUTON DE RENVOI N'EST PAS UN CONFORT. Un e-mail de confirmation se perd :
+ *  filtre anti-spam, adresse mal recopiée, changement de téléphone. Sans ce
+ *  bouton, l'inscrit serait bloqué définitivement, et il n'aurait aucun moyen de
+ *  le signaler. Le renvoi est fait par le tableau (voir doPost). */
+function blocInscription() {
+  const ins = inscriptionLocale();
+  if (!ins || !ins.email) return '';
+  return `
+    <div class="carte-bloc" style="margin-top:12px">
+      <p style="margin:0 0 10px">${esc(t('Inscription : {n} — en attente de confirmation', { n: ins.email }))}</p>
+      <p style="margin:0"><button class="outil" id="renvoyerConfirmation">${esc(t("Renvoyer l'e-mail de confirmation"))}</button></p>
+    </div>`;
+}
+
 /** Verse les blocs ci-dessus dans l'onglet Informations. */
 function dessinerDroits() {
   const rd = $('regDroits');
@@ -558,6 +582,7 @@ function dessinerCompte() {
         <button class="outil" id="exporterDonnees">Télécharger mes données</button>
         <button class="outil danger" id="supprimerCompte">${esc(t('Supprimer mon compte'))}</button>
       </div>
+      ${blocInscription()}
     </div>`;
 }
 
@@ -1711,8 +1736,20 @@ function brancher() {
       // « ENVOYÉE », PAS « INSCRITE » : le tableau Google ne laisse pas la page
       // lire sa réponse (voir inscription.js). On annonce ce qu'on sait.
       return annonce(envoi.ok
-        ? t("Ton adresse est envoyée. Elle apparaîtra dans ta feuille : c'est elle qui fait foi.")
+        ? t('Un e-mail de confirmation part vers {n}. Ouvre-le et clique le lien pour activer ton compte.', { n: mail })
         : t("L'envoi n'a pas pu partir. Vérifie ta connexion, puis réessaie."), envoi.ok);
+    }
+
+    // RENVOI DE L'E-MAIL DE CONFIRMATION. C'est le même envoi que l'inscription :
+    // le tableau reconnaît l'adresse, voit qu'elle est « en attente », et
+    // renvoie le message. La page n'a donc rien de spécial à savoir faire.
+    if (e.target.closest('#renvoyerConfirmation')) {
+      const ins = inscriptionLocale();
+      if (!ins || !ins.email) return;
+      const r = await envoyerInscription({ email: ins.email, prenom: ins.prenom, langue, pays: etat.pays });
+      return annonce(r.ok
+        ? t('Un e-mail de confirmation part vers {n}. Ouvre-le et clique le lien pour activer ton compte.', { n: ins.email })
+        : t("L'envoi n'a pas pu partir. Vérifie ta connexion, puis réessaie."), r.ok);
     }
 
     if (e.target.closest('#changerMdp')) {
@@ -1750,6 +1787,11 @@ function brancher() {
       suppressionArmee = false;
       C.supprimerCompte();
       effacerTout();
+      // L'inscription locale part avec le reste : sinon la fiche continuerait
+      // d'afficher une adresse « en attente » pour un compte qu'on vient
+      // d'effacer. Le tableau, lui, n'est PAS touché — une inscription confirmée
+      // reste chez son propriétaire, et seule la feuille peut la retirer.
+      oublierInscription();
       dessinerCompte();
       return annonce(t('Compte et données effacés de cet appareil.'), true);
     }

@@ -89,13 +89,24 @@ test('aucune inscription n’est envoyée sans consentement explicite', () => {
   assert.ok(iConsent < iEnvoi, 'le consentement doit être vérifié AVANT l’envoi');
 });
 
-test('l’annonce dit « envoyée » et jamais « inscrite »', () => {
-  // Le tableau Google ne laisse pas la page lire sa réponse : annoncer
-  // « inscrit » serait un mensonge. On annonce ce qu'on sait : c'est parti.
-  assert.ok(/Ton adresse est envoyée/.test(APP),
-    'l’annonce de succès doit dire « envoyée », pas « inscrite »');
-  assert.ok(!/t\('Tu es inscrit/.test(APP) && !/t\("Tu es inscrit/.test(APP),
-    'une annonce prétend à tort que l’inscription est confirmée');
+test('l’annonce parle de l’e-mail de confirmation, jamais d’un compte activé', () => {
+  // Le tableau Google ne laisse pas la page lire sa réponse, et la confirmation
+  // se fait par e-mail : l'application ne peut donc RIEN affirmer sur
+  // l'activation. La première version de ce test exigeait le mot « envoyée » ;
+  // depuis que la confirmation existe, le message doit annoncer l'E-MAIL, et
+  // toujours pas l'activation.
+  assert.ok(/Un e-mail de confirmation part vers/.test(APP),
+    'l’annonce doit parler de l’e-mail de confirmation');
+  const interdits = [
+    /t\('Ton compte est activé/,
+    /t\("Ton compte est activé/,
+    /t\('Tu es inscrit/,
+    /t\("Tu es inscrit/,
+    /t\('Inscription confirmée/,
+  ];
+  for (const motif of interdits) {
+    assert.ok(!motif.test(APP), `l’annonce prétend à tort que le compte est activé (${motif})`);
+  }
 });
 
 test('les 6 nouvelles phrases existent dans les 9 langues', () => {
@@ -138,9 +149,49 @@ test('une ADRESSE E-MAIL est un identifiant de compte valable', () => {
   assert.equal(verifierNom('marie dupont').ok, false);
 });
 
+test('le récepteur envoie un e-mail de confirmation et active le compte', () => {
+  const gs = lire('outils/tableau-inscription.gs');
+  // L'e-mail de confirmation est la demande explicite de B : « il faudra envoyer
+  // un mail de confirmation pour activer le compte ».
+  assert.ok(/MailApp\.sendEmail/.test(gs), 'le récepteur doit envoyer l’e-mail de confirmation');
+  // doGet = le clic sur le lien de l'e-mail. Sans lui, le lien ne ferait rien.
+  assert.ok(/function doGet/.test(gs), 'le lien de confirmation doit avoir un traitement (doGet)');
+  assert.ok(/confirmé/.test(gs), 'le clic doit faire passer la ligne en « confirmé »');
+  assert.ok(/Jeton/.test(gs), 'la ligne doit porter un jeton : c’est le seul secret du lien');
+  // Un jeton devinable permettrait de confirmer l'inscription de quelqu'un d'autre.
+  assert.ok(/getUuid\(\)/.test(gs), 'le jeton doit être tiré au hasard, pas devinable');
+  // Le renvoi : sans lui, un e-mail perdu bloque l'inscrit pour toujours.
+  assert.ok(/renvoye/.test(gs), 'le récepteur doit savoir RENVOYER l’e-mail');
+  // Les 9 langues pour le message envoyé.
+  for (const l of ['fr', 'nl', 'de', 'en', 'es', 'it', 'pt', 'pl', 'sv']) {
+    assert.ok(new RegExp('\\n  ' + l + ': \\{').test(gs), `message d’e-mail manquant en « ${l} »`);
+  }
+});
+
+test('l’application annonce la confirmation et propose de renvoyer', () => {
+  assert.ok(/Un e-mail de confirmation part vers \{n\}/.test(APP),
+    'après l’inscription, l’application doit annoncer l’e-mail de confirmation');
+  assert.ok(APP.includes('id="renvoyerConfirmation"'),
+    'la fiche du compte doit offrir un renvoi de l’e-mail');
+  assert.ok(/renvoyerConfirmation/.test(APP.slice(APP.indexOf("addEventListener('click'"))),
+    'le bouton de renvoi doit être branché, pas seulement dessiné');
+  assert.ok(/en attente de confirmation/.test(APP),
+    'le statut affiché doit dire « en attente » : la page ne peut pas savoir si le lien a été cliqué');
+});
+
+test('le statut local d’une inscription est « en attente », jamais « confirmé »', () => {
+  // La page ne peut pas lire la réponse du tableau Google : prétendre savoir que
+  // le compte est activé serait un mensonge. Seule la feuille fait foi.
+  const src = lire('public/inscription.js');
+  assert.ok(/statut: 'en-attente'/.test(src),
+    'l’inscription locale doit être rangée « en-attente »');
+  assert.ok(!/statut: 'confirm/.test(src),
+    'la page ne doit jamais se déclarer « confirmé » elle-même');
+});
+
 test('le récepteur Google refuse les doublons et vérifie l’adresse', () => {
   const gs = lire('outils/tableau-inscription.gs');
-  assert.ok(/dejaInscrit/.test(gs), 'le récepteur doit refuser un doublon');
+  assert.ok(/ligneDe\(/.test(gs), 'le récepteur doit savoir retrouver une adresse déjà présente (refus des doublons)');
   assert.ok(/LockService/.test(gs),
     'le récepteur doit verrouiller l’écriture : sans cela, deux envois simultanés en perdent un');
   assert.ok(/\^\[\^\\s@\]\+@/.test(gs), 'le récepteur doit vérifier la forme de l’adresse');

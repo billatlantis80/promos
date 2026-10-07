@@ -95,52 +95,71 @@ commerciale.
 2. Remplissez le formulaire avec **une adresse à vous** : adresse e-mail,
    prénom, mot de passe, et cochez la case du bas.
 3. Cliquez sur **Créer mon compte**.
-4. Le message doit dire : *« Ton adresse est envoyée. »*
-5. Ouvrez votre feuille `Kazendra — inscriptions` : **une ligne doit y être
-   apparue**, avec la date, l'adresse, le prénom, la langue et le pays.
+4. Le message doit dire : *« Un e-mail de confirmation part vers
+   votre.adresse@… »*
+5. **Ouvrez votre boîte mail.** Un message signé Kazendra doit être arrivé
+   (regardez aussi dans les indésirables la première fois).
+6. **Cliquez le lien qu'il contient.** Une page sobre doit s'ouvrir :
+   **« Compte activé »**.
+7. Ouvrez votre feuille `Kazendra — inscriptions` : la ligne doit exister, avec
+   la colonne **Statut** passée de `en attente` à `confirmé`.
 
 Si la ligne n'y est pas, c'est presque toujours l'une de ces trois choses :
 l'adresse `/exec` n'a pas été collée dans `inscription.js`, le site n'a pas été
 republié, ou le déploiement n'a pas été mis en « Tout le monde ».
 
+Si la ligne existe mais que l'e-mail n'arrive pas : le statut indique
+`en attente, e-mail NON envoye`. Dans ce cas, retournez sur le site et cliquez
+**« Renvoyer l'e-mail de confirmation »** (visible sous votre compte) — le
+tableau renverra le message.
+
 ---
 
-## Ce qui est déjà fait pour vous
+## Comment un compte s'active, en deux temps
 
-- **Les doublons sont refusés.** La même adresse deux fois n'écrit qu'une ligne.
-  Sans cela, un inscrit qui clique deux fois reçoit deux newsletters.
-- **Les adresses mal écrites sont refusées des deux côtés** — dans la page *et*
-  dans le tableau. Une faute de frappe silencieuse est un contact perdu pour
-  toujours.
-- **Les écritures sont verrouillées.** Deux personnes peuvent s'inscrire à la
-  même seconde ; sans verrou, une des deux inscriptions serait perdue.
-- **Le consentement est obligatoire.** Aucune adresse n'est enregistrée sans la
-  case cochée.
-- **Le message dit « envoyée », jamais « inscrite ».** Votre page ne peut pas
-  lire la réponse du tableau Google (c'est une limite des navigateurs). Annoncer
-  « vous êtes inscrit » serait un mensonge ; on annonce ce qu'on sait.
+1. Quelqu'un remplit le formulaire → sa ligne est écrite avec le statut
+   **`en attente`**, et un e-mail part vers l'adresse indiquée.
+2. Il clique le lien de l'e-mail → la ligne passe en **`confirmé`** et une page
+   « Compte activé » s'affiche.
 
-## Ensuite : envoyer la newsletter
+**Pourquoi cette étape n'est pas une complication inutile.** Une adresse non
+confirmée n'a jamais été vérifiée : elle peut être mal orthographiée, ou
+appartenir à quelqu'un qui n'a rien demandé. Envoyer une newsletter à ces
+adresses-là, c'est du courrier non sollicité — mauvais pour les gens, et
+contraire à la règle européenne du consentement. **La confirmation est à la fois
+la preuve du consentement et le filtre contre les fautes de frappe.**
 
-La feuille collecte ; elle n'envoie pas. Pour envoyer, il faut un outil d'envoi.
+**Ne diffusez que la colonne `confirmé`.** Les lignes `en attente` ne doivent
+jamais recevoir de newsletter : ce sont précisément celles dont on ne sait rien.
+
+## Envoyer la newsletter — la limite à connaître
+
+Le même compte Google peut envoyer, mais **pas en volume**. Sur un compte Gmail
+personnel, la limite est de **100 destinataires par jour** (1 500 sur un compte
+Google professionnel). C'est très suffisant pour les e-mails de confirmation —
+il y en a un par inscription. **C'est insuffisant pour une newsletter envoyée à
+toute la liste** dès qu'elle dépasse la centaine.
+
 Trois chemins, du plus simple au plus autonome :
 
-- **Depuis Gmail, par lots** — gratuit, mais limité à environ 500 envois par jour,
-  et les adresses doivent être copiées-collées. Tenable jusqu'à quelques centaines
-  d'inscrits.
+- **Depuis Gmail, par lots** — gratuit, mais limité à environ 100 par jour avec
+  Apps Script, et les adresses doivent être copiées-collées. Tenable au début.
 - **Un script Google qui envoie** — le même éditeur Apps Script peut envoyer avec
-  `MailApp`, dans la limite du quota quotidien du compte. Plus autonome.
-- **Un service d'envoi** — le jour où la liste devient grande, ce sera nécessaire
-  (les gros volumes depuis une adresse personnelle finissent en spam). C'est un
-  tiers, mais seulement à ce moment-là, et seulement pour l'envoi : la liste,
-  elle, reste chez vous.
+  `MailApp`, dans la même limite quotidienne. Plus autonome, même plafond.
+- **Un service d'envoi** — le jour où la liste devient grande, ce sera
+  nécessaire : au-delà, les envois depuis une adresse personnelle finissent en
+  spam, et les inscrits ne reçoivent plus rien. C'est un tiers, mais seulement à
+  ce moment-là, et seulement pour l'envoi : **la liste, elle, reste chez vous.**
 
 ## Vos obligations légales (Belgique / UE) — pour mémoire
 
-- **Consentement** : obtenu par la case à cocher. C'est déjà en place.
+- **Consentement** : obtenu par la case à cocher, et **prouvé** par la
+  confirmation par e-mail. C'est déjà en place.
 - **Désinscription** : chaque envoi doit contenir un moyen simple de se
   désinscrire. À prévoir dans l'outil d'envoi.
 - **Droit à l'effacement** : si quelqu'un demande la suppression, il suffit de
   supprimer sa ligne dans la feuille.
 - **Durée** : ne gardez pas une adresse sans raison. Une liste non utilisée
   depuis des années se nettoie.
+- **Les adresses `en attente`** : ce sont des demandes sans suite. Vous pouvez
+  les supprimer au bout de quelques semaines sans rien perdre.

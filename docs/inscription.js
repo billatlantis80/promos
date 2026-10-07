@@ -80,13 +80,20 @@ export function inscriptionLocale() {
   } catch (e) { return null; }
 }
 
-/** Retient l'inscription sur cet appareil. Rien n'est envoyé ici. */
+/** Retient l'inscription sur cet appareil. Rien n'est envoyé ici.
+ *
+ *  Le STATUT est toujours « en-attente » : c'est la vérité au moment où l'on
+ *  écrit cette ligne. La confirmation se passe dans l'e-mail, et la page ne peut
+ *  pas savoir si le lien a été cliqué (elle ne peut pas lire la réponse du
+ *  tableau Google). La seule source fiable du statut est la feuille de calcul —
+ *  on ne prétend donc jamais, ici, qu'un compte est activé. */
 export function retenirInscription(email, prenom) {
   try {
     localStorage.setItem(CLE_INSCRIPTION, JSON.stringify({
       email: String(email || '').trim().toLowerCase(),
       prenom: String(prenom || '').trim(),
       quand: new Date().toISOString(),
+      statut: 'en-attente',
     }));
     return true;
   } catch (e) { return false; }
