@@ -539,14 +539,20 @@ const dateLisible = (iso) => {
 function dessinerCompte() {
   const f = C.ficheCompte();
   if (!f) {
+    // PLUS DE TITRE « Créer un compte sur cet appareil » (retiré le 08/10/2026,
+    // demande de B : « ne doit plus être d'actualité car je récupère l'adresse
+    // mail »). La phrase était devenue fausse — l'adresse ne reste pas sur
+    // l'appareil, elle part vers le tableau — et elle n'avait plus de métier :
+    // la rubrique au-dessus s'appelle déjà « Inscription et connexion », et le
+    // bouton en dessous dit déjà « Créer mon compte ». Un titre qui répète le
+    // bouton ET se trompe sur la portée ne rend service à personne.
+    //
     // Le formulaire d'INSCRIPTION MANUELLE passe en premier — c'est la demande
-    // de B : « il faut commencer par l'inscription manuelle avec nom
-    // d'utilisateur et mot de passe ». Les paragraphes d'explication qui le
-    // précédaient sont partis dans l'onglet Informations (voir blocDroits) :
-    // ici, on ne garde que ce qui sert à remplir le formulaire.
+    // de B : « il faut commencer par l'inscription manuelle ». Les paragraphes
+    // d'explication qui le précédaient sont partis dans l'onglet Informations
+    // (voir blocDroits) : ici, on ne garde que ce qui sert à remplir.
     $('regCompte').innerHTML = `
       <div class="carte-bloc">
-        <h4>${esc(t('Créer un compte sur cet appareil'))}</h4>
         <div class="champ">
           <label for="cMail">${esc(t('Adresse e-mail'))}</label>
           <input id="cMail" type="email" maxlength="120" autocomplete="email" inputmode="email" placeholder="nom@exemple.be">
