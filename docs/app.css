@@ -119,15 +119,18 @@ h1, h2, h3, h4, .marque b, .prix { font-family: var(--police-titre); }
 .outil.on { background: var(--accent); border-color: var(--accent); color: var(--sur-accent); font-weight: 600; }
 .outil .n { font-size: 11px; opacity: .85; }
 /* Sélecteur d'affichage : trois boutons, l'actif en orange. */
-.vues {
-  display: flex; gap: 2px; flex: 0 0 auto;
-  background: var(--carte); border: 1px solid var(--bord); border-radius: 10px; padding: 2px;
-}
+/* Les trois modes d'affichage. Le GRAND CADRE qui les entourait est retiré
+   (demande de B : « il faut minimiser le grand rectangle qui entoure les trois
+   possibilités. Il faut que ce soit plus propre »). Chaque mode se présente
+   comme un bouton ordinaire, de la même famille que les autres réglages : plus
+   de boîte dans la boîte, qui mangeait de la place et alourdissait la ligne. */
+.vues { display: inline-flex; gap: 6px; flex: 0 0 auto; }
 .vue {
-  background: transparent; border: 0; color: var(--doux); cursor: pointer;
-  font-size: 15px; line-height: 1; padding: 8px 8px; border-radius: 8px;
+  background: var(--carte-2); border: 1px solid var(--bord); color: var(--doux);
+  cursor: pointer; font-size: 15px; line-height: 1; padding: 9px 13px; border-radius: 9px;
 }
-.vue.on { background: var(--accent); color: var(--sur-accent); }
+.vue:hover { border-color: var(--accent-2); }
+.vue.on { background: var(--accent); border-color: var(--accent); color: var(--sur-accent); font-weight: 700; }
 .puces { display: flex; gap: 6px; overflow-x: auto; padding: 0 0 10px; scrollbar-width: none; }
 .puces::-webkit-scrollbar { display: none; }
 .puce {
@@ -539,6 +542,17 @@ html[data-theme="contraste"] {
    B), donc elle doit dire lequel est choisi aussi clairement qu'un <select> le
    ferait — même langage visuel que la langue active. */
 .pays-item.on { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; font-weight: 600; }
+/* La liste des pays des RÉGLAGES, sur deux colonnes, chacune avec son drapeau
+   (demande de B : « il faut que le pays soit aussi avec le drapeau. Et partager
+   sur deux colonnes pour gagner de la place »). « pays-2col » est un
+   MODIFICATEUR : la question d'ouverture garde sa liste d'origine, sur une
+   colonne, avec ses grandes lignes — là-bas on choisit pour la première fois,
+   ici on règle. */
+.pays-liste.pays-2col { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+@media (min-width: 620px) { .pays-liste.pays-2col { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.pays-2col .pays-item { align-items: center; padding: 9px 10px; font-size: 13px; gap: 7px; }
+.pays-2col .pays-item b { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pays-2col .pays-item .n { flex: 0 0 auto; font-size: 11.5px; }
 
 /* ---------- Langues : drapeau + nom natif, en liste ----------
    Demande de B : « mettre les drapeaux des pays avec la langue à côté » et

@@ -1887,7 +1887,7 @@ const EXTRA = {
     'Déjà inscrit ? Connecte-toi': 'Déjà inscrit ? Connecte-toi',
     'Nouveau ici ? Inscris-toi': 'Nouveau ici ? Inscris-toi',
     'Choisis la langue de l’interface': 'Choisis la langue de l’interface',
-    'Affichage et thèmes': 'Affichage et thèmes',
+    'Thème et affichage': 'Thème et affichage',
 'date inconnue': 'date inconnue',
   },
   nl: {
@@ -1911,7 +1911,7 @@ const EXTRA = {
     'Déjà inscrit ? Connecte-toi': 'Al een account? Log in',
     'Nouveau ici ? Inscris-toi': 'Nieuw hier? Maak een account',
     'Choisis la langue de l’interface': 'Kies de taal van de interface',
-    'Affichage et thèmes': 'Weergave en thema’s',
+    'Thème et affichage': 'Thema en weergave',
 'date inconnue': 'onbekende datum',
   },
   de: {
@@ -1935,7 +1935,7 @@ const EXTRA = {
     'Déjà inscrit ? Connecte-toi': 'Schon registriert? Anmelden',
     'Nouveau ici ? Inscris-toi': 'Neu hier? Registriere dich',
     'Choisis la langue de l’interface': 'Wähle die Sprache der Oberfläche',
-    'Affichage et thèmes': 'Anzeige und Designs',
+    'Thème et affichage': 'Design und Anzeige',
 'date inconnue': 'unbekanntes Datum',
   },
   en: {
@@ -1959,7 +1959,7 @@ const EXTRA = {
     'Déjà inscrit ? Connecte-toi': 'Already registered? Log in',
     'Nouveau ici ? Inscris-toi': 'New here? Sign up',
     'Choisis la langue de l’interface': 'Choose the interface language',
-    'Affichage et thèmes': 'Display and themes',
+    'Thème et affichage': 'Theme and display',
 'date inconnue': 'unknown date',
   },
   es: {
@@ -1983,7 +1983,7 @@ const EXTRA = {
     'Déjà inscrit ? Connecte-toi': '¿Ya estás registrado? Inicia sesión',
     'Nouveau ici ? Inscris-toi': '¿Nuevo por aquí? Regístrate',
     'Choisis la langue de l’interface': 'Elige el idioma de la interfaz',
-    'Affichage et thèmes': 'Visualización y temas',
+    'Thème et affichage': 'Tema y visualización',
 'date inconnue': 'fecha desconocida',
   },
   it: {
@@ -2007,7 +2007,7 @@ const EXTRA = {
     'Déjà inscrit ? Connecte-toi': 'Già registrato? Accedi',
     'Nouveau ici ? Inscris-toi': 'Nuovo qui? Registrati',
     'Choisis la langue de l’interface': 'Scegli la lingua dell’interfaccia',
-    'Affichage et thèmes': 'Visualizzazione e temi',
+    'Thème et affichage': 'Tema e visualizzazione',
 'date inconnue': 'data sconosciuta',
   },
   pt: {
@@ -2031,7 +2031,7 @@ const EXTRA = {
     'Déjà inscrit ? Connecte-toi': 'Já tens conta? Entra',
     'Nouveau ici ? Inscris-toi': 'Novo por aqui? Regista-te',
     'Choisis la langue de l’interface': 'Escolhe o idioma da interface',
-    'Affichage et thèmes': 'Visualização e temas',
+    'Thème et affichage': 'Tema e visualização',
 'date inconnue': 'data desconhecida',
   },
   pl: {
@@ -2055,7 +2055,7 @@ const EXTRA = {
     'Déjà inscrit ? Connecte-toi': 'Masz już konto? Zaloguj się',
     'Nouveau ici ? Inscris-toi': 'Nowy tutaj? Zarejestruj się',
     'Choisis la langue de l’interface': 'Wybierz język interfejsu',
-    'Affichage et thèmes': 'Wyświetlanie i motywy',
+    'Thème et affichage': 'Motyw i wyświetlanie',
 'date inconnue': 'nieznana data',
   },
   sv: {
@@ -2079,7 +2079,7 @@ const EXTRA = {
     'Déjà inscrit ? Connecte-toi': 'Redan registrerad? Logga in',
     'Nouveau ici ? Inscris-toi': 'Ny här? Registrera dig',
     'Choisis la langue de l’interface': 'Välj gränssnittets språk',
-    'Affichage et thèmes': 'Visning och teman',
+    'Thème et affichage': 'Tema och visning',
 'date inconnue': 'okänt datum',
   },
 };

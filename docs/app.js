@@ -321,6 +321,41 @@ const DRAPEAUX = {
     + '<rect y="7" width="24" height="3" fill="#FECC00"/>',
 };
 
+/** Drapeau de l'Europe : bleu à douze étoiles d'or.
+ *  Les douze étoiles sont POSÉES EN CERCLE par calcul, pas écrites à la main :
+ *  douze coordonnées recopiées finissent toujours par dériver, et un drapeau
+ *  européen à onze étoiles est une faute qui se voit. */
+const DRAPEAU_EUROPE = (() => {
+  const points = [];
+  for (let i = 0; i < 12; i += 1) {
+    const a = (i * 30 - 90) * Math.PI / 180;
+    points.push(`<use href="#etoileEu" x="${(12 + 5.1 * Math.cos(a)).toFixed(2)}"`
+      + ` y="${(8 + 5.1 * Math.sin(a)).toFixed(2)}"/>`);
+  }
+  return '<defs><path id="etoileEu" d="M0-1.55 L.36-.48 L1.48-.48 L.58,.18 L.91,1.25'
+    + ' L0,.6 L-.91,1.25 L-.58,.18 L-1.48-.48 L-.36-.48 Z" fill="#FFCC00"/></defs>'
+    + '<rect width="24" height="16" fill="#003399"/>' + points.join('');
+})();
+
+/** Drapeaux des PAYS du catalogue. Ce sont ceux des offres, pas ceux des
+ *  langues : un Suédois lit les offres de Suède (sv <-> se), un anglophone
+ *  celles du Royaume-Uni (en <-> gb), et l'Autriche, la Belgique et l'Irlande
+ *  n'ont pas de langue à elles dans l'interface. B a demandé que le pays soit
+ *  « aussi avec le drapeau » : sans table dédiée, ces trois-là n'en auraient
+ *  pas, et la liste aurait des trous. */
+const DRAPEAUX_PAYS = {
+  tout: DRAPEAU_EUROPE,
+  fr: DRAPEAUX.fr, nl: DRAPEAUX.nl, de: DRAPEAUX.de, es: DRAPEAUX.es,
+  it: DRAPEAUX.it, pt: DRAPEAUX.pt, pl: DRAPEAUX.pl,
+  gb: DRAPEAUX.en, se: DRAPEAUX.sv,
+  at: '<rect width="24" height="16" fill="#ffffff"/><rect width="24" height="5.4" fill="#ED2939"/>'
+    + '<rect y="10.6" width="24" height="5.4" fill="#ED2939"/>',
+  be: '<rect width="24" height="16" fill="#FDDA24"/><rect width="8" height="16" fill="#000000"/>'
+    + '<rect x="16" width="8" height="16" fill="#EF3340"/>',
+  ie: '<rect width="24" height="16" fill="#ffffff"/><rect width="8" height="16" fill="#169B62"/>'
+    + '<rect x="16" width="8" height="16" fill="#FF883E"/>',
+};
+
 /** Rubrique « Langue » : les 9 langues en LISTE, drapeau + nom natif.
  *
  *  Demande de B : « Pour la partie des langues tu peux utiliser plus de place
@@ -1287,9 +1322,14 @@ function dessinerPays() {
     const item = (code, libelle, n) => `
       <button class="pays-item${etat.pays === code ? ' on' : ''}" data-pays="${esc(code)}" type="button"
               aria-pressed="${etat.pays === code}">
-        <b>${esc(libelle)}</b><span>${esc(t('{n} offres', { n }))}</span>
+        <span class="drap" aria-hidden="true"><svg viewBox="0 0 24 16">${DRAPEAUX_PAYS[String(code).toLowerCase()] || ''}</svg></span>
+        <b>${esc(libelle)}</b><span class="n">${esc(t('{n} offres', { n }))}</span>
       </button>`;
-    rp.innerHTML = '<div class="pays-liste">'
+    // SUR DEUX COLONNES (demande de B : « et partager sur deux colonnes pour
+    // gagner de la place »). La classe « pays-2col » est ce qui distingue cette
+    // liste de celle de la question d'ouverture, qui reste sur une colonne : là
+    // -bas on DÉCOUVRE, ici on RÈGLE, et les lignes y sont plus larges.
+    rp.innerHTML = '<div class="pays-liste pays-2col">'
       + item('tout', t("Tous les pays d'Europe"), etat.offres.length)
       + codes.map((c) => item(c, t(NOMS_PAYS[c]), compteP[c])).join('')
       + '</div>'

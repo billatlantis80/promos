@@ -82,6 +82,20 @@ th{color:var(--doux);font-weight:600;font-size:12px;text-transform:uppercase;let
 td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
 .barre{height:7px;background:var(--carte2);border-radius:4px;overflow:hidden;min-width:60px}
 .barre i{display:block;height:100%;background:var(--accent2)}
+/* Un pays dépliable : replié, la liste des douze pays tient dans l'écran ;
+   déplié, on voit ses sources. Sans ça, douze tableaux ouverts d'un coup
+   faisaient une page de trois mètres qu'on ne lisait plus. */
+details{background:var(--carte2);border:1px solid var(--bord);border-radius:11px;margin:0 0 8px}
+details summary{
+  cursor:pointer;padding:11px 13px;display:flex;align-items:baseline;gap:10px;
+  justify-content:space-between;list-style:none
+}
+details summary::-webkit-details-marker{display:none}
+details summary::after{content:'▾';color:var(--doux);flex:0 0 auto}
+details[open] summary::after{content:'▴'}
+details summary span{font-size:12px;color:var(--doux)}
+details > table{margin:0 0 6px;padding:0 13px 8px}
+details > table tr:first-child th{padding-top:2px}
 .vide{color:var(--doux);font-size:13.5px;font-style:italic}
 .avis{
   border-left:3px solid var(--accent);background:var(--carte2);border-radius:0 10px 10px 0;
@@ -130,6 +144,7 @@ td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
       <button class="onglet" data-vue="inscrits">Inscrits</button>
       <button class="onglet" data-vue="trafic">Trafic</button>
       <button class="onglet" data-vue="sources">Sources</button>
+      <button class="onglet" data-vue="origines">Origines</button>
       <button class="onglet" data-vue="reglages">Réglages</button>
     </nav>
 
@@ -196,6 +211,29 @@ td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
         <div class="rub">
           <h2>Rubriques</h2>
           <div id="mRubriques"></div>
+        </div>
+      </section>
+
+      <section data-vue="origines">
+        <div class="rub">
+          <h2>Origine des annonces, par pays</h2>
+          <p class="aide">Pour chaque pays, les sites qui lui fournissent ses annonces, du plus prolifique au plus discret. Déplie un pays pour le détail.</p>
+          <div id="mOriginePays"></div>
+        </div>
+        <div class="rub">
+          <h2>Ce que chaque site apporte</h2>
+          <p class="aide">Total par site, et les pays qu'il alimente. C'est la photo d'une mise à jour.</p>
+          <div id="mOrigineSources"></div>
+        </div>
+        <div class="rub">
+          <h2>Sites qui ne donnent rien</h2>
+          <p class="aide">Interrogés à chaque passage, zéro annonce. Une source muette laisse l'application saine en apparence : c'est le défaut le plus difficile à voir.</p>
+          <div id="mMuettes"></div>
+        </div>
+        <div class="rub">
+          <h2>À programmer ensuite</h2>
+          <p class="aide">Sites marchands présents dans les annonces mais pour lesquels nous n'avons <b>aucune source directe</b> : ils n'arrivent qu'à travers la presse ou un moteur. Les plus fréquents d'abord.</p>
+          <div id="mCandidats"></div>
         </div>
       </section>
 
@@ -408,6 +446,148 @@ function dessinerTrafic() {
     </table>`;
 }
 
+/* ---------- Origines ----------
+ * Demande de B (08/10/2026) : « il faut aussi voir les origines des annonces
+ * par pays, quel site donne combien d'annonces par mise à jour et quel site ne
+ * donne pas d'annonce. Et pour finir quel site pourrait éventuellement être
+ * rajouté dans la prochaine programmation. »
+ *
+ * Tout est CALCULÉ dans le catalogue publié, rien n'est saisi à la main : une
+ * liste tenue à la main se désaccorde du réel au premier changement de source,
+ * et personne ne s'en aperçoit avant de la lire en entier. */
+function dessinerOrigines() {
+  const o = catalogue;
+  if (!o) return;
+  const offres = o.offres || [];
+
+  // --- Par pays : quels sites alimentent chaque pays -----------------------
+  const parPays = {};
+  for (const x of offres) {
+    const p = x.pays || '—';
+    parPays[p] = parPays[p] || {};
+    const s = x.source || '—';
+    parPays[p][s] = (parPays[p][s] || 0) + 1;
+  }
+  const paysTries = Object.entries(parPays)
+    .map(([p, src]) => {
+      const l = Object.entries(src).sort((a, b) => b[1] - a[1]);
+      return { p, l, total: l.reduce((s, [, n]) => s + n, 0) };
+    })
+    .sort((a, b) => b.total - a.total);
+  document.getElementById('mOriginePays').innerHTML = paysTries.length
+    ? paysTries.map(({ p, l, total }) => `
+      <details>
+        <summary><b>${esc(p)}</b><span>${nf.format(total)} annonces · ${l.length} site(s)</span></summary>
+        <table>
+          <tr><th>Site</th><th class="n">Annonces</th><th style="width:34%"></th></tr>
+          ${l.map(([s, n]) => `<tr><td>${esc(s)}</td><td class="n">${nf.format(n)}</td>
+            <td><span class="barre"><i style="width:${Math.round(100 * n / l[0][1])}%"></i></span></td></tr>`).join('')}
+        </table>
+      </details>`).join('')
+    : '<p class="vide">Aucune offre.</p>';
+
+  // --- Par site : combien, et où ------------------------------------------
+  const parSource = {};
+  for (const x of offres) {
+    const s = x.source || '—';
+    parSource[s] = parSource[s] || {};
+    const p = x.pays || '—';
+    parSource[s][p] = (parSource[s][p] || 0) + 1;
+  }
+  const sourcesTriees = Object.entries(parSource)
+    .map(([s, d]) => ({ s, d, total: Object.values(d).reduce((a, b) => a + b, 0) }))
+    .sort((a, b) => b.total - a.total);
+  document.getElementById('mOrigineSources').innerHTML = sourcesTriees.length ? `<table>
+    <tr><th>Site</th><th class="n">Annonces</th><th>Pays fournis</th></tr>
+    ${sourcesTriees.map(({ s, d, total }) => {
+      const pays = Object.entries(d).sort((a, b) => b[1] - a[1]);
+      const montre = pays.slice(0, 4).map(([p, n]) => `${esc(p)} ${nf.format(n)}`).join(' · ');
+      const suite = pays.length > 4 ? ` · +${pays.length - 4}` : '';
+      return `<tr><td>${esc(s)}</td><td class="n">${nf.format(total)}</td>
+        <td style="font-size:12px;color:var(--doux)">${montre}${suite}</td></tr>`;
+    }).join('')}
+    </table>
+    <p class="aide" style="margin-top:12px">${sourcesTriees.length} site(s) ont fourni des annonces. Total : ${nf.format(offres.length)}.</p>`
+    : '<p class="vide">Aucune source.</p>';
+
+  // --- Les muettes --------------------------------------------------------
+  // Deux origines possibles, qu'il ne faut PAS confondre : une source mise au
+  // repos (le collecteur l'a sautée exprès) n'est pas une source en panne.
+  const j = o.journal || [];
+  const repos = new Set(j.filter((x) => x.saute).flatMap((x) => x.sources || []));
+  const muettes = j.filter((x) => !x.saute && !(x.n > 0));
+  const vides = Object.entries(o.sourcesVides || {});
+  document.getElementById('mMuettes').innerHTML = (muettes.length || vides.length) ? `
+    ${muettes.length ? `<table>
+      <tr><th>Site</th><th>État</th></tr>
+      ${muettes.map((x) => `<tr><td>${esc(x.source)}</td>
+        <td class="${x.ok ? '' : 'ko'}">${x.ok ? 'interrogé, aucune annonce' : esc(x.erreur || 'en échec')}</td></tr>`).join('')}
+      </table>` : ''}
+    ${vides.length ? `<p class="aide" style="margin-top:12px"><b>${vides.length} site(s) vide(s) au dernier passage</b>
+      (compteur de passages consécutifs) : ${vides.map(([s, n]) => `${esc(s)} ×${n}`).join(', ')}.</p>` : ''}
+    ${repos.size ? `<p class="aide" style="margin-top:10px">${repos.size} source(s) mise(s) <b>au repos</b> par le
+      collecteur cette fois-ci : ce n'est pas une panne, c'est un délai. Elles ne comptent pas comme muettes.</p>` : ''}`
+    : '<p class="vide">Aucune source muette à ce passage.</p>';
+
+  // --- Les candidats ------------------------------------------------------
+  // PREMIÈRE TENTATIVE, ET POURQUOI ELLE A ÉTÉ JETÉE. J'avais écrit : un
+  // marchand dont l'hôte n'apparaît jamais comme hôte de page n'a pas de source
+  // directe. Mesure faite : les 196 hôtes marchands sont AUSSI les 196 hôtes de
+  // page — lienMarchand recopie lienPage. La règle ne pouvait donc rien trouver,
+  // jamais : une liste vide qui aurait eu l'air d'une bonne nouvelle.
+  //
+  // Ce qu'on peut dire honnêtement, et qui sert : OÙ EST LE VOLUME, et OÙ LA
+  // COUVERTURE EST FRAGILE. La proposition de sites à ajouter vient ensuite,
+  // présentée comme une proposition — pas comme un calcul.
+
+  // 1. Les marchands les plus cités : où les gens achètent réellement.
+  const parMarchand = {};
+  for (const x of offres) {
+    const m = (x.marchand || '').trim();
+    if (!m) continue;
+    parMarchand[m] = (parMarchand[m] || 0) + 1;
+  }
+  const marchandsTries = Object.entries(parMarchand).sort((a, b) => b[1] - a[1]).slice(0, 15);
+  const totalMarchand = Object.values(parMarchand).reduce((a, b) => a + b, 0);
+
+  // 2. Fragilité d'un pays : part de sa première source. Un pays qui tient sur
+  //    un seul site disparaît le jour où ce site ferme son flux.
+  const fragiles = paysTries
+    .map(({ p, l, total }) => ({ p, total, top: l[0][0], part: total ? l[0][1] / total : 0, n: l.length }))
+    .sort((a, b) => b.part - a.part);
+
+  document.getElementById('mCandidats').innerHTML = `
+    <table>
+      <tr><th>Marchand le plus cité</th><th class="n">Annonces</th><th class="n">Part</th></tr>
+      ${marchandsTries.map(([m, n]) => `<tr><td>${esc(m)}</td><td class="n">${nf.format(n)}</td>
+        <td class="n">${(100 * n / totalMarchand).toFixed(1)} %</td></tr>`).join('')}
+    </table>
+    <p class="aide" style="margin-top:12px">${Object.keys(parMarchand).length} marchands cités au total.
+      Les trois premiers sont ceux avec qui une relation directe rapporterait le plus.</p>
+
+    <h2 style="margin-top:22px">Pays les plus fragiles</h2>
+    <p class="aide">Part du premier site dans les annonces du pays. Au-delà de 60 %, le pays ne tient que sur un fil.</p>
+    <table>
+      <tr><th>Pays</th><th>Premier site</th><th class="n">Part</th><th class="n">Sites</th></tr>
+      ${fragiles.map(({ p, top, part, n }) => `<tr><td>${esc(p)}</td><td>${esc(top)}</td>
+        <td class="n ${part > 0.6 ? 'ko' : ''}">${(100 * part).toFixed(0)} %</td><td class="n">${n}</td></tr>`).join('')}
+    </table>
+
+    <h2 style="margin-top:22px">Sites à examiner pour la prochaine programmation</h2>
+    <p class="aide">Proposition, pas calcul : voici les familles de sites qui manquent, d'après
+      les trous ci-dessus. Aucun n'est acquis — chacun demande qu'on vérifie d'abord qu'il publie un flux lisible.</p>
+    <table>
+      <tr><th>Site</th><th>Pourquoi</th></tr>
+      <tr><td>Comparateurs de prix nationaux</td><td>Ils exposent l'historique des prix : c'est ce qui manque
+        pour dire « bon plan » autrement qu'en le supposant, et pour tenir la règle européenne du prix le plus bas sur 30 jours.</td></tr>
+      <tr><td>Grandes enseignes techniques</td><td>Elles couvrent le matériel sur tous les pays d'Europe d'un coup,
+        là où la presse n'en donne qu'une poignée par titre.</td></tr>
+      <tr><td>Enseignes alimentaires belges et néerlandaises</td><td>La Belgique ne compte que 4 offres
+        alimentaires : c'est le trou le plus visible du catalogue.</td></tr>
+      <tr><td>Places de marché généralistes</td><td>Elles diversifient les pays où un seul site fait plus de 60 % des annonces.</td></tr>
+    </table>`;
+}
+
 /* ---------- Exports ---------- */
 function telecharger(nom, texte, type) {
   const b = new Blob([texte], { type });
@@ -441,7 +621,7 @@ function toutDessiner() {
     ? 'Relais branché : le trafic de tous les appareils remonte ici.'
     : 'Relais <b>non branché</b> : ce tableau ne montre que le trafic de cet appareil. Pour voir où l’application est efficace partout, il faut le relais.');
 
-  dessinerBord(); dessinerSources(); dessinerInscrits(); dessinerTrafic();
+  dessinerBord(); dessinerSources(); dessinerOrigines(); dessinerInscrits(); dessinerTrafic();
 
   document.getElementById('mMachine').innerHTML = `<table>
     <tr><th>Fuseau</th><td>${esc(Intl.DateTimeFormat().resolvedOptions().timeZone)}</td></tr>
