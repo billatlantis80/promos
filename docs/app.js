@@ -533,8 +533,14 @@ function dessinerDroits() {
 }
 
 const dateLisible = (iso) => {
-  try { return new Date(iso).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }); }
-  catch { return 'date inconnue'; }
+  // La date suit la LANGUE de l'utilisateur, pas un format figé : « 8 oktober
+  // 2026 » pour un lecteur néerlandais, « 8 octobre 2026 » pour un francophone.
+  // Le repli était écrit en clair (« date inconnue ») : la phrase existait dans
+  // les 9 dictionnaires sans que personne ne l'appelle, donc elle s'affichait en
+  // français dans toutes les langues. Corrigé le 08/10/2026 en même temps que le
+  // ménage des clés mortes — c'est la sonde qui l'a mis au jour.
+  try { return new Date(iso).toLocaleDateString(locale(), { day: 'numeric', month: 'long', year: 'numeric' }); }
+  catch { return t('date inconnue'); }
 };
 
 /** Les deux dessins de l'œil (Material). ŒIL OUVERT = le mot de passe est
@@ -646,7 +652,7 @@ ${champMotDePasse('cMdp2', 'Répète le mot de passe', { autocomplete: 'new-pass
         <span class="avatar">${esc(f.nom.slice(0, 1).toUpperCase())}</span>
         <span>
           <span class="qui">${esc(f.nom)}</span><br>
-          <span class="quand">compte local créé le ${dateLisible(f.cree)} · ${esc(f.algorithme || 'PBKDF2-SHA256')} ${f.tours ? `(${f.tours} tours)` : ''}</span>
+          <span class="quand">${esc(t('compte local créé le {n}', { n: dateLisible(f.cree) }))} · ${esc(f.algorithme || 'PBKDF2-SHA256')} ${f.tours ? `(${f.tours} tours)` : ''}</span>
         </span>
       </div>
       <p>${t("Ce compte vit sur cet appareil uniquement. Il protège l'accès à l'application et ne synchronise rien. Seule l'adresse de ton inscription est envoyée, pour recevoir les bons plans.")}</p>
@@ -2044,9 +2050,9 @@ async function lancer() {
     etat.meta.marches = aff.marchesAmazonActifs();
     etat.meta.reseaux = (aff.RESEAUX || []).length > 0;
   } catch (e) {
-    $('comptes').textContent = 'données indisponibles';
+    $('comptes').textContent = t('données indisponibles');
     $('vide').hidden = false;
-    $('vide').textContent = `Impossible de lire les offres (${e.message}). Lance le collecteur : node collecteur.mjs`;
+    $('vide').textContent = t('Impossible de lire les offres ({n}). Lance le collecteur : node collecteur.mjs', { n: e.message });
     return;
   }
   // La langue est lue AVANT tout dessin : chaque libellé construit par le
