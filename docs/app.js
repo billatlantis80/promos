@@ -7,6 +7,7 @@
 import { lienAffilie, MENTION_AFFILIATION, siteAmazon } from './affiliation.js';
 import * as C from './compte.js';
 import { t, chargerLangue, definirLangue, traduireDOM, languesDisponibles, langue, CLE_LANGUE, locale } from './langues.js';
+import { noterVisite } from './trafic.js';
 
 const $ = (id) => document.getElementById(id);
 
@@ -1782,6 +1783,15 @@ async function lancer() {
   dessinerBandeau();
   dessiner();
   demanderPays();     // première ouverture : on demande le pays, une fois
+  // Relevé de trafic, en DERNIER : à ce point la langue et le pays sont
+  // connus, donc le relevé dit quelque chose de vrai. Le noter plus tôt
+  // inscrirait « pays inconnu » pour tout le monde. Un seul relevé par
+  // session, et l'envoi au relais ne bloque jamais l'affichage (voir trafic.js).
+  noterVisite({
+    pays: etat.pays,
+    langue: langue(),
+    relais: (() => { try { return localStorage.getItem('kazendra.relais') || ''; } catch { return ''; } })(),
+  });
 }
 
 /**

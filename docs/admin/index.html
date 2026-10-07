@@ -1,0 +1,546 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Kazendra — administration</title>
+<link rel="icon" href="../favicon.svg">
+<style>
+/* Application privée d'administration. Elle vit à part du site public : ses
+   styles sont écrits ici et n'empruntent rien à l'application, pour qu'une
+   modification de la vitrine ne puisse pas casser le panneau. */
+:root{
+  --fond:#0e1a26; --carte:#152535; --carte2:#1b2f42; --bord:#26445e;
+  --texte:#eaf2f8; --doux:#93aec4; --accent:#eb912d; --accent2:#3f9fd0;
+  --vert:#2fbf71; --rouge:#e5544b; --sur-accent:#0d2536;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--fond); color:var(--texte); font-size:15px; line-height:1.5;
+  font-family:"Open Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  padding-bottom:40px;
+}
+h1,h2,h3,.gros{font-family:"Montserrat",system-ui,sans-serif}
+a{color:var(--accent2)}
+.boite{max-width:1080px;margin:0 auto;padding:0 14px}
+
+/* ---------- Verrou ---------- */
+#verrou{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+#verrou .carte{
+  width:100%;max-width:400px;background:var(--carte);border:1px solid var(--bord);
+  border-radius:16px;padding:22px
+}
+#verrou h1{font-size:20px;margin:0 0 4px}
+#verrou p{color:var(--doux);font-size:13px;margin:0 0 16px}
+.champ{margin:0 0 12px}
+.champ label{display:block;font-size:12.5px;color:var(--doux);margin-bottom:5px}
+.champ input{
+  width:100%;background:var(--carte2);color:var(--texte);border:1px solid var(--bord);
+  border-radius:10px;padding:11px 12px;font:inherit;font-size:15px
+}
+.champ input:focus{outline:2px solid var(--accent);outline-offset:-1px}
+button{font:inherit;cursor:pointer}
+.principal{
+  width:100%;background:var(--accent);color:var(--sur-accent);border:0;border-radius:11px;
+  padding:12px;font-weight:700;font-size:15px
+}
+.annonce{margin:12px 0 0;font-size:13px;min-height:19px}
+.annonce.err{color:var(--rouge)} .annonce.ok{color:var(--vert)}
+
+/* ---------- Coquille ---------- */
+#tete{
+  background:#0b1622;border-bottom:1px solid var(--bord);padding:12px 0;position:sticky;top:0;z-index:5
+}
+#tete .boite{display:flex;align-items:center;gap:12px}
+#tete img{width:30px;height:36px}
+#tete b{font-family:"Montserrat",sans-serif;font-size:17px;letter-spacing:.4px}
+#tete .priv{
+  margin-left:auto;font-size:11.5px;color:var(--doux);border:1px solid var(--bord);
+  border-radius:20px;padding:4px 10px;text-transform:uppercase;letter-spacing:.6px
+}
+#onglets{display:flex;gap:8px;overflow-x:auto;padding:14px 0 0}
+.onglet{
+  background:var(--carte);color:var(--texte);border:1px solid var(--bord);border-radius:10px;
+  padding:9px 14px;font-size:14px;white-space:nowrap
+}
+.onglet.on{background:var(--accent);border-color:var(--accent);color:var(--sur-accent);font-weight:700}
+main{padding-top:16px}
+section[data-vue]{display:none}
+section[data-vue].on{display:block}
+.rub{background:var(--carte);border:1px solid var(--bord);border-radius:14px;padding:16px;margin:0 0 14px}
+.rub h2{font-size:15px;margin:0 0 3px;text-transform:uppercase;letter-spacing:.7px;color:var(--accent)}
+.rub p.aide{color:var(--doux);font-size:12.5px;margin:0 0 14px}
+.grille{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.mesure{background:var(--carte2);border:1px solid var(--bord);border-radius:11px;padding:12px}
+.mesure .gros{font-size:26px;font-weight:800;line-height:1.1}
+.mesure .lib{font-size:12px;color:var(--doux);margin-top:3px}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--bord)}
+th{color:var(--doux);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+.barre{height:7px;background:var(--carte2);border-radius:4px;overflow:hidden;min-width:60px}
+.barre i{display:block;height:100%;background:var(--accent2)}
+.vide{color:var(--doux);font-size:13.5px;font-style:italic}
+.avis{
+  border-left:3px solid var(--accent);background:var(--carte2);border-radius:0 10px 10px 0;
+  padding:11px 13px;font-size:13px;color:var(--texte);margin:0 0 14px
+}
+.avis b{color:var(--accent)}
+.bouton{
+  background:var(--carte2);color:var(--texte);border:1px solid var(--bord);border-radius:10px;
+  padding:9px 13px;font-size:13.5px;margin:0 6px 6px 0
+}
+.bouton:hover{border-color:var(--accent)}
+.ok{color:var(--vert)} .ko{color:var(--rouge)}
+</style>
+</head>
+<body>
+
+<!-- ---------- VERROU ---------- -->
+<section id="verrou">
+  <div class="carte">
+    <h1>Administration Kazendra</h1>
+    <p id="verrouAide"></p>
+    <div class="champ">
+      <label for="aId">Identifiant</label>
+      <input id="aId" type="text" autocomplete="username" autocapitalize="off" spellcheck="false">
+    </div>
+    <div class="champ">
+      <label for="aMdp">Mot de passe</label>
+      <input id="aMdp" type="password" autocomplete="current-password">
+    </div>
+    <button class="principal" id="aOk">Ouvrir le panneau</button>
+    <p class="annonce" id="aMsg" role="alert"></p>
+  </div>
+</section>
+
+<!-- ---------- PANNEAU ---------- -->
+<div id="panneau" hidden>
+  <header id="tete"><div class="boite">
+    <img src="../favicon.svg" alt="">
+    <b>Kazendra</b>
+    <span class="priv">Privé</span>
+  </div></header>
+
+  <div class="boite">
+    <nav id="onglets">
+      <button class="onglet on" data-vue="bord">Tableau de bord</button>
+      <button class="onglet" data-vue="inscrits">Inscrits</button>
+      <button class="onglet" data-vue="trafic">Trafic</button>
+      <button class="onglet" data-vue="sources">Sources</button>
+      <button class="onglet" data-vue="reglages">Réglages</button>
+    </nav>
+
+    <main>
+      <section data-vue="bord" class="on">
+        <div class="rub">
+          <h2>Catalogue</h2>
+          <p class="aide">Lu directement dans le fichier publié — chiffres réels, pas d'estimation.</p>
+          <div class="grille" id="mCatalogue"></div>
+        </div>
+        <div class="rub">
+          <h2>Offres par pays</h2>
+          <p class="aide">Ce que chaque pays apporte au catalogue.</p>
+          <div id="mPays"></div>
+        </div>
+      </section>
+
+      <section data-vue="inscrits">
+        <div class="avis" id="avisInscrits"></div>
+        <div class="rub">
+          <h2>Adresses</h2>
+          <p class="aide">Toutes les adresses recueillies, avec leur pays et leur consentement.</p>
+          <div class="grille" id="mInscrits"></div>
+          <p style="margin:14px 0 0">
+            <button class="bouton" id="expCsv">Télécharger pour Excel (CSV)</button>
+            <button class="bouton" id="expJson">Sauvegarde complète (JSON)</button>
+          </p>
+        </div>
+        <div class="rub">
+          <h2>Par pays</h2>
+          <div id="mInscritsPays"></div>
+        </div>
+        <div class="rub">
+          <h2>Liste</h2>
+          <div id="mInscritsListe"></div>
+        </div>
+      </section>
+
+      <section data-vue="trafic">
+        <div class="avis" id="avisTrafic"></div>
+        <div class="rub">
+          <h2>Activité</h2>
+          <p class="aide">Ce qui s'est passé sur cet appareil. Le trafic de tous les appareils demande le relais.</p>
+          <div class="grille" id="mTrafic"></div>
+        </div>
+        <div class="rub">
+          <h2>Points d'entrée par pays</h2>
+          <p class="aide">D'où viennent les visiteurs, et par quelle porte ils sont entrés.</p>
+          <div id="mEntrees"></div>
+        </div>
+        <div class="rub">
+          <h2>Appareils</h2>
+          <p class="aide">Application Android ou navigateur — pour voir où l'application est efficace.</p>
+          <div id="mAppareils"></div>
+        </div>
+      </section>
+
+      <section data-vue="sources">
+        <div class="rub">
+          <h2>Santé des sources</h2>
+          <p class="aide">Une source muette laisse l'application saine en apparence mais figée : c'est le défaut le plus dangereux.</p>
+          <div id="mSources"></div>
+        </div>
+        <div class="rub">
+          <h2>Rubriques</h2>
+          <div id="mRubriques"></div>
+        </div>
+      </section>
+
+      <section data-vue="reglages">
+        <div class="rub">
+          <h2>Accès</h2>
+          <p class="aide">Identifiant et mot de passe du panneau.</p>
+          <div class="champ"><label for="nId">Identifiant</label><input id="nId" type="text" autocapitalize="off" spellcheck="false"></div>
+          <div class="champ"><label for="nMdp">Nouveau mot de passe</label><input id="nMdp" type="password" autocomplete="new-password"></div>
+          <div class="champ"><label for="nMdp2">Répète le mot de passe</label><input id="nMdp2" type="password" autocomplete="new-password"></div>
+          <button class="principal" id="nOk" style="max-width:320px">Enregistrer</button>
+          <p class="annonce" id="nMsg" role="alert"></p>
+        </div>
+        <div class="rub">
+          <h2>Relais des données</h2>
+          <p class="aide">Adresse à laquelle les inscriptions et le trafic sont envoyés.</p>
+          <div class="champ"><label for="relais">Adresse du relais</label><input id="relais" type="url" placeholder="https://script.google.com/macros/s/…/exec" spellcheck="false"></div>
+          <button class="bouton" id="relaisOk">Enregistrer l'adresse</button>
+          <button class="bouton" id="relaisTest">Tester</button>
+          <p class="annonce" id="relaisMsg" role="alert"></p>
+        </div>
+        <div class="rub">
+          <h2>Cette machine</h2>
+          <div id="mMachine"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<script type="module">
+/* =========================================================================
+   PANNEAU D'ADMINISTRATION — application privée.
+   =========================================================================
+   CE QU'IL EST, ET CE QU'IL N'EST PAS. Le site est servi par GitHub Pages, qui
+   ne sait rendre que des fichiers figés : il n'y a pas de serveur derrière. Le
+   panneau ne peut donc PAS, à lui seul, rassembler les inscriptions faites sur
+   les autres téléphones. Ce qu'il fait réellement, et qui est déjà utile :
+     - il lit le CATALOGUE publié : offres, pays, santé des sources, fraîcheur ;
+     - il lit le registre et le journal de trafic DE CETTE MACHINE ;
+     - il exporte tout en CSV pour Excel.
+   Le rassemblement multi-appareils arrive par le RELAIS (onglet Réglages) :
+   une adresse à renseigner, et les deux premiers points cessent d'être locaux.
+   Tant qu'elle est vide, le panneau le DIT au lieu de faire croire à des
+   chiffres complets — c'est la règle de la maison.
+   ========================================================================= */
+
+const CLE_ADMIN = 'kazendra.admin';
+const b64 = (b) => btoa(String.fromCharCode(...new Uint8Array(b)));
+const deb64 = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
+
+async function empreinte(texte, sel, tours) {
+  const cle = await crypto.subtle.importKey('raw', new TextEncoder().encode(texte),
+                                            'PBKDF2', false, ['deriveBits']);
+  return crypto.subtle.deriveBits({ name: 'PBKDF2', salt: sel, iterations: tours, hash: 'SHA-256' },
+                                  cle, 256);
+}
+
+const reglagesAdmin = () => {
+  try { return JSON.parse(localStorage.getItem(CLE_ADMIN) || 'null'); } catch { return null; }
+};
+
+async function definirAdmin(id, mdp) {
+  const sel = crypto.getRandomValues(new Uint8Array(16));
+  const emp = await empreinte(mdp, sel, 200000);
+  localStorage.setItem(CLE_ADMIN, JSON.stringify({
+    id: id.trim(), sel: b64(sel), empreinte: b64(emp), tours: 200000,
+    cree: new Date().toISOString(),
+  }));
+}
+
+async function verifierAdmin(id, mdp) {
+  const c = reglagesAdmin();
+  if (!c) return false;
+  if (c.id.toLowerCase() !== id.trim().toLowerCase()) return false;
+  const e = new Uint8Array(await empreinte(mdp, deb64(c.sel), c.tours || 200000));
+  const a = deb64(c.empreinte);
+  let d = e.length === a.length ? 0 : 1;
+  for (let i = 0; i < Math.max(e.length, a.length); i++) d |= (e[i] || 0) ^ (a[i] || 0);
+  return d === 0;
+}
+
+/* ---------- Formatage ---------- */
+const nf = new Intl.NumberFormat('fr-BE');
+const esc = (s) => String(s).replace(/[&<>"']/g, (c) =>
+  ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const ilYA = (iso) => {
+  const s = Math.max(0, (Date.now() - new Date(iso).getTime()) / 1000);
+  if (s < 90) return 'à l’instant';
+  if (s < 3600) return `il y a ${Math.round(s / 60)} min`;
+  if (s < 86400) return `il y a ${Math.round(s / 3600)} h`;
+  return `il y a ${Math.round(s / 86400)} j`;
+};
+
+/* ---------- Lecture des données ---------- */
+let catalogue = null;
+const lireRegistre = () => {
+  try { return JSON.parse(localStorage.getItem('kazendra.inscrits') || '[]'); } catch { return []; }
+};
+const lireTrafic = () => {
+  try { return JSON.parse(localStorage.getItem('kazendra.trafic') || '[]'); } catch { return []; }
+};
+const relais = () => { try { return localStorage.getItem('kazendra.relais') || ''; } catch { return ''; } };
+
+/* ---------- Tableau de bord ---------- */
+function dessinerBord() {
+  const o = catalogue;
+  if (!o) { document.getElementById('mCatalogue').innerHTML = '<p class="vide">Catalogue illisible.</p>'; return; }
+  const offres = o.offres || [];
+  const pays = o.parPays || {};
+  const maj = o.genereLe ? ilYA(o.genereLe) : '—';
+  document.getElementById('mCatalogue').innerHTML = [
+    [nf.format(offres.length), 'offres au catalogue'],
+    [nf.format(o.totalOffres ?? '—'), 'promotions retenues'],
+    [Object.keys(pays).length, 'pays couverts'],
+    [maj, 'dernière collecte'],
+  ].map(([v, l]) => `<div class="mesure"><div class="gros">${esc(v)}</div><div class="lib">${esc(l)}</div></div>`).join('');
+
+  const max = Math.max(...Object.values(pays), 1);
+  const lignes = Object.entries(pays).sort((a, b) => b[1] - a[1]);
+  document.getElementById('mPays').innerHTML = lignes.length ? `<table>
+    <tr><th>Pays</th><th class="n">Offres</th><th style="width:40%"></th></tr>
+    ${lignes.map(([c, n]) => `<tr><td>${esc(c)}</td><td class="n">${nf.format(n)}</td>
+      <td><span class="barre"><i style="width:${Math.round(100 * n / max)}%"></i></span></td></tr>`).join('')}
+    </table>` : '<p class="vide">Aucun pays.</p>';
+}
+
+/* ---------- Sources ---------- */
+function dessinerSources() {
+  const o = catalogue;
+  if (!o) return;
+  const j = o.journal || [];
+  const ko = j.filter((x) => !x.ok);
+  document.getElementById('mSources').innerHTML = j.length ? `<table>
+    <tr><th>Source</th><th class="n">Offres</th><th>État</th></tr>
+    ${j.map((x) => `<tr><td>${esc(x.source || '?')}</td><td class="n">${nf.format(x.n || 0)}</td>
+      <td class="${x.ok ? 'ok' : 'ko'}">${x.ok ? 'ok' : esc(x.erreur || 'en échec')}</td></tr>`).join('')}
+    </table>
+    <p class="aide" style="margin-top:12px">${ko.length} source(s) en échec sur ${j.length}.</p>`
+    : '<p class="vide">Aucun journal dans ce fichier.</p>';
+
+  const parCat = {};
+  for (const x of (o.offres || [])) { const c = x.categorie || x.cat || '?'; parCat[c] = (parCat[c] || 0) + 1; }
+  const max = Math.max(...Object.values(parCat), 1);
+  const l = Object.entries(parCat).sort((a, b) => b[1] - a[1]);
+  document.getElementById('mRubriques').innerHTML = l.length ? `<table>
+    <tr><th>Rubrique</th><th class="n">Offres</th><th style="width:40%"></th></tr>
+    ${l.map(([c, n]) => `<tr><td>${esc(c)}</td><td class="n">${nf.format(n)}</td>
+      <td><span class="barre"><i style="width:${Math.round(100 * n / max)}%"></i></span></td></tr>`).join('')}
+    </table>` : '<p class="vide">Aucune rubrique.</p>';
+}
+
+/* ---------- Inscrits ---------- */
+function dessinerInscrits() {
+  const liste = lireRegistre();
+  const avec = liste.filter((x) => x.newsletter);
+  document.getElementById('mInscrits').innerHTML = [
+    [nf.format(liste.length), 'adresses au total'],
+    [nf.format(avec.length), 'avec newsletter'],
+    [nf.format(new Set(liste.map((x) => x.pays)).size), 'pays représentés'],
+    [liste.length ? ilYA(liste[liste.length - 1].quand) : '—', 'dernière inscription'],
+  ].map(([v, l]) => `<div class="mesure"><div class="gros">${esc(v)}</div><div class="lib">${esc(l)}</div></div>`).join('');
+
+  const par = {};
+  for (const x of liste) par[x.pays || '?'] = (par[x.pays || '?'] || 0) + 1;
+  const max = Math.max(...Object.values(par), 1);
+  const l = Object.entries(par).sort((a, b) => b[1] - a[1]);
+  document.getElementById('mInscritsPays').innerHTML = l.length ? `<table>
+    <tr><th>Pays</th><th class="n">Inscrits</th><th style="width:40%"></th></tr>
+    ${l.map(([c, n]) => `<tr><td>${esc(c)}</td><td class="n">${nf.format(n)}</td>
+      <td><span class="barre"><i style="width:${Math.round(100 * n / max)}%"></i></span></td></tr>`).join('')}
+    </table>` : '<p class="vide">Aucune inscription sur cette machine.</p>';
+
+  document.getElementById('mInscritsListe').innerHTML = liste.length ? `<table>
+    <tr><th>Adresse</th><th>Pays</th><th>Newsletter</th><th>Inscrit</th></tr>
+    ${liste.slice(-200).reverse().map((x) => `<tr><td>${esc(x.email)}</td><td>${esc(x.pays || '—')}</td>
+      <td class="${x.newsletter ? 'ok' : ''}">${x.newsletter ? 'oui' : 'non'}</td>
+      <td>${esc(new Date(x.quand).toLocaleString('fr-BE'))}</td></tr>`).join('')}
+    </table>` : '<p class="vide">Rien à afficher.</p>';
+}
+
+/* ---------- Trafic ---------- */
+function dessinerTrafic() {
+  const t = lireTrafic();
+  const vues = t.reduce((s, x) => s + (x.vues || 1), 0);
+  const cinq = t.filter((x) => Date.now() - new Date(x.quand).getTime() < 5 * 60000);
+  const app = t.filter((x) => x.appareil === 'application').length;
+  document.getElementById('mTrafic').innerHTML = [
+    [nf.format(t.length), 'visites enregistrées'],
+    [nf.format(vues), 'pages vues'],
+    [nf.format(cinq.length), 'en direct (5 min)'],
+    [nf.format(app), 'depuis l’application'],
+  ].map(([v, l]) => `<div class="mesure"><div class="gros">${esc(v)}</div><div class="lib">${esc(l)}</div></div>`).join('');
+
+  const entrees = {};
+  for (const x of t) { const c = x.pays || '?'; entrees[c] = (entrees[c] || 0) + 1; }
+  const max = Math.max(...Object.values(entrees), 1);
+  const l = Object.entries(entrees).sort((a, b) => b[1] - a[1]);
+  document.getElementById('mEntrees').innerHTML = l.length ? `<table>
+    <tr><th>Pays</th><th class="n">Entrées</th><th style="width:40%"></th></tr>
+    ${l.map(([c, n]) => `<tr><td>${esc(c)}</td><td class="n">${nf.format(n)}</td>
+      <td><span class="barre"><i style="width:${Math.round(100 * n / max)}%"></i></span></td></tr>`).join('')}
+    </table>` : '<p class="vide">Aucune visite enregistrée.</p>';
+
+  const ap = { application: app, navigateur: t.length - app };
+  const maxAp = Math.max(...Object.values(ap), 1);
+  document.getElementById('mAppareils').innerHTML = `<table>
+    ${Object.entries(ap).map(([c, n]) => `<tr><td>${esc(c)}</td><td class="n">${nf.format(n)}</td>
+      <td style="width:40%"><span class="barre"><i style="width:${Math.round(100 * n / maxAp)}%"></i></span></td></tr>`).join('')}
+    </table>`;
+}
+
+/* ---------- Exports ---------- */
+function telecharger(nom, texte, type) {
+  const b = new Blob([texte], { type });
+  const u = URL.createObjectURL(b);
+  const a = document.createElement('a');
+  a.href = u; a.download = nom; a.click();
+  setTimeout(() => URL.revokeObjectURL(u), 2000);
+}
+
+function csv() {
+  const liste = lireRegistre();
+  // Séparateur POINT-VIRGULE et BOM UTF-8 : c'est ce qu'Excel attend en français.
+  // Avec une virgule, il met tout dans une seule colonne ; sans BOM, il abîme les accents.
+  const entetes = ['Adresse e-mail', 'Pays', 'Newsletter', 'Langue', 'Inscription', 'Consentement'];
+  const lignes = liste.map((x) => [
+    x.email, x.pays || '', x.newsletter ? 'oui' : 'non', x.langue || '',
+    new Date(x.quand).toISOString(), x.consentement || '',
+  ].map((v) => `"${String(v).replace(/"/g, '""')}"`).join(';'));
+  return '\uFEFF' + [entetes.join(';'), ...lignes].join('\r\n');
+}
+
+/* ---------- Rendu complet ---------- */
+function toutDessiner() {
+  const r = relais();
+  const complete = r.length > 0;
+  const dire = (id, texte) => { document.getElementById(id).innerHTML = texte; };
+  dire('avisInscrits', complete
+    ? `Relais branché : les inscriptions de tous les appareils remontent ici. <b>Adresse : ${esc(r.slice(0, 46))}…</b>`
+    : 'Relais <b>non branché</b> : ce tableau ne montre que les inscriptions faites sur cet appareil. Les autres téléphones gardent les leurs, et personne ne les rassemble encore.');
+  dire('avisTrafic', complete
+    ? 'Relais branché : le trafic de tous les appareils remonte ici.'
+    : 'Relais <b>non branché</b> : ce tableau ne montre que le trafic de cet appareil. Pour voir où l’application est efficace partout, il faut le relais.');
+
+  dessinerBord(); dessinerSources(); dessinerInscrits(); dessinerTrafic();
+
+  document.getElementById('mMachine').innerHTML = `<table>
+    <tr><th>Fuseau</th><td>${esc(Intl.DateTimeFormat().resolvedOptions().timeZone)}</td></tr>
+    <tr><th>Langue du navigateur</th><td>${esc(navigator.language)}</td></tr>
+    <tr><th>Inscrits sur cette machine</th><td class="n">${nf.format(lireRegistre().length)}</td></tr>
+    <tr><th>Visites enregistrées</th><td class="n">${nf.format(lireTrafic().length)}</td></tr>
+    <tr><th>Relais</th><td class="${complete ? 'ok' : 'ko'}">${complete ? 'branché' : 'non branché'}</td></tr>
+    </table>`;
+
+  const c = reglagesAdmin();
+  if (c) document.getElementById('nId').value = c.id;
+  document.getElementById('relais').value = r;
+}
+
+/* ---------- Branchements ---------- */
+function brancher() {
+  document.querySelectorAll('.onglet').forEach((b) => b.addEventListener('click', () => {
+    document.querySelectorAll('.onglet').forEach((x) => x.classList.toggle('on', x === b));
+    document.querySelectorAll('section[data-vue]').forEach((s) =>
+      s.classList.toggle('on', s.dataset.vue === b.dataset.vue));
+  }));
+
+  document.getElementById('expCsv').addEventListener('click', () =>
+    telecharger(`kazendra-inscrits-${new Date().toISOString().slice(0, 10)}.csv`, csv(), 'text/csv;charset=utf-8'));
+  document.getElementById('expJson').addEventListener('click', () =>
+    telecharger(`kazendra-sauvegarde-${new Date().toISOString().slice(0, 10)}.json`,
+                JSON.stringify({ inscrits: lireRegistre(), trafic: lireTrafic() }, null, 2),
+                'application/json'));
+
+  document.getElementById('nOk').addEventListener('click', async () => {
+    const id = document.getElementById('nId').value.trim();
+    const a = document.getElementById('nMdp').value;
+    const b = document.getElementById('nMdp2').value;
+    const msg = document.getElementById('nMsg');
+    if (id.length < 3) { msg.textContent = 'L’identifiant doit faire au moins 3 caractères.'; msg.className = 'annonce err'; return; }
+    if (a.length < 10) { msg.textContent = 'Le mot de passe doit faire au moins 10 caractères.'; msg.className = 'annonce err'; return; }
+    if (a !== b) { msg.textContent = 'Les deux mots de passe ne sont pas identiques.'; msg.className = 'annonce err'; return; }
+    await definirAdmin(id, a);
+    msg.textContent = 'Enregistré. Il servira à la prochaine ouverture.';
+    msg.className = 'annonce ok';
+  });
+
+  document.getElementById('relaisOk').addEventListener('click', () => {
+    const v = document.getElementById('relais').value.trim();
+    try { localStorage.setItem('kazendra.relais', v); } catch { /* privé */ }
+    const m = document.getElementById('relaisMsg');
+    m.textContent = v ? 'Adresse enregistrée.' : 'Adresse effacée.';
+    m.className = 'annonce ok';
+    toutDessiner();
+  });
+}
+
+/* ---------- Ouverture ---------- */
+async function ouvrir() {
+  document.getElementById('verrou').hidden = true;
+  document.getElementById('panneau').hidden = false;
+  const r = relais();
+  try {
+    const rep = await fetch('../offres.json', { cache: 'no-store' });
+    catalogue = await rep.json();
+  } catch (e) { catalogue = null; }
+  if (r) {
+    try {
+      const rep = await fetch(r, { cache: 'no-store' });
+      const d = await rep.json();
+      if (Array.isArray(d.inscrits) && d.inscrits.length) {
+        try { localStorage.setItem('kazendra.inscrits', JSON.stringify(d.inscrits)); } catch { /* plein */ }
+      }
+    } catch (e) { /* relais muet : on garde le local */ }
+  }
+  toutDessiner();
+}
+
+const c = reglagesAdmin();
+const aide = document.getElementById('verrouAide');
+if (c) {
+  aide.textContent = 'Panneau privé. Identifiant et mot de passe.';
+} else {
+  aide.innerHTML = 'Première ouverture sur cet appareil : <b>choisis</b> ton identifiant et ton mot de passe. '
+    + 'Le mot de passe n’est jamais conservé — seule une empreinte calculée à partir de lui l’est, sur cette machine.';
+  document.getElementById('aOk').textContent = 'Créer l’accès';
+}
+document.getElementById('aOk').addEventListener('click', async () => {
+  const id = document.getElementById('aId').value;
+  const mdp = document.getElementById('aMdp').value;
+  const msg = document.getElementById('aMsg');
+  if (!reglagesAdmin()) {
+    if (id.trim().length < 3) { msg.textContent = 'Identifiant : 3 caractères minimum.'; msg.className = 'annonce err'; return; }
+    if (mdp.length < 10) { msg.textContent = 'Mot de passe : 10 caractères minimum.'; msg.className = 'annonce err'; return; }
+    await definirAdmin(id, mdp);
+    await ouvrir();
+    return;
+  }
+  if (await verifierAdmin(id, mdp)) { await ouvrir(); }
+  else { msg.textContent = 'Identifiant ou mot de passe incorrect.'; msg.className = 'annonce err'; }
+});
+document.getElementById('aMdp').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') document.getElementById('aOk').click();
+});
+</script>
+</body>
+</html>
