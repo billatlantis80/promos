@@ -948,8 +948,87 @@ function carte(o) {
         <a class="btn" href="${esc(lien)}" target="_blank" rel="noopener nofollow sponsored">${libelle}</a>
         <span class="quand">${quand}</span>
       </div>
+      <div class="ligne-partage">
+        <button class="partager" data-id="${esc(o.id)}" title="${esc(t('Partager cette offre'))}"
+                aria-label="${esc(t('Partager cette offre'))}">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M12 2.6 17 7.6 15.6 9 13 6.4V16h-2V6.4L8.4 9 7 7.6z"/>
+            <path d="M4 13v9h16v-9h-2v7H6v-7z"/>
+          </svg>
+          <span>${esc(t('Partager'))}</span>
+        </button>
+      </div>
     </div>
   </article>`;
+}
+
+/* ============================================================
+   PARTAGE D'UNE OFFRE
+   Trois voies, dans cet ordre — aucune ne marche partout :
+     1. le PONT ANDROID : dans l'application, c'est la SEULE qui ouvre la vraie
+        feuille de partage du téléphone (WhatsApp, Messenger, Gmail…). Un WebView
+        n'implémente PAS navigator.share : sans ce pont, le bouton ne ferait
+        strictement rien, sans la moindre erreur.
+     2. navigator.share : la feuille du navigateur, là où elle existe.
+     3. les LIENS DIRECTS : WhatsApp, e-mail, et copier le lien — de vrais liens
+        qui fonctionnent partout, même sans aucune API de partage.
+   ============================================================ */
+
+/** Le lien partagé porte l'identifiant du marché visé, comme le bouton. */
+function lienPartage(o) {
+  return lienAffilie(o.lienMarchand || o.lienPage, o.marchand);
+}
+
+/** Ce qu'on écrit à l'ami : le titre, le prix s'il est connu, et le lien. */
+function textePartage(o, lien) {
+  const prix = o.prix != null ? '\n' + euros(o.prix) : '';
+  return o.titre + prix + '\n' + lien;
+}
+
+function partagerOffre(id, bouton) {
+  const o = etat.offres.find((x) => String(x.id) === String(id));
+  if (!o) return;
+  const lien = lienPartage(o);
+  const texte = textePartage(o, lien);
+  if (window.AndroidPartage && typeof window.AndroidPartage.partager === 'function') {
+    try { window.AndroidPartage.partager(o.titre, texte, lien); return; } catch (e) { /* on essaie la suite */ }
+  }
+  if (navigator.share) {
+    navigator.share({ title: o.titre, text: texte, url: lien }).catch(() => { /* l'utilisateur a refusé */ });
+    return;
+  }
+  ouvrirMenuPartage(o.titre, texte, lien, bouton);
+}
+
+function fermerMenuPartage() {
+  const m = document.getElementById('menuPartage');
+  if (m) m.remove();
+}
+
+/** Le repli : de vrais liens, qui marchent sans la moindre API de partage. */
+function ouvrirMenuPartage(titre, texte, lien, bouton) {
+  fermerMenuPartage();
+  const menu = document.createElement('div');
+  menu.className = 'menu-partage';
+  menu.id = 'menuPartage';
+  const corps = encodeURIComponent(texte);
+  menu.innerHTML = `
+    <a href="https://wa.me/?text=${corps}" target="_blank" rel="noopener">WhatsApp</a>
+    <a href="mailto:?subject=${encodeURIComponent(titre)}&body=${corps}">E-mail</a>
+    <button type="button" class="copier" data-lien="${esc(lien)}">${esc(t('Copier le lien'))}</button>`;
+  const ligne = bouton && bouton.closest('.ligne-partage');
+  (ligne || document.body).appendChild(menu);
+  menu.addEventListener('click', async (e) => {
+    const c = e.target.closest('.copier');
+    if (!c) return;
+    try {
+      await navigator.clipboard.writeText(c.dataset.lien);
+      c.textContent = t('Lien copié');
+      c.disabled = true;
+    } catch (err) {
+      // Pas de presse-papiers : on laisse le libellé, l'utilisateur verra.
+    }
+  });
 }
 
 /** Les offres du pays choisi — la base sur laquelle on annonce des nombres.
@@ -1177,18 +1256,16 @@ function dessiner() {
   // L'en-tête dit ce qui est À L'ÉCRAN, pas la taille du catalogue : annoncer
   // « 2 027 offres » au-dessus de 315 lignes ferait croire à un affichage cassé.
   if (etat.portee === 'promos') {
-    // Ce que l'en-tête annonce = ce que la liste contient, mélange compris, et
-    // la PROPORTION est écrite noir sur blanc : l'utilisateur voit pourquoi
-    // Amazon est majoritaire, et d'où viennent les autres lignes. Le nombre de
-    // pays était juste, mais muet sur la composition — c'était ça, le problème
-    // de compréhension des paramètres de recherche.
-    // Dédoublonné, comme la liste : le nombre annoncé doit être atteignable en
-    // faisant défiler l'écran.
+    // Ce que l'en-tête annonce = ce que la liste contient. Dédoublonné, comme la
+    // liste : le nombre annoncé doit être atteignable en faisant défiler l'écran.
     const melange = melanger(dedoublonner(etat.offres.filter(estBonnePromo)));
     const nb = melange.length;
-    const nAmz = melange.filter(estAmazon).length;
-    const pcAmz = nb ? Math.round((nAmz / nb) * 100) : 0;
-    $('comptes').innerHTML = `<b>${nb}</b> ${esc(t('bonnes promos'))}<br>≈ ${pcAmz} % Amazon · ${100 - pcAmz} % ${esc(t('enseignes & presse'))}<br>${esc(t('mis à jour {n}', { n: ilYA(etat.meta.genereLe || new Date().toISOString()) }))}`;
+    // La répartition Amazon / autres enseignes est un RÉGLAGE DE PROGRAMMATION
+    // (le mélange se décide dans melanger(), et il est testé là-bas). L'afficher
+    // obligeait l'utilisateur à lire un paramètre interne qui ne le concerne pas.
+    // L'en-tête ne garde donc que le nombre de bonnes promos et la date de MISE
+    // À JOUR — deux informations, pas trois.
+    $('comptes').innerHTML = `<b>${nb}</b> ${esc(t('bonnes promos'))}<br>${esc(t('mis à jour {n}', { n: ilYA(etat.meta.genereLe || new Date().toISOString()) }))}`;
   } else {
     $('comptes').innerHTML = `${etat.meta.totalOffres ?? '—'} ${esc(t('offres'))} · ${etat.meta.totalVeille ?? '—'} ${esc(t('veille'))}<br>${esc(t('mis à jour {n}', { n: ilYA(etat.meta.genereLe || new Date().toISOString()) }))}`;
   }
@@ -1299,10 +1376,13 @@ function brancher() {
     majOutils();
     dessiner();
   });
-  // Étoile : écouteur délégué — les cartes sont recréées à chaque rendu.
+  // Étoile et partage : écouteurs délégués — les cartes sont recréées à chaque rendu.
   $('liste').addEventListener('click', (e) => {
     const b = e.target.closest('.favori');
-    if (b) basculerFavori(b.dataset.id);
+    if (b) { basculerFavori(b.dataset.id); return; }
+    const p = e.target.closest('.partager');
+    if (p) { partagerOffre(p.dataset.id, p); return; }
+    if (!e.target.closest('#menuPartage')) fermerMenuPartage();
   });
 
   // --- Réglages ---

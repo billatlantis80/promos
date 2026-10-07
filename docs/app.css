@@ -63,6 +63,11 @@ h1, h2, h3, h4, .marque b, .prix { font-family: var(--police-titre); }
   flex: 1; min-width: 0; background: var(--carte); color: var(--texte);
   border: 1px solid var(--bord); border-radius: 10px; padding: 10px 12px; font-size: 14px;
 }
+/* Le texte d'aide est un peu plus petit que la saisie : sans cela, « Chercher un
+   produit, un marchand… » débordait du champ et se faisait COUPER (« un
+   marcha »). Défaut apparu le jour où l'identité a remplacé la police du système
+   par Open Sans, plus large à taille égale. */
+#recherche::placeholder { font-size: 13px; }
 #recherche:focus { outline: 2px solid var(--anneau); outline-offset: -1px;}
 /* Le sélecteur de pays vit à côté de la recherche, pas dans la barre du bas :
    celle-ci est déjà pleine (tri, affichage, éco, favoris, réglages) et y ajouter
@@ -234,6 +239,31 @@ body[data-eco="1"] .offre .visuel { display: none; }
 }
 .btn.ghost { background: transparent; color: var(--doux); border: 1px solid var(--bord); flex: 0 0 auto; font-weight: 500; }
 .quand { font-size: 11.5px; color: var(--doux); }
+
+/* ---------- Partage d'une offre ----------
+   Une petite icône sous l'heure de parution. Discrète : elle ne doit pas
+   concurrencer le bouton d'achat, mais rester trouvable au pouce. */
+.ligne-partage { position: relative; display: flex; justify-content: flex-end; margin-top: 6px; }
+.partager {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: transparent; border: 1px solid var(--bord); border-radius: 9px;
+  color: var(--doux); font: inherit; font-size: 12px; padding: 5px 9px; cursor: pointer;
+}
+.partager svg { width: 15px; height: 15px; fill: currentColor; display: block; }
+.partager:hover, .partager:focus-visible { color: var(--accent-2); border-color: var(--accent-2); }
+.menu-partage {
+  position: absolute; right: 0; bottom: calc(100% + 6px); z-index: 6;
+  display: flex; flex-direction: column; min-width: 158px;
+  background: var(--carte); border: 1px solid var(--bord); border-radius: 10px;
+  box-shadow: 0 8px 22px rgba(0,0,0,.20); overflow: hidden;
+}
+.menu-partage a, .menu-partage button {
+  display: block; width: 100%; text-align: left; text-decoration: none;
+  background: transparent; border: 0; color: var(--texte);
+  font: inherit; font-size: 13px; padding: 10px 12px; cursor: pointer;
+}
+.menu-partage a + a, .menu-partage a + button { border-top: 1px solid var(--bord); }
+.menu-partage button[disabled] { color: var(--vert); }
 
 /* ---------- Divers ---------- */
 .vide, .plus { text-align: center; color: var(--doux); margin: 26px 0; font-size: 14px; }
