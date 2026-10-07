@@ -19,6 +19,8 @@
  * paramètre faux, et JAMAIS l'identifiant d'un autre pays sur son lien.
  */
 
+import { t } from './langues.js';
+
 /* 1. Amazon Partenaires — UN identifiant PAR marché.
       Coller ici l'identifiant de suivi fourni par chaque programme national.
       Laisser vide tant que le programme n'est pas ouvert : les liens de ce
