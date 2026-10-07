@@ -927,24 +927,60 @@ const FAMILLES = {
     'dator', 'bildskarm', 'horlurar', 'tangentbord', 'mus', 'surfplatta', 'telefon', 'tv-apparat', 'skrivare', 'kamera', 'konsol', 'grafikkort', 'laddare', 'hogtalare', 'elektronik', 'datorer',
   ],
   mode: [
+    //  A8 — VÊTEMENTS ET ACCESSOIRES (demande de B : « les chaussettes et tout
+    //  autre vêtement → Mode »). Complément des tables dans les 9 langues.
+    //  Mesuré le 7/10 sur les offres publiées : les CHAUSSETTES étaient 7 hors
+    //  Mode (4 « Autres », 3 Sport — dont « Chaussettes Basses Homme Femme
+    //  10/20 Paires ») et les SOUS-VÊTEMENTS hors Mode étaient des « Trunks »
+    //  Calvin Klein en « Autres ». Les mots ajoutés sont groupés PAR LANGUE,
+    //  à la suite des mots d'origine de la même langue (un seul bloc par
+    //  langue : le vérificateur lit un compteur par langue, le dupliquer le
+    //  casserait). Les chaussettes, elles, sont en MOTS_FORTS (elles tranchent
+    //  seules) ; les sous-vêtements restent ici, en mots FAIBLES.
+    //  ⚠ Mots PIÉGEUX volontairement ÉCARTÉS, chacun mesuré :
+    //   « slip »     → attrape « non-slip » (tapis de souris, étui, pince) ;
+    //   « collant »  → attrape « collant = gluant » (jouets collants) ;
+    //   « want »     → attrape le domaine « want.nl » d'un article Lego ;
+    //   « rok »      → attrape 14 offres sans rapport ;
+    //   « maglia »   → manchette d'Apple Watch.
+    //  « gant »/« gants » sont lus ENTRE FRONTIÈRES (MOTS_A_FRONTIERE) : sans
+    //  cela « élégant » les contient ; les cas non vestimentaires (gant de
+    //  toilette, gants nitrile) sont en MOTS_TROMPEURS.
     // fr
     'mode', 'vetement', 'chaussure', 'sneaker', 'sac', 'bijou', 'montre', 'lingerie', 'manteau', 'pull', 'jean', 'textile', 'robe', 'chemise', 'pantalon', 'basket', 'bottes', 'ceinture', 'portefeuille', 'pull-over',
+    'echarpe', 'casquette', 'bonnet', 'gant', 'gants', 'jupe', 'short', 'maillot', 'pyjama', 't-shirt', 'tee-shirt', 'sweat', 'blouson', 'veste', 'sandale', 'claquette', 'kimono', 'calecon',
     // en
     'fashion', 'clothing', 'clothes', 'shoe', 'shoes', 'sneakers', 'handbag', 'jewel', 'jewellery', 'watch', 'coat', 'jacket', 'jumper', 'jeans', 'apparel', 'dress', 'shirt', 'trousers', 'boots', 'belt', 'wallet', 'sweater',
+    'scarf', 'beanie', 'mitten', 'swimsuit', 'slipper', 'skirt', 'hoodie', 'boxer', 'trunks', 'underwear',
+    'sweatshirt', 'pyjamas', 'sandals', 'flip flops',
     // de
     'kleidung', 'schuh', 'schuhe', 'tasche', 'handtasche', 'schmuck', 'uhr', 'mantel', 'jacke', 'pullover', 'textil', 'kleid', 'hemd', 'hose', 'stiefel', 'gurtel', 'portemonnaie', 'lederjacke', 'muetze', 'schal',
+    'handschuh', 'unterhose', 'unterwasche',
+    'schlafanzug', 'sandalen', 'badeanzug',
     // nl
     'kleding', 'schoen', 'schoenen', 'tas', 'handtas', 'sieraad', 'horloge', 'jas', 'trui', 'jurk', 'hemd', 'broek', 'laarzen', 'riem', 'portemonnee', 'sieraden',
+    'sjaal', 'muts', 'handschoen', 'onderbroek',
+    'pyjama', 'sandalen', 'badpak',
     // es
     'moda', 'ropa', 'zapato', 'zapatos', 'zapatilla', 'zapatillas', 'bolso', 'joya', 'reloj', 'lenceria', 'abrigo', 'chaqueta', 'jersey', 'vaqueros', 'vestido', 'camisa', 'pantalon', 'botas', 'cinturon', 'cartera',
+    'guante', 'gorro', 'bufanda', 'falda',
+    'camiseta', 'sudadera', 'sandalias', 'chanclas', 'banador', 'pijama',
     // it
     'abbigliamento', 'scarpa', 'scarpe', 'borsa', 'gioiello', 'orologio', 'intimo', 'cappotto', 'giacca', 'maglione', 'tessile', 'vestito', 'camicia', 'pantaloni', 'stivali', 'cintura', 'portafoglio',
+    'sciarpa', 'cappello', 'guanti', 'gonna', 'mutande',
+    'pigiama', 'maglietta', 'felpa', 'sandali', 'ciabatte',
     // pt
     'roupa', 'sapato', 'sapatos', 'sapatilhas', 'mala', 'bolsa', 'joia', 'relogio', 'casaco', 'camisola', 'ganga', 'vestuario', 'calcas', 'botas', 'cinto', 'carteira',
+    'cachecol', 'luva', 'saia', 'cueca',
+    'pijama', 'sandalias', 'chinelos', 'fato de banho',
     // pl
     'odziez', 'but', 'buty', 'sneakersy', 'torba', 'torebka', 'bizuteria', 'zegarek', 'bielizna', 'plaszcz', 'kurtka', 'sweter', 'jeansy', 'tekstylia', 'sukienka', 'koszula', 'spodnie', 'kozaki', 'pasek', 'portfel',
+    'szalik', 'czapka', 'rekawiczki', 'spodnica', 'majtki', 'bokserski',
+    'pizama', 'sandaly', 'klapki', 'bluza', 'koszulka',
     // sv
     'klader', 'sko', 'skor', 'vaska', 'handvaska', 'smycke', 'klocka', 'underklader', 'kappa', 'jacka', 'troja', 'tyg', 'klanning', 'skjorta', 'byxor', 'stovlar', 'balte', 'planbok',
+    'halsduk', 'mossa', 'vantar', 'kjol',
+    'pyjamas', 'sandaler', 'badklader',
   ],
   sport: [
     // fr
@@ -1252,6 +1288,12 @@ const MOTS_FORTS = {
     'tondeuse a gazon', 'robot tondeuse', 'tondeuse robot',
     'lawnmower', 'lawn mower', 'robot lawn mower', 'mower', 'rasenmaher', 'mahroboter',
     'grasmachine', 'robotmaaier', 'cortacesped', 'tosaerba', 'cortador de relva', 'kosiarka', 'grasklippare',
+    //  A8 : « cricut » — machine de découpe (loisirs créatifs / bricolage) dont
+    //  la DESCRIPTION énumère des projets (« … custom vinyl decals, t-shirts,
+    //  full color stickers »). Mesuré : le mot faible « t-shirt » (+ « shirt »)
+    //  la faisait passer en Mode. Produit NOMMÉ, il tranche : Bricolage. Précédent
+    //  identique : « sonicare », marque-produit placée en MOTS_FORTS par A7.
+    'cricut',
   ],
   // ÉLECTROMÉNAGER → electromenager (nouvel onglet, à côté de High-tech).
   //  Les appareils ménagers ne vont PLUS en « maison » : cette famille ne
@@ -1611,6 +1653,22 @@ const MOTS_FORTS = {
     'return flight', 'kreuzfahrt', 'flugreise', 'paketresa', 'utlandsresa', 'wycieczka objazdowa',
     'soggiorno hotel', 'pacchetto vacanza', 'soggiorno hotel', 'resort todo incluido',
   ],
+  // MODE — CHAUSSETTES (unité A8). Ce sont des PRODUITS NOMMÉS et sans
+  //  ambiguïté : ils tranchent avant la catégorie de la source. Mesuré le 7/10 :
+  //  « SukModen Men's Ankle Running Socks » et « Getry piłkarskie adidas Knee
+  //  Socks » étaient rangés en SPORT par la rubrique de la source et non par le
+  //  titre ; un mot fort les ramène en Mode. Le mot nu « sock » est lu entre
+  //  frontières (MOTS_A_FRONTIERE) pour ne pas attraper « socket ».
+  mode: [
+    'chaussette', 'sock', 'socks', 'socken', 'sokken', 'calcetin', 'calzino', 'calzini', 'meia', 'skarpet', 'strumpa', 'strumpor',
+    //  Pluriels mesurés absents (unité A8, complément des 9 langues) : une
+    //  chaussette se vend presque toujours au PLURIEL. Ajoutés explicitement
+    //  car « meia »/« skarpet » ne couvrent pas leur pluriel (le mot est lu
+    //  entre frontières : « meias » a un « s » qui rompt la frontière).
+    //  « meias » est protégé du sens « meias-finais » (demi-finales) par
+    //  MOTS_TROMPEURS. « sockor » = chaussettes (sv).
+    'calcetines', 'meias', 'skarpetki', 'sockor',
+  ],
 };
 
 /** Normalisation de comparaison : accents, apostrophes, lettres spéciales.
@@ -1807,7 +1865,18 @@ const MOTS_A_FRONTIERE = new Set(['auto', 'moto', 'tire', 'wagen', 'wiel', 'mota
   //  descontos - Leak.pt », un article de presse, partait en Beauté. À
   //  frontière, « Mascara » isolé (« Maybelline Mascara, Lash Sensational »)
   //  continue de matcher, et le faux positif disparaît.
-  'mascara']);
+  'mascara',
+  //  AJOUT MESURÉ le 7/10 (unité A8 — chaussettes, sous-vêtements, accessoires
+  //  → Mode). Quatre mots COURTS lus en sous-chaîne attrapaient un mot
+  //  ordinaire :
+  //   « sock »  → « socket » (prises, hubs USB) — « socks » suffit pour le
+  //     pluriel anglais, mais le singulier « sock » doit rester ;
+  //   « meia »  → « meia-… » (pt) : prudence sur un mot de 4 lettres ;
+  //   « gant »/« gants » → « élégant »/« élégants » (« Matelas Elegant Prime »,
+  //     « Silhouette élégante ») : 16 offres touchées à tort en sous-chaîne.
+  //  À frontière, « Socks », « Meia », « Gants de moto » continuent de matcher ;
+  //  « socket » et « élégant » non.
+  'sock', 'meia', 'gant', 'gants']);
 
 /** Un mot-clé doit-il être lu entre deux frontières de mot ? */
 const exigeFrontiere = (m) => m.length <= 3 || MOTS_A_FRONTIERE.has(m);
@@ -1886,7 +1955,7 @@ const exigeFrontiere = (m) => m.length <= 3 || MOTS_A_FRONTIERE.has(m);
  *                     un titre de VÊTEMENTS (« Character Clothing Incl. … Hot
  *                     Wheels, K-Pop »), qui doit rester en Mode.
  */
-const MOTS_TROMPEURS = /(^|[^a-z])(motorola|motoroli|motorole|motorolu|streifen|good girl|tom cruise|ideal voyage|kinder schokolade|kinder bueno|orient bambino|beach boys|lost boys|rebecca mobili|bookshelf speakers|bookshelf speaker|couch co-op|couch co op|couch coop|podkladka na biurko|accesorio de escritorio|libreria completa|pour une etagere|pour etagere|chaise romaine|babyliss|configuration|configuracion|configurazione|fargat|fargad|fargnattseende|flerfargstryck|fargdisplay|washing machine cleaner|k-pop)([^a-z]|$)/g;
+const MOTS_TROMPEURS = /(^|[^a-z])(motorola|motoroli|motorole|motorolu|streifen|good girl|tom cruise|ideal voyage|kinder schokolade|kinder bueno|orient bambino|beach boys|lost boys|rebecca mobili|bookshelf speakers|bookshelf speaker|couch co-op|couch co op|couch coop|podkladka na biurko|accesorio de escritorio|libreria completa|pour une etagere|pour etagere|chaise romaine|babyliss|configuration|configuracion|configurazione|fargat|fargad|fargnattseende|flerfargstryck|fargdisplay|washing machine cleaner|k-pop|gant de toilette|gants nitrile|gant nitrile|no sweat|meias-finais|meias finais|meia-final)([^a-z]|$)/g;
 const retirerTrompeurs = (texte) => texte.replace(MOTS_TROMPEURS, '$1 $3');
 
 /** Les marqueurs d'un jeu NUMÉRIQUE — application, téléchargement… ou console.
