@@ -286,19 +286,67 @@ function annoncerConnexion(reseau) {
           { r: reseau }));
 }
 
-/** Rubrique « Langue » : le sélecteur des 9 langues, avec leur NOM NATIF.
-    Écrit dans #regLangue (index.html). Le changement s'applique tout de suite
-    (voir changerLangue) et ne touche jamais au pays — deux clés distinctes. */
+/** Drapeaux des 9 langues, dessinés en VECTORIEL.
+ *
+ *  Pourquoi pas les emoji (🇫🇷) : Windows ne les dessine pas — il affiche les
+ *  deux lettres « FR » dans un petit carré. Sur une application qui vise toute
+ *  l'Europe, un drapeau qui devient du texte selon la machine n'est pas
+ *  acceptable. Ces tracés-là s'affichent identiquement partout, à toute taille,
+ *  et ne coûtent aucune requête réseau (un fichier image par drapeau = 9
+ *  téléchargements de plus sur un forfait mobile — contraire à la règle
+ *  d'économie de données).
+ *
+ *  Chaque drapeau fait 24 × 16, les proportions réelles d'un drapeau. */
+const DRAPEAUX = {
+  fr: '<rect width="24" height="16" fill="#ffffff"/><rect width="8" height="16" fill="#002395"/>'
+    + '<rect x="16" width="8" height="16" fill="#ED2939"/>',
+  nl: '<rect width="24" height="16" fill="#ffffff"/><rect width="24" height="5.4" fill="#AE1C28"/>'
+    + '<rect y="10.6" width="24" height="5.4" fill="#21468B"/>',
+  de: '<rect width="24" height="16" fill="#ffffff"/><rect width="24" height="5.4" fill="#000000"/>'
+    + '<rect y="10.6" width="24" height="5.4" fill="#FFCE00"/>',
+  en: '<rect width="24" height="16" fill="#012169"/>'
+    + '<path d="M0 0 24 16M24 0 0 16" stroke="#ffffff" stroke-width="3.4"/>'
+    + '<path d="M0 0 24 16M24 0 0 16" stroke="#C8102E" stroke-width="1.5"/>'
+    + '<path d="M12 0V16M0 8H24" stroke="#ffffff" stroke-width="5.4"/>'
+    + '<path d="M12 0V16M0 8H24" stroke="#C8102E" stroke-width="3"/>',
+  es: '<rect width="24" height="16" fill="#F1BF00"/><rect width="24" height="4" fill="#AA151B"/>'
+    + '<rect y="12" width="24" height="4" fill="#AA151B"/>',
+  it: '<rect width="24" height="16" fill="#ffffff"/><rect width="8" height="16" fill="#009246"/>'
+    + '<rect x="16" width="8" height="16" fill="#CE2B37"/>',
+  pt: '<rect width="24" height="16" fill="#FF0000"/><rect width="9.6" height="16" fill="#006600"/>'
+    + '<circle cx="9.6" cy="8" r="3.4" fill="#FFD700"/><circle cx="9.6" cy="8" r="1.7" fill="#CE1126"/>',
+  pl: '<rect width="24" height="16" fill="#ffffff"/><rect y="8" width="24" height="8" fill="#DC143C"/>',
+  sv: '<rect width="24" height="16" fill="#006AA7"/><rect x="7.5" width="3" height="16" fill="#FECC00"/>'
+    + '<rect y="7" width="24" height="3" fill="#FECC00"/>',
+};
+
+/** Rubrique « Langue » : les 9 langues en LISTE, drapeau + nom natif.
+ *
+ *  Demande de B : « Pour la partie des langues tu peux utiliser plus de place
+ *  dans l'onglet en mettant les drapeaux des pays avec la langue à côté. » Plus
+ *  de menu déroulant, donc : « Pas besoin de menu déroulant. Il y a suffisamment
+ *  de place. » Un menu déroulant cachait huit langues sur neuf derrière un clic ;
+ *  ici les neuf sont visibles d'un coup, et on voit laquelle est active.
+ *
+ *  Le changement s'applique tout de suite (voir changerLangue) et ne touche
+ *  JAMAIS au pays — deux clés distinctes. */
 function dessinerLangue() {
   const rl = $('regLangue');
   if (!rl) return;
-  if (!$('langueReglages')) {
-    rl.innerHTML = '<div class="champ"><select id="langueReglages" aria-label="'
-      + esc(t('Langue')) + '"></select></div>';
-  }
-  $('langueReglages').innerHTML = languesDisponibles()
-    .map((l) => '<option value="' + l.code + '">' + esc(l.nom) + '</option>').join('');
-  $('langueReglages').value = langue();
+  const choix = langue();
+  rl.innerHTML = `<p class="aide-reglages">${esc(t('Choisis la langue de l’interface'))}</p>`
+    + '<div class="langues" role="radiogroup" aria-label="' + esc(t('Langue')) + '">'
+    + languesDisponibles().map((l) => `
+      <button class="langue${l.code === choix ? ' on' : ''}" data-langue="${esc(l.code)}"
+              role="radio" aria-checked="${l.code === choix}" type="button">
+        <span class="drap" aria-hidden="true"><svg viewBox="0 0 24 16">${DRAPEAUX[l.code] || ''}</svg></span>
+        <span class="nom-langue">${esc(l.nom)}</span>
+        <span class="coche" aria-hidden="true">${l.code === choix ? '✓' : ''}</span>
+      </button>`).join('')
+    + '</div>';
+  rl.querySelectorAll('.langue').forEach((b) => {
+    b.addEventListener('click', () => changerLangue(b.dataset.langue));
+  });
 }
 
 /** Applique un changement de langue choisi par l'utilisateur.
@@ -1230,13 +1278,24 @@ function dessinerPays() {
 
   const rp = $('regPays');
   if (rp) {
-    if (!$('paysReglages')) {
-      rp.innerHTML = '<div class="champ"><label for="paysReglages">' + esc(t('Pays des offres')) + '</label>'
-        + '<select id="paysReglages"></select></div>'
-        + '<p style="margin:0;font-size:12.5px;color:var(--doux)">Seuls des pays d’Europe sont proposés : les trajets restent courts.</p>';
-    }
-    $('paysReglages').innerHTML = optionsPays();
-    $('paysReglages').value = etat.pays;
+    // En LISTE, plus en menu déroulant (demande de B : « Pas besoin de menu
+    // déroulant. Il y a suffisamment de place »). Chaque pays montre le nombre
+    // d'offres qu'il apporte : un pays vide n'est pas proposé, sinon on
+    // offrirait un filtre qui vide l'écran — l'utilisateur croirait à une panne.
+    const compteP = compteParPays();
+    const item = (code, libelle, n) => `
+      <button class="pays-item${etat.pays === code ? ' on' : ''}" data-pays="${esc(code)}" type="button"
+              aria-pressed="${etat.pays === code}">
+        <b>${esc(libelle)}</b><span>${esc(t('{n} offres', { n }))}</span>
+      </button>`;
+    rp.innerHTML = '<div class="pays-liste">'
+      + item('tout', t("Tous les pays d'Europe"), etat.offres.length)
+      + codes.map((c) => item(c, t(NOMS_PAYS[c]), compteP[c])).join('')
+      + '</div>'
+      + '<p style="margin:10px 0 0;font-size:12.5px;color:var(--doux)">Seuls des pays d’Europe sont proposés : les trajets restent courts.</p>';
+    rp.querySelectorAll('.pays-item').forEach((b) => {
+      b.addEventListener('click', () => choisirPays(b.dataset.pays));
+    });
   }
 }
 
@@ -1464,16 +1523,12 @@ function brancher() {
     const b = e.target.closest('.pays-item');
     if (b) choisirPays(b.dataset.pays);
   });
-  // Réglages : le même choix, au même endroit que le reste.
-  $('regPays').addEventListener('change', (e) => {
-    if (e.target.id === 'paysReglages') choisirPays(e.target.value);
-  });
-  // Langue de l'INTERFACE : le choix de l'utilisateur, gardé à part du pays.
-  // Les deux listes vivent dans la même feuille Réglages et ne se parlent pas :
-  // changer l'une ne touche jamais l'autre.
-  $('regLangue').addEventListener('change', (e) => {
-    if (e.target.id === 'langueReglages') changerLangue(e.target.value);
-  });
+  // Réglages : les listes sont dessinées par dessinerPays() / dessinerLangue(),
+  // qui posent elles-mêmes l'écouteur sur chaque bouton. Les deux `change` qui
+  // s'en occupaient auparavant sont partis avec les menus déroulants qu'ils
+  // servaient : ils guettaient des identifiants qui n'existent plus. Du code
+  // mort qui surveille un élément absent ne casse rien — il ment sur ce qui est
+  // réellement branché, et fait croire que le réglage passe encore par là.
   document.querySelectorAll('.vue').forEach((b) => {
     b.addEventListener('click', () => appliquerVue(b.dataset.vue));
   });

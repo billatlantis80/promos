@@ -125,8 +125,7 @@
   <div class="onglets" role="tablist" aria-label="Réglages" id="ongletsReglages">
     <button class="onglet" role="tab" data-onglet="compte" aria-selected="true" data-i18n="Compte">Compte</button>
     <button class="onglet" role="tab" data-onglet="langue" aria-selected="false" data-i18n="Langue">Langue</button>
-    <button class="onglet" role="tab" data-onglet="themes" aria-selected="false" data-i18n="Thèmes">Thèmes</button>
-    <button class="onglet" role="tab" data-onglet="affichage" aria-selected="false" data-i18n="Affichage">Affichage</button>
+    <button class="onglet" role="tab" data-onglet="affichage" aria-selected="false" data-i18n="Affichage et thèmes">Affichage et thèmes</button>
     <button class="onglet" role="tab" data-onglet="infos" aria-selected="false" data-i18n="Informations">Informations</button>
   </div>
 
@@ -155,14 +154,11 @@
     </section>
   </div>
 
-  <div class="panneau" data-panneau="themes" role="tabpanel" hidden>
-    <section class="rubrique">
-      <h3 data-i18n="Thème et couleurs">Thème et couleurs</h3>
-      <p data-i18n="Dix thèmes. Le choix s'applique tout de suite et reste enregistré sur cet appareil.">Dix thèmes. Le choix s'applique tout de suite et reste enregistré sur cet appareil.</p>
-      <div class="themes" id="themes"></div>
-    </section>
-  </div>
-
+  <!-- « Affichage » et « Thèmes » ne font plus qu'un onglet (demande de B :
+       « Tu peux regrouper thèmes et affichage, l'affichage au-dessus et les
+       thèmes en bas car ils prennent plus de place »). L'ordre est celui-là :
+       Affichage, puis Pays — qui commande ce qui est montré —, puis les Thèmes,
+       qui ne changent que l'habillage. -->
   <div class="panneau" data-panneau="affichage" role="tabpanel" hidden>
     <section class="rubrique">
       <h3 data-i18n="Affichage">Affichage</h3>
@@ -173,6 +169,11 @@
       <h3 data-i18n="Pays">Pays</h3>
       <p data-i18n="Les offres affichées viennent de ce pays. Tu peux en changer quand tu veux : chaque pays proposé a ses propres sources.">Les offres affichées viennent de ce pays. Tu peux en changer quand tu veux : chaque pays proposé a ses propres sources.</p>
       <div id="regPays"></div>
+    </section>
+    <section class="rubrique">
+      <h3 data-i18n="Thème et couleurs">Thème et couleurs</h3>
+      <p data-i18n="Dix thèmes. Le choix s'applique tout de suite et reste enregistré sur cet appareil.">Dix thèmes. Le choix s'applique tout de suite et reste enregistré sur cet appareil.</p>
+      <div class="themes" id="themes"></div>
     </section>
   </div>
 

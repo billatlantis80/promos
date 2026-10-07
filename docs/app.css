@@ -535,6 +535,35 @@ html[data-theme="contraste"] {
 .pays-item span { font-size: 12px; color: var(--doux); }
 .pays-item.conseille { border-color: var(--accent); }
 .pays-item:hover { border-color: var(--accent-2); }
+/* Pays ACTIF dans les réglages. La liste remplace un menu déroulant (demande de
+   B), donc elle doit dire lequel est choisi aussi clairement qu'un <select> le
+   ferait — même langage visuel que la langue active. */
+.pays-item.on { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; font-weight: 600; }
+
+/* ---------- Langues : drapeau + nom natif, en liste ----------
+   Demande de B : « mettre les drapeaux des pays avec la langue à côté » et
+   « pas besoin de menu déroulant ». Neuf langues tiennent sur deux colonnes,
+   toutes visibles d'un coup : un menu déroulant en cachait huit sur neuf. */
+.aide-reglages { margin: 0 0 10px; font-size: 12.5px; color: var(--doux); }
+.langues { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.langue {
+  display: flex; align-items: center; gap: 9px;
+  padding: 10px 11px; cursor: pointer; text-align: left;
+  background: var(--carte-2); color: var(--texte);
+  border: 1px solid var(--bord); border-radius: 11px;
+  font: inherit; font-size: 14px;
+}
+.langue:hover { border-color: var(--accent-2); }
+.langue.on { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; font-weight: 600; }
+/* Le drapeau est un DESSIN, pas une image : aucune requête réseau (règle
+   d'économie de données), et le même rendu sur toutes les machines — les emoji
+   drapeaux se transforment en lettres « FR » sous Windows. Le liseré est
+   nécessaire : un drapeau à bandes blanches (Pologne) se confondrait sinon avec
+   la carte claire des thèmes lumineux. */
+.drap { flex: 0 0 auto; display: block; line-height: 0; }
+.drap svg { display: block; width: 27px; height: 18px; border-radius: 3px; box-shadow: 0 0 0 1px rgba(0, 0, 0, .2); }
+.nom-langue { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.langue .coche { color: var(--accent); flex: 0 0 auto; }
 /* Bouton qui ressemble à un lien : pour les actions de secours (mot de passe
    oublié), on ne veut pas qu'elles aient l'air d'une action principale. */
 .lien-bouton {
