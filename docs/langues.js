@@ -133,6 +133,7 @@ const FR = {
   'High-tech': 'High-tech',
   'Électroménager': 'Électroménager',
   'Mode': 'Mode',
+  'Bijoux': 'Bijoux',  // fr
   'Meubles': 'Meubles',
   'Sport': 'Sport',
   'Jeux & jouets': 'Jeux & jouets',
@@ -352,6 +353,7 @@ const NL = {
   'High-tech': 'Hightech',
   'Électroménager': 'Huishoudapparaten',
   'Mode': 'Mode',
+  'Bijoux': 'Sieraden',  // nl
   'Meubles': 'Meubels',
   'Sport': 'Sport',
   'Jeux & jouets': 'Spellen & speelgoed',
@@ -549,6 +551,7 @@ const DE = {
   'High-tech': 'Hightech',
   'Électroménager': 'Haushaltsgeräte',
   'Mode': 'Mode',
+  'Bijoux': 'Schmuck',  // de
   'Meubles': 'Möbel',
   'Sport': 'Sport',
   'Jeux & jouets': 'Spiele & Spielzeug',
@@ -746,6 +749,7 @@ const EN = {
   'High-tech': 'Tech',
   'Électroménager': 'Home appliances',
   'Mode': 'Fashion',
+  'Bijoux': 'Jewellery',  // en
   'Meubles': 'Furniture',
   'Sport': 'Sport',
   'Jeux & jouets': 'Games & toys',
@@ -943,6 +947,7 @@ const ES = {
   'High-tech': 'Tecnología',
   'Électroménager': 'Electrodomésticos',
   'Mode': 'Moda',
+  'Bijoux': 'Joyería',  // es
   'Meubles': 'Muebles',
   'Sport': 'Deporte',
   'Jeux & jouets': 'Juegos y juguetes',
@@ -1140,6 +1145,7 @@ const IT = {
   'High-tech': 'Tecnologia',
   'Électroménager': 'Elettrodomestici',
   'Mode': 'Moda',
+  'Bijoux': 'Gioielli',  // it
   'Meubles': 'Mobili',
   'Sport': 'Sport',
   'Jeux & jouets': 'Giochi e giocattoli',
@@ -1337,6 +1343,7 @@ const PT = {
   'High-tech': 'Tecnologia',
   'Électroménager': 'Eletrodomésticos',
   'Mode': 'Moda',
+  'Bijoux': 'Joias',  // pt
   'Meubles': 'Móveis',
   'Sport': 'Desporto',
   'Jeux & jouets': 'Jogos e brinquedos',
@@ -1534,6 +1541,7 @@ const PL = {
   'High-tech': 'Technologia',
   'Électroménager': 'Sprzęt AGD',
   'Mode': 'Moda',
+  'Bijoux': 'Biżuteria',  // pl
   'Meubles': 'Meble',
   'Sport': 'Sport',
   'Jeux & jouets': 'Gry i zabawki',
@@ -1731,6 +1739,7 @@ const SV = {
   'High-tech': 'Teknik',
   'Électroménager': 'Hushållsapparater',
   'Mode': 'Mode',
+  'Bijoux': 'Smycken',  // sv
   'Meubles': 'Möbler',
   'Sport': 'Sport',
   'Jeux & jouets': 'Spel och leksaker',

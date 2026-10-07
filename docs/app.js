@@ -30,7 +30,7 @@ const BASE = DANS_APK ? HUB : '';
 
 const NOMS_CATEGORIES = {
   bricolage: 'Bricolage', maison: 'Maison', tech: 'High-tech',
-  electromenager: 'Électroménager', mode: 'Mode',
+  electromenager: 'Électroménager', mode: 'Mode', bijoux: 'Bijoux',
   meubles: 'Meubles', sport: 'Sport', jouets: 'Jeux & jouets', auto: 'Auto & moto',
   beaute: 'Beauté', nourriture: 'Nourriture', animaux: 'Animaux',
   voyages: 'Voyages', activite: 'Activité', autre: 'Autres',
@@ -52,7 +52,7 @@ const NOMS_CATEGORIES = {
  * Une catégorie inconnue (ajoutée par le collecteur sans passer par ici) se
  * range juste avant « Autres » — jamais au milieu et jamais en tête.
  */
-const ORDRE_CATEGORIES = ['tech', 'electromenager', 'meubles', 'maison', 'mode', 'auto', 'jouets', 'sport', 'bricolage', 'beaute', 'nourriture', 'animaux', 'voyages', 'activite', 'autre'];
+const ORDRE_CATEGORIES = ['tech', 'electromenager', 'meubles', 'maison', 'mode', 'bijoux', 'auto', 'jouets', 'sport', 'bricolage', 'beaute', 'nourriture', 'animaux', 'voyages', 'activite', 'autre'];
 
 /** Rang d'affichage d'une catégorie : un entier, ou « juste avant Autres ». */
 function rangCategorie(c) {
