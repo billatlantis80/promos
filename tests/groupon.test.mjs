@@ -177,3 +177,62 @@ test('E3 — les pièges de mots ne font pas basculer un repas en Beauté', () =
   assert.equal(C('Soins du visage et du cou'), 'beaute', 'un soin du visage va en Beauté');
 });
 
+/* ------------------------------------------------------------------ *
+ *  RENDU « TanStack » — la page Groupon servie en JavaScript.
+ *
+ *  Mesuré (AUDIT-B1.md) : `groupon.fr/bon-plan` est tirée au hasard, par le
+ *  même domaine, en rendu Next (`__NEXT_DATA__`, JSON) ou TanStack
+ *  (`<script class="$tsr">`, flux JavaScript). 3 fois sur 4 en TanStack. Un
+ *  lecteur qui ne connaît que Next rend alors ZÉRO offre, en silence.
+ *
+ *  Ces tests fixent le second lecteur : la MÊME carte, sérialisée au format
+ *  TanStack, doit produire la MÊME offre que le format Next.
+ * ------------------------------------------------------------------ */
+
+let _n = 0;
+const _ref = () => `$R[${++_n}]`;
+/** Sérialise une valeur comme le fait Groupon : objets/tableaux marqués
+ *  `$R[n]=`, objets en `Object.assign(Object.create(null),{…})`, booléens `!0`/`!1`. */
+function tan(v) {
+  if (v === null) return 'null';
+  if (v === true) return '!0';
+  if (v === false) return '!1';
+  if (typeof v === 'number') return String(v);
+  if (typeof v === 'string') return JSON.stringify(v);
+  if (Array.isArray(v)) return `${_ref()}=[${v.map(tan).join(',')}]`;
+  return `${_ref()}=Object.assign(Object.create(null),{${Object.entries(v).map(([k, x]) => `${k}:${tan(x)}`).join(',')}})`;
+}
+const pageTanStack = (cartes) => '<html data-renderer="tanstack"><head>'
+  + '<script class="$tsr" id="$tsr-stream-barrier">'
+  + '(self.$R=self.$R||{})["tsr"]=[];'
+  + `$_TSR.router=($R=>${tan({ __typename: 'BrowseDealFeedResult', cards: cartes })})([]);`
+  + '$_TSR.e();document.currentScript.remove()</script></head></html>';
+
+test('E1 — une page au rendu TanStack est lue comme la page Next', () => {
+  const c = carte('spa-ts', 'Spa privatif pour 2 avec modelage', 11199, 17300);
+  const oNext = offresGroupon(page([c]), SOURCE);
+  const oTS = offresGroupon(pageTanStack([c]), SOURCE);
+  assert.equal(oTS.length, 1, 'la carte du flux TanStack doit être lue (avant B2 : 0, en silence)');
+  // On neutralise l'horodatage, qui diffère forcément entre les deux lectures.
+  const sans = (o) => ({ ...o, date: null });
+  assert.deepEqual(sans(oTS[0]), sans(oNext[0]), 'mêmes offres, quel que soit le rendu servi');
+});
+
+test('E1 — le rendu TanStack fait respecter les MÊMES garde-fous', () => {
+  // Une promotion gonflée (référence à 10× le prix) est rejetée dans les deux
+  // rendus ; sinon le second lecteur deviendrait une porte dérobée.
+  const gonflee = carte('licence-ts', 'Licence Microsoft Windows 11 à vie', 1199, 12990);
+  assert.deepEqual(offresGroupon(pageTanStack([gonflee]), SOURCE), []);
+  // Sans second prix, il n'y a pas de promotion à montrer — même verdict.
+  const sansRef = carte('simple-ts', 'Massage relaxant 1h', 3999, null);
+  assert.deepEqual(offresGroupon(pageTanStack([sansRef]), SOURCE), []);
+});
+
+test('E1 — un flux TanStack illisible est ignoré, jamais deviné', () => {
+  // Un `$tsr` qui ne contient aucune carte ne rend rien — et ne lève pas.
+  assert.deepEqual(offresGroupon('<html><script class="$tsr">(self.$R={})["tsr"]=[];$_TSR.e()</script></html>', SOURCE), []);
+  // Une carte TRONQUÉE (accolade jamais refermée) est ignorée, pas inventée.
+  const tronquee = '<script class="$tsr">{__typename:"StandardDealCard",id:"x",title:"Café offert",prices:{';
+  assert.deepEqual(offresGroupon(`<html>${tronquee}</html>`, SOURCE), []);
+});
+

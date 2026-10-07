@@ -2662,11 +2662,22 @@ function versNumberCarte(texte) {
 /* ------------------------------------------------------------------ *
  *  GROUPON — lire une page de bons plans.
  *
- *  Deux formats selon la page, et le lecteur s'en accommode :
- *    • `/fr/landing/sale`, `/fr/bon-plan` → le JSON d'une application Next.js,
- *      dans `<script id="__NEXT_DATA__">`. Les bons plans y sont des objets
- *      `StandardDealCard` portant `title`, `url`, `prices.price.amount` et
- *      `prices.strikeThroughPrice.amount` — les DEUX prix, en centimes.
+ *  La même page est servie par Groupon en DEUX rendus DIFFÉRENTS, tirés au
+ *  hasard par le même domaine (mesuré : `groupon.fr/bon-plan` 3 fois sur 4 en
+ *  TanStack, 1 fois sur 4 en Next). Les deux portent les MÊMES bons plans :
+ *
+ *    • rendu Next.js → `<script id="__NEXT_DATA__">`, JSON valide. Les bons
+ *      plans y sont des objets `StandardDealCard` portant `title`, `url`,
+ *      `prices.price.amount` et `prices.strikeThroughPrice.amount`.
+ *    • rendu TanStack → `<script class="$tsr">`, un flux JavaScript
+ *      (`Object.assign(Object.create(null),{…})`, marqueurs `$R[n]`) qui N'EST
+ *      PAS du JSON. Les mêmes `StandardDealCard` y sont présents, à l'identique.
+ *
+ *  Un lecteur qui ne connaît que le premier rend 0 offre — EN SILENCE — une fois
+ *  sur trois au moins sur les pages françaises (voir AUDIT-B1.md). Le second
+ *  lecteur `cartesGrouponTanStack` couvre l'autre rendu, sans jamais exécuter le
+ *  JavaScript distant : il n'analyse que le sous-ensemble de données du flux.
+ *
  *    • `/goods` (produits) → même JSON-LD standard que Coolblue, traité par
  *      offresEnseigne. Pas de code ici.
  *
@@ -2678,19 +2689,171 @@ function versNumberCarte(texte) {
  *  prix, jamais lue dans le titre — Groupon écrit « jusqu'à 50 % » dans
  *  certains titres, un maximum qui ne dit rien de l'offre affichée.
  * ------------------------------------------------------------------ */
+
+/** Index du `}` / `]` qui ferme le bloc ouvert à `debut`, chaînes ignorées
+ *  (guillemets et échappements). -1 si le bloc ne se referme pas. */
+function finBlocJs(s, debut) {
+  let prof = 0;
+  for (let i = debut; i < s.length; i++) {
+    const c = s[i];
+    if (c === '"' || c === "'") {
+      const q = c;
+      i++;
+      while (i < s.length) {
+        if (s[i] === '\\') { i += 2; continue; }
+        if (s[i] === q) break;
+        i++;
+      }
+      continue;
+    }
+    if (c === '{' || c === '[') prof++;
+    else if (c === '}' || c === ']') { prof--; if (prof === 0) return i; }
+  }
+  return -1;
+}
+
+/** Analyseur du sous-ensemble JavaScript du flux TanStack : objets
+ *  `Object.assign(Object.create(null),{…})`, tableaux, chaînes, nombres,
+ *  `!0`/`!1`, `null`, et marqueurs `$R[n]` (définition `$R[n]=` puis
+ *  réutilisation `$R[n]`). Ne lit que des DONNÉES ; n'exécute rien. */
+function parseurTanStack(src) {
+  const refs = new Map();
+  const n = src.length;
+  let i = 0;
+  const espaces = () => { while (i < n && /\s/.test(src[i])) i++; };
+  const chaine = () => {
+    const debut = i++;                       // src[debut] === '"'
+    let ech = false;
+    while (i < n) {
+      const c = src[i++];
+      if (ech) { ech = false; continue; }
+      if (c === '\\') { ech = true; continue; }
+      if (c === '"') break;
+    }
+    const brut = src.slice(debut, i);
+    try { return JSON.parse(brut); } catch { return brut.slice(1, -1); }
+  };
+  const nombre = () => {
+    const m = /^-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?/.exec(src.slice(i, i + 40));
+    if (!m) return null;
+    i += m[0].length;
+    return Number(m[0]);
+  };
+  function objet() {
+    espaces();
+    if (src.startsWith('Object.assign(', i)) {
+      i += 'Object.assign('.length;
+      const k = src.indexOf('Object.create(null)', i);
+      if (k >= 0) i = k + 'Object.create(null)'.length;
+      espaces();
+      if (src[i] === ',') i++;
+      espaces();
+    }
+    if (src[i] !== '{') throw new Error('accolade attendue à ' + i);
+    i++;
+    const o = {};
+    espaces();
+    while (i < n && src[i] !== '}') {
+      let cle;
+      if (src[i] === '"') cle = chaine();
+      else {
+        let j = i;
+        while (j < n && src[j] !== ':') j++;
+        cle = src.slice(i, j).trim();
+        i = j;
+      }
+      espaces();
+      if (src[i] === ':') i++;
+      o[cle] = valeur();
+      espaces();
+      if (src[i] === ',') i++;
+      espaces();
+    }
+    if (src[i] === '}') i++;
+    espaces();
+    if (src[i] === ')') i++;                 // ferme Object.assign(
+    return o;
+  }
+  function tableau() {
+    i++;                                     // '['
+    const a = [];
+    espaces();
+    while (i < n && src[i] !== ']') {
+      a.push(valeur());
+      espaces();
+      if (src[i] === ',') i++;
+      espaces();
+    }
+    if (src[i] === ']') i++;
+    return a;
+  }
+  function valeur() {
+    espaces();
+    const m = /^\$R\[(\d+)\]/.exec(src.slice(i, i + 20));
+    if (m) {
+      const num = Number(m[1]);
+      i += m[0].length;
+      espaces();
+      if (src[i] === '=') { i++; const v = valeur(); refs.set(num, v); return v; }
+      return refs.has(num) ? refs.get(num) : null;
+    }
+    if (src.startsWith('Object.assign(', i)) return objet();
+    if (src[i] === '{') return objet();
+    if (src[i] === '[') return tableau();
+    if (src[i] === '"') return chaine();
+    if (src.startsWith('!0', i)) { i += 2; return true; }
+    if (src.startsWith('!1', i)) { i += 2; return false; }
+    if (src.startsWith('null', i)) { i += 4; return null; }
+    if (src.startsWith('true', i)) { i += 4; return true; }
+    if (src.startsWith('false', i)) { i += 5; return false; }
+    if (src[i] === '-' || /\d/.test(src[i])) return nombre();
+    throw new Error('valeur illisible à ' + i + ' : ' + JSON.stringify(src.slice(i, i + 24)));
+  }
+  return { valeur };
+}
+
+/** Cartes d'un rendu TanStack : on isole chaque `StandardDealCard` par
+ *  appariement d'accolades (chaque carte est autonome dans le flux — mesuré :
+ *  autant de `$R[n]=` que de `$R[n]`, aucune référence externe) et on la relit
+ *  seule. Une carte illisible est ignorée, jamais devinée. */
+function cartesGrouponTanStack(html) {
+  const s = String(html);
+  const cartes = [];
+  const lit = '{__typename:"StandardDealCard"';
+  let idx = 0;
+  while (true) {
+    const debut = s.indexOf(lit, idx);
+    if (debut < 0) break;
+    const fin = finBlocJs(s, debut);
+    if (fin < 0) break;
+    try { cartes.push(parseurTanStack(s.slice(debut, fin + 1)).valeur()); } catch { /* carte illisible : ignorée */ }
+    idx = fin + 1;
+  }
+  return cartes;
+}
+
+/** Rend la liste des `StandardDealCard`, quel que soit le rendu servi. */
+function cartesGroupon(html) {
+  const texte = String(html);
+  const bloc = texte.match(/<script id="__NEXT_DATA__"[^>]*>([\s\S]*?)<\/script>/i);
+  if (bloc) {
+    let data = null;
+    try { data = JSON.parse(bloc[1]); } catch { data = null; }
+    const cartes = [];
+    if (data) (function parcourir(o) {
+      if (!o || typeof o !== 'object') return;
+      if (o.__typename === 'StandardDealCard') cartes.push(o);
+      for (const v of Object.values(o)) parcourir(v);
+    })(data);
+    if (cartes.length) return cartes;
+  }
+  try { return cartesGrouponTanStack(texte); } catch { return []; }
+}
+
 function offresGroupon(html, source) {
   const out = [];
   const vus = new Set();
-  const bloc = String(html).match(/<script id="__NEXT_DATA__"[^>]*>([\s\S]*?)<\/script>/i);
-  if (!bloc) return out;
-  let data;
-  try { data = JSON.parse(bloc[1]); } catch { return out; }
-  const cartes = [];
-  (function parcourir(o) {
-    if (!o || typeof o !== 'object') return;
-    if (o.__typename === 'StandardDealCard') cartes.push(o);
-    for (const v of Object.values(o)) parcourir(v);
-  })(data);
+  const cartes = cartesGroupon(html);
   const centimes = (o) => (o && Number.isFinite(o.amount) ? Math.round(o.amount) / 100 : null);
   for (const c of cartes) {
     const prix = centimes(c.prices && c.prices.price);
