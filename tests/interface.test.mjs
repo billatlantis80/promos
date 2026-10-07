@@ -514,16 +514,34 @@ test('le logo est le logotype fourni : carré arrondi, K détouré, dégradé', 
     assert.ok(!/étiquette|etiquette/i.test(contenu.replace(/<!--[\s\S]*?-->/g, '')),
       `${nom} : aucune étiquette de prix dans le dessin`);
   }
-  // Le mot : sa lettre K porte le dégradé du logo — « pour le mot kazendra il
-  // faut le même dégradé que dans le logo, dans la lettre K ». Les sept autres
-  // lettres prennent la couleur du thème, sinon le mot disparaîtrait sur les
-  // trois thèmes à en-tête clair.
-  assert.match(html, /<span class="k-mot">K<\/span>AZENDRA/,
-    'la lettre K du mot doit être isolée pour porter le dégradé');
-  assert.match(css, /\.k-mot \{[\s\S]*?background-clip:\s*text/,
-    'la lettre K doit être remplie par le dégradé du logo');
-  assert.match(css, /--k-mot-1:\s*#4c86b4/, 'déclinaison prévue pour en-tête sombre');
-  assert.match(css, /--k-mot-1:\s*#1f4473/, 'déclinaison exacte pour en-tête clair');
+  // TOUT le mot KAZENDRA porte le dégradé, de GAUCHE à DROITE — demande de B :
+  // « de gauche vers la droite pour le dégradé. Le dégradé est pour le mot
+  // Kazendra. » Un dégradé diagonal, ou limité à la seule lettre K, serait un
+  // retour en arrière.
+  assert.match(html, /<b class="marque-nom">KAZENDRA<\/b>/,
+    'le mot entier doit porter le dégradé, pas une seule lettre');
+  const mot = css.match(/^\.marque-nom \{([\s\S]*?)^\}/m);
+  assert.ok(mot, 'la règle .marque-nom doit exister');
+  assert.match(mot[1], /background-clip:\s*text/,
+    'le mot doit être rempli par le dégradé');
+  assert.match(mot[1], /linear-gradient\(\s*90deg/,
+    'le dégradé doit aller de gauche à droite');
+  assert.doesNotMatch(mot[1], /linear-gradient\(\s*(?:45|1[0-9]{2})deg/,
+    'un dégradé diagonal n’est pas ce qui a été demandé');
+  assert.match(css, /--mot-deg-1:\s*#5a9ac8/, 'déclinaison prévue pour en-tête sombre');
+  assert.match(css, /--mot-deg-1:\s*#223a5f/, 'déclinaison exacte pour en-tête clair');
+  // Le dégradé doit être LISIBLE sur l'en-tête sombre : le bleu nuit du thème
+  // est #0d3b5b, la teinte de départ doit s'en détacher.
+  const sombre = css.match(/\.marque \{ --mot-deg-1:\s*#([0-9a-f]{6})/i);
+  assert.ok(sombre, 'la déclinaison sombre doit définir une teinte de départ');
+  const c = [0, 2, 4].map((i) => parseInt(sombre[1].slice(i, i + 2), 16));
+  const lum = (v) => { const s = v / 255;
+    return s <= 0.03928 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4); };
+  const lMot = 0.2126 * lum(c[0]) + 0.7152 * lum(c[1]) + 0.0722 * lum(c[2]);
+  const lTete = 0.2126 * lum(13) + 0.7152 * lum(59) + 0.0722 * lum(91); // #0d3b5b
+  const contraste = (lMot + 0.05) / (lTete + 0.05);
+  assert.ok(contraste >= 3,
+    `le début du mot doit rester lisible sur l’en-tête (#0d3b5b) : ${contraste.toFixed(2)}:1`);
 });
 
 test('la phrase d’accroche est sur la page, dans les 9 langues', () => {
