@@ -705,6 +705,15 @@ const FAMILLES = {
   maison: [
     // fr
     'maison', 'habitat', 'cuisine', 'literie', 'matelas', 'deco', 'piscine', 'barbecue', 'cocotte', 'poele', 'couette', 'oreiller', 'vaisselle',
+    //  AJOUT MESURÉ le 7/10 (unité A7, audit de « Autres ») — petit mobilier
+    //  et entretien de la maison, mesurés en « Autres » sur les ventes flash
+    //  Amazon (aucune rubrique de source, donc un seul mot suffit) :
+    //   « bocaux » (3, ComSaf) → rangement de cuisine ; « boite a pain » (1) ;
+    //   « chiffon microfibre »/« lavette » (1, MR.SIGA) ; « paillasson » (2) ;
+    //   « guirlande » (1, LED). Mots FAIBLES : ils ne tranchent qu'en l'absence
+    //   de rubrique de source ou contre « Autres », jamais contre une vraie
+    //   rubrique du marchand.
+    'bocaux', 'boite a pain', 'chiffon microfibre', 'paillasson', 'guirlande',
     // en
     'home', 'kitchen', 'mattress', 'bedding', 'cookware', 'pan', 'duvet', 'pillow', 'decor', 'bed sheet',
     // de
@@ -1023,6 +1032,11 @@ const FAMILLES = {
   beaute: [
     // fr
     'beaute', 'parfum', 'cosmetique', 'soin', 'maquillage', 'cheveux', 'brosse a dents', 'creme', 'shampoing', 'gel douche', 'hygiene', 'epilateur', 'epilation',
+    //  AJOUT MESURÉ le 7/10 (A7) : « mascara » manquait — les Maybelline
+    //  « Lash Sensational Sky High » (GB/NL) restaient en « Autres ». Mot FAIBLE
+    //  (produit courant, peut voisiner une autre famille) ; il suffit contre
+    //  « Autres » et ne force jamais une rubrique de source.
+    'mascara',
     // en
     'beauty', 'perfume', 'fragrance', 'cosmetics', 'skincare', 'makeup', 'hair', 'toothbrush', 'cream', 'shampoo', 'shower gel', 'grooming', 'epilator',
     // de
@@ -1192,7 +1206,14 @@ const MARQUES = {
     //  données, que sur une sous-chaîne lue par accident (« scie » ⊂ « ściennych »).
     //  La frontière exigée pour « scie » le laissait partir en « Autres » ; la
     //  marque le maintient en Bricolage.
-    'wagner'],
+    //  A7 : « bosch professional » (la gamme OUTILLAGE ÉLECTRO-PORTATIF bleue).
+    //  ⚠ La marque nue « bosch » NE PEUT PAS être inscrite : le test
+    //  « aucune marque ambiguë rangée en dur » l'interdit (Bosch fait aussi des
+    //  lave-linge et des frigos). La gamme « Professional », elle, ne désigne
+    //  que l'outillage : mesuré le 7/10, elle ramène de « Autres » les perceuses,
+    //  meuleuses, scies et lasers Bosch Pro (BE/PL/SE) sans toucher à un seul
+    //  appareil ménager. « bosch auto » reste là aussi, pour les pièces auto.
+    'wagner', 'bosch professional'],
   sport: ['decathlon', 'quechua', 'btwin', 'orbea', 'canyon', 'specialized'],
   beaute: ['loreal', 'sephora', 'nivea', 'garnier', 'oral-b', 'gillette', 'neutrogena', 'douglas', 'braun silk'],
   jouets: ['lego', 'playmobil', 'hasbro', 'mattel', 'barbie', 'nerf', 'funko', 'schleich', 'ravensburger', 'asmodee'],
@@ -1295,6 +1316,36 @@ const MOTS_FORTS = {
     //  « akkusauger » (de : aspirateur à batterie) : la sous-chaîne « akku » le
     //  rangeait en Bricolage ; à frontière, c'est le nom de l'APPAREIL qui parle.
     'akkusauger',
+    //  AJOUT MESURÉ le 7/10 (unité A7, audit de « Autres »). Des APPAREILS
+    //  ménagers NOMMÉS restaient en « Autres » parce que leur nom (allemand,
+    //  néerlandais, suédois, polonais, français) manquait aux tables — l'audit
+    //  de « Autres » les a listés par fréquence. Comptés sur les 9 574 offres
+    //  publiées (les chiffres entre parenthèses sont les occurrences en
+    //  « Autres » AVANT correction) :
+    //   « kaffeevollautomat » (6) → PHILIPS LatteGo 2200/3300/5400/5500, DE+AT ;
+    //   « dampfbügelstation » (2) → Philips PerfectCare 6000, DE+AT ;
+    //   « fensterputzroboter » (2) → ECOVACS WINBOT W2S/W3, AT ;
+    //   « saugroboter » (3) → dreame L40/L40s/X50s, DE (déjà « robot aspirateur ») ;
+    //   « nettoyeur de vitres » (1) → ECOVACS WINBOT W3, FR ;
+    //   « centrale vapeur » (2) → Calor Power Pro / Pro Express, FR ;
+    //   « machine a expresso » (1) → Bialetti Venus Induction, FR ;
+    //   « bodygroom »/« bodygroomer » (4) → Philips série 7000/5000, FR/NL/PL ;
+    //   « multiquick » (5) → Braun MultiQuick 5/7/9 (mélangeurs), BE ;
+    //   « ergomaster » (6) → Bosch ErgoMaster 4/6/8 (mélangeurs), BE ;
+    //   « pastamachine » (1) → Philips ProExtrude, NL ;
+    //   « aquaclean » (3) → filtres à eau Philips pour espresso, NL/SE/PL ;
+    //   « luftfuktare » (1) → Philips 3000 NanoCloud, SE ;
+    //   « nawilzacz » (1) → Philips série 2000, PL ;
+    //   « parownica » (1) → Philips série 1000, PL.
+    //  Ces mots sont des NOMS D'APPAREIL, pas des marques : ils gardent la même
+    //  sûreté que « haartrockner » ou « kaffeevollautomat » et sont pris en
+    //  entier (pas de sous-chaîne courte). Les titres de Coolblue réduits au
+    //  seul numéro de modèle (« Bosch WGB264ACFG i-DOS ») ne sont PAS traités
+    //  ici : aucun mot n'y nomme l'appareil, on ne devine pas (voir AUDIT-A7).
+    'kaffeevollautomat', 'dampfbugelstation', 'fensterputzroboter', 'saugroboter',
+    'nettoyeur de vitres', 'centrale vapeur', 'machine a expresso',
+    'bodygroom', 'bodygroomer', 'multiquick', 'ergomaster', 'pastamachine',
+    'aquaclean', 'luftfuktare', 'nawilzacz', 'parownica',
   ],
   // MOBILIER NOMMÉ → meubles (unité E6).
   //  Ce sont des PRODUITS NOMMÉS, au même titre qu'un appareil électroménager :
@@ -1327,6 +1378,15 @@ const MOTS_FORTS = {
     'kanapa', 'fotel', 'szafa', 'komoda', 'kredens', 'biurko', 'stolik', 'krzeslo', 'szafka', 'lozko',
     // sv
     'soffa', 'fatolj', 'bokhylla', 'byra', 'skank', 'garderob', 'skrivbord', 'matbord', 'soffbord', 'nattduksbord',
+    //  ⚠ « bureau » N'EST PAS ici, et c'est une MESURE de l'unité A7, pas un
+    //  oubli : essayé en mot FORT (avec frontière de mot), il déplaçait 28
+    //  offres de Maison vers Meubles — mais aussi, à tort, « Ordinateur de
+    //  Bureau » (high-tech), « déco 3D pour bureau » (un set LEGO), « tapis de
+    //  cuisine … bureau », « horloge murale … bureau », « kit d'outils …
+    //  bureau ». Le mot est un LIEU, pas toujours un meuble ; la frontière
+    //  n'y change rien. Retiré : un « bureau » réglable reste classé par sa
+    //  source (« Maison & Habitat ») ou reste en « Autres », jamais rangé au
+    //  hasard. Un vrai meuble se nomme (« etagere », « commode »…).
   ],
   // ALIMENTATION (ÉPICERIE) NOMMÉE → nourriture (unité A6).
   //  Plusieurs produits d'épicerie de la source allemande « Lebensmittel &
@@ -1371,6 +1431,17 @@ const MOTS_FORTS = {
     //  sous-chaîne « pila » ⊂ « depilación » ; l'appareil NOMMÉ les ramène en
     //  Beauté, comme « epilateur ».
     'lumea',
+    //  AJOUT MESURÉ le 7/10 (unité A7, audit de « Autres »). Gammes d'APPAREILS
+    //  de soin NOMMÉES, restées en « Autres » faute de mot (comptées sur les
+    //  9 574 offres publiées) :
+    //   « sonicare » (4)  → têtes de brosse à dents Philips Sonicare, SE/NL/ES/PT ;
+    //   « smart ipl » (3) → épilateurs Braun Smart IPL Skin i-expert, BE ;
+    //   « reaura » (1)    → masque LED visage Philips ReAura, NL.
+    //  ⚠ Ce sont des NOMS DE GAMME d'APPAREIL DE SOIN, pas la marque ambiguë
+    //  « Philips » (interdite en dur : un seul mot de marque enverrait aussi ses
+    //  moniteurs et ses friteuses ici). La brosse à dents et l'épilateur sont
+    //  des soins de la personne, pas des appareils ménagers (point 9).
+    'sonicare', 'smart ipl', 'reaura',
   ],
   // APPAREIL TECHNIQUE → high-tech
   tech: [
@@ -1729,7 +1800,14 @@ const MOTS_A_FRONTIERE = new Set(['auto', 'moto', 'tire', 'wagen', 'wiel', 'mota
   //  mais lu en sous-chaîne il attrapait « P**lumea**u » — une « Brosse
   //  Nettoyage Radiateur … Plumeau » partait en Beauté. À frontière, « Lumea »
   //  isolé (« Philips Lumea serie 8000 ») continue de matcher.
-  'lumea']);
+  'lumea',
+  //  AJOUT MESURÉ le 7/10 (unité A7) : « mascara », mot FORT de Beauté, attrapait
+  //  en sous-chaîne le PORTUGAIS « desmasca**ra** » (« unmask ») — mesuré :
+  //  « Black Friday: atenção ao teste dos 30 dias que desmascara falsos
+  //  descontos - Leak.pt », un article de presse, partait en Beauté. À
+  //  frontière, « Mascara » isolé (« Maybelline Mascara, Lash Sensational »)
+  //  continue de matcher, et le faux positif disparaît.
+  'mascara']);
 
 /** Un mot-clé doit-il être lu entre deux frontières de mot ? */
 const exigeFrontiere = (m) => m.length <= 3 || MOTS_A_FRONTIERE.has(m);

@@ -165,7 +165,13 @@ test('le nom d’une de nos familles ne sert JAMAIS de preuve de catégorie', ()
   assert.equal(categorieDeSource('mode'), null);
   assert.equal(categorieDeSource('presse'), null);
   assert.equal(famille('Bosch MSM4B610', 'tech'), 'autre');
-  assert.equal(famille('Braun Smart IPL Skin i-expert Pro 7 PL7431', 'tech'), 'autre');
+  //  A7 : « Braun Smart IPL Skin i-expert » n'est PLUS un bon exemple — c'est un
+  //  APPAREIL DE SOIN NOMMÉ (« smart ipl » est désormais un mot fort de Beauté,
+  //  mesuré), donc il tombe en Beauté, et c'est correct. On reprend un titre du
+  //  catalogue réduit au seul MODÈLE (« Braun Series 7 72-G7200CC », un rasoir
+  //  sans mot d'appareil) : là, ni la source « tech » ni le titre ne disent quoi
+  //  que ce soit, et « Autres » est la seule réponse honnête.
+  assert.equal(famille('Braun Series 7 72-G7200CC', 'tech'), 'autre');
 });
 
 test('les marques rangent dans leur famille, apostrophes comprises', () => {
