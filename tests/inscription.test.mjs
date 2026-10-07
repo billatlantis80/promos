@@ -28,6 +28,7 @@ import { readFileSync } from 'node:fs';
 import {
   adresseValide, tableauConfigure, envoyerInscription, URL_TABLEAU,
 } from '../public/inscription.js';
+import { verifierNom } from '../public/compte.js';
 
 const lire = (p) => readFileSync(new URL('../' + p, import.meta.url), 'utf8');
 const APP = lire('public/app.js');
@@ -111,6 +112,30 @@ test('les 6 nouvelles phrases existent dans les 9 langues', () => {
     const n = SRC.split('\n').filter((l) => l.includes(`'${p}':`) || l.includes(`"${p}":`)).length;
     assert.equal(n, 9, `${p.slice(0, 50)}… : présente ${n} fois, attendu 9`);
   }
+});
+
+test('une ADRESSE E-MAIL est un identifiant de compte valable', () => {
+  // ⚠ C'est LE défaut trouvé en exerçant le formulaire : la règle d'origine
+  // n'admettait pas le caractère « @ », donc la création du compte échouait
+  // TOUJOURS avec une adresse — et rien n'était jamais envoyé au tableau.
+  // Le formulaire aurait dit « envoyée », le compte n'aurait pas existé.
+  const bonnes = ['marie@exemple.be', 'jean.dupont@mail.fr', 'a+bonsplans@gmail.com', 'anna@telia.se'];
+  for (const m of bonnes) {
+    const r = verifierNom(m);
+    assert.equal(r.ok, true, `« ${m} » doit être acceptée comme identifiant (${r.message || ''})`);
+  }
+  // Une adresse est rangée en minuscules : deux casses = deux inscriptions =
+  // deux newsletters pour la même personne.
+  assert.equal(verifierNom('Marie@Exemple.BE').valeur, 'marie@exemple.be');
+  // Une adresse mal formée est refusée, avec le message déjà traduit.
+  //  Attention à ne PAS mettre « marie » ici : sans « @ », c'est un NOM, et un
+  //  nom valable — la première version de ce test se trompait là-dessus.
+  for (const m of ['marie@', '@exemple.be', 'marie@exemple', 'marie @exemple.be']) {
+    assert.equal(verifierNom(m).ok, false, `« ${m} » ne doit pas passer`);
+  }
+  // Les anciens comptes à NOM continuent de fonctionner à l'identique.
+  assert.equal(verifierNom('marie').ok, true);
+  assert.equal(verifierNom('marie dupont').ok, false);
 });
 
 test('le récepteur Google refuse les doublons et vérifie l’adresse', () => {

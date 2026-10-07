@@ -46,9 +46,36 @@ export function ficheCompte() {
   return c ? { nom: c.nom, cree: c.cree, tours: c.tours, algorithme: c.algo } : null;
 }
 
-/** Règles annoncées à l'inscription — l'utilisateur sait à quoi se tenir. */
+/** Règles de l'identifiant de compte.
+ *
+ *  ⚠ DÉFAUT CORRIGÉ (08/10/2026), trouvé en EXERÇANT le formulaire et non en
+ *  relisant le code. Depuis que l'inscription collecte des adresses e-mail, le
+ *  formulaire envoie une adresse… et la règle ci-dessous la REFUSAIT : elle
+ *  n'admettait que lettres, chiffres, point, tiret et souligné — donc jamais le
+ *  caractère « @ ». Résultat : « marie@exemple.be » renvoyait « Lettres,
+ *  chiffres, point, tiret et souligné uniquement. » et le compte n'était JAMAIS
+ *  créé, donc l'adresse n'était jamais envoyée au tableau. Les deux règles
+ *  vivaient dans deux fichiers, chacune correcte toute seule.
+ *
+ *  On garde donc DEUX règles, choisies par la présence du « @ » : une adresse est
+ *  jugée comme une adresse, un nom comme un nom. Les comptes déjà créés avec un
+ *  nom continuent de fonctionner à l'identique.
+ *
+ *  Volontairement, aucun message nouveau n'est introduit : une adresse vide ou
+ *  trop longue reçoit le même refus qu'une adresse mal formée. Trois façons de
+ *  dire la même chose à l'utilisateur n'apportent rien.
+ */
 export function verifierNom(nom) {
   const n = String(nom || '').trim();
+  if (n.includes('@')) {
+    // Adresse e-mail : un seul @, quelque chose avant, un point après.
+    if (n.length > 120 || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(n)) {
+      return { ok: false, message: "Cette adresse e-mail n'est pas valide." };
+    }
+    // Rangée en minuscules : « Marie@… » et « marie@… » sont la MÊME personne.
+    // Sans cela, deux inscriptions pour une seule adresse, donc deux newsletters.
+    return { ok: true, valeur: n.toLowerCase() };
+  }
   if (n.length < NOM_MIN) return { ok: false, message: `Le nom doit faire au moins ${NOM_MIN} caractères.` };
   if (n.length > NOM_MAX) return { ok: false, message: `Le nom ne doit pas dépasser ${NOM_MAX} caractères.` };
   if (!/^[\p{L}\p{N}._-]+$/u.test(n)) return { ok: false, message: 'Lettres, chiffres, point, tiret et souligné uniquement.' };
