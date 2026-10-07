@@ -1888,6 +1888,7 @@ const EXTRA = {
     'Nouveau ici ? Inscris-toi': 'Nouveau ici ? Inscris-toi',
     'Choisis la langue de l’interface': 'Choisis la langue de l’interface',
     'Thème et affichage': 'Thème et affichage',
+    'Le nombre à droite de chaque pays est son nombre d\'offres.': 'Le nombre à droite de chaque pays est son nombre d\'offres.',
 'date inconnue': 'date inconnue',
   },
   nl: {
@@ -1912,6 +1913,7 @@ const EXTRA = {
     'Nouveau ici ? Inscris-toi': 'Nieuw hier? Maak een account',
     'Choisis la langue de l’interface': 'Kies de taal van de interface',
     'Thème et affichage': 'Thema en weergave',
+    'Le nombre à droite de chaque pays est son nombre d\'offres.': 'Het getal rechts van elk land is het aantal aanbiedingen.',
 'date inconnue': 'onbekende datum',
   },
   de: {
@@ -1936,6 +1938,7 @@ const EXTRA = {
     'Nouveau ici ? Inscris-toi': 'Neu hier? Registriere dich',
     'Choisis la langue de l’interface': 'Wähle die Sprache der Oberfläche',
     'Thème et affichage': 'Design und Anzeige',
+    'Le nombre à droite de chaque pays est son nombre d\'offres.': 'Die Zahl rechts neben jedem Land ist seine Anzahl Angebote.',
 'date inconnue': 'unbekanntes Datum',
   },
   en: {
@@ -1960,6 +1963,7 @@ const EXTRA = {
     'Nouveau ici ? Inscris-toi': 'New here? Sign up',
     'Choisis la langue de l’interface': 'Choose the interface language',
     'Thème et affichage': 'Theme and display',
+    'Le nombre à droite de chaque pays est son nombre d\'offres.': 'The number to the right of each country is its number of deals.',
 'date inconnue': 'unknown date',
   },
   es: {
@@ -1984,6 +1988,7 @@ const EXTRA = {
     'Nouveau ici ? Inscris-toi': '¿Nuevo por aquí? Regístrate',
     'Choisis la langue de l’interface': 'Elige el idioma de la interfaz',
     'Thème et affichage': 'Tema y visualización',
+    'Le nombre à droite de chaque pays est son nombre d\'offres.': 'El número a la derecha de cada país es su número de ofertas.',
 'date inconnue': 'fecha desconocida',
   },
   it: {
@@ -2008,6 +2013,7 @@ const EXTRA = {
     'Nouveau ici ? Inscris-toi': 'Nuovo qui? Registrati',
     'Choisis la langue de l’interface': 'Scegli la lingua dell’interfaccia',
     'Thème et affichage': 'Tema e visualizzazione',
+    'Le nombre à droite de chaque pays est son nombre d\'offres.': 'Il numero a destra di ogni paese è il suo numero di offerte.',
 'date inconnue': 'data sconosciuta',
   },
   pt: {
@@ -2032,6 +2038,7 @@ const EXTRA = {
     'Nouveau ici ? Inscris-toi': 'Novo por aqui? Regista-te',
     'Choisis la langue de l’interface': 'Escolhe o idioma da interface',
     'Thème et affichage': 'Tema e visualização',
+    'Le nombre à droite de chaque pays est son nombre d\'offres.': 'O número à direita de cada país é o seu número de promoções.',
 'date inconnue': 'data desconhecida',
   },
   pl: {
@@ -2056,6 +2063,7 @@ const EXTRA = {
     'Nouveau ici ? Inscris-toi': 'Nowy tutaj? Zarejestruj się',
     'Choisis la langue de l’interface': 'Wybierz język interfejsu',
     'Thème et affichage': 'Motyw i wyświetlanie',
+    'Le nombre à droite de chaque pays est son nombre d\'offres.': 'Liczba po prawej stronie każdego kraju to liczba jego ofert.',
 'date inconnue': 'nieznana data',
   },
   sv: {
@@ -2080,6 +2088,7 @@ const EXTRA = {
     'Nouveau ici ? Inscris-toi': 'Ny här? Registrera dig',
     'Choisis la langue de l’interface': 'Välj gränssnittets språk',
     'Thème et affichage': 'Tema och visning',
+    'Le nombre à droite de chaque pays est son nombre d\'offres.': 'Siffran till höger om varje land är dess antal erbjudanden.',
 'date inconnue': 'okänt datum',
   },
 };

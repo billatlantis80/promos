@@ -1323,8 +1323,12 @@ function dessinerPays() {
       <button class="pays-item${etat.pays === code ? ' on' : ''}" data-pays="${esc(code)}" type="button"
               aria-pressed="${etat.pays === code}">
         <span class="drap" aria-hidden="true"><svg viewBox="0 0 24 16">${DRAPEAUX_PAYS[String(code).toLowerCase()] || ''}</svg></span>
-        <b>${esc(libelle)}</b><span class="n">${esc(t('{n} offres', { n }))}</span>
+        <b>${esc(libelle)}</b><span class="n">${esc(n.toLocaleString(locale()))}</span>
       </button>`;
+    // Le NOMBRE SEUL, sans le mot « offres » : sur deux colonnes, « Royaume-Uni
+    // 1664 offres » ne tenait pas et le nom se faisait couper (« Royaume-… »).
+    // Ce que le nombre compte est dit juste au-dessus, en toutes lettres — on
+    // préfère une phrase claire à un mot répété treize fois qui mange la place.
     // SUR DEUX COLONNES (demande de B : « et partager sur deux colonnes pour
     // gagner de la place »). La classe « pays-2col » est ce qui distingue cette
     // liste de celle de la question d'ouverture, qui reste sur une colonne : là

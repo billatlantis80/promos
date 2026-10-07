@@ -17,6 +17,11 @@
 }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
+/* [hidden] DOIT gagner. Sans cette ligne, la règle #verrou { display:flex } plus
+   bas ÉCRASE l'attribut hidden : l'écran de connexion restait affiché AU-DESSUS
+   du panneau ouvert, et on pouvait lire les deux à la fois. Le défaut est
+   invisible en lecture de code — il ne se voit qu'à l'écran. */
+[hidden]{display:none !important}
 body{
   background:var(--fond); color:var(--texte); font-size:15px; line-height:1.5;
   font-family:"Open Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;

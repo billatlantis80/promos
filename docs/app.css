@@ -551,7 +551,7 @@ html[data-theme="contraste"] {
 .pays-liste.pays-2col { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
 @media (min-width: 620px) { .pays-liste.pays-2col { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 .pays-2col .pays-item { align-items: center; padding: 9px 10px; font-size: 13px; gap: 7px; }
-.pays-2col .pays-item b { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pays-2col .pays-item b { flex: 1 1 auto; min-width: 0; font-size: 12.5px; }
 .pays-2col .pays-item .n { flex: 0 0 auto; font-size: 11.5px; }
 
 /* ---------- Langues : drapeau + nom natif, en liste ----------
