@@ -19,8 +19,6 @@
  * paramètre faux, et JAMAIS l'identifiant d'un autre pays sur son lien.
  */
 
-import { t } from './langues.js';
-
 /* 1. Amazon Partenaires — UN identifiant PAR marché.
       Coller ici l'identifiant de suivi fourni par chaque programme national.
       Laisser vide tant que le programme n'est pas ouvert : les liens de ce
@@ -138,13 +136,12 @@ export const affiliationActive = () =>
 
 /** Mention légale : obligatoire (DGCCRF + stores), et non négociable.
  *
- *  C'est une FONCTION, pas une constante. Défaut corrigé le 08/10/2026 : elle
- *  était figée au chargement du module, en français, et ce fichier n'importait
- *  même pas le moteur de traduction — la mention s'affichait donc telle quelle
- *  dans les 9 langues, en bas de page, sans que rien ne le signale. Une
- *  fonction relue à chaque rendu suit le changement de langue.
+ *  Deux phrases selon que l'affiliation est ouverte ou non. Elles sont livrées
+ *  NUES, en français (la clé du dictionnaire EST le texte français) : c'est
+ *  app.js qui les passe à t() pour l'affichage, parce que ce fichier-ci reste
+ *  SANS DÉPENDANCE — son test l'évalue tel quel, et un `import` y casserait le
+ *  chargeur. Défaut corrigé le 08/10/2026 : la mention était une constante
+ *  figée au chargement, en français, affichée telle quelle dans les 9 langues.
  */
-export const mentionAffiliation = () => (affiliationActive() ? t(MENTION_ACTIVE) : t(MENTION_DESACTIVEE));
-
-const MENTION_ACTIVE = "Certains liens de cette page sont des liens affiliés : si tu achètes, une commission nous est versée par le marchand. Le prix que tu paies ne change pas.";
-const MENTION_DESACTIVEE = "Cette version ne contient pas encore d'identifiant d'affiliation : les liens sortants sont directs, sans commission.";
+export const MENTION_AFFILIATION_ACTIVE = "Certains liens de cette page sont des liens affiliés : si tu achètes, une commission nous est versée par le marchand. Le prix que tu paies ne change pas.";
+export const MENTION_AFFILIATION_INACTIVE = "Cette version ne contient pas encore d'identifiant d'affiliation : les liens sortants sont directs, sans commission.";

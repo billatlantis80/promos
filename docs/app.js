@@ -4,7 +4,7 @@
  * Principe : ne JAMAIS maquiller une offre. Une remise calculée est marquée
  * comme telle ; sans remise chiffrée, on affiche l'offre sans étiquette.
  */
-import { lienAffilie, mentionAffiliation, siteAmazon } from './affiliation.js';
+import { lienAffilie, affiliationActive, MENTION_AFFILIATION_ACTIVE, MENTION_AFFILIATION_INACTIVE, siteAmazon } from './affiliation.js';
 import * as C from './compte.js';
 import { t, chargerLangue, definirLangue, traduireDOM, languesDisponibles, langue, CLE_LANGUE, locale } from './langues.js';
 import { noterVisite } from './trafic.js';
@@ -420,7 +420,12 @@ function dessinerLangue() {
  *  redessinée comme le reste de l'interface. */
 function dessinerMention() {
   const p = $('mention');
-  if (p) p.textContent = mentionAffiliation();
+  if (!p) return;
+  // Les deux phrases viennent d'affiliation.js, en français (ce sont les clés du
+  // dictionnaire) ; c'est ICI qu'elles passent à t(), avec le reste du rendu.
+  p.textContent = t(affiliationActive()
+    ? MENTION_AFFILIATION_ACTIVE
+    : MENTION_AFFILIATION_INACTIVE);
 }
 
 /** Applique un changement de langue choisi par l'utilisateur.
