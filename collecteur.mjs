@@ -4607,6 +4607,17 @@ async function principal() {
     // seraient réacceptés au tour suivant, puis rejetés, indéfiniment.
     imagesGeneriques: [...imagesGeneriques],
     journal,
+    // LE CATALOGUE DES SOURCES SUIVIES, publié AVEC les offres.
+    //
+    // Sans lui, le panneau ne peut parler que des sources qui ont parlé dans CE
+    // passage : une source jamais interrogée, ou mise au repos (délai non
+    // écoulé), y est tout simplement invisible. On ne peut alors pas répondre à
+    // la question posée — « combien de sites suivis, combien actifs, combien
+    // non actifs, et lesquels » — et le panneau donne l'impression que tous les
+    // sites sont dormants, puisque seuls les muets y figurent.
+    sources: TOUTES_SOURCES.map((s) => ({
+      id: s.id, nom: s.nom, type: s.type, pays: s.pays, url: s.url,
+    })),
     offres,
   };
   // Toujours écrit : le hub local et le contrôle des sources lisent ce fichier,

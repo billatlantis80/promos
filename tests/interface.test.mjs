@@ -800,7 +800,7 @@ test('le panneau d’administration impose [hidden]', () => {
   // Et le panneau doit être une application à part, pas un onglet du site.
   assert.match(admin, /data-vue="origines"/,
     'l’onglet Origines doit exister dans le panneau');
-  for (const id of ['mOriginePays', 'mOrigineSources', 'mMuettes', 'mCandidats']) {
+  for (const id of ['mOriginePays', 'mActifs', 'mNonActifs', 'mCandidats']) {
     assert.ok(admin.includes(`id="${id}"`), `le bloc « ${id} » doit exister`);
   }
   assert.match(admin, /noindex/, 'le panneau ne doit pas être indexé');

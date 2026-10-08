@@ -221,19 +221,24 @@ details > table tr:first-child th{padding-top:2px}
 
       <section data-vue="origines">
         <div class="rub">
+          <h2>Sites actifs</h2>
+          <p class="aide">Les sites qui ont des annonces en ligne à la dernière mise à jour,
+            du plus prolifique au plus discret. Le nombre d'annonces est celui des annonces
+            <b>retenues</b> (lues puis gardées après les filtres) — c'est ce que le visiteur voit.</p>
+          <div id="mActifs"></div>
+        </div>
+        <div class="rub">
+          <h2>Sites non actifs</h2>
+          <p class="aide">Tous les sites suivis qui n'ont rien apporté cette fois, <b>avec la raison</b> :
+            en échec, flux vide, annonces écartées par les filtres, ou simplement mis au repos
+            (délai non écoulé — ce n'est pas une panne). C'est la liste où chercher un site à
+            réparer, ou à remplacer par un nouveau.</p>
+          <div id="mNonActifs"></div>
+        </div>
+        <div class="rub">
           <h2>Origine des annonces, par pays</h2>
           <p class="aide">Pour chaque pays, les sites qui lui fournissent ses annonces, du plus prolifique au plus discret. Déplie un pays pour le détail.</p>
           <div id="mOriginePays"></div>
-        </div>
-        <div class="rub">
-          <h2>Ce que chaque site apporte</h2>
-          <p class="aide">Total par site, et les pays qu'il alimente. C'est la photo d'une mise à jour.</p>
-          <div id="mOrigineSources"></div>
-        </div>
-        <div class="rub">
-          <h2>Sites qui ne donnent rien</h2>
-          <p class="aide">Interrogés à chaque passage, zéro annonce. Une source muette laisse l'application saine en apparence : c'est le défaut le plus difficile à voir.</p>
-          <div id="mMuettes"></div>
         </div>
         <div class="rub">
           <h2>À programmer ensuite</h2>
@@ -372,12 +377,20 @@ function dessinerSources() {
   if (!o) return;
   const j = o.journal || [];
   const ko = j.filter((x) => !x.ok);
+  // Le journal écrit `items` (annonces LUES dans le flux) et `retenues` (gardées
+  // après les filtres) — pas `n`. L'ancienne version affichait `x.n || 0` : la
+  // colonne valait donc 0 pour TOUT LE MONDE, et le panneau donnait l'impression
+  // que tous les sites étaient dormants. Corrigé le 08/10/2026.
   document.getElementById('mSources').innerHTML = j.length ? `<table>
-    <tr><th>Source</th><th class="n">Offres</th><th>État</th></tr>
-    ${j.map((x) => `<tr><td>${esc(x.source || '?')}</td><td class="n">${nf.format(x.n || 0)}</td>
-      <td class="${x.ok ? 'ok' : 'ko'}">${x.ok ? 'ok' : esc(x.erreur || 'en échec')}</td></tr>`).join('')}
+    <tr><th>Source</th><th class="n">Lues</th><th class="n">Retenues</th><th>État</th></tr>
+    ${j.map((x) => `<tr><td>${esc(x.source || '?')}</td>
+      <td class="n">${x.saute ? '—' : nf.format(x.items || 0)}</td>
+      <td class="n">${x.saute ? `${nf.format((x.sources || []).length)} au repos` : nf.format(x.retenues || 0)}</td>
+      <td class="${x.ok ? 'ok' : 'ko'}">${x.ok ? (x.saute ? 'au repos (délai)' : 'ok') : esc(x.erreur || 'en échec')}</td></tr>`).join('')}
     </table>
-    <p class="aide" style="margin-top:12px">${ko.length} source(s) en échec sur ${j.length}.</p>`
+    <p class="aide" style="margin-top:12px">${ko.length} source(s) en échec sur ${j.length}.
+      « Lues » = annonces trouvées dans le flux, « retenues » = gardées après les filtres.
+      Le total par site, et la liste des sites actifs et non actifs, sont dans l'onglet <b>Origines</b>.</p>`
     : '<p class="vide">Aucun journal dans ce fichier.</p>';
 
   const parCat = {};
@@ -451,6 +464,124 @@ function dessinerTrafic() {
     </table>`;
 }
 
+/* ---------- Le classement des sites : ACTIFS / NON ACTIFS ----------
+ *
+ * FONCTION PURE : elle ne touche pas au DOM. C'est ce qui la rend vérifiable —
+ * `tests/origines-admin.test.mjs` extrait son texte de ce fichier et l'exécute
+ * sur des journaux fabriqués. Une règle qu'on ne peut essayer que dans un
+ * navigateur ne se vérifie pas.
+ *
+ * DÉFAUT CORRIGÉ ICI (08/10/2026) — et il était grave. Le panneau lisait `x.n`
+ * dans le journal, alors que le collecteur y écrit `retenues` (annonces gardées)
+ * et `items` (annonces lues) : `n` n'existe pas. Conséquence : TOUS les sites
+ * apparaissaient avec 0 annonce, donc TOUS rangés dans « sites qui ne donnent
+ * rien ». C'est exactement ce que B a vu — « il y avait tous les sites dormant,
+ * inactif ». Un décompte faux ne fait aucun bruit : il a l'air d'une mauvaise
+ * nouvelle, et on cherche la panne chez les autres.
+ *
+ * Deuxième correction, de la même famille : le panneau ne connaissait que les
+ * sources présentes dans le journal du passage. Une source en repos, ou jamais
+ * appelée, était INVISIBLE — impossible de dire combien de sites sont suivis.
+ * Le collecteur publie maintenant `sources` (le catalogue des sources suivies),
+ * et on s'en sert.
+ */
+function classementSites(catalogue) {
+  const o = catalogue || {};
+  const offres = o.offres || [];
+  const journalBrut = o.journal || [];
+
+  // Un seul enregistrement regroupe les sources mises au repos : ce n'est pas
+  // une panne, c'est un délai non écoulé.
+  const auRepos = new Set(journalBrut.filter((x) => x.saute).flatMap((x) => x.sources || []));
+  const vides = o.sourcesVides || {};
+
+  // Le journal parle en IDENTIFIANTS (`dealabs-tendance`), le catalogue en NOMS
+  // (`Dealabs`). Le catalogue des sources publié avec les offres fait le pont.
+  const nomDe = {};
+  const suivis = [];
+  for (const s of (o.sources || [])) {
+    nomDe[s.id] = s.nom || s.id;
+    const nom = s.nom || s.id;
+    if (!suivis.includes(nom)) suivis.push(nom);
+  }
+
+  // TOUTES les lignes du journal ne décrivent PAS un site. « visuels » raconte
+  // l'étape de rapatriement des images (`essais`, `trouves`) : la compter comme
+  // un site la ferait apparaître en « non actif, flux vide » — un faux site
+  // dans la liste de ceux qu'on cherche à activer. On ne garde donc, quand le
+  // catalogue est publié, que les lignes qui correspondent à une source suivie.
+  const internes = new Set(['repos', 'visuels']);
+  const connue = (id) => Object.prototype.hasOwnProperty.call(nomDe, id);
+  const journal = journalBrut.filter((x) => !x.saute && !internes.has(x.source)
+    && (suivis.length === 0 || connue(x.source)));
+
+  // Ce que chaque site a RÉELLEMENT en ligne : lu dans les offres publiées, pas
+  // dans le journal. Le journal raconte un passage ; les offres sont le résultat.
+  const parSite = {};
+  for (const x of offres) {
+    const s = x.source || '—';
+    parSite[s] = parSite[s] || { total: 0, pays: {} };
+    parSite[s].total += 1;
+    const p = x.pays || '—';
+    parSite[s].pays[p] = (parSite[s].pays[p] || 0) + 1;
+  }
+
+  // Le journal écrit `retenues` (gardées) et `items` (lues). L'ancien code
+  // lisait `n`, qui n'existe pas : on lit `retenues`, `n` en secours seulement.
+  const retenues = (x) => (typeof x.retenues === 'number' ? x.retenues
+    : (typeof x.n === 'number' ? x.n : 0));
+
+  const actifs = Object.entries(parSite)
+    .map(([site, d]) => {
+      const j = journal.find((x) => (nomDe[x.source] || x.source) === site);
+      return { site, total: d.total, pays: d.pays, lues: j ? (j.items || 0) : 0 };
+    })
+    .sort((a, b) => b.total - a.total);
+
+  // Les NON actifs, regroupés par site, en gardant la raison la plus parlante :
+  // un échec d'abord, puis un flux vide, puis des annonces écartées, puis le
+  // repos (qui n'est pas une panne), et enfin ce qui n'a jamais été interrogé.
+  const muets = {};
+  const ajouter = (site, etat, raison, rang) => {
+    const e = muets[site] = muets[site] || { site, etat, raison, rang };
+    if (rang < e.rang) { e.etat = etat; e.raison = raison; e.rang = rang; }
+  };
+  for (const x of journal) {
+    const site = nomDe[x.source] || x.source;
+    if (parSite[site]) continue;                       // il a des annonces : actif
+    if (!x.ok) ajouter(site, 'en échec', x.erreur || 'raison non écrite', 0);
+    else if (!(x.items > 0)) ajouter(site, 'flux vide', 'rien à lire dans le flux', 1);
+    else if (!retenues(x)) ajouter(site, 'écarté par les filtres',
+      x.items + ' lue(s), aucune retenue (catégorie, prix ou mot écarté)', 2);
+    else ajouter(site, 'sans annonce en ligne', 'lu, mais rien de publiable', 3);
+    const n = vides[x.source] || 0;
+    if (n > 0 && muets[site]) muets[site].raison += ' · ' + n + ' passage(s) vide(s) d’affilée';
+  }
+  for (const id of auRepos) {
+    const site = nomDe[id] || id;
+    if (parSite[site]) continue;
+    ajouter(site, 'au repos', 'délai non écoulé — réinterrogée au prochain passage', 4);
+  }
+  for (const site of suivis) {
+    if (parSite[site] || muets[site]) continue;
+    ajouter(site, 'pas encore interrogée', 'aucun passage ne l’a encore appelée', 5);
+  }
+  const nonActifs = Object.values(muets)
+    .sort((a, b) => a.rang - b.rang || a.site.localeCompare(b.site));
+
+  const parEtat = {};
+  for (const x of nonActifs) parEtat[x.etat] = (parEtat[x.etat] || 0) + 1;
+
+  return {
+    actifs,
+    nonActifs,
+    suivis: suivis.length,
+    totalAnnonces: offres.length,
+    vueLe: o.genereLe || null,
+    parEtat: Object.entries(parEtat).sort((a, b) => b[1] - a[1]),
+  };
+}
+
 /* ---------- Origines ----------
  * Demande de B (08/10/2026) : « il faut aussi voir les origines des annonces
  * par pays, quel site donne combien d'annonces par mise à jour et quel site ne
@@ -491,48 +622,36 @@ function dessinerOrigines() {
       </details>`).join('')
     : '<p class="vide">Aucune offre.</p>';
 
-  // --- Par site : combien, et où ------------------------------------------
-  const parSource = {};
-  for (const x of offres) {
-    const s = x.source || '—';
-    parSource[s] = parSource[s] || {};
-    const p = x.pays || '—';
-    parSource[s][p] = (parSource[s][p] || 0) + 1;
-  }
-  const sourcesTriees = Object.entries(parSource)
-    .map(([s, d]) => ({ s, d, total: Object.values(d).reduce((a, b) => a + b, 0) }))
-    .sort((a, b) => b.total - a.total);
-  document.getElementById('mOrigineSources').innerHTML = sourcesTriees.length ? `<table>
-    <tr><th>Site</th><th class="n">Annonces</th><th>Pays fournis</th></tr>
-    ${sourcesTriees.map(({ s, d, total }) => {
-      const pays = Object.entries(d).sort((a, b) => b[1] - a[1]);
-      const montre = pays.slice(0, 4).map(([p, n]) => `${esc(p)} ${nf.format(n)}`).join(' · ');
-      const suite = pays.length > 4 ? ` · +${pays.length - 4}` : '';
-      return `<tr><td>${esc(s)}</td><td class="n">${nf.format(total)}</td>
-        <td style="font-size:12px;color:var(--doux)">${montre}${suite}</td></tr>`;
+  // --- Les sites : ACTIFS et NON ACTIFS -----------------------------------
+  // Le calcul est dans `classementSites()` (fonction pure, plus haut) : c'est
+  // elle que `tests/origines-admin.test.mjs` essaye hors navigateur.
+  const cl = classementSites(o);
+
+  document.getElementById('mActifs').innerHTML = cl.actifs.length ? `<table>
+    <tr><th>Site</th><th class="n">Annonces</th><th style="width:22%"></th><th>Pays fournis</th></tr>
+    ${cl.actifs.map(({ site, total, pays, lues }) => {
+      const l = Object.entries(pays).sort((a, b) => b[1] - a[1]);
+      const montre = l.slice(0, 4).map(([p, n]) => `${esc(p)} ${nf.format(n)}`).join(' · ');
+      const suite = l.length > 4 ? ` · +${l.length - 4}` : '';
+      return `<tr><td>${esc(site)}</td><td class="n"><b>${nf.format(total)}</b></td>
+        <td><span class="barre"><i style="width:${Math.round(100 * total / cl.actifs[0].total)}%"></i></span></td>
+        <td style="font-size:12px;color:var(--doux)">${montre}${suite}${lues ? ` (${nf.format(lues)} lues)` : ''}</td></tr>`;
     }).join('')}
     </table>
-    <p class="aide" style="margin-top:12px">${sourcesTriees.length} site(s) ont fourni des annonces. Total : ${nf.format(offres.length)}.</p>`
-    : '<p class="vide">Aucune source.</p>';
+    <p class="aide" style="margin-top:12px"><b>${cl.actifs.length} site(s) actif(s)</b> sur ${cl.suivis} suivi(s)
+      · ${nf.format(cl.totalAnnonces)} annonces en ligne${cl.vueLe ? ` · mise à jour ${esc(ilYA(cl.vueLe))}` : ''}.</p>`
+    : '<p class="vide">Aucun site n’a d’annonce en ligne.</p>';
 
-  // --- Les muettes --------------------------------------------------------
-  // Deux origines possibles, qu'il ne faut PAS confondre : une source mise au
-  // repos (le collecteur l'a sautée exprès) n'est pas une source en panne.
-  const j = o.journal || [];
-  const repos = new Set(j.filter((x) => x.saute).flatMap((x) => x.sources || []));
-  const muettes = j.filter((x) => !x.saute && !(x.n > 0));
-  const vides = Object.entries(o.sourcesVides || {});
-  document.getElementById('mMuettes').innerHTML = (muettes.length || vides.length) ? `
-    ${muettes.length ? `<table>
-      <tr><th>Site</th><th>État</th></tr>
-      ${muettes.map((x) => `<tr><td>${esc(x.source)}</td>
-        <td class="${x.ok ? '' : 'ko'}">${x.ok ? 'interrogé, aucune annonce' : esc(x.erreur || 'en échec')}</td></tr>`).join('')}
-      </table>` : ''}
-    ${vides.length ? `<p class="aide" style="margin-top:12px"><b>${vides.length} site(s) vide(s) au dernier passage</b>
-      (compteur de passages consécutifs) : ${vides.map(([s, n]) => `${esc(s)} ×${n}`).join(', ')}.</p>` : ''}
-    ${repos.size ? `<p class="aide" style="margin-top:10px">${repos.size} source(s) mise(s) <b>au repos</b> par le
-      collecteur cette fois-ci : ce n'est pas une panne, c'est un délai. Elles ne comptent pas comme muettes.</p>` : ''}`
-    : '<p class="vide">Aucune source muette à ce passage.</p>';
+  document.getElementById('mNonActifs').innerHTML = cl.nonActifs.length ? `
+    <table>
+      <tr><th>Site</th><th>État</th><th>Ce qui s’est passé</th></tr>
+      ${cl.nonActifs.map((x) => `<tr><td>${esc(x.site)}</td>
+        <td class="${x.rang <= 2 ? 'ko' : ''}">${esc(x.etat)}</td>
+        <td style="font-size:12px;color:var(--doux)">${esc(x.raison)}</td></tr>`).join('')}
+    </table>
+    <p class="aide" style="margin-top:12px"><b>${cl.nonActifs.length} site(s) non actif(s)</b> sur ${cl.suivis} suivi(s) :
+      ${cl.parEtat.map(([e, n]) => `${n} ${esc(e)}`).join(' · ')}.</p>`
+    : '<p class="vide">Tous les sites suivis ont des annonces en ligne.</p>';
 
   // --- Les candidats ------------------------------------------------------
   // PREMIÈRE TENTATIVE, ET POURQUOI ELLE A ÉTÉ JETÉE. J'avais écrit : un
