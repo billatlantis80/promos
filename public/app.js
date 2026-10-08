@@ -685,7 +685,7 @@ ${champMotDePasse('cNouveau', 'Nouveau mot de passe', { autocomplete: 'new-passw
 /** Export RGPD : tout ce que l'application garde, dans un seul fichier lisible. */
 function exporterDonnees() {
   const paquet = {
-    application: 'Promos',
+    application: 'Kazendra',
     exporteLe: new Date().toISOString(),
     avertissement: "Tout ce que l'application conserve sur cet appareil. La seule chose qui ait pu en "
                  + "sortir est l'adresse de ton inscription, et seulement si tu l'as demandée.",
@@ -701,7 +701,7 @@ function exporterDonnees() {
   const url = URL.createObjectURL(new Blob([JSON.stringify(paquet, null, 2)], { type: 'application/json' }));
   const a = document.createElement('a');
   a.href = url;
-  a.download = 'promos-mes-donnees.json';
+  a.download = 'kazendra-mes-donnees.json';
   document.body.appendChild(a);
   a.click();
   a.remove();
@@ -2210,7 +2210,7 @@ function brancher() {
 
     if (e.target.closest('#exporterDonnees')) {
       exporterDonnees();
-      return annonce(t('Fichier « promos-mes-donnees.json » généré.'), true);
+      return annonce(t('Fichier « kazendra-mes-donnees.json » généré.'), true);
     }
 
     if (e.target.closest('#verrouiller')) {
