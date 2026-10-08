@@ -283,6 +283,18 @@ details > table tr:first-child th{padding-top:2px}
           <div class="grille" id="mMarcheCompteurs"></div>
         </div>
         <div class="rub">
+          <h2>Portes d'entrée — Google News et Bing</h2>
+          <p class="aide">Ces deux-là <b>ne vendent rien</b> : ni siège, ni catalogue, ni prix.
+            Ce ne sont donc <b>pas des acteurs</b>, et ils n'ont pas de ligne dans la base —
+            sinon « Google News » y figurerait comme une enseigne belge, et la base cesserait
+            de décrire un marché. Mais ils ne sont <b>pas éteints</b> pour autant : ce sont des
+            <b>portes d'entrée</b>, les seuls moyens de voir les marchands qui n'ont pas de flux
+            lisible chez eux (Delhaize, JBC, Spar, OKay…). Voici ce qu'ils rapportent réellement,
+            à la dernière collecte. <b>« Pas un acteur » veut dire « compté à part », jamais
+            « désactivé ».</b></p>
+          <div id="mPortes"></div>
+        </div>
+        <div class="rub">
           <h2>Les acteurs, par catégorie</h2>
           <p class="aide">Le nombre d'articles est celui des annonces <b>en ligne</b> venant de
             cet acteur. Les clics et les partages sont ceux relevés <b>sur cet appareil</b>
@@ -356,7 +368,7 @@ details > table tr:first-child th{padding-top:2px}
    délibéré : une fonction PURE peut être exécutée par les tests, alors qu'une
    règle enfouie dans ce fichier ne se vérifierait qu'à l'œil. Le panneau
    l'affiche, il ne la recalcule pas à sa façon. */
-import { liaisonActeurs, formesDe, memeFormes } from '../acteurs.js';
+import { liaisonActeurs, portesEntree, formesDe, memeFormes } from '../acteurs.js';
 import { lireActions } from '../trafic.js';
 
 const CLE_ADMIN = 'kazendra.admin';
@@ -1020,6 +1032,54 @@ function ficheInfo(a) {
   return `<dl class="fiche-info">${lignes.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join('')}</dl>`;
 }
 
+/* ---------- Les portes d'entrée -------------------------------------------
+   Google News et Bing ne sont pas des acteurs : on les montre à part, avec ce
+   qu'ils rapportent. Sans ce bloc, « pas un acteur » se lisait « désactivé ». */
+function dessinerPortes() {
+  const zone = document.getElementById('mPortes');
+  if (!zone) return;
+  if (!catalogue || !Array.isArray(catalogue.sources)) {
+    zone.innerHTML = '<p class="vide">Catalogue non chargé : impossible de compter l’apport des moteurs.</p>';
+    return;
+  }
+  const r = portesEntree(catalogue);
+  const total = (catalogue.offres || []).length;
+  const part = (n) => (total ? `${(100 * n / total).toFixed(1)} %` : '—');
+
+  zone.innerHTML = `
+    <p class="aide" style="margin-top:0"><b>${nf.format(r.totalAnnonces)}</b> articles sur
+      <b>${nf.format(total)}</b> — soit <b>${(100 * r.partAnnonces).toFixed(1)} %</b> du catalogue —
+      arrivent par ces <b>${nf.format(r.totalSources)}</b> sources. Elles sont interrogées à
+      chaque passage, comme les autres.</p>
+    <table>
+      <tr><th>Porte d'entrée</th><th>Rôle</th><th class="n">Sources</th>
+        <th class="n">Articles</th><th class="n">Part</th><th class="n">Pays</th></tr>
+      ${r.portes.map((p) => `<tr>
+        <td><details><summary><b>${esc(p.nom)}</b></summary>
+          <p class="aide" style="margin:6px 0 0">${esc(p.quoi)}<br>
+          Ce n’est pas un acteur : <b>aucune ligne dans la base</b>, et une épreuve le vérifie.</p>
+          <div style="font-size:11.5px;color:var(--doux);margin-top:6px">
+            ${p.pays.map((x) => `${esc(x.pays)} ${nf.format(x.n)}`).join(' · ') || '—'}</div>
+        </details></td>
+        <td style="font-size:12px;color:var(--doux)">${esc(p.quoi.split('—')[0].trim())}</td>
+        <td class="n">${nf.format(p.sources)}</td>
+        <td class="n">${nf.format(p.annonces)}</td>
+        <td class="n">${part(p.annonces)}</td>
+        <td class="n">${p.pays.length}</td></tr>`).join('')}
+      <tr style="font-weight:700">
+        <td colspan="2">Total des portes d'entrée</td>
+        <td class="n">${nf.format(r.totalSources)}</td>
+        <td class="n">${nf.format(r.totalAnnonces)}</td>
+        <td class="n">${part(r.totalAnnonces)}</td>
+        <td class="n">—</td></tr>
+    </table>
+    <p class="aide">Ces articles viennent d'éditeurs (presse, blogs high-tech) qui
+      <b>parlent</b> de promotions : c'est de la veille, pas de la lecture directe chez le
+      marchand. C'est précisément pourquoi leurs sources figurent en <b>voie « veille »</b>
+      dans l'onglet Origines — et pourquoi un acteur vu seulement par elles est marqué
+      <b>en veille</b>, jamais <b>branché</b>.</p>`;
+}
+
 function dessinerMarche() {
   const zoneCompteurs = document.getElementById('mMarcheCompteurs');
   const zone = document.getElementById('mMarche');
@@ -1173,7 +1233,7 @@ function toutDessiner() {
     ? 'Relais branché : le trafic de tous les appareils remonte ici.'
     : 'Relais <b>non branché</b> : ce tableau ne montre que le trafic de cet appareil. Pour voir où l’application est efficace partout, il faut le relais.');
 
-  dessinerBord(); dessinerSources(); dessinerOrigines(); dessinerMarche(); dessinerInscrits(); dessinerTrafic();
+  dessinerBord(); dessinerSources(); dessinerOrigines(); dessinerMarche(); dessinerPortes(); dessinerInscrits(); dessinerTrafic();
 
   document.getElementById('mMachine').innerHTML = `<table>
     <tr><th>Fuseau</th><td>${esc(Intl.DateTimeFormat().resolvedOptions().timeZone)}</td></tr>

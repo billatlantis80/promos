@@ -218,6 +218,80 @@ export function domaineDe(url) {
 export const estMoteur = (url) => /news\.google\.com|bing\.com\/news/.test(String(url || ''));
 
 /**
+ * LES PORTES D'ENTRÉE — Google News et Bing.
+ *
+ * Ce ne sont PAS des acteurs : ils ne vendent rien, ils n'ont ni siège social, ni
+ * catalogue, ni prix. Mais ils ne sont pas rien pour autant : sans eux, des
+ * marchands entiers (Delhaize, JBC, Spar, OKay…) resteraient invisibles, faute de
+ * flux lisible chez eux. Ce sont des MOYENS DE VOIR.
+ *
+ * On les compte donc, mais À PART — et à part seulement. Jamais dans la base des
+ * acteurs : « Google News » y deviendrait une enseigne belge, et la base
+ * cesserait de décrire un marché.
+ *
+ * Le but de cette fonction est de rendre cet apport VISIBLE (combien d'articles,
+ * dans combien de pays) pour qu'on ne confonde plus « pas un acteur » avec
+ * « désactivé ».
+ *
+ * @param catalogue  le catalogue publié : { sources: [...], offres: [...] }
+ * @returns { portes: [{nom, quoi, sources, annonces, pays:[{pays, n}]}],
+ *            totalAnnonces, totalSources, partAnnonces }
+ */
+export function portesEntree(catalogue) {
+  const sources = (catalogue && catalogue.sources) || [];
+  const offres = (catalogue && catalogue.offres) || [];
+
+  const FAMILLES = [
+    {
+      nom: 'Google News',
+      motif: /news\.google\.com/i,
+      quoi: 'recherches « promo » dans la langue de chaque pays — c’est la porte d’entrée principale',
+    },
+    {
+      nom: 'Bing News',
+      motif: /bing\.com\/news/i,
+      quoi: 'porte d’entrée de secours : elle donne les visuels là où Google n’en donne pas',
+    },
+  ];
+
+  // Les annonces, comptées une fois, par nom de source (comme la liaison).
+  const annoncesDe = {};
+  for (const o of offres) {
+    const s = o.source || '—';
+    annoncesDe[s] = (annoncesDe[s] || 0) + 1;
+  }
+
+  const portes = FAMILLES.map(({ nom, motif, quoi }) => {
+    const siennes = sources.filter((s) => motif.test(String(s.url || '')));
+    const noms = new Set(siennes.map((s) => s.nom));
+    let annonces = 0;
+    const parPays = {};
+    for (const o of offres) {
+      if (!noms.has(o.source)) continue;
+      annonces += 1;
+      const p = o.pays || '—';
+      parPays[p] = (parPays[p] || 0) + 1;
+    }
+    return {
+      nom,
+      quoi,
+      sources: siennes.length,
+      annonces,
+      pays: Object.entries(parPays)
+        .sort((a, b) => b[1] - a[1]).map(([pays, n]) => ({ pays, n })),
+    };
+  });
+
+  const totalAnnonces = portes.reduce((n, p) => n + p.annonces, 0);
+  return {
+    portes,
+    totalAnnonces,
+    totalSources: portes.reduce((n, p) => n + p.sources, 0),
+    partAnnonces: offres.length ? totalAnnonces / offres.length : 0,
+  };
+}
+
+/**
  * LA LIAISON COMPLÈTE.
  *
  * @param catalogue  le catalogue publié : { sources: [...], offres: [...] }
