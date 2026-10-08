@@ -380,6 +380,47 @@ function dessinerMention() {
     : MENTION_AFFILIATION_INACTIVE);
 }
 
+/* LES PAGES ADMINISTRATIVES, DANS LA LANGUE DE L'INTERFACE.
+ *
+ * Les quatre pages légales existent en TROIS langues : français, néerlandais et
+ * anglais. Le pied de page doit suivre la langue choisie — sinon un lecteur
+ * néerlandais tomberait sur une page française, ou sur un intitulé français
+ * au-dessus d'une page anglaise.
+ *
+ * Les six AUTRES langues de l'interface (de, es, it, pt, pl, sv) mènent à
+ * l'ANGLAIS. C'est la règle de repli déjà appliquée aux liens sortants : une
+ * page légale en anglais vaut mieux qu'une page légale dans une langue qu'on n'a
+ * pas — et surtout bien mieux qu'un intitulé traduit vers une page inexistante.
+ *
+ * Sans JavaScript, le pied de page garde ce qu'écrit index.html : le français.
+ * C'est la langue par défaut du site, et une page légale atteignable reste une
+ * page légale.
+ */
+const PAGES_LEGALES = ['mentions-legales', 'confidentialite', 'cookies', 'cgu'];
+const INTITULES_LEGAUX = {
+  fr: ['Mentions légales', 'Confidentialité', 'Cookies', 'Conditions d’utilisation'],
+  nl: ['Wettelijke vermeldingen', 'Privacy', 'Cookies', 'Gebruiksvoorwaarden'],
+  en: ['Legal notice', 'Privacy', 'Cookies', 'Terms of use'],
+};
+const ARIA_LEGAUX = {
+  fr: 'Informations légales', nl: 'Juridische informatie', en: 'Legal information',
+};
+
+function dessinerLiensLegaux() {
+  const nav = $('liensLegaux');
+  if (!nav) return;
+  const code = INTITULES_LEGAUX[langue()] ? langue() : 'en';   // repli : anglais
+  const noms = INTITULES_LEGAUX[code];
+  const suffixe = code === 'fr' ? '' : '.' + code;
+  nav.setAttribute('aria-label', ARIA_LEGAUX[code]);
+  nav.querySelectorAll('a').forEach((a, i) => {
+    a.setAttribute('href', PAGES_LEGALES[i] + suffixe + '.html');
+    a.setAttribute('hreflang', code);
+    a.setAttribute('lang', code);
+    a.textContent = noms[i];
+  });
+}
+
 /** Applique un changement de langue choisi par l'utilisateur.
  *
  *  Ordre : le moteur d'abord (mémoire + `document.lang`), puis le DOM statique,
@@ -402,6 +443,7 @@ function changerLangue(code) {
   dessinerReglages();
   preparerOeils();   // le libellé de l'œil est une phrase traduite
   dessinerMention(); // la mention d'affiliation est une phrase traduite
+  dessinerLiensLegaux(); // les pages légales existent en trois langues
   majOutils();
   dessiner();
 }
@@ -2165,6 +2207,9 @@ async function lancer() {
   // redessin complet.
   chargerLangue();
   traduireDOM();
+  // Les quatre pages légales existent en trois langues : leurs liens suivent la
+  // langue lue ci-dessus, dès le premier dessin (voir dessinerLiensLegaux).
+  dessinerLiensLegaux();
   // Le dessin et le libellé des yeux : posés une fois la langue lue, et avant
   // tout affichage — celui de l'écran de verrouillage est écrit dans
   // index.html, il attend d'être complété.

@@ -16,19 +16,27 @@ champ vide, parce qu'il aurait l'air vrai.
 
 Créées le 08/10/2026 (elles répondaient toutes 404 avant) :
 
-| Page | Adresse | Rôle |
+| Page | Adresses | Rôle |
 |---|---|---|
-| Mentions légales | `kazendra.com/mentions-legales.html` | Qui édite, qui héberge, propriété, affiliation, litiges |
-| Politique de confidentialité | `kazendra.com/confidentialite.html` | RGPD : ce qui est traité, où, combien de temps, vos droits |
-| Cookies et stockage local | `kazendra.com/cookies.html` | Pourquoi il n'y a **pas** de bannière |
-| Conditions d'utilisation | `kazendra.com/cgu.html` | Ce que le site garantit — et ne garantit pas |
+| Mentions légales | `mentions-legales` + `.nl` + `.en` | Qui édite, qui héberge, propriété, affiliation, litiges |
+| Politique de confidentialité | `confidentialite` + `.nl` + `.en` | RGPD : ce qui est traité, où, combien de temps, vos droits |
+| Cookies et stockage local | `cookies` + `.nl` + `.en` | Pourquoi il n'y a **pas** de bannière |
+| Conditions d'utilisation | `cgu` + `.nl` + `.en` | Ce que le site garantit — et ne garantit pas |
 
-Plus, hors pages : `robots.txt` et `sitemap.xml` (eux aussi en 404 avant), et les liens vers les
-quatre pages dans le **pied de page** du site.
+Toutes à `kazendra.com/`, en `.html`. Plus, hors pages : `robots.txt` et `sitemap.xml` (eux aussi en
+404 avant), et les liens vers les quatre pages dans le **pied de page** du site.
 
-**Ces pages sont en français seulement.** Le site, lui, est traduit. Un intitulé traduit vers une page
-qui n'existe pas dans cette langue serait un mensonge : les liens du pied de page restent donc en
-français. Les versions **néerlandaise et anglaise** restent à produire (voir § C).
+**Les douze pages existent en trois langues** — français, néerlandais, anglais (décision de B du
+08/10/2026). Chaque page porte un **sélecteur de langue** et déclare ses traductions aux moteurs de
+recherche (`hreflang`). Le **pied de page du site suit la langue choisie** : les six autres langues de
+l'interface (de, es, it, pt, pl, sv) mènent à l'anglais, comme les liens sortants.
+
+Les trois versions ont **exactement la même structure** — même nombre de sections, mêmes rubriques
+obligatoires. Une épreuve refuse qu'une section disparaisse d'une seule langue : ce serait un manque
+invisible, la page ayant toujours l'air complète.
+
+**En cas de divergence d'interprétation, la version française fait foi** : c'est celle dans laquelle
+les textes ont été rédigés, et les trois pages le disent en toutes lettres.
 
 ---
 
@@ -91,17 +99,23 @@ l'anticipe pas, et je n'écrirai aucune adresse avant que vous me la donniez.
 
 ---
 
-## D. DÉCISION N° 2 — les langues des pages légales
+## D. ✅ DÉCISION N° 2 — TRANCHÉE le 08/10/2026
 
-Le site est offert en plusieurs langues ; les pages légales ne le sont qu'en français aujourd'hui.
+**Réponse de B** : « Tu peux faire la traduction en anglais et en néerlandais. »
 
-- **Option A (Belgique d'abord)** : produire le **néerlandais** en plus du français. C'est le minimum
-  pour un site belge qui s'adresse aussi à la Flandre.
-- **Option B (Europe)** : français + néerlandais + anglais, et l'anglais sert de repli pour les
-  11 autres pays.
+**Fait et publié** : les quatre pages existent maintenant en **français, néerlandais et anglais** —
+douze documents. Chacune a son sélecteur de langue, et le pied de page du site s'adapte à la langue
+choisie.
 
-Les deux sont possibles. L'option B demande plus de texte à écrire et à tenir à jour (chaque
-correction future devra être faite dans chaque langue).
+**Choix retenu pour les autres langues** : les six langues restantes de l'interface (allemand,
+espagnol, italien, portugais, polonais, suédois) mènent à la **version anglaise**. C'est la règle de
+repli déjà appliquée aux liens sortants : une page légale en anglais vaut mieux qu'une page légale
+dans une langue qu'on n'a pas — et surtout mieux qu'un intitulé traduit vers une page inexistante.
+
+**Ce que ça change pour la suite** : toute correction d'une page légale devra désormais être faite
+**trois fois**. C'est le coût d'une traduction, et il est assumé. Les trois versions ont la même
+structure, et une épreuve le vérifie : c'est ce qui empêche une correction d'être appliquée à une
+seule langue et oubliée dans les deux autres.
 
 ---
 

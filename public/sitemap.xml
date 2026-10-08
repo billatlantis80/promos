@@ -10,6 +10,11 @@
   Le site lui-même est une page unique (index.html) : ses offres ne sont pas des
   adresses distinctes, il n'y a donc rien à lister de plus — les inventer
   produirait des milliers d'adresses mortes.
+
+  Les quatre pages administratives existent en trois langues (fr, nl, en). Les
+  deux entrées qui comptent pour l'indexation sont la française et la
+  néerlandaise ; l'anglais est cité aussi, car il sert de repli aux six autres
+  langues de l'interface.
 -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
@@ -20,26 +25,50 @@
   </url>
   <url>
     <loc>https://kazendra.com/mentions-legales.html</loc>
-    <lastmod>2026-10-08</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
+    <lastmod>2026-10-08</lastmod><changefreq>yearly</changefreq><priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://kazendra.com/mentions-legales.nl.html</loc>
+    <lastmod>2026-10-08</lastmod><changefreq>yearly</changefreq><priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://kazendra.com/mentions-legales.en.html</loc>
+    <lastmod>2026-10-08</lastmod><changefreq>yearly</changefreq><priority>0.3</priority>
   </url>
   <url>
     <loc>https://kazendra.com/confidentialite.html</loc>
-    <lastmod>2026-10-08</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
+    <lastmod>2026-10-08</lastmod><changefreq>yearly</changefreq><priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://kazendra.com/confidentialite.nl.html</loc>
+    <lastmod>2026-10-08</lastmod><changefreq>yearly</changefreq><priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://kazendra.com/confidentialite.en.html</loc>
+    <lastmod>2026-10-08</lastmod><changefreq>yearly</changefreq><priority>0.3</priority>
   </url>
   <url>
     <loc>https://kazendra.com/cookies.html</loc>
-    <lastmod>2026-10-08</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
+    <lastmod>2026-10-08</lastmod><changefreq>yearly</changefreq><priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://kazendra.com/cookies.nl.html</loc>
+    <lastmod>2026-10-08</lastmod><changefreq>yearly</changefreq><priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://kazendra.com/cookies.en.html</loc>
+    <lastmod>2026-10-08</lastmod><changefreq>yearly</changefreq><priority>0.3</priority>
   </url>
   <url>
     <loc>https://kazendra.com/cgu.html</loc>
-    <lastmod>2026-10-08</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
+    <lastmod>2026-10-08</lastmod><changefreq>yearly</changefreq><priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://kazendra.com/cgu.nl.html</loc>
+    <lastmod>2026-10-08</lastmod><changefreq>yearly</changefreq><priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://kazendra.com/cgu.en.html</loc>
+    <lastmod>2026-10-08</lastmod><changefreq>yearly</changefreq><priority>0.3</priority>
   </url>
 </urlset>

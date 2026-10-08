@@ -314,9 +314,13 @@ dépend d'un `.css` coupé en chemin ne remplit pas sa fonction. Les liens vers 
   champs surlignés « à compléter » dans les pages. **Aucune valeur n'a été inventée** — c'est la règle
   du projet, et une épreuve (`tests/legal.test.mjs`) fait **échouer** la suite si un numéro BCE ou une
   adresse e-mail apparaît hors de ces champs.
-- **Les traductions néerlandaise et anglaise** des pages restent à produire : une décision de B (voir
-  `FICHE-ADMINISTRATIVE.md`, § D). Les intitulés restent en français, car traduire un intitulé vers une
-  page qui n'existe pas dans cette langue serait un mensonge.
+- ✅ **Les traductions néerlandaise et anglaise sont FAITES (08/10/2026, demande de B)** : les quatre
+  pages existent en **trois langues** — douze documents. Chacune porte un sélecteur de langue et
+  déclare ses traductions aux moteurs (`hreflang`). Le **pied de page du site suit la langue
+  choisie** : les six autres langues de l'interface (de, es, it, pt, pl, sv) mènent à l'anglais, comme
+  les liens sortants. Une phrase affirmait que « les autres versions linguistiques n'ont pas encore été
+  publiées » : elle était vraie le matin, elle ne l'est plus — corrigée dans les trois langues, et une
+  épreuve refuse désormais qu'elle réapparaisse.
 - ✅ **L'activité est tranchée (08/10/2026, B)** : « régime fiscal de petite entreprise en personne
   physique ». Les mentions légales sont donc écrites dans cette forme — nom et prénom, pas de raison
   sociale — et la TVA y est déclarée **non assujettie** (franchise de la petite entreprise).
@@ -336,8 +340,8 @@ croire le contraire.
    (`FICHE-ADMINISTRATIVE.md`, § B et § C). C'est ce qui transforme les quatre pages administratives de
    modèles en pages valables. Le régime est déjà tranché : **personne physique**, franchise de la petite
    entreprise, donc **non assujetti à la TVA**.
-3. **Trancher les langues** des pages légales (`FICHE-ADMINISTRATIVE.md`, § D) — seule décision encore
-   ouverte.
+3. ✅ **Langues des pages légales** : tranché et fait le 08/10/2026 — français, néerlandais, anglais,
+   et repli sur l'anglais pour les six autres langues de l'interface.
 4. **Recherche d'antériorité « Kazendra »** puis **dépôt de marque** (`/ 2`) — avant toute promotion.
 5. **Corrections d'affichage** (`/ 5`) — ✅ **faites toutes les deux** le 08/10/2026 (devises, favoris,
    et l'ordre chronologique des bonnes promos).
@@ -361,8 +365,9 @@ croire le contraire.
   corrigé, vérifié sur le catalogue publié (14 274 offres, 0 identifiant partagé).
 - **Ordre des « bonnes promos »** : chronologique, la plus récente en tête — 0 inversion d'ordre sur le
   catalogue publié (contre 486 avant). Design inchangé, comme demandé.
-- **Partie administrative** : quatre pages légales créées (mentions, confidentialité, cookies, CGU),
-  `robots.txt` et `sitemap.xml` publiés, liens dans le pied de page. Voir `FICHE-ADMINISTRATIVE.md`
-  pour **ce qui reste à fournir de votre côté**.
-- Suite de tests : **527 sur 527**. Elle échoue si un numéro d'entreprise ou une adresse e-mail est
-  **inventé** dans une page légale.
+- **Partie administrative** : quatre pages légales créées **en trois langues** (français, néerlandais,
+  anglais — 12 documents), `robots.txt` et `sitemap.xml` publiés, liens dans le pied de page qui suivent
+  la langue choisie. Voir `FICHE-ADMINISTRATIVE.md` pour **ce qui reste à fournir de votre côté**.
+- Suite de tests : **534 sur 534**. Elle échoue si un numéro d'entreprise ou une adresse e-mail est
+  **inventé** dans une page légale, si une section disparaît d'une seule langue, ou si une page
+  recommence à affirmer que les autres langues n'existent pas.

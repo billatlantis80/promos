@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacybeleid — Kazendra</title>
+<meta name="description" content="Welke gegevens kazendra.com verwerkt, waar ze worden bewaard, hoelang, en hoe u uw rechten uitoefent.">
+<meta name="robots" content="index, follow">
+<!-- De drie taalversies van DEZE pagina. hreflang vertelt zoekmachines dat
+     het om DEZELFDE pagina in drie talen gaat — anders zouden ze als drie
+     concurrerende pagina's worden behandeld die elkaar verzwakken. x-default
+     duidt de standaard geleverde versie aan. -->
+<link rel="alternate" hreflang="fr" href="https://kazendra.com/confidentialite.html">
+<link rel="alternate" hreflang="nl" href="https://kazendra.com/confidentialite.nl.html">
+<link rel="alternate" hreflang="en" href="https://kazendra.com/confidentialite.en.html">
+<link rel="alternate" hreflang="x-default" href="https://kazendra.com/confidentialite.html">
+<!-- DEBUT-FEUILLE-EN-LIGNE -->
+<!--
+     FEUILLE DE STYLE EN LIGNE — écrite par bin/inliner-legal.mjs.
+
+     Elle n’est PAS appelée en fichier externe, volontairement : sur le PC de
+     B, les .css externes étaient coupés en chemin (antivirus, bloqueur, proxy).
+     Une page d’information dont l’habillage dépendrait d’un fichier bloqué ne
+     remplirait pas sa fonction.
+
+     Ne pas modifier à la main : éditer public/legal.css, puis relancer
+     « node bin/inliner-legal.mjs ». Le test tests/legal.test.mjs échoue si ce
+     bloc et le fichier divergent.
+-->
+<style>
+/* =============================================================================
+   HABILLAGE DES PAGES ADMINISTRATIVES — Kazendra.
+
+   Ces pages (mentions légales, confidentialité, cookies, conditions
+   d'utilisation) ont leur propre feuille, plus sobre que celle du site : ce sont
+   des documents à lire, pas un catalogue.
+
+   ELLE AUSSI EST POSÉE EN LIGNE DANS CHAQUE PAGE. Raison identique à celle du
+   site (voir bin/inliner-css.mjs) : le 08/10/2026, sur le PC de B, les fichiers
+   .css externes n'arrivaient pas au navigateur. Une page légale dont
+   l'habillage — ou pire, le TEXTE — dépendrait d'un fichier coupé en chemin ne
+   serait pas une page légale. On écrit donc la feuille dans la page.
+
+   NE PAS ÉDITER LE BLOC EN LIGNE À LA MAIN : éditer public/legal.css, puis
+   relancer « node bin/inliner-legal.mjs ». Le test tests/legal.test.mjs échoue
+   si le bloc et ce fichier divergent.
+   ============================================================================= */
+
+:root {
+  --bleu: #0d3b5b;
+  --orange: #eb912d;
+  --texte: #16324a;
+  --doux: #5a6b7b;
+  --bord: #dde1e6;
+  --fond: #ffffff;
+  --fond-doux: #f5f7f9;
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --texte: #e8edf2;
+    --doux: #a4b1be;
+    --bord: #2b3846;
+    --fond: #101a24;
+    --fond-doux: #17242f;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--fond);
+  color: var(--texte);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.doc { max-width: 820px; margin: 0 auto; padding: 0 18px 64px; }
+
+/* En-tête : le K de l'identité + un retour au site. Le lien de retour est
+   TOUJOURS visible : une page légale atteinte par obligation doit offrir la
+   sortie la plus évidente possible. */
+.tete {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  padding: 18px 0 14px; margin-bottom: 26px; border-bottom: 1px solid var(--bord);
+}
+.tete .k { width: 28px; height: 28px; flex: none; }
+.tete .nom { font-weight: 700; letter-spacing: .02em; color: var(--bleu); }
+@media (prefers-color-scheme: dark) { .tete .nom { color: #7fb8dd; } }
+.tete .retour {
+  margin-left: auto; color: var(--orange); text-decoration: none;
+  font-weight: 600; border-bottom: 1px solid transparent;
+}
+.tete .retour:hover, .tete .retour:focus { border-bottom-color: var(--orange); }
+
+/* SÉLECTEUR DE LANGUE des pages administratives. Trois langues : français,
+   néerlandais, anglais. La page courante est marquée par aria-current="page",
+   ce qui la rend lisible par un lecteur d'écran ET stylable ici — un état qui
+   n'existerait qu'en couleur serait invisible pour qui ne distingue pas les
+   couleurs.
+   Les autres langues du site (de, es, it, pt, pl, sv) mènent à l'ANGLAIS :
+   c'est la règle de repli déjà appliquée aux liens sortants, et une page légale
+   en anglais vaut mieux qu'une page légale dans une langue qu'on n'a pas. */
+.langues-doc {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 16px;
+  margin: 0 0 24px; font-size: 14px;
+}
+.langues-doc a { color: var(--doux); text-decoration: none; border-bottom: 1px solid transparent; }
+.langues-doc a:hover, .langues-doc a:focus { color: var(--orange); border-bottom-color: var(--orange); }
+.langues-doc a[aria-current="page"] {
+  color: var(--texte); font-weight: 700; border-bottom-color: var(--bord);
+}
+
+h1 { font-size: 26px; line-height: 1.25; margin: 0 0 6px; }
+h2 { font-size: 18px; margin: 32px 0 8px; color: var(--bleu); }
+@media (prefers-color-scheme: dark) { h2 { color: #7fb8dd; } }
+h3 { font-size: 15px; margin: 20px 0 6px; }
+p, ul, ol { margin: 0 0 12px; }
+ul, ol { padding-left: 22px; }
+li { margin-bottom: 5px; }
+a { color: var(--bleu); }
+@media (prefers-color-scheme: dark) { a { color: #8cc4e6; } }
+code { background: var(--fond-doux); padding: 1px 5px; border-radius: 4px; font-size: 14px; }
+
+.maj { color: var(--doux); font-size: 14px; margin: 0 0 26px; }
+
+/* CE QUI RESTE À FOURNIR. Le surlignage est volontairement visible : une page
+   légale qui aurait l'air complète alors qu'il manque l'identité de l'éditeur
+   tromperait tout le monde, à commencer par son auteur. Le test
+   tests/legal.test.mjs compte ces marques et refuse qu'elles disparaissent
+   sans que la donnée soit réellement renseignée. */
+.a-completer {
+  background: #fff3cd; color: #6b4b00; border: 1px dashed #d9a400;
+  border-radius: 4px; padding: 0 5px; font-weight: 600;
+}
+@media (prefers-color-scheme: dark) {
+  .a-completer { background: #3a2e07; color: #ffd77a; border-color: #8a6d12; }
+}
+
+/* L'avis de chantier. Il n'est là que TANT QUE la page n'est pas finalisée. */
+.charte {
+  border: 1px solid var(--bord); border-left: 4px solid var(--orange);
+  background: var(--fond-doux); border-radius: 8px;
+  padding: 12px 14px; margin: 0 0 26px; font-size: 15px;
+}
+.charte b { color: var(--bleu); }
+@media (prefers-color-scheme: dark) { .charte b { color: #7fb8dd; } }
+
+table { border-collapse: collapse; width: 100%; margin: 0 0 16px; font-size: 15px; }
+th, td { border: 1px solid var(--bord); padding: 7px 9px; text-align: left; vertical-align: top; }
+th { background: var(--fond-doux); }
+
+.pied-doc {
+  margin-top: 44px; padding-top: 16px; border-top: 1px solid var(--bord);
+  color: var(--doux); font-size: 14px;
+}
+.pied-doc a { margin-right: 14px; }
+
+@media print {
+  .tete .retour, .charte { display: none; }
+  body { background: #fff; color: #000; }
+}
+</style>
+<!-- FIN-FEUILLE-EN-LIGNE -->
+</head>
+<body>
+<div class="doc">
+
+  <header class="tete">
+    <img class="k" src="favicon.svg" width="28" height="28" alt="">
+    <span class="nom">KAZENDRA</span>
+    <a class="retour" href="index.html">← Terug naar de site</a>
+  </header>
+
+  <nav class="langues-doc" aria-label="Taal van de pagina">
+    <a href="confidentialite.html" hreflang="fr" lang="fr">Français</a>
+    <a href="confidentialite.nl.html" hreflang="nl" lang="nl" aria-current="page">Nederlands</a>
+    <a href="confidentialite.en.html" hreflang="en" lang="en">English</a>
+  </nav>
+
+  <h1>Privacybeleid</h1>
+  <p class="maj">Laatst bijgewerkt: 8 oktober 2026.</p>
+
+  <p class="charte">
+    <b>Deze pagina is nog niet definitief.</b> De identiteit en het contact van de verwerkingsverantwoordelijke
+    moeten worden ingevuld&nbsp;: <span class="a-completer">AAN TE VULLEN — naam, adres, e-mail van de
+    verwerkingsverantwoordelijke</span>. De beschrijvingen hieronder zijn wel afgeleid uit het programma
+    van de site — ze beschrijven wat hij werkelijk doet.
+  </p>
+
+  <h2>1. Samengevat</h2>
+  <ul>
+    <li>De site <b>plaatst geen enkele cookie</b> voor publieksmeting of voor advertenties.</li>
+    <li>Het account, de favorieten en de instellingen <b>verlaten het toestel niet</b>&nbsp;: ze leven in
+      de lokale opslag van de browser, niet op een server.</li>
+    <li>De site <b>registreert geen enkel IP-adres</b> en geen enkele toestelidentificatie.</li>
+    <li>Eén enkele zaak kan het toestel verlaten&nbsp;: <b>het inschrijvingsadres</b>, en alleen als de
+      persoon het zelf heeft ingevoerd. <b>Dit formulier is nog niet actief</b> (zie §&nbsp;5).</li>
+  </ul>
+
+  <h2>2. Wie is de verwerkingsverantwoordelijke</h2>
+  <ul>
+    <li>Verwerkingsverantwoordelijke&nbsp;: <span class="a-completer">AAN TE VULLEN — naam en voornaam</span>
+      (natuurlijke persoon)</li>
+    <li>Adres&nbsp;: <span class="a-completer">AAN TE VULLEN</span></li>
+    <li>Contact voor elke vraag met betrekking tot gegevens&nbsp;:
+      <span class="a-completer">AAN TE VULLEN — e-mailadres</span></li>
+  </ul>
+  <p>
+    Een functionaris voor gegevensbescherming (DPO) is niet aangesteld&nbsp;: de verwerking die hier wordt
+    beschreven, valt onder geen van de gevallen waarin dat verplicht is. Verzoeken worden gericht aan het
+    contact hierboven.
+  </p>
+
+  <h2>3. Wat op uw toestel wordt bewaard</h2>
+  <p>
+    Deze informatie wordt geschreven in de <b>lokale opslag</b> (localStorage) of de sessieopslag
+    (sessionStorage) van de browser. Ze <b>wordt aan niemand doorgegeven</b>, ook niet aan de uitgever van
+    de site&nbsp;: zonder server bestaat er geen enkele plek om ze te ontvangen.
+  </p>
+  <table>
+    <tr><th>Wat wordt bewaard</th><th>Waarom</th><th>Hoelang</th></tr>
+    <tr>
+      <td>Gebruikersnaam en <b>vingerafdruk</b> van het wachtwoord (het wachtwoord zelf wordt nooit bewaard)</td>
+      <td>De toegang tot de toepassing op dit toestel beschermen</td>
+      <td>Tot de persoon het account verwijdert, of tot de browsergegevens worden gewist</td>
+    </tr>
+    <tr>
+      <td>Weergegeven voornaam</td><td>De interface personaliseren</td><td>Idem</td>
+    </tr>
+    <tr>
+      <td>Favorieten en instellingen (thema, weergave, taal, land)</td>
+      <td>Niet bij elke opening opnieuw vragen wat al gekozen is</td>
+      <td>Idem</td>
+    </tr>
+    <tr>
+      <td>Frequentielogboek&nbsp;: geraadpleegd land, taal, herkomst van het bezoek, type toestel, tijdstempel</td>
+      <td>De persoon in staat stellen zijn eigen frequentie in het beheerpaneel te raadplegen</td>
+      <td>Maximaal 2 000 metingen, daarna worden de oudste vervangen</td>
+    </tr>
+  </table>
+  <p>
+    <b>Geen enkel gegeven waarmee iemand kan worden herkend</b> wordt in dit logboek opgeslagen&nbsp;:
+    geen IP-adres, geen toestelidentificatie, geen cookie, geen browser-vingerafdruk. Een land, een taal,
+    een herkomst, een type toestel en een uur.
+  </p>
+
+  <h2>4. Rechtsgrond</h2>
+  <ul>
+    <li>Account, favorieten en instellingen&nbsp;: deze gegevens worden niet door de uitgever verwerkt,
+      ze blijven bij de persoon. Er vindt aan zijn kant geen verwerking in de zin van de AVG plaats.</li>
+    <li>Lokaal frequentielogboek&nbsp;: <b>gerechtvaardigd belang</b> (artikel 6.1.f van de AVG) — zijn
+      eigen publiek meten zonder tracker en zonder persoonsgegevens.</li>
+    <li>Inschrijving&nbsp;: <b>toestemming</b> (artikel 6.1.a), gegeven door het vrijwillig invoeren van
+      het adres.</li>
+  </ul>
+
+  <h2>5. De inschrijving — wat er zal gebeuren, en wat er vandaag gebeurt</h2>
+  <p>
+    <b>Vandaag (8 oktober 2026) verstuurt het inschrijvingsformulier niets.</b> Het adres van de
+    ontvangstdienst is niet ingevuld in het programma&nbsp;: het formulier weigert de verzending dus in
+    plaats van een geregistreerde inschrijving voor te wenden. Tot op heden wordt geen enkel gegeven
+    verzameld.
+  </p>
+  <p>Wanneer het actief zal zijn, en alleen dan&nbsp;:</p>
+  <ul>
+    <li>wordt <b>het enige ingevoerde adres</b> doorgegeven, met als doel op de hoogte te worden gebracht
+      van nieuwe promoties&nbsp;;</li>
+    <li>wordt het ontvangen door een <b>rekenblad dat door de uitgever van de site wordt gehost</b>
+      (dienst Google Sheets, via een Google Apps Script-script) — er is geen Kazendra-server&nbsp;;</li>
+    <li>wordt het niet doorverkocht, niet overgedragen en niet voor een ander doel gebruikt&nbsp;;</li>
+    <li>wordt het bewaard tot de vraag tot uitschrijving, die gebeurt door eenvoudig te antwoorden op het
+      ontvangen bericht of via het contact van §&nbsp;2.</li>
+  </ul>
+  <p>
+    Deze pagina wordt <b>vóór</b> de activering van het formulier bijgewerkt, met name om de ontvanger en
+    de bewaartermijn nauwkeurig te benoemen.
+  </p>
+
+  <h2>6. Ontvangers en doorgiften buiten de Europese Unie</h2>
+  <ul>
+    <li>
+      <b>Hosting van de site&nbsp;:</b> GitHub, Inc. (GitHub Pages), Verenigde Staten. De bezoekers van de
+      site gaan dus via een host die buiten de Unie is gevestigd. GitHub verklaart zich te schikken naar
+      het EU–VS-kader voor gegevensbescherming en naar de standaardcontractbepalingen.
+    </li>
+    <li><b>Geen enkele andere derde partij</b> komt tussenbeide&nbsp;: geen advertentienetwerk, geen
+      publieksmeetinstrument, geen extern lettertype, geen ingebed sociaal netwerk.</li>
+  </ul>
+  <p>
+    <span class="a-completer">NA TE KIJKEN — vervang de zin hierboven door de verwijzing naar het
+    hostingscontract dat op het moment van de publicatie werkelijk van kracht is.</span>
+  </p>
+
+  <h2>7. Uw rechten</h2>
+  <p>
+    U beschikt over de rechten van <b>toegang</b>, <b>rectificatie</b>, <b>wissing</b>, <b>beperking</b>,
+    <b>verzet</b> en <b>overdraagbaarheid</b> met betrekking tot de gegevens die u betreffen.
+  </p>
+  <p>
+    <b>Belangrijk en ongebruikelijk punt&nbsp;:</b> het merendeel van de gegevens die in §&nbsp;3 worden
+    beschreven, is niet in het bezit van de uitgever — ze staan op uw toestel. Om ze te raadplegen of te
+    wissen, is de meest directe handeling dus de uwe&nbsp;: de instellingen van de site maken het mogelijk
+    uw gegevenspakket te exporteren en te verwijderen, en het wissen van de browsergegevens wist de rest.
+  </p>
+  <p>
+    Voor de gegevens die de uitgever heeft ontvangen (het inschrijvingsadres, wanneer het formulier actief
+    zal zijn), schrijft u naar het contact van §&nbsp;2. Er wordt binnen een maand geantwoord.
+  </p>
+  <p>
+    Als het antwoord u niet voldoet, kunt u een klacht indienen bij de <b>Gegevensbeschermingsautoriteit</b>,
+    Drukpersstraat 35, 1000 Brussel —
+    <a href="https://www.autoriteprotectiondonnees.be" rel="noopener noreferrer">autoriteprotectiondonnees.be</a>.
+  </p>
+
+  <h2>8. Beveiliging</h2>
+  <p>
+    De site wordt via HTTPS aangeboden. Geen enkel wachtwoord wordt doorgegeven of bewaard&nbsp;: alleen
+    een daaruit berekende vingerafdruk wordt opgeslagen, en die maakt het niet mogelijk het wachtwoord
+    terug te vinden.
+  </p>
+  <p>
+    Een informatiesysteem kan nooit gegarandeerd vrij van fouten zijn. Aangezien de site geen
+    identificatie, geen IP-adres en geen betalingsgegevens verzamelt, blijft de omvang van een eventuele
+    inbreuk beperkt tot de gegevens die in §&nbsp;3 worden beschreven.
+  </p>
+
+  <h2>9. Wijzigingen</h2>
+  <p>
+    Elke wijziging van dit beleid wordt bovenaan de pagina gedateerd. Bij een belangrijke wijziging van de
+    doorgegeven gegevens wordt de betrokken personen informatie ter kennis gebracht via het kanaal
+    waarlangs zij zich hebben ingeschreven.
+  </p>
+
+  <footer class="pied-doc">
+    <a href="index.html">Terug naar de site</a>
+    <a href="mentions-legales.nl.html">Wettelijke vermeldingen</a>
+    <a href="cookies.nl.html">Cookies</a>
+    <a href="cgu.nl.html">Gebruiksvoorwaarden</a>
+  </footer>
+
+</div>
+</body>
+</html>

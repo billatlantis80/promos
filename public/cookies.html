@@ -6,6 +6,14 @@
 <title>Cookies — Kazendra</title>
 <meta name="description" content="Kazendra ne pose aucun cookie de mesure d'audience ni de publicité. Voici ce qu'il utilise à la place, et comment l'effacer.">
 <meta name="robots" content="index, follow">
+<!-- Les trois versions linguistiques de CETTE page. hreflang dit aux moteurs de
+     recherche qu'il s'agit de la MÊME page en trois langues — sans quoi elles
+     seraient traitées comme trois pages concurrentes qui se diluent l'une
+     l'autre. x-default désigne la version servie par défaut. -->
+<link rel="alternate" hreflang="fr" href="https://kazendra.com/cookies.html">
+<link rel="alternate" hreflang="nl" href="https://kazendra.com/cookies.nl.html">
+<link rel="alternate" hreflang="en" href="https://kazendra.com/cookies.en.html">
+<link rel="alternate" hreflang="x-default" href="https://kazendra.com/cookies.html">
 <!-- DEBUT-FEUILLE-EN-LIGNE -->
 <!--
      FEUILLE DE STYLE EN LIGNE — écrite par bin/inliner-legal.mjs.
@@ -88,6 +96,24 @@ body {
 }
 .tete .retour:hover, .tete .retour:focus { border-bottom-color: var(--orange); }
 
+/* SÉLECTEUR DE LANGUE des pages administratives. Trois langues : français,
+   néerlandais, anglais. La page courante est marquée par aria-current="page",
+   ce qui la rend lisible par un lecteur d'écran ET stylable ici — un état qui
+   n'existerait qu'en couleur serait invisible pour qui ne distingue pas les
+   couleurs.
+   Les autres langues du site (de, es, it, pt, pl, sv) mènent à l'ANGLAIS :
+   c'est la règle de repli déjà appliquée aux liens sortants, et une page légale
+   en anglais vaut mieux qu'une page légale dans une langue qu'on n'a pas. */
+.langues-doc {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 16px;
+  margin: 0 0 24px; font-size: 14px;
+}
+.langues-doc a { color: var(--doux); text-decoration: none; border-bottom: 1px solid transparent; }
+.langues-doc a:hover, .langues-doc a:focus { color: var(--orange); border-bottom-color: var(--orange); }
+.langues-doc a[aria-current="page"] {
+  color: var(--texte); font-weight: 700; border-bottom-color: var(--bord);
+}
+
 h1 { font-size: 26px; line-height: 1.25; margin: 0 0 6px; }
 h2 { font-size: 18px; margin: 32px 0 8px; color: var(--bleu); }
 @media (prefers-color-scheme: dark) { h2 { color: #7fb8dd; } }
@@ -148,6 +174,12 @@ th { background: var(--fond-doux); }
     <span class="nom">KAZENDRA</span>
     <a class="retour" href="index.html">← Retour au site</a>
   </header>
+
+  <nav class="langues-doc" aria-label="Langue de la page">
+    <a href="cookies.html" hreflang="fr" lang="fr" aria-current="page">Français</a>
+    <a href="cookies.nl.html" hreflang="nl" lang="nl">Nederlands</a>
+    <a href="cookies.en.html" hreflang="en" lang="en">English</a>
+  </nav>
 
   <h1>Cookies et stockage local</h1>
   <p class="maj">Dernière mise à jour : 8 octobre 2026.</p>

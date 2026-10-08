@@ -22,13 +22,16 @@ const racine = join(dirname(fileURLToPath(import.meta.url)), '..');
 const DEBUT = '<!-- DEBUT-FEUILLE-EN-LIGNE -->';
 const FIN = '<!-- FIN-FEUILLE-EN-LIGNE -->';
 
-/** Les pages administratives habillées par legal.css. */
-export const PAGES = [
-  'mentions-legales.html',
-  'confidentialite.html',
-  'cookies.html',
-  'cgu.html',
-];
+/** Les pages administratives habillées par legal.css.
+ *
+ *  Elles existent en TROIS langues. La liste est CONSTRUITE, pas recopiée : une
+ *  page ajoutée sans être inscrite ici s'afficherait nue — et personne ne s'en
+ *  apercevrait avant qu'un visiteur tombe dessus. Le test tests/legal.test.mjs
+ *  vérifie justement que TOUTE page administrative présente dans public/ est
+ *  couverte par cette liste. */
+export const BASES = ['mentions-legales', 'confidentialite', 'cookies', 'cgu'];
+export const LANGUES_PAGES = ['', '.nl', '.en'];
+export const PAGES = BASES.flatMap((base) => LANGUES_PAGES.map((l) => `${base}${l}.html`));
 
 function construireBloc() {
   const css = readFileSync(join(racine, 'public', 'legal.css'), 'utf8');
