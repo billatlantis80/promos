@@ -48,23 +48,30 @@
 <!-- =============================================================================
      LE SITE NE DOIT JAMAIS RESTER VIDE ET MUET.
 
-     Défaut réel, mesuré le 08/10/2026 : sur un PC ancien, kazendra.com
-     n'affichait que l'en-tête et « chargement… », définitivement, sans le
-     moindre message. Ce n'était pas un hasard :
+     CE QUI A ÉTÉ RAPPORTÉ, ET CE QUI ÉTAIT VRAI. B a signalé le 08/10/2026 que
+     le site ne s'affichait pas dans Edge ni Chrome, alors que le panneau
+     /admin/ s'affichait parfaitement. J'ai d'abord accusé l'âge du navigateur,
+     en m'appuyant sur un comptage FAUX (« `?.` plus de 2 000 fois dans
+     app.js ») : mesuré depuis, app.js n'en contient qu'UN, exactement comme le
+     panneau qui fonctionnait. La vraie cause était ailleurs — les quatre
+     domaines `.be/.fr/.eu/.app` n'étaient pas redirigés et servaient la page
+     d'attente OVH « Site en construction ». Le défaut n'était donc PAS dans
+     cette page.
 
-       - le site ne charge QU'UN script, `<script type="module">`. Internet
-         Explorer 11 ignore les modules ES : il n'exécutait aucun code ;
-       - `app.js` emploie `?.` plus de 2 000 fois, ce qui exige Chrome 80
-         (février 2020). Un navigateur intermédiaire lit le fichier, échoue à
-         l'analyser, et meurt sans rien dire.
+     CE QUI RESTE VRAI, ET JUSTIFIE CE FILET. Le site ne charge QU'UN script,
+     `<script type="module">`. Un navigateur qui ignore les modules ES —
+     Internet Explorer 11, et tout navigateur antérieur à Chrome 61 /
+     Firefox 60 / Safari 10.1 — n'exécute alors STRICTEMENT RIEN : l'en-tête et
+     « chargement… », sans un mot. C'est le seul cas où la page serait
+     parfaitement muette, et c'est celui-ci qu'on couvre.
 
      Trois filets, du navigateur le plus ancien au plus récent :
        1. <noscript>          — le JavaScript est coupé ;
        2. <script nomodule>   — le navigateur ignore les modules ES (IE11,
                                 Chrome < 61) : il exécute CELUI-CI, pas app.js ;
        3. une sentinelle      — app.js n'a pas signalé son démarrage en 20 s
-                                (Chrome 61-79 qui bute sur `?.`, script bloqué
-                                par un antivirus, erreur de programme).
+                                (script bloqué par un antivirus ou un
+                                pare-feu, erreur de programme, réseau coupé).
 
      Règle de la maison, appliquée ici : ce qui ne peut pas marcher doit DIRE
      ce qui manque, au lieu d'échouer en silence.

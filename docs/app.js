@@ -18,18 +18,30 @@ const $ = (id) => document.getElementById(id);
 
 /* TÉMOIN DE DÉMARRAGE — lu par la sentinelle d'index.html.
  *
- * Défaut réel (08/10/2026) : sur un PC ancien, le site n'affichait que
- * l'en-tête et « chargement… », sans un mot d'explication. app.js utilise
- * `?.` plus de 2 000 fois : un navigateur antérieur à février 2020 (Chrome 80)
- * lit le fichier, échoue à l'ANALYSER, et rien ne s'exécute — pas même un
- * message. Le même silence se produit si le fichier est bloqué en route.
+ * Le site n'a qu'UN script : `<script type="module" src="app.js">`. Un
+ * navigateur qui ne connaît pas les modules ES — Internet Explorer 11, et tout
+ * navigateur antérieur à Chrome 61 / Firefox 60 / Safari 10.1 — n'exécute
+ * alors STRICTEMENT RIEN : la page reste sur son en-tête et sur
+ * « chargement… », sans le moindre message. C'est le cas le plus grave, car
+ * rien ne le signale.
+ *
+ * CORRECTION D'UNE ERREUR COMMISE ICI. Ce commentaire a d'abord affirmé
+ * qu'`app.js` employait « `?.` plus de 2 000 fois », ce qui aurait exigé
+ * Chrome 80. C'ÉTAIT FAUX : mesuré depuis, `app.js` contient UN seul `?.`
+ * — autant que le panneau d'administration, qui s'affiche parfaitement sur un
+ * navigateur ancien. Le comptage initial était un artefact de commande, et il
+ * avait servi à écarter à tort la vraie cause du défaut signalé par B : les
+ * quatre domaines `.be/.fr/.eu/.app`, qui affichaient la page d'attente OVH
+ * (« Site en construction ») faute d'être redirigés.
+ *
+ * La sentinelle reste utile — elle couvre le navigateur qui ne sait pas lire
+ * le programme, le fichier bloqué en route et l'erreur au démarrage — mais
+ * elle ne doit pas s'appuyer sur une mesure fausse pour se justifier.
  *
  * Cette ligne est posée EN PREMIER, avant toute lecture de données : la
- * sentinelle d'index.html doit pouvoir distinguer « le programme tourne mais
- * les offres arrivent lentement » (ici : le témoin est posé → elle se tait)
- * de « le programme n'a jamais démarré » (le témoin est absent → elle parle).
- * La poser après le chargement des données ferait accuser à tort une connexion
- * simplement lente.
+ * sentinelle doit pouvoir distinguer « le programme tourne mais les offres
+ * arrivent lentement » (ici : le témoin est posé → elle se tait) de « le
+ * programme n'a jamais démarré » (le témoin est absent → elle parle).
  */
 window.KAZENDRA_PRET = true;
 
@@ -1257,7 +1269,7 @@ function carte(o) {
   // Il reste vide quand on n'a pas assez de recul : un badge inventé serait
   // pire que pas de badge du tout.
   const verdict = texteVerdict(o);
-  const lien = lienAffilie(o.lienMarchand || o.lienPage, o.marchand);
+  const lien = lienAffilie(o.lienMarchand || o.lienPage, o.marchand, langue());
   const article = o.type === 'article';
   // Le bouton dit OÙ il emmène. « Voir l'offre » pour tout le monde obligeait
   // l'utilisateur à deviner s'il allait chez Amazon, chez Coolblue ou sur un
@@ -1333,7 +1345,7 @@ export const ICONE_ENGRENAGE = '<svg viewBox="0 0 24 24" aria-hidden="true" focu
 
 /** Le lien partagé porte l'identifiant du marché visé, comme le bouton. */
 function lienPartage(o) {
-  return lienAffilie(o.lienMarchand || o.lienPage, o.marchand);
+  return lienAffilie(o.lienMarchand || o.lienPage, o.marchand, langue());
 }
 
 /** Ce qu'on écrit à l'ami : le titre, le prix s'il est connu, et le lien. */
