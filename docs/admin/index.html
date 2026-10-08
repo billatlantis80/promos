@@ -208,7 +208,21 @@ details[open] summary::after{content:'▴'}
 details summary span{font-size:12px;color:var(--doux);text-align:right}
 details > table,details > .defile{margin:0;padding:0 14px 10px}
 details > table tr:first-child th{padding-top:2px}
+/* Un sous-titre DANS un pays déplié s'aligne sur le texte du tableau : sans ça
+   il collait au bord et on ne voyait plus qu'il commandait les lignes du dessous. */
+details h3{padding:0 14px}
+details h3 span{font-weight:400;color:var(--doux);font-size:12px;text-transform:none;letter-spacing:0}
 .vide{color:var(--doux);font-size:13.5px;font-style:italic}
+/* Quelques classes partagées, pour ne plus écrire de style EN LIGNE dans les
+   gabarits. C'est là le vrai défaut d'un panneau bâti onglet par onglet : une
+   taille ici, une autre là, et deux tableaux voisins qui ne se ressemblent plus.
+   Une classe porte la décision une fois ; l'onglet ne fait que l'appeler. */
+.fin{font-size:12px;color:var(--doux)}
+.tres-fin{font-size:11.5px;color:var(--doux)}
+.micro{font-size:11px;color:var(--tres-doux);margin-top:3px}
+.suite{margin-top:12px}
+.haut{margin-top:0}
+.gras{font-weight:700}
 
 /* La fiche d'un acteur : adresse, téléphone, e-mail, CA. Ce sont des
    INFORMATIONS (règle de B) — on les présente donc en petit, dans la ligne,
@@ -500,30 +514,35 @@ td.info.sep,th.info.sep{border-left:2px solid var(--bord-clair)}
 
         <div class="rub">
           <h2>Récapitulatif du pays</h2>
-          <p class="aide">Ce que le pays consulté porte aujourd'hui : ses acteurs,
-            ceux qui sont <b>réellement branchés</b>, ce qu'ils apportent, et le
-            nombre de catégories travaillées. Les trois états ne se confondent pas —
-            <b>branché</b> = le site publie ses offres, on les lit chez lui ;
-            <b>en veille</b> = on ne le voit qu'à travers un moteur, donc pas
-            réellement branché ; <b>non suivi</b> = aucune source du tout. La
-            colonne « articles lus » compte ce que l'application a vu dans ce pays,
-            qui peut dépasser ce que ses propres acteurs apportent : une annonce
-            belge peut venir d'une source étrangère.</p>
+          <p class="aide">Ce que le pays consulté porte aujourd'hui : ses acteurs, ceux qui
+            sont <b>réellement branchés</b>, ce qu'ils apportent, et le nombre de catégories
+            travaillées.</p>
+          <details class="pourquoi"><summary>« Branché », « en veille », « non suivi » — et pourquoi deux comptes d'articles</summary>
+            <p><b>Branché</b> = le site publie ses offres, on les lit chez lui.
+              <b>En veille</b> = on ne le voit qu'à travers un moteur, donc pas réellement
+              branché. <b>Non suivi</b> = aucune source du tout.</p>
+            <p>« <b>Articles venant d'eux</b> » compte ce que les acteurs de ce pays apportent ;
+              « <b>articles lus sur ce pays</b> » compte ce que l'application a vu dans ce pays.
+              Les deux diffèrent légitimement : une annonce belge peut venir d'une source
+              étrangère.</p>
+          </details>
           <div class="grille" id="mMarcheCompteurs"></div>
           <div id="mPaysRecap"></div>
         </div>
 
         <div class="rub">
           <h2>Les acteurs, par catégorie</h2>
-          <p class="aide">Chaque acteur tient sur <b>une seule ligne</b> : son état, ses
-            informations de siège, son site, et <b>l'adresse des promotions</b> — la
-            colonne où l'application prend ce qu'elle partage. Cette dernière est
-            <b>modifiable</b> : colle un lien vers la page de promotions de l'enseigne et
-            elle sera utilisée. Les informations de siège (adresse, téléphone, e-mail, CA)
-            sont <b>documentaires</b> : elles figurent dans la base et à l'export, mais
-            <b>le programme ne s'en sert jamais</b> — la liaison se fait uniquement sur
-            le <b>nom</b> et le <b>site web</b>.</p>
-          <div class="champ" style="max-width:360px">
+          <p class="aide">Chaque acteur tient sur <b>une seule ligne</b>. La colonne
+            <b>Adresse des promotions</b> est <b>modifiable</b> : colle un lien vers la page
+            de promotions de l'enseigne et il sera utilisé par la collecte. La <b>note</b> en
+            fin de ligne est libre, et commune avec l'onglet Affiliation.</p>
+          <details class="pourquoi"><summary>Ce que sont les colonnes à droite du trait, et en quoi elles ne décident rien</summary>
+            <p>Les informations de siège (adresse, téléphone, e-mail, CA) sont
+              <b>documentaires</b> : elles figurent dans la base et à l'export, mais
+              <b>le programme ne s'en sert jamais</b> — la liaison se fait uniquement sur le
+              <b>nom</b> et le <b>site web</b>.</p>
+          </details>
+          <div class="champ etroit">
             <label for="rechercheMarche">Chercher un acteur dans ce pays</label>
             <input id="rechercheMarche" type="search" placeholder="nom de l'enseigne…" spellcheck="false">
           </div>
@@ -534,13 +553,16 @@ td.info.sep,th.info.sep{border-left:2px solid var(--bord-clair)}
 
         <div class="rub">
           <h2>Portes d'entrée — Google News et Bing</h2>
-          <p class="aide">Ces deux-là <b>ne vendent rien</b> : ni siège, ni catalogue, ni prix.
-            Ce ne sont donc <b>pas des acteurs</b>, et ils n'ont pas de ligne dans la base —
-            sinon « Google News » y figurerait comme une enseigne. Mais ils ne sont
-            <b>pas éteints</b> pour autant : ce sont des <b>portes d'entrée</b>, les seuls
-            moyens de voir les marchands qui n'ont pas de flux lisible chez eux. Voici ce
-            qu'ils rapportent réellement. <b>« Pas un acteur » veut dire « compté à part »,
+          <p class="aide">Ces deux-là ne vendent rien : ce ne sont <b>pas des acteurs</b>, et ils
+            n'ont aucune ligne dans la base. <b>« Pas un acteur » veut dire « compté à part »,
             jamais « désactivé ».</b></p>
+          <details class="pourquoi"><summary>Ce qu'elles rapportent, et pourquoi elles n'ont pas de fiche</summary>
+            <p>Ni siège, ni catalogue, ni prix : si elles avaient une fiche, « Google News »
+              figurerait dans la base comme une enseigne. Mais elles ne sont <b>pas éteintes</b>
+              pour autant — ce sont des <b>portes d'entrée</b>, les seuls moyens de voir les
+              marchands qui n'ont pas de flux lisible chez eux. Voici ce qu'elles rapportent
+              réellement, à chaque passage, comme les autres sources.</p>
+          </details>
           <div id="mPortes"></div>
         </div>
 
@@ -571,28 +593,36 @@ td.info.sep,th.info.sep{border-left:2px solid var(--bord-clair)}
 
         <div class="rub">
           <h2>Ce que ce pays propose</h2>
-          <p class="aide">Ce que le balayage a réellement VU sur les sites de ce pays :
-            une page de programme, ou la signature d'un réseau d'affiliation dans le
-            code de la page. Trois états, et le troisième compte autant que les deux
-            autres — <b>programme trouvé</b> (mesuré, avec l'adresse qui le prouve),
-            <b>non mesuré</b> (le site a refusé la mesure : on ne sait pas), et
-            <b>aucun signe trouvé</b> (le site a répondu, on a regardé, on n'a rien vu).
-            <b>« Aucun signe » ne veut pas dire « pas d’affiliation »</b> : un programme
-            privé ne laisse aucune trace publique. C'est là qu'une demande directe au
-            commerçant a du sens.</p>
+          <p class="aide">Ce que le balayage a réellement <b>vu</b> sur les sites de ce pays :
+            une page de programme, ou la signature d'un réseau dans le code de la page. Trois
+            états, et le troisième compte autant que les deux autres.</p>
+          <details class="pourquoi"><summary>Pourquoi « aucun signe » ne veut pas dire « pas d'affiliation »</summary>
+            <p><b>Programme trouvé</b> : mesuré, avec l'adresse qui le prouve.
+              <b>Non mesuré</b> : le site a refusé la mesure — on ne sait pas.
+              <b>Aucun signe trouvé</b> : le site a répondu, on a regardé, on n'a rien vu.</p>
+            <p><b>« Aucun signe » ne veut pas dire « pas d’affiliation »</b> : un programme
+              privé ne laisse aucune trace publique. C'est là qu'une demande directe au
+              commerçant a du sens.</p>
+          </details>
           <div class="grille" id="mAffCompteurs"></div>
           <div id="mAffReseaux"></div>
         </div>
 
         <div class="rub">
           <h2>Les acteurs et leur affiliation</h2>
-          <p class="aide">Les programmes <b>trouvés</b> d'abord, puis ceux qu'on n'a
-            pas pu mesurer, puis ceux où rien n'a été vu. Dans chaque groupe, les
-            acteurs sont classés par ce qu'ils apportent déjà au catalogue : c'est
-            l'ordre de démarchage. La case <b>note</b> en fin de ligne est libre —
-            écris-y ce que tu veux (un contact, une démarche en cours, un lien de
-            parrainage privé) ; elle est conservée sur cet appareil et sort à l'export.</p>
-          <div class="champ" style="max-width:360px">
+          <p class="aide">Les programmes <b>trouvés</b> d'abord, puis ceux qu'on n'a pas pu
+            mesurer, puis ceux où rien n'a été vu. C'est l'ordre de démarchage. La case
+            <b>note</b> en fin de ligne est libre.</p>
+          <details class="pourquoi"><summary>Comment la liste est ordonnée, et où sont conservées les notes</summary>
+            <p>Dans chaque groupe, les acteurs sont classés par ce qu'ils apportent déjà au
+              catalogue : un acteur qui pèse beaucoup d'articles sans être affilié est celui
+              avec qui une relation rapporterait le plus.</p>
+            <p>La note accepte ce que tu veux — un contact, une démarche en cours, un lien de
+              parrainage privé. Elle est conservée <b>sur cet appareil</b> (le panneau publié
+              n'écrit rien côté serveur) et sort à l'export, avec la même valeur que dans
+              l'onglet Marché Euro.</p>
+          </details>
+          <div class="champ etroit">
             <label for="rechercheAffiliation">Chercher un acteur dans ce pays</label>
             <input id="rechercheAffiliation" type="search" placeholder="nom de l'enseigne…" spellcheck="false">
           </div>
@@ -728,41 +758,92 @@ function dessinerBord() {
 
   const max = Math.max(...Object.values(pays), 1);
   const lignes = Object.entries(pays).sort((a, b) => b[1] - a[1]);
-  document.getElementById('mPays').innerHTML = lignes.length ? `<table>
-    <tr><th>Pays</th><th class="n">Offres</th><th style="width:40%"></th></tr>
-    ${lignes.map(([c, n]) => `<tr><td>${esc(c)}</td><td class="n">${nf.format(n)}</td>
+  // LE PAYS S'ÉCRIT COMME DANS LES AUTRES ONGLETS : drapeau + nom lisible.
+  // Ici on affichait « DE », « GB », « ES » — des codes, quand le Marché Euro
+  // affichait « Allemagne » avec son drapeau. Le même pays ne doit pas porter
+  // deux noms dans le même panneau.
+  document.getElementById('mPays').innerHTML = lignes.length ? `<table class="etroite">
+    <tr><th>Pays</th><th class="n">Offres</th><th style="width:34%"></th></tr>
+    ${lignes.map(([c, n]) => `<tr><td><span class="pays-nom">${svgDrapeau(c)}${esc(nomDuPays(c))}</span></td>
+      <td class="n">${nf.format(n)}</td>
       <td><span class="barre"><i style="width:${Math.round(100 * n / max)}%"></i></span></td></tr>`).join('')}
     </table>` : '<p class="vide">Aucun pays.</p>';
 }
 
 /* ---------- Sources ---------- */
+let filtreSources = '';
+
 function dessinerSources() {
   const o = catalogue;
   if (!o) return;
   const j = o.journal || [];
-  const ko = j.filter((x) => !x.ok);
+
+  // LE NOM LISIBLE, PAS L'IDENTIFIANT. Défaut mesuré à l'écran : ce tableau
+  // affichait « enseigne-be-nl-funbelgipromotie », « bing-se-sv-3 » — des
+  // identifiants de configuration. Ils venaient du journal, qui parle en
+  // identifiants, alors que le catalogue publié porte le nom de chaque source
+  // (`sources[].nom`). Le pont existe : on s'en sert.
+  const nomDe = {};
+  for (const s of (o.sources || [])) nomDe[s.id] = s.nom || s.id;
+  const nom = (x) => nomDe[x.source] || x.source;
+
   // Le journal écrit `items` (annonces LUES dans le flux) et `retenues` (gardées
   // après les filtres) — pas `n`. L'ancienne version affichait `x.n || 0` : la
   // colonne valait donc 0 pour TOUT LE MONDE, et le panneau donnait l'impression
   // que tous les sites étaient dormants. Corrigé le 08/10/2026.
-  document.getElementById('mSources').innerHTML = j.length ? `<table>
+  //
+  // Deux lignes du journal ne décrivent PAS une source : « repos » (le groupe des
+  // sources en attente, qui porte `saute`) et « visuels » (l'étape des images).
+  // Les compter comme des sources faisait apparaître « repos » en tête de liste.
+  const passages = j.filter((x) => !x.saute && x.source !== 'visuels');
+  const auRepos = j.filter((x) => x.saute).reduce((n, x) => n + (x.sources || []).length, 0);
+  const ko = passages.filter((x) => !x.ok);
+  const lues = passages.reduce((n, x) => n + (x.items || 0), 0);
+  const retenues = passages.reduce((n, x) => n + (x.retenues || 0), 0);
+  const vides = o.sourcesVides || {};
+
+  // LES CHIFFRES EN TÊTE, avant le détail : on veut savoir « est-ce que ça
+  // tourne » avant de lire cent quarante lignes.
+  document.getElementById('mSourcesCompteurs').innerHTML = [
+    [nf.format(passages.length), 'sources interrogées ce passage'],
+    [nf.format(passages.length - ko.length), 'ont répondu'],
+    [nf.format(ko.length), 'en échec'],
+    [nf.format(auRepos), 'au repos (délai non écoulé)'],
+    [nf.format(lues), 'annonces lues'],
+    [nf.format(retenues), 'retenues après filtres'],
+  ].map(([v, l]) => `<div class="mesure"><div class="gros">${esc(v)}</div><div class="lib">${esc(l)}</div></div>`).join('');
+
+  // LES ÉCHECS D'ABORD, PUIS CE QUI RAPPORTE LE PLUS. Trié par ordre de fichier,
+  // ce tableau enterrait la source à quarante annonces sous cent lignes à zéro :
+  // la seule ligne qui comptait était la plus difficile à trouver.
+  const f = filtreSources.trim().toLowerCase();
+  const liste = passages
+    .filter((x) => !f || nom(x).toLowerCase().includes(f))
+    .sort((a, b) => (a.ok ? 1 : 0) - (b.ok ? 1 : 0)
+      || (b.retenues || 0) - (a.retenues || 0)
+      || (b.items || 0) - (a.items || 0)
+      || nom(a).localeCompare(nom(b)));
+
+  document.getElementById('mSources').innerHTML = liste.length ? `<table>
     <tr><th>Source</th><th class="n">Lues</th><th class="n">Retenues</th><th>État</th></tr>
-    ${j.map((x) => `<tr><td>${esc(x.source || '?')}</td>
-      <td class="n">${x.saute ? '—' : nf.format(x.items || 0)}</td>
-      <td class="n">${x.saute ? `${nf.format((x.sources || []).length)} au repos` : nf.format(x.retenues || 0)}</td>
-      <td class="${x.ok ? 'ok' : 'ko'}">${x.ok ? (x.saute ? 'au repos (délai)' : 'ok') : esc(x.erreur || 'en échec')}</td></tr>`).join('')}
+    ${liste.map((x) => `<tr><td>${esc(nom(x))}</td>
+      <td class="n">${nf.format(x.items || 0)}</td>
+      <td class="n">${nf.format(x.retenues || 0)}</td>
+      <td class="${x.ok ? 'ok' : 'ko'}">${x.ok ? 'ok' : esc(x.erreur || 'en échec')}${(vides[x.source] || 0) ? ` · ${vides[x.source]} passage(s) vide(s) d’affilée` : ''}</td></tr>`).join('')}
     </table>
-    <p class="aide" style="margin-top:12px">${ko.length} source(s) en échec sur ${j.length}.
+    <p class="aide" style="margin-top:12px">${f
+    ? `${liste.length} source(s) sur ${passages.length} correspondent à « ${esc(filtreSources)} ».`
+    : `<b>${ko.length} source(s) en échec</b> sur ${passages.length} interrogées${auRepos ? `, et ${auRepos} au repos` : ''}.
       « Lues » = annonces trouvées dans le flux, « retenues » = gardées après les filtres.
-      Le total par site, et la liste des sites actifs et non actifs, sont dans l'onglet <b>Origines</b>.</p>`
-    : '<p class="vide">Aucun journal dans ce fichier.</p>';
+      Le total par site, et la liste des sites actifs et non actifs, sont dans l'onglet <b>Origines</b>.`}</p>`
+    : `<p class="vide">${f ? 'Aucune source ne correspond à cette recherche.' : 'Aucun journal dans ce fichier.'}</p>`;
 
   const parCat = {};
   for (const x of (o.offres || [])) { const c = x.categorie || x.cat || '?'; parCat[c] = (parCat[c] || 0) + 1; }
   const max = Math.max(...Object.values(parCat), 1);
   const l = Object.entries(parCat).sort((a, b) => b[1] - a[1]);
-  document.getElementById('mRubriques').innerHTML = l.length ? `<table>
-    <tr><th>Rubrique</th><th class="n">Offres</th><th style="width:40%"></th></tr>
+  document.getElementById('mRubriques').innerHTML = l.length ? `<table class="etroite">
+    <tr><th>Rubrique</th><th class="n">Offres</th><th style="width:34%"></th></tr>
     ${l.map(([c, n]) => `<tr><td>${esc(c)}</td><td class="n">${nf.format(n)}</td>
       <td><span class="barre"><i style="width:${Math.round(100 * n / max)}%"></i></span></td></tr>`).join('')}
     </table>` : '<p class="vide">Aucune rubrique.</p>';
@@ -783,15 +864,17 @@ function dessinerInscrits() {
   for (const x of liste) par[x.pays || '?'] = (par[x.pays || '?'] || 0) + 1;
   const max = Math.max(...Object.values(par), 1);
   const l = Object.entries(par).sort((a, b) => b[1] - a[1]);
-  document.getElementById('mInscritsPays').innerHTML = l.length ? `<table>
-    <tr><th>Pays</th><th class="n">Inscrits</th><th style="width:40%"></th></tr>
-    ${l.map(([c, n]) => `<tr><td>${esc(c)}</td><td class="n">${nf.format(n)}</td>
+  document.getElementById('mInscritsPays').innerHTML = l.length ? `<table class="etroite">
+    <tr><th>Pays</th><th class="n">Inscrits</th><th style="width:34%"></th></tr>
+    ${l.map(([c, n]) => `<tr><td><span class="pays-nom">${svgDrapeau(c)}${esc(nomDuPays(c))}</span></td>
+      <td class="n">${nf.format(n)}</td>
       <td><span class="barre"><i style="width:${Math.round(100 * n / max)}%"></i></span></td></tr>`).join('')}
-    </table>` : '<p class="vide">Aucune inscription sur cette machine.</p>';
+    </table>` : '<p class="vide">Aucune inscription sur cette machine. Les inscriptions des autres appareils remonteront ici quand le relais sera branché (onglet Réglages).</p>';
 
   document.getElementById('mInscritsListe').innerHTML = liste.length ? `<table>
     <tr><th>Adresse</th><th>Pays</th><th>Newsletter</th><th>Inscrit</th></tr>
-    ${liste.slice(-200).reverse().map((x) => `<tr><td>${esc(x.email)}</td><td>${esc(x.pays || '—')}</td>
+    ${liste.slice(-200).reverse().map((x) => `<tr><td>${esc(x.email)}</td>
+      <td><span class="pays-nom">${x.pays ? svgDrapeau(x.pays) : ''}${esc(x.pays ? nomDuPays(x.pays) : '—')}</span></td>
       <td class="${x.newsletter ? 'ok' : ''}">${x.newsletter ? 'oui' : 'non'}</td>
       <td>${esc(new Date(x.quand).toLocaleString('fr-BE'))}</td></tr>`).join('')}
     </table>` : '<p class="vide">Rien à afficher.</p>';
@@ -814,17 +897,19 @@ function dessinerTrafic() {
   for (const x of t) { const c = x.pays || '?'; entrees[c] = (entrees[c] || 0) + 1; }
   const max = Math.max(...Object.values(entrees), 1);
   const l = Object.entries(entrees).sort((a, b) => b[1] - a[1]);
-  document.getElementById('mEntrees').innerHTML = l.length ? `<table>
-    <tr><th>Pays</th><th class="n">Entrées</th><th style="width:40%"></th></tr>
-    ${l.map(([c, n]) => `<tr><td>${esc(c)}</td><td class="n">${nf.format(n)}</td>
+  document.getElementById('mEntrees').innerHTML = l.length ? `<table class="etroite">
+    <tr><th>Pays</th><th class="n">Entrées</th><th style="width:34%"></th></tr>
+    ${l.map(([c, n]) => `<tr><td><span class="pays-nom">${svgDrapeau(c)}${esc(nomDuPays(c))}</span></td>
+      <td class="n">${nf.format(n)}</td>
       <td><span class="barre"><i style="width:${Math.round(100 * n / max)}%"></i></span></td></tr>`).join('')}
     </table>` : '<p class="vide">Aucune visite enregistrée.</p>';
 
   const ap = { application: app, navigateur: t.length - app };
   const maxAp = Math.max(...Object.values(ap), 1);
-  document.getElementById('mAppareils').innerHTML = `<table>
+  document.getElementById('mAppareils').innerHTML = `<table class="etroite">
+    <tr><th>Appareil</th><th class="n">Visites</th><th style="width:34%"></th></tr>
     ${Object.entries(ap).map(([c, n]) => `<tr><td>${esc(c)}</td><td class="n">${nf.format(n)}</td>
-      <td style="width:40%"><span class="barre"><i style="width:${Math.round(100 * n / maxAp)}%"></i></span></td></tr>`).join('')}
+      <td><span class="barre"><i style="width:${Math.round(100 * n / maxAp)}%"></i></span></td></tr>`).join('')}
     </table>`;
 }
 
@@ -1065,6 +1150,53 @@ function sitesParPaysEtRubrique(catalogue) {
  * Tout est CALCULÉ dans le catalogue publié, rien n'est saisi à la main : une
  * liste tenue à la main se désaccorde du réel au premier changement de source,
  * et personne ne s'en aperçoit avant de la lire en entier. */
+let filtreSites = '';
+
+/** LES DEUX LISTES DE SITES — actifs ⊕ non actifs, et rien d'autre.
+ *
+ *  Extraites de `dessinerOrigines()` pour une raison précise : la RECHERCHE doit
+ *  pouvoir les redessiner SEULES à chaque lettre tapée. Refaire tout l'onglet
+ *  (les douze pays dépliables, les marchands, les pays fragiles) à chaque frappe
+ *  rendait la saisie poussive — et une frappe perdue fait douter du champ, donc
+ *  on n'ose plus s'en servir.
+ *
+ *  Le filtre porte sur les DEUX listes à la fois : elles forment une partition
+ *  (« actif » ⊕ « non actif »). Filtrer une seule moitié ferait croire qu'un
+ *  site a disparu. */
+function dessinerListesSites(o) {
+  const cl = classementSites(o);
+  const fl = filtreSites.trim().toLowerCase();
+  const garde = (n) => !fl || String(n).toLowerCase().includes(fl);
+  const actifs = cl.actifs.filter((x) => garde(x.site));
+  const nonActifs = cl.nonActifs.filter((x) => garde(x.site));
+
+  document.getElementById('mActifs').innerHTML = actifs.length ? `<table>
+    <tr><th>Site</th><th class="n">Annonces</th><th style="width:22%"></th><th>Pays fournis</th></tr>
+    ${actifs.map(({ site, total, pays, lues }) => {
+      const l = Object.entries(pays).sort((a, b) => b[1] - a[1]);
+      const montre = l.slice(0, 4).map(([p, n]) => `<span class="pays-nom">${svgDrapeau(p)}${esc(p)} ${nf.format(n)}</span>`).join(' · ');
+      const suite = l.length > 4 ? ` · +${l.length - 4}` : '';
+      return `<tr><td>${esc(site)}</td><td class="n"><b>${nf.format(total)}</b></td>
+        <td><span class="barre"><i style="width:${Math.round(100 * total / cl.actifs[0].total)}%"></i></span></td>
+        <td class="fin">${montre}${suite}${lues ? ` (${nf.format(lues)} lues)` : ''}</td></tr>`;
+    }).join('')}
+    </table>
+    <p class="aide suite"><b>${actifs.length} site(s) actif(s)</b> sur ${cl.suivis} suivi(s)
+      · ${nf.format(cl.totalAnnonces)} annonces en ligne${cl.vueLe ? ` · mise à jour ${esc(ilYA(cl.vueLe))}` : ''}.${fl ? ` — filtre « ${esc(filtreSites)} » appliqué.` : ''}</p>`
+    : `<p class="vide">${fl ? 'Aucun site actif ne correspond à cette recherche.' : 'Aucun site n’a d’annonce en ligne.'}</p>`;
+
+  document.getElementById('mNonActifs').innerHTML = nonActifs.length ? `
+    <table>
+      <tr><th>Site</th><th>État</th><th>Ce qui s’est passé</th></tr>
+      ${nonActifs.map((x) => `<tr><td>${esc(x.site)}</td>
+        <td class="${x.rang <= 2 ? 'ko' : ''}">${esc(x.etat)}</td>
+        <td class="fin">${esc(x.raison)}</td></tr>`).join('')}
+    </table>
+    <p class="aide suite"><b>${nonActifs.length} site(s) non actif(s)</b> sur ${cl.suivis} suivi(s) :
+      ${cl.parEtat.map(([e, n]) => `${n} ${esc(e)}`).join(' · ')}.${fl ? ` — filtre « ${esc(filtreSites)} » appliqué.` : ''}</p>`
+    : `<p class="vide">${fl ? 'Aucun site non actif ne correspond à cette recherche.' : 'Tous les sites suivis ont des annonces en ligne.'}</p>`;
+}
+
 function dessinerOrigines() {
   const o = catalogue;
   if (!o) return;
@@ -1098,34 +1230,11 @@ function dessinerOrigines() {
 
   // --- Les sites : ACTIFS et NON ACTIFS -----------------------------------
   // Le calcul est dans `classementSites()` (fonction pure, plus haut) : c'est
-  // elle que `tests/origines-admin.test.mjs` essaye hors navigateur.
-  const cl = classementSites(o);
-
-  document.getElementById('mActifs').innerHTML = cl.actifs.length ? `<table>
-    <tr><th>Site</th><th class="n">Annonces</th><th style="width:22%"></th><th>Pays fournis</th></tr>
-    ${cl.actifs.map(({ site, total, pays, lues }) => {
-      const l = Object.entries(pays).sort((a, b) => b[1] - a[1]);
-      const montre = l.slice(0, 4).map(([p, n]) => `${esc(p)} ${nf.format(n)}`).join(' · ');
-      const suite = l.length > 4 ? ` · +${l.length - 4}` : '';
-      return `<tr><td>${esc(site)}</td><td class="n"><b>${nf.format(total)}</b></td>
-        <td><span class="barre"><i style="width:${Math.round(100 * total / cl.actifs[0].total)}%"></i></span></td>
-        <td style="font-size:12px;color:var(--doux)">${montre}${suite}${lues ? ` (${nf.format(lues)} lues)` : ''}</td></tr>`;
-    }).join('')}
-    </table>
-    <p class="aide" style="margin-top:12px"><b>${cl.actifs.length} site(s) actif(s)</b> sur ${cl.suivis} suivi(s)
-      · ${nf.format(cl.totalAnnonces)} annonces en ligne${cl.vueLe ? ` · mise à jour ${esc(ilYA(cl.vueLe))}` : ''}.</p>`
-    : '<p class="vide">Aucun site n’a d’annonce en ligne.</p>';
-
-  document.getElementById('mNonActifs').innerHTML = cl.nonActifs.length ? `
-    <table>
-      <tr><th>Site</th><th>État</th><th>Ce qui s’est passé</th></tr>
-      ${cl.nonActifs.map((x) => `<tr><td>${esc(x.site)}</td>
-        <td class="${x.rang <= 2 ? 'ko' : ''}">${esc(x.etat)}</td>
-        <td style="font-size:12px;color:var(--doux)">${esc(x.raison)}</td></tr>`).join('')}
-    </table>
-    <p class="aide" style="margin-top:12px"><b>${cl.nonActifs.length} site(s) non actif(s)</b> sur ${cl.suivis} suivi(s) :
-      ${cl.parEtat.map(([e, n]) => `${n} ${esc(e)}`).join(' · ')}.</p>`
-    : '<p class="vide">Tous les sites suivis ont des annonces en ligne.</p>';
+  // elle que `tests/origines-admin.test.mjs` essaye hors navigateur. Le DESSIN
+  // est isolé dans `dessinerListesSites()` pour que la recherche puisse
+  // redessiner ces deux listes seules, sans refaire tout l'onglet à chaque
+  // lettre tapée — une frappe perdue fait douter du champ.
+  dessinerListesSites(o);
 
   // --- Les sites, PAR PAYS puis PAR RUBRIQUE -------------------------------
   // Le calcul est dans `sitesParPaysEtRubrique()` (fonction pure, plus haut) :
@@ -1135,10 +1244,10 @@ function dessinerOrigines() {
     ? '<span style="color:var(--accent);font-weight:600">veille</span>'
     : '<span style="color:var(--doux)">flux</span>');
   document.getElementById('mRubriquesSites').innerHTML = pr.rubriques.length ? `
-    <p class="aide" style="margin-top:0"><b>${pr.totalSites} sites suivis</b>,
+    <p class="aide haut"><b>${pr.totalSites} sites suivis</b>,
       ${nf.format(pr.totalAnnonces)} annonces en ligne. Une rubrique dont la colonne
-      « Branchés » est à zéro ne donne <b>rien de direct</b> : tout ce qui la concerne
-      n'arrive que par la presse ou un moteur. C'est la liste des sites à activer.</p>
+      « Branchés » est à zéro ne donne <b>rien de direct</b> : c'est la liste des sites
+      à activer.</p>
     <table>
       <tr><th>Rubrique</th><th class="n">Sites</th><th class="n">Branchés (flux)</th>
         <th class="n">En veille</th><th class="n">Annonces</th></tr>
@@ -1149,17 +1258,16 @@ function dessinerOrigines() {
         <td class="n">${nf.format(r.annonces)}</td></tr>`).join('')}
     </table>
 
-    <h2 style="margin-top:24px">Détail par pays</h2>
+    <h3>Détail par pays</h3>
     <p class="aide">Déplie un pays : chaque rubrique du pays, puis ses sites, du plus
       prolifique au plus discret.</p>
     ${pr.pays.map((P) => `
       <details>
-        <summary><b>${esc(P.pays)}</b><span>${nf.format(P.total)} annonces ·
+        <summary><span class="pays-nom"><b>${svgDrapeau(P.pays)}${esc(nomDuPays(P.pays))}</b></span><span>${nf.format(P.total)} annonces ·
           ${P.sites} site(s) · ${P.flux} en flux, ${P.veille} en veille</span></summary>
         ${P.rubriques.map((R) => `
-          <h2 style="margin:14px 12px 4px;font-size:13px">${esc(R.rubrique)}
-            <span style="font-weight:400;color:var(--doux);font-size:12px;text-transform:none;letter-spacing:0">
-              ${R.sites.length} site(s)${R.annonces ? ` · ${nf.format(R.annonces)} annonces` : ' · aucune annonce'}</span></h2>
+          <h3>${esc(R.rubrique)}
+            <span>${R.sites.length} site(s)${R.annonces ? ` · ${nf.format(R.annonces)} annonces` : ' · aucune annonce'}</span></h3>
           <table>
             <tr><th>Site</th><th class="n">Annonces</th><th>Voie</th><th>État</th></tr>
             ${R.sites.map((s) => `<tr><td>${esc(s.site)}</td>
@@ -1168,10 +1276,10 @@ function dessinerOrigines() {
               <td class="${s.actif ? 'ok' : 'ko'}">${esc(s.actif ? 'actif' : s.etat)}</td></tr>`).join('')}
           </table>`).join('')}
       </details>`).join('')}
-    <p class="aide" style="margin-top:12px">« En veille » n'est <b>pas</b> une panne : le site
-      n'expose aucun flux lisible (page montée en JavaScript, refus, ou image seule — mesuré
-      un par un, voir SOURCES.md). On ne le voit qu'à travers un moteur de recherche qui parle
-      de lui. Chaque ligne en veille est un site à activer le jour où il publie un flux.</p>`
+    <p class="aide suite">« En veille » n'est <b>pas</b> une panne : le site n'expose
+      aucun flux lisible (page montée en JavaScript, refus, ou image seule — mesuré un par
+      un, voir SOURCES.md). Chaque ligne en veille est un site à activer le jour où il
+      publie un flux.</p>`
     : '<p class="vide">Aucun site dans le catalogue publié.</p>';
 
   // --- Les candidats ------------------------------------------------------
@@ -1207,18 +1315,18 @@ function dessinerOrigines() {
       ${marchandsTries.map(([m, n]) => `<tr><td>${esc(m)}</td><td class="n">${nf.format(n)}</td>
         <td class="n">${(100 * n / totalMarchand).toFixed(1)} %</td></tr>`).join('')}
     </table>
-    <p class="aide" style="margin-top:12px">${Object.keys(parMarchand).length} marchands cités au total.
+    <p class="aide suite">${Object.keys(parMarchand).length} marchands cités au total.
       Les trois premiers sont ceux avec qui une relation directe rapporterait le plus.</p>
 
-    <h2 style="margin-top:22px">Pays les plus fragiles</h2>
+    <h2>Pays les plus fragiles</h2>
     <p class="aide">Part du premier site dans les annonces du pays. Au-delà de 60 %, le pays ne tient que sur un fil.</p>
     <table>
       <tr><th>Pays</th><th>Premier site</th><th class="n">Part</th><th class="n">Sites</th></tr>
-      ${fragiles.map(({ p, top, part, n }) => `<tr><td>${esc(p)}</td><td>${esc(top)}</td>
+      ${fragiles.map(({ p, top, part, n }) => `<tr><td><span class="pays-nom">${svgDrapeau(p)}${esc(nomDuPays(p))}</span></td><td>${esc(top)}</td>
         <td class="n ${part > 0.6 ? 'ko' : ''}">${(100 * part).toFixed(0)} %</td><td class="n">${n}</td></tr>`).join('')}
     </table>
 
-    <h2 style="margin-top:22px">Sites à examiner pour la prochaine programmation</h2>
+    <h2>Sites à examiner pour la prochaine programmation</h2>
     <p class="aide">Proposition, pas calcul : voici les familles de sites qui manquent, d'après
       les trous ci-dessus. Aucun n'est acquis — chacun demande qu'on vérifie d'abord qu'il publie un flux lisible.</p>
     <table>
@@ -1671,7 +1779,7 @@ function dessinerMarche() {
     .sort((a, b) => b.annonces - a.annonces || a.nom.localeCompare(b.nom));
   const aucun = p.categories.flatMap((k) => k.liste).filter((a) => a.etat === 'aucun');
   zonePlan.innerHTML = `
-    <h2 style="margin-top:0">1. À brancher pour de vrai — ${nf.format(veille.length)} acteur(s) en veille</h2>
+    <h2>1. À brancher pour de vrai — ${nf.format(veille.length)} acteur(s) en veille</h2>
     <p class="aide">On les VOIT déjà, mais par des articles qui parlent d'eux : leurs propres
       promotions ne sont pas lues. Colle leur adresse de promotions dans la colonne ci-dessus,
       et le branchement devient possible.</p>
@@ -1685,7 +1793,7 @@ function dessinerMarche() {
         <td style="font-size:12px">${adresses[a.nom] ? `<span class="ok">oui</span>` : '<span class="vide">à renseigner</span>'}</td></tr>`).join('')}
     </table></div>` : '<p class="vide">Aucun acteur en veille dans ce pays.</p>'}
 
-    <h2 style="margin-top:22px">2. Pas suivis du tout — ${nf.format(aucun.length)} acteur(s)</h2>
+    <h2>2. Pas suivis du tout — ${nf.format(aucun.length)} acteur(s)</h2>
     <p class="aide">Aucune source. C'est ici qu'un acteur ajouté ouvre une catégorie entière.</p>
     ${aucun.length ? Object.entries(aucun.reduce((m, a) => { (m[a.categorie] = m[a.categorie] || []).push(a); return m; }, {}))
     .sort((x, y) => y[1].length - x[1].length || x[0].localeCompare(y[0]))
@@ -1903,7 +2011,15 @@ function toutDessiner() {
 
   dessinerBord(); dessinerSources(); dessinerOrigines(); dessinerBarrePays(); dessinerMarche(); dessinerBarreAffiliation(); dessinerAffiliation(); dessinerPortes(); dessinerInscrits(); dessinerTrafic();
 
-  document.getElementById('mMachine').innerHTML = `<table>
+  // « CETTE MACHINE » DIT AUSSI OÙ EN EST LE CATALOGUE. C'est la question qu'on
+  // se pose en ouvrant le panneau — « mes données sont-elles fraîches ? » — et
+  // elle n'était répondue que dans le tableau de bord, sous forme d'un « il y a
+  // 3 min » qu'il fallait aller chercher.
+  const g = catalogue && catalogue.genereLe ? new Date(catalogue.genereLe) : null;
+  document.getElementById('mMachine').innerHTML = `<table class="etroite2">
+    <tr><th>Catalogue publié</th><td class="n">${g ? esc(g.toLocaleString('fr-BE')) : '—'}</td></tr>
+    <tr><th>Fraîcheur</th><td class="n">${g ? esc(ilYA(g)) : '—'}</td></tr>
+    <tr><th>Offres au catalogue</th><td class="n">${nf.format(((catalogue || {}).offres || []).length)}</td></tr>
     <tr><th>Fuseau</th><td>${esc(Intl.DateTimeFormat().resolvedOptions().timeZone)}</td></tr>
     <tr><th>Langue du navigateur</th><td>${esc(navigator.language)}</td></tr>
     <tr><th>Inscrits sur cette machine</th><td class="n">${nf.format(lireRegistre().length)}</td></tr>
@@ -2009,6 +2125,61 @@ function brancher() {
     boutonAff.addEventListener('click', () => {
       const j = new Date().toISOString().slice(0, 10);
       telecharger(`kazendra-affiliation-${paysChoisiAff || 'eu'}-${j}.csv`, csvAffiliation(), 'text/csv;charset=utf-8');
+    });
+  }
+
+  // LES DEUX RECHERCHES NOUVELLES. Même méthode que les autres : on ne
+  // redessine QUE la liste concernée. Pour les sources, c'est un seul tableau.
+  // Pour les sites, ce sont les DEUX listes de la partition, et elles seules.
+  const champSources = document.getElementById('rechercheSources');
+  if (champSources) {
+    champSources.addEventListener('input', () => {
+      filtreSources = champSources.value || '';
+      dessinerSources();
+    });
+  }
+  const champSites = document.getElementById('rechercheSites');
+  if (champSites) {
+    champSites.addEventListener('input', () => {
+      filtreSites = champSites.value || '';
+      dessinerListesSites(catalogue);
+    });
+  }
+
+  // LE BOUTON « TESTER » DU RELAIS.
+  //
+  // DÉFAUT CORRIGÉ (08/10/2026) : ce bouton était dans le panneau depuis le
+  // début et N'AVAIT AUCUN écouteur. On cliquait, rien ne se passait, et rien
+  // ne le disait — le pire genre de commande : elle a l'air de marcher. C'est
+  // exactement le défaut que le commentaire d'`ouvrir()` raconte déjà.
+  //
+  // On ne peut PAS lire la réponse du relais : l'envoi part en `no-cors` (c'est
+  // ainsi que le site écrit dedans), donc le navigateur rend une réponse opaque.
+  // Le test dit donc ce qu'il sait vraiment : le relais a-t-il répondu, ou pas.
+  // Prétendre « testé, tout va bien » sur une réponse illisible serait un
+  // mensonge — celui qui coûte le plus cher sur un panneau de bord.
+  const boutonTester = document.getElementById('relaisTest');
+  if (boutonTester) {
+    boutonTester.addEventListener('click', async () => {
+      const m = document.getElementById('relaisMsg');
+      const u = document.getElementById('relais').value.trim();
+      m.className = 'annonce';
+      if (!u) { m.textContent = 'Renseigne d’abord une adresse.'; m.className = 'annonce err'; return; }
+      m.textContent = 'Envoi d’un relevé de test…';
+      try {
+        await fetch(u, {
+          method: 'POST', mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ type: 'test', quand: new Date().toISOString(), source: 'panneau-admin' }),
+        });
+        m.innerHTML = 'Relevé de test envoyé. Le navigateur ne peut pas lire la réponse : '
+          + '<b>ouvre le tableur du relais</b> pour voir la ligne « test » y arriver — c’est la seule preuve.';
+        m.className = 'annonce ok';
+      } catch (e) {
+        m.innerHTML = 'Le relais n’a pas répondu : adresse fausse, ou réseau. '
+          + 'Un « Ajout » sur un site qui existe <b>prouve</b> en revanche que l’adresse répond.';
+        m.className = 'annonce err';
+      }
     });
   }
 
