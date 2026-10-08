@@ -190,7 +190,13 @@ function memeSimple(fa, fb) {
     for (const y of fb.espace) {
       const court = x.length <= y.length ? x : y;
       const long = x.length <= y.length ? y : x;
-      if (court.length >= 5 && ` ${long} `.includes(` ${court} `)) return true;
+      // SEUIL À 4, ET POURQUOI. Il était à 5, et cela faisait manquer « Hubo
+      // promotie (BE) » pour « Hubo » — un acteur pourtant présent dans la base,
+      // proposé à tort comme nouveau. MESURÉ : c'était le seul cas de la liste.
+      // Descendre à 4 est sans danger ICI parce que la comparaison porte sur des
+      // MOTS ENTIERS : les faux positifs venaient des bouts de mots, et c'est
+      // cela qu'on a corrigé, pas la longueur.
+      if (court.length >= 4 && ` ${long} `.includes(` ${court} `)) return true;
     }
   }
   return false;

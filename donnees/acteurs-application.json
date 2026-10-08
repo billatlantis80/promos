@@ -1,0 +1,293 @@
+{
+  "version": 1,
+  "pays": "multi",
+  "note": "Acteurs LUS par l'application mais ABSENTS du tableur du marché belge. Demande de B (08/10/2026) : « Il y a des acteurs dans l'application qui ne sont pas documentés dans le fichier excel tu peux les rajouter car ils doivent faire partie de la base de données. » Liste ÉTABLIE PAR MESURE (outils/mesure-acteurs-manquants.mjs), jamais à la main : sont retenus les sites que le collecteur interroge vraiment et qu'aucun acteur de la base ne revendique. Les MOTEURS de recherche en sont exclus — un moteur n'est pas un acteur, c'est un moyen de voir un acteur. Ne sont PAS documentées ici les informations de siège : nous ne les avons pas, et en inventer serait pire que de les laisser vides.",
+  "acteurs": [
+    {
+      "nom": "MyDealz",
+      "categorie": "Communautés de bons plans",
+      "type": "Communauté de bons plans",
+      "segment": "B2C",
+      "pays": "DE",
+      "site": "https://www.mydealz.de",
+      "domaines": ["mydealz.de"],
+      "provenance": "application",
+      "remarques": "Flux « hot » lu directement. Même moteur que Dealabs : chaque titre porte son score de température."
+    },
+    {
+      "nom": "HotUKDeals",
+      "categorie": "Communautés de bons plans",
+      "type": "Communauté de bons plans",
+      "segment": "B2C",
+      "pays": "GB",
+      "site": "https://www.hotukdeals.com",
+      "domaines": ["hotukdeals.com"],
+      "provenance": "application",
+      "remarques": "Même famille que Dealabs. Flux « hot » lu directement."
+    },
+    {
+      "nom": "Chollometro",
+      "categorie": "Communautés de bons plans",
+      "type": "Communauté de bons plans",
+      "segment": "B2C",
+      "pays": "ES",
+      "site": "https://www.chollometro.com",
+      "domaines": ["chollometro.com"],
+      "provenance": "application",
+      "remarques": "Espagne. Même famille que Dealabs, flux « hot »."
+    },
+    {
+      "nom": "Pepper PL",
+      "categorie": "Communautés de bons plans",
+      "type": "Communauté de bons plans",
+      "segment": "B2C",
+      "pays": "PL",
+      "site": "https://www.pepper.pl",
+      "domaines": ["pepper.pl"],
+      "provenance": "application",
+      "remarques": "Pologne. Même famille que Dealabs, flux « hot »."
+    },
+    {
+      "nom": "Pepper NL",
+      "categorie": "Communautés de bons plans",
+      "type": "Communauté de bons plans",
+      "segment": "B2C",
+      "pays": "NL",
+      "site": "https://nl.pepper.com",
+      "domaines": ["pepper.com"],
+      "provenance": "application",
+      "remarques": "Pays-Bas. Sous-domaine national — c'est « pepper.com » qui porte le domaine."
+    },
+    {
+      "nom": "Preisjäger",
+      "categorie": "Communautés de bons plans",
+      "type": "Communauté de bons plans",
+      "segment": "B2C",
+      "pays": "AT",
+      "site": "https://www.preisjaeger.at",
+      "domaines": ["preisjaeger.at"],
+      "provenance": "application",
+      "remarques": "Autriche. Messuré : l'Autriche n'avait que de la presse, aucune communauté — c'est la seule."
+    },
+    {
+      "nom": "Groupon",
+      "categorie": "Activités Touristiques & Séjours en Belgique",
+      "type": "Plateforme bons plans",
+      "segment": "B2C",
+      "pays": "BE",
+      "site": "https://www.groupon.be",
+      "domaines": ["groupon.be"],
+      "provenance": "application",
+      "remarques": "La seule source belge qui publie ses bons plans avec DEUX prix réels (« 26,99 € au lieu de 59,90 € ») : les remises sont donc chiffrables. Refuse le client HTTP de Node, d'où une lecture par curl. Absent du tableur — relevé en mesurant ce que l'application lit."
+    },
+    {
+      "nom": "Het Nieuwsblad",
+      "categorie": "Presse, Tests Produits & Annonces Promo",
+      "type": "Média en ligne",
+      "segment": "B2C",
+      "pays": "BE",
+      "site": "https://www.nieuwsblad.be",
+      "domaines": ["nieuwsblad.be"],
+      "provenance": "application",
+      "remarques": "Flux d'éditeur choisi pour ses VISUELS, dans les pays que Google News laisse sans image."
+    },
+    {
+      "nom": "Gazet van Antwerpen",
+      "categorie": "Presse, Tests Produits & Annonces Promo",
+      "type": "Média en ligne",
+      "segment": "B2C",
+      "pays": "BE",
+      "site": "https://www.gva.be",
+      "domaines": ["gva.be"],
+      "provenance": "application",
+      "remarques": "Flux d'éditeur, néerlandais de Belgique, retenu pour ses visuels."
+    },
+    {
+      "nom": "DHnet",
+      "categorie": "Presse, Tests Produits & Annonces Promo",
+      "type": "Média en ligne",
+      "segment": "B2C",
+      "pays": "BE",
+      "site": "https://www.dhnet.be",
+      "domaines": ["dhnet.be"],
+      "provenance": "application",
+      "remarques": "Flux d'éditeur, français de Belgique, retenu pour ses visuels."
+    },
+    {
+      "nom": "Journal du Geek",
+      "categorie": "Presse, Tests Produits & Annonces Promo",
+      "type": "Média en ligne",
+      "segment": "B2C",
+      "pays": "FR",
+      "site": "https://www.journaldugeek.com",
+      "domaines": ["journaldugeek.com"],
+      "provenance": "application",
+      "remarques": "Presse spécialisée : publie des bons plans article par article."
+    },
+    {
+      "nom": "HDblog",
+      "categorie": "Presse, Tests Produits & Annonces Promo",
+      "type": "Média en ligne",
+      "segment": "B2C",
+      "pays": "IT",
+      "site": "https://www.hdblog.it",
+      "domaines": ["hdblog.it"],
+      "provenance": "application",
+      "remarques": "Presse italienne, lue avec le filtre de pertinence italien."
+    },
+    {
+      "nom": "TuttoAndroid",
+      "categorie": "Presse, Tests Produits & Annonces Promo",
+      "type": "Média en ligne",
+      "segment": "B2C",
+      "pays": "IT",
+      "site": "https://www.tuttoandroid.net",
+      "domaines": ["tuttoandroid.net"],
+      "provenance": "application",
+      "remarques": "Presse italienne."
+    },
+    {
+      "nom": "Macitynet",
+      "categorie": "Presse, Tests Produits & Annonces Promo",
+      "type": "Média en ligne",
+      "segment": "B2C",
+      "pays": "IT",
+      "site": "https://www.macitynet.it",
+      "domaines": ["macitynet.it"],
+      "provenance": "application",
+      "remarques": "Presse italienne, retenue pour ses visuels."
+    },
+    {
+      "nom": "iPhoneItalia",
+      "categorie": "Presse, Tests Produits & Annonces Promo",
+      "type": "Média en ligne",
+      "segment": "B2C",
+      "pays": "IT",
+      "site": "https://www.iphoneitalia.com",
+      "domaines": ["iphoneitalia.com"],
+      "provenance": "application",
+      "remarques": "Presse italienne, retenue pour ses visuels."
+    },
+    {
+      "nom": "Androidworld",
+      "categorie": "Presse, Tests Produits & Annonces Promo",
+      "type": "Média en ligne",
+      "segment": "B2C",
+      "pays": "NL",
+      "site": "https://www.androidworld.nl",
+      "domaines": ["androidworld.nl"],
+      "provenance": "application",
+      "remarques": "Presse néerlandaise."
+    },
+    {
+      "nom": "Mobil.se",
+      "categorie": "Presse, Tests Produits & Annonces Promo",
+      "type": "Média en ligne",
+      "segment": "B2C",
+      "pays": "SE",
+      "site": "https://www.mobil.se",
+      "domaines": ["mobil.se"],
+      "provenance": "application",
+      "remarques": "Presse suédoise."
+    },
+    {
+      "nom": "M3",
+      "categorie": "Presse, Tests Produits & Annonces Promo",
+      "type": "Média en ligne",
+      "segment": "B2C",
+      "pays": "SE",
+      "site": "https://www.m3.se",
+      "domaines": ["m3.se"],
+      "provenance": "application",
+      "remarques": "Presse suédoise (jeux vidéo)."
+    },
+    {
+      "nom": "Teknikveckan",
+      "categorie": "Presse, Tests Produits & Annonces Promo",
+      "type": "Média en ligne",
+      "segment": "B2C",
+      "pays": "SE",
+      "site": "https://teknikveckan.se",
+      "domaines": ["teknikveckan.se"],
+      "provenance": "application",
+      "remarques": "Presse suédoise, retenue pour ses visuels."
+    },
+    {
+      "nom": "4gnews",
+      "categorie": "Presse, Tests Produits & Annonces Promo",
+      "type": "Média en ligne",
+      "segment": "B2C",
+      "pays": "PT",
+      "site": "https://4gnews.pt",
+      "domaines": ["4gnews.pt"],
+      "provenance": "application",
+      "remarques": "Presse portugaise, retenue pour ses visuels."
+    },
+    {
+      "nom": "Bio-Planet",
+      "categorie": "Grande Distribution Alimentaire",
+      "type": "Supermarché (bio)",
+      "segment": "B2C",
+      "pays": "BE",
+      "site": "https://www.bioplanet.be",
+      "domaines": ["bioplanet.be"],
+      "provenance": "application",
+      "remarques": "MESURÉ : « bio-planet.be » (avec tiret) existe en DNS mais ne porte AUCUNE adresse — le vrai domaine est « bioplanet.be ». La première écriture venait de ma mémoire, pas d'une mesure ; corrigée après vérification. Surveillé par requête, pas encore branché : aucun flux lisible trouvé, les dépliants sont des images."
+    },
+    {
+      "nom": "OKay",
+      "categorie": "Grande Distribution Alimentaire",
+      "type": "Supermarché",
+      "segment": "B2C",
+      "pays": "BE",
+      "site": "https://www.okay.be",
+      "domaines": ["okay.be"],
+      "provenance": "application",
+      "remarques": "Enseigne du groupe Colruyt. Surveillée par requête, pas encore branchée."
+    },
+    {
+      "nom": "Spar",
+      "categorie": "Grande Distribution Alimentaire",
+      "type": "Supermarché (franchise)",
+      "segment": "B2C",
+      "pays": "BE",
+      "site": "https://www.spar.be",
+      "domaines": ["spar.be"],
+      "provenance": "application",
+      "remarques": "Surveillé par requête, pas encore branché."
+    },
+    {
+      "nom": "JBC",
+      "categorie": "Mode, Chaussures & Sport",
+      "type": "Retail mode",
+      "segment": "B2C",
+      "pays": "BE",
+      "site": "https://www.jbc.be",
+      "domaines": ["jbc.be"],
+      "provenance": "application",
+      "remarques": "Chaîne de mode familiale belge. Surveillée par requête, pas encore branchée."
+    },
+    {
+      "nom": "Fun",
+      "categorie": "Jeux & Jouets",
+      "type": "Retail jouets",
+      "segment": "B2C",
+      "pays": "BE",
+      "site": "https://www.fun.be",
+      "domaines": ["fun.be"],
+      "provenance": "application",
+      "remarques": "MESURÉ : « fun.be » REDIRIGE vers dreamland.be. Fun est devenu une marque de DreamLand (groupe Colruyt) — les deux enseignes partagent désormais le même site, donc la même source potentielle. Le collecteur les surveille séparément par leur nom ; c'est pourquoi l'acteur reste distinct ici, mais le jour où l'une publiera un flux, il faudra vérifier qu'il ne double pas l'autre."
+    },
+    {
+      "nom": "Toolstation",
+      "categorie": "Bricolage, Jardin & Aménagement Extérieur",
+      "type": "Retail bricolage",
+      "segment": "B2C",
+      "pays": "BE",
+      "site": "https://www.toolstation.be",
+      "domaines": ["toolstation.be"],
+      "provenance": "application",
+      "remarques": "Surveillé par requête, pas encore branché."
+    }
+  ]
+}

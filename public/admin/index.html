@@ -108,6 +108,10 @@ details > table tr:first-child th{padding-top:2px}
 .fiche-info{margin:7px 0 0;font-size:11.5px;line-height:1.45}
 .fiche-info dt{color:var(--doux);text-transform:uppercase;font-size:10px;letter-spacing:.4px;margin-top:5px}
 .fiche-info dd{margin:0;color:var(--texte)}
+/* L'étiquette « ajouté » : un acteur que l'appli lit et qui ne venait pas du
+   tableur de B. Elle doit se voir, pour qu'il garde la maîtrise de sa base. */
+.ajout{background:var(--accent);color:#12222e;border-radius:4px;padding:1px 5px;
+  font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;vertical-align:1px}
 .avis{
   border-left:3px solid var(--accent);background:var(--carte2);border-radius:0 10px 10px 0;
   padding:11px 13px;font-size:13px;color:var(--texte);margin:0 0 14px
@@ -268,9 +272,10 @@ details > table tr:first-child th{padding-top:2px}
       <section data-vue="marche">
         <div class="rub">
           <h2>Le marché belge, acteur par acteur</h2>
-          <p class="aide">Les <b>139 acteurs</b> du marché belge (22 catégories), croisés avec
-            les sites que l'application lit réellement. Trois états, et la distinction est
-            tout le sujet :
+          <p class="aide">Les <b>165 acteurs</b> des 23 catégories : ceux de ton tableur, plus
+            ceux que l'application lit sans qu'ils y figurent — ils doivent être dans la base,
+            sinon ils n'ont aucune ligne. Croisés avec les sites réellement lus. Trois états,
+            et la distinction est tout le sujet :
             <b>branché</b> = le site publie ses offres, on les lit chez lui ;
             <b>en veille</b> = on ne le voit qu'à travers un moteur de recherche, donc
             <b>pas réellement branché</b> ; <b>non suivi</b> = aucune source du tout.
@@ -1027,12 +1032,17 @@ function dessinerMarche() {
   }
   const r = liaisonActeurs(catalogue, marche);
   const c = r.compteurs;
+  // D'OÙ VIENT CHAQUE ACTEUR. On sépare le tableur de B de ce que nous avons
+  // ajouté : sans cela, il ne pourrait plus distinguer ce qu'il a fourni de ce
+  // que nous avons complété — et sa base cesserait d'être la sienne.
+  const ajoutes = r.acteurs.filter((a) => a.provenance === 'application').length;
+  const duFichier = r.acteurs.length - ajoutes;
   const uniques = clicsEtPartages();
   const totalClics = uniques.reduce((n, e) => n + e.clics, 0);
   const totalPartages = uniques.reduce((n, e) => n + e.partages, 0);
 
   zoneCompteurs.innerHTML = [
-    [nf.format(c.acteurs), 'acteurs du marché belge'],
+    [nf.format(c.acteurs), `acteurs suivis · dont ${nf.format(ajoutes)} ajoutés`],
     [nf.format(c.flux), 'branchés (on lit chez eux)'],
     [nf.format(c.veille), 'en veille — pas branchés'],
     [nf.format(c.aucun), 'pas suivis du tout'],
@@ -1046,6 +1056,7 @@ function dessinerMarche() {
   const garde = r.acteurs.filter((a) => !f
     || a.nom.toLowerCase().includes(f)
     || (a.categorie || '').toLowerCase().includes(f)
+    || (a.pays || '').toLowerCase() === f
     || (a.domaines || []).some((d) => d.includes(f)));
   const parCat = {};
   for (const a of garde) (parCat[a.categorie] = parCat[a.categorie] || []).push(a);
@@ -1071,7 +1082,9 @@ function dessinerMarche() {
           const act = actionsDe(formesDe(a.nom), uniques);
           const liens = [...a.liaison.flux, ...a.liaison.veille].map((s) => esc(s.nom));
           return `<tr>
-            <td><details><summary><b>${esc(a.nom)}</b></summary>${ficheInfo(a)}</details>${liens.length ? `<div style="font-size:11.5px;color:var(--doux);margin-top:3px">${liens.join(' · ')}</div>` : ''}</td>
+            <td><details><summary><b>${esc(a.nom)}</b>${a.provenance === 'application'
+              ? ' <span class="ajout" title="Ajouté par l’application : ce site est lu, il ne figurait pas dans le tableur">ajouté</span>' : ''}${a.pays && a.pays !== 'BE'
+              ? ` <span style="font-size:10.5px;color:var(--doux)">${esc(a.pays)}</span>` : ''}</summary>${ficheInfo(a)}</details>${liens.length ? `<div style="font-size:11.5px;color:var(--doux);margin-top:3px">${liens.join(' · ')}</div>` : ''}</td>
             <td style="font-size:12px;color:var(--doux)">${esc(a.type || '—')}</td>
             <td style="font-size:12px">${(a.domaines || []).length ? esc((a.domaines || []).join(' / ')) : '—'}</td>
             <td>${etiquette(a.etat)}</td>
@@ -1084,7 +1097,7 @@ function dessinerMarche() {
   }).join('')}
   <p class="aide" style="margin-top:12px">${f
     ? `${garde.length} acteur(s) sur ${r.acteurs.length} correspondent à « ${esc(filtreMarche)} ».`
-    : `${r.acteurs.length} acteurs · ${r.categories.length} catégories · source : ${esc(marche.source || '—')}`}</p>`
+    : `${r.acteurs.length} acteurs · ${r.categories.length} catégories · ${duFichier} venus de ton tableur, ${ajoutes} ajoutés parce que l'application les lit · source : ${esc(marche.source || '—')}`}</p>`
     : '<p class="vide">Aucun acteur ne correspond à cette recherche.</p>';
 
   // --- Le plan de régularisation ----------------------------------------

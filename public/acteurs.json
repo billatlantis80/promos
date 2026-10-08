@@ -2,7 +2,8 @@
  "version": 1,
  "pays": "BE",
  "source": "marche-be-2026-10-08.xlsx",
- "genereLe": "2026-10-08T11:25:27Z",
+ "sourceApplication": "acteurs-application.json",
+ "genereLe": "2026-10-08T11:38:40Z",
  "categories": [
   "Activités Touristiques & Séjours en Belgique",
   "Animaleries",
@@ -10,6 +11,7 @@
   "Bazar, Dépannage & Petits Prix",
   "Boissons & Terroir",
   "Bricolage, Jardin & Aménagement Extérieur",
+  "Communautés de bons plans",
   "Compagnies Aériennes",
   "Croisières, Train & Transport de Voyageurs",
   "E-Commerce Généraliste & Marketplaces",
@@ -29,6 +31,19 @@
  ],
  "acteurs": [
   {
+   "nom": "Preisjäger",
+   "categorie": "Communautés de bons plans",
+   "type": "Communauté de bons plans",
+   "segment": "B2C",
+   "pays": "AT",
+   "site": "https://www.preisjaeger.at",
+   "domaines": [
+    "preisjaeger.at"
+   ],
+   "provenance": "application",
+   "remarques": "Autriche. Messuré : l'Autriche n'avait que de la presse, aucune communauté — c'est la seule."
+  },
+  {
    "nom": "Ardennes-Etape",
    "categorie": "Activités Touristiques & Séjours en Belgique",
    "positionnement": "Leader location de gîtes et chalets dans les Ardennes, avantages partenaires",
@@ -45,7 +60,9 @@
    "domaines": [
     "ardennes-etape.be"
    ],
-   "domaine": "ardennes-etape.be"
+   "domaine": "ardennes-etape.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Bongo & Wonderbox",
@@ -65,7 +82,22 @@
     "bongo.be",
     "wonderbox.be"
    ],
-   "domaine": "bongo.be"
+   "domaine": "bongo.be",
+   "provenance": "fichier",
+   "pays": "BE"
+  },
+  {
+   "nom": "Groupon",
+   "categorie": "Activités Touristiques & Séjours en Belgique",
+   "type": "Plateforme bons plans",
+   "segment": "B2C",
+   "pays": "BE",
+   "site": "https://www.groupon.be",
+   "domaines": [
+    "groupon.be"
+   ],
+   "provenance": "application",
+   "remarques": "La seule source belge qui publie ses bons plans avec DEUX prix réels (« 26,99 € au lieu de 59,90 € ») : les remises sont donc chiffrables. Refuse le client HTTP de Node, d'où une lecture par curl. Absent du tableur — relevé en mesurant ce que l'application lit."
   },
   {
    "nom": "Social Deal & Outspot",
@@ -85,7 +117,9 @@
     "socialdeal.be",
     "outspot.be"
    ],
-   "domaine": "socialdeal.be"
+   "domaine": "socialdeal.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Ticketmaster Belgique & Eventim",
@@ -105,7 +139,9 @@
     "ticketmaster.be",
     "eventim.be"
    ],
-   "domaine": "ticketmaster.be"
+   "domaine": "ticketmaster.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "VISITWALLONIA / Visit Brussels / Visit Flanders",
@@ -126,7 +162,9 @@
     "visit.brussels",
     "visitflanders.com"
    ],
-   "domaine": "visitwallonia.be"
+   "domaine": "visitwallonia.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Maxi Zoo",
@@ -145,7 +183,9 @@
    "domaines": [
     "maxizoo.be"
    ],
-   "domaine": "maxizoo.be"
+   "domaine": "maxizoo.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Poils et Plumes",
@@ -164,7 +204,9 @@
    "domaines": [
     "poils-et-plumes.be"
    ],
-   "domaine": "poils-et-plumes.be"
+   "domaine": "poils-et-plumes.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Tom&Co",
@@ -183,7 +225,9 @@
    "domaines": [
     "tomandco.be"
    ],
-   "domaine": "tomandco.be"
+   "domaine": "tomandco.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Zooplus.be",
@@ -202,7 +246,9 @@
    "domaines": [
     "zooplus.be"
    ],
-   "domaine": "zooplus.be"
+   "domaine": "zooplus.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Auto5",
@@ -221,7 +267,9 @@
    "domaines": [
     "auto5.be"
    ],
-   "domaine": "auto5.be"
+   "domaine": "auto5.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "AutoDoc",
@@ -240,7 +288,9 @@
    "domaines": [
     "autodoc.be"
    ],
-   "domaine": "autodoc.be"
+   "domaine": "autodoc.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Mister Auto",
@@ -259,7 +309,9 @@
    "domaines": [
     "mister-auto.be"
    ],
-   "domaine": "mister-auto.be"
+   "domaine": "mister-auto.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Action",
@@ -278,7 +330,9 @@
    "domaines": [
     "action.com"
    ],
-   "domaine": "action.com"
+   "domaine": "action.com",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Flying Tiger Copenhagen",
@@ -297,7 +351,9 @@
    "domaines": [
     "flyingtiger.com"
    ],
-   "domaine": "flyingtiger.com"
+   "domaine": "flyingtiger.com",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "HEMA",
@@ -316,7 +372,9 @@
    "domaines": [
     "hema.be"
    ],
-   "domaine": "hema.be"
+   "domaine": "hema.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Normal",
@@ -335,7 +393,9 @@
    "domaines": [
     "normal.be"
    ],
-   "domaine": "normal.be"
+   "domaine": "normal.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Wibra",
@@ -354,7 +414,9 @@
    "domaines": [
     "wibra.be"
    ],
-   "domaine": "wibra.be"
+   "domaine": "wibra.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Zeeman",
@@ -373,7 +435,9 @@
    "domaines": [
     "zeeman.com"
    ],
-   "domaine": "zeeman.com"
+   "domaine": "zeeman.com",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Prik&Tik",
@@ -392,7 +456,9 @@
    "domaines": [
     "prik-et-tik.be"
    ],
-   "domaine": "prik-et-tik.be"
+   "domaine": "prik-et-tik.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Aveve",
@@ -411,7 +477,9 @@
    "domaines": [
     "aveve.be"
    ],
-   "domaine": "aveve.be"
+   "domaine": "aveve.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Brico",
@@ -430,7 +498,9 @@
    "domaines": [
     "brico.be"
    ],
-   "domaine": "brico.be"
+   "domaine": "brico.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "BricoPlanit",
@@ -449,7 +519,9 @@
    "domaines": [
     "bricoplanit.be"
    ],
-   "domaine": "bricoplanit.be"
+   "domaine": "bricoplanit.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Floralux",
@@ -468,7 +540,9 @@
    "domaines": [
     "floralux.be"
    ],
-   "domaine": "floralux.be"
+   "domaine": "floralux.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Gamma",
@@ -487,7 +561,9 @@
    "domaines": [
     "gamma.be"
    ],
-   "domaine": "gamma.be"
+   "domaine": "gamma.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Hubo",
@@ -506,7 +582,9 @@
    "domaines": [
     "hubo.be"
    ],
-   "domaine": "hubo.be"
+   "domaine": "hubo.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Mr.Bricolage",
@@ -525,7 +603,9 @@
    "domaines": [
     "mr-bricolage.be"
    ],
-   "domaine": "mr-bricolage.be"
+   "domaine": "mr-bricolage.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Oh'Green",
@@ -544,7 +624,22 @@
    "domaines": [
     "ohgreen.be"
    ],
-   "domaine": "ohgreen.be"
+   "domaine": "ohgreen.be",
+   "provenance": "fichier",
+   "pays": "BE"
+  },
+  {
+   "nom": "Toolstation",
+   "categorie": "Bricolage, Jardin & Aménagement Extérieur",
+   "type": "Retail bricolage",
+   "segment": "B2C",
+   "pays": "BE",
+   "site": "https://www.toolstation.be",
+   "domaines": [
+    "toolstation.be"
+   ],
+   "provenance": "application",
+   "remarques": "Surveillé par requête, pas encore branché."
   },
   {
    "nom": "Air France & KLM",
@@ -564,7 +659,9 @@
     "airfrance.com",
     "klm.com"
    ],
-   "domaine": "airfrance.com"
+   "domaine": "airfrance.com",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "British Airways",
@@ -583,7 +680,9 @@
    "domaines": [
     "britishairways.com"
    ],
-   "domaine": "britishairways.com"
+   "domaine": "britishairways.com",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Brussels Airlines",
@@ -602,7 +701,9 @@
    "domaines": [
     "brusselsairlines.com"
    ],
-   "domaine": "brusselsairlines.com"
+   "domaine": "brusselsairlines.com",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "EasyJet",
@@ -621,7 +722,9 @@
    "domaines": [
     "easyjet.com"
    ],
-   "domaine": "easyjet.com"
+   "domaine": "easyjet.com",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Eurowings",
@@ -640,7 +743,9 @@
    "domaines": [
     "eurowings.com"
    ],
-   "domaine": "eurowings.com"
+   "domaine": "eurowings.com",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Iberia",
@@ -659,7 +764,9 @@
    "domaines": [
     "iberia.com"
    ],
-   "domaine": "iberia.com"
+   "domaine": "iberia.com",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Lufthansa",
@@ -678,7 +785,9 @@
    "domaines": [
     "lufthansa.com"
    ],
-   "domaine": "lufthansa.com"
+   "domaine": "lufthansa.com",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Pegasus Airlines",
@@ -697,7 +806,9 @@
    "domaines": [
     "flypgs.com"
    ],
-   "domaine": "flypgs.com"
+   "domaine": "flypgs.com",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Ryanair",
@@ -716,7 +827,9 @@
    "domaines": [
     "ryanair.com"
    ],
-   "domaine": "ryanair.com"
+   "domaine": "ryanair.com",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "TAP Air Portugal",
@@ -735,7 +848,9 @@
    "domaines": [
     "flytap.com"
    ],
-   "domaine": "flytap.com"
+   "domaine": "flytap.com",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "TUI fly Belgium",
@@ -754,7 +869,9 @@
    "domaines": [
     "tuifly.be"
    ],
-   "domaine": "tuifly.be"
+   "domaine": "tuifly.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Transavia",
@@ -773,7 +890,9 @@
    "domaines": [
     "transavia.com"
    ],
-   "domaine": "transavia.com"
+   "domaine": "transavia.com",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Volotea",
@@ -792,7 +911,9 @@
    "domaines": [
     "volotea.com"
    ],
-   "domaine": "volotea.com"
+   "domaine": "volotea.com",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Vueling",
@@ -811,7 +932,9 @@
    "domaines": [
     "vueling.com"
    ],
-   "domaine": "vueling.com"
+   "domaine": "vueling.com",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Wizz Air",
@@ -830,7 +953,9 @@
    "domaines": [
     "wizzair.com"
    ],
-   "domaine": "wizzair.com"
+   "domaine": "wizzair.com",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "CroisiEurope",
@@ -849,7 +974,9 @@
    "domaines": [
     "croisieurope.travel"
    ],
-   "domaine": "croisieurope.travel"
+   "domaine": "croisieurope.travel",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "FlixBus & BlaBlaCar",
@@ -869,7 +996,9 @@
     "flixbus.be",
     "blablacar.be"
    ],
-   "domaine": "flixbus.be"
+   "domaine": "flixbus.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "MSC Croisières & Costa Croisières",
@@ -889,7 +1018,9 @@
     "msccroisieres.be",
     "costacroisieres.be"
    ],
-   "domaine": "msccroisieres.be"
+   "domaine": "msccroisieres.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "SNCB / SNCB International",
@@ -909,7 +1040,9 @@
     "belgiantrain.be",
     "sncb-international.com"
    ],
-   "domaine": "belgiantrain.be"
+   "domaine": "belgiantrain.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Amazon Belgique (.com.be)",
@@ -928,7 +1061,9 @@
    "domaines": [
     "amazon.com.be"
    ],
-   "domaine": "amazon.com.be"
+   "domaine": "amazon.com.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Bol.com",
@@ -947,7 +1082,9 @@
    "domaines": [
     "bol.com"
    ],
-   "domaine": "bol.com"
+   "domaine": "bol.com",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Veepee / Zalando Lounge",
@@ -967,7 +1104,9 @@
     "veepee.com",
     "zalandolounge.be"
    ],
-   "domaine": "veepee.com"
+   "domaine": "veepee.com",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Zalando",
@@ -986,7 +1125,9 @@
    "domaines": [
     "zalando.be"
    ],
-   "domaine": "zalando.be"
+   "domaine": "zalando.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "ALDI",
@@ -1005,7 +1146,9 @@
    "domaines": [
     "aldi.be"
    ],
-   "domaine": "aldi.be"
+   "domaine": "aldi.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Albert Heijn",
@@ -1024,7 +1167,22 @@
    "domaines": [
     "ah.be"
    ],
-   "domaine": "ah.be"
+   "domaine": "ah.be",
+   "provenance": "fichier",
+   "pays": "BE"
+  },
+  {
+   "nom": "Bio-Planet",
+   "categorie": "Grande Distribution Alimentaire",
+   "type": "Supermarché (bio)",
+   "segment": "B2C",
+   "pays": "BE",
+   "site": "https://www.bioplanet.be",
+   "domaines": [
+    "bioplanet.be"
+   ],
+   "provenance": "application",
+   "remarques": "MESURÉ : « bio-planet.be » (avec tiret) existe en DNS mais ne porte AUCUNE adresse — le vrai domaine est « bioplanet.be ». La première écriture venait de ma mémoire, pas d'une mesure ; corrigée après vérification. Surveillé par requête, pas encore branché : aucun flux lisible trouvé, les dépliants sont des images."
   },
   {
    "nom": "Carrefour Belgique",
@@ -1043,7 +1201,9 @@
    "domaines": [
     "carrefour.be"
    ],
-   "domaine": "carrefour.be"
+   "domaine": "carrefour.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Colruyt Group",
@@ -1062,7 +1222,9 @@
    "domaines": [
     "colruytgroup.be"
    ],
-   "domaine": "colruytgroup.be"
+   "domaine": "colruytgroup.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Delhaize",
@@ -1081,7 +1243,9 @@
    "domaines": [
     "delhaize.be"
    ],
-   "domaine": "delhaize.be"
+   "domaine": "delhaize.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Intermarché",
@@ -1100,7 +1264,9 @@
    "domaines": [
     "intermarche.be"
    ],
-   "domaine": "intermarche.be"
+   "domaine": "intermarche.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Lidl",
@@ -1119,7 +1285,35 @@
    "domaines": [
     "lidl.be"
    ],
-   "domaine": "lidl.be"
+   "domaine": "lidl.be",
+   "provenance": "fichier",
+   "pays": "BE"
+  },
+  {
+   "nom": "OKay",
+   "categorie": "Grande Distribution Alimentaire",
+   "type": "Supermarché",
+   "segment": "B2C",
+   "pays": "BE",
+   "site": "https://www.okay.be",
+   "domaines": [
+    "okay.be"
+   ],
+   "provenance": "application",
+   "remarques": "Enseigne du groupe Colruyt. Surveillée par requête, pas encore branchée."
+  },
+  {
+   "nom": "Spar",
+   "categorie": "Grande Distribution Alimentaire",
+   "type": "Supermarché (franchise)",
+   "segment": "B2C",
+   "pays": "BE",
+   "site": "https://www.spar.be",
+   "domaines": [
+    "spar.be"
+   ],
+   "provenance": "application",
+   "remarques": "Surveillé par requête, pas encore branché."
   },
   {
    "nom": "DreamLand",
@@ -1138,7 +1332,9 @@
    "domaines": [
     "dreamland.be"
    ],
-   "domaine": "dreamland.be"
+   "domaine": "dreamland.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Fox & Compagnie",
@@ -1157,7 +1353,22 @@
    "domaines": [
     "foxcompagnie.be"
    ],
-   "domaine": "foxcompagnie.be"
+   "domaine": "foxcompagnie.be",
+   "provenance": "fichier",
+   "pays": "BE"
+  },
+  {
+   "nom": "Fun",
+   "categorie": "Jeux & Jouets",
+   "type": "Retail jouets",
+   "segment": "B2C",
+   "pays": "BE",
+   "site": "https://www.fun.be",
+   "domaines": [
+    "fun.be"
+   ],
+   "provenance": "application",
+   "remarques": "MESURÉ : « fun.be » REDIRIGE vers dreamland.be. Fun est devenu une marque de DreamLand (groupe Colruyt) — les deux enseignes partagent désormais le même site, donc la même source potentielle. Le collecteur les surveille séparément par leur nom ; c'est pourquoi l'acteur reste distinct ici, mais le jour où l'une publiera un flux, il faudra vérifier qu'il ne double pas l'autre."
   },
   {
    "nom": "JouéClub",
@@ -1176,7 +1387,9 @@
    "domaines": [
     "joueclub.be"
    ],
-   "domaine": "joueclub.be"
+   "domaine": "joueclub.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "King Jouet (ex-Maxi Toys)",
@@ -1195,7 +1408,9 @@
    "domaines": [
     "king-jouet.be"
    ],
-   "domaine": "king-jouet.be"
+   "domaine": "king-jouet.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "ToyChamp",
@@ -1214,7 +1429,9 @@
    "domaines": [
     "toychamp.be"
    ],
-   "domaine": "toychamp.be"
+   "domaine": "toychamp.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Player / PlayerOne",
@@ -1233,7 +1450,9 @@
    "domaines": [
     "playerone.be"
    ],
-   "domaine": "playerone.be"
+   "domaine": "playerone.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Smartoys",
@@ -1252,7 +1471,9 @@
    "domaines": [
     "smartoys.be"
    ],
-   "domaine": "smartoys.be"
+   "domaine": "smartoys.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Deliveroo",
@@ -1271,7 +1492,9 @@
    "domaines": [
     "deliveroo.be"
    ],
-   "domaine": "deliveroo.be"
+   "domaine": "deliveroo.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "HelloFresh",
@@ -1290,7 +1513,9 @@
    "domaines": [
     "hellofresh.be"
    ],
-   "domaine": "hellofresh.be"
+   "domaine": "hellofresh.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Marley Spoon",
@@ -1309,7 +1534,9 @@
    "domaines": [
     "marleyspoon.be"
    ],
-   "domaine": "marleyspoon.be"
+   "domaine": "marleyspoon.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Takeaway.com (Takeaway.be)",
@@ -1328,7 +1555,9 @@
    "domaines": [
     "takeaway.com"
    ],
-   "domaine": "takeaway.com"
+   "domaine": "takeaway.com",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Uber Eats",
@@ -1347,7 +1576,9 @@
    "domaines": [
     "ubereats.com"
    ],
-   "domaine": "ubereats.com"
+   "domaine": "ubereats.com",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Babelio / SensCritique",
@@ -1367,7 +1598,9 @@
     "babelio.com",
     "senscritique.com"
    ],
-   "domaine": "babelio.com"
+   "domaine": "babelio.com",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Club",
@@ -1386,7 +1619,9 @@
    "domaines": [
     "club.be"
    ],
-   "domaine": "club.be"
+   "domaine": "club.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Standaard Boekhandel",
@@ -1405,7 +1640,9 @@
    "domaines": [
     "standaardboekhandel.be"
    ],
-   "domaine": "standaardboekhandel.be"
+   "domaine": "standaardboekhandel.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Casa",
@@ -1424,7 +1661,9 @@
    "domaines": [
     "casa.be"
    ],
-   "domaine": "casa.be"
+   "domaine": "casa.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "IKEA",
@@ -1443,7 +1682,9 @@
    "domaines": [
     "ikea.com"
    ],
-   "domaine": "ikea.com"
+   "domaine": "ikea.com",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Ixina",
@@ -1462,7 +1703,9 @@
    "domaines": [
     "ixina.be"
    ],
-   "domaine": "ixina.be"
+   "domaine": "ixina.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "JYSK",
@@ -1481,7 +1724,9 @@
    "domaines": [
     "jysk.be"
    ],
-   "domaine": "jysk.be"
+   "domaine": "jysk.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Le Roi du Matelas",
@@ -1500,7 +1745,9 @@
    "domaines": [
     "leroidumatelas.be"
    ],
-   "domaine": "leroidumatelas.be"
+   "domaine": "leroidumatelas.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Maisons du Monde",
@@ -1519,7 +1766,9 @@
    "domaines": [
     "maisonsdumonde.com"
    ],
-   "domaine": "maisonsdumonde.com"
+   "domaine": "maisonsdumonde.com",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Sleepworld",
@@ -1538,7 +1787,9 @@
    "domaines": [
     "sleepworld.be"
    ],
-   "domaine": "sleepworld.be"
+   "domaine": "sleepworld.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Swiss Sense",
@@ -1557,7 +1808,9 @@
    "domaines": [
     "swiss-sense.be"
    ],
-   "domaine": "swiss-sense.be"
+   "domaine": "swiss-sense.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Trafic",
@@ -1576,7 +1829,9 @@
    "domaines": [
     "trafic.be"
    ],
-   "domaine": "trafic.be"
+   "domaine": "trafic.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "X²O Badkamers",
@@ -1595,7 +1850,9 @@
    "domaines": [
     "x2o.be"
    ],
-   "domaine": "x2o.be"
+   "domaine": "x2o.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Èggo",
@@ -1614,7 +1871,9 @@
    "domaines": [
     "eggo.be"
    ],
-   "domaine": "eggo.be"
+   "domaine": "eggo.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "A.S.Adventure",
@@ -1633,7 +1892,9 @@
    "domaines": [
     "asadventure.com"
    ],
-   "domaine": "asadventure.com"
+   "domaine": "asadventure.com",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "C&A",
@@ -1652,7 +1913,9 @@
    "domaines": [
     "c-and-a.com"
    ],
-   "domaine": "c-and-a.com"
+   "domaine": "c-and-a.com",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Cameleon",
@@ -1671,7 +1934,9 @@
    "domaines": [
     "cameleon.be"
    ],
-   "domaine": "cameleon.be"
+   "domaine": "cameleon.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Decathlon",
@@ -1690,7 +1955,9 @@
    "domaines": [
     "decathlon.be"
    ],
-   "domaine": "decathlon.be"
+   "domaine": "decathlon.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "H&M",
@@ -1709,7 +1976,22 @@
    "domaines": [
     "hm.com"
    ],
-   "domaine": "hm.com"
+   "domaine": "hm.com",
+   "provenance": "fichier",
+   "pays": "BE"
+  },
+  {
+   "nom": "JBC",
+   "categorie": "Mode, Chaussures & Sport",
+   "type": "Retail mode",
+   "segment": "B2C",
+   "pays": "BE",
+   "site": "https://www.jbc.be",
+   "domaines": [
+    "jbc.be"
+   ],
+   "provenance": "application",
+   "remarques": "Chaîne de mode familiale belge. Surveillée par requête, pas encore branchée."
   },
   {
    "nom": "Kiabi",
@@ -1728,7 +2010,9 @@
    "domaines": [
     "kiabi.be"
    ],
-   "domaine": "kiabi.be"
+   "domaine": "kiabi.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Maniet! Luxus",
@@ -1747,7 +2031,9 @@
    "domaines": [
     "maniet.be"
    ],
-   "domaine": "maniet.be"
+   "domaine": "maniet.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Primark",
@@ -1766,7 +2052,9 @@
    "domaines": [
     "primark.com"
    ],
-   "domaine": "primark.com"
+   "domaine": "primark.com",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Schoenen Torfs",
@@ -1785,7 +2073,9 @@
    "domaines": [
     "torfs.be"
    ],
-   "domaine": "torfs.be"
+   "domaine": "torfs.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Sports Direct",
@@ -1804,7 +2094,9 @@
    "domaines": [
     "sportsdirect.com"
    ],
-   "domaine": "sportsdirect.com"
+   "domaine": "sportsdirect.com",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Zara",
@@ -1823,7 +2115,9 @@
    "domaines": [
     "zara.com"
    ],
-   "domaine": "zara.com"
+   "domaine": "zara.com",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Amplifon",
@@ -1842,7 +2136,9 @@
    "domaines": [
     "amplifon.com"
    ],
-   "domaine": "amplifon.com"
+   "domaine": "amplifon.com",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "GrandOptical",
@@ -1861,7 +2157,9 @@
    "domaines": [
     "grandoptical.be"
    ],
-   "domaine": "grandoptical.be"
+   "domaine": "grandoptical.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Hans Anders",
@@ -1880,7 +2178,9 @@
    "domaines": [
     "hansanders.be"
    ],
-   "domaine": "hansanders.be"
+   "domaine": "hansanders.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Lapperre",
@@ -1899,7 +2199,9 @@
    "domaines": [
     "lapperre.be"
    ],
-   "domaine": "lapperre.be"
+   "domaine": "lapperre.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Pearle Opticiens",
@@ -1918,7 +2220,9 @@
    "domaines": [
     "pearle.be"
    ],
-   "domaine": "pearle.be"
+   "domaine": "pearle.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Di",
@@ -1937,7 +2241,9 @@
    "domaines": [
     "di.be"
    ],
-   "domaine": "di.be"
+   "domaine": "di.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Farmaline",
@@ -1956,7 +2262,9 @@
    "domaines": [
     "farmaline.be"
    ],
-   "domaine": "farmaline.be"
+   "domaine": "farmaline.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "ICI PARIS XL",
@@ -1975,7 +2283,9 @@
    "domaines": [
     "iciparisxl.be"
    ],
-   "domaine": "iciparisxl.be"
+   "domaine": "iciparisxl.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Kruidvat",
@@ -1994,7 +2304,9 @@
    "domaines": [
     "kruidvat.be"
    ],
-   "domaine": "kruidvat.be"
+   "domaine": "kruidvat.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Medi-Market",
@@ -2013,7 +2325,9 @@
    "domaines": [
     "medi-market.be"
    ],
-   "domaine": "medi-market.be"
+   "domaine": "medi-market.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Newpharma",
@@ -2032,7 +2346,9 @@
    "domaines": [
     "newpharma.be"
    ],
-   "domaine": "newpharma.be"
+   "domaine": "newpharma.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Trekpleister",
@@ -2051,7 +2367,9 @@
    "domaines": [
     "trekpleister.be"
    ],
-   "domaine": "trekpleister.be"
+   "domaine": "trekpleister.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Yves Rocher",
@@ -2070,7 +2388,9 @@
    "domaines": [
     "yves-rocher.be"
    ],
-   "domaine": "yves-rocher.be"
+   "domaine": "yves-rocher.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Clubic",
@@ -2089,7 +2409,22 @@
    "domaines": [
     "clubic.com"
    ],
-   "domaine": "clubic.com"
+   "domaine": "clubic.com",
+   "provenance": "fichier",
+   "pays": "BE"
+  },
+  {
+   "nom": "DHnet",
+   "categorie": "Presse, Tests Produits & Annonces Promo",
+   "type": "Média en ligne",
+   "segment": "B2C",
+   "pays": "BE",
+   "site": "https://www.dhnet.be",
+   "domaines": [
+    "dhnet.be"
+   ],
+   "provenance": "application",
+   "remarques": "Flux d'éditeur, français de Belgique, retenu pour ses visuels."
   },
   {
    "nom": "Dealabs",
@@ -2108,7 +2443,9 @@
    "domaines": [
     "dealabs.com"
    ],
-   "domaine": "dealabs.com"
+   "domaine": "dealabs.com",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Frandroid / 01net",
@@ -2128,7 +2465,35 @@
     "frandroid.com",
     "01net.com"
    ],
-   "domaine": "frandroid.com"
+   "domaine": "frandroid.com",
+   "provenance": "fichier",
+   "pays": "BE"
+  },
+  {
+   "nom": "Gazet van Antwerpen",
+   "categorie": "Presse, Tests Produits & Annonces Promo",
+   "type": "Média en ligne",
+   "segment": "B2C",
+   "pays": "BE",
+   "site": "https://www.gva.be",
+   "domaines": [
+    "gva.be"
+   ],
+   "provenance": "application",
+   "remarques": "Flux d'éditeur, néerlandais de Belgique, retenu pour ses visuels."
+  },
+  {
+   "nom": "Het Nieuwsblad",
+   "categorie": "Presse, Tests Produits & Annonces Promo",
+   "type": "Média en ligne",
+   "segment": "B2C",
+   "pays": "BE",
+   "site": "https://www.nieuwsblad.be",
+   "domaines": [
+    "nieuwsblad.be"
+   ],
+   "provenance": "application",
+   "remarques": "Flux d'éditeur choisi pour ses VISUELS, dans les pays que Google News laisse sans image."
   },
   {
    "nom": "Les Numériques",
@@ -2147,7 +2512,9 @@
    "domaines": [
     "lesnumeriques.com"
    ],
-   "domaine": "lesnumeriques.com"
+   "domaine": "lesnumeriques.com",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "RTL info & Sudinfo",
@@ -2167,7 +2534,9 @@
     "rtl.be",
     "sudinfo.be"
    ],
-   "domaine": "rtl.be"
+   "domaine": "rtl.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Test-Achats",
@@ -2186,7 +2555,9 @@
    "domaines": [
     "test-achats.be"
    ],
-   "domaine": "test-achats.be"
+   "domaine": "test-achats.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "BASE",
@@ -2205,7 +2576,9 @@
    "domaines": [
     "base.be"
    ],
-   "domaine": "base.be"
+   "domaine": "base.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "DIGI Belgique",
@@ -2224,7 +2597,9 @@
    "domaines": [
     "digi.be"
    ],
-   "domaine": "digi.be"
+   "domaine": "digi.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Hey!",
@@ -2243,7 +2618,9 @@
    "domaines": [
     "hey.be"
    ],
-   "domaine": "hey.be"
+   "domaine": "hey.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Mobile Vikings",
@@ -2262,7 +2639,9 @@
    "domaines": [
     "mobilevikings.be"
    ],
-   "domaine": "mobilevikings.be"
+   "domaine": "mobilevikings.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Orange Belgique",
@@ -2281,7 +2660,9 @@
    "domaines": [
     "orange.be"
    ],
-   "domaine": "orange.be"
+   "domaine": "orange.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Proximus",
@@ -2300,7 +2681,9 @@
    "domaines": [
     "proximus.be"
    ],
-   "domaine": "proximus.be"
+   "domaine": "proximus.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Scarlet",
@@ -2319,7 +2702,9 @@
    "domaines": [
     "scarlet.be"
    ],
-   "domaine": "scarlet.be"
+   "domaine": "scarlet.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "SkyDSL",
@@ -2338,7 +2723,9 @@
    "domaines": [
     "skydsl.be"
    ],
-   "domaine": "skydsl.be"
+   "domaine": "skydsl.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Starlink",
@@ -2357,7 +2744,9 @@
    "domaines": [
     "starlink.com"
    ],
-   "domaine": "starlink.com"
+   "domaine": "starlink.com",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Telenet",
@@ -2376,7 +2765,9 @@
    "domaines": [
     "telenet.be"
    ],
-   "domaine": "telenet.be"
+   "domaine": "telenet.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "TÉLÉSAT",
@@ -2395,7 +2786,9 @@
    "domaines": [
     "telesat.be"
    ],
-   "domaine": "telesat.be"
+   "domaine": "telesat.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "VOO",
@@ -2414,7 +2807,9 @@
    "domaines": [
     "voo.be"
    ],
-   "domaine": "voo.be"
+   "domaine": "voo.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Booking.com & Expedia",
@@ -2434,7 +2829,9 @@
     "booking.com",
     "expedia.be"
    ],
-   "domaine": "booking.com"
+   "domaine": "booking.com",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Connections",
@@ -2453,7 +2850,9 @@
    "domaines": [
     "connections.be"
    ],
-   "domaine": "connections.be"
+   "domaine": "connections.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Corendon Belgique",
@@ -2472,7 +2871,9 @@
    "domaines": [
     "corendon.be"
    ],
-   "domaine": "corendon.be"
+   "domaine": "corendon.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Sunweb Belgique",
@@ -2491,7 +2892,9 @@
    "domaines": [
     "sunweb.be"
    ],
-   "domaine": "sunweb.be"
+   "domaine": "sunweb.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "TUI Belgique (TUI.be)",
@@ -2510,7 +2913,9 @@
    "domaines": [
     "tui.be"
    ],
-   "domaine": "tui.be"
+   "domaine": "tui.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Voyage Privé",
@@ -2529,7 +2934,9 @@
    "domaines": [
     "voyage-prive.be"
    ],
-   "domaine": "voyage-prive.be"
+   "domaine": "voyage-prive.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Alternate.be",
@@ -2548,7 +2955,9 @@
    "domaines": [
     "alternate.be"
    ],
-   "domaine": "alternate.be"
+   "domaine": "alternate.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Coolblue",
@@ -2567,7 +2976,9 @@
    "domaines": [
     "coolblue.be"
    ],
-   "domaine": "coolblue.be"
+   "domaine": "coolblue.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Electro Dépôt",
@@ -2586,7 +2997,9 @@
    "domaines": [
     "electrodepot.be"
    ],
-   "domaine": "electrodepot.be"
+   "domaine": "electrodepot.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Fnac",
@@ -2605,7 +3018,9 @@
    "domaines": [
     "fnac.be"
    ],
-   "domaine": "fnac.be"
+   "domaine": "fnac.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Krëfel",
@@ -2624,7 +3039,9 @@
    "domaines": [
     "krefel.be"
    ],
-   "domaine": "krefel.be"
+   "domaine": "krefel.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "LDLC",
@@ -2643,7 +3060,9 @@
    "domaines": [
     "ldlc.com"
    ],
-   "domaine": "ldlc.com"
+   "domaine": "ldlc.com",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "MediaMarkt",
@@ -2662,7 +3081,9 @@
    "domaines": [
     "mediamarkt.be"
    ],
-   "domaine": "mediamarkt.be"
+   "domaine": "mediamarkt.be",
+   "provenance": "fichier",
+   "pays": "BE"
   },
   {
    "nom": "Vanden Borre",
@@ -2681,7 +3102,204 @@
    "domaines": [
     "vandenborre.be"
    ],
-   "domaine": "vandenborre.be"
+   "domaine": "vandenborre.be",
+   "provenance": "fichier",
+   "pays": "BE"
+  },
+  {
+   "nom": "MyDealz",
+   "categorie": "Communautés de bons plans",
+   "type": "Communauté de bons plans",
+   "segment": "B2C",
+   "pays": "DE",
+   "site": "https://www.mydealz.de",
+   "domaines": [
+    "mydealz.de"
+   ],
+   "provenance": "application",
+   "remarques": "Flux « hot » lu directement. Même moteur que Dealabs : chaque titre porte son score de température."
+  },
+  {
+   "nom": "Chollometro",
+   "categorie": "Communautés de bons plans",
+   "type": "Communauté de bons plans",
+   "segment": "B2C",
+   "pays": "ES",
+   "site": "https://www.chollometro.com",
+   "domaines": [
+    "chollometro.com"
+   ],
+   "provenance": "application",
+   "remarques": "Espagne. Même famille que Dealabs, flux « hot »."
+  },
+  {
+   "nom": "Journal du Geek",
+   "categorie": "Presse, Tests Produits & Annonces Promo",
+   "type": "Média en ligne",
+   "segment": "B2C",
+   "pays": "FR",
+   "site": "https://www.journaldugeek.com",
+   "domaines": [
+    "journaldugeek.com"
+   ],
+   "provenance": "application",
+   "remarques": "Presse spécialisée : publie des bons plans article par article."
+  },
+  {
+   "nom": "HotUKDeals",
+   "categorie": "Communautés de bons plans",
+   "type": "Communauté de bons plans",
+   "segment": "B2C",
+   "pays": "GB",
+   "site": "https://www.hotukdeals.com",
+   "domaines": [
+    "hotukdeals.com"
+   ],
+   "provenance": "application",
+   "remarques": "Même famille que Dealabs. Flux « hot » lu directement."
+  },
+  {
+   "nom": "HDblog",
+   "categorie": "Presse, Tests Produits & Annonces Promo",
+   "type": "Média en ligne",
+   "segment": "B2C",
+   "pays": "IT",
+   "site": "https://www.hdblog.it",
+   "domaines": [
+    "hdblog.it"
+   ],
+   "provenance": "application",
+   "remarques": "Presse italienne, lue avec le filtre de pertinence italien."
+  },
+  {
+   "nom": "Macitynet",
+   "categorie": "Presse, Tests Produits & Annonces Promo",
+   "type": "Média en ligne",
+   "segment": "B2C",
+   "pays": "IT",
+   "site": "https://www.macitynet.it",
+   "domaines": [
+    "macitynet.it"
+   ],
+   "provenance": "application",
+   "remarques": "Presse italienne, retenue pour ses visuels."
+  },
+  {
+   "nom": "TuttoAndroid",
+   "categorie": "Presse, Tests Produits & Annonces Promo",
+   "type": "Média en ligne",
+   "segment": "B2C",
+   "pays": "IT",
+   "site": "https://www.tuttoandroid.net",
+   "domaines": [
+    "tuttoandroid.net"
+   ],
+   "provenance": "application",
+   "remarques": "Presse italienne."
+  },
+  {
+   "nom": "iPhoneItalia",
+   "categorie": "Presse, Tests Produits & Annonces Promo",
+   "type": "Média en ligne",
+   "segment": "B2C",
+   "pays": "IT",
+   "site": "https://www.iphoneitalia.com",
+   "domaines": [
+    "iphoneitalia.com"
+   ],
+   "provenance": "application",
+   "remarques": "Presse italienne, retenue pour ses visuels."
+  },
+  {
+   "nom": "Pepper NL",
+   "categorie": "Communautés de bons plans",
+   "type": "Communauté de bons plans",
+   "segment": "B2C",
+   "pays": "NL",
+   "site": "https://nl.pepper.com",
+   "domaines": [
+    "pepper.com"
+   ],
+   "provenance": "application",
+   "remarques": "Pays-Bas. Sous-domaine national — c'est « pepper.com » qui porte le domaine."
+  },
+  {
+   "nom": "Androidworld",
+   "categorie": "Presse, Tests Produits & Annonces Promo",
+   "type": "Média en ligne",
+   "segment": "B2C",
+   "pays": "NL",
+   "site": "https://www.androidworld.nl",
+   "domaines": [
+    "androidworld.nl"
+   ],
+   "provenance": "application",
+   "remarques": "Presse néerlandaise."
+  },
+  {
+   "nom": "Pepper PL",
+   "categorie": "Communautés de bons plans",
+   "type": "Communauté de bons plans",
+   "segment": "B2C",
+   "pays": "PL",
+   "site": "https://www.pepper.pl",
+   "domaines": [
+    "pepper.pl"
+   ],
+   "provenance": "application",
+   "remarques": "Pologne. Même famille que Dealabs, flux « hot »."
+  },
+  {
+   "nom": "4gnews",
+   "categorie": "Presse, Tests Produits & Annonces Promo",
+   "type": "Média en ligne",
+   "segment": "B2C",
+   "pays": "PT",
+   "site": "https://4gnews.pt",
+   "domaines": [
+    "4gnews.pt"
+   ],
+   "provenance": "application",
+   "remarques": "Presse portugaise, retenue pour ses visuels."
+  },
+  {
+   "nom": "M3",
+   "categorie": "Presse, Tests Produits & Annonces Promo",
+   "type": "Média en ligne",
+   "segment": "B2C",
+   "pays": "SE",
+   "site": "https://www.m3.se",
+   "domaines": [
+    "m3.se"
+   ],
+   "provenance": "application",
+   "remarques": "Presse suédoise (jeux vidéo)."
+  },
+  {
+   "nom": "Mobil.se",
+   "categorie": "Presse, Tests Produits & Annonces Promo",
+   "type": "Média en ligne",
+   "segment": "B2C",
+   "pays": "SE",
+   "site": "https://www.mobil.se",
+   "domaines": [
+    "mobil.se"
+   ],
+   "provenance": "application",
+   "remarques": "Presse suédoise."
+  },
+  {
+   "nom": "Teknikveckan",
+   "categorie": "Presse, Tests Produits & Annonces Promo",
+   "type": "Média en ligne",
+   "segment": "B2C",
+   "pays": "SE",
+   "site": "https://teknikveckan.se",
+   "domaines": [
+    "teknikveckan.se"
+   ],
+   "provenance": "application",
+   "remarques": "Presse suédoise, retenue pour ses visuels."
   }
  ]
 }

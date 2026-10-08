@@ -55,18 +55,46 @@ const parNom = new Map(r.acteurs.map((a) => [a.nom, a]));
 
 /* ------------------------------------------------------- la base elle-même */
 
-test('la base est complète : 139 acteurs, 22 catégories, chacun nommé et situé', () => {
-  assert.equal(base.acteurs.length, 139, 'la base compte 139 acteurs');
-  assert.equal(base.categories.length, 22, '22 catégories');
+test('la base est complète : tableur + acteurs lus par l’application', () => {
+  // 139 acteurs viennent du tableur de B, 26 ont été AJOUTÉS parce que
+  // l'application les lit sans qu'ils y figurent (demande du 08/10/2026).
+  assert.equal(base.acteurs.length, 165, '165 acteurs : 139 du fichier + 26 de l’application');
+  const duFichier = base.acteurs.filter((a) => a.provenance === 'fichier');
+  const ajoutes = base.acteurs.filter((a) => a.provenance === 'application');
+  assert.equal(duFichier.length, 139);
+  assert.equal(ajoutes.length, 26);
+  assert.equal(base.categories.length, 23, '23 catégories : les 22 du fichier + « Communautés de bons plans »');
   for (const a of base.acteurs) {
     assert.ok(a.nom && a.nom.trim(), 'chaque acteur porte un nom');
     assert.ok(a.categorie && a.categorie.trim(), `${a.nom} doit avoir une catégorie`);
+    assert.ok(a.pays, `${a.nom} doit porter un pays`);
     assert.ok(Array.isArray(a.domaines) && a.domaines.length,
       `${a.nom} doit porter au moins un domaine — c'est ce qui relie un acteur à sa source`);
   }
   // Un acteur à deux enseignes porte deux domaines (« Social Deal & Outspot »).
   const multi = base.acteurs.filter((a) => a.domaines.length > 1);
   assert.ok(multi.length >= 10, `les acteurs à plusieurs enseignes doivent être détectés (${multi.length} trouvés)`);
+});
+
+test('PLUS AUCUN site lu par l’application n’est hors de la base', () => {
+  // C'est la demande elle-même : « des acteurs dans l'application qui ne sont
+  // pas documentés dans le fichier excel, tu peux les rajouter ». On vérifie
+  // donc, sources en main, qu'aucun site réel — hors moteurs de recherche —
+  // n'est laissé de côté. Un moteur n'est pas un acteur : il est écarté.
+  const reconnu = new Set();
+  for (const a of r.acteurs) {
+    for (const s of [...a.liaison.flux, ...a.liaison.veille]) reconnu.add(s.nom);
+  }
+  const REQUETE_GENERIQUE = new Set(['Supermarchés (BE)', 'Supermarkten (BE)', 'Veille presse']);
+  const orphelins = [];
+  for (const s of catalogue.sources) {
+    if (reconnu.has(s.nom)) continue;
+    const moteur = /news\.google\.com|bing\.com\/news/.test(s.url);
+    const requete = REQUETE_GENERIQUE.has(s.nom) || /^(Presse|Bing)\s[A-Z]{2}\s/.test(s.nom);
+    if (!moteur || !requete) orphelins.push(s.nom);
+  }
+  assert.deepEqual([...new Set(orphelins)], [],
+    'tout site réellement lu doit appartenir à un acteur de la base');
 });
 
 test('les informations de siège SONT dans la base (elles doivent y être)', () => {
@@ -79,8 +107,8 @@ test('les informations de siège SONT dans la base (elles doivent y être)', () 
 /* ------------------------------------------------------------------ liaison */
 
 test('chaque acteur est rangé dans l’un des trois états, et aucun n’est oublié', () => {
-  assert.equal(r.acteurs.length, 139);
-  assert.equal(r.compteurs.flux + r.compteurs.veille + r.compteurs.aucun, 139);
+  assert.equal(r.acteurs.length, 165);
+  assert.equal(r.compteurs.flux + r.compteurs.veille + r.compteurs.aucun, 165);
   assert.ok(r.compteurs.flux > 0 && r.compteurs.veille > 0 && r.compteurs.aucun > 0);
   for (const a of r.acteurs) {
     assert.ok(['flux', 'veille', 'aucun'].includes(a.etat), `${a.nom} : état inconnu « ${a.etat} »`);
@@ -142,9 +170,9 @@ test('un acteur relié DEUX fois (flux et veille) est compté BRANCHÉ', () => {
     'Coolblue doit porter les DEUX voies, et rester « branché »');
 });
 
-test('le bilan par catégorie couvre exactement les 139 acteurs', () => {
+test('le bilan par catégorie couvre exactement les acteurs de la base', () => {
   const total = r.categories.reduce((n, c) => n + c.acteurs, 0);
-  assert.equal(total, 139);
+  assert.equal(total, 165);
   for (const c of r.categories) {
     assert.equal(c.flux + c.veille + c.aucun, c.acteurs, `${c.categorie} : les états ne totalisent pas les acteurs`);
   }
@@ -198,10 +226,24 @@ test('RÈGLE : le panneau AFFICHE les informations, en les annonçant comme tell
     'l’export doit séparer visiblement ce qui sert au travail de ce qui informe');
 });
 
-test('un acteur absent de la base ne peut pas être compté (limite connue, mesurée)', () => {
-  // Groupon et Social Deal apparaissent dans les offres, mais Groupon n'est PAS
-  // dans les 139. Le panneau doit donc rester honnête : les clics de Groupon
-  // existent, mais ne se rattachent à aucune ligne.
-  assert.ok(!parNom.has('Groupon'), 'Groupon n’est pas dans la base — c’est la limite à connaître');
-  assert.ok(parNom.has('Social Deal & Outspot'), 'Social Deal, lui, y est');
+test('les acteurs AJOUTÉS portent leur provenance, et sont bien ceux qui manquaient', () => {
+  // Chaque acteur doit dire d'où il vient : du tableur de B, ou de l'application.
+  // Sans cela, on ne saurait plus distinguer ce qu'il a fourni de ce que nous
+  // avons ajouté — et il ne pourrait plus corriger sa base.
+  assert.ok(base.acteurs.every((a) => a.provenance === 'fichier' || a.provenance === 'application'));
+  const ajoutes = new Set(base.acteurs.filter((a) => a.provenance === 'application').map((a) => a.nom));
+  for (const nom of ['Groupon', 'MyDealz', 'HotUKDeals', 'Chollometro', 'Spar', 'JBC', 'Toolstation',
+    'Bio-Planet', 'OKay', 'Fun', 'DHnet', 'Het Nieuwsblad', 'Gazet van Antwerpen']) {
+    assert.ok(ajoutes.has(nom), `« ${nom} » devait être ajouté — c'est un site que l'application lit`);
+  }
+  // Groupon était LE cas signalé : ses clics existaient, sans ligne où les
+  // rattacher. Il est désormais dans la base, donc rattachable.
+  assert.ok(parNom.has('Groupon'), 'Groupon doit désormais être dans la base');
+  assert.equal(parNom.get('Groupon').etat, 'flux', 'et il est lu directement : c’est un acteur branché');
+  // Les moteurs, eux, ne doivent JAMAIS devenir des acteurs : ce ne sont pas des
+  // acteurs du marché, seulement des moyens de les voir.
+  for (const nom of base.acteurs.map((a) => a.nom)) {
+    assert.ok(!/^(Presse|Bing)\s[A-Z]{2}\s/.test(nom), `« ${nom} » est un moteur, pas un acteur`);
+    assert.ok(!['Veille presse', 'Supermarchés (BE)', 'Supermarkten (BE)'].includes(nom));
+  }
 });

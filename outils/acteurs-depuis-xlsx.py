@@ -45,6 +45,7 @@ from openpyxl import load_workbook
 
 RACINE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SOURCE = os.path.join(RACINE, "donnees", "marche-be-2026-10-08.xlsx")
+SOURCE_APPLICATION = os.path.join(RACINE, "donnees", "acteurs-application.json")
 SORTIE = os.path.join(RACINE, "public", "acteurs.json")
 PAYS = "BE"
 
@@ -129,14 +130,50 @@ def lire_lignes():
         # liaison. Un acteur à deux enseignes doit pouvoir être relié par l'une
         # ou par l'autre.
         acteur["domaine"] = liste[0] if liste else ""
+        # D'OÙ VIENT CET ACTEUR. Le panneau doit pouvoir dire ce qui vient du
+        # tableur de B et ce qui a été ajouté parce que l'application le lit.
+        acteur["provenance"] = "fichier"
+        acteur["pays"] = PAYS
         lignes.append(acteur)
     return lignes
+
+
+def lire_acteurs_application():
+    """Les acteurs LUS par l'application mais absents du tableur.
+    Liste tenue dans `donnees/acteurs-application.json` et ÉTABLIE PAR MESURE
+    (outils/mesure-acteurs-manquants.mjs) : ce sont les sites que le collecteur
+    interroge vraiment et qu'aucun acteur du tableur ne revendique. Pourquoi un
+    second fichier, et pas une retouche du tableur : le tableur est la pièce
+    fournie par B — on ne la modifie pas. Chaque acteur garde donc son origine.
+    """
+    if not os.path.exists(SOURCE_APPLICATION):
+        return []
+    with open(SOURCE_APPLICATION, encoding="utf-8") as f:
+        base = json.load(f)
+    return base.get("acteurs", [])
 
 
 def main():
     if not os.path.exists(SOURCE):
         sys.exit(f"tableur introuvable : {SOURCE}")
-    acteurs = lire_lignes()
+    du_fichier = lire_lignes()
+    de_l_application = lire_acteurs_application()
+
+    # DEUX ORIGINES, UNE SEULE BASE. Le tableur de B, et les acteurs que
+    # l'application lit sans qu'ils y figurent. On refuse les doublons : un
+    # acteur déjà présent dans le tableur ne doit pas être ajouté deux fois.
+    noms = {a["nom"].strip().lower() for a in du_fichier}
+    ajoutes = []
+    for a in de_l_application:
+        a = dict(a)
+        a.setdefault("provenance", "application")
+        a.setdefault("pays", "")
+        if a["nom"].strip().lower() in noms:
+            print(f"⚠ « {a['nom']} » est déjà dans le tableur : non ajouté", file=sys.stderr)
+            continue
+        ajoutes.append(a)
+
+    acteurs = du_fichier + ajoutes
 
     # Contrôles de forme : une base amputée doit se signaler ICI, pas trois
     # écrans plus loin quand le panneau ne trouvera plus rien.
@@ -145,19 +182,20 @@ def main():
     sans_nom = [a for a in acteurs if not a["nom"]]
     if sans_nom:
         sys.exit(f"{len(sans_nom)} ligne(s) sans nom d'enseigne")
-    sans_domaine = [a["nom"] for a in acteurs if not a["domaine"]]
+    sans_domaine = [a["nom"] for a in acteurs if not a.get("domaines")]
     if sans_domaine:
         print(f"⚠ {len(sans_domaine)} acteur(s) sans domaine exploitable : "
               + ", ".join(sans_domaine[:6]), file=sys.stderr)
 
-    # Ordre STABLE : par catégorie puis par nom. Un JSON dont l'ordre change à
-    # chaque génération rendrait tout diff illisible.
-    acteurs.sort(key=lambda a: (a["categorie"], a["nom"]))
+    # Ordre STABLE : par pays, puis par catégorie, puis par nom. Un JSON dont
+    # l'ordre change à chaque génération rendrait tout diff illisible.
+    acteurs.sort(key=lambda a: (a.get("pays") or "", a["categorie"], a["nom"]))
 
     base = {
         "version": 1,
         "pays": PAYS,
         "source": os.path.basename(SOURCE),
+        "sourceApplication": os.path.basename(SOURCE_APPLICATION) if ajoutes else "",
         "genereLe": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "categories": sorted({a["categorie"] for a in acteurs}),
         "acteurs": acteurs,
@@ -166,11 +204,15 @@ def main():
         json.dump(base, f, ensure_ascii=False, indent=1)
         f.write("\n")
 
-    tailles = sorted(
-        ((a["categorie"], sum(1 for x in acteurs if x["categorie"] == a["categorie"]))
-         for a in acteurs), key=lambda x: x[0])
     print(f"√ {len(acteurs)} acteurs · {len(base['categories'])} catégories → {SORTIE}")
-    for cat, n in dict(tailles).items():
+    print(f"    dont {len(du_fichier)} du tableur et {len(ajoutes)} ajoutés parce que l'application les lit")
+    par_pays = {}
+    for a in acteurs:
+        p = a.get("pays") or "?"
+        par_pays[p] = par_pays.get(p, 0) + 1
+    print("    par pays : " + " · ".join(f"{p} {n}" for p, n in sorted(par_pays.items(), key=lambda x: -x[1])))
+    for cat, n in sorted({a["categorie"]: sum(1 for x in acteurs if x["categorie"] == a["categorie"])
+                          for a in acteurs}.items()):
         print(f"    {n:>3}  {cat}")
 
 
