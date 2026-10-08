@@ -52,18 +52,24 @@ h1, h2, h3, h4, .marque b, .prix { font-family: var(--police-titre); }
   padding: 10px 12px 0;
 }
 .tete-in { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
-.marque { display: flex; align-items: center; gap: 8px; font-size: 17px; letter-spacing: .2px; }
+.marque { display: flex; align-items: center; gap: 10px; font-size: 19px; letter-spacing: .2px; }
 .pastille { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 12px var(--accent); }
 /* Le logo de marque : un carré arrondi bleu et le K blanc. Taille fixe pour que
    l'en-tête ne bouge pas d'un pixel quand la police système change. */
 /* L'icone EST deja un carre arrondi : pas de border-radius, il rognerait son
-   propre galbe. 26 px et non 22 : a 22 px le liseré blanc et les pistes se
-   noient (mesure faite sur les rendus). */
-.logo { width: 26px; height: 26px; display: block; flex: 0 0 auto; }
+   propre galbe.
+   32 px sur téléphone, ET NON 22 : à 22 px le liseré blanc et les pistes se
+   noient (mesure faite sur les rendus). B a demandé le 08/10/2026 une marque
+   « plus grande, plus visible » — 26 px ne suffisait plus, et il a étendu la
+   demande au téléphone le même jour (« il y a de la place »). Sur PC, la couche
+   « AFFICHAGE PC » le porte à 42 px : c'est LÀ que la place manquait le moins.
+   Taille fixe en pixels : l'en-tête ne bouge pas quand la police système
+   change de métrique. */
+.logo { width: 32px; height: 32px; display: block; flex: 0 0 auto; }
 
 /* Le mot et l'accroche, empiles : l'accroche est SOUS le nom, comme sur le
    logotype fourni. */
-.marque-txt { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.marque-txt { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 /* Le mot KAZENDRA portait un dégradé bleu -> orange, de gauche à droite
    (« Le dégradé est pour le mot Kazendra »). B a demandé de l'ENLEVER le
    08/10/2026 : « Tu peux enlever le dégradé ». Le mot est désormais en APLAT,
@@ -76,8 +82,8 @@ h1, h2, h3, h4, .marque b, .prix { font-family: var(--police-titre); }
   color: inherit;
 }
 .accroche {
-  font-size: 9.5px; font-weight: 600; letter-spacing: .55px;
-  text-transform: uppercase; opacity: .72; white-space: nowrap;
+  font-size: 10.5px; font-weight: 600; letter-spacing: .6px;
+  text-transform: uppercase; opacity: .8; white-space: nowrap;
 }
 .comptes { color: var(--doux); font-size: 12px; text-align: right; }
 .barre { display: flex; gap: 8px; margin: 10px 0; align-items: stretch; }
@@ -729,23 +735,31 @@ html[data-theme="contraste"] {
 
   /* ---------- La marque : plus grande et plus visible ----------
      Demande de B, 08/10/2026 : « le logo et la marque doivent apparaître plus
-     grand, plus visible ». Sur téléphone, ces 26 px de logo sont justes : à
-     390 px de large, l'en-tête doit d'abord laisser la place aux offres. Sur PC,
-     la marque flottait dans un bandeau de 1 280 px — le bloc le plus important
-     de la page était le plus petit.
+     grand, plus visible ». Sur PC, la marque flottait dans un bandeau de
+     1 280 px — le bloc le plus important de la page était le plus petit, alors
+     que le téléphone avait la même taille depuis le début. B a ensuite étendu
+     la demande au téléphone (« il y a de la place ») : les tailles de base de la
+     feuille sont donc montées AUSSI (26 → 32 px de logo, 17 → 19 px de mot),
+     et c'est ce que ce palier agrandit encore.
 
      Les trois pièces grandissent ENSEMBLE, et dans le même rapport, sinon la
-     marque se casse : le logo 26 → 42 px (×1,6), le mot 17 → 25 px (×1,45),
-     l'accroche 9,5 → 12 px (×1,26). L'accroche grandit moins : à 25 px de mot,
-     une accroche de 15 px tirerait à elle seule tout le bloc vers le haut.
-     L'écart interne suit (10 → 13 px) et l'accroche s'écarte du mot de 2 px, au
-     lieu d'1 : à cette taille, 1 px se lit comme un défaut d'alignement.
+     marque se casse : de 32 à 42 px de logo (×1,31), de 19 à 25 px de mot
+     (×1,32), de 10,5 à 12 px d'accroche (×1,14). L'accroche grandit MOINS, et
+     c'est voulu : à 25 px de mot, une accroche deux fois plus grosse tirerait à
+     elle seule tout le bloc vers le haut. L'écart interne suit (10 → 13 px).
 
      Conséquence PRISE EN COMPTE : la ligne de marque passe de 34 à ~48 px, et
      l'en-tête collant avec elle. C'est le prix de la demande, et il est mesuré
-     (bin/mesurer-pc.py) : ~209 px au total, contre 226 px AVANT toute cette
-     refonte d'affichage PC. Le bandeau reste donc plus court qu'à l'origine,
-     tout en portant une marque nettement plus grande. */
+     au navigateur à chaque étape (bin/mesurer-pc.py) : 199 px au total, contre
+     226 px AVANT toute cette refonte, sur PC. Le bandeau reste donc plus court
+     qu'à l'origine, tout en portant une marque plus grande partout.
+
+     Défaut PAYÉ en agrandissant : la marque et les compteurs de droite étaient
+     alignés sur la ligne de base (comme sur téléphone). Avec un mot de 25 px
+     face à trois lignes de chiffres, cet alignement faisait DESCENDRE les trois
+     lignes sous la marque : la ligne d'en-tête montait à 86 px au lieu de 56,
+     et le bandeau à 229 px au lieu de 199. D'où l'alignement au centre, plus
+     bas dans ce palier. */
   .marque { font-size: 25px; gap: 13px; }
   .logo { width: 42px; height: 42px; }
   .marque-txt { gap: 2px; }
