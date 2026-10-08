@@ -972,19 +972,33 @@ function dedoublonner(liste) {
   return sortie;
 }
 
-/*  MÉLANGE 60 % / 40 % — décision du propriétaire du produit : la majorité des
- *  résultats doit pointer chez Amazon (lien direct, commissions), et 40 % vers
- *  les autres grandes enseignes du pays.
+/*  MÉLANGE 60 % / 40 % — EN PAUSE.
  *
- *  C'est un PLAFOND des deux côtés, donc une vraie proportion, et pas une
- *  simple préférence de tri : sans plafond sur les enseignes, la Belgique
- *  (44 promos Amazon pour 157 offres d'enseignes) afficherait 22 % d'Amazon —
- *  l'inverse de la cible. Sans plafond sur Amazon, les pays riches en ventes
- *  flash repartiraient à 98 % d'Amazon.
+ *  Ce que la règle faisait : la majorité des résultats devait pointer chez
+ *  Amazon (lien direct, commissions), et 40 % vers les autres enseignes du pays.
+ *  C'était un plafond des DEUX côtés — donc une vraie proportion, et pas une
+ *  simple préférence de tri. Sans plafond sur les enseignes, la Belgique
+ *  (44 promos Amazon pour 157 offres d'enseignes) affichait 22 % d'Amazon ;
+ *  sans plafond sur Amazon, les pays riches en ventes flash repartaient à 98 %.
  *
- *  L'alternance est VOULUE : le mélange doit se voir dès la première page,
- *  sinon l'utilisateur croit que les enseignes ont disparu.
+ *  POURQUOI ELLE EST EN PAUSE (B, 08/10/2026) : « mettre en pause le 60/40 en
+ *  faveur d'Amazon, tous les acteurs affichent en fonction de ce qu'il publie,
+ *  sans préférence. » Autrement dit : l'ordre ne doit plus être arbitré entre
+ *  deux camps, il doit suivre ce que chaque acteur apporte réellement.
+ *
+ *  MISE EN PAUSE, PAS SUPPRESSION. La règle reste écrite, complète, et elle
+ *  reste ÉPROUVÉE (voir tests/melange.test.mjs, qui la rejoue avec l'interrupteur
+ *  sur « actif »). Le jour où on la rallume, elle sera exactement celle qu'on
+ *  connaissait — on ne réécrira pas une règle de mémoire.
+ *
+ *  CE QUI CHANGE À L'ÉCRAN. Plus de plafond, plus de quotas de camps, plus
+ *  d'alternance : la liste est simplement classée par ce que les offres valent
+ *  (remise, prix, intérêt), tous acteurs mêlés. Aucune offre n'est écartée au
+ *  nom d'une proportion — c'était le vrai enjeu, puisqu'un plafond SACRIFIE des
+ *  offres réelles pour tenir un pourcentage.
  */
+const MELANGE_ACTIF = false;
+
 const PART_AMAZON = 0.6;
 
 /** Sous ce nombre de lignes, une liste ne se juge plus : plutôt que de
@@ -1035,6 +1049,11 @@ function melanger(liste, cmp) {
   // existait dans les données et disparaissait à l'écran. Mesuré sur le site
   // publié : vingt cartes Amazon d'affilée sous un en-tête annonçant 60/40.
   const tri = cmp || (() => 0);
+  // EN PAUSE : la liste est rendue classée telle quelle — pas d'arbitrage entre
+  // deux camps, pas de plafond, pas de quota, pas d'alternance. Conséquence
+  // voulue : AUCUNE offre n'est sacrifiée pour tenir un pourcentage, et l'ordre
+  // suit ce que chaque acteur publie.
+  if (!MELANGE_ACTIF) return [...liste].sort(tri);
   const amazon = liste.filter(estAmazon).sort(tri);
   // Dans le camp des 40 %, les BOUTIQUES passent avant la presse. Les articles
   // ont souvent deux prix réels, donc un meilleur rang au tri : sans ce
