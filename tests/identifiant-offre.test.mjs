@@ -28,7 +28,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { identifiant } from '../collecteur.mjs';
+import { identifiant, migrerIdentifiants } from '../collecteur.mjs';
 
 const RACINE = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -123,10 +123,69 @@ test('AUCUN identifiant du catalogue entier n’est partagé par deux liens diff
 
 test('aucune source ne fabrique plus son identifiant à la main', () => {
   const source = fs.readFileSync(path.join(RACINE, 'collecteur.mjs'), 'utf8');
-  assert.ok(!/base64url/.test(source),
+  // Les commentaires d'abord : ils CITENT « base64url » pour expliquer le défaut
+  // corrigé, et une épreuve qui lit le fichier brut les prendrait pour du code —
+  // elle échouerait sur la documentation de ce qu'elle vérifie.
+  const code = source
+    .replace(/\/\*[\s\S]*?\*\//g, ' ')
+    .replace(/(^|[^:])\/\/[^\n]*/g, '$1 ');
+  assert.ok(!/base64url/.test(code),
     'la fabrication par base64url doit avoir disparu : elle perdait le début du lien');
-  const appels = [...source.matchAll(/id: identifiant\('([dpegs])',\s*([^)]+)\)/g)];
+  const appels = [...code.matchAll(/id: identifiant\('([dpegs])',\s*([^)]+)\)/g)];
   assert.equal(appels.length, 5,
     `les 5 sources (d, p, e, g, s) doivent passer par identifiant() — ${appels.length} trouvée(s)`);
   assert.deepEqual(appels.map((m) => m[1]).sort(), ['d', 'e', 'g', 'p', 's']);
+});
+
+/* --------------------------------------------------------------------------
+   LA MIGRATION DES OFFRES DÉJÀ EN STOCK.
+
+   Corriger la fabrication ne suffit pas : la collecte REPREND du stock les
+   offres qu'une source n'a pas re-servies, et celles-là gardaient l'ancien
+   identifiant. Mesuré après la première collecte corrigée : 175 identifiants
+   seulement avaient changé, et 74 restaient partagés par 287 offres.
+   -------------------------------------------------------------------------- */
+
+test('la migration corrige les identifiants ANCIENS sans toucher aux autres', () => {
+  const neufConnu = identifiant('d', 'https://exemple.test/a');
+  const offres = [
+    { id: 'sL21hZHJldHNtYS', lienMarchand: TEMOIN[0], titre: 'ancien → à migrer' },
+    { id: 'aB0C3528VHM', lienMarchand: 'https://www.amazon.de/dp/B0C3528VHM', titre: 'Amazon (ASIN)' },
+    { id: 'flSEB0FLQDCR7X', lienMarchand: 'https://www.amazon.fr/dp/B0FLQDCR7X', titre: 'Amazon (ASIN, fl…)' },
+    { id: neufConnu, lienMarchand: 'https://exemple.test/a', titre: 'déjà migré' },
+  ];
+  const intacts = [offres[1].id, offres[2].id, offres[3].id];
+
+  assert.equal(migrerIdentifiants(offres), 1, 'une seule offre doit être migrée');
+  assert.equal(offres[0].id, identifiant('s', TEMOIN[0]),
+    'l’ancien identifiant doit devenir l’empreinte de son lien');
+  assert.deepEqual([offres[1].id, offres[2].id, offres[3].id], intacts,
+    'les identifiants Amazon (ASIN) et les identifiants déjà migrés ne doivent PAS être touchés');
+});
+
+test('la migration est idempotente : une seconde passe ne change plus rien', () => {
+  const offres = [{ id: 'sL21hZHJldHNtYS', lienMarchand: TEMOIN[0], titre: 'x' }];
+  assert.equal(migrerIdentifiants(offres), 1, 'la première passe migre');
+  assert.equal(migrerIdentifiants(offres), 0, 'la seconde passe ne doit rien changer : sinon l’identifiant d’un favori bougerait encore');
+});
+
+test('APRÈS migration, le catalogue entier n’a plus un seul identifiant partagé', () => {
+  const fichier = [path.join(RACINE, 'data', 'offres.json'), path.join(RACINE, 'docs', 'offres.json')]
+    .find((f) => fs.existsSync(f));
+  assert.ok(fichier, 'ni data/offres.json (local) ni docs/offres.json (dépôt)');
+  const catalogue = JSON.parse(fs.readFileSync(fichier, 'utf8'));
+  // Copie : l'épreuve ne doit jamais réécrire le catalogue de travail.
+  const offres = catalogue.offres.map((o) => ({ ...o }));
+  const migrees = migrerIdentifiants(offres);
+
+  const entree = (o) => o.lienMarchand || o.lienPage || o.titre || '';
+  const parId = new Map();
+  for (const o of offres) {
+    if (!parId.has(o.id)) parId.set(o.id, new Set());
+    parId.get(o.id).add(entree(o));
+  }
+  const partages = [...parId.entries()].filter(([, liens]) => liens.size > 1);
+  assert.deepEqual(partages.map(([id, liens]) => `${id} → ${liens.size} liens`), [],
+    `${partages.length} identifiant(s) encore partagé(s) après migration (${migrees} migrées) : `
+    + 'la migration doit suffire à tout corriger, sans attendre que les sources re-servent les offres');
 });

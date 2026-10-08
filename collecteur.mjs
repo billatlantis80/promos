@@ -63,6 +63,34 @@ export function identifiant(prefixe, lien, titre) {
   return prefixe + crypto.createHash('sha1').update(String(lien || titre)).digest('hex').slice(0, 20);
 }
 
+/** Les identifiants fabriqués AVANT le 08/10/2026 : 1 lettre de source + 14
+ *  caractères base64url. Sert à reconnaître ce qu'il faut migrer — et, surtout,
+ *  à NE PAS toucher au reste : les offres Amazon portent `a…`/`fl…` + ASIN,
+ *  qui est déjà unique (mesuré : 0 collision sur 3 740 offres). */
+const MOTIF_ANCIEN_ID = /^[dpegs][A-Za-z0-9_-]{14}$/;
+
+/**
+ * Migre les identifiants périmés, EN PLACE, et dit combien il en a changé.
+ *
+ * Pourquoi c'est nécessaire : le correctif d'identifiant() ne vaut que pour les
+ * offres RE-ANALYSÉES. Or la collecte reprend du stock les offres qu'une source
+ * n'a pas re-servies : celles-là gardaient l'ancien identifiant, donc les
+ * collisions. Mesuré après la première collecte corrigée : 175 identifiants
+ * seulement avaient changé, et 74 restaient partagés par 287 offres.
+ *
+ * Idempotente : une fois migré, l'identifiant ne correspond plus au motif
+ * ancien et n'est plus retouché. On peut donc l'appeler à chaque collecte.
+ */
+export function migrerIdentifiants(offres) {
+  let migrees = 0;
+  for (const o of offres) {
+    if (!o || !MOTIF_ANCIEN_ID.test(String(o.id))) continue;
+    const neuf = identifiant(String(o.id)[0], o.lienMarchand || o.lienPage, o.titre);
+    if (neuf !== o.id) { o.id = neuf; migrees++; }
+  }
+  return migrees;
+}
+
 /* ------------------------------------------------------------------ *
  *  BUDGET DE TEMPS — une contrainte de la plateforme, pas un réglage.
  *
@@ -4605,6 +4633,12 @@ async function principal() {
       raison: 'une promotion sans deuxième prix n’est pas une promotion (pages d’enseigne)',
     });
   }
+
+  // Les offres reprises du stock gardent l'identifiant qu'elles avaient : on les
+  // migre AVANT tout le reste (visuels, tri, écriture), sinon la correction ne
+  // vaudrait que pour ce que les sources ont bien voulu re-servir ce tour-ci.
+  const idMigres = migrerIdentifiants(connues.values());
+  if (idMigres) journal.push({ source: 'identifiants', ok: true, migres: idMigres, raison: 'identifiants fabriqués avant le 08/10/2026 (inversion du lien) — empreinte du lien entier' });
 
   const imagesGeneriques = new Set(existant.imagesGeneriques || []);
   const images = await enrichirVisuels(connues, imagesGeneriques);
