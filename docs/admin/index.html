@@ -304,6 +304,37 @@ details h3 span{font-weight:400;color:var(--doux);font-size:12px;text-transform:
 .note textarea.rempli{border-color:rgba(235,145,45,.55)}
 .etat-note{font-size:10.5px;color:var(--tres-doux);font-style:italic}
 
+/* ---------- LE BOUTON « MODIFIER » ET SA FICHE ----------
+   B (08/10/2026) : « rajouter un petit bouton de modification du champ pour que je
+   puisse l'adapter, compléter moi-même si nécessaire. »
+
+   UN CRAYON, À CÔTÉ DU NOM. C'est le plus court à intégrer, et il ne coûte pas une
+   colonne de plus dans une ligne déjà large — le placer en fin de ligne aurait
+   repoussé la note, qui doit rester la dernière. Il ouvre la fiche de l'acteur
+   SOUS sa ligne : on garde le contexte sous les yeux, on ne quitte pas la liste,
+   et on n'a pas à retenir ce qu'on était en train de corriger. */
+.editer{
+  background:transparent;border:1px solid var(--bord);color:var(--doux);border-radius:7px;
+  padding:0 6px;font-size:12px;line-height:1.7;margin-left:6px;vertical-align:1px
+}
+.editer:hover{border-color:var(--accent);color:var(--accent)}
+.editer[aria-expanded="true"]{border-color:var(--accent);color:var(--accent);background:rgba(235,145,45,.12)}
+tr.edition > td{background:var(--carte2);border-bottom:2px solid var(--bord-clair);padding:0}
+.fiche-form{padding:14px 16px}
+.fiche-grille{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px;margin:10px 0 14px
+}
+.champ-fiche{display:flex;flex-direction:column;gap:4px;font-size:11.5px;color:var(--doux)}
+.champ-fiche input{
+  width:100%;background:var(--carte);color:var(--texte);border:1px solid var(--bord);
+  border-radius:8px;padding:7px 9px;font:inherit;font-size:12.5px
+}
+.champ-fiche input:focus{outline:2px solid var(--accent);outline-offset:-1px;background:var(--carte3)}
+.champ-fiche input.rempli{border-color:rgba(47,191,113,.55)}
+/* Dans la fiche, le bouton d'enregistrement ne prend que SA largeur : le
+   `.principal` de l'écran de connexion, lui, occupe toute la ligne. */
+tr.edition .principal{width:auto;padding:9px 18px;display:inline-block;margin-right:8px}
+
 /* ---------- LE TABLEAU DE PAYS, AVEC DRAPEAUX ----------
    B (08/10/2026) : « Pour les pays je ne souhaite pas un menu déroulant, je
    souhaite un tableau comme il y a dans les paramètres de l'appli, avec les
