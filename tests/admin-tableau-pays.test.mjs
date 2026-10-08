@@ -182,3 +182,28 @@ test('la frontière « ce qui informe » est visible dans le tableau', () => {
   assert.match(m[0], /i === 0 \? ' sep'/, 'la première colonne informative doit porter le liseré');
   assert.match(css, /td\.info\.sep|td\.info,th\.info\.sep/, 'le liseré doit être écrit dans la feuille de style');
 });
+
+/* ------------------- 5. Le texte s'adapte à la place prévue */
+
+test('un texte trop long se coupe, et se lit EN ENTIER au survol', () => {
+  // B (08/10/2026) : « Si le texte est trop long, exemple dans la description, on
+  // doit garder la même distance dans l'encadrement, c'est le texte qui doit
+  // s'adapter. […] le reste du texte apparaîtra quand la souris est dessus. »
+  //
+  // CE QUI SE JOUE ICI, ET QUI EST FACILE À RATER : tronquer à l'écran est
+  // acceptable SEULEMENT si le texte entier reste accessible. Une coupure qui
+  // perd l'information n'est pas une mise en forme, c'est une perte de données —
+  // et elle est silencieuse, puisqu'on ne voit que ce qui reste.
+  assert.match(css, /\.tronque\{[^}]*text-overflow:\s*ellipsis/,
+    'la coupure doit se voir (points de suspension), pas se deviner');
+  assert.match(css, /\.tronque\{[^}]*white-space:\s*nowrap/,
+    'c’est le TEXTE qui s’adapte : il ne doit pas faire grandir la cellule');
+  const m = admin.match(/function celluleTronquee\(txt\) \{[\s\S]*?\n\}/);
+  assert.ok(m, 'la fabrique de valeur tronquée doit exister');
+  assert.match(m[0], /title="\$\{esc\(t\)\}"/,
+    'le texte ENTIER doit partir dans l’infobulle — sinon la coupure perd l’information');
+  // Et elle est réellement utilisée là où le texte est long, pas seulement écrite.
+  assert.match(admin, /celluleTronquee\(parLibelle\.get\(libelle\)\)/,
+    'les informations de siège doivent passer par la coupure');
+  assert.match(admin, /\$\{celluleTronquee\(a\.type\)\}/, 'la colonne Type aussi');
+});

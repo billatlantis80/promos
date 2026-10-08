@@ -342,6 +342,25 @@ td.nom-acteur{white-space:nowrap}
    plafond l'empêche à l'inverse de pousser un acteur à dix sources hors du
    tableau. */
 td.lu-par,th.lu-par{min-width:150px;max-width:230px}
+/* ---------- LE TEXTE S'ADAPTE À LA PLACE, PAS L'INVERSE ----------
+   B (08/10/2026) : « Si le texte est trop long, exemple dans la description, on
+   doit garder la même distance dans l'encadrement, c'est le texte qui doit
+   s'adapter. Le texte doit apparaître dans la place apparente prévue pour [lui]
+   et s'il a besoin de plus de place, le reste du texte apparaîtra quand la souris
+   est dessus. »
+
+   La cellule garde donc UNE hauteur, toujours la même : c'est le texte qui se
+   coupe proprement sur des points de suspension. Le texte ENTIER reste
+   accessible — il est porté par l'attribut `title`, que le navigateur affiche au
+   survol, au-dessus de la cellule. Rien n'est perdu, et le tableau cesse de
+   faire des lignes de trois étages. */
+.tronque{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+td.type-acteur,td.lu-par,td.info,td.site,td.raison{white-space:nowrap}
+td.site{max-width:250px}
+td.pays-fournis{max-width:330px}
+td.cat-acteur{max-width:210px}
+td.reseaux{max-width:220px;white-space:nowrap}
+td.preuve{max-width:340px;white-space:nowrap}
 /* ET LA FICHE RESTE VISIBLE. Mesuré : sur dix-sept colonnes, le tableau devient
    plus large que l'écran et défile horizontalement. La fiche, qui s'étale sur
    toute la ligne, partait donc hors de l'écran par la droite — on ouvrait un
@@ -1275,9 +1294,12 @@ function dessinerListesSites(o) {
       const l = Object.entries(pays).sort((a, b) => b[1] - a[1]);
       const montre = l.slice(0, 4).map(([p, n]) => `<span class="pays-nom">${svgDrapeau(p)}${esc(p)} ${nf.format(n)}</span>`).join(' · ');
       const suite = l.length > 4 ? ` · +${l.length - 4}` : '';
+      // La liste ENTIÈRE part dans l'infobulle : tronquer à l'écran ne doit
+      // jamais faire perdre l'information, seulement la déplacer sous la souris.
+      const toutPays = l.map(([p, n]) => `${p} ${nf.format(n)}`).join(' · ');
       return `<tr><td>${esc(site)}</td><td class="n"><b>${nf.format(total)}</b></td>
         <td><span class="barre"><i style="width:${Math.round(100 * total / cl.actifs[0].total)}%"></i></span></td>
-        <td class="fin">${montre}${suite}${lues ? ` (${nf.format(lues)} lues)` : ''}</td></tr>`;
+        <td class="fin pays-fournis" title="${esc(toutPays)}">${montre}${suite}${lues ? ` (${nf.format(lues)} lues)` : ''}</td></tr>`;
     }).join('')}
     </table>
     <p class="aide suite"><b>${actifs.length} site(s) actif(s)</b> sur ${cl.suivis} suivi(s)
@@ -1289,7 +1311,7 @@ function dessinerListesSites(o) {
       <tr><th>Site</th><th>État</th><th>Ce qui s’est passé</th></tr>
       ${nonActifs.map((x) => `<tr><td>${esc(x.site)}</td>
         <td class="${x.rang <= 2 ? 'ko' : ''}">${esc(x.etat)}</td>
-        <td class="fin">${esc(x.raison)}</td></tr>`).join('')}
+        <td class="fin raison">${celluleTronquee(x.raison)}</td></tr>`).join('')}
     </table>
     <p class="aide suite"><b>${nonActifs.length} site(s) non actif(s)</b> sur ${cl.suivis} suivi(s) :
       ${cl.parEtat.map(([e, n]) => `${n} ${esc(e)}`).join(' · ')}.${fl ? ` — filtre « ${esc(filtreSites)} » appliqué.` : ''}</p>`
@@ -1798,8 +1820,20 @@ function ficheInfo(a) {
 function cellulesInfo(a) {
   const parLibelle = new Map(ficheInfo(a));
   return ORDRE_INFORMATIF.map((libelle, i) => `<td class="info${i === 0 ? ' sep' : ''}">${
-    parLibelle.has(libelle) ? esc(parLibelle.get(libelle)) : '<span class="vide">—</span>'
+    parLibelle.has(libelle) ? celluleTronquee(parLibelle.get(libelle)) : '<span class="vide">—</span>'
   }</td>`).join('');
+}
+
+/** UNE VALEUR QUI TIENT DANS LA PLACE PRÉVUE, ET SE LIT EN ENTIER AU SURVOL.
+ *  Une seule fabrique pour tout le panneau : deux écritures séparées finiraient
+ *  par ne plus se comporter pareil — l'une avec son infobulle, l'autre sans.
+ *  Le libellé complet part dans `title`, que `esc()` a déjà mis à l'abri des
+ *  guillemets : une apostrophe ou un guillemet dans une adresse ne peut donc pas
+ *  casser l'attribut. */
+function celluleTronquee(txt) {
+  const t = String(txt == null ? '' : txt).trim();
+  if (!t) return '<span class="vide">—</span>';
+  return `<span class="tronque" title="${esc(t)}">${esc(t)}</span>`;
 }
 
 /* ---------- Les portes d'entrée -------------------------------------------
@@ -1977,8 +2011,13 @@ function dessinerMarche() {
       <div class="liens">${d.url ? `<a href="${esc(d.url)}" target="_blank" rel="noopener">ouvrir</a>` : ''}${note}</div>
     </div>`;
   };
+  // LE SITE TIENT SUR UNE LIGNE. Les adresses sont jointes par « · » au lieu
+  // d'être empilées : la cellule garde une hauteur, chaque adresse reste un lien
+  // cliquable, et la liste entière est rappelée au survol.
   const site = (a) => (a.domaines || []).length
-    ? `<div class="site">${(a.domaines || []).map((d) => `<a href="https://${esc(d)}" target="_blank" rel="noopener">${esc(d)}</a>`).join('<br>')}</div>`
+    ? `<span class="tronque" title="${esc((a.domaines || []).join(' · '))}">${
+      (a.domaines || []).map((d) => `<a href="https://${esc(d)}" target="_blank" rel="noopener">${esc(d)}</a>`).join(' · ')
+    }</span>`
     : '<span class="vide">—</span>';
 
   // LA FICHE ÉCRITE À LA MAIN EST APPLIQUÉE ICI, UNE FOIS. Tout ce qui suit la
@@ -2010,10 +2049,10 @@ function dessinerMarche() {
     return `<tr>
           <td class="nom-acteur"><b>${esc(a.nom)}</b>${a.provenance === 'application' ? ' <span class="ajout" title="Ajouté par l’application : ce site est lu, il ne figurait pas dans le tableur">ajouté</span>' : ''}${boutonEditer(a)}</td>
           <td>${etiquette(a.etat)}</td>
-          <td class="fin">${esc(a.type || '—')}</td>
+          <td class="fin type-acteur">${celluleTronquee(a.type)}</td>
           <td class="n">${a.annonces ? nf.format(a.annonces) : '—'}</td>
-          <td class="fin lu-par">${lu.length ? lu.map((n) => esc(n)).join(' · ') : '<span class="vide">—</span>'}</td>
-          <td>${site(a)}</td>
+          <td class="fin lu-par">${lu.length ? celluleTronquee(lu.join(' · ')) : '<span class="vide">—</span>'}</td>
+          <td class="site">${site(a)}</td>
           <td>${blocAdresse(a)}</td>
           ${cellulesInfo(a)}
           <td>${blocNote(a.nom)}</td></tr>
@@ -2261,14 +2300,14 @@ function dessinerAffiliation() {
         ${g.liste.map((a) => {
     const preuves = preuvesAffiliation(a.affiliation);
     return `<tr>
-          <td><b>${esc(a.nom)}</b>${a.provenance === 'application' ? ' <span class="ajout">ajouté</span>' : ''}
-            <div style="font-size:11.5px;color:var(--doux)">${esc((a.domaines || []).join(' / ') || '—')}</div></td>
-          <td style="font-size:12px;color:var(--doux)">${esc(a.categorie || '—')}</td>
+          <td class="nom-acteur"><b>${esc(a.nom)}</b>${a.provenance === 'application' ? ' <span class="ajout">ajouté</span>' : ''}
+            <span class="tres-fin tronque" title="${esc((a.domaines || []).join(' · '))}">${esc((a.domaines || []).join(' · ') || '—')}</span></td>
+          <td class="fin cat-acteur">${celluleTronquee(a.categorie)}</td>
           <td class="n">${a.citations ? nf.format(a.citations) : '—'}</td>
-          <td>${a.affiliation.reseaux.length ? a.affiliation.reseaux.map((r) => `<b>${esc(r)}</b>`).join(' · ') : '—'}</td>
-          <td style="font-size:11.5px;max-width:340px">${preuves.length
-    ? preuves.map((p) => `<div><span style="color:var(--tres-doux)">${esc(p.quoi)} : </span><a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.url.replace(/^https?:\/\/(www\.)?/, '').slice(0, 46))}</a></div>`).join('')
-    : `<span class="vide">${esc(a.affiliation.raison || '—')}</span>`}</td>
+          <td class="reseaux">${a.affiliation.reseaux.length ? celluleTronquee(a.affiliation.reseaux.join(' · ')) : '—'}</td>
+          <td class="tres-fin preuve" title="${esc(preuves.map((x) => `${x.quoi} : ${x.url}`).join('\n') || a.affiliation.raison || '')}">${preuves.length
+    ? preuves.map((x) => `<a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.quoi)}</a>`).join(' · ')
+    : `<span class="vide tronque">${esc(a.affiliation.raison || '—')}</span>`}</td>
           <td>${blocNote(a.nom)}</td></tr>`;
   }).join('')}
       </table></div>` : '<p class="vide" style="margin:8px 14px 12px">Aucun acteur dans ce groupe.</p>'}
