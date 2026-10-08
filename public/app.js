@@ -125,6 +125,8 @@ let etat = {
   portee: 'promos',
   // Index ASIN → offres, construit une seule fois au chargement.
   indexProduits: null,
+  // Le taux de la BCE du jour, publié par le collecteur (devises.json).
+  taux: null,
 };
 
 /* ---------- Mode d'affichage ----------
@@ -917,13 +919,14 @@ function indexerProduits(offres) {
  *
  *  Ne convertit jamais rien et ne modifie jamais une offre : les prix rendus
  *  sont exactement ceux du catalogue. */
-function autresPlaces(o, index) {
+function autresPlaces(o, index, taux) {
   const vide = { moinsCher: null, autres: [] };
   if (!o || !index || typeof index.get !== 'function' || !estPlaceAmazon(o)) return vide;
   const asin = asinDe(o);
   const maPlace = placeAmazon(o);
   if (!asin || !maPlace) return vide;
   const maDevise = deviseDe(o).code;
+  const table = (taux && taux.taux) || null;
 
   const vues = new Set([maPlace]);
   const autres = [];
@@ -935,12 +938,24 @@ function autresPlaces(o, index) {
     if (x.prix == null) continue;
     vues.add(place);
     const devise = deviseDe(x);
-    if (devise.code === maDevise && o.prix != null && x.prix < o.prix) {
-      if (!moinsCher || x.prix < moinsCher.prix) {
-        moinsCher = { place, prix: x.prix, devise, id: x.id };
+    // Un frère dans MA monnaie se compare directement. Un frère dans une AUTRE
+    // monnaie se convertit au taux du jour — et s'il n'y a pas de taux, il n'est
+    // pas classé du tout : on se tait plutôt que d'inventer un ordre.
+    const equivalentDansLaMienne = devise.code === maDevise ? null : equivalent(x.prix, devise.code, maDevise, table);
+    const comparable = devise.code === maDevise ? x.prix : equivalentDansLaMienne;
+    // MÊME MONNAIE : la comparaison est exacte, on prend le moindre centime.
+    // MONNAIES DIFFÉRENTES : le taux est une approximation, et les frais de
+    // change existent. En dessous de 2 %, l'écart ne prouve rien — on se tait.
+    const moinsCherQueMoi = o.prix != null && comparable != null
+      && (devise.code === maDevise
+        ? comparable < o.prix
+        : comparable < o.prix * (1 - ECART_MIN_CHANGE / 100));
+    if (moinsCherQueMoi) {
+      if (!moinsCher || comparable < moinsCher.comparable) {
+        moinsCher = { place, prix: x.prix, devise, id: x.id, equivalent: equivalentDansLaMienne, comparable };
       }
     } else {
-      autres.push({ place, prix: x.prix, devise, id: x.id });
+      autres.push({ place, prix: x.prix, devise, id: x.id, equivalent: equivalentDansLaMienne });
     }
   }
   // Même monnaie d'abord (comparable), puis du moins cher au plus cher.
@@ -949,19 +964,72 @@ function autresPlaces(o, index) {
   return { moinsCher, autres: autres.slice(0, 2) };
 }
 
+/* ---- LE TAUX DE CHANGE, POUR COMPARER CE QUI N'EST PAS DANS LA MÊME MONNAIE --
+ *
+ * Décision de B, 08/10/2026 : « Moins cher avec le taux de la BCE du jour
+ * affiché à côté ». La règle « on ne convertit jamais » protégeait le PRIX
+ * affiché — celui qu'on retrouve sur la boutique, et qu'on peut vérifier. Elle
+ * n'interdisait pas de COMPARER deux prix, à condition de le faire au grand jour.
+ *
+ * On compare donc, et on montre les trois choses : le prix d'origine, son
+ * équivalent, et le taux qui l'a produit avec sa date. La BCE publie une fois
+ * par jour ouvré : un taux « du jour » peut dater d'hier ou de vendredi, et le
+ * visiteur a le droit de le savoir.
+ *
+ * D'où vient le taux : du fichier `devises.json`, écrit par le COLLECTEUR.
+ * Jamais d'appel à la BCE depuis le navigateur — elle n'envoie pas d'en-tête
+ * CORS, la requête serait refusée, et le projet n'appelle aucun tiers depuis
+ * chez le visiteur.
+ *
+ * SANS TAUX, AUCUNE COMPARAISON : si le fichier manque, on retombe exactement
+ * sur le comportement d'avant — nommer l'autre place, sans classer.
+ * --------------------------------------------------------------------------- */
+
+/** Le seuil qui vaut entre deux MONNAIES : en dessous de 2 %, l'écart se noie
+ *  dans l'arrondi du taux et dans les frais de change — l'annoncer serait une
+ *  affirmation que le chiffre ne porte pas.
+ *  Il ne s'applique JAMAIS dans la même monnaie : là, 6 € d'écart sont 6 €, et
+ *  la comparaison est exacte. */
+const ECART_MIN_CHANGE = 2;
+
+/** Un prix converti d'une monnaie à l'autre, via l'euro (la BCE cote en euros). */
+function equivalent(prix, de, vers, taux) {
+  if (prix == null || !taux) return null;
+  const enEuro = de === 'EUR' ? prix : (taux[de] ? prix / taux[de] : null);
+  if (enEuro == null) return null;
+  const sorti = vers === 'EUR' ? enEuro : (taux[vers] ? enEuro * taux[vers] : null);
+  return sorti == null ? null : Math.round(sorti * 100) / 100;
+}
+
+/** « 2026-10-08 » → « 08/10 ». Le taux se cite avec SA date, jamais tout seul. */
+function dateCourte(iso) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(String(iso || ''));
+  return m ? `${m[3]}/${m[2]}` : String(iso || '');
+}
+
 /** La mention affichée sur la carte — vide quand il n'y a rien à dire. */
 function mentionAilleurs(o) {
-  const { moinsCher, autres } = autresPlaces(o, etat.indexProduits);
+  const taux = etat.taux;
+  const { moinsCher, autres } = autresPlaces(o, etat.indexProduits, taux);
   if (!moinsCher && !autres.length) return '';
+  // Un prix se cite dans SA monnaie ; quand elle n'est pas la nôtre, on ajoute
+  // l'équivalent AU TAUX AFFICHÉ AVEC SA DATE. Jamais l'un sans l'autre.
+  const prixDe = (a) => {
+    const base = montant(a.prix, a.devise);
+    if (a.equivalent == null) return base;
+    return base + ' ' + t('(≈ {prix}, taux BCE du {date})', {
+      prix: montant(a.equivalent, deviseDe(o)), date: dateCourte(taux && taux.date),
+    });
+  };
   const morceaux = [];
   if (moinsCher) {
     morceaux.push('<b>' + esc(t('Moins cher sur {place} : {prix}', {
-      place: nomPlace(moinsCher.place), prix: montant(moinsCher.prix, moinsCher.devise),
+      place: nomPlace(moinsCher.place), prix: prixDe(moinsCher),
     })) + '</b>');
   }
   for (const a of autres) {
     morceaux.push(esc(t('Aussi sur {place} : {prix}', {
-      place: nomPlace(a.place), prix: montant(a.prix, a.devise),
+      place: nomPlace(a.place), prix: prixDe(a),
     })));
   }
   return '<p class="ailleurs" title="' + esc(t("Le même produit, sur une autre place de marché. Les prix ne sont pas convertis : chacun s'affiche dans sa monnaie.")) + '">'
@@ -2288,6 +2356,20 @@ async function chargerDonnees() {
   }
 }
 
+/** Le taux de référence de la BCE, lu dans NOTRE fichier (voir devises.json).
+ *  Le navigateur ne va jamais le chercher chez la BCE : elle n'envoie pas
+ *  d'en-tête CORS, et le projet n'appelle aucun tiers depuis chez le visiteur.
+ *  Fichier absent ou illisible → null, donc aucune comparaison entre monnaies. */
+async function chargerTaux() {
+  try {
+    const r = await fetch(BASE + 'devises.json', { cache: 'no-store' });
+    if (!r.ok) return null;
+    const d = await r.json();
+    if (!d || !d.date || !d.taux || typeof d.taux !== 'object') return null;
+    return d;
+  } catch { return null; }
+}
+
 async function lancer() {
   dessinerMention();
   // Thème et profil AVANT le premier rendu : sinon l'écran s'affiche aux
@@ -2319,6 +2401,9 @@ async function lancer() {
     // L'index des produits multi-places se construit ICI, une fois : les cartes
     // le consultent ensuite sans jamais reparcourir le catalogue.
     etat.indexProduits = indexerProduits(etat.offres);
+    // Le taux de la BCE, écrit par le collecteur : il sert à comparer des prix
+    // de monnaies différentes. Absent, il n'y a simplement aucune comparaison.
+    etat.taux = await chargerTaux();
     etat.meta = { ...d, amazon: false, reseaux: false };
     const aff = await import('./affiliation.js');
     etat.meta.amazon = aff.marchesAmazonActifs().length > 0;

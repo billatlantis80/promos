@@ -943,8 +943,13 @@ function autresPlaces(o, index, taux) {
     // pas classé du tout : on se tait plutôt que d'inventer un ordre.
     const equivalentDansLaMienne = devise.code === maDevise ? null : equivalent(x.prix, devise.code, maDevise, table);
     const comparable = devise.code === maDevise ? x.prix : equivalentDansLaMienne;
+    // MÊME MONNAIE : la comparaison est exacte, on prend le moindre centime.
+    // MONNAIES DIFFÉRENTES : le taux est une approximation, et les frais de
+    // change existent. En dessous de 2 %, l'écart ne prouve rien — on se tait.
     const moinsCherQueMoi = o.prix != null && comparable != null
-      && comparable < o.prix * (1 - ECART_MIN_CHANGE / 100);
+      && (devise.code === maDevise
+        ? comparable < o.prix
+        : comparable < o.prix * (1 - ECART_MIN_CHANGE / 100));
     if (moinsCherQueMoi) {
       if (!moinsCher || comparable < moinsCher.comparable) {
         moinsCher = { place, prix: x.prix, devise, id: x.id, equivalent: equivalentDansLaMienne, comparable };
@@ -980,9 +985,11 @@ function autresPlaces(o, index, taux) {
  * sur le comportement d'avant — nommer l'autre place, sans classer.
  * --------------------------------------------------------------------------- */
 
-/** En dessous de 2 %, l'écart se noie dans les frais de change et dans
- *  l'arrondi du taux : annoncer « moins cher » serait une affirmation que le
- *  chiffre ne porte pas. Au-dessus, on le dit. */
+/** Le seuil qui vaut entre deux MONNAIES : en dessous de 2 %, l'écart se noie
+ *  dans l'arrondi du taux et dans les frais de change — l'annoncer serait une
+ *  affirmation que le chiffre ne porte pas.
+ *  Il ne s'applique JAMAIS dans la même monnaie : là, 6 € d'écart sont 6 €, et
+ *  la comparaison est exacte. */
 const ECART_MIN_CHANGE = 2;
 
 /** Un prix converti d'une monnaie à l'autre, via l'euro (la BCE cote en euros). */

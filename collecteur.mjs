@@ -36,6 +36,61 @@ const PUBLIER = process.argv.includes('--publier');
 const DOSSIER_PUBLIE = path.join(__dirname, 'docs');
 
 /* ------------------------------------------------------------------ *
+ *  LE TAUX DE RÉFÉRENCE DE LA BCE — relevé par le COLLECTEUR, pas par le site.
+ *
+ *   Pourquoi ici : la BCE publie un fichier public, sans clé et sans compte
+ *   (eurofxref-daily.xml). Mais elle n'envoie PAS d'en-tête CORS : un navigateur
+ *   ne pourrait pas le lire. Le collecteur, lui, le lit une fois par passage et
+ *   l'écrit dans le site (`devises.json`), où le navigateur le trouve chez nous.
+ *
+ *   Ce taux sert à UNE chose : comparer le prix du même produit entre deux places
+ *   de marché qui ne comptent pas dans la même monnaie (« moins cher sur
+ *   Amazon.de : 429,99 € ≈ 4 813 kr, taux BCE du 08/10 »). Le prix affiché sur
+ *   une offre reste, lui, toujours dans sa monnaie d'origine — on ne convertit
+ *   pas le prix, on éclaire la comparaison.
+ *
+ *   Échec réseau, réponse illisible, valeur absurde : on garde le fichier
+ *   précédent et on continue. Une collecte ne doit jamais échouer pour un taux.
+ * ------------------------------------------------------------------ */
+
+/** Lit le fichier public de la BCE. Fonction PURE (aucun réseau) : c'est elle
+ *  que les épreuves exercent, avec le vrai texte de la BCE. */
+export function analyserTauxBce(xml) {
+  const texte = String(xml || '');
+  const date = (/time=["'](\d{4}-\d{2}-\d{2})["']/.exec(texte) || [])[1] || '';
+  const taux = { EUR: 1 };
+  for (const m of texte.matchAll(/currency=["']([A-Z]{3})["']\s+rate=["']([0-9.]+)["']/g)) {
+    const v = Number(m[2]);
+    if (Number.isFinite(v) && v > 0) taux[m[1]] = v;
+  }
+  // Sans date ni devise utilisable, le relevé ne vaut rien : mieux vaut ne rien
+  // écrire que d'écrire un taux qu'on ne saurait pas dater.
+  if (!date || Object.keys(taux).length < 2) return null;
+  return { date, source: TAUX_URL, sourceNom: 'Banque centrale européenne — taux de référence', releveLe: new Date().toISOString(), taux };
+}
+
+const TAUX_URL = 'https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml';
+const FICHIER_TAUX = path.join(DATA, 'devises.json');
+
+/** Relève le taux et l'écrit (données locales + site publié). Silencieux en cas
+ *  d'échec : voir la note ci-dessus. */
+export async function majTauxBce({ publier = false, delai = 8000 } = {}) {
+  try {
+    const stop = AbortSignal.timeout ? AbortSignal.timeout(delai) : undefined;
+    const r = await fetch(TAUX_URL, stop ? { signal: stop } : undefined);
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const releve = analyserTauxBce(await r.text());
+    if (!releve) throw new Error('réponse illisible');
+    fs.writeFileSync(FICHIER_TAUX, JSON.stringify(releve, null, 0));
+    if (publier) fs.writeFileSync(path.join(DOSSIER_PUBLIE, 'devises.json'), JSON.stringify(releve, null, 0));
+    return releve;
+  } catch (e) {
+    console.log(`  taux BCE : relevé impossible (${e.message}) — le précédent reste en place`);
+    return null;
+  }
+}
+
+/* ------------------------------------------------------------------ *
  *  L'IDENTIFIANT D'UNE OFFRE — l'EMPREINTE DE SON LIEN ENTIER.
  *
  *  Défaut corrigé le 08/10/2026, mesuré sur le catalogue réel (14 004
@@ -4779,6 +4834,12 @@ async function principal() {
   console.log(`  historique des prix : ${bilanPrix.avec} offre(s) analysée(s), ${bilanPrix.verdicts} verdict(s), ${Object.keys(historique.jours).length} jour(s) conservé(s)`);
   console.log(`  → ${FICHIER}`);
   if (PUBLIER) await publier(sortie);
+  // Le taux de la BCE : relevé à chaque collecte, publié avec le site. Il ne
+  // fait jamais échouer une collecte (voir majTauxBce).
+  const tauxBce = await majTauxBce({ publier: PUBLIER });
+  if (tauxBce) {
+    console.log(`  taux BCE du ${tauxBce.date} : 1 € = ${tauxBce.taux.SEK} SEK, ${tauxBce.taux.PLN} PLN, ${tauxBce.taux.GBP} GBP, ${tauxBce.taux.USD} USD`);
+  }
 }
 
 // Exécuté seulement quand ce fichier EST le programme : sinon l'importer depuis

@@ -29,6 +29,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { analyserTauxBce } from '../collecteur.mjs';
 
 const RACINE = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const app = fs.readFileSync(path.join(RACINE, 'public', 'app.js'), 'utf8');
@@ -42,9 +43,13 @@ assert.ok(debut > 0 && fin > debut, 'la tranche devise/places est introuvable da
 const extrait = app.slice(debut, fin);
 
 const M = await import('data:text/javascript;base64,' + Buffer.from(
-  extrait + '\nexport { deviseDe, montant, indexerProduits, autresPlaces, asinDe, placeAmazon, nomPlace };'
+  extrait + '\nexport { deviseDe, montant, indexerProduits, autresPlaces, asinDe, placeAmazon, nomPlace, equivalent, dateCourte, ECART_MIN_CHANGE };'
 ).toString('base64'));
 const { indexerProduits, autresPlaces, asinDe, placeAmazon, nomPlace } = M;
+
+/* Le taux de référence, tel que le collecteur le publie. */
+const TAUX = { date: '2026-10-08',
+  taux: { EUR: 1, SEK: 11.1940, PLN: 4.3753, GBP: 0.84698, USD: 1.1186 } };
 
 /* --------------------------------------------------------- le témoin figé -- */
 /* Le groupe réel du 08/10/2026 : le même Wahoo KICKR CORE 2, quatre lignes. */
@@ -168,6 +173,101 @@ test('sur le CATALOGUE RÉEL : aucune comparaison ne franchit une monnaie', () =
   console.log(`   ${proposes} offres peuvent dire « moins cher ailleurs », ${violations} violations`);
   assert.equal(violations, 0, 'une comparaison entre monnaies, ou un prix non inférieur, est passée');
   assert.ok(proposes > 0, 'aucune offre ne peut plus dire « moins cher ailleurs » : la règle ne sert à rien');
+});
+
+/* =============================================================================
+   LE TAUX DE LA BCE — comparer ce qui n'est pas dans la même monnaie.
+
+   Décision de B, 08/10/2026 : « Moins cher avec le taux de la BCE du jour
+   affiché à côté ». La règle « on ne convertit jamais » protégeait le PRIX
+   affiché, celui qu'on vérifie sur la boutique. Elle n'interdisait pas de
+   COMPARER deux prix — à condition de montrer le taux et sa date.
+
+   Ce que ces épreuves protègent :
+     1. le prix d'origine n'est JAMAIS remplacé par sa conversion ;
+     2. l'équivalent porte toujours le taux et SA date ;
+     3. sans taux, on ne classe rien du tout — le silence d'avant ;
+     4. un écart trop faible pour être réel ne s'annonce pas « moins cher ».
+   ============================================================================= */
+
+test('le relevé de la BCE se lit, et se refuse quand il est illisible', () => {
+  const xml = '<Cube time="2026-10-08"><Cube currency="USD" rate="1.1186"/>'
+    + '<Cube currency="SEK" rate="11.1940"/><Cube currency="PLN" rate="4.3753"/>'
+    + '<Cube currency="GBP" rate="0.84698"/></Cube>';
+  const r = analyserTauxBce(xml);
+  assert.equal(r.date, '2026-10-08');
+  assert.equal(r.taux.SEK, 11.194);
+  assert.equal(r.taux.GBP, 0.84698);
+  assert.equal(r.taux.EUR, 1, 'l’euro est la base : il vaut 1 par définition');
+  assert.match(r.source, /ecb\.europa\.eu/, 'la source doit être citée : un taux sans provenance ne vaut rien');
+  assert.equal(analyserTauxBce('<html>ERREUR 503</html>'), null, 'une réponse illisible ne doit produire aucun taux');
+  assert.equal(analyserTauxBce(''), null);
+});
+
+test('le taux publié est daté, et vient de la BCE', () => {
+  const f = [path.join(RACINE, 'docs', 'devises.json'), path.join(RACINE, 'data', 'devises.json')]
+    .find((p) => fs.existsSync(p));
+  assert.ok(f, 'devises.json doit être publié : sans lui, aucune comparaison entre monnaies');
+  const d = JSON.parse(fs.readFileSync(f, 'utf8'));
+  assert.match(d.date, /^\d{4}-\d{2}-\d{2}$/, 'le taux doit porter sa date de cotation');
+  assert.match(d.source, /ecb\.europa\.eu/);
+  for (const c of ['SEK', 'PLN', 'GBP', 'USD']) {
+    assert.ok(d.taux[c] > 0, `le taux ${c} manque : la conversion serait fausse pour cette place`);
+  }
+});
+
+test('avec le taux du jour, une autre monnaie peut être dite moins chère', () => {
+  const vues = autresPlaces(offre('flSEB0FLQDCR7X'), index, TAUX);   // 6 089 kr
+  assert.ok(vues.moinsCher, '429,99 € doit sortir moins cher que 6 089 kr au taux du jour');
+  assert.equal(vues.moinsCher.place, 'amazon.de');
+  assert.equal(vues.moinsCher.prix, 429.99, 'le prix d’origine est conservé tel quel');
+  assert.equal(vues.moinsCher.devise.code, 'EUR');
+  assert.equal(vues.moinsCher.equivalent, 4813.31, '429,99 € × 11,1940 = 4 813,31 kr');
+});
+
+test('convertir ne remplace JAMAIS le prix affiché', () => {
+  // Le formatage français sépare les milliers par une espace FINE INSÉCABLE :
+  // comparer les chaînes telles quelles ferait échouer une épreuve juste, sur
+  // une différence invisible à l'œil (piège déjà payé sur la devise).
+  const espaces = (s) => String(s).replace(/[\u202f\u00a0\u2009]/g, ' ');
+  const o = offre('flSEB0FLQDCR7X');
+  const vues = autresPlaces(o, index, TAUX);
+  assert.equal(espaces(M.montant(vues.moinsCher.prix, vues.moinsCher.devise)), '429,99 €');
+  assert.equal(espaces(M.montant(vues.moinsCher.equivalent, M.deviseDe(o))), '4 813,31 kr');
+});
+
+test('SANS taux, aucune comparaison entre monnaies — on se tait', () => {
+  assert.equal(autresPlaces(offre('flSEB0FLQDCR7X'), index, null).moinsCher, null);
+  assert.equal(autresPlaces(offre('flSEB0FLQDCR7X'), index, { date: '2026-10-08' }).moinsCher, null,
+    'un relevé sans table de taux ne doit rien classer');
+});
+
+test('un écart noyé dans le change ne s’annonce pas « moins cher »', () => {
+  const suedois = offre('flSEB0FLQDCR7X');
+  // 541 € = 6 056 kr : 0,5 % sous les 6 089 kr. Sous le seuil : on n'affirme rien.
+  const proche = { ...offre('flDEB0FLQDCR7X'), prix: 541 };
+  const vues = autresPlaces(suedois, indexerProduits([suedois, proche]), TAUX);
+  assert.equal(vues.moinsCher, null, '0,5 % d’écart ne devient pas une affirmation');
+  // 429,99 € = 4 813 kr : 21 % sous les 6 089 kr. Là, on le dit.
+  const franche = { ...offre('flDEB0FLQDCR7X'), prix: 429.99 };
+  assert.ok(autresPlaces(suedois, indexerProduits([suedois, franche]), TAUX).moinsCher);
+});
+
+test('l’équivalent porte TOUJOURS la date du taux, dans les 9 langues', () => {
+  assert.equal(M.dateCourte('2026-10-08'), '08/10');
+  assert.equal(M.dateCourte('2026-10-08T16:00:00+02:00'), '08/10');
+  assert.equal(M.dateCourte(''), '');
+  const cle = '(≈ {prix}, taux BCE du {date})';
+  const motif = new RegExp('^\\s*\'' + cle.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\':', 'gm');
+  assert.equal([...langues.matchAll(motif)].length, 9, 'la phrase de l’équivalent doit exister dans les 9 langues');
+});
+
+test('la mention DESSINÉE cite le taux et l’équivalent', () => {
+  const i = app.indexOf('function mentionAilleurs(');
+  const corps = app.slice(i, app.indexOf('\nfunction ', i + 10));
+  assert.match(corps, /taux BCE du \{date\}/, 'la mention doit citer le taux et sa date');
+  assert.match(corps, /dateCourte\(taux && taux\.date\)/, 'la date vient du relevé du jour, pas d’une constante');
+  assert.match(corps, /etat\.taux/, 'la mention doit lire le taux chargé');
 });
 
 /* ------------------------------------------------- et si elle n’était pas dessinée ? -- */
