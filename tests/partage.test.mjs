@@ -33,7 +33,7 @@ const css = lire('app.css');
 // Le contrôle, lui, n'est pas perdu : il tourne sur le NAS, où le projet Android
 // vit réellement. Sur la voie de secours, il est marqué « sauté » et non « vert ».
 const CHEMIN_JAVA = process.env.PROMOS_MAINACTIVITY
-  || '/opt/data/android-build/app-promos/app/src/main/java/com/atlantis/promos/MainActivity.java';
+  || '/opt/data/android-build/app-promos/app/src/main/java/com/kazendra/app/MainActivity.java';
 const java = fs.existsSync(CHEMIN_JAVA) ? fs.readFileSync(CHEMIN_JAVA, 'utf8') : null;
 const sansJava = java
   ? false
