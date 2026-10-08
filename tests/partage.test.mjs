@@ -20,8 +20,25 @@ const ICI = path.dirname(fileURLToPath(import.meta.url));
 const lire = (f) => fs.readFileSync(path.join(ICI, '..', 'public', f), 'utf8');
 const js = lire('app.js');
 const css = lire('app.css');
-const java = fs.readFileSync(
-  '/opt/data/android-build/app-promos/app/src/main/java/com/atlantis/promos/MainActivity.java', 'utf8');
+
+// L'arborescence Android n'existe QUE sur la machine du propriétaire : ce fichier
+// de test lit son `MainActivity.java`. Quand elle est absente — c'est le cas dans
+// GitHub Actions, où la collecte de secours tourne toutes les heures — on ne fait
+// PAS échouer la suite : on saute la vérification en disant pourquoi.
+//
+// Défaut mesuré le 08/10/2026 : la lecture inconditionnelle faisait échouer le
+// workflow horaire À TOUS LES COUPS (ENOENT sur /opt/data/…), et le propriétaire
+// recevait un courriel « All jobs have failed » par heure. Une alerte qui sonne
+// toujours ne signale plus rien — le vrai incident serait passé au milieu.
+// Le contrôle, lui, n'est pas perdu : il tourne sur le NAS, où le projet Android
+// vit réellement. Sur la voie de secours, il est marqué « sauté » et non « vert ».
+const CHEMIN_JAVA = process.env.PROMOS_MAINACTIVITY
+  || '/opt/data/android-build/app-promos/app/src/main/java/com/atlantis/promos/MainActivity.java';
+const java = fs.existsSync(CHEMIN_JAVA) ? fs.readFileSync(CHEMIN_JAVA, 'utf8') : null;
+const sansJava = java
+  ? false
+  : `arborescence Android absente ici (${CHEMIN_JAVA}) — ce contrôle tourne sur le NAS`;
+if (!java) console.log('# MainActivity.java introuvable : vérification du pont Android SAUTÉE (pas en échec).');
 
 test('chaque carte porte un bouton de partage, sous l’heure de parution', () => {
   assert.match(js, /class="ligne-partage"/, 'la ligne de partage doit exister dans la carte');
@@ -55,7 +72,7 @@ test('le lien partagé porte l’identifiant du marché, comme le bouton d’ach
     'le partage doit réutiliser lienAffilie — sinon le lien partagé serait nu');
 });
 
-test('le pont Android ouvre une vraie feuille de partage', () => {
+test('le pont Android ouvre une vraie feuille de partage', { skip: sansJava }, () => {
   assert.match(java, /addJavascriptInterface\(new Partage\(\), "AndroidPartage"\)/,
     'l’interface doit être exposée au WebView sous le nom AndroidPartage');
   assert.match(java, /Intent\.ACTION_SEND/, 'il faut une intention de partage');
