@@ -14,8 +14,76 @@
      vers Google, donc aucune donnée d'utilisateur transmise à un tiers. -->
 <link rel="stylesheet" href="fonts.css">
 <link rel="stylesheet" href="app.css">
+<style>
+/* =============================================================================
+   FILET DE SÉCURITÉ — le seul style qui ne vient pas de app.css.
+
+   Il s'affiche quand l'application n'a PAS pu démarrer (voir plus bas). Il est
+   écrit avec des couleurs et des tailles en dur, volontairement : à ce
+   moment-là, on ne peut plus rien tenir pour acquis — ni les variables CSS,
+   ni l'ordre des feuilles de style.
+   ============================================================================= */
+#secours[hidden] { display: none; }
+#secours { max-width: 660px; margin: 26px auto; padding: 0 16px; }
+#secours .secours-boite {
+  border: 1px solid #d9a05b; border-left: 5px solid #e8842a; border-radius: 10px;
+  background: #fff8f0; padding: 18px 20px;
+}
+#secours h2 { margin: 0 0 10px; font-size: 19px; color: #7a3d05; font-family: inherit; }
+#secours p { margin: 0 0 12px; font-size: 14.5px; line-height: 1.55; color: #33291f; }
+#secours .secours-lien {
+  display: inline-block; padding: 11px 18px; background: #e8842a; color: #fff;
+  border-radius: 9px; text-decoration: none; font-weight: 600; font-size: 14.5px;
+}
+.nojs-affiche {
+  max-width: 660px; margin: 26px auto; padding: 18px 20px;
+  border: 1px solid #d9a05b; border-left: 5px solid #e8842a; border-radius: 10px;
+  background: #fff8f0; color: #33291f; font-size: 14.5px; line-height: 1.55;
+}
+.nojs-affiche h2 { margin: 0 0 10px; font-size: 19px; color: #7a3d05; }
+</style>
 </head>
 <body>
+
+<!-- =============================================================================
+     LE SITE NE DOIT JAMAIS RESTER VIDE ET MUET.
+
+     Défaut réel, mesuré le 08/10/2026 : sur un PC ancien, kazendra.com
+     n'affichait que l'en-tête et « chargement… », définitivement, sans le
+     moindre message. Ce n'était pas un hasard :
+
+       - le site ne charge QU'UN script, `<script type="module">`. Internet
+         Explorer 11 ignore les modules ES : il n'exécutait aucun code ;
+       - `app.js` emploie `?.` plus de 2 000 fois, ce qui exige Chrome 80
+         (février 2020). Un navigateur intermédiaire lit le fichier, échoue à
+         l'analyser, et meurt sans rien dire.
+
+     Trois filets, du navigateur le plus ancien au plus récent :
+       1. <noscript>          — le JavaScript est coupé ;
+       2. <script nomodule>   — le navigateur ignore les modules ES (IE11,
+                                Chrome < 61) : il exécute CELUI-CI, pas app.js ;
+       3. une sentinelle      — app.js n'a pas signalé son démarrage en 20 s
+                                (Chrome 61-79 qui bute sur `?.`, script bloqué
+                                par un antivirus, erreur de programme).
+
+     Règle de la maison, appliquée ici : ce qui ne peut pas marcher doit DIRE
+     ce qui manque, au lieu d'échouer en silence.
+     ============================================================================= -->
+<noscript>
+  <div class="nojs-affiche">
+    <h2>JavaScript est désactivé</h2>
+    <p>Kazendra est une application : sans JavaScript, elle ne peut afficher aucune offre.
+       Active JavaScript dans les réglages du navigateur, puis recharge la page.</p>
+  </div>
+</noscript>
+
+<section id="secours" hidden>
+  <div class="secours-boite">
+    <h2 id="secoursTitre">Le site n’a pas pu démarrer</h2>
+    <p id="secoursTexte"></p>
+    <p><a class="secours-lien" href="diagnostic.html">Faire le test — 5 secondes, rien à installer</a></p>
+  </div>
+</section>
 
 <header class="tete">
   <div class="tete-in">
@@ -245,5 +313,55 @@
 </section>
 
 <script type="module" src="app.js"></script>
+
+<!-- ---------------------------------------------------------------------------
+     FILET N°2 — les navigateurs SANS modules ES (Internet Explorer 11,
+     Chrome antérieur à 61, Firefox antérieur à 60, Safari antérieur à 10.1).
+
+     Le script ci-dessus leur est invisible (`type="module"` inconnu) ; celui-ci
+     leur est invisible aux navigateurs modernes (`nomodule`). Écrit en ES5
+     exprès : IE11 doit pouvoir le LIRE pour pouvoir l'afficher. C'est le cas
+     de panne le plus fréquent sur une vieille machine Windows.
+     --------------------------------------------------------------------------- -->
+<script nomodule>
+(function () {
+  var bloc = document.getElementById('secours');
+  if (!bloc) { return; }
+  document.getElementById('secoursTitre').textContent = 'Ce navigateur est trop ancien';
+  document.getElementById('secoursTexte').innerHTML =
+    'Kazendra demande un navigateur de <b>2020 ou plus récent</b>. Internet Explorer 11 ne peut pas afficher ce site, quel que soit le réglage : il ne connaît pas les outils avec lesquels il est écrit. '
+    + 'Ce n’est pas ta machine qui est en cause, c’est l’âge du logiciel — un navigateur à jour se télécharge gratuitement et s’installe en deux minutes :'
+    + '<br>• <b>Google Chrome</b> — google.com/chrome'
+    + '<br>• <b>Microsoft Edge</b> — microsoft.com/edge'
+    + '<br>• <b>Mozilla Firefox</b> — mozilla.org';
+  bloc.hidden = false;
+})();
+</script>
+
+<!-- ---------------------------------------------------------------------------
+     FILET N°3 — LA SENTINELLE.
+
+     Elle ne parle que si `app.js` n'a PAS posé son témoin de démarrage en
+     20 secondes. Elle distingue donc « le programme n'a jamais tourné » — et
+     le dit — de « les offres arrivent, la connexion est lente », où elle se
+     tait. 20 s dépasse le délai de 15 s que s'accorde l'application pour
+     télécharger les offres : dans ce cas, c'est elle qui a déjà parlé de son
+     propre échec, et la sentinelle n'a rien à ajouter.
+     --------------------------------------------------------------------------- -->
+<script>
+(function () {
+  setTimeout(function () {
+    if (window.KAZENDRA_PRET) { return; }
+    var bloc = document.getElementById('secours');
+    if (!bloc || !bloc.hidden) { return; }
+    document.getElementById('secoursTitre').textContent = 'Le site n’a pas pu démarrer';
+    document.getElementById('secoursTexte').innerHTML =
+      'Le programme du site n’a pas répondu. Deux causes possibles, et le test ci-dessous tranche entre les deux :'
+      + '<br>• ton navigateur est trop ancien — il lui faut une version de <b>2020 ou plus récente</b> ;'
+      + '<br>• quelque chose empêche le téléchargement : un antivirus, un pare-feu, un bloqueur de publicité, ou un réseau d’entreprise.';
+    bloc.hidden = false;
+  }, 20000);
+})();
+</script>
 </body>
 </html>
