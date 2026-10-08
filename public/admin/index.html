@@ -102,6 +102,12 @@ details summary span{font-size:12px;color:var(--doux)}
 details > table{margin:0 0 6px;padding:0 13px 8px}
 details > table tr:first-child th{padding-top:2px}
 .vide{color:var(--doux);font-size:13.5px;font-style:italic}
+/* La fiche d'un acteur : adresse, téléphone, e-mail, CA. Ce sont des
+   INFORMATIONS (règle de B) — on les présente donc en petit, sous le nom,
+   pour qu'elles documentent sans jamais ressembler à des critères de travail. */
+.fiche-info{margin:7px 0 0;font-size:11.5px;line-height:1.45}
+.fiche-info dt{color:var(--doux);text-transform:uppercase;font-size:10px;letter-spacing:.4px;margin-top:5px}
+.fiche-info dd{margin:0;color:var(--texte)}
 .avis{
   border-left:3px solid var(--accent);background:var(--carte2);border-radius:0 10px 10px 0;
   padding:11px 13px;font-size:13px;color:var(--texte);margin:0 0 14px
@@ -150,6 +156,7 @@ details > table tr:first-child th{padding-top:2px}
       <button class="onglet" data-vue="trafic">Trafic</button>
       <button class="onglet" data-vue="sources">Sources</button>
       <button class="onglet" data-vue="origines">Origines</button>
+      <button class="onglet" data-vue="marche">Marché belge</button>
       <button class="onglet" data-vue="reglages">Réglages</button>
     </nav>
 
@@ -258,6 +265,44 @@ details > table tr:first-child th{padding-top:2px}
         </div>
       </section>
 
+      <section data-vue="marche">
+        <div class="rub">
+          <h2>Le marché belge, acteur par acteur</h2>
+          <p class="aide">Les <b>139 acteurs</b> du marché belge (22 catégories), croisés avec
+            les sites que l'application lit réellement. Trois états, et la distinction est
+            tout le sujet :
+            <b>branché</b> = le site publie ses offres, on les lit chez lui ;
+            <b>en veille</b> = on ne le voit qu'à travers un moteur de recherche, donc
+            <b>pas réellement branché</b> ; <b>non suivi</b> = aucune source du tout.
+            C'est la liste où travailler, site par site.</p>
+          <div class="grille" id="mMarcheCompteurs"></div>
+        </div>
+        <div class="rub">
+          <h2>Les acteurs, par catégorie</h2>
+          <p class="aide">Le nombre d'articles est celui des annonces <b>en ligne</b> venant de
+            cet acteur. Les clics et les partages sont ceux relevés <b>sur cet appareil</b>
+            (voir l'onglet Trafic) : ils disent ce qui intéresse, pas seulement ce qui est
+            disponible. <b>Clique le nom d'un acteur</b> pour voir sa fiche (siège, téléphone,
+            e-mail, CA) — ces informations sont <b>documentaires</b> : elles figurent dans la
+            base et à l'export, mais <b>le programme ne s'en sert jamais</b>. La liaison se
+            fait uniquement sur le <b>nom</b> et le <b>site web</b>.</p>
+          <div class="champ" style="max-width:360px">
+            <label for="rechercheMarche">Chercher un acteur</label>
+            <input id="rechercheMarche" type="search" placeholder="nom de l'enseigne…" spellcheck="false">
+          </div>
+          <button class="bouton" id="marcheCsv">Exporter en CSV (pour Excel)</button>
+          <div id="mMarche"></div>
+        </div>
+        <div class="rub">
+          <h2>À régulariser, site par site</h2>
+          <p class="aide">L'ordre de travail. D'abord ceux qu'on <b>voit</b> déjà sans les lire
+            (en veille) : ils ont des annonces, il ne manque que le branchement. Ensuite ceux
+            qu'on ne suit pas du tout, catégorie par catégorie — c'est là qu'un site ajouté
+            ouvre une rubrique entière.</p>
+          <div id="mMarchePlan"></div>
+        </div>
+      </section>
+
       <section data-vue="reglages">
         <div class="rub">
           <h2>Accès</h2>
@@ -301,6 +346,13 @@ details > table tr:first-child th{padding-top:2px}
    Tant qu'elle est vide, le panneau le DIT au lieu de faire croire à des
    chiffres complets — c'est la règle de la maison.
    ========================================================================= */
+
+/* Le croisement « marché belge ↔ sources » vit dans un module À PART, et c'est
+   délibéré : une fonction PURE peut être exécutée par les tests, alors qu'une
+   règle enfouie dans ce fichier ne se vérifierait qu'à l'œil. Le panneau
+   l'affiche, il ne la recalcule pas à sa façon. */
+import { liaisonActeurs, formesDe, memeFormes } from '../acteurs.js';
+import { lireActions } from '../trafic.js';
 
 const CLE_ADMIN = 'kazendra.admin';
 const b64 = (b) => btoa(String.fromCharCode(...new Uint8Array(b)));
@@ -902,6 +954,201 @@ function csv() {
 }
 
 /* ---------- Rendu complet ---------- */
+/* ---------- LE MARCHÉ BELGE ----------
+ * Demande de B (08/10/2026) : « introduire la base de données complète qui est
+ * dans le fichier, mais surtout faire une liaison avec les sites qui sont actifs
+ * au niveau des promotions dans notre application. Et ceux qui ne sont pas
+ * actifs. Cela nous permettra de régulariser chaque site, site par site. »
+ *
+ * CE QUI EST CALCULÉ, ET OÙ. Le croisement vit dans `public/acteurs.js` — une
+ * fonction PURE, que les tests exécutent telle quelle. Ici, on ne fait que
+ * l'afficher. Recalculer la règle dans ce fichier la rendrait invérifiable.
+ *
+ * DEUX MESURES QUI SE COMPLÈTENT, ET C'EST LE POINT. Le nombre d'ARTICLES dit ce
+ * qu'un acteur apporte ; le nombre de CLICS dit ce qu'il intéresse. Un acteur
+ * avec beaucoup d'articles et aucun clic n'est pas un succès — c'est du
+ * remplissage. Sans la seconde colonne, on ne verrait jamais la différence.
+ */
+let marche = null;
+let filtreMarche = '';
+
+/** Les clics et partages relevés sur cet appareil, regroupés par marchand.
+ *  Les formes des noms sont calculées UNE fois : sur 139 acteurs, comparer des
+ *  formes déjà prêtes au lieu de les refabriquer à chaque fois change tout. */
+function clicsEtPartages() {
+  const par = new Map();
+  for (const a of lireActions()) {
+    const cle = `${a.marchand || '?'}\u0000${a.source || '?'}`;
+    let e = par.get(cle);
+    if (!e) {
+      e = { fa: formesDe(a.marchand), fb: formesDe(a.source), clics: 0, partages: 0 };
+      par.set(cle, e);
+    }
+    if (a.type === 'clic') e.clics += 1; else e.partages += 1;
+  }
+  return [...par.values()];
+}
+
+/** Ce qu'un acteur a reçu comme clics et partages. On regarde le marchand ET la
+ *  source : selon l'offre, l'un ou l'autre porte le nom de l'enseigne. */
+function actionsDe(fa, uniques) {
+  let clics = 0, partages = 0;
+  for (const e of uniques) {
+    if (memeFormes(fa, e.fa) || memeFormes(fa, e.fb)) { clics += e.clics; partages += e.partages; }
+  }
+  return { clics, partages };
+}
+
+/** La FICHE d'un acteur — les informations de siège, INFORMATIVES.
+ *  Règle de B (08/10/2026) : elles doivent apparaître dans la base, donc ici et
+ *  dans l'export ; elles ne doivent jamais servir au programme. On les affiche
+ *  donc pour ce qu'elles sont : de la documentation, sous le nom de l'acteur,
+ *  et seulement quand elles existent vraiment. Rien de « n/d », rien de vide. */
+function ficheInfo(a) {
+  const lignes = [
+    ['Adresse', a.adresse], ['Téléphone', a.telephone], ['E-mail', a.email],
+    ['CA indicatif', a.ca], ['Actionnariat', a.actionnariat],
+    ['Positionnement', a.positionnement], ['Segment', a.segment],
+    ['Distribution', a.distribution], ['Remarques', a.remarques],
+  ].filter(([, v]) => v && String(v).trim() && String(v).trim().toLowerCase() !== 'n/d');
+  if (!lignes.length) return '';
+  return `<dl class="fiche-info">${lignes.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join('')}</dl>`;
+}
+
+function dessinerMarche() {
+  const zoneCompteurs = document.getElementById('mMarcheCompteurs');
+  const zone = document.getElementById('mMarche');
+  const zonePlan = document.getElementById('mMarchePlan');
+  if (!marche || !marche.acteurs) {
+    zoneCompteurs.innerHTML = '';
+    zone.innerHTML = '<p class="vide">Base du marché non chargée : le fichier <b>acteurs.json</b> n’a pas répondu.</p>';
+    zonePlan.innerHTML = '';
+    return;
+  }
+  const r = liaisonActeurs(catalogue, marche);
+  const c = r.compteurs;
+  const uniques = clicsEtPartages();
+  const totalClics = uniques.reduce((n, e) => n + e.clics, 0);
+  const totalPartages = uniques.reduce((n, e) => n + e.partages, 0);
+
+  zoneCompteurs.innerHTML = [
+    [nf.format(c.acteurs), 'acteurs du marché belge'],
+    [nf.format(c.flux), 'branchés (on lit chez eux)'],
+    [nf.format(c.veille), 'en veille — pas branchés'],
+    [nf.format(c.aucun), 'pas suivis du tout'],
+    [nf.format(c.annonces), 'articles en ligne'],
+    [nf.format(totalClics), 'clics vers un marchand'],
+    [nf.format(totalPartages), 'partages'],
+  ].map(([n, lib]) => `<div class="mesure"><b>${n}</b><div class="lib">${lib}</div></div>`).join('');
+
+  // --- Les acteurs, par catégorie ----------------------------------------
+  const f = filtreMarche.trim().toLowerCase();
+  const garde = r.acteurs.filter((a) => !f
+    || a.nom.toLowerCase().includes(f)
+    || (a.categorie || '').toLowerCase().includes(f)
+    || (a.domaines || []).some((d) => d.includes(f)));
+  const parCat = {};
+  for (const a of garde) (parCat[a.categorie] = parCat[a.categorie] || []).push(a);
+  const cats = Object.entries(parCat).sort((x, y) => y[1].length - x[1].length || x[0].localeCompare(y[0]));
+
+  const etiquette = (etat) => (etat === 'flux'
+    ? '<span class="ok">branché</span>'
+    : (etat === 'veille' ? '<span style="color:var(--accent)">en veille</span>'
+      : '<span class="ko">non suivi</span>'));
+
+  zone.innerHTML = cats.length ? `${cats.map(([cat, liste]) => {
+    const flux = liste.filter((a) => a.etat === 'flux').length;
+    const veille = liste.filter((a) => a.etat === 'veille').length;
+    const annonces = liste.reduce((n, a) => n + a.annonces, 0);
+    return `
+    <details>
+      <summary><b>${esc(cat)}</b><span>${liste.length} acteur(s) ·
+        ${flux} branché(s) · ${veille} en veille · ${nf.format(annonces)} articles</span></summary>
+      <table>
+        <tr><th>Acteur</th><th>Type</th><th>Site</th><th>État</th>
+          <th class="n">Articles</th><th class="n">Clics</th><th class="n">Partages</th></tr>
+        ${liste.sort((a, b) => b.annonces - a.annonces || a.nom.localeCompare(b.nom)).map((a) => {
+          const act = actionsDe(formesDe(a.nom), uniques);
+          const liens = [...a.liaison.flux, ...a.liaison.veille].map((s) => esc(s.nom));
+          return `<tr>
+            <td><details><summary><b>${esc(a.nom)}</b></summary>${ficheInfo(a)}</details>${liens.length ? `<div style="font-size:11.5px;color:var(--doux);margin-top:3px">${liens.join(' · ')}</div>` : ''}</td>
+            <td style="font-size:12px;color:var(--doux)">${esc(a.type || '—')}</td>
+            <td style="font-size:12px">${(a.domaines || []).length ? esc((a.domaines || []).join(' / ')) : '—'}</td>
+            <td>${etiquette(a.etat)}</td>
+            <td class="n">${a.annonces ? nf.format(a.annonces) : '—'}</td>
+            <td class="n">${act.clics ? nf.format(act.clics) : '—'}</td>
+            <td class="n">${act.partages ? nf.format(act.partages) : '—'}</td></tr>`;
+        }).join('')}
+      </table>
+    </details>`;
+  }).join('')}
+  <p class="aide" style="margin-top:12px">${f
+    ? `${garde.length} acteur(s) sur ${r.acteurs.length} correspondent à « ${esc(filtreMarche)} ».`
+    : `${r.acteurs.length} acteurs · ${r.categories.length} catégories · source : ${esc(marche.source || '—')}`}</p>`
+    : '<p class="vide">Aucun acteur ne correspond à cette recherche.</p>';
+
+  // --- Le plan de régularisation ----------------------------------------
+  const veille = r.acteurs.filter((a) => a.etat === 'veille')
+    .sort((a, b) => b.annonces - a.annonces || a.nom.localeCompare(b.nom));
+  const aucun = r.acteurs.filter((a) => a.etat === 'aucun');
+  zonePlan.innerHTML = `
+    <h2 style="margin-top:0">1. À brancher pour de vrai — ${veille.length} acteur(s) en veille</h2>
+    <p class="aide">On les VOIT déjà, mais par des articles qui parlent d'eux : leurs propres
+      promotions ne sont pas lues. Les articles ci-dessous sont ceux qu'ils apportent
+      aujourd'hui. Le travail : trouver et brancher leur source réelle.</p>
+    <table>
+      <tr><th>Acteur</th><th>Catégorie</th><th>Vu par</th><th class="n">Articles</th></tr>
+      ${veille.map((a) => `<tr>
+        <td><b>${esc(a.nom)}</b><div style="font-size:11.5px;color:var(--doux)">${esc((a.domaines || []).join(' / ') || '—')}</div></td>
+        <td style="font-size:12px">${esc(a.categorie)}</td>
+        <td style="font-size:12px;color:var(--doux)">${a.liaison.veille.map((s) => esc(s.nom)).join(' · ')}</td>
+        <td class="n">${a.annonces ? nf.format(a.annonces) : '—'}</td></tr>`).join('')}
+    </table>
+
+    <h2 style="margin-top:22px">2. Pas suivis du tout — ${aucun.length} acteur(s)</h2>
+    <p class="aide">Aucune source. C'est ici qu'un site ajouté ouvre une catégorie entière.
+      Les catégories sont ordonnées par nombre d'acteurs à traiter.</p>
+    ${Object.entries(aucun.reduce((m, a) => { (m[a.categorie] = m[a.categorie] || []).push(a); return m; }, {}))
+    .sort((x, y) => y[1].length - x[1].length || x[0].localeCompare(y[0]))
+    .map(([cat, liste]) => `<details>
+      <summary><b>${esc(cat)}</b><span>${liste.length} acteur(s) à traiter</span></summary>
+      <table>
+        <tr><th>Acteur</th><th>Type</th><th>Site</th><th>Distribution</th></tr>
+        ${liste.sort((a, b) => a.nom.localeCompare(b.nom)).map((a) => `<tr>
+          <td>${esc(a.nom)}</td>
+          <td style="font-size:12px;color:var(--doux)">${esc(a.type || '—')}</td>
+          <td style="font-size:12px">${esc((a.domaines || []).join(' / ') || '—')}</td>
+          <td style="font-size:12px;color:var(--doux)">${esc(a.distribution || '—')}</td></tr>`).join('')}
+      </table>
+    </details>`).join('')}`;
+}
+
+/** L'export CSV du marché : la liste de travail, ouvrable dans Excel.
+ *  Les informations de siège y figurent (règle de B : elles DOIVENT apparaître
+ *  dans la base) et sont placées EN FIN de ligne, après tout ce qui sert à
+ *  travailler — pour qu'on ne les prenne pas pour des critères. */
+function csvMarche() {
+  const r = liaisonActeurs(catalogue, marche);
+  const uniques = clicsEtPartages();
+  const entetes = ['Acteur', 'Categorie', 'Type', 'Etat',
+    'Sources flux', 'Sources veille', 'Articles en ligne', 'Clics', 'Partages',
+    'Site', 'Domaines',
+    '--- INFORMATIF ---', 'Adresse', 'Telephone', 'Email', 'CA indicatif',
+    'Actionnariat', 'Segment', 'Distribution', 'Remarques'];
+  const cell = (v) => `"${String(v == null ? '' : v).replace(/"/g, '""')}"`;
+  const lignes = r.acteurs.map((a) => {
+    const act = actionsDe(formesDe(a.nom), uniques);
+    return [a.nom, a.categorie, a.type, a.etat,
+      a.liaison.flux.map((s) => s.nom).join(' · '), a.liaison.veille.map((s) => s.nom).join(' · '),
+      a.annonces, act.clics, act.partages,
+      a.site, (a.domaines || []).join(' / '),
+      '', a.adresse, a.telephone, a.email, a.ca, a.actionnariat, a.segment, a.distribution, a.remarques,
+    ].map(cell).join(';');
+  });
+  // BOM UTF-8 + point-virgule : ce qu'Excel attend en français.
+  return '\ufeff' + [entetes.map(cell).join(';'), ...lignes].join('\r\n');
+}
+
 function toutDessiner() {
   const r = relais();
   const complete = r.length > 0;
@@ -913,7 +1160,7 @@ function toutDessiner() {
     ? 'Relais branché : le trafic de tous les appareils remonte ici.'
     : 'Relais <b>non branché</b> : ce tableau ne montre que le trafic de cet appareil. Pour voir où l’application est efficace partout, il faut le relais.');
 
-  dessinerBord(); dessinerSources(); dessinerOrigines(); dessinerInscrits(); dessinerTrafic();
+  dessinerBord(); dessinerSources(); dessinerOrigines(); dessinerMarche(); dessinerInscrits(); dessinerTrafic();
 
   document.getElementById('mMachine').innerHTML = `<table>
     <tr><th>Fuseau</th><td>${esc(Intl.DateTimeFormat().resolvedOptions().timeZone)}</td></tr>
@@ -942,6 +1189,18 @@ function brancher() {
     telecharger(`kazendra-sauvegarde-${new Date().toISOString().slice(0, 10)}.json`,
                 JSON.stringify({ inscrits: lireRegistre(), trafic: lireTrafic() }, null, 2),
                 'application/json'));
+
+  // Le marché belge : une recherche, un export. On ne redessine QUE la liste des
+  // acteurs — inutile de refaire tout le panneau à chaque lettre tapée.
+  const champ = document.getElementById('rechercheMarche');
+  if (champ) {
+    champ.addEventListener('input', () => { filtreMarche = champ.value || ''; dessinerMarche(); });
+  }
+  const boutonCsvMarche = document.getElementById('marcheCsv');
+  if (boutonCsvMarche) {
+    boutonCsvMarche.addEventListener('click', () =>
+      telecharger(`kazendra-marche-${new Date().toISOString().slice(0, 10)}.csv`, csvMarche(), 'text/csv;charset=utf-8'));
+  }
 
   document.getElementById('nOk').addEventListener('click', async () => {
     const id = document.getElementById('nId').value.trim();
@@ -982,6 +1241,10 @@ async function ouvrir() {
     const rep = await fetch('../offres.json', { cache: 'no-store' });
     catalogue = await rep.json();
   } catch (e) { catalogue = null; }
+  try {
+    const rep = await fetch('../acteurs.json', { cache: 'no-store' });
+    marche = await rep.json();
+  } catch (e) { marche = null; }
   if (r) {
     try {
       const rep = await fetch(r, { cache: 'no-store' });

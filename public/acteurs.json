@@ -1,0 +1,2687 @@
+{
+ "version": 1,
+ "pays": "BE",
+ "source": "marche-be-2026-10-08.xlsx",
+ "genereLe": "2026-10-08T11:25:27Z",
+ "categories": [
+  "Activités Touristiques & Séjours en Belgique",
+  "Animaleries",
+  "Auto, Entretien & Pièces Détachées",
+  "Bazar, Dépannage & Petits Prix",
+  "Boissons & Terroir",
+  "Bricolage, Jardin & Aménagement Extérieur",
+  "Compagnies Aériennes",
+  "Croisières, Train & Transport de Voyageurs",
+  "E-Commerce Généraliste & Marketplaces",
+  "Grande Distribution Alimentaire",
+  "Jeux & Jouets",
+  "Jeux Vidéo & Pop Culture",
+  "Livraison de Repas & Box Cuisine",
+  "Livres, Culture & Papeterie",
+  "Meubles, Décoration & Équipement du Foyer",
+  "Mode, Chaussures & Sport",
+  "Optique & Audition",
+  "Parapharmacie, Santé & Beauté",
+  "Presse, Tests Produits & Annonces Promo",
+  "Téléphonie, Internet, Télévision & Satellite",
+  "Voyages & Touropérateurs",
+  "Électronique, Multimédia & Électroménager"
+ ],
+ "acteurs": [
+  {
+   "nom": "Ardennes-Etape",
+   "categorie": "Activités Touristiques & Séjours en Belgique",
+   "positionnement": "Leader location de gîtes et chalets dans les Ardennes, avantages partenaires",
+   "segment": "B2C",
+   "type": "Plateforme location",
+   "adresse": "Spa (à vérifier)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.ardennes-etape.be",
+   "ca": "n/d",
+   "actionnariat": "Privé belge",
+   "distribution": "100 % en ligne",
+   "remarques": "≈ 1 500 gîtes (à vérifier).",
+   "domaines": [
+    "ardennes-etape.be"
+   ],
+   "domaine": "ardennes-etape.be"
+  },
+  {
+   "nom": "Bongo & Wonderbox",
+   "categorie": "Activités Touristiques & Séjours en Belgique",
+   "positionnement": "Coffrets cadeaux d'activités, repas et séjours (BE et limitrophes)",
+   "segment": "B2C",
+   "type": "Coffrets cadeaux",
+   "adresse": "Belgique / France",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.bongo.be / www.wonderbox.be",
+   "ca": "n/d",
+   "actionnariat": "Privés",
+   "distribution": "Web + retail (GSA)",
+   "remarques": "Cadeau d'expérience.",
+   "domaines": [
+    "bongo.be",
+    "wonderbox.be"
+   ],
+   "domaine": "bongo.be"
+  },
+  {
+   "nom": "Social Deal & Outspot",
+   "categorie": "Activités Touristiques & Séjours en Belgique",
+   "positionnement": "Bons plans quotidiens -30 % à -70 % : restos, spas, hôtels, loisirs",
+   "segment": "B2C",
+   "type": "Plateforme bons plans",
+   "adresse": "Pays-Bas",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.socialdeal.be / www.outspot.be",
+   "ca": "n/d",
+   "actionnariat": "Social Deal (NL)",
+   "distribution": "100 % en ligne",
+   "remarques": "Achat groupé local.",
+   "domaines": [
+    "socialdeal.be",
+    "outspot.be"
+   ],
+   "domaine": "socialdeal.be"
+  },
+  {
+   "nom": "Ticketmaster Belgique & Eventim",
+   "categorie": "Activités Touristiques & Séjours en Belgique",
+   "positionnement": "Billetterie concerts, festivals, spectacles, parcs d'attractions (Walibi, Pairi Daiza, Plopsaland)",
+   "segment": "B2C",
+   "type": "Billetterie",
+   "adresse": "à vérifier",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.ticketmaster.be / www.eventim.be",
+   "ca": "n/d",
+   "actionnariat": "Live Nation (US) / CTS Eventim (DE)",
+   "distribution": "100 % en ligne",
+   "remarques": "Billetterie officielle majeure.",
+   "domaines": [
+    "ticketmaster.be",
+    "eventim.be"
+   ],
+   "domaine": "ticketmaster.be"
+  },
+  {
+   "nom": "VISITWALLONIA / Visit Brussels / Visit Flanders",
+   "categorie": "Activités Touristiques & Séjours en Belgique",
+   "positionnement": "Portails officiels du tourisme belge : sorties, pass musées, itinéraires",
+   "segment": "B2C (publique)",
+   "type": "Office de tourisme",
+   "adresse": "Namur / Bruxelles / Bruges",
+   "telephone": "",
+   "email": "",
+   "site": "https://visitwallonia.be / visit.brussels / www.visitflanders.com",
+   "ca": "n/d",
+   "actionnariat": "Régions (publique)",
+   "distribution": "100 % en ligne",
+   "remarques": "Sources officielles d'infos touristiques.",
+   "domaines": [
+    "visitwallonia.be",
+    "visit.brussels",
+    "visitflanders.com"
+   ],
+   "domaine": "visitwallonia.be"
+  },
+  {
+   "nom": "Maxi Zoo",
+   "categorie": "Animaleries",
+   "positionnement": "Grande chaîne européenne d'animaleries : choix vaste de marques",
+   "segment": "B2C",
+   "type": "Animalerie",
+   "adresse": "à vérifier",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.maxizoo.be (à vérifier)",
+   "ca": "n/d",
+   "actionnariat": "Fressnapf (DE) / Aveve Group",
+   "distribution": "Magasins",
+   "remarques": "Réseau en croissance.",
+   "domaines": [
+    "maxizoo.be"
+   ],
+   "domaine": "maxizoo.be"
+  },
+  {
+   "nom": "Poils et Plumes",
+   "categorie": "Animaleries",
+   "positionnement": "Alimentation naturelle et bien-être animal",
+   "segment": "B2C",
+   "type": "Animalerie spécialisée",
+   "adresse": "Belgique (à vérifier)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.poils-et-plumes.be (à vérifier)",
+   "ca": "n/d",
+   "actionnariat": "Privé belge (à vérifier)",
+   "distribution": "Magasins",
+   "remarques": "Positionnement naturel.",
+   "domaines": [
+    "poils-et-plumes.be"
+   ],
+   "domaine": "poils-et-plumes.be"
+  },
+  {
+   "nom": "Tom&Co",
+   "categorie": "Animaleries",
+   "positionnement": "Alimentation, accessoires et soins pour animaux — leader belge",
+   "segment": "B2C",
+   "type": "Animalerie (hybride)",
+   "adresse": "Belgique (à vérifier)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.tomandco.be",
+   "ca": "≈ 120 M€ (est.)",
+   "actionnariat": "Privé belge",
+   "distribution": "Magasins + e-commerce",
+   "remarques": "≈ 45 magasins.",
+   "domaines": [
+    "tomandco.be"
+   ],
+   "domaine": "tomandco.be"
+  },
+  {
+   "nom": "Zooplus.be",
+   "categorie": "Animaleries",
+   "positionnement": "E-commerce animalier : prix bas, grands conditionnements",
+   "segment": "B2C",
+   "type": "E-commerce spécialisé",
+   "adresse": "Munich (DE)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.zooplus.be",
+   "ca": "n/d (BE)",
+   "actionnariat": "Zooplus (DE)",
+   "distribution": "100 % e-commerce",
+   "remarques": "Leader online pet food Europe.",
+   "domaines": [
+    "zooplus.be"
+   ],
+   "domaine": "zooplus.be"
+  },
+  {
+   "nom": "Auto5",
+   "categorie": "Auto, Entretien & Pièces Détachées",
+   "positionnement": "Entretien auto, pneus, équipement, pièces d'usure — branche belge de Norauto",
+   "segment": "B2C",
+   "type": "Garage/centre auto",
+   "adresse": "à vérifier",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.auto5.be",
+   "ca": "n/d",
+   "actionnariat": "Ex-filiale Norauto (à vérifier)",
+   "distribution": "Magasins (ateliers)",
+   "remarques": "Réseau national d'ateliers.",
+   "domaines": [
+    "auto5.be"
+   ],
+   "domaine": "auto5.be"
+  },
+  {
+   "nom": "AutoDoc",
+   "categorie": "Auto, Entretien & Pièces Détachées",
+   "positionnement": "E-commerce de pièces auto détachées neuves à prix discount",
+   "segment": "B2C",
+   "type": "E-commerce pièces auto",
+   "adresse": "Berlin (DE)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.autodoc.be",
+   "ca": "n/d (BE)",
+   "actionnariat": "Autodoc (DE)",
+   "distribution": "100 % e-commerce",
+   "remarques": "Catalogue pièces multi-marques.",
+   "domaines": [
+    "autodoc.be"
+   ],
+   "domaine": "autodoc.be"
+  },
+  {
+   "nom": "Mister Auto",
+   "categorie": "Auto, Entretien & Pièces Détachées",
+   "positionnement": "Pièces détachées et accessoires automobiles à bas prix",
+   "segment": "B2C",
+   "type": "E-commerce pièces auto",
+   "adresse": "à vérifier",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.mister-auto.be",
+   "ca": "n/d",
+   "actionnariat": "Groupe PSB (à vérifier)",
+   "distribution": "100 % e-commerce",
+   "remarques": "Livraison rapide.",
+   "domaines": [
+    "mister-auto.be"
+   ],
+   "domaine": "mister-auto.be"
+  },
+  {
+   "nom": "Action",
+   "categorie": "Bazar, Dépannage & Petits Prix",
+   "positionnement": "Décoration, produits ménagers, essentiels quotidien à prix cassés",
+   "segment": "B2C",
+   "type": "Discount non-food",
+   "adresse": "Belgique (à vérifier)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.action.com/be",
+   "ca": "≈ 1,0 Md€ (BE, est.)",
+   "actionnariat": "Action (NL)",
+   "distribution": "Magasins",
+   "remarques": "≈ 300 magasins ; croissance rapide.",
+   "domaines": [
+    "action.com"
+   ],
+   "domaine": "action.com"
+  },
+  {
+   "nom": "Flying Tiger Copenhagen",
+   "categorie": "Bazar, Dépannage & Petits Prix",
+   "positionnement": "Gadgets créatifs, jeux, papeterie, petits objets design",
+   "segment": "B2C",
+   "type": "Retail concept",
+   "adresse": "Copenhague (DK)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.flyingtiger.com",
+   "ca": "n/d",
+   "actionnariat": "Flying Tiger Copenhagen (DK)",
+   "distribution": "Magasins",
+   "remarques": "Concept stores.",
+   "domaines": [
+    "flyingtiger.com"
+   ],
+   "domaine": "flyingtiger.com"
+  },
+  {
+   "nom": "HEMA",
+   "categorie": "Bazar, Dépannage & Petits Prix",
+   "positionnement": "Papeterie, déco, textile basique, maison, beauté — enseigne NL",
+   "segment": "B2C",
+   "type": "Retail généraliste (hybride)",
+   "adresse": "à vérifier",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.hema.be",
+   "ca": "n/d",
+   "actionnariat": "Groupe HEMA (NL)",
+   "distribution": "Magasins + e-commerce",
+   "remarques": "Présence croissante en Belgique.",
+   "domaines": [
+    "hema.be"
+   ],
+   "domaine": "hema.be"
+  },
+  {
+   "nom": "Normal",
+   "categorie": "Bazar, Dépannage & Petits Prix",
+   "positionnement": "Discount grandes marques : soins, hygiène, ménage, snacks",
+   "segment": "B2C",
+   "type": "Discount non-food",
+   "adresse": "à vérifier",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.normal.be (à vérifier)",
+   "ca": "n/d",
+   "actionnariat": "Normal A/S (DK)",
+   "distribution": "Magasins",
+   "remarques": "Ouvertures rapides en Belgique.",
+   "domaines": [
+    "normal.be"
+   ],
+   "domaine": "normal.be"
+  },
+  {
+   "nom": "Wibra",
+   "categorie": "Bazar, Dépannage & Petits Prix",
+   "positionnement": "Vêtements, produits ménagers, fournitures quotidien — discount",
+   "segment": "B2C",
+   "type": "Discount textile/ménage",
+   "adresse": "à vérifier",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.wibra.be",
+   "ca": "≈ 200 M€ (BE, est.)",
+   "actionnariat": "Groupe NL (à vérifier)",
+   "distribution": "Magasins",
+   "remarques": "≈ 80 magasins ; expansion wallonne.",
+   "domaines": [
+    "wibra.be"
+   ],
+   "domaine": "wibra.be"
+  },
+  {
+   "nom": "Zeeman",
+   "categorie": "Bazar, Dépannage & Petits Prix",
+   "positionnement": "Textile de base, linge de maison, vêtements à prix très bas",
+   "segment": "B2C",
+   "type": "Discount textile",
+   "adresse": "à vérifier",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.zeeman.com (à vérifier)",
+   "ca": "n/d",
+   "actionnariat": "Zeeman Groep (NL)",
+   "distribution": "Magasins",
+   "remarques": "Réseau dense.",
+   "domaines": [
+    "zeeman.com"
+   ],
+   "domaine": "zeeman.com"
+  },
+  {
+   "nom": "Prik&Tik",
+   "categorie": "Boissons & Terroir",
+   "positionnement": "Boissons, bières belges, bacs consignés, softs et spiritueux",
+   "segment": "B2C",
+   "type": "Drankencentrum (hybride)",
+   "adresse": "Belgique (à vérifier)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.prik-et-tik.be (à vérifier)",
+   "ca": "n/d",
+   "actionnariat": "Privé belge (à vérifier)",
+   "distribution": "Magasins + e-commerce",
+   "remarques": "Réseau de drankencentra.",
+   "domaines": [
+    "prik-et-tik.be"
+   ],
+   "domaine": "prik-et-tik.be"
+  },
+  {
+   "nom": "Aveve",
+   "categorie": "Bricolage, Jardin & Aménagement Extérieur",
+   "positionnement": "Jardinage, soins aux animaux, outillage extérieur, boulangerie maison",
+   "segment": "B2C",
+   "type": "Retail spécialisé (hybride)",
+   "adresse": "Merchtem (à vérifier)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.aveve.be",
+   "ca": "≈ 300 M€ (groupe, est.)",
+   "actionnariat": "Aveve Group (BE)",
+   "distribution": "Magasins + e-commerce",
+   "remarques": "≈ 120 points de vente (groupe, incl. Maxi Zoo).",
+   "domaines": [
+    "aveve.be"
+   ],
+   "domaine": "aveve.be"
+  },
+  {
+   "nom": "Brico",
+   "categorie": "Bricolage, Jardin & Aménagement Extérieur",
+   "positionnement": "Réseau de bricolage incontournable : outillage et aménagement",
+   "segment": "B2C",
+   "type": "Retail spécialisé",
+   "adresse": "à vérifier",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.brico.be",
+   "ca": "n/d",
+   "actionnariat": "⚠ Ex-Louis Delhaize Group",
+   "distribution": "Magasins",
+   "remarques": "⚠ Réseau en reprise après la réorganisation judiciaire LDG 2025 — à vérifier.",
+   "domaines": [
+    "brico.be"
+   ],
+   "domaine": "brico.be"
+  },
+  {
+   "nom": "BricoPlanit",
+   "categorie": "Bricolage, Jardin & Aménagement Extérieur",
+   "positionnement": "Surface géante : grands travaux, matériaux, aménagement extérieur",
+   "segment": "B2C & B2B",
+   "type": "Retail spécialisé (géant)",
+   "adresse": "à vérifier",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.bricoplanit.be (à vérifier)",
+   "ca": "n/d",
+   "actionnariat": "⚠ Ex-Louis Delhaize Group",
+   "distribution": "Magasins",
+   "remarques": "⚠ Périmètre 2025 à vérifier.",
+   "domaines": [
+    "bricoplanit.be"
+   ],
+   "domaine": "bricoplanit.be"
+  },
+  {
+   "nom": "Floralux",
+   "categorie": "Bricolage, Jardin & Aménagement Extérieur",
+   "positionnement": "Jardineries immenses : plantes, déco extérieure, équipement",
+   "segment": "B2C",
+   "type": "Retail spécialisé",
+   "adresse": "Virton (à vérifier)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.floralux.be (à vérifier)",
+   "ca": "n/d",
+   "actionnariat": "Groupe à vérifier",
+   "distribution": "Magasins",
+   "remarques": "Grandes surfaces sud du pays.",
+   "domaines": [
+    "floralux.be"
+   ],
+   "domaine": "floralux.be"
+  },
+  {
+   "nom": "Gamma",
+   "categorie": "Bricolage, Jardin & Aménagement Extérieur",
+   "positionnement": "Bricolage : site web complet, conseils, tutoriels, promos hebdo",
+   "segment": "B2C",
+   "type": "Retail spécialisé (hybride)",
+   "adresse": "Belgique (à vérifier)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.gamma.be",
+   "ca": "≈ 300 M€ (est.)",
+   "actionnariat": "Intergamma (NL)",
+   "distribution": "Magasins + e-commerce",
+   "remarques": "≈ 30 magasins.",
+   "domaines": [
+    "gamma.be"
+   ],
+   "domaine": "gamma.be"
+  },
+  {
+   "nom": "Hubo",
+   "categorie": "Bricolage, Jardin & Aménagement Extérieur",
+   "positionnement": "Bricolage répandu : remises membres et journées promotions",
+   "segment": "B2C",
+   "type": "Retail spécialisé",
+   "adresse": "Wallonie (à vérifier)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.hubo.be",
+   "ca": "n/d",
+   "actionnariat": "Reprise par groupe NL (2025, à confirmer)",
+   "distribution": "Magasins",
+   "remarques": "⚠ Ex-réseau Louis Delhaize : reprise 2025 à confirmer.",
+   "domaines": [
+    "hubo.be"
+   ],
+   "domaine": "hubo.be"
+  },
+  {
+   "nom": "Mr.Bricolage",
+   "categorie": "Bricolage, Jardin & Aménagement Extérieur",
+   "positionnement": "Magasins de proximité : dépannage, outillage, aménagement maison",
+   "segment": "B2C",
+   "type": "Retail spécialisé (franchise)",
+   "adresse": "à vérifier",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.mr-bricolage.be (à vérifier)",
+   "ca": "n/d",
+   "actionnariat": "Mr.Bricolage (FR)",
+   "distribution": "Magasins",
+   "remarques": "Réseau franchises.",
+   "domaines": [
+    "mr-bricolage.be"
+   ],
+   "domaine": "mr-bricolage.be"
+  },
+  {
+   "nom": "Oh'Green",
+   "categorie": "Bricolage, Jardin & Aménagement Extérieur",
+   "positionnement": "Grandes surfaces de jardinage, plantes, mobilier de jardin, déco",
+   "segment": "B2C",
+   "type": "Retail spécialisé",
+   "adresse": "Belgique (à vérifier)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.ohgreen.be (à vérifier)",
+   "ca": "n/d",
+   "actionnariat": "Privé belge (à vérifier)",
+   "distribution": "Magasins",
+   "remarques": "Jardineries régionales.",
+   "domaines": [
+    "ohgreen.be"
+   ],
+   "domaine": "ohgreen.be"
+  },
+  {
+   "nom": "Air France & KLM",
+   "categorie": "Compagnies Aériennes",
+   "positionnement": "Vols Belgique-monde, promos récurrentes (Oh-La-La Deals, Les Rendez-Vous)",
+   "segment": "B2C",
+   "type": "Compagnie aérienne réseau",
+   "adresse": "Paris/Amsterdam",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.airfrance.com / www.klm.com",
+   "ca": "n/d (BE)",
+   "actionnariat": "Air France-KLM (FR/NL)",
+   "distribution": "Direct + agences/OTA",
+   "remarques": "Hubs CDG/AMS accessibles en train depuis BE.",
+   "domaines": [
+    "airfrance.com",
+    "klm.com"
+   ],
+   "domaine": "airfrance.com"
+  },
+  {
+   "nom": "British Airways",
+   "categorie": "Compagnies Aériennes",
+   "positionnement": "Soldes saisonnières (BA Sale) vers UK, Amérique du Nord, Asie",
+   "segment": "B2C",
+   "type": "Compagnie aérienne réseau",
+   "adresse": "Londres (UK)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.britishairways.com",
+   "ca": "n/d (BE)",
+   "actionnariat": "IAG (UK)",
+   "distribution": "Direct + agences/OTA",
+   "remarques": "Hubs Londres.",
+   "domaines": [
+    "britishairways.com"
+   ],
+   "domaine": "britishairways.com"
+  },
+  {
+   "nom": "Brussels Airlines",
+   "categorie": "Compagnies Aériennes",
+   "positionnement": "Compagnie nationale belge (hub BRU), ventes flash régulières",
+   "segment": "B2C",
+   "type": "Compagnie aérienne réseau",
+   "adresse": "Brussels Airport, Zaventem",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.brusselsairlines.com",
+   "ca": "≈ 1,3 Md€ (est.)",
+   "actionnariat": "Lufthansa Group (DE)",
+   "distribution": "Direct + agences/OTA",
+   "remarques": "± 100 destinations Afrique/Europe/Amérique.",
+   "domaines": [
+    "brusselsairlines.com"
+   ],
+   "domaine": "brusselsairlines.com"
+  },
+  {
+   "nom": "EasyJet",
+   "categorie": "Compagnies Aériennes",
+   "positionnement": "Low-cost majeur desservant les grands aéroports européens",
+   "segment": "B2C",
+   "type": "Compagnie low-cost",
+   "adresse": "Luton (UK)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.easyjet.com",
+   "ca": "n/d (BE)",
+   "actionnariat": "EasyJet plc (UK)",
+   "distribution": "100 % direct (online)",
+   "remarques": "Ventes Big Seat Sale.",
+   "domaines": [
+    "easyjet.com"
+   ],
+   "domaine": "easyjet.com"
+  },
+  {
+   "nom": "Eurowings",
+   "categorie": "Compagnies Aériennes",
+   "positionnement": "Low-cost Lufthansa Group : connexions économiques Europe",
+   "segment": "B2C",
+   "type": "Compagnie low-cost",
+   "adresse": "Düsseldorf (DE)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.eurowings.com",
+   "ca": "n/d (BE)",
+   "actionnariat": "Lufthansa Group (DE)",
+   "distribution": "100 % direct (online)",
+   "remarques": "Départs BRU.",
+   "domaines": [
+    "eurowings.com"
+   ],
+   "domaine": "eurowings.com"
+  },
+  {
+   "nom": "Iberia",
+   "categorie": "Compagnies Aériennes",
+   "positionnement": "Promotions vers Espagne, Baléares, Canaries, Amérique latine",
+   "segment": "B2C",
+   "type": "Compagnie aérienne réseau",
+   "adresse": "Madrid (ES)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.iberia.com",
+   "ca": "n/d (BE)",
+   "actionnariat": "IAG (International Airlines Group)",
+   "distribution": "Direct + agences/OTA",
+   "remarques": "Hub Madrid.",
+   "domaines": [
+    "iberia.com"
+   ],
+   "domaine": "iberia.com"
+  },
+  {
+   "nom": "Lufthansa",
+   "categorie": "Compagnies Aériennes",
+   "positionnement": "Géant allemand reliant la Belgique au monde entier",
+   "segment": "B2C",
+   "type": "Compagnie aérienne réseau",
+   "adresse": "Francfort (DE)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.lufthansa.com",
+   "ca": "n/d (BE)",
+   "actionnariat": "Lufthansa Group (DE)",
+   "distribution": "Direct + agences/OTA",
+   "remarques": "Volonté de reprise Brussels Airlines à 100 %.",
+   "domaines": [
+    "lufthansa.com"
+   ],
+   "domaine": "lufthansa.com"
+  },
+  {
+   "nom": "Pegasus Airlines",
+   "categorie": "Compagnies Aériennes",
+   "positionnement": "Low-cost turque : Turquie et Moyen-Orient depuis Charleroi/Bruxelles",
+   "segment": "B2C",
+   "type": "Compagnie low-cost",
+   "adresse": "Istanbul (TR)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.flypgs.com",
+   "ca": "n/d (BE)",
+   "actionnariat": "Pegasus (TR)",
+   "distribution": "100 % direct (online)",
+   "remarques": "Hub Istanbul Sabiha Gökçen.",
+   "domaines": [
+    "flypgs.com"
+   ],
+   "domaine": "flypgs.com"
+  },
+  {
+   "nom": "Ryanair",
+   "categorie": "Compagnies Aériennes",
+   "positionnement": "Leader low-cost en Belgique (Charleroi + Zaventem), vols dès 15-20 €",
+   "segment": "B2C",
+   "type": "Compagnie low-cost",
+   "adresse": "Dublin (IE)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.ryanair.com",
+   "ca": "groupe ≈ 14 Md€ (FY 2025)",
+   "actionnariat": "Ryanair Holdings (IE, cotée)",
+   "distribution": "100 % direct (online)",
+   "remarques": "Hub principal : Charleroi (CRL).",
+   "domaines": [
+    "ryanair.com"
+   ],
+   "domaine": "ryanair.com"
+  },
+  {
+   "nom": "TAP Air Portugal",
+   "categorie": "Compagnies Aériennes",
+   "positionnement": "Liaisons Portugal/Brésil, Stopover gratuit Lisbonne/Porto",
+   "segment": "B2C",
+   "type": "Compagnie aérienne réseau",
+   "adresse": "Lisbonne (PT)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.flytap.com",
+   "ca": "n/d (BE)",
+   "actionnariat": "TAP Air Portugal (PT)",
+   "distribution": "Direct + agences/OTA",
+   "remarques": "Programme stopover.",
+   "domaines": [
+    "flytap.com"
+   ],
+   "domaine": "flytap.com"
+  },
+  {
+   "nom": "TUI fly Belgium",
+   "categorie": "Compagnies Aériennes",
+   "positionnement": "Compagnie charter/vacances belge (BRU, CRL, LGG, ANR, OST)",
+   "segment": "B2C",
+   "type": "Compagnie charter/vacances",
+   "adresse": "Zaventem (à vérifier)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.tuifly.be",
+   "ca": "n/d (BE)",
+   "actionnariat": "TUI Group",
+   "distribution": "Agences + direct",
+   "remarques": "Vol sec + packages TUI.",
+   "domaines": [
+    "tuifly.be"
+   ],
+   "domaine": "tuifly.be"
+  },
+  {
+   "nom": "Transavia",
+   "categorie": "Compagnies Aériennes",
+   "positionnement": "Low-cost Air France-KLM : Méditerranée, Maghreb",
+   "segment": "B2C",
+   "type": "Compagnie low-cost",
+   "adresse": "Paris/Amsterdam",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.transavia.com",
+   "ca": "n/d (BE)",
+   "actionnariat": "Air France-KLM",
+   "distribution": "100 % direct (online)",
+   "remarques": "Départs BRU/CRL/LGG.",
+   "domaines": [
+    "transavia.com"
+   ],
+   "domaine": "transavia.com"
+  },
+  {
+   "nom": "Volotea",
+   "categorie": "Compagnies Aériennes",
+   "positionnement": "Liaisons régionales directes en Europe (Charleroi, Lille)",
+   "segment": "B2C",
+   "type": "Compagnie low-cost",
+   "adresse": "Barcelone (ES)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.volotea.com",
+   "ca": "n/d (BE)",
+   "actionnariat": "Volotea (ES)",
+   "distribution": "100 % direct (online)",
+   "remarques": "Villes moyennes.",
+   "domaines": [
+    "volotea.com"
+   ],
+   "domaine": "volotea.com"
+  },
+  {
+   "nom": "Vueling",
+   "categorie": "Compagnies Aériennes",
+   "positionnement": "Low-cost IAG : Espagne, Italie, France",
+   "segment": "B2C",
+   "type": "Compagnie low-cost",
+   "adresse": "Barcelone (ES)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.vueling.com",
+   "ca": "n/d (BE)",
+   "actionnariat": "IAG (ES)",
+   "distribution": "100 % direct (online)",
+   "remarques": "Hub Barcelone.",
+   "domaines": [
+    "vueling.com"
+   ],
+   "domaine": "vueling.com"
+  },
+  {
+   "nom": "Wizz Air",
+   "categorie": "Compagnies Aériennes",
+   "positionnement": "Europe de l'Est et Moyen-Orient au départ de Charleroi",
+   "segment": "B2C",
+   "type": "Compagnie low-cost",
+   "adresse": "Budapest (HU)",
+   "telephone": "",
+   "email": "",
+   "site": "https://wizzair.com",
+   "ca": "n/d (BE)",
+   "actionnariat": "Wizz Air Holdings (HU)",
+   "distribution": "100 % direct (online)",
+   "remarques": "Wizz Discount Club.",
+   "domaines": [
+    "wizzair.com"
+   ],
+   "domaine": "wizzair.com"
+  },
+  {
+   "nom": "CroisiEurope",
+   "categorie": "Croisières, Train & Transport de Voyageurs",
+   "positionnement": "Croisières fluviales (Rhin, Danube, Seine)",
+   "segment": "B2C",
+   "type": "Compagnie fluviale",
+   "adresse": "Strasbourg (FR)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.croisieurope.travel",
+   "ca": "n/d",
+   "actionnariat": "CroisiEurope (FR)",
+   "distribution": "Agences + direct",
+   "remarques": "Leader fluvial européen.",
+   "domaines": [
+    "croisieurope.travel"
+   ],
+   "domaine": "croisieurope.travel"
+  },
+  {
+   "nom": "FlixBus & BlaBlaCar",
+   "categorie": "Croisières, Train & Transport de Voyageurs",
+   "positionnement": "Autocar longue distance et covoiturage économiques en Europe",
+   "segment": "B2C",
+   "type": "Transporteur autocar / covoiturage",
+   "adresse": "Munich (DE) / Paris (FR)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.flixbus.be / www.blablacar.be",
+   "ca": "n/d",
+   "actionnariat": "Flix (DE) / BlaBlaCar (FR)",
+   "distribution": "100 % en ligne",
+   "remarques": "Lignes depuis la Belgique.",
+   "domaines": [
+    "flixbus.be",
+    "blablacar.be"
+   ],
+   "domaine": "flixbus.be"
+  },
+  {
+   "nom": "MSC Croisières & Costa Croisières",
+   "categorie": "Croisières, Train & Transport de Voyageurs",
+   "positionnement": "Croisières maritimes, départs Belgique (Anvers, Zeebruges) ou ports voisins",
+   "segment": "B2C",
+   "type": "Compagnie de croisière",
+   "adresse": "Genève (CH)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.msccroisieres.be / www.costacroisieres.be",
+   "ca": "n/d (BE)",
+   "actionnariat": "MSC (CH) / Carnival Corp (US)",
+   "distribution": "Agences + direct",
+   "remarques": "Homeports Anvers/Zeebruges.",
+   "domaines": [
+    "msccroisieres.be",
+    "costacroisieres.be"
+   ],
+   "domaine": "msccroisieres.be"
+  },
+  {
+   "nom": "SNCB / SNCB International",
+   "categorie": "Croisières, Train & Transport de Voyageurs",
+   "positionnement": "Opérateur ferroviaire national + trains grande vitesse (Eurostar, TGV, ICE)",
+   "segment": "B2C & B2B",
+   "type": "Opérateur ferroviaire",
+   "adresse": "Rue de France 85, 1070 Bruxelles",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.belgiantrain.be / www.sncb-international.com",
+   "ca": "n/d",
+   "actionnariat": "SNCB (société publique)",
+   "distribution": "Gares + web/app",
+   "remarques": "Billetterie internationale.",
+   "domaines": [
+    "belgiantrain.be",
+    "sncb-international.com"
+   ],
+   "domaine": "belgiantrain.be"
+  },
+  {
+   "nom": "Amazon Belgique (.com.be)",
+   "categorie": "E-Commerce Généraliste & Marketplaces",
+   "positionnement": "Catalogue mondial, tarifs compétitifs, livraison Prime",
+   "segment": "B2C",
+   "type": "Marketplace",
+   "adresse": "à vérifier",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.amazon.com.be",
+   "ca": "n/d",
+   "actionnariat": "Amazon (US)",
+   "distribution": "100 % e-commerce",
+   "remarques": "Site belge lancé en octobre 2022.",
+   "domaines": [
+    "amazon.com.be"
+   ],
+   "domaine": "amazon.com.be"
+  },
+  {
+   "nom": "Bol.com",
+   "categorie": "E-Commerce Généraliste & Marketplaces",
+   "positionnement": "Plateforme e-commerce leader en Belgique, millions de références",
+   "segment": "B2C (+B2B marketplace)",
+   "type": "Marketplace",
+   "adresse": "Papendorpseweg 100, 3528 BJ Utrecht (NL)",
+   "telephone": "",
+   "email": "klantenservice@bol.com",
+   "site": "https://www.bol.com/be",
+   "ca": "n/d (BE) - groupe ≈ 5,5 Md€ (2024)",
+   "actionnariat": "Ahold Delhaize (NL)",
+   "distribution": "100 % e-commerce + points relais",
+   "remarques": "Acteur dominant e-commerce BE ; +13,6 M clients (groupe).",
+   "domaines": [
+    "bol.com"
+   ],
+   "domaine": "bol.com"
+  },
+  {
+   "nom": "Veepee / Zalando Lounge",
+   "categorie": "E-Commerce Généraliste & Marketplaces",
+   "positionnement": "Ventes privées en ligne : grandes marques jusqu'à -70 %",
+   "segment": "B2C",
+   "type": "Ventes privées (e-commerce)",
+   "adresse": "Paris (FR) / Berlin (DE)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.veepee.com / www.zalandolounge.be",
+   "ca": "n/d",
+   "actionnariat": "Veepee (FR) / Zalando (DE)",
+   "distribution": "100 % e-commerce",
+   "remarques": "Ventes événementielles à durée limitée.",
+   "domaines": [
+    "veepee.com",
+    "zalandolounge.be"
+   ],
+   "domaine": "veepee.com"
+  },
+  {
+   "nom": "Zalando",
+   "categorie": "E-Commerce Généraliste & Marketplaces",
+   "positionnement": "Mode, chaussures, prêt-à-porter, retours gratuits",
+   "segment": "B2C",
+   "type": "Marketplace mode",
+   "adresse": "Valeska-Gert-Straße 5, 10243 Berlin (DE)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.zalando.be",
+   "ca": "n/d (BE) - groupe ≈ 10 Md€ (2024)",
+   "actionnariat": "Zalando SE (cotée)",
+   "distribution": "100 % e-commerce",
+   "remarques": "Leader mode en ligne en Belgique.",
+   "domaines": [
+    "zalando.be"
+   ],
+   "domaine": "zalando.be"
+  },
+  {
+   "nom": "ALDI",
+   "categorie": "Grande Distribution Alimentaire",
+   "positionnement": "Pionnier du hard-discount : essentiels qualité à bas prix, arrivages hebdo",
+   "segment": "B2C",
+   "type": "Hard-discount",
+   "adresse": "Belgique (à vérifier)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.aldi.be",
+   "ca": "≈ 2,7 Md€ (est.)",
+   "actionnariat": "ALDI Einkauf SE (DE)",
+   "distribution": "Magasins physiques",
+   "remarques": "≈ 450 magasins.",
+   "domaines": [
+    "aldi.be"
+   ],
+   "domaine": "aldi.be"
+  },
+  {
+   "nom": "Albert Heijn",
+   "categorie": "Grande Distribution Alimentaire",
+   "positionnement": "Chaîne NL très populaire, promotions agressives (1+1 gratuit)",
+   "segment": "B2C",
+   "type": "Distributeur (hybride)",
+   "adresse": "Opéré depuis Zaandam (NL)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.ah.be",
+   "ca": "≈ 1,0 Md€ (BE, est.)",
+   "actionnariat": "Ahold Delhaize (NL)",
+   "distribution": "Magasins + e-commerce",
+   "remarques": "≈ 80 magasins, cible 100+.",
+   "domaines": [
+    "ah.be"
+   ],
+   "domaine": "ah.be"
+  },
+  {
+   "nom": "Carrefour Belgique",
+   "categorie": "Grande Distribution Alimentaire",
+   "positionnement": "Hypermarchés, Market, Express : grand choix alimentaire + e-commerce",
+   "segment": "B2C",
+   "type": "Distributeur (hybride)",
+   "adresse": "Boulevard de l'Humanité 17, 1070 Anderlecht",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.carrefour.be",
+   "ca": "≈ 3,5 Md€ (2023)",
+   "actionnariat": "Carrefour SA (FR)",
+   "distribution": "Magasins + e-commerce",
+   "remarques": "Réseau mixte propre + franchises.",
+   "domaines": [
+    "carrefour.be"
+   ],
+   "domaine": "carrefour.be"
+  },
+  {
+   "nom": "Colruyt Group",
+   "categorie": "Grande Distribution Alimentaire",
+   "positionnement": "Leader grande distribution BE : Colruyt (Meilleurs Prix), OKay, Bio-Planet, Collect&Go",
+   "segment": "B2C + B2B",
+   "type": "Distributeur (hybride)",
+   "adresse": "Edingensesteenweg 196, 1500 Halle",
+   "telephone": "+32 2 360 10 40",
+   "email": "",
+   "site": "https://www.colruytgroup.be",
+   "ca": "≈ 10,6 Md€ (groupe, FY 2025/26)",
+   "actionnariat": "Famille Colruyt ~67 %, cotée Euronext (COLR)",
+   "distribution": "Magasins + e-commerce",
+   "remarques": "N°1 food retail BE ; enseignes aussi : DreamLand, Panos, DATS 24, Jims, Newpharma, Zeb.",
+   "domaines": [
+    "colruytgroup.be"
+   ],
+   "domaine": "colruytgroup.be"
+  },
+  {
+   "nom": "Delhaize",
+   "categorie": "Grande Distribution Alimentaire",
+   "positionnement": "Large assortiment qualité, bio, frais + livraison à domicile",
+   "segment": "B2C",
+   "type": "Distributeur (hybride)",
+   "adresse": "Brusselsesteenweg 347, 1730 Asse",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.delhaize.be",
+   "ca": "≈ 5,5 Md€ (2025)",
+   "actionnariat": "Ahold Delhaize (NL)",
+   "distribution": "Magasins + e-commerce",
+   "remarques": "100 % franchisé depuis 2024 (128 magasins convertis).",
+   "domaines": [
+    "delhaize.be"
+   ],
+   "domaine": "delhaize.be"
+  },
+  {
+   "nom": "Intermarché",
+   "categorie": "Grande Distribution Alimentaire",
+   "positionnement": "En forte expansion : prix abordables, frais, proximité",
+   "segment": "B2C",
+   "type": "Supermarchés (franchise)",
+   "adresse": "à vérifier",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.intermarche.be",
+   "ca": "≈ 0,5 Md€ (est.)",
+   "actionnariat": "Les Mousquetaires (FR)",
+   "distribution": "Magasins + drive",
+   "remarques": "≈ 120 magasins (franchisés indépendants).",
+   "domaines": [
+    "intermarche.be"
+   ],
+   "domaine": "intermarche.be"
+  },
+  {
+   "nom": "Lidl",
+   "categorie": "Grande Distribution Alimentaire",
+   "positionnement": "Hard-discount axé frais, MDD compétitives, e-shop non-alimentaire",
+   "segment": "B2C",
+   "type": "Hard-discount",
+   "adresse": "Bruxelles (à vérifier)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.lidl.be",
+   "ca": "≈ 3,0 Md€ (est.)",
+   "actionnariat": "Schwarz Gruppe (DE)",
+   "distribution": "Magasins + e-commerce",
+   "remarques": "≈ 300 magasins.",
+   "domaines": [
+    "lidl.be"
+   ],
+   "domaine": "lidl.be"
+  },
+  {
+   "nom": "DreamLand",
+   "categorie": "Jeux & Jouets",
+   "positionnement": "Jouets, jeux d'extérieur et de société au meilleur prix",
+   "segment": "B2C",
+   "type": "Retail spécialisé (hybride)",
+   "adresse": "Halle (groupe Colruyt)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.dreamland.be",
+   "ca": "n/d",
+   "actionnariat": "Colruyt Group (participation)",
+   "distribution": "Magasins + e-commerce",
+   "remarques": "≈ 40 magasins ; DreamBabies pour la puériculture.",
+   "domaines": [
+    "dreamland.be"
+   ],
+   "domaine": "dreamland.be"
+  },
+  {
+   "nom": "Fox & Compagnie",
+   "categorie": "Jeux & Jouets",
+   "positionnement": "Jeux de société, jeux éducatifs, jouets durables en bois",
+   "segment": "B2C",
+   "type": "Retail spécialisé",
+   "adresse": "Belgique (à vérifier)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.foxcompagnie.be (à vérifier)",
+   "ca": "n/d",
+   "actionnariat": "Privé belge (à vérifier)",
+   "distribution": "Magasins + e-commerce",
+   "remarques": "Positionnement durable/éducatif.",
+   "domaines": [
+    "foxcompagnie.be"
+   ],
+   "domaine": "foxcompagnie.be"
+  },
+  {
+   "nom": "JouéClub",
+   "categorie": "Jeux & Jouets",
+   "positionnement": "Magasins spécialisés gérés par des passionnés, nouveautés et exclusivités",
+   "segment": "B2C",
+   "type": "Retail spécialisé (franchise)",
+   "adresse": "à vérifier",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.joueclub.be (à vérifier)",
+   "ca": "n/d",
+   "actionnariat": "JouéClub (FR, franchise)",
+   "distribution": "Magasins + e-commerce",
+   "remarques": "Réseau de franchisés.",
+   "domaines": [
+    "joueclub.be"
+   ],
+   "domaine": "joueclub.be"
+  },
+  {
+   "nom": "King Jouet (ex-Maxi Toys)",
+   "categorie": "Jeux & Jouets",
+   "positionnement": "Catalogue complet jouets pour tous les âges, magasin + web",
+   "segment": "B2C",
+   "type": "Retail spécialisé (hybride)",
+   "adresse": "à vérifier",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.king-jouet.be (à vérifier)",
+   "ca": "n/d",
+   "actionnariat": "Groupe à vérifier",
+   "distribution": "Magasins + e-commerce",
+   "remarques": "⚠ Reprise de l'ancien réseau Maxi Toys Belgique.",
+   "domaines": [
+    "king-jouet.be"
+   ],
+   "domaine": "king-jouet.be"
+  },
+  {
+   "nom": "ToyChamp",
+   "categorie": "Jeux & Jouets",
+   "positionnement": "Magasins d'expérience : immense choix de jouets et espaces de jeu",
+   "segment": "B2C",
+   "type": "Retail spécialisé",
+   "adresse": "Pays-Bas (à vérifier)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.toychamp.be (à vérifier)",
+   "ca": "n/d",
+   "actionnariat": "Groupe NL (à vérifier)",
+   "distribution": "Magasins + e-commerce",
+   "remarques": "Magasins d'expérience avec attractions.",
+   "domaines": [
+    "toychamp.be"
+   ],
+   "domaine": "toychamp.be"
+  },
+  {
+   "nom": "Player / PlayerOne",
+   "categorie": "Jeux Vidéo & Pop Culture",
+   "positionnement": "Retrogaming, import et éditions collectors rares",
+   "segment": "B2C",
+   "type": "Retail spécialisé + e-commerce",
+   "adresse": "Belgique (à vérifier)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.playerone.be (à vérifier)",
+   "ca": "n/d",
+   "actionnariat": "Privé belge (à vérifier)",
+   "distribution": "Magasins + e-commerce",
+   "remarques": "Cible collectionneurs.",
+   "domaines": [
+    "playerone.be"
+   ],
+   "domaine": "playerone.be"
+  },
+  {
+   "nom": "Smartoys",
+   "categorie": "Jeux Vidéo & Pop Culture",
+   "positionnement": "Jeux vidéo neufs, consoles, produits dérivés pop culture",
+   "segment": "B2C",
+   "type": "Retail spécialisé (hybride)",
+   "adresse": "Belgique (à vérifier)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.smartoys.be (à vérifier)",
+   "ca": "n/d",
+   "actionnariat": "Privé belge",
+   "distribution": "Magasins + e-commerce",
+   "remarques": "Chaîne belge spécialisée JV.",
+   "domaines": [
+    "smartoys.be"
+   ],
+   "domaine": "smartoys.be"
+  },
+  {
+   "nom": "Deliveroo",
+   "categorie": "Livraison de Repas & Box Cuisine",
+   "positionnement": "Livraison de repas de restaurants et enseignes partenaires",
+   "segment": "B2C (marketplace)",
+   "type": "Plateforme livraison",
+   "adresse": "Londres (UK)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.deliveroo.be",
+   "ca": "n/d",
+   "actionnariat": "Deliveroo plc (UK)",
+   "distribution": "100 % en ligne",
+   "remarques": "Réseau partenaires Belgique.",
+   "domaines": [
+    "deliveroo.be"
+   ],
+   "domaine": "deliveroo.be"
+  },
+  {
+   "nom": "HelloFresh",
+   "categorie": "Livraison de Repas & Box Cuisine",
+   "positionnement": "Kits repas hebdomadaires à cuisiner soi-même (ingrédients frais prédosés)",
+   "segment": "B2C",
+   "type": "Box repas (abonnement)",
+   "adresse": "à vérifier",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.hellofresh.be",
+   "ca": "n/d (BE) - groupe ≈ 6 Md€ (est.)",
+   "actionnariat": "HelloFresh (NL/DE)",
+   "distribution": "Livraison à domicile",
+   "remarques": "Modèle abonnement flexible.",
+   "domaines": [
+    "hellofresh.be"
+   ],
+   "domaine": "hellofresh.be"
+  },
+  {
+   "nom": "Marley Spoon",
+   "categorie": "Livraison de Repas & Box Cuisine",
+   "positionnement": "Box repas : recettes variées, ingrédients frais livrés",
+   "segment": "B2C",
+   "type": "Box repas (abonnement)",
+   "adresse": "Berlin (DE)",
+   "telephone": "",
+   "email": "",
+   "site": "https://marleyspoon.be (à vérifier)",
+   "ca": "n/d",
+   "actionnariat": "Marley Spoon (DE)",
+   "distribution": "Livraison à domicile",
+   "remarques": "Alternative premium box repas.",
+   "domaines": [
+    "marleyspoon.be"
+   ],
+   "domaine": "marleyspoon.be"
+  },
+  {
+   "nom": "Takeaway.com (Takeaway.be)",
+   "categorie": "Livraison de Repas & Box Cuisine",
+   "positionnement": "Leader historique de la livraison de repas à domicile en Belgique",
+   "segment": "B2C (marketplace)",
+   "type": "Plateforme livraison repas",
+   "adresse": "Amsterdam (NL)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.takeaway.com",
+   "ca": "n/d (BE)",
+   "actionnariat": "Just Eat Takeaway.com (NL)",
+   "distribution": "100 % en ligne",
+   "remarques": "Applis iOS/Android.",
+   "domaines": [
+    "takeaway.com"
+   ],
+   "domaine": "takeaway.com"
+  },
+  {
+   "nom": "Uber Eats",
+   "categorie": "Livraison de Repas & Box Cuisine",
+   "positionnement": "Livraison rapide restaurants + petites courses",
+   "segment": "B2C (marketplace)",
+   "type": "Plateforme livraison",
+   "adresse": "San Francisco (US)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.ubereats.com/be",
+   "ca": "n/d",
+   "actionnariat": "Uber Technologies (US)",
+   "distribution": "100 % en ligne",
+   "remarques": "Livraison + retrait.",
+   "domaines": [
+    "ubereats.com"
+   ],
+   "domaine": "ubereats.com"
+  },
+  {
+   "nom": "Babelio / SensCritique",
+   "categorie": "Livres, Culture & Papeterie",
+   "positionnement": "Plateformes culturelles : avis, critiques et recommandations livres/films/jeux",
+   "segment": "B2C",
+   "type": "Plateforme web",
+   "adresse": "France",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.babelio.com / www.senscritique.com",
+   "ca": "n/d",
+   "actionnariat": "Privés (FR)",
+   "distribution": "100 % en ligne",
+   "remarques": "Communautés de lecteurs.",
+   "domaines": [
+    "babelio.com",
+    "senscritique.com"
+   ],
+   "domaine": "babelio.com"
+  },
+  {
+   "nom": "Club",
+   "categorie": "Livres, Culture & Papeterie",
+   "positionnement": "Librairies, papeteries et loisirs créatifs — Wallonie et Bruxelles",
+   "segment": "B2C",
+   "type": "Librairie (hybride)",
+   "adresse": "à vérifier",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.club.be (à vérifier)",
+   "ca": "n/d",
+   "actionnariat": "Privé belge",
+   "distribution": "Magasins + e-commerce",
+   "remarques": "Réseau francophone.",
+   "domaines": [
+    "club.be"
+   ],
+   "domaine": "club.be"
+  },
+  {
+   "nom": "Standaard Boekhandel",
+   "categorie": "Livres, Culture & Papeterie",
+   "positionnement": "Plus grand réseau de librairies-papeteries de Flandre et Bruxelles",
+   "segment": "B2C",
+   "type": "Librairie (hybride)",
+   "adresse": "Belgique (à vérifier)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.standaardboekhandel.be",
+   "ca": "≈ 150 M€ (est.)",
+   "actionnariat": "Groupe média belge (à vérifier)",
+   "distribution": "Magasins + e-commerce",
+   "remarques": "≈ 150 magasins.",
+   "domaines": [
+    "standaardboekhandel.be"
+   ],
+   "domaine": "standaardboekhandel.be"
+  },
+  {
+   "nom": "Casa",
+   "categorie": "Meubles, Décoration & Équipement du Foyer",
+   "positionnement": "Décoration intérieure, arts de la table, petit mobilier",
+   "segment": "B2C",
+   "type": "Retail spécialisé (hybride)",
+   "adresse": "Belgique (à vérifier)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.casa.be",
+   "ca": "n/d",
+   "actionnariat": "Blokker (NL)",
+   "distribution": "Magasins + e-commerce",
+   "remarques": "≈ 60 magasins.",
+   "domaines": [
+    "casa.be"
+   ],
+   "domaine": "casa.be"
+  },
+  {
+   "nom": "IKEA",
+   "categorie": "Meubles, Décoration & Équipement du Foyer",
+   "positionnement": "Ameublement et déco design à prix accessibles",
+   "segment": "B2C",
+   "type": "Retail spécialisé (hybride)",
+   "adresse": "Siège BE à vérifier (groupe : Älmhult, SE)",
+   "telephone": "+46 775 700 500 (groupe)",
+   "email": "",
+   "site": "https://www.ikea.com/be",
+   "ca": "≈ 800 M€ (BE, est.)",
+   "actionnariat": "Ingka Group",
+   "distribution": "Mégastores + e-commerce",
+   "remarques": "≈ 7 magasins/studios ; click & collect.",
+   "domaines": [
+    "ikea.com"
+   ],
+   "domaine": "ikea.com"
+  },
+  {
+   "nom": "Ixina",
+   "categorie": "Meubles, Décoration & Équipement du Foyer",
+   "positionnement": "Cuisinistes : projets personnalisés + électroménagers",
+   "segment": "B2C",
+   "type": "Retail spécialisé (franchise)",
+   "adresse": "à vérifier",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.ixina.be",
+   "ca": "n/d",
+   "actionnariat": "Groupe FBD (BE, à vérifier)",
+   "distribution": "Magasins (franchise)",
+   "remarques": "Réseau international.",
+   "domaines": [
+    "ixina.be"
+   ],
+   "domaine": "ixina.be"
+  },
+  {
+   "nom": "JYSK",
+   "categorie": "Meubles, Décoration & Équipement du Foyer",
+   "positionnement": "Mobilier, articles de nuit, déco scandinave à prix abordable",
+   "segment": "B2C",
+   "type": "Retail spécialisé (hybride)",
+   "adresse": "à vérifier",
+   "telephone": "",
+   "email": "",
+   "site": "https://jysk.be",
+   "ca": "n/d",
+   "actionnariat": "JYSK Group (DK)",
+   "distribution": "Magasins + e-commerce",
+   "remarques": "Réseau en expansion.",
+   "domaines": [
+    "jysk.be"
+   ],
+   "domaine": "jysk.be"
+  },
+  {
+   "nom": "Le Roi du Matelas",
+   "categorie": "Meubles, Décoration & Équipement du Foyer",
+   "positionnement": "Literie, matelas et sommiers à prix accessibles",
+   "segment": "B2C",
+   "type": "Retail spécialisé",
+   "adresse": "à vérifier",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.leroidumatelas.be (à vérifier)",
+   "ca": "n/d",
+   "actionnariat": "Privé belge (à vérifier)",
+   "distribution": "Magasins + e-commerce",
+   "remarques": "Réseau de magasins de literie.",
+   "domaines": [
+    "leroidumatelas.be"
+   ],
+   "domaine": "leroidumatelas.be"
+  },
+  {
+   "nom": "Maisons du Monde",
+   "categorie": "Meubles, Décoration & Équipement du Foyer",
+   "positionnement": "Meubles et objets de déco en plusieurs styles",
+   "segment": "B2C",
+   "type": "Retail spécialisé (hybride)",
+   "adresse": "France",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.maisonsdumonde.com",
+   "ca": "n/d",
+   "actionnariat": "Maisons du Monde (FR)",
+   "distribution": "Magasins + e-commerce",
+   "remarques": "Plusieurs magasins en Belgique.",
+   "domaines": [
+    "maisonsdumonde.com"
+   ],
+   "domaine": "maisonsdumonde.com"
+  },
+  {
+   "nom": "Sleepworld",
+   "categorie": "Meubles, Décoration & Équipement du Foyer",
+   "positionnement": "Magasins et e-commerce dédiés aux produits du sommeil",
+   "segment": "B2C",
+   "type": "Retail spécialisé (hybride)",
+   "adresse": "Belgique (à vérifier)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.sleepworld.be (à vérifier)",
+   "ca": "n/d",
+   "actionnariat": "Privé (à vérifier)",
+   "distribution": "Magasins + e-commerce",
+   "remarques": "Réseau literie.",
+   "domaines": [
+    "sleepworld.be"
+   ],
+   "domaine": "sleepworld.be"
+  },
+  {
+   "nom": "Swiss Sense",
+   "categorie": "Meubles, Décoration & Équipement du Foyer",
+   "positionnement": "Literie haute qualité, matelas et lits boxspring",
+   "segment": "B2C",
+   "type": "Retail spécialisé",
+   "adresse": "Pays-Bas",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.swiss-sense.be (à vérifier)",
+   "ca": "n/d",
+   "actionnariat": "Swiss Sense (NL)",
+   "distribution": "Magasins + e-commerce",
+   "remarques": "Positionnement premium.",
+   "domaines": [
+    "swiss-sense.be"
+   ],
+   "domaine": "swiss-sense.be"
+  },
+  {
+   "nom": "Trafic",
+   "categorie": "Meubles, Décoration & Équipement du Foyer",
+   "positionnement": "Textile, déco et aménagement à bas prix — enseigne belge généraliste",
+   "segment": "B2C",
+   "type": "Discount non-food",
+   "adresse": "Belgique (à vérifier)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.trafic.be",
+   "ca": "n/d",
+   "actionnariat": "⚠ Ex-Louis Delhaize Group (à vérifier)",
+   "distribution": "Magasins",
+   "remarques": "⚠ Appartenance à confirmer après réorganisation LDG 2025.",
+   "domaines": [
+    "trafic.be"
+   ],
+   "domaine": "trafic.be"
+  },
+  {
+   "nom": "X²O Badkamers",
+   "categorie": "Meubles, Décoration & Équipement du Foyer",
+   "positionnement": "Spécialiste belge salles de bains, sanitaires, robinetteries",
+   "segment": "B2C",
+   "type": "Retail spécialisé",
+   "adresse": "à vérifier",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.x2o.be",
+   "ca": "n/d",
+   "actionnariat": "Groupe à vérifier (BE)",
+   "distribution": "Magasins + e-commerce",
+   "remarques": "Concept salles de bains.",
+   "domaines": [
+    "x2o.be"
+   ],
+   "domaine": "x2o.be"
+  },
+  {
+   "nom": "Èggo",
+   "categorie": "Meubles, Décoration & Équipement du Foyer",
+   "positionnement": "Cuisine équipée sur-mesure et rangement personnalisé — leader belge",
+   "segment": "B2C",
+   "type": "Retail spécialisé (showrooms)",
+   "adresse": "à vérifier",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.eggo.be",
+   "ca": "n/d",
+   "actionnariat": "Privé belge",
+   "distribution": "Showrooms + rendez-vous",
+   "remarques": "Cuisine + dressings.",
+   "domaines": [
+    "eggo.be"
+   ],
+   "domaine": "eggo.be"
+  },
+  {
+   "nom": "A.S.Adventure",
+   "categorie": "Mode, Chaussures & Sport",
+   "positionnement": "Randonnée, camping, vélo, matériel outdoor de qualité",
+   "segment": "B2C",
+   "type": "Retail outdoor (hybride)",
+   "adresse": "Anvers",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.asadventure.com",
+   "ca": "≈ 440 M€ (groupe, est.)",
+   "actionnariat": "Privé (BE)",
+   "distribution": "Magasins + e-commerce",
+   "remarques": "≈ 100 magasins (groupe).",
+   "domaines": [
+    "asadventure.com"
+   ],
+   "domaine": "asadventure.com"
+  },
+  {
+   "nom": "C&A",
+   "categorie": "Mode, Chaussures & Sport",
+   "positionnement": "Vêtements accessibles et durables, adultes et enfants",
+   "segment": "B2C",
+   "type": "Retail mode (hybride)",
+   "adresse": "à vérifier",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.c-and-a.com/be",
+   "ca": "≈ 400 M€ (BE, est.)",
+   "actionnariat": "Cofra Holding (NL)",
+   "distribution": "Magasins + e-commerce",
+   "remarques": "≈ 80 magasins.",
+   "domaines": [
+    "c-and-a.com"
+   ],
+   "domaine": "c-and-a.com"
+  },
+  {
+   "nom": "Cameleon",
+   "categorie": "Mode, Chaussures & Sport",
+   "positionnement": "Comptoir privé de marques dégriffées : textile, déco, chaussures (outlet)",
+   "segment": "B2C",
+   "type": "Ventes privées/outlet",
+   "adresse": "Belgique (à vérifier)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.cameleon.be (à vérifier)",
+   "ca": "n/d",
+   "actionnariat": "Privé belge",
+   "distribution": "E-commerce + showrooms",
+   "remarques": "Ventes événementielles.",
+   "domaines": [
+    "cameleon.be"
+   ],
+   "domaine": "cameleon.be"
+  },
+  {
+   "nom": "Decathlon",
+   "categorie": "Mode, Chaussures & Sport",
+   "positionnement": "Sport abordable : marques propres (Quechua, Btwin, Kipsta), catalogue massif",
+   "segment": "B2C",
+   "type": "Retail sportif (hybride)",
+   "adresse": "Belgique (à vérifier)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.decathlon.be",
+   "ca": "≈ 450 M€ (BE, est.)",
+   "actionnariat": "Association Familiale Mulliez (FR)",
+   "distribution": "Magasins + e-commerce",
+   "remarques": "≈ 25 magasins ; leader sport.",
+   "domaines": [
+    "decathlon.be"
+   ],
+   "domaine": "decathlon.be"
+  },
+  {
+   "nom": "H&M",
+   "categorie": "Mode, Chaussures & Sport",
+   "positionnement": "Prêt-à-porter accessible pour toute la famille — suédois",
+   "segment": "B2C",
+   "type": "Retail mode (hybride)",
+   "adresse": "Stockholm (SE)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.hm.com",
+   "ca": "n/d (BE)",
+   "actionnariat": "H&M Group (SE)",
+   "distribution": "Magasins + e-commerce",
+   "remarques": "Réseau national.",
+   "domaines": [
+    "hm.com"
+   ],
+   "domaine": "hm.com"
+  },
+  {
+   "nom": "Kiabi",
+   "categorie": "Mode, Chaussures & Sport",
+   "positionnement": "Vêtements et prêt-à-porter à petits prix pour la famille",
+   "segment": "B2C",
+   "type": "Retail mode (hybride)",
+   "adresse": "France",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.kiabi.be",
+   "ca": "n/d",
+   "actionnariat": "Association Familiale Mulliez (FR)",
+   "distribution": "Magasins + e-commerce",
+   "remarques": "Présence Belgique.",
+   "domaines": [
+    "kiabi.be"
+   ],
+   "domaine": "kiabi.be"
+  },
+  {
+   "nom": "Maniet! Luxus",
+   "categorie": "Mode, Chaussures & Sport",
+   "positionnement": "Chaussures familiales et maroquinerie, e-shop développé",
+   "segment": "B2C",
+   "type": "Retail chaussures (hybride)",
+   "adresse": "Belgique (à vérifier)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.maniet.be (à vérifier)",
+   "ca": "n/d",
+   "actionnariat": "Privé belge",
+   "distribution": "Magasins + e-commerce",
+   "remarques": "Wallonie/Flandre.",
+   "domaines": [
+    "maniet.be"
+   ],
+   "domaine": "maniet.be"
+  },
+  {
+   "nom": "Primark",
+   "categorie": "Mode, Chaussures & Sport",
+   "positionnement": "Mode et accessoires à prix ultra-bas",
+   "segment": "B2C",
+   "type": "Retail mode (discount)",
+   "adresse": "Irlande",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.primark.com",
+   "ca": "n/d",
+   "actionnariat": "ABF (UK)",
+   "distribution": "Magasins",
+   "remarques": "Magasins en Flandre/Bruxelles.",
+   "domaines": [
+    "primark.com"
+   ],
+   "domaine": "primark.com"
+  },
+  {
+   "nom": "Schoenen Torfs",
+   "categorie": "Mode, Chaussures & Sport",
+   "positionnement": "Chaussures de marque et accessoires — réseau belge",
+   "segment": "B2C",
+   "type": "Retail chaussures (hybride)",
+   "adresse": "à vérifier",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.torfs.be",
+   "ca": "n/d",
+   "actionnariat": "Privé belge (familial)",
+   "distribution": "Magasins + e-commerce",
+   "remarques": "≈ 80 magasins.",
+   "domaines": [
+    "torfs.be"
+   ],
+   "domaine": "torfs.be"
+  },
+  {
+   "nom": "Sports Direct",
+   "categorie": "Mode, Chaussures & Sport",
+   "positionnement": "Déstockage : vêtements et équipements grandes marques de sport à prix réduits",
+   "segment": "B2C",
+   "type": "Retail sport/discount",
+   "adresse": "à vérifier",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.sportsdirect.com",
+   "ca": "n/d",
+   "actionnariat": "Frasers Group (UK)",
+   "distribution": "Magasins + e-commerce",
+   "remarques": "Acquisition d'enseignes (e.g. Sportscorner?).",
+   "domaines": [
+    "sportsdirect.com"
+   ],
+   "domaine": "sportsdirect.com"
+  },
+  {
+   "nom": "Zara",
+   "categorie": "Mode, Chaussures & Sport",
+   "positionnement": "Mode rapide — référence du groupe Inditex",
+   "segment": "B2C",
+   "type": "Retail mode (hybride)",
+   "adresse": "Espagne",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.zara.com",
+   "ca": "n/d (BE)",
+   "actionnariat": "Inditex (ES)",
+   "distribution": "Magasins + e-commerce",
+   "remarques": "Leader fast fashion.",
+   "domaines": [
+    "zara.com"
+   ],
+   "domaine": "zara.com"
+  },
+  {
+   "nom": "Amplifon",
+   "categorie": "Optique & Audition",
+   "positionnement": "Solutions et appareils auditifs — spécialiste mondial",
+   "segment": "B2C",
+   "type": "Audition (hybride)",
+   "adresse": "Milan (IT)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.amplifon.com/be",
+   "ca": "n/d (BE)",
+   "actionnariat": "Amplifon (IT, cotée)",
+   "distribution": "Centres + e-commerce",
+   "remarques": "Réseau mondial.",
+   "domaines": [
+    "amplifon.com"
+   ],
+   "domaine": "amplifon.com"
+  },
+  {
+   "nom": "GrandOptical",
+   "categorie": "Optique & Audition",
+   "positionnement": "Optique de précision, lunettes de soleil, verres correcteurs",
+   "segment": "B2C",
+   "type": "Optique (hybride)",
+   "adresse": "à vérifier",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.grandoptical.be (à vérifier)",
+   "ca": "n/d",
+   "actionnariat": "EssilorLuxottica",
+   "distribution": "Magasins",
+   "remarques": "Enseigne internationale.",
+   "domaines": [
+    "grandoptical.be"
+   ],
+   "domaine": "grandoptical.be"
+  },
+  {
+   "nom": "Hans Anders",
+   "categorie": "Optique & Audition",
+   "positionnement": "Opticien et audioprothésiste, formules économiques",
+   "segment": "B2C",
+   "type": "Optique & audition (hybride)",
+   "adresse": "Pays-Bas",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.hansanders.be (à vérifier)",
+   "ca": "n/d",
+   "actionnariat": "Hans Anders (NL)",
+   "distribution": "Magasins",
+   "remarques": "Prix bas.",
+   "domaines": [
+    "hansanders.be"
+   ],
+   "domaine": "hansanders.be"
+  },
+  {
+   "nom": "Lapperre",
+   "categorie": "Optique & Audition",
+   "positionnement": "Centres auditatifs et bilans de l'audition — réseau belge",
+   "segment": "B2C",
+   "type": "Audition",
+   "adresse": "Belgique (à vérifier)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.lapperre.be",
+   "ca": "n/d",
+   "actionnariat": "Privé belge (à vérifier)",
+   "distribution": "Centres",
+   "remarques": "≈ 80 centres (à vérifier).",
+   "domaines": [
+    "lapperre.be"
+   ],
+   "domaine": "lapperre.be"
+  },
+  {
+   "nom": "Pearle Opticiens",
+   "categorie": "Optique & Audition",
+   "positionnement": "Lunettes de vue, montures, lentilles de contact",
+   "segment": "B2C",
+   "type": "Optique (hybride)",
+   "adresse": "à vérifier",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.pearle.be",
+   "ca": "n/d",
+   "actionnariat": "GrandVision (EssilorLuxottica)",
+   "distribution": "Magasins",
+   "remarques": "Réseau national.",
+   "domaines": [
+    "pearle.be"
+   ],
+   "domaine": "pearle.be"
+  },
+  {
+   "nom": "Di",
+   "categorie": "Parapharmacie, Santé & Beauté",
+   "positionnement": "Maquillage, parapharmacie, soins du corps — chaîne belge",
+   "segment": "B2C",
+   "type": "Parfumerie value",
+   "adresse": "Belgique (à vérifier)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.di.be",
+   "ca": "≈ 80 M€ (est.)",
+   "actionnariat": "Privé belge",
+   "distribution": "Magasins",
+   "remarques": "≈ 110 magasins.",
+   "domaines": [
+    "di.be"
+   ],
+   "domaine": "di.be"
+  },
+  {
+   "nom": "Farmaline",
+   "categorie": "Parapharmacie, Santé & Beauté",
+   "positionnement": "Vente en ligne : soins, produits de santé, cosmétiques",
+   "segment": "B2C",
+   "type": "E-commerce pharma",
+   "adresse": "Belgique (à vérifier)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.farmaline.be",
+   "ca": "n/d",
+   "actionnariat": "Privé belge (à vérifier)",
+   "distribution": "100 % e-commerce",
+   "remarques": "Acteur majeur online BE.",
+   "domaines": [
+    "farmaline.be"
+   ],
+   "domaine": "farmaline.be"
+  },
+  {
+   "nom": "ICI PARIS XL",
+   "categorie": "Parapharmacie, Santé & Beauté",
+   "positionnement": "Parfumerie sélective : cosmétiques de luxe, parfums, remises web",
+   "segment": "B2C",
+   "type": "Parfumerie (hybride)",
+   "adresse": "à vérifier",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.iciparisxl.be",
+   "ca": "n/d",
+   "actionnariat": "Groupe NL (à vérifier)",
+   "distribution": "Magasins + e-commerce",
+   "remarques": "≈ 50 magasins.",
+   "domaines": [
+    "iciparisxl.be"
+   ],
+   "domaine": "iciparisxl.be"
+  },
+  {
+   "nom": "Kruidvat",
+   "categorie": "Parapharmacie, Santé & Beauté",
+   "positionnement": "Droguerie discount : maquillage, soins, hygiène, offres 1+1",
+   "segment": "B2C",
+   "type": "Droguerie (hybride)",
+   "adresse": "à vérifier",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.kruidvat.be",
+   "ca": "n/d",
+   "actionnariat": "AS Watson Group (HK)",
+   "distribution": "Magasins + e-commerce",
+   "remarques": "Leader droguerie Benelux.",
+   "domaines": [
+    "kruidvat.be"
+   ],
+   "domaine": "kruidvat.be"
+  },
+  {
+   "nom": "Medi-Market",
+   "categorie": "Parapharmacie, Santé & Beauté",
+   "positionnement": "Parapharmacie discount géante et matériel médical — belge",
+   "segment": "B2C",
+   "type": "Parapharmacie discount",
+   "adresse": "Belgique (à vérifier)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.medi-market.be",
+   "ca": "n/d",
+   "actionnariat": "Privé belge",
+   "distribution": "Magasins + e-commerce",
+   "remarques": "Grands formats.",
+   "domaines": [
+    "medi-market.be"
+   ],
+   "domaine": "medi-market.be"
+  },
+  {
+   "nom": "Newpharma",
+   "categorie": "Parapharmacie, Santé & Beauté",
+   "positionnement": "Pharmacie et parapharmacie en ligne — leader belge",
+   "segment": "B2C",
+   "type": "E-commerce pharma",
+   "adresse": "Belgique (à vérifier)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.newpharma.be",
+   "ca": "n/d",
+   "actionnariat": "Colruyt Group (majoritaire)",
+   "distribution": "100 % e-commerce",
+   "remarques": "Vente en ligne de médicaments sans ordonnance.",
+   "domaines": [
+    "newpharma.be"
+   ],
+   "domaine": "newpharma.be"
+  },
+  {
+   "nom": "Trekpleister",
+   "categorie": "Parapharmacie, Santé & Beauté",
+   "positionnement": "Drogueries : santé, beauté, soins personnels",
+   "segment": "B2C",
+   "type": "Droguerie",
+   "adresse": "Pays-Bas",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.trekpleister.be (à vérifier)",
+   "ca": "n/d",
+   "actionnariat": "Groupe NL (à vérifier)",
+   "distribution": "Magasins",
+   "remarques": "Enseigne NL en Belgique.",
+   "domaines": [
+    "trekpleister.be"
+   ],
+   "domaine": "trekpleister.be"
+  },
+  {
+   "nom": "Yves Rocher",
+   "categorie": "Parapharmacie, Santé & Beauté",
+   "positionnement": "Beauté d'origine végétale à prix abordables",
+   "segment": "B2C",
+   "type": "Cosmétique (hybride)",
+   "adresse": "France",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.yves-rocher.be",
+   "ca": "n/d",
+   "actionnariat": "Groupe Yves Rocher (FR)",
+   "distribution": "Magasins + e-commerce",
+   "remarques": "Réseau de boutiques.",
+   "domaines": [
+    "yves-rocher.be"
+   ],
+   "domaine": "yves-rocher.be"
+  },
+  {
+   "nom": "Clubic",
+   "categorie": "Presse, Tests Produits & Annonces Promo",
+   "positionnement": "Actualité informatique, logiciels, tests matériel détaillés",
+   "segment": "B2C",
+   "type": "Média web",
+   "adresse": "France",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.clubic.com",
+   "ca": "n/d",
+   "actionnariat": "Groupe Fiba (FR)",
+   "distribution": "100 % en ligne",
+   "remarques": "Média tech francophone.",
+   "domaines": [
+    "clubic.com"
+   ],
+   "domaine": "clubic.com"
+  },
+  {
+   "nom": "Dealabs",
+   "categorie": "Presse, Tests Produits & Annonces Promo",
+   "positionnement": "Plateforme communautaire : promos, codes de réduction, erreurs de prix",
+   "segment": "B2C",
+   "type": "Plateforme communautaire",
+   "adresse": "à vérifier",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.dealabs.com",
+   "ca": "n/d",
+   "actionnariat": "Pepper.com (US)",
+   "distribution": "100 % en ligne",
+   "remarques": "Communauté très active en Belgique.",
+   "domaines": [
+    "dealabs.com"
+   ],
+   "domaine": "dealabs.com"
+  },
+  {
+   "nom": "Frandroid / 01net",
+   "categorie": "Presse, Tests Produits & Annonces Promo",
+   "positionnement": "Actualité technologique, mobilité, bons plans",
+   "segment": "B2C",
+   "type": "Média web",
+   "adresse": "France",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.frandroid.com / www.01net.com",
+   "ca": "n/d",
+   "actionnariat": "Groupe Humanoid / Reworld (FR)",
+   "distribution": "100 % en ligne",
+   "remarques": "Rubriques bons plans.",
+   "domaines": [
+    "frandroid.com",
+    "01net.com"
+   ],
+   "domaine": "frandroid.com"
+  },
+  {
+   "nom": "Les Numériques",
+   "categorie": "Presse, Tests Produits & Annonces Promo",
+   "positionnement": "Tests indépendants high-tech, électroménager, guides d'achat",
+   "segment": "B2C",
+   "type": "Média web",
+   "adresse": "Paris (FR)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.lesnumeriques.com",
+   "ca": "n/d",
+   "actionnariat": "Privé (FR)",
+   "distribution": "100 % en ligne",
+   "remarques": "Laboratoire de tests.",
+   "domaines": [
+    "lesnumeriques.com"
+   ],
+   "domaine": "lesnumeriques.com"
+  },
+  {
+   "nom": "RTL info & Sudinfo",
+   "categorie": "Presse, Tests Produits & Annonces Promo",
+   "positionnement": "Presse nationale : tendances conso, sécurité, technologie",
+   "segment": "B2C",
+   "type": "Média (presse/web)",
+   "adresse": "Bruxelles",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.rtl.be / www.sudinfo.be",
+   "ca": "n/d",
+   "actionnariat": "DPG Media / Groupe Rossel",
+   "distribution": "Web + print + TV/radio",
+   "remarques": "Rubriques conso & tech.",
+   "domaines": [
+    "rtl.be",
+    "sudinfo.be"
+   ],
+   "domaine": "rtl.be"
+  },
+  {
+   "nom": "Test-Achats",
+   "categorie": "Presse, Tests Produits & Annonces Promo",
+   "positionnement": "Organisation de consommateurs : comparatifs de prix, alertes promos, tests produits",
+   "segment": "B2C (asbl)",
+   "type": "Média/association consommateurs",
+   "adresse": "Bruxelles",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.test-achats.be",
+   "ca": "n/d",
+   "actionnariat": "ASBL indépendante",
+   "distribution": "Web + magazine",
+   "remarques": "Influence forte sur le marché belge.",
+   "domaines": [
+    "test-achats.be"
+   ],
+   "domaine": "test-achats.be"
+  },
+  {
+   "nom": "BASE",
+   "categorie": "Téléphonie, Internet, Télévision & Satellite",
+   "positionnement": "Forfaits mobiles, internet et offres TV",
+   "segment": "B2C",
+   "type": "Marque (MVNO/filiale)",
+   "adresse": "Malines (via Telenet)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.base.be",
+   "ca": "n/d",
+   "actionnariat": "Marque de Telenet Group",
+   "distribution": "E-commerce + retail partenaires",
+   "remarques": "⚠ Marque du groupe Telenet.",
+   "domaines": [
+    "base.be"
+   ],
+   "domaine": "base.be"
+  },
+  {
+   "nom": "DIGI Belgique",
+   "categorie": "Téléphonie, Internet, Télévision & Satellite",
+   "positionnement": "Services mobile et fixe sur le marché belge",
+   "segment": "B2C",
+   "type": "Opérateur télécom",
+   "adresse": "Bruxelles (à vérifier)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.digi.be",
+   "ca": "n/d",
+   "actionnariat": "DIGI Communications (RO)",
+   "distribution": "Boutiques + e-commerce",
+   "remarques": "Nouvel entrant (arrivée récente sur le marché belge).",
+   "domaines": [
+    "digi.be"
+   ],
+   "domaine": "digi.be"
+  },
+  {
+   "nom": "Hey!",
+   "categorie": "Téléphonie, Internet, Télévision & Satellite",
+   "positionnement": "Opérateur 100 % en ligne : forfaits mobiles et abonnements internet",
+   "segment": "B2C",
+   "type": "Marque digitale low-cost",
+   "adresse": "Bruxelles (via Orange)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.hey.be",
+   "ca": "n/d",
+   "actionnariat": "Marque d'Orange Belgique",
+   "distribution": "100 % en ligne",
+   "remarques": "⚠ Marque low-cost d'Orange.",
+   "domaines": [
+    "hey.be"
+   ],
+   "domaine": "hey.be"
+  },
+  {
+   "nom": "Mobile Vikings",
+   "categorie": "Téléphonie, Internet, Télévision & Satellite",
+   "positionnement": "Opérateur numérique : forfaits mobile et internet fixe",
+   "segment": "B2C",
+   "type": "Opérateur digital (MVNO)",
+   "adresse": "Belgique (à vérifier)",
+   "telephone": "",
+   "email": "",
+   "site": "https://mobilevikings.be",
+   "ca": "n/d",
+   "actionnariat": "DPG Media",
+   "distribution": "100 % en ligne",
+   "remarques": "Community-based, offres flexibles.",
+   "domaines": [
+    "mobilevikings.be"
+   ],
+   "domaine": "mobilevikings.be"
+  },
+  {
+   "nom": "Orange Belgique",
+   "categorie": "Téléphonie, Internet, Télévision & Satellite",
+   "positionnement": "Téléphonie mobile, internet fixe et abonnements TV",
+   "segment": "B2C & B2B",
+   "type": "Opérateur télécom",
+   "adresse": "Avenue du Bourget 3, 1130 Bruxelles (à vérifier)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.orange.be",
+   "ca": "≈ 1,5 Md€ (2024, entité combinée)",
+   "actionnariat": "Orange SA (FR), cotée Euronext (OBEL)",
+   "distribution": "Boutiques + e-commerce",
+   "remarques": "Fusion Orange/VOO finalisée en 2024 ; marque low-cost Hey!.",
+   "domaines": [
+    "orange.be"
+   ],
+   "domaine": "orange.be"
+  },
+  {
+   "nom": "Proximus",
+   "categorie": "Téléphonie, Internet, Télévision & Satellite",
+   "positionnement": "Opérateur historique : téléphonie mobile, internet fixe/fibre, TV (Pickx)",
+   "segment": "B2C & B2B",
+   "type": "Opérateur télécom",
+   "adresse": "Boulevard du Roi Albert II 27, 1030 Bruxelles",
+   "telephone": "+32 2 202 41 11",
+   "email": "",
+   "site": "https://www.proximus.be",
+   "ca": "≈ 5,7 Md€ (groupe, 2024)",
+   "actionnariat": "État belge ~53 %, cotée Euronext (PROX)",
+   "distribution": "Boutiques + e-commerce",
+   "remarques": "Leader télécoms belge ; marques Scarlet et Hey! ; pôle ICT (Proximus NXT).",
+   "domaines": [
+    "proximus.be"
+   ],
+   "domaine": "proximus.be"
+  },
+  {
+   "nom": "Scarlet",
+   "categorie": "Téléphonie, Internet, Télévision & Satellite",
+   "positionnement": "Filiale à prix réduit de Proximus : internet, TV, mobile",
+   "segment": "B2C",
+   "type": "Marque (low-cost)",
+   "adresse": "Bruxelles (via Proximus)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.scarlet.be",
+   "ca": "n/d",
+   "actionnariat": "Marque de Proximus Group",
+   "distribution": "100 % en ligne",
+   "remarques": "⚠ Marque low-cost de Proximus.",
+   "domaines": [
+    "scarlet.be"
+   ],
+   "domaine": "scarlet.be"
+  },
+  {
+   "nom": "SkyDSL",
+   "categorie": "Téléphonie, Internet, Télévision & Satellite",
+   "positionnement": "Accès internet haut débit par satellite",
+   "segment": "B2C",
+   "type": "FAI satellite",
+   "adresse": "à vérifier",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.skydsl.be (à vérifier)",
+   "ca": "n/d",
+   "actionnariat": "à vérifier",
+   "distribution": "100 % en ligne",
+   "remarques": "Cible zones blanches.",
+   "domaines": [
+    "skydsl.be"
+   ],
+   "domaine": "skydsl.be"
+  },
+  {
+   "nom": "Starlink",
+   "categorie": "Téléphonie, Internet, Télévision & Satellite",
+   "positionnement": "Internet haut débit et faible latence par satellite, mondial",
+   "segment": "B2C & B2B",
+   "type": "FAI satellite (mondial)",
+   "adresse": "à vérifier",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.starlink.com",
+   "ca": "n/d",
+   "actionnariat": "SpaceX (US)",
+   "distribution": "100 % en ligne",
+   "remarques": "Disponible en Belgique ; terminal autonome.",
+   "domaines": [
+    "starlink.com"
+   ],
+   "domaine": "starlink.com"
+  },
+  {
+   "nom": "Telenet",
+   "categorie": "Téléphonie, Internet, Télévision & Satellite",
+   "positionnement": "Premier opérateur de câble (Flandre/Bruxelles) : très haut débit, TV, mobile",
+   "segment": "B2C & B2B",
+   "type": "Opérateur télécom",
+   "adresse": "Liersesteenweg 4, 2800 Malines",
+   "telephone": "+32 15 66 66 66",
+   "email": "",
+   "site": "https://www.telenet.be",
+   "ca": "≈ 2,4 Md€ (2024)",
+   "actionnariat": "Liberty Global (majoritaire), cotée Euronext (TNET)",
+   "distribution": "Boutiques + e-commerce",
+   "remarques": "Marque mobile BASE.",
+   "domaines": [
+    "telenet.be"
+   ],
+   "domaine": "telenet.be"
+  },
+  {
+   "nom": "TÉLÉSAT",
+   "categorie": "Téléphonie, Internet, Télévision & Satellite",
+   "positionnement": "Télévision par satellite pour une réception partout en Belgique",
+   "segment": "B2C",
+   "type": "Opérateur TV satellite",
+   "adresse": "Luxembourg (M7 Group)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.telesat.be (à vérifier)",
+   "ca": "n/d",
+   "actionnariat": "M7 Group / Canal+ Luxembourg",
+   "distribution": "Abonnement + installateurs",
+   "remarques": "Spécialiste TV satellite (BENELUX).",
+   "domaines": [
+    "telesat.be"
+   ],
+   "domaine": "telesat.be"
+  },
+  {
+   "nom": "VOO",
+   "categorie": "Téléphonie, Internet, Télévision & Satellite",
+   "positionnement": "Opérateur télécom et câble historique en Wallonie et à Bruxelles",
+   "segment": "B2C",
+   "type": "Marque intégrée",
+   "adresse": "Bruxelles (ex-siège à vérifier)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.voo.be",
+   "ca": "n/d",
+   "actionnariat": "Intégré à Orange Belgique",
+   "distribution": "Boutiques + e-commerce",
+   "remarques": "⚠ Fusionné au sein d'Orange Belgique depuis 2024 — ne plus contacter comme entité indépendante.",
+   "domaines": [
+    "voo.be"
+   ],
+   "domaine": "voo.be"
+  },
+  {
+   "nom": "Booking.com & Expedia",
+   "categorie": "Voyages & Touropérateurs",
+   "positionnement": "Plateformes globales : hôtels, hébergements, vols, locations de voitures",
+   "segment": "B2C (marketplace)",
+   "type": "OTA",
+   "adresse": "Amsterdam (NL) / Seattle (US)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.booking.com / www.expedia.be",
+   "ca": "n/d (BE)",
+   "actionnariat": "Booking Holdings (US) / Expedia Group (US)",
+   "distribution": "100 % en ligne",
+   "remarques": "Leaders mondiaux réservation.",
+   "domaines": [
+    "booking.com",
+    "expedia.be"
+   ],
+   "domaine": "booking.com"
+  },
+  {
+   "nom": "Connections",
+   "categorie": "Voyages & Touropérateurs",
+   "positionnement": "Billets d'avion, circuits sur mesure, voyages petits groupes",
+   "segment": "B2C",
+   "type": "Agence de voyage",
+   "adresse": "Bruxelles (à vérifier)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.connections.be",
+   "ca": "n/d",
+   "actionnariat": "Privé belge (à vérifier)",
+   "distribution": "Agences + e-commerce",
+   "remarques": "Spécialiste long-courrier.",
+   "domaines": [
+    "connections.be"
+   ],
+   "domaine": "connections.be"
+  },
+  {
+   "nom": "Corendon Belgique",
+   "categorie": "Voyages & Touropérateurs",
+   "positionnement": "Clubs vacances et séjours tout compris économiques",
+   "segment": "B2C",
+   "type": "Tour-opérateur + compagnie",
+   "adresse": "Pays-Bas/Turquie",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.corendon.be",
+   "ca": "n/d",
+   "actionnariat": "Corendon Group (NL/TR)",
+   "distribution": "E-commerce + agences",
+   "remarques": "Turquie, Grèce, Canaries.",
+   "domaines": [
+    "corendon.be"
+   ],
+   "domaine": "corendon.be"
+  },
+  {
+   "nom": "Sunweb Belgique",
+   "categorie": "Voyages & Touropérateurs",
+   "positionnement": "Vacances soleil et ski (vol + hôtel) à tarifs compétitifs",
+   "segment": "B2C",
+   "type": "Tour-opérateur",
+   "adresse": "Rotterdam (NL)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.sunweb.be",
+   "ca": "n/d",
+   "actionnariat": "Sunweb Group (NL)",
+   "distribution": "100 % en ligne",
+   "remarques": "Formules dynamiques.",
+   "domaines": [
+    "sunweb.be"
+   ],
+   "domaine": "sunweb.be"
+  },
+  {
+   "nom": "TUI Belgique (TUI.be)",
+   "categorie": "Voyages & Touropérateurs",
+   "positionnement": "Principal tour-opérateur de Belgique : tout compris, vols, circuits, dernières minutes",
+   "segment": "B2C",
+   "type": "Tour-opérateur (hybride)",
+   "adresse": "Bruxelles (à vérifier)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.tui.be",
+   "ca": "n/d (BE) - groupe TUI ≈ 23 Md€ (2024)",
+   "actionnariat": "TUI Group (DE/UK)",
+   "distribution": "Agences + e-commerce",
+   "remarques": "Marque leader vacances BE.",
+   "domaines": [
+    "tui.be"
+   ],
+   "domaine": "tui.be"
+  },
+  {
+   "nom": "Voyage Privé",
+   "categorie": "Voyages & Touropérateurs",
+   "positionnement": "Club de ventes privées voyages : hôtels 4/5* jusqu'à -70 %",
+   "segment": "B2C",
+   "type": "Ventes privées voyages",
+   "adresse": "Marseille (FR)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.voyage-prive.be",
+   "ca": "n/d",
+   "actionnariat": "Voyage Privé (FR)",
+   "distribution": "100 % en ligne",
+   "remarques": "Ventes flash hôtels.",
+   "domaines": [
+    "voyage-prive.be"
+   ],
+   "domaine": "voyage-prive.be"
+  },
+  {
+   "nom": "Alternate.be",
+   "categorie": "Électronique, Multimédia & Électroménager",
+   "positionnement": "Composants PC, hardware, informatique, gaming",
+   "segment": "B2C",
+   "type": "E-commerce spécialisé",
+   "adresse": "Waalwijk (NL)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.alternate.be",
+   "ca": "n/d",
+   "actionnariat": "Alternate (NL)",
+   "distribution": "E-commerce",
+   "remarques": "≈ 10 M références tech.",
+   "domaines": [
+    "alternate.be"
+   ],
+   "domaine": "alternate.be"
+  },
+  {
+   "nom": "Coolblue",
+   "categorie": "Électronique, Multimédia & Électroménager",
+   "positionnement": "E-commerce : service client et livraison ultra-rapide",
+   "segment": "B2C",
+   "type": "Pure player + services",
+   "adresse": "Weena 664, 3012 CN Rotterdam (NL)",
+   "telephone": "+31 10 798 8999",
+   "email": "klantenservice@coolblue.be",
+   "site": "https://www.coolblue.be",
+   "ca": "≈ 400 M€ (BE, est.) - groupe ≈ 2,3 Md€",
+   "actionnariat": "Privée (NL)",
+   "distribution": "E-commerce + livraison/installation",
+   "remarques": "Livraison en Belgique avec installateurs propres.",
+   "domaines": [
+    "coolblue.be"
+   ],
+   "domaine": "coolblue.be"
+  },
+  {
+   "nom": "Electro Dépôt",
+   "categorie": "Électronique, Multimédia & Électroménager",
+   "positionnement": "Dépôt discount : appareils neufs grandes marques à prix cassés",
+   "segment": "B2C",
+   "type": "Discount électro",
+   "adresse": "Belgique (à vérifier)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.electrodepot.be (à vérifier)",
+   "ca": "n/d",
+   "actionnariat": "Groupe à vérifier",
+   "distribution": "Magasins + e-commerce",
+   "remarques": "Concept no-frills.",
+   "domaines": [
+    "electrodepot.be"
+   ],
+   "domaine": "electrodepot.be"
+  },
+  {
+   "nom": "Fnac",
+   "categorie": "Électronique, Multimédia & Électroménager",
+   "positionnement": "Culture, livres, gaming, high-tech en magasin et en ligne",
+   "segment": "B2C",
+   "type": "Retail spécialisé (hybride)",
+   "adresse": "Belgique (à vérifier)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.fnac.be",
+   "ca": "≈ 300 M€ (est.)",
+   "actionnariat": "Fnac Darty (FR)",
+   "distribution": "Magasins + e-commerce",
+   "remarques": "≈ 10 magasins.",
+   "domaines": [
+    "fnac.be"
+   ],
+   "domaine": "fnac.be"
+  },
+  {
+   "nom": "Krëfel",
+   "categorie": "Électronique, Multimédia & Électroménager",
+   "positionnement": "Électroménager, TV, hifi, cuisines équipées — enseigne belge historique",
+   "segment": "B2C",
+   "type": "Retail spécialisé (hybride)",
+   "adresse": "Flandre occidentale (à vérifier)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.krefel.be",
+   "ca": "≈ 150 M€ (est.)",
+   "actionnariat": "Familiale belge (à vérifier)",
+   "distribution": "Magasins + e-commerce",
+   "remarques": "≈ 30 magasins.",
+   "domaines": [
+    "krefel.be"
+   ],
+   "domaine": "krefel.be"
+  },
+  {
+   "nom": "LDLC",
+   "categorie": "Électronique, Multimédia & Électroménager",
+   "positionnement": "Matériel informatique, périphériques, PC sur mesure",
+   "segment": "B2C",
+   "type": "E-commerce + magasins",
+   "adresse": "Lyon (FR)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.ldlc.com",
+   "ca": "n/d",
+   "actionnariat": "Groupe LDLC (FR)",
+   "distribution": "E-commerce + magasins",
+   "remarques": "Assemblage PC sur mesure.",
+   "domaines": [
+    "ldlc.com"
+   ],
+   "domaine": "ldlc.com"
+  },
+  {
+   "nom": "MediaMarkt",
+   "categorie": "Électronique, Multimédia & Électroménager",
+   "positionnement": "Multimédia, gaming, électroménager, promotions régulières",
+   "segment": "B2C",
+   "type": "Retail spécialisé (omnicanal)",
+   "adresse": "Belgique (à vérifier)",
+   "telephone": "",
+   "email": "",
+   "site": "https://www.mediamarkt.be",
+   "ca": "≈ 550 M€ (est.)",
+   "actionnariat": "Ceconomy / MediaMarktSaturn (DE)",
+   "distribution": "Magasins + e-commerce",
+   "remarques": "≈ 30 magasins.",
+   "domaines": [
+    "mediamarkt.be"
+   ],
+   "domaine": "mediamarkt.be"
+  },
+  {
+   "nom": "Vanden Borre",
+   "categorie": "Électronique, Multimédia & Électroménager",
+   "positionnement": "Électroménager/multimédia, Meilleur Prix garanti (Contrat de Confiance)",
+   "segment": "B2C",
+   "type": "Retail spécialisé (hybride)",
+   "adresse": "Satenrozen 8, 2550 Kontich",
+   "telephone": "+32 2 334 00 00",
+   "email": "info@vandenborre.be",
+   "site": "https://www.vandenborre.be",
+   "ca": "≈ 450 M€ (est.)",
+   "actionnariat": "Fnac Darty (FR)",
+   "distribution": "Magasins + e-commerce",
+   "remarques": "≈ 40 magasins ; réparation et reprise.",
+   "domaines": [
+    "vandenborre.be"
+   ],
+   "domaine": "vandenborre.be"
+  }
+ ]
+}

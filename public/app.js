@@ -7,7 +7,7 @@
 import { lienAffilie, affiliationActive, MENTION_AFFILIATION_ACTIVE, MENTION_AFFILIATION_INACTIVE, siteAmazon } from './affiliation.js';
 import * as C from './compte.js';
 import { t, chargerLangue, definirLangue, traduireDOM, languesDisponibles, langue, CLE_LANGUE, locale } from './langues.js';
-import { noterVisite } from './trafic.js';
+import { noterVisite, noterAction } from './trafic.js';
 import {
   envoyerInscription, adresseValide, tableauConfigure,
   inscriptionLocale, retenirInscription, oublierInscription,
@@ -1276,7 +1276,8 @@ function carte(o) {
       <div class="bas">
         <!-- Le bouton de redirection, et SOUS lui la mise à jour de l'offre. -->
         <div class="col-envoi">
-          <a class="btn" href="${esc(lien)}" target="_blank" rel="noopener nofollow sponsored">${libelle}</a>
+          <a class="btn" href="${esc(lien)}" target="_blank" rel="noopener nofollow sponsored"
+             data-marchand="${esc(o.marchand || '')}" data-source="${esc(o.source || '')}">${libelle}</a>
           <span class="quand">${quand}</span>
         </div>
         <!-- Les DEUX ICÔNES, empilées À DROITE — demande de B : « l'icône
@@ -1331,9 +1332,41 @@ function textePartage(o, lien) {
   return o.titre + prix + '\n' + lien;
 }
 
+/** LE CLIC VERS LE MARCHAND — compté une fois, au bon endroit.
+ *
+ *  Demande de B (08/10/2026) : « d'autres statistiques qui permettent de
+ *  surveiller le trafic en temps réel ». Le nombre d'articles d'un acteur dit
+ *  ce qu'il APPORTE ; le nombre de clics dit ce qu'il INTÉRESSE. Les deux
+ *  ensemble, et seulement ensemble, disent où mettre le travail.
+ *
+ *  On écoute sur le document plutôt que de poser un gestionnaire par carte :
+ *  les cartes sont redessinées à chaque filtre, et un gestionnaire attaché à
+ *  chacune disparaîtrait avec elle. Ici, un seul écouteur, posé une fois,
+ *  qui survit à tous les redessins.
+ *
+ *  Le relevé ne retarde RIEN : la navigation part d'abord, la note s'écrit
+ *  ensuite. L'utilisateur ne doit jamais attendre une statistique. */
+document.addEventListener('click', (e) => {
+  const a = e.target && e.target.closest ? e.target.closest('article.offre a.btn') : null;
+  if (!a) return;
+  try {
+    noterAction({
+      type: 'clic',
+      marchand: a.dataset.marchand,
+      source: a.dataset.source,
+      pays: etat.pays,
+    });
+  } catch { /* une mesure ne doit jamais casser une visite */ }
+}, true);
+
 function partagerOffre(id, bouton) {
   const o = etat.offres.find((x) => String(x.id) === String(id));
   if (!o) return;
+  // Le partage se note AVANT tout le reste : que l'utilisateur passe par le pont
+  // Android, par l'API du navigateur ou par le menu de repli, c'est un partage.
+  try {
+    noterAction({ type: 'partage', marchand: o.marchand, source: o.source, pays: etat.pays });
+  } catch { /* une mesure ne doit jamais empêcher un partage */ }
   const lien = lienPartage(o);
   const texte = textePartage(o, lien);
   if (window.AndroidPartage && typeof window.AndroidPartage.partager === 'function') {
