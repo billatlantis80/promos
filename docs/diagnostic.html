@@ -55,11 +55,12 @@
   <h2>Capacités du navigateur</h2>
   <table id="capacites"></table>
 
-  <h2>Téléchargement réel depuis kazendra.com</h2>
+  <h2>Téléchargement réel depuis ce site</h2>
   <table id="reseau">
     <tr><td class="marque" id="r1m">…</td><td class="quoi">Lecture en cours</td><td class="detail" id="r1d"></td></tr>
     <tr><td class="marque" id="r2m">…</td><td class="quoi">Lecture en cours</td><td class="detail" id="r2d"></td></tr>
   </table>
+  <p class="sous" id="rurl"></p>
 
   <h2>Ton appareil</h2>
   <table id="appareil"></table>
@@ -209,6 +210,23 @@ document.getElementById('ua').innerHTML = ua.replace(/</g, '&lt;');
 function mesurer(url, quelle, cb) {
   var m = document.getElementById(quelle === 'app.js' ? 'r1m' : 'r2m');
   var d = document.getElementById(quelle === 'app.js' ? 'r1d' : 'r2d');
+  /* On AFFICHE l'adresse réellement appelée : « depuis kazendra.com » écrit en
+     dur serait faux dès que la page est ouverte ailleurs (le hub, un poste
+     local) — et un diagnostic qui nomme une mauvaise source fait chercher au
+     mauvais endroit.
+     On résout l'adresse avec un élément <a>, et NON avec `new URL()` : ce
+     constructeur n'existe pas dans Internet Explorer 11, précisément le
+     navigateur pour lequel cette page est écrite. */
+  var absolu = url;
+  try {
+    var resolveur = document.createElement('a');
+    resolveur.href = url;
+    absolu = resolveur.href;
+  } catch (e) { absolu = url; }
+  var ligneUrl = document.getElementById('rurl');
+  if (ligneUrl) {
+    ligneUrl.innerHTML = (ligneUrl.innerHTML ? ligneUrl.innerHTML + '<br>' : '') + 'Adresse mesurée : ' + absolu.replace(/</g, '&lt;');
+  }
   if (typeof XMLHttpRequest === 'undefined') { m.innerHTML = '&#10060;'; d.innerHTML = 'pas de XMLHttpRequest'; cb(false, 0, 0); return; }
   var x = new XMLHttpRequest();
   var t0 = (new Date()).getTime();
