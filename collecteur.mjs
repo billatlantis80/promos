@@ -36,6 +36,34 @@ const PUBLIER = process.argv.includes('--publier');
 const DOSSIER_PUBLIE = path.join(__dirname, 'docs');
 
 /* ------------------------------------------------------------------ *
+ *  L'IDENTIFIANT D'UNE OFFRE — l'EMPREINTE DE SON LIEN ENTIER.
+ *
+ *  Défaut corrigé le 08/10/2026, mesuré sur le catalogue réel (14 004
+ *  offres). L'identifiant était fabriqué en INVERSANT le lien, puis en gardant
+ *  les 14 premiers caractères de sa version base64. Or la chaîne inversée
+ *  commence par la FIN du lien — c'est-à-dire par le suffixe, IDENTIQUE pour
+ *  toutes les offres d'un même site (« …/amsterdam/ », « …/lessurb-6 »).
+ *  Résultat mesuré : 339 identifiants partagés par 962 offres DISTINCTES — un
+ *  favori enregistré pouvait en rouvrir une AUTRE, parfois dans un autre pays.
+ *
+ *  Allonger la troncature ne suffisait pas (à 60 caractères : encore des
+ *  centaines de collisions) : c'est l'INVERSION qui jetait ce qui distinguait
+ *  les liens, pas la longueur.
+ *
+ *  On prend donc une empreinte du lien ENTIER (SHA-1, 80 bits utiles) — le
+ *  même outil que celui qui nomme déjà les visuels (voir formatImage). Même
+ *  lien → même identifiant, donc un favori retrouve son offre d'un jour à
+ *  l'autre ; deux liens différents → deux identifiants différents.
+ *
+ *  Effet connu et assumé : les favoris enregistrés AVANT ce correctif ne
+ *  retrouvent plus leur offre. L'interface le dit déjà (« n'est plus dans la
+ *  liste du jour ») au lieu d'afficher une autre offre en silence.
+ * ------------------------------------------------------------------ */
+export function identifiant(prefixe, lien, titre) {
+  return prefixe + crypto.createHash('sha1').update(String(lien || titre)).digest('hex').slice(0, 20);
+}
+
+/* ------------------------------------------------------------------ *
  *  BUDGET DE TEMPS — une contrainte de la plateforme, pas un réglage.
  *
  *  Le planificateur tue ce script au bout de 120 s :
@@ -2844,7 +2872,7 @@ function offreDealabs(bloc, source) {
   const rem = remise(texte, prix, avant);
 
   return {
-    id: 'd' + Buffer.from((lien || titre).split('').reverse().join('')).toString('base64url').slice(0, 14),
+    id: identifiant('d', lien, titre),
     type: 'offre',
     titre: titre.slice(0, 220),
     lienMarchand: lien,
@@ -2928,7 +2956,7 @@ function offrePresse(bloc, source, familleImposee) {
   // remise en pourcentage sans prix n'a rien à faire dans la liste des offres.
   const type = prix != null ? 'offre' : 'article';
   return {
-    id: 'p' + Buffer.from((lien || titre).split('').reverse().join('')).toString('base64url').slice(0, 14),
+    id: identifiant('p', lien, titre),
     type,
     titre: titre.slice(0, 220),
     lienMarchand: lien,
@@ -3116,7 +3144,7 @@ function offresEnseigne(html, source) {
     // inchangée : un faux pourcentage est pire que pas d'offre.
     const rem = remise(texte, p.prix, p.prixAvant);
     return {
-      id: 'e' + Buffer.from((p.lien || p.titre).split('').reverse().join('')).toString('base64url').slice(0, 14),
+      id: identifiant('e', p.lien, p.titre),
       type: 'offre',
       titre: p.titre.slice(0, 220),
       lienMarchand: p.lien,
@@ -3403,7 +3431,7 @@ function offresGroupon(html, source) {
     const image = typeof imgs === 'string' ? imgs
       : (imgs && (imgs.large || imgs.medium || imgs.small)) || '';
     out.push({
-      id: 'g' + Buffer.from((lien || titre).split('').reverse().join('')).toString('base64url').slice(0, 14),
+      id: identifiant('g', lien, titre),
       type: 'offre',
       titre: titre.slice(0, 220),
       lienMarchand: lien,
@@ -3499,7 +3527,7 @@ function offresSocialDeal(html, source) {
     if (vus.has(cle)) continue;
     vus.add(cle);
     out.push({
-      id: 's' + Buffer.from(lien.split('').reverse().join('')).toString('base64url').slice(0, 14),
+      id: identifiant('s', lien, titre),
       type: 'offre',
       titre: titre.slice(0, 220),
       lienMarchand: lien,
