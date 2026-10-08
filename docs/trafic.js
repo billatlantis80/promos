@@ -90,3 +90,68 @@ export function noterVue() {
     localStorage.setItem(CLE_TRAFIC, JSON.stringify(t));
   } catch { /* rien */ }
 }
+
+/* --------------------------------------------------------------------------
+ * LES ACTIONS — un clic vers un marchand, un partage.
+ *
+ * DEMANDE DE B (08/10/2026) : « la quantité d'articles partagés, et autres
+ * statistiques qui permettent de surveiller le trafic en temps réel ».
+ *
+ * POURQUOI UN SECOND JOURNAL, ET PAS LE PREMIER. Celui des visites est borné à
+ * 2000 relevés et ne compte qu'une ouverture par session. Y verser les clics
+ * aurait fait disparaître les visites les plus anciennes au bout de quelques
+ * jours de trafic : on aurait perdu la mesure lente (d'où viennent les gens)
+ * pour la mesure rapide (ce qu'ils font). Deux journaux, deux durées.
+ *
+ * CE QU'ON N'ENREGISTRE PAS, comme pour les visites : aucune adresse IP, aucun
+ * identifiant d'appareil, aucune donnée personnelle. Le MARCHAND visé, la
+ * source, le pays consulté, l'heure. Rien qui permette de reconnaître quelqu'un
+ * — et surtout pas le contenu de ce qu'il a cherché ailleurs.
+ *
+ * LA VALEUR DE CETTE MESURE. Elle dit quels acteurs intéressent réellement les
+ * visiteurs, et lesquels ont des annonces que personne ne regarde. Sans elle,
+ * on juge un acteur au nombre d'articles qu'il apporte — ce qui ne dit rien de
+ * l'intérêt qu'on leur porte.
+ * -------------------------------------------------------------------------- */
+
+const CLE_ACTIONS = 'kazendra.actions';
+const MAX_ACTIONS = 5000;          // borne plus large : un clic est plus rare qu'une visite
+
+/** Le journal des actions de CET appareil. */
+export function lireActions() {
+  try { return JSON.parse(localStorage.getItem(CLE_ACTIONS) || '[]'); } catch { return []; }
+}
+
+/** Note un clic sortant (« clic ») ou un partage (« partage »).
+ *  Renvoie false si rien n'a pu être écrit (navigation privée, stockage plein) —
+ *  l'appelant n'a rien à en faire, mais un test peut le vérifier. */
+export function noterAction({ type, marchand, source, pays, canal } = {}) {
+  if (type !== 'clic' && type !== 'partage') return false;
+  const releve = {
+    quand: new Date().toISOString(),
+    type,
+    marchand: String(marchand || '?').slice(0, 60),
+    source: String(source || '?').slice(0, 60),
+    pays: String(pays || '?').slice(0, 8),
+  };
+  if (canal) releve.canal = String(canal).slice(0, 20);
+  try {
+    const t = lireActions();
+    t.push(releve);
+    localStorage.setItem(CLE_ACTIONS, JSON.stringify(t.length > MAX_ACTIONS ? t.slice(-MAX_ACTIONS) : t));
+  } catch { return false; }
+  return true;
+}
+
+/** Le même relevé part au relais quand il est branché — même forme que les
+ *  visites, donc rien de nouveau à écrire côté serveur le jour venu. */
+export function relayerAction(releve, relais) {
+  if (!relais || !releve) return;
+  try {
+    fetch(relais, {
+      method: 'POST', mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ type: 'action', ...releve }),
+    }).catch(() => { /* relais muet */ });
+  } catch { /* rien */ }
+}
