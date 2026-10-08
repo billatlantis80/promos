@@ -212,6 +212,21 @@ details > table tr:first-child th{padding-top:2px}
 .adr .liens a{text-decoration:none}
 .adr .liens a:hover{text-decoration:underline}
 .etat-adr{font-size:10.5px;color:var(--tres-doux);font-style:italic}
+
+/* ---------- L'encadré de note ----------
+   Libre, mais bordé : un champ qui accepte du texte doit se voir comme tel. La
+   bordure change quand il porte quelque chose, pour qu'on repère d'un coup d'œil
+   les lignes déjà annotées dans une liste de cent cinquante. */
+.note{display:flex;flex-direction:column;gap:3px;min-width:170px}
+.note textarea{
+  width:100%;background:var(--carte2);color:var(--texte);border:1px solid var(--bord);
+  border-radius:8px;padding:6px 8px;font:inherit;font-size:12px;resize:vertical;min-height:44px;
+  line-height:1.4
+}
+.note textarea::placeholder{color:var(--tres-doux);font-style:italic}
+.note textarea:focus{outline:2px solid var(--accent);outline-offset:-1px;background:var(--carte3)}
+.note textarea.rempli{border-color:rgba(235,145,45,.55)}
+.etat-note{font-size:10.5px;color:var(--tres-doux);font-style:italic}
 </style>
 </head>
 <body>
@@ -250,6 +265,7 @@ details > table tr:first-child th{padding-top:2px}
       <button class="onglet" data-vue="sources">Sources</button>
       <button class="onglet" data-vue="origines">Origines</button>
       <button class="onglet" data-vue="marche">Marché Euro</button>
+      <button class="onglet" data-vue="affiliation">Affiliation</button>
       <button class="onglet" data-vue="reglages">Réglages</button>
     </nav>
 
@@ -427,6 +443,50 @@ details > table tr:first-child th{padding-top:2px}
         </div>
       </section>
 
+      <section data-vue="affiliation">
+        <!-- L'AFFILIATION, PAYS PAR PAYS. B (08/10/2026) : « Pour chaque pays tu
+             dois m'afficher les affiliations qui sont possibles, existantes. Ça me
+             permettra d'avoir une vue claire de quelle affiliation j'ai ou pas. […]
+             s'il y a des affiliations, ils apparaissent en haut, s'il n'y en a pas
+             ils apparaissent plus bas. » -->
+        <div id="barrePays">
+          <label for="paysAffiliation">Pays consulté</label>
+          <select id="paysAffiliation"></select>
+          <span class="resume" id="resumeAffiliation"></span>
+        </div>
+
+        <div class="rub">
+          <h2>Ce que ce pays propose</h2>
+          <p class="aide">Ce que le balayage a réellement VU sur les sites de ce pays :
+            une page de programme, ou la signature d'un réseau d'affiliation dans le
+            code de la page. Trois états, et le troisième compte autant que les deux
+            autres — <b>programme trouvé</b> (mesuré, avec l'adresse qui le prouve),
+            <b>non mesuré</b> (le site a refusé la mesure : on ne sait pas), et
+            <b>aucun signe trouvé</b> (le site a répondu, on a regardé, on n'a rien vu).
+            <b>« Aucun signe » ne veut pas dire « pas d'affiliation »</b> : un programme
+            privé ne laisse aucune trace publique. C'est là qu'une demande directe au
+            commerçant a du sens.</p>
+          <div class="grille" id="mAffCompteurs"></div>
+          <div id="mAffReseaux"></div>
+        </div>
+
+        <div class="rub">
+          <h2>Les acteurs et leur affiliation</h2>
+          <p class="aide">Les programmes <b>trouvés</b> d'abord, puis ceux qu'on n'a
+            pas pu mesurer, puis ceux où rien n'a été vu. Dans chaque groupe, les
+            acteurs sont classés par ce qu'ils apportent déjà au catalogue : c'est
+            l'ordre de démarchage. La case <b>note</b> en fin de ligne est libre —
+            écris-y ce que tu veux (un contact, une démarche en cours, un lien de
+            parrainage privé) ; elle est conservée sur cet appareil et sort à l'export.</p>
+          <div class="champ" style="max-width:360px">
+            <label for="rechercheAffiliation">Chercher un acteur dans ce pays</label>
+            <input id="rechercheAffiliation" type="search" placeholder="nom de l'enseigne…" spellcheck="false">
+          </div>
+          <button class="bouton" id="affCsv">Exporter en CSV (pour Excel)</button>
+          <div id="mAffiliation"></div>
+        </div>
+      </section>
+
       <section data-vue="reglages">
         <div class="rub">
           <h2>Accès</h2>
@@ -477,6 +537,7 @@ details > table tr:first-child th{padding-top:2px}
    l'affiche, il ne la recalcule pas à sa façon. */
 import { liaisonActeurs, portesEntree, paysDuMarche, marcheDuPays,
   formesDe, memeFormes } from '../acteurs.js';
+import { paysAffiliation, affiliationsDuPays, preuvesAffiliation } from '../affiliations.js';
 import { lireActions } from '../trafic.js';
 
 const CLE_ADMIN = 'kazendra.admin';
@@ -1161,6 +1222,59 @@ function adresseActeur(a, adresses, urls) {
   return { url: '', origine: 'aucune' };
 }
 
+/* ---------- LES NOTES — un encadré libre, à la fin de chaque ligne ----------
+ * B (08/10/2026) : « Mettre à côté une case note dans lequel je peux écrire
+ * quelque chose ou toi. La même chose dans la partie marché euro, pour chaque
+ * entreprise il me faut à la fin de la ligne un encadrement note manuel. Où l'on
+ * peut déposer du feedback. »
+ *
+ * UNE SEULE RÉSERVE POUR LES DEUX ONGLETS, et c'est voulu : une note parle d'un
+ * ACTEUR, pas d'un onglet. La même enseigne notée « contact pris le 12/10 » dans
+ * le Marché Euro doit se retrouver notée dans l'Affiliation — sinon il faudrait
+ * écrire deux fois, et les deux copies finiraient par se contredire.
+ *
+ * Conservée sur CET APPAREIL, comme les adresses : le panneau publié est une
+ * page statique, il n'écrit rien côté serveur. On le dit à l'écran plutôt que de
+ * laisser croire à un enregistrement invisible.
+ */
+const CLE_NOTES = 'kazendra.notes';
+
+function lireNotes() {
+  try {
+    const n = JSON.parse(localStorage.getItem(CLE_NOTES) || '{}');
+    return n && typeof n === 'object' && !Array.isArray(n) ? n : {};
+  } catch { return {}; }
+}
+
+/** Enregistre une note. Une note vidée est RETIRÉE : garder une clé vide ferait
+ *  croire à une note existante, et l'export la porterait. */
+function ecrireNote(nom, texte) {
+  const n = lireNotes();
+  const propre = String(texte || '').trim();
+  if (propre) n[nom] = propre; else delete n[nom];
+  try { localStorage.setItem(CLE_NOTES, JSON.stringify(n)); } catch { /* plein */ }
+  return n;
+}
+
+/** L'encadré de note d'un acteur. Il est identique dans les deux onglets : on
+ *  le fabrique ici, une fois. Deux encadrés écrits séparément finiraient par ne
+ *  plus se comporter pareil — et c'est le genre d'écart qu'on ne voit pas. */
+function blocNote(nom) {
+  const v = lireNotes()[nom] || '';
+  const long = v.length > 90;
+  return `<div class="note">
+      <textarea data-note="${esc(nom)}" rows="2" spellcheck="false"
+        placeholder="note / feedback…">${esc(v)}</textarea>
+      <span class="etat-note">${v ? (long ? 'notée (' + v.length + ' car.)' : 'notée') : 'vide'}</span>
+    </div>`;
+}
+
+/* ---------- L'AFFILIATION ---------- */
+let affMesures = null;
+let paysChoisiAff = '';
+try { paysChoisiAff = localStorage.getItem('kazendra.paysAffiliation') || ''; } catch { /* privé */ }
+let filtreAffiliation = '';
+
 
 /** Les clics et partages relevés sur cet appareil, regroupés par marchand.
  *  Les formes des noms sont calculées UNE fois : sur 139 acteurs, comparer des
@@ -1390,7 +1504,8 @@ function dessinerMarche() {
       <div class="defile">
       <table>
         <tr><th>Acteur</th><th>État</th><th class="n">Articles</th>
-          <th>Informations de siège</th><th>Site</th><th>Adresse des promotions</th></tr>
+          <th>Informations de siège</th><th>Site</th><th>Adresse des promotions</th>
+          <th>Note</th></tr>
         ${k.liste.map((a) => `<tr>
           <td><b>${esc(a.nom)}</b>${a.provenance === 'application' ? ' <span class="ajout" title="Ajouté par l’application : ce site est lu, il ne figurait pas dans le tableur">ajouté</span>' : ''}
             <div style="font-size:11.5px;color:var(--doux)">${esc(a.type || '—')}</div>
@@ -1400,7 +1515,8 @@ function dessinerMarche() {
           <td class="n">${a.annonces ? nf.format(a.annonces) : '—'}</td>
           <td>${ficheInfo(a) || '<span class="vide">—</span>'}</td>
           <td>${site(a)}</td>
-          <td>${blocAdresse(a)}</td></tr>`).join('')}
+          <td>${blocAdresse(a)}</td>
+          <td>${blocNote(a.nom)}</td></tr>`).join('')}
       </table>
       </div>
     </details>`).join('')}
@@ -1458,10 +1574,11 @@ function csvMarche() {
   const uniques = clicsEtPartages();
   const adresses = lireAdresses();
   const urls = urlsDesSources(catalogue);
+  const notes = lireNotes();
   const adressePour = (a) => adresseActeur(a, adresses, urls).url;
   const entetes = ['Acteur', 'Categorie', 'Type', 'Etat',
     'Sources flux', 'Sources veille', 'Articles en ligne', 'Clics', 'Partages',
-    'Site', 'Domaines', 'Adresse des promotions',
+    'Site', 'Domaines', 'Adresse des promotions', 'Note',
     '--- INFORMATIF ---', 'Adresse', 'Telephone', 'Email', 'CA indicatif',
     'Actionnariat', 'Segment', 'Distribution', 'Remarques'];
   const cell = (v) => `"${String(v == null ? '' : v).replace(/"/g, '""')}"`;
@@ -1470,11 +1587,32 @@ function csvMarche() {
     return [a.nom, a.categorie, a.type, a.etat,
       a.liaison.flux.map((s) => s.nom).join(' · '), a.liaison.veille.map((s) => s.nom).join(' · '),
       a.annonces, act.clics, act.partages,
-      a.site, (a.domaines || []).join(' / '), adressePour(a),
+      a.site, (a.domaines || []).join(' / '), adressePour(a), notes[a.nom] || '',
       '', a.adresse, a.telephone, a.email, a.ca, a.actionnariat, a.segment, a.distribution, a.remarques,
     ].map(cell).join(';');
   });
   // BOM UTF-8 + point-virgule : ce qu'Excel attend en français.
+  return '\ufeff' + [entetes.map(cell).join(';'), ...lignes].join('\r\n');
+}
+
+/** L'export de l'affiliation : la liste de démarchage, ouvrable dans Excel.
+ *  Elle porte ce qu'on a VU (l'état et la preuve) et ce que B a écrit (la note) —
+ *  jamais une supposition. Une ligne « aucun signe » exportée telle quelle est
+ *  une invitation à demander, pas une affirmation qu'il n'y a rien. */
+function csvAffiliation() {
+  const v = affiliationsDuPays(catalogue, marche, affMesures, paysChoisiAff);
+  const notes = lireNotes();
+  const entetes = ['Acteur', 'Categorie', 'Pays', 'Etat affiliation', 'Reseaux',
+    'Preuve', 'Raison', 'Articles', 'Note',
+    '--- INFORMATIF ---', 'Adresse', 'Telephone', 'Email', 'CA indicatif', 'Site'];
+  const cell = (x) => `"${String(x == null ? '' : x).replace(/"/g, '""')}"`;
+  const lignes = v.groupes.flatMap((g) => g.liste).map((a) => [
+    a.nom, a.categorie, a.pays || '', a.affiliation.etat,
+    a.affiliation.reseaux.join(' · '),
+    preuvesAffiliation(a.affiliation).join(' · '),
+    a.affiliation.raison || '', a.citations, notes[a.nom] || '',
+    '', a.adresse, a.telephone, a.email, a.ca, a.site,
+  ].map(cell).join(';'));
   return '\ufeff' + [entetes.map(cell).join(';'), ...lignes].join('\r\n');
 }
 
@@ -1505,6 +1643,115 @@ function jsonAdresses() {
   }, null, 2);
 }
 
+/* ---------- L'ONGLET AFFILIATION ----------
+ * B (08/10/2026) : « une vue claire de quelle affiliation j'ai ou pas. »
+ *
+ * Le calcul vit dans `public/affiliations.js` — des fonctions PURES, que les
+ * tests exécutent telles quelles. Ici, on n'affiche que leur résultat : une
+ * règle enfouie dans ce fichier ne se vérifierait qu'à l'œil.
+ */
+function dessinerBarreAffiliation() {
+  const sel = document.getElementById('paysAffiliation');
+  const resume = document.getElementById('resumeAffiliation');
+  if (!sel) return;
+  if (!marche || !marche.acteurs) {
+    sel.innerHTML = '<option value="">—</option>';
+    if (resume) resume.textContent = '';
+    return;
+  }
+  const pays = paysAffiliation(marche, affMesures);
+  if (!pays.length) { sel.innerHTML = '<option value="">Aucun pays</option>'; if (resume) resume.textContent = ''; return; }
+  if (!pays.some((x) => x.pays === paysChoisiAff)) paysChoisiAff = pays[0].pays;
+  sel.innerHTML = pays.map((x) => `<option value="${esc(x.pays)}"${x.pays === paysChoisiAff ? ' selected' : ''}>`
+    + `${esc(nomDuPays(x.pays))} (${esc(x.pays)}) — ${nf.format(x.programme)} programme(s) trouvé(s)`
+    + ` sur ${nf.format(x.acteurs)} acteur(s)</option>`).join('');
+  const cur = pays.find((x) => x.pays === paysChoisiAff);
+  if (resume) {
+    resume.innerHTML = cur
+      ? `${nf.format(cur.nonMesure)} à vérifier · ${nf.format(cur.aucunSigne)} sans signe${cur.reseaux.length ? ` · réseaux : ${cur.reseaux.map((r) => esc(r.nom)).join(', ')}` : ''}`
+      : '';
+  }
+}
+
+function dessinerAffiliation() {
+  const zc = document.getElementById('mAffCompteurs');
+  const zr = document.getElementById('mAffReseaux');
+  const z = document.getElementById('mAffiliation');
+  if (!zc) return;
+  if (!marche || !marche.acteurs) {
+    zc.innerHTML = '';
+    zr.innerHTML = '';
+    z.innerHTML = '<p class="vide">Base du marché non chargée : le fichier <b>acteurs.json</b> n’a pas répondu.</p>';
+    return;
+  }
+  const v = affiliationsDuPays(catalogue, marche, affMesures, paysChoisiAff);
+  const c = v.compteurs;
+
+  zc.innerHTML = [
+    [nf.format(c.acteurs), 'acteurs recensés'],
+    [nf.format(c.programme), 'programmes trouvés'],
+    [nf.format(c.nonMesure), 'à vérifier à la main'],
+    [nf.format(c.aucunSigne), 'aucun signe trouvé'],
+    [nf.format(v.reseaux.length), 'réseaux différents'],
+  ].map(([n, lib]) => `<div class="mesure"><div class="gros">${n}</div><div class="lib">${esc(lib)}</div></div>`).join('');
+
+  zr.innerHTML = v.reseaux.length ? `
+    <h2>Les réseaux qui comptent dans ce pays</h2>
+    <p class="aide">C'est par ici qu'on s'inscrit : un réseau couvre plusieurs enseignes
+      d'un coup. Le nombre est celui des programmes trouvés chez lui.</p>
+    <table>
+      <tr><th>Réseau</th><th class="n">Programmes</th></tr>
+      ${v.reseaux.map((r) => `<tr><td><b>${esc(r.nom)}</b></td><td class="n">${nf.format(r.n)}</td></tr>`).join('')}
+    </table>` : '';
+
+  // --- Les trois groupes, dans l'ordre demandé ---------------------------
+  const f = filtreAffiliation.trim().toLowerCase();
+  const pastille = (etat) => (etat === 'programme trouvé'
+    ? '<span class="pastille flux">programme trouvé</span>'
+    : (etat === 'non mesuré' ? '<span class="pastille veille">non mesuré</span>'
+      : '<span class="pastille aucun">aucun signe</span>'));
+  const sousTitre = {
+    'programme trouvé': 'Ceux qui ont un programme : c’est là qu’on s’inscrit.',
+    'non mesuré': 'Le site a refusé la mesure : on ne sait pas. À vérifier à la main — Groupon, Bol et Amazon sont dans ce cas.',
+    'aucun signe trouvé': 'Le site a répondu, rien n’a été vu. Un programme privé ne laisse aucune trace : c’est ici qu’une demande directe a du sens.',
+  };
+
+  const groupes = v.groupes.map((g) => ({
+    ...g,
+    liste: g.liste.filter((a) => !f || a.nom.toLowerCase().includes(f)
+      || (a.categorie || '').toLowerCase().includes(f)
+      || (a.domaines || []).some((d) => d.includes(f))),
+  }));
+
+  z.innerHTML = c.acteurs ? `${groupes.map((g) => `
+    <details${g.etat === 'programme trouvé' ? ' open' : ''}>
+      <summary><b>${esc(g.etat)}</b><span>${nf.format(g.liste.length)} acteur(s)</span></summary>
+      <p class="aide" style="margin:8px 14px 0">${esc(sousTitre[g.etat])}</p>
+      ${g.liste.length ? `<div class="defile"><table>
+        <tr><th>Acteur</th><th>Catégorie</th><th class="n">Articles</th>
+          <th>Réseaux</th><th>Preuve</th><th>Note</th></tr>
+        ${g.liste.map((a) => {
+    const preuves = preuvesAffiliation(a.affiliation);
+    return `<tr>
+          <td><b>${esc(a.nom)}</b>${a.provenance === 'application' ? ' <span class="ajout">ajouté</span>' : ''}
+            <div style="font-size:11.5px;color:var(--doux)">${esc((a.domaines || []).join(' / ') || '—')}</div></td>
+          <td style="font-size:12px;color:var(--doux)">${esc(a.categorie || '—')}</td>
+          <td class="n">${a.citations ? nf.format(a.citations) : '—'}</td>
+          <td>${a.affiliation.reseaux.length ? a.affiliation.reseaux.map((r) => `<b>${esc(r)}</b>`).join(' · ') : '—'}</td>
+          <td style="font-size:11.5px;max-width:340px">${preuves.length
+    ? preuves.map((p) => `<div><a href="${esc(p.replace(/^[^(]*\((https?:[^)]+)\)$/, '$1'))}" target="_blank" rel="noopener">${esc(p.replace(/^[^(]*\((https?:[^)]+)\)$/, '$1'))}</a></div>`).join('')
+    : `<span class="vide">${esc(a.affiliation.raison || '—')}</span>`}</td>
+          <td>${blocNote(a.nom)}</td></tr>`;
+  }).join('')}
+      </table></div>` : '<p class="vide" style="margin:8px 14px 12px">Aucun acteur dans ce groupe.</p>'}
+    </details>`).join('')}
+  <p class="aide" style="margin-top:12px">${f
+    ? `${groupes.reduce((n, g) => n + g.liste.length, 0)} acteur(s) sur ${c.acteurs} correspondent à « ${esc(filtreAffiliation)} ».`
+    : `${nf.format(c.programme)} programme(s) trouvé(s) sur ${nf.format(c.acteurs)} acteur(s) · mesure du
+       ${affMesures && affMesures.genereLe ? esc(new Date(affMesures.genereLe).toLocaleString('fr-BE')) : '— (aucun balayage)'}`}</p>`
+    : '<p class="vide">Aucun acteur recensé pour ce pays.</p>';
+}
+
 function toutDessiner() {
   const r = relais();
   const complete = r.length > 0;
@@ -1516,7 +1763,7 @@ function toutDessiner() {
     ? 'Relais branché : le trafic de tous les appareils remonte ici.'
     : 'Relais <b>non branché</b> : ce tableau ne montre que le trafic de cet appareil. Pour voir où l’application est efficace partout, il faut le relais.');
 
-  dessinerBord(); dessinerSources(); dessinerOrigines(); dessinerBarrePays(); dessinerMarche(); dessinerPortes(); dessinerInscrits(); dessinerTrafic();
+  dessinerBord(); dessinerSources(); dessinerOrigines(); dessinerBarrePays(); dessinerMarche(); dessinerBarreAffiliation(); dessinerAffiliation(); dessinerPortes(); dessinerInscrits(); dessinerTrafic();
 
   document.getElementById('mMachine').innerHTML = `<table>
     <tr><th>Fuseau</th><td>${esc(Intl.DateTimeFormat().resolvedOptions().timeZone)}</td></tr>
@@ -1537,6 +1784,18 @@ function brancher() {
     document.querySelectorAll('.onglet').forEach((x) => x.classList.toggle('on', x === b));
     document.querySelectorAll('section[data-vue]').forEach((s) =>
       s.classList.toggle('on', s.dataset.vue === b.dataset.vue));
+    // ON REDESSINE L'ONGLET QU'ON OUVRE. Les listes du Marché Euro et de
+    // l'Affiliation sont dessinées une fois ; sans ce redessin, une note écrite
+    // dans l'un s'affichait VIDE dans l'autre — un défaut silencieux, puisqu'il
+    // fallait taper dans la recherche pour le faire disparaître. Mesuré.
+    const rafraichir = {
+      marche: () => { dessinerBarrePays(); dessinerMarche(); },
+      affiliation: () => { dessinerBarreAffiliation(); dessinerAffiliation(); },
+      origines: () => { dessinerOrigines(); },
+      sources: () => { dessinerSources(); },
+    };
+    const f = rafraichir[b.dataset.vue];
+    if (f) f();
   }));
 
   document.getElementById('expCsv').addEventListener('click', () =>
@@ -1584,6 +1843,48 @@ function brancher() {
   // posés sur les champs disparaîtraient avec eux. Le champ resterait éditable
   // à l'écran, la frappe ne serait enregistrée nulle part, et RIEN ne le
   // dirait : le pire genre de panne — celle qui a l'air de marcher.
+  // L'ONGLET AFFILIATION : le pays, la recherche, l'export.
+  const choixAff = document.getElementById('paysAffiliation');
+  if (choixAff) {
+    choixAff.addEventListener('change', () => {
+      paysChoisiAff = choixAff.value;
+      try { localStorage.setItem('kazendra.paysAffiliation', paysChoisiAff); } catch { /* privé */ }
+      filtreAffiliation = '';
+      const c = document.getElementById('rechercheAffiliation');
+      if (c) c.value = '';
+      dessinerBarreAffiliation(); dessinerAffiliation();
+    });
+  }
+  const champAff = document.getElementById('rechercheAffiliation');
+  if (champAff) {
+    champAff.addEventListener('input', () => { filtreAffiliation = champAff.value || ''; dessinerAffiliation(); });
+  }
+  const boutonAff = document.getElementById('affCsv');
+  if (boutonAff) {
+    boutonAff.addEventListener('click', () => {
+      const j = new Date().toISOString().slice(0, 10);
+      telecharger(`kazendra-affiliation-${paysChoisiAff || 'eu'}-${j}.csv`, csvAffiliation(), 'text/csv;charset=utf-8');
+    });
+  }
+
+  // LES NOTES. Délégation sur le panneau entier, et sur TOUS les changements :
+  // les deux onglets redessinent leur liste à chaque lettre tapée dans leur
+  // recherche. Un écouteur posé sur chaque champ disparaîtrait avec lui, et la
+  // note serait perdue sans que rien ne le dise.
+  const panneau = document.getElementById('panneau');
+  if (panneau) {
+    panneau.addEventListener('change', (e) => {
+      const t = e.target;
+      if (!t || t.tagName !== 'TEXTAREA' || !t.dataset.note) return;
+      const nom = t.dataset.note;
+      const val = t.value.trim();
+      ecrireNote(nom, val);
+      t.classList.toggle('rempli', !!val);
+      const etat = t.parentElement ? t.parentElement.querySelector('.etat-note') : null;
+      if (etat) etat.textContent = !val ? 'vide' : (val.length > 90 ? `notée (${val.length} car.)` : 'notée');
+    });
+  }
+
   const zoneMarche = document.getElementById('mMarche');
   if (zoneMarche) {
     zoneMarche.addEventListener('change', (e) => {
@@ -1651,6 +1952,12 @@ async function ouvrir() {
     const rep = await fetch('../acteurs.json', { cache: 'no-store' });
     marche = await rep.json();
   } catch (e) { marche = null; }
+  // Les mesures d'affiliation. Leur absence n'est PAS une panne : c'est un
+  // balayage qui n'a pas encore tourné. Le panneau le dira, il ne plantera pas.
+  try {
+    const rep = await fetch('../affiliations.json', { cache: 'no-store' });
+    affMesures = await rep.json();
+  } catch (e) { affMesures = null; }
   if (r) {
     try {
       const rep = await fetch(r, { cache: 'no-store' });

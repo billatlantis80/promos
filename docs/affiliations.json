@@ -1,0 +1,104 @@
+{
+ "genereLe": "2026-10-08T12:32:44.641Z",
+ "methode": "Signatures de réseaux d’affiliation dans le HTML du site, et page « programme d’affiliation ». « aucun signe trouvé » ne veut PAS dire « pas d’affiliation » : un programme privé ne laisse aucune trace publique.",
+ "nombreActeurs": 10,
+ "avecProgramme": 2,
+ "sansSigne": 5,
+ "nonMesures": 3,
+ "acteurs": [
+  {
+   "nom": "Preisjäger",
+   "pays": "AT",
+   "domaine": "preisjaeger.at",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Ardennes-Etape",
+   "pays": "BE",
+   "domaine": "ardennes-etape.be",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Bongo & Wonderbox",
+   "pays": "BE",
+   "domaine": "bongo.be",
+   "etat": "programme trouvé",
+   "reseaux": [],
+   "indices": [
+    "page programme : https://www.bongo.be/nl/affiliate-programma/"
+   ],
+   "http": 200
+  },
+  {
+   "nom": "Groupon",
+   "pays": "BE",
+   "domaine": "groupon.be",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Social Deal & Outspot",
+   "pays": "BE",
+   "domaine": "socialdeal.be",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Ticketmaster Belgique & Eventim",
+   "pays": "BE",
+   "domaine": "ticketmaster.be",
+   "etat": "programme trouvé",
+   "reseaux": [],
+   "indices": [
+    "programme annoncé sur la page d'accueil (https://ticketmaster.be)"
+   ],
+   "http": 200
+  },
+  {
+   "nom": "VISITWALLONIA / Visit Brussels / Visit Flanders",
+   "pays": "BE",
+   "domaine": "visitwallonia.be",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 200)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Maxi Zoo",
+   "pays": "BE",
+   "domaine": "maxizoo.be",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Poils et Plumes",
+   "pays": "BE",
+   "domaine": "poils-et-plumes.be",
+   "etat": "non mesuré",
+   "raison": "réponse vide",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Tom&Co",
+   "pays": "BE",
+   "domaine": "tomandco.be",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  }
+ ]
+}
