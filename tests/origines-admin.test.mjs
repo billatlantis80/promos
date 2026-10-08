@@ -30,6 +30,23 @@ function extraire(nom) {
   assert.ok(m, `la fonction ${nom} doit exister dans le panneau (elle a peut-être été renommée)`);
   return m[0];
 }
+
+/* OÙ EST LE CATALOGUE, ET POURQUOI CE N'EST PAS ÉCRIT EN DUR.
+ *
+ * `data/offres.json` n'est PAS versionné (voir .gitignore) : il n'existe que là
+ * où la collecte tourne — sur la machine du propriétaire. La copie du dépôt que
+ * GitHub récupère n'en a aucune trace ; elle n'a que `docs/offres.json`, publié
+ * avec le site et de MÊME FORME (mêmes `sources`, même `journal`, mêmes offres).
+ *
+ * Lire `data/` en dur faisait donc échouer ce test TOUTES LES HEURES côté
+ * GitHub, en silence, et le workflow s'arrêtait avant de publier quoi que ce
+ * soit. Vécu le 08/10/2026 : deux échecs horaires. On lit le premier qui existe. */
+function lireCatalogue() {
+  const c = [path.join(ICI, '..', 'data', 'offres.json'), path.join(ICI, '..', 'docs', 'offres.json')]
+    .find((p) => fs.existsSync(p));
+  assert.ok(c, 'ni data/offres.json (local) ni docs/offres.json (dépôt) : rien à vérifier');
+  return fs.readFileSync(c, 'utf8');
+}
 // Le panneau tourne dans un navigateur : la fonction est déclarée au niveau du
 // script. On la reconstruit ici, seule, sans DOM.
 const classementSites = new Function(`${extraire('classementSites')}; return classementSites;`)();
@@ -129,8 +146,7 @@ test('le collecteur publie bien le catalogue des sources suivies', () => {
   const collecteur = fs.readFileSync(path.join(ICI, '..', 'collecteur.mjs'), 'utf8');
   assert.match(collecteur, /sources: TOUTES_SOURCES\.map/,
     'sans ce champ, le panneau ne peut pas dire combien de sites sont suivis');
-  const brut = fs.readFileSync(path.join(ICI, '..', 'data', 'offres.json'), 'utf8');
-  const etat = JSON.parse(brut);
+  const etat = JSON.parse(lireCatalogue());
   const j = (etat.journal || []).filter((x) => !x.saute);
   assert.ok(j.length > 0, 'le journal doit porter des passages de sources');
   const ok = j.filter((x) => x.ok && x.source !== 'visuels');
