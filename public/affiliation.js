@@ -36,6 +36,53 @@ export const AMAZON_TAGS = {
   'amazon.pl': '',      // Pologne
 };
 
+/* 1 bis. LA LANGUE DE LA BOUTIQUE OUVERTE.
+
+   Demande de B (08/10/2026) : « Quand un utilisateur utilise kazendra en
+   Français et qu'il est redirigé vers un autre site. On va prendre par exemple
+   Amazon. Amazon doit être consulté en français. Le site doit s'adapter à la
+   langue de l'utilisateur de l'appli. Si la langue n'existe pas ça sera
+   l'anglais la base. »
+
+   Le mécanisme : Amazon accepte un paramètre `language` dans l'adresse, et il
+   répond dans cette langue QUAND la place de marché la propose. Sans ce
+   paramètre, c'est le navigateur du visiteur qui décide — un lecteur français
+   qui ouvre une offre allemande tombe sur une interface allemande.
+
+   CE TABLEAU N'EST PAS DEVINÉ, IL EST MESURÉ. Chaque entrée a été vérifiée le
+   08/10/2026 en interrogeant la place de marché et en lisant le `lang` du
+   document renvoyé :
+
+       amazon.com.be + fr_BE -> lang="fr-be"    amazon.com.be + nl_BE -> "nl-be"
+       amazon.fr     + fr_FR -> lang="fr-fr"    amazon.de     + de_DE -> "de-de"
+       amazon.es     + es_ES -> lang="es-es"    amazon.it     + it_IT -> "it-it"
+       amazon.nl     + nl_NL -> lang="nl-nl"    amazon.se     + sv_SE -> "sv-se"
+       amazon.pl     + pl_PL -> lang="pl-pl"    amazon.ie     + en_GB -> "en-ie"
+
+   Et les LIMITES, mesurées elles aussi — c'est ce qui justifie le repli :
+
+       amazon.de     + fr_FR -> lang="en-gb"    (le français n'existe pas sur .de)
+       amazon.co.uk  + de_DE -> lang="en-gb"    (l'anglais seul sur .co.uk)
+       amazon.fr     + de_DE -> lang="fr-fr"    (demandé, non offert : le local)
+
+   C'est exactement la règle demandée : la langue du lecteur quand la boutique
+   la propose, l'ANGLAIS sinon. */
+export const AMAZON_LANGUES = {
+  'amazon.com.be': { fr: 'fr_BE', nl: 'nl_BE', en: 'en_GB' },
+  'amazon.fr':     { fr: 'fr_FR', en: 'en_GB' },
+  'amazon.de':     { de: 'de_DE', en: 'en_GB' },
+  'amazon.co.uk':  { en: 'en_GB' },
+  'amazon.ie':     { en: 'en_GB' },
+  'amazon.es':     { es: 'es_ES', en: 'en_GB' },
+  'amazon.it':     { it: 'it_IT', en: 'en_GB' },
+  'amazon.nl':     { nl: 'nl_NL', en: 'en_GB' },
+  'amazon.se':     { sv: 'sv_SE', en: 'en_GB' },
+  'amazon.pl':     { pl: 'pl_PL', en: 'en_GB' },
+};
+
+/** La langue de repli quand la place de marché n'offre pas celle du lecteur. */
+export const LANGUE_REPLI_AMAZON = 'en_GB';
+
 /* 2. Réseaux d'affiliation (Awin, Effiliation, Kwanko…) : un modèle de lien
       contenant {url} = l'adresse du marchand. Couvre les enseignes qui n'ont
       pas de programme Amazon, y compris la plupart des chaînes de bricolage. */
@@ -122,9 +169,32 @@ function habillerReseau(url) {
  * @param {string} url      adresse du marchand
  * @param {string} marchand nom du marchand (pour choisir la bonne règle)
  */
-export function lienAffilie(url, marchand = '') {
+/** L'adresse d'une boutique Amazon, ouverte dans la langue du lecteur.
+ *
+ *  On ne touche PAS aux autres marchands : le paramètre `language` est propre à
+ *  Amazon. Une enseigne ayant son propre mécanisme devra être traitée
+ *  nommément — l'inventer pour tout le monde serait une devinette. */
+export function langueAmazon(url, langueApp = '') {
+  const dom = marcheDe(url);
+  if (!dom) return url;
+  const offre = AMAZON_LANGUES[dom];
+  if (!offre) return url;
+  const code = offre[langueApp] || LANGUE_REPLI_AMAZON;
+  try {
+    const u = new URL(url);
+    u.searchParams.set('language', code);
+    return u.toString();
+  } catch { return url; }
+}
+
+export function lienAffilie(url, marchand = '', langueApp = '') {
   if (!url) return url;
-  if (EST_AMAZON.test(marchand) || EST_AMAZON.test(url)) return habillerAmazon(url);
+  if (EST_AMAZON.test(marchand) || EST_AMAZON.test(url)) {
+    // La LANGUE d'abord : `habillerAmazon` rend l'adresse inchangée tant
+    // qu'aucun identifiant d'affiliation n'est posé — or le paramètre de
+    // langue, lui, doit être ajouté dans TOUS les cas.
+    return habillerAmazon(langueAmazon(url, langueApp));
+  }
   const parReseau = habillerReseau(url);
   return parReseau || url;
 }

@@ -68,7 +68,7 @@ test('le repli propose de VRAIS liens, qui marchent sans aucune API', () => {
 });
 
 test('le lien partagé porte l’identifiant du marché, comme le bouton d’achat', () => {
-  assert.match(js, /function lienPartage\(o\) \{\s*return lienAffilie\(o\.lienMarchand \|\| o\.lienPage, o\.marchand\);/,
+  assert.match(js, /function lienPartage\(o\) \{\s*return lienAffilie\(o\.lienMarchand \|\| o\.lienPage, o\.marchand(?:, langue\(\))?\);/,
     'le partage doit réutiliser lienAffilie — sinon le lien partagé serait nu');
 });
 

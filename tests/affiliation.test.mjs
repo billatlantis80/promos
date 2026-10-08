@@ -54,21 +54,28 @@ test('aucun identifiant : le lien part INCHANGÉ (jamais de tag inventé)', () =
 
 test('le tag va sur SON marché, et sur aucun autre', () => {
   const m = charger({ 'amazon.com.be': 'belgique-21', 'amazon.fr': 'france-21' });
-  assert.equal(m.lienAffilie(BE, 'Amazon'), BE + '?tag=belgique-21');
-  assert.equal(m.lienAffilie(FR, 'Amazon'), FR + '?tag=france-21');
+  // Depuis le 08/10/2026 le lien sortant porte AUSSI la langue du lecteur
+  // (`?language=…`) : comparer l'adresse entière ne dit plus rien du tag. On
+  // interroge donc le paramètre qui NOUS intéresse ici — et seulement lui.
+  const tag = (u) => new URL(u).searchParams.get('tag');
+  assert.equal(tag(m.lienAffilie(BE, 'Amazon')), 'belgique-21');
+  assert.equal(tag(m.lienAffilie(FR, 'Amazon')), 'france-21');
   // Le point capital : un marché NON ouvert ne reçoit RIEN — surtout pas le
   // tag d'un autre pays.
-  assert.equal(m.lienAffilie(DE, 'Amazon'), DE);
-  assert.equal(m.lienAffilie(UK, 'Amazon'), UK);
+  assert.equal(tag(m.lienAffilie(DE, 'Amazon')), null);
+  assert.equal(tag(m.lienAffilie(UK, 'Amazon')), null);
 });
 
 test('un marché non ouvert ne reçoit JAMAIS l’identifiant d’un autre pays', () => {
   // On ouvre le seul marché français : l'Allemagne et la Belgique doivent
   // rester intactes. C'est la règle de sûreté, testée explicitement.
   const m = charger({ 'amazon.fr': 'france-21' });
-  assert.equal(m.lienAffilie(DE, 'Amazon'), DE);
-  assert.equal(m.lienAffilie(BE, 'Amazon'), BE);
-  assert.equal(m.lienAffilie(UK, 'Amazon'), UK);
+  // On ne compare plus l'adresse entière (la langue du lecteur s'y ajoute) :
+  // on vérifie ce qui compte — AUCUN tag, et surtout pas celui du voisin.
+  for (const u of [DE, BE, UK]) {
+    assert.equal(new URL(m.lienAffilie(u, 'Amazon')).searchParams.get('tag'), null,
+      `${u} ne doit porter aucun tag`);
+  }
   assert.ok(!m.lienAffilie(DE, 'Amazon').includes('france-21'));
 });
 
@@ -85,7 +92,8 @@ test('amazon.com.be n’est pas confondu avec un autre marché', () => {
 test('un tag déjà présent n’est jamais écrasé', () => {
   const m = charger({ 'amazon.fr': 'france-21' });
   const deja = 'https://www.amazon.fr/dp/B0?tag=quelquun-21';
-  assert.equal(m.lienAffilie(deja, 'Amazon'), deja);
+  assert.equal(new URL(m.lienAffilie(deja, 'Amazon')).searchParams.get('tag'), 'quelquun-21',
+    'un tag déjà posé par quelqu’un d’autre ne doit jamais être remplacé');
 });
 
 test('les dix marchés européens sont déclarés dans la table', () => {
