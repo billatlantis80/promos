@@ -7,3 +7,8 @@ node_modules/
 *.log
 .DS_Store
 _avant-tmp.mjs
+
+# Pages lues au navigateur pour mesurer les affiliations (~100 Mo) :
+# un cache de travail, reconstituable par outils/rendus-navigateur.py.
+# Sans cette ligne, un « git add -A » pousserait 99 Mo de HTML brut.
+donnees/rendus/
