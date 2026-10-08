@@ -59,6 +59,7 @@
   <table id="reseau">
     <tr><td class="marque" id="r1m">…</td><td class="quoi">Lecture en cours</td><td class="detail" id="r1d"></td></tr>
     <tr><td class="marque" id="r2m">…</td><td class="quoi">Lecture en cours</td><td class="detail" id="r2d"></td></tr>
+    <tr><td class="marque" id="r3m">…</td><td class="quoi">Lecture en cours</td><td class="detail" id="r3d"></td></tr>
   </table>
   <p class="sous" id="rurl"></p>
 
@@ -207,9 +208,15 @@ document.getElementById('ua').innerHTML = ua.replace(/</g, '&lt;');
 /* --------------------------------------------------- téléchargement réel -- */
 /* On télécharge pour de bon : c'est le SEUL moyen de voir un pare-feu, un
    antivirus ou un bloqueur de publicité qui couperait les données. */
-function mesurer(url, quelle, cb) {
-  var m = document.getElementById(quelle === 'app.js' ? 'r1m' : 'r2m');
-  var d = document.getElementById(quelle === 'app.js' ? 'r1d' : 'r2d');
+/* La ligne du tableau est passée en clair : trois fichiers sont désormais
+   mesurés, et non deux. `app.css` a été AJOUTÉ après un défaut réel — B voyait
+   le site sans aucun style (le K géant, pas d'image, pas d'encadrement), ce qui
+   arrive exactement quand la feuille de style n'est pas appliquée. Il fallait
+   donc que cette page sache le DIRE, au lieu de ne tester que le programme et
+   les données. */
+function mesurer(url, ligne, cb) {
+  var m = document.getElementById('r' + ligne + 'm');
+  var d = document.getElementById('r' + ligne + 'd');
   /* On AFFICHE l'adresse réellement appelée : « depuis kazendra.com » écrit en
      dur serait faux dès que la page est ouverte ailleurs (le hub, un poste
      local) — et un diagnostic qui nomme une mauvaise source fait chercher au
@@ -273,10 +280,23 @@ function conclure() {
 
   var v = document.getElementById('verdict');
   var conseil = document.getElementById('conseil');
-  if (PROBLEMES.length === 0 && window.__prixOk) {
+  if (PROBLEMES.length === 0 && window.__prixOk && window.__styleOk) {
     v.className = 'verdict ok';
     v.innerHTML = 'Ce navigateur peut afficher Kazendra. Si le site ne s\'affiche toujours pas, vide son cache (Ctrl + Maj + Suppr) puis recharge avec Ctrl + F5.';
-    conseil.innerHTML = 'Le site a besoin d\'un navigateur de <b>2020 ou plus récent</b> : c\'est son unique exigence. Si les deux téléchargements ci-dessus sont au vert et que la page reste vide, c\'est le cache du navigateur — ou l\'application elle-même, et non ta machine.';
+    conseil.innerHTML = 'Le site a besoin d\'un navigateur de <b>2020 ou plus récent</b> : c\'est son unique exigence. Si les trois téléchargements ci-dessus sont au vert et que la page reste vide ou sans style, c\'est le cache du navigateur — ou l\'application elle-même, et non ta machine.';
+  } else if (PROBLEMES.length === 0 && !window.__styleOk) {
+    /* LE CAS DE B, ET IL MÉRITE SON PROPRE VERDICT.
+       Un site sans sa feuille de style donne exactement trois symptômes :
+       le logo géant (aucune taille ne lui est donnée), les visuels invisibles
+       (hauteur nulle) et les cartes sans encadrement (bordure nulle). Un
+       « tout va bien » serait donc un mensonge. */
+    v.className = 'verdict ko';
+    v.innerHTML = 'La feuille de style n\'arrive pas. C\'est pour cela que le logo est énorme, que les images ne s\'affichent pas et que les cartes n\'ont pas d\'encadrement.';
+    conseil.innerHTML = 'Le fichier <b>app.css</b> n\'a pas pu être téléchargé, alors que le programme et les données, eux, sont bien passés. '
+      + 'C\'est le plus souvent :<br>• un <b>bloqueur de contenu</b> (AdGuard, uBlock, un antivirus avec filtre web) qui le coupe ;<br>'
+      + '• une <b>extension</b> de navigateur ;<br>• un <b>cache abîmé</b> — essaie Ctrl + Maj + Suppr, puis Ctrl + F5 ;<br>'
+      + '• un <b>réseau d\'entreprise</b> qui filtre les fichiers .css.<br><br>'
+      + 'Essaie d\'abord dans une fenêtre de navigation privée : si le site s\'y affiche correctement, c\'est une extension ou le cache.';
   } else if (PROBLEMES.length === 0) {
     v.className = 'verdict att';
     v.innerHTML = 'Le navigateur sait tout faire, mais les données n\'arrivent pas.';
@@ -292,10 +312,14 @@ function conclure() {
 }
 
 /* app.js sert de témoin de bonne santé du réseau : s'il arrive, le reste arrive. */
-mesurer('app.js', 'app.js', function (ok1) {
-  mesurer('offres.json', 'offres.json', function (ok2) {
-    window.__prixOk = (ok1 && ok2);
-    conclure();
+/* L'ordre compte : le style d'abord, parce que c'est lui qui a manqué. */
+mesurer('app.css', 3, function (ok3) {
+  window.__styleOk = ok3;
+  mesurer('app.js', 1, function (ok1) {
+    mesurer('offres.json', 2, function (ok2) {
+      window.__prixOk = (ok1 && ok2);
+      conclure();
+    });
   });
 });
 </script>
