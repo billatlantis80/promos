@@ -10,28 +10,10 @@
 /* Application privée d'administration. Elle vit à part du site public : ses
    styles sont écrits ici et n'empruntent rien à l'application, pour qu'une
    modification de la vitrine ne puisse pas casser le panneau. */
-/* ---------------------------------------------------------------------------
-   MISE EN FORME DU PANNEAU.
-   Reprise du 08/10/2026, à la demande de B : « j'aimerais que tu l'améliores
-   dans sa généralité. »
-
-   LE PRINCIPE, ET CE QU'IL CORRIGE. Le panneau s'était construit onglet par
-   onglet : trois sortes de tableaux, deux tailles de titres, des bandeaux d'aide
-   partout, et des chiffres tantôt alignés à gauche tantôt à droite selon la
-   ligne qui les avait écrits. Rien de cassé, mais un ensemble qu'on ne lit pas
-   d'un coup d'œil. Ici, une seule grammaire : UN titre de section, UNE aide
-   courte sous le titre, UN tableau dont les nombres sont alignés à droite et
-   dont l'en-tête reste visible quand on descend.
-
-   Les classes existantes sont conservées : les tests relisent ce fichier.
-   --------------------------------------------------------------------------- */
 :root{
-  --fond:#0c1723; --carte:#142434; --carte2:#1a2c3e; --carte3:#22394e;
-  --bord:#274660; --bord-clair:#3a6087;
-  --texte:#eaf2f8; --doux:#93aec4; --tres-doux:#728fa6;
-  --accent:#eb912d; --accent2:#3f9fd0;
+  --fond:#0e1a26; --carte:#152535; --carte2:#1b2f42; --bord:#26445e;
+  --texte:#eaf2f8; --doux:#93aec4; --accent:#eb912d; --accent2:#3f9fd0;
   --vert:#2fbf71; --rouge:#e5544b; --sur-accent:#0d2536;
-  --r:14px; --r-petit:9px;
 }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
@@ -43,17 +25,17 @@ html,body{margin:0;padding:0}
 body{
   background:var(--fond); color:var(--texte); font-size:15px; line-height:1.5;
   font-family:"Open Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-  padding-bottom:64px;
+  padding-bottom:40px;
 }
 h1,h2,h3,.gros{font-family:"Montserrat",system-ui,sans-serif}
 a{color:var(--accent2)}
-.boite{max-width:1180px;margin:0 auto;padding:0 16px}
+.boite{max-width:1080px;margin:0 auto;padding:0 14px}
 
 /* ---------- Verrou ---------- */
 #verrou{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
 #verrou .carte{
   width:100%;max-width:400px;background:var(--carte);border:1px solid var(--bord);
-  border-radius:18px;padding:24px;box-shadow:0 18px 48px rgba(0,0,0,.45)
+  border-radius:16px;padding:22px
 }
 #verrou h1{font-size:20px;margin:0 0 4px}
 #verrou p{color:var(--doux);font-size:13px;margin:0 0 16px}
@@ -69,14 +51,12 @@ button{font:inherit;cursor:pointer}
   width:100%;background:var(--accent);color:var(--sur-accent);border:0;border-radius:11px;
   padding:12px;font-weight:700;font-size:15px
 }
-.principal:hover{filter:brightness(1.06)}
 .annonce{margin:12px 0 0;font-size:13px;min-height:19px}
 .annonce.err{color:var(--rouge)} .annonce.ok{color:var(--vert)}
 
 /* ---------- Coquille ---------- */
 #tete{
-  background:rgba(9,19,29,.92);backdrop-filter:blur(8px);
-  border-bottom:1px solid var(--bord);padding:12px 0;position:sticky;top:0;z-index:6
+  background:#0b1622;border-bottom:1px solid var(--bord);padding:12px 0;position:sticky;top:0;z-index:5
 }
 #tete .boite{display:flex;align-items:center;gap:12px}
 #tete img{width:30px;height:36px}
@@ -85,85 +65,48 @@ button{font:inherit;cursor:pointer}
   margin-left:auto;font-size:11.5px;color:var(--doux);border:1px solid var(--bord);
   border-radius:20px;padding:4px 10px;text-transform:uppercase;letter-spacing:.6px
 }
-/* Les onglets : une barre qui défile plutôt qu'une barre qui se casse. Le
-   soulignement remplace la pastille pleine — neuf pastilles orange saturaient
-   l'écran et faisaient perdre de vue ce qui est un onglet et ce qui est un
-   bouton d'action. */
-#onglets{
-  display:flex;gap:4px;overflow-x:auto;padding:8px 0 0;margin-top:4px;
-  scrollbar-width:thin
-}
+#onglets{display:flex;gap:8px;overflow-x:auto;padding:14px 0 0}
 .onglet{
-  background:transparent;color:var(--doux);border:0;border-bottom:2px solid transparent;
-  border-radius:0;padding:11px 13px 10px;font-size:14px;white-space:nowrap
+  background:var(--carte);color:var(--texte);border:1px solid var(--bord);border-radius:10px;
+  padding:9px 14px;font-size:14px;white-space:nowrap
 }
-.onglet:hover{color:var(--texte)}
-.onglet.on{color:var(--accent);border-bottom-color:var(--accent);font-weight:700}
-main{padding-top:18px}
+.onglet.on{background:var(--accent);border-color:var(--accent);color:var(--sur-accent);font-weight:700}
+main{padding-top:16px}
 section[data-vue]{display:none}
 section[data-vue].on{display:block}
-.rub{
-  background:var(--carte);border:1px solid var(--bord);border-radius:var(--r);
-  padding:18px;margin:0 0 16px
-}
-.rub > h2:first-child{font-size:13.5px;margin:0 0 4px;text-transform:uppercase;
-  letter-spacing:.9px;color:var(--accent);display:flex;align-items:center;gap:9px}
-.rub > h2:first-child::before{content:'';width:3px;height:15px;background:var(--accent);
-  border-radius:2px;flex:0 0 auto}
-.rub h2{font-size:14px;margin:22px 0 4px;text-transform:uppercase;letter-spacing:.8px;color:var(--accent)}
-.rub p.aide{color:var(--doux);font-size:12.5px;margin:0 0 14px;max-width:105ch}
-.grille{display:grid;grid-template-columns:repeat(auto-fit,minmax(152px,1fr));gap:10px}
-.mesure{
-  background:var(--carte2);border:1px solid var(--bord);border-radius:var(--r-petit);padding:12px 13px
-}
-.mesure .gros{font-size:25px;font-weight:800;line-height:1.1;font-variant-numeric:tabular-nums}
+.rub{background:var(--carte);border:1px solid var(--bord);border-radius:14px;padding:16px;margin:0 0 14px}
+.rub h2{font-size:15px;margin:0 0 3px;text-transform:uppercase;letter-spacing:.7px;color:var(--accent)}
+.rub p.aide{color:var(--doux);font-size:12.5px;margin:0 0 14px}
+.grille{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.mesure{background:var(--carte2);border:1px solid var(--bord);border-radius:11px;padding:12px}
+.mesure .gros{font-size:26px;font-weight:800;line-height:1.1}
 .mesure .lib{font-size:12px;color:var(--doux);margin-top:3px}
-
-/* ---------- Les tableaux, une seule grammaire ---------- */
-.defile{overflow-x:auto;margin:0 -4px}
 table{width:100%;border-collapse:collapse;font-size:13.5px}
-th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--bord)}
-th{
-  color:var(--doux);font-weight:600;font-size:11.5px;text-transform:uppercase;letter-spacing:.6px;
-  position:sticky;top:0;background:var(--carte);z-index:1
-}
-tbody tr:hover td,table tr:hover td{background:rgba(63,159,208,.07)}
+th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--bord)}
+th{color:var(--doux);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px}
 td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
-.barre{height:7px;background:var(--carte3);border-radius:4px;overflow:hidden;min-width:60px;display:block}
+.barre{height:7px;background:var(--carte2);border-radius:4px;overflow:hidden;min-width:60px}
 .barre i{display:block;height:100%;background:var(--accent2)}
-
-/* ---------- Pastilles d'état ---------- */
-.pastille{
-  display:inline-flex;align-items:center;gap:6px;border-radius:20px;padding:3px 10px 3px 8px;
-  font-size:11.5px;font-weight:600;white-space:nowrap;border:1px solid transparent
-}
-.pastille::before{content:'';width:7px;height:7px;border-radius:50%;background:currentColor;flex:0 0 auto}
-.pastille.flux{color:var(--vert);background:rgba(47,191,113,.12);border-color:rgba(47,191,113,.3)}
-.pastille.veille{color:var(--accent);background:rgba(235,145,45,.12);border-color:rgba(235,145,45,.3)}
-.pastille.aucun{color:var(--tres-doux);background:rgba(114,143,166,.12);border-color:rgba(114,143,166,.3)}
-
 /* Un pays dépliable : replié, la liste des douze pays tient dans l'écran ;
    déplié, on voit ses sources. Sans ça, douze tableaux ouverts d'un coup
    faisaient une page de trois mètres qu'on ne lisait plus. */
-details{background:var(--carte2);border:1px solid var(--bord);border-radius:var(--r-petit);margin:0 0 8px}
-details[open]{border-color:var(--bord-clair)}
+details{background:var(--carte2);border:1px solid var(--bord);border-radius:11px;margin:0 0 8px}
 details summary{
-  cursor:pointer;padding:12px 14px;display:flex;align-items:baseline;gap:10px;
+  cursor:pointer;padding:11px 13px;display:flex;align-items:baseline;gap:10px;
   justify-content:space-between;list-style:none
 }
 details summary::-webkit-details-marker{display:none}
 details summary::after{content:'▾';color:var(--doux);flex:0 0 auto}
 details[open] summary::after{content:'▴'}
-details summary span{font-size:12px;color:var(--doux);text-align:right}
-details > table,details > .defile{margin:0;padding:0 14px 10px}
+details summary span{font-size:12px;color:var(--doux)}
+details > table{margin:0 0 6px;padding:0 13px 8px}
 details > table tr:first-child th{padding-top:2px}
 .vide{color:var(--doux);font-size:13.5px;font-style:italic}
-
 /* La fiche d'un acteur : adresse, téléphone, e-mail, CA. Ce sont des
-   INFORMATIONS (règle de B) — on les présente donc en petit, dans la ligne,
+   INFORMATIONS (règle de B) — on les présente donc en petit, sous le nom,
    pour qu'elles documentent sans jamais ressembler à des critères de travail. */
-.fiche-info{margin:6px 0 0;font-size:11.5px;line-height:1.45}
-.fiche-info dt{color:var(--doux);text-transform:uppercase;font-size:9.5px;letter-spacing:.4px;margin-top:4px}
+.fiche-info{margin:7px 0 0;font-size:11.5px;line-height:1.45}
+.fiche-info dt{color:var(--doux);text-transform:uppercase;font-size:10px;letter-spacing:.4px;margin-top:5px}
 .fiche-info dd{margin:0;color:var(--texte)}
 /* L'étiquette « ajouté » : un acteur que l'appli lit et qui ne venait pas du
    tableur de B. Elle doit se voir, pour qu'il garde la maîtrise de sa base. */
@@ -171,47 +114,15 @@ details > table tr:first-child th{padding-top:2px}
   font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;vertical-align:1px}
 .avis{
   border-left:3px solid var(--accent);background:var(--carte2);border-radius:0 10px 10px 0;
-  padding:11px 14px;font-size:13px;color:var(--texte);margin:0 0 16px
+  padding:11px 13px;font-size:13px;color:var(--texte);margin:0 0 14px
 }
 .avis b{color:var(--accent)}
 .bouton{
   background:var(--carte2);color:var(--texte);border:1px solid var(--bord);border-radius:10px;
   padding:9px 13px;font-size:13.5px;margin:0 6px 6px 0
 }
-.bouton:hover{border-color:var(--accent);color:var(--accent)}
+.bouton:hover{border-color:var(--accent)}
 .ok{color:var(--vert)} .ko{color:var(--rouge)}
-
-/* ---------- Le choix du pays ---------- */
-#barrePays{
-  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
-  background:var(--carte2);border:1px solid var(--bord);border-radius:var(--r);
-  padding:12px 14px;margin:0 0 14px
-}
-#barrePays label{font-size:12px;color:var(--doux);text-transform:uppercase;letter-spacing:.7px}
-#paysMarche{
-  background:var(--carte3);color:var(--texte);border:1px solid var(--bord-clair);
-  border-radius:10px;padding:9px 12px;font:inherit;font-size:15px;font-weight:600;min-width:250px
-}
-#paysMarche:focus{outline:2px solid var(--accent);outline-offset:-1px}
-#barrePays .resume{font-size:12.5px;color:var(--doux);margin-left:auto;text-align:right}
-
-/* ---------- L'adresse des promotions : modifiable, et ça se voit ----------
-   Une colonne qu'on peut réécrire doit DIRE qu'elle se réécrit. Un champ
-   bordé et cliquable ne se confond pas avec du texte ; c'est la différence
-   entre « on peut » et « on voit qu'on peut ». */
-.adr{display:flex;flex-direction:column;gap:4px;min-width:230px}
-.adr input{
-  width:100%;background:var(--carte2);color:var(--texte);border:1px solid var(--bord);
-  border-radius:8px;padding:7px 9px;font:inherit;font-size:12.5px;
-  font-family:ui-monospace,SFMono-Regular,Menlo,monospace
-}
-.adr input::placeholder{color:var(--tres-doux);font-style:italic}
-.adr input:focus{outline:2px solid var(--accent);outline-offset:-1px;background:var(--carte3)}
-.adr input.rempli{border-color:rgba(47,191,113,.55)}
-.adr .liens{font-size:11px;color:var(--doux);display:flex;gap:10px;flex-wrap:wrap}
-.adr .liens a{text-decoration:none}
-.adr .liens a:hover{text-decoration:underline}
-.etat-adr{font-size:10.5px;color:var(--tres-doux);font-style:italic}
 </style>
 </head>
 <body>
@@ -249,7 +160,7 @@ details > table tr:first-child th{padding-top:2px}
       <button class="onglet" data-vue="trafic">Trafic</button>
       <button class="onglet" data-vue="sources">Sources</button>
       <button class="onglet" data-vue="origines">Origines</button>
-      <button class="onglet" data-vue="marche">Marché Euro</button>
+      <button class="onglet" data-vue="marche">Marché belge</button>
       <button class="onglet" data-vue="reglages">Réglages</button>
     </nav>
 
@@ -359,70 +270,52 @@ details > table tr:first-child th{padding-top:2px}
       </section>
 
       <section data-vue="marche">
-        <!-- LE CHOIX DU PAYS. Demande de B (08/10/2026) : « tu vas adapter
-             l'onglet "Marché Euro" uniquement. Et dedans j'aurais le choix du
-             pays que je veux consulter. » Les pays viennent de l'application ET
-             de la base : un pays sans fiche s'annonce « à constituer » au lieu
-             de s'ouvrir sur une page vide qui aurait l'air cassée. -->
-        <div id="barrePays">
-          <label for="paysMarche">Pays consulté</label>
-          <select id="paysMarche"></select>
-          <span class="resume" id="resumePays"></span>
-        </div>
-
         <div class="rub">
-          <h2>Récapitulatif du pays</h2>
-          <p class="aide">Ce que le pays consulté porte aujourd'hui : ses acteurs,
-            ceux qui sont <b>réellement branchés</b>, ce qu'ils apportent, et le
-            nombre de catégories travaillées. Les trois états ne se confondent pas —
+          <h2>Le marché belge, acteur par acteur</h2>
+          <p class="aide">Les <b>165 acteurs</b> des 23 catégories : ceux de ton tableur, plus
+            ceux que l'application lit sans qu'ils y figurent — ils doivent être dans la base,
+            sinon ils n'ont aucune ligne. Croisés avec les sites réellement lus. Trois états,
+            et la distinction est tout le sujet :
             <b>branché</b> = le site publie ses offres, on les lit chez lui ;
-            <b>en veille</b> = on ne le voit qu'à travers un moteur, donc pas
-            réellement branché ; <b>non suivi</b> = aucune source du tout. La
-            colonne « articles lus » compte ce que l'application a vu dans ce pays,
-            qui peut dépasser ce que ses propres acteurs apportent : une annonce
-            belge peut venir d'une source étrangère.</p>
+            <b>en veille</b> = on ne le voit qu'à travers un moteur de recherche, donc
+            <b>pas réellement branché</b> ; <b>non suivi</b> = aucune source du tout.
+            C'est la liste où travailler, site par site.</p>
           <div class="grille" id="mMarcheCompteurs"></div>
-          <div id="mPaysRecap"></div>
         </div>
-
-        <div class="rub">
-          <h2>Les acteurs, par catégorie</h2>
-          <p class="aide">Chaque acteur tient sur <b>une seule ligne</b> : son état, ses
-            informations de siège, son site, et <b>l'adresse des promotions</b> — la
-            colonne où l'application prend ce qu'elle partage. Cette dernière est
-            <b>modifiable</b> : colle un lien vers la page de promotions de l'enseigne et
-            elle sera utilisée. Les informations de siège (adresse, téléphone, e-mail, CA)
-            sont <b>documentaires</b> : elles figurent dans la base et à l'export, mais
-            <b>le programme ne s'en sert jamais</b> — la liaison se fait uniquement sur
-            le <b>nom</b> et le <b>site web</b>.</p>
-          <div class="champ" style="max-width:360px">
-            <label for="rechercheMarche">Chercher un acteur dans ce pays</label>
-            <input id="rechercheMarche" type="search" placeholder="nom de l'enseigne…" spellcheck="false">
-          </div>
-          <button class="bouton" id="marcheCsv">Exporter en CSV (pour Excel)</button>
-          <button class="bouton" id="marcheAdrJson">Exporter les adresses de promotions</button>
-          <div id="mMarche"></div>
-        </div>
-
         <div class="rub">
           <h2>Portes d'entrée — Google News et Bing</h2>
           <p class="aide">Ces deux-là <b>ne vendent rien</b> : ni siège, ni catalogue, ni prix.
             Ce ne sont donc <b>pas des acteurs</b>, et ils n'ont pas de ligne dans la base —
-            sinon « Google News » y figurerait comme une enseigne. Mais ils ne sont
-            <b>pas éteints</b> pour autant : ce sont des <b>portes d'entrée</b>, les seuls
-            moyens de voir les marchands qui n'ont pas de flux lisible chez eux. Voici ce
-            qu'ils rapportent réellement. <b>« Pas un acteur » veut dire « compté à part »,
-            jamais « désactivé ».</b></p>
+            sinon « Google News » y figurerait comme une enseigne belge, et la base cesserait
+            de décrire un marché. Mais ils ne sont <b>pas éteints</b> pour autant : ce sont des
+            <b>portes d'entrée</b>, les seuls moyens de voir les marchands qui n'ont pas de flux
+            lisible chez eux (Delhaize, JBC, Spar, OKay…). Voici ce qu'ils rapportent réellement,
+            à la dernière collecte. <b>« Pas un acteur » veut dire « compté à part », jamais
+            « désactivé ».</b></p>
           <div id="mPortes"></div>
         </div>
-
         <div class="rub">
-          <h2>À régulariser, dans ce pays</h2>
-          <p class="aide">L'ordre de travail. D'abord ceux qu'on <b>voit</b> déjà sans les
-            lire (en veille) : ils ont des annonces, il ne manque que le branchement — et
-            c'est exactement là que la colonne « adresse des promotions » sert. Ensuite ceux
-            qu'on ne suit pas du tout : c'est là qu'un acteur ajouté ouvre une catégorie
-            entière.</p>
+          <h2>Les acteurs, par catégorie</h2>
+          <p class="aide">Le nombre d'articles est celui des annonces <b>en ligne</b> venant de
+            cet acteur. Les clics et les partages sont ceux relevés <b>sur cet appareil</b>
+            (voir l'onglet Trafic) : ils disent ce qui intéresse, pas seulement ce qui est
+            disponible. <b>Clique le nom d'un acteur</b> pour voir sa fiche (siège, téléphone,
+            e-mail, CA) — ces informations sont <b>documentaires</b> : elles figurent dans la
+            base et à l'export, mais <b>le programme ne s'en sert jamais</b>. La liaison se
+            fait uniquement sur le <b>nom</b> et le <b>site web</b>.</p>
+          <div class="champ" style="max-width:360px">
+            <label for="rechercheMarche">Chercher un acteur</label>
+            <input id="rechercheMarche" type="search" placeholder="nom de l'enseigne…" spellcheck="false">
+          </div>
+          <button class="bouton" id="marcheCsv">Exporter en CSV (pour Excel)</button>
+          <div id="mMarche"></div>
+        </div>
+        <div class="rub">
+          <h2>À régulariser, site par site</h2>
+          <p class="aide">L'ordre de travail. D'abord ceux qu'on <b>voit</b> déjà sans les lire
+            (en veille) : ils ont des annonces, il ne manque que le branchement. Ensuite ceux
+            qu'on ne suit pas du tout, catégorie par catégorie — c'est là qu'un site ajouté
+            ouvre une rubrique entière.</p>
           <div id="mMarchePlan"></div>
         </div>
       </section>
@@ -1095,71 +988,6 @@ function csv() {
  */
 let marche = null;
 let filtreMarche = '';
-/** Le pays consulté dans « Marché Euro ». Conservé d'une visite à l'autre :
- *  on revient toujours voir le même pays, et le laisser se réinitialiser
- *  obligerait à le rechoisir à chaque ouverture. */
-let paysChoisi = '';
-try { paysChoisi = localStorage.getItem('kazendra.pays') || ''; } catch { /* privé */ }
-
-/* ---------- LES ADRESSES DE PROMOTIONS, MODIFIABLES À LA MAIN ----------
- * B (08/10/2026) : « tu dois rajouter une colonne avec l'adresse internet où tu
- * vas prendre les informations à partager sur l'application. Cette colonne peut
- * être adaptée manuellement car je peux venir coller un lien. »
- *
- * UNE SEULE COLONNE, et c'est celle-là : l'endroit où l'application LIT. On y
- * affiche l'adresse saisie si elle existe, sinon celle de la source réellement
- * lue — pour que la colonne ne soit jamais vide quand on sait déjà où on lit.
- *
- * POURQUOI ELLE RESTE MODIFIABLE ALORS QU'ELLE EST PRÉ-REMPLIE. Si l'adresse
- * affichée vient de la source, la retoucher la transforme en « saisie » ; la
- * remettre identique à la source efface la saisie et rend la main à la source.
- * Sans cette règle, on ne saurait plus si une ligne est un choix ou un héritage.
- *
- * OÙ ELLE VIT, ET POURQUOI PAS DANS LA BASE. Le panneau publié est une page
- * statique : il n'écrit rien côté serveur. L'adresse est donc conservée SUR CET
- * APPAREIL, et s'exporte en JSON — c'est ce fichier que la collecte relira. Le
- * panneau le DIT à l'écran, plutôt que de laisser croire à un enregistrement
- * quelque part qu'on ne verrait pas.
- */
-const CLE_ADRESSES = 'kazendra.adressesPromo';
-
-function lireAdresses() {
-  try {
-    const d = JSON.parse(localStorage.getItem(CLE_ADRESSES) || '{}');
-    return d && typeof d === 'object' && !Array.isArray(d) ? d : {};
-  } catch { return {}; }
-}
-
-/** Enregistre l'adresse d'un acteur. Une adresse VIDÉE est retirée : garder une
- *  clé vide ferait croire à un réglage existant, et l'export la porterait. */
-function ecrireAdresse(nom, url) {
-  const d = lireAdresses();
-  const propre = String(url || '').trim();
-  if (propre) d[nom] = propre; else delete d[nom];
-  try { localStorage.setItem(CLE_ADRESSES, JSON.stringify(d)); } catch { /* plein */ }
-  return d;
-}
-
-/** L'adresse d'une source, par nom de source : ce qui permet de pré-remplir.
- *  On ne garde QUE la voie « flux » : une source de veille passe par un moteur,
- *  et coller « bing.com/news?q=… » comme adresse de promotions d'une enseigne
- *  serait donner une adresse de moteur en la faisant passer pour la sienne. */
-function urlsDesSources(catalogue) {
-  const m = {};
-  for (const s of ((catalogue && catalogue.sources) || [])) {
-    if (s.voie && s.voie !== 'flux') continue;
-    if (s.url && !m[s.nom]) m[s.nom] = s.url;
-  }
-  return m;
-}
-
-/** L'adresse affichée pour un acteur, et d'où elle vient. */
-function adresseActeur(a, adresses, urls) {
-  if (adresses[a.nom]) return { url: adresses[a.nom], origine: 'saisie' };
-  for (const s of (a.liaison.flux || [])) if (urls[s.nom]) return { url: urls[s.nom], origine: 'source' };
-  return { url: '', origine: 'aucune' };
-}
-
 
 /** Les clics et partages relevés sur cet appareil, regroupés par marchand.
  *  Les formes des noms sont calculées UNE fois : sur 139 acteurs, comparer des
@@ -1252,197 +1080,120 @@ function dessinerPortes() {
       <b>en veille</b>, jamais <b>branché</b>.</p>`;
 }
 
-/** Le nom lisible d'un pays. « BE » se lit mal dans une barre de choix ;
- *  « Belgique » se lit tout seul, dans la langue du lecteur. */
-const nomDuPays = (code) => {
-  try { return new Intl.DisplayNames(['fr'], { type: 'region' }).of(code) || code; }
-  catch { return code; }
-};
-
-/* ---------- LE MARCHÉ EURO ----------
- * B (08/10/2026) : « Comme on va rajouter les autres pays par la suite, tu vas
- * adapter l'onglet "Marché Euro" uniquement. Et dedans j'aurais le choix du pays
- * que je veux consulter. Quand je rentre dans le pays consulté j'ai un tableau
- * récapitulatif et en dessous, j'ai la liste des acteurs qui sont actifs ou pas.
- * Par catégorie. »
- *
- * CE QUI EST CALCULÉ AILLEURS, ET POURQUOI. Le croisement vit dans
- * `public/acteurs.js` (`paysDuMarche`, `marcheDuPays`) — des fonctions PURES,
- * que les tests exécutent telles quelles. Ici on n'affiche que leur résultat.
- * Recalculer la règle dans ce fichier la rendrait invérifiable : une règle
- * qu'on ne peut essayer que dans un navigateur ne se vérifie pas.
- */
-function dessinerBarrePays() {
-  const sel = document.getElementById('paysMarche');
-  const resume = document.getElementById('resumePays');
-  if (!sel) return;
-  if (!catalogue || !marche) { sel.innerHTML = ''; if (resume) resume.textContent = ''; return; }
-  const pays = paysDuMarche(catalogue, marche);
-  if (!pays.length) { sel.innerHTML = '<option value="">Aucun pays</option>'; if (resume) resume.textContent = ''; return; }
-  // Le pays choisi a pu disparaître (base modifiée) : on retombe sur le premier.
-  if (!pays.some((x) => x.pays === paysChoisi)) paysChoisi = pays[0].pays;
-  sel.innerHTML = pays.map((x) => `<option value="${esc(x.pays)}"${x.pays === paysChoisi ? ' selected' : ''}>`
-    + `${esc(nomDuPays(x.pays))} (${esc(x.pays)}) — ${nf.format(x.acteurs)} acteur(s), ${nf.format(x.flux)} branché(s)`
-    + `${x.base === 'à constituer' ? ' · base à constituer' : ''}</option>`).join('');
-  const cur = pays.find((x) => x.pays === paysChoisi);
-  if (resume) {
-    resume.innerHTML = cur && cur.base !== 'à constituer'
-      ? `${nf.format(cur.categories)} catégorie(s) · ${nf.format(cur.veille)} en veille · ${nf.format(cur.aucun)} non suivi(s)`
-      : (cur ? 'aucun acteur recensé pour ce pays' : '');
-  }
-}
-
 function dessinerMarche() {
   const zoneCompteurs = document.getElementById('mMarcheCompteurs');
-  const zoneRecap = document.getElementById('mPaysRecap');
   const zone = document.getElementById('mMarche');
   const zonePlan = document.getElementById('mMarchePlan');
   if (!marche || !marche.acteurs) {
     zoneCompteurs.innerHTML = '';
-    zoneRecap.innerHTML = '';
     zone.innerHTML = '<p class="vide">Base du marché non chargée : le fichier <b>acteurs.json</b> n’a pas répondu.</p>';
     zonePlan.innerHTML = '';
     return;
   }
-  const p = marcheDuPays(catalogue, marche, paysChoisi);
-  const c = p.compteurs;
-  const adresses = lireAdresses();
-  const urls = urlsDesSources(catalogue);
+  const r = liaisonActeurs(catalogue, marche);
+  const c = r.compteurs;
+  // D'OÙ VIENT CHAQUE ACTEUR. On sépare le tableur de B de ce que nous avons
+  // ajouté : sans cela, il ne pourrait plus distinguer ce qu'il a fourni de ce
+  // que nous avons complété — et sa base cesserait d'être la sienne.
+  const ajoutes = r.acteurs.filter((a) => a.provenance === 'application').length;
+  const duFichier = r.acteurs.length - ajoutes;
   const uniques = clicsEtPartages();
   const totalClics = uniques.reduce((n, e) => n + e.clics, 0);
   const totalPartages = uniques.reduce((n, e) => n + e.partages, 0);
-  const infosPays = paysDuMarche(catalogue, marche).find((x) => x.pays === paysChoisi) || {};
-  const saisies = Object.keys(adresses).length;
 
-  // --- Le récapitulatif du pays -------------------------------------------
   zoneCompteurs.innerHTML = [
-    [nf.format(c.acteurs), 'acteurs recensés'],
+    [nf.format(c.acteurs), `acteurs suivis · dont ${nf.format(ajoutes)} ajoutés`],
     [nf.format(c.flux), 'branchés (on lit chez eux)'],
     [nf.format(c.veille), 'en veille — pas branchés'],
     [nf.format(c.aucun), 'pas suivis du tout'],
-    [nf.format(c.annonces), 'articles venant d’eux'],
-    [nf.format(infosPays.articlesLus || 0), 'articles lus sur ce pays'],
-    [nf.format(p.categories.length), 'catégories'],
+    [nf.format(c.annonces), 'articles en ligne'],
     [nf.format(totalClics), 'clics vers un marchand'],
-  ].map(([n, lib]) => `<div class="mesure"><div class="gros">${n}</div><div class="lib">${esc(lib)}</div></div>`).join('');
+    [nf.format(totalPartages), 'partages'],
+  ].map(([n, lib]) => `<div class="mesure"><b>${n}</b><div class="lib">${lib}</div></div>`).join('');
 
-  zoneRecap.innerHTML = p.categories.length ? `
-    <table>
-      <tr><th>Catégorie</th><th class="n">Acteurs</th><th class="n">Branchés</th>
-        <th class="n">En veille</th><th class="n">Non suivis</th><th class="n">Articles</th></tr>
-      ${p.categories.map((k) => `<tr>
-        <td><b>${esc(k.categorie)}</b></td>
-        <td class="n">${nf.format(k.acteurs)}</td>
-        <td class="n ${k.flux ? 'ok' : 'ko'}">${nf.format(k.flux)}</td>
-        <td class="n">${nf.format(k.veille)}</td>
-        <td class="n">${nf.format(k.aucun)}</td>
-        <td class="n">${k.annonces ? nf.format(k.annonces) : '—'}</td></tr>`).join('')}
-      <tr style="font-weight:700">
-        <td>Total — ${esc(nomDuPays(paysChoisi))}</td>
-        <td class="n">${nf.format(c.acteurs)}</td>
-        <td class="n">${nf.format(c.flux)}</td>
-        <td class="n">${nf.format(c.veille)}</td>
-        <td class="n">${nf.format(c.aucun)}</td>
-        <td class="n">${nf.format(c.annonces)}</td></tr>
-    </table>
-    <p class="aide" style="margin-top:12px">Une catégorie dont « Branchés » est à zéro ne donne
-      <b>rien de direct</b> : tout ce qui la concerne n'arrive que par la presse ou un moteur.
-      <b>${nf.format(p.categories.filter((k) => !k.flux).length)} catégorie(s)</b> dans ce cas.
-      ${saisies ? `· <b>${nf.format(saisies)}</b> adresse(s) de promotions saisie(s) sur cet appareil.` : ''}</p>`
-    : '<p class="vide">Aucun acteur recensé pour ce pays. C’est une base à constituer, pas une panne : ' +
-      'la liste des acteurs viendra comme pour la Belgique.</p>';
-
-  // --- Les acteurs, par catégorie -----------------------------------------
-  // LA LIGNE DEMANDÉE : état, informations de siège, site, et l'adresse des
-  // promotions — le tout sur une seule ligne, pour ne pas avoir à recoller
-  // mentalement des blocs séparés.
+  // --- Les acteurs, par catégorie ----------------------------------------
   const f = filtreMarche.trim().toLowerCase();
+  const garde = r.acteurs.filter((a) => !f
+    || a.nom.toLowerCase().includes(f)
+    || (a.categorie || '').toLowerCase().includes(f)
+    || (a.pays || '').toLowerCase() === f
+    || (a.domaines || []).some((d) => d.includes(f)));
+  const parCat = {};
+  for (const a of garde) (parCat[a.categorie] = parCat[a.categorie] || []).push(a);
+  const cats = Object.entries(parCat).sort((x, y) => y[1].length - x[1].length || x[0].localeCompare(y[0]));
+
   const etiquette = (etat) => (etat === 'flux'
-    ? '<span class="pastille flux">branché</span>'
-    : (etat === 'veille' ? '<span class="pastille veille">en veille</span>'
-      : '<span class="pastille aucun">non suivi</span>'));
-  const blocAdresse = (a) => {
-    const d = adresseActeur(a, adresses, urls);
-    const note = d.origine === 'saisie' ? '<span class="etat-adr">saisie — utilisée par la collecte</span>'
-      : (d.origine === 'source' ? '<span class="etat-adr">relevée de la source lue</span>'
-        : '<span class="etat-adr">non renseignée</span>');
-    return `<div class="adr">
-      <input type="text" data-acteur="${esc(a.nom)}" value="${esc(d.url)}"
-        placeholder="colle ici l’adresse des promotions" spellcheck="false" autocomplete="off">
-      <div class="liens">${d.url ? `<a href="${esc(d.url)}" target="_blank" rel="noopener">ouvrir</a>` : ''}${note}</div>
-    </div>`;
-  };
-  const site = (a) => (a.domaines || []).length
-    ? `<div style="font-size:12.5px">${(a.domaines || []).map((d) => `<a href="https://${esc(d)}" target="_blank" rel="noopener">${esc(d)}</a>`).join('<br>')}</div>`
-    : '<span class="vide">—</span>';
+    ? '<span class="ok">branché</span>'
+    : (etat === 'veille' ? '<span style="color:var(--accent)">en veille</span>'
+      : '<span class="ko">non suivi</span>'));
 
-  const cats = p.categories.map((k) => ({ ...k,
-    liste: k.liste.filter((a) => !f || a.nom.toLowerCase().includes(f)
-      || (a.categorie || '').toLowerCase().includes(f)
-      || (a.domaines || []).some((d) => d.includes(f))) })).filter((k) => k.liste.length);
-
-  zone.innerHTML = cats.length ? `${cats.map((k) => `
-    <details${f ? ' open' : ''}>
-      <summary><b>${esc(k.categorie)}</b><span>${nf.format(k.liste.length)} acteur(s) ·
-        ${nf.format(k.flux)} branché(s) · ${nf.format(k.veille)} en veille ·
-        ${k.annonces ? nf.format(k.annonces) + ' articles' : 'aucun article'}</span></summary>
-      <div class="defile">
+  zone.innerHTML = cats.length ? `${cats.map(([cat, liste]) => {
+    const flux = liste.filter((a) => a.etat === 'flux').length;
+    const veille = liste.filter((a) => a.etat === 'veille').length;
+    const annonces = liste.reduce((n, a) => n + a.annonces, 0);
+    return `
+    <details>
+      <summary><b>${esc(cat)}</b><span>${liste.length} acteur(s) ·
+        ${flux} branché(s) · ${veille} en veille · ${nf.format(annonces)} articles</span></summary>
       <table>
-        <tr><th>Acteur</th><th>État</th><th class="n">Articles</th>
-          <th>Informations de siège</th><th>Site</th><th>Adresse des promotions</th></tr>
-        ${k.liste.map((a) => `<tr>
-          <td><b>${esc(a.nom)}</b>${a.provenance === 'application' ? ' <span class="ajout" title="Ajouté par l’application : ce site est lu, il ne figurait pas dans le tableur">ajouté</span>' : ''}
-            <div style="font-size:11.5px;color:var(--doux)">${esc(a.type || '—')}</div>
-            ${[...(a.liaison.flux || []), ...(a.liaison.veille || [])].length
-    ? `<div style="font-size:11px;color:var(--tres-doux);margin-top:3px">lu par ${[...a.liaison.flux, ...a.liaison.veille].map((s) => esc(s.nom)).join(' · ')}</div>` : ''}</td>
-          <td>${etiquette(a.etat)}</td>
-          <td class="n">${a.annonces ? nf.format(a.annonces) : '—'}</td>
-          <td>${ficheInfo(a) || '<span class="vide">—</span>'}</td>
-          <td>${site(a)}</td>
-          <td>${blocAdresse(a)}</td></tr>`).join('')}
+        <tr><th>Acteur</th><th>Type</th><th>Site</th><th>État</th>
+          <th class="n">Articles</th><th class="n">Clics</th><th class="n">Partages</th></tr>
+        ${liste.sort((a, b) => b.annonces - a.annonces || a.nom.localeCompare(b.nom)).map((a) => {
+          const act = actionsDe(formesDe(a.nom), uniques);
+          const liens = [...a.liaison.flux, ...a.liaison.veille].map((s) => esc(s.nom));
+          return `<tr>
+            <td><details><summary><b>${esc(a.nom)}</b>${a.provenance === 'application'
+              ? ' <span class="ajout" title="Ajouté par l’application : ce site est lu, il ne figurait pas dans le tableur">ajouté</span>' : ''}${a.pays && a.pays !== 'BE'
+              ? ` <span style="font-size:10.5px;color:var(--doux)">${esc(a.pays)}</span>` : ''}</summary>${ficheInfo(a)}</details>${liens.length ? `<div style="font-size:11.5px;color:var(--doux);margin-top:3px">${liens.join(' · ')}</div>` : ''}</td>
+            <td style="font-size:12px;color:var(--doux)">${esc(a.type || '—')}</td>
+            <td style="font-size:12px">${(a.domaines || []).length ? esc((a.domaines || []).join(' / ')) : '—'}</td>
+            <td>${etiquette(a.etat)}</td>
+            <td class="n">${a.annonces ? nf.format(a.annonces) : '—'}</td>
+            <td class="n">${act.clics ? nf.format(act.clics) : '—'}</td>
+            <td class="n">${act.partages ? nf.format(act.partages) : '—'}</td></tr>`;
+        }).join('')}
       </table>
-      </div>
-    </details>`).join('')}
+    </details>`;
+  }).join('')}
   <p class="aide" style="margin-top:12px">${f
-    ? `${cats.reduce((n, k) => n + k.liste.length, 0)} acteur(s) sur ${c.acteurs} correspondent à « ${esc(filtreMarche)} ».`
-    : `${nf.format(c.acteurs)} acteur(s) · ${nf.format(p.categories.length)} catégorie(s) · ${nf.format(totalPartages)} partage(s) relevés sur cet appareil · source : ${esc(marche.source || '—')}`}</p>`
-    : '<p class="vide">Aucun acteur ne correspond à cette recherche dans ce pays.</p>';
+    ? `${garde.length} acteur(s) sur ${r.acteurs.length} correspondent à « ${esc(filtreMarche)} ».`
+    : `${r.acteurs.length} acteurs · ${r.categories.length} catégories · ${duFichier} venus de ton tableur, ${ajoutes} ajoutés parce que l'application les lit · source : ${esc(marche.source || '—')}`}</p>`
+    : '<p class="vide">Aucun acteur ne correspond à cette recherche.</p>';
 
-  // --- Le plan de régularisation, pour ce pays ----------------------------
-  const veille = p.categories.flatMap((k) => k.liste).filter((a) => a.etat === 'veille')
+  // --- Le plan de régularisation ----------------------------------------
+  const veille = r.acteurs.filter((a) => a.etat === 'veille')
     .sort((a, b) => b.annonces - a.annonces || a.nom.localeCompare(b.nom));
-  const aucun = p.categories.flatMap((k) => k.liste).filter((a) => a.etat === 'aucun');
+  const aucun = r.acteurs.filter((a) => a.etat === 'aucun');
   zonePlan.innerHTML = `
-    <h2 style="margin-top:0">1. À brancher pour de vrai — ${nf.format(veille.length)} acteur(s) en veille</h2>
+    <h2 style="margin-top:0">1. À brancher pour de vrai — ${veille.length} acteur(s) en veille</h2>
     <p class="aide">On les VOIT déjà, mais par des articles qui parlent d'eux : leurs propres
-      promotions ne sont pas lues. Colle leur adresse de promotions dans la colonne ci-dessus,
-      et le branchement devient possible.</p>
-    ${veille.length ? `<div class="defile"><table>
-      <tr><th>Acteur</th><th>Catégorie</th><th>Vu par</th><th class="n">Articles</th><th>Adresse saisie</th></tr>
+      promotions ne sont pas lues. Les articles ci-dessous sont ceux qu'ils apportent
+      aujourd'hui. Le travail : trouver et brancher leur source réelle.</p>
+    <table>
+      <tr><th>Acteur</th><th>Catégorie</th><th>Vu par</th><th class="n">Articles</th></tr>
       ${veille.map((a) => `<tr>
         <td><b>${esc(a.nom)}</b><div style="font-size:11.5px;color:var(--doux)">${esc((a.domaines || []).join(' / ') || '—')}</div></td>
         <td style="font-size:12px">${esc(a.categorie)}</td>
         <td style="font-size:12px;color:var(--doux)">${a.liaison.veille.map((s) => esc(s.nom)).join(' · ')}</td>
-        <td class="n">${a.annonces ? nf.format(a.annonces) : '—'}</td>
-        <td style="font-size:12px">${adresses[a.nom] ? `<span class="ok">oui</span>` : '<span class="vide">à renseigner</span>'}</td></tr>`).join('')}
-    </table></div>` : '<p class="vide">Aucun acteur en veille dans ce pays.</p>'}
+        <td class="n">${a.annonces ? nf.format(a.annonces) : '—'}</td></tr>`).join('')}
+    </table>
 
-    <h2 style="margin-top:22px">2. Pas suivis du tout — ${nf.format(aucun.length)} acteur(s)</h2>
-    <p class="aide">Aucune source. C'est ici qu'un acteur ajouté ouvre une catégorie entière.</p>
-    ${aucun.length ? Object.entries(aucun.reduce((m, a) => { (m[a.categorie] = m[a.categorie] || []).push(a); return m; }, {}))
+    <h2 style="margin-top:22px">2. Pas suivis du tout — ${aucun.length} acteur(s)</h2>
+    <p class="aide">Aucune source. C'est ici qu'un site ajouté ouvre une catégorie entière.
+      Les catégories sont ordonnées par nombre d'acteurs à traiter.</p>
+    ${Object.entries(aucun.reduce((m, a) => { (m[a.categorie] = m[a.categorie] || []).push(a); return m; }, {}))
     .sort((x, y) => y[1].length - x[1].length || x[0].localeCompare(y[0]))
     .map(([cat, liste]) => `<details>
-      <summary><b>${esc(cat)}</b><span>${nf.format(liste.length)} acteur(s) à traiter</span></summary>
-      <div class="defile"><table>
-        <tr><th>Acteur</th><th>Type</th><th>Site</th><th>Distribution</th><th class="n">Article(s)</th></tr>
-        ${liste.slice().sort((a, b) => a.nom.localeCompare(b.nom)).map((a) => `<tr>
+      <summary><b>${esc(cat)}</b><span>${liste.length} acteur(s) à traiter</span></summary>
+      <table>
+        <tr><th>Acteur</th><th>Type</th><th>Site</th><th>Distribution</th></tr>
+        ${liste.sort((a, b) => a.nom.localeCompare(b.nom)).map((a) => `<tr>
           <td>${esc(a.nom)}</td>
           <td style="font-size:12px;color:var(--doux)">${esc(a.type || '—')}</td>
           <td style="font-size:12px">${esc((a.domaines || []).join(' / ') || '—')}</td>
-          <td style="font-size:12px;color:var(--doux)">${esc(a.distribution || '—')}</td>
-          <td class="n">${a.annonces ? nf.format(a.annonces) : '—'}</td></tr>`).join('')}
-      </table></div>
-    </details>`).join('') : '<p class="vide">Tous les acteurs de ce pays sont suivis d’une manière ou d’une autre.</p>'}`;
+          <td style="font-size:12px;color:var(--doux)">${esc(a.distribution || '—')}</td></tr>`).join('')}
+      </table>
+    </details>`).join('')}`;
 }
 
 /** L'export CSV du marché : la liste de travail, ouvrable dans Excel.
