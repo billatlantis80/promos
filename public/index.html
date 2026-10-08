@@ -10,10 +10,733 @@
 <!-- L'icône du site : le même K que l'en-tête, en vectoriel (net à toute taille,
      et rien à télécharger de plus). -->
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
-<!-- Polices de l'identité, SERVIES EN LOCAL (voir fonts.css) : aucune requête
-     vers Google, donc aucune donnée d'utilisateur transmise à un tiers. -->
-<link rel="stylesheet" href="fonts.css">
-<link rel="stylesheet" href="app.css">
+<!-- DEBUT-FEUILLE-EN-LIGNE -->
+<!--
+     FEUILLE DE STYLE EN LIGNE — écrite par bin/inliner-css.mjs.
+
+     Elle n’est PAS appelée en fichier externe, volontairement : le 08/10/2026
+     le site s’affichait sans habillage sur le PC de B parce que les fichiers
+     .css étaient coupés en chemin (antivirus, bloqueur, proxy) — alors que le
+     panneau /admin/, qui écrit son style dans sa page, s’affichait bien.
+     Écrite ici, la feuille ne peut plus être coupée. Total identique : le HTML
+     grossit de ce que le fichier .css pesait, et un aller-retour disparaît.
+
+     Ne pas modifier à la main : éditer public/app.css ou public/fonts.css,
+     puis relancer « node bin/inliner-css.mjs ». Le test
+     tests/css-en-ligne.test.mjs échoue si ce bloc et les fichiers divergent.
+-->
+<style>
+/* ========== fonts.css — les polices de l’identité, servies en local ========== */
+/* Polices de l'identité Kazendra : Montserrat (titres) et Open Sans (texte).
+   SERVIES EN LOCAL — aucune requête vers Google au chargement, donc aucune
+   donnée d'utilisateur transmise à un tiers, et le site reste autonome.
+   Google sert le MEME fichier pour 600 et 700 (polices variables) : on ne
+   stocke donc que 4 fichiers (2 familles x latin + latin-ext) au lieu de 8,
+   soit 188 Ko au lieu de 384 Ko. 'font-display: swap' affiche le texte
+   immédiatement avec la police système puis bascule — jamais de page vide. */
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 600 800;
+  font-display: swap;
+  src: url('fonts/montserrat-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 600 800;
+  font-display: swap;
+  src: url('fonts/montserrat-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('fonts/opensans-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('fonts/opensans-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* ========== app.css — tout l’habillage du site ========== */
+/* Application n°2 — feuille de style. Sombre, dense, lisible au pouce. */
+:root {
+  --fond: #0c0d10;
+  --carte: #14161b;
+  --carte-2: #1a1d24;
+  --bord: #262a33;
+  --texte: #eceef3;
+  --doux: #9aa1ae;
+  --accent: #ff8a3d;
+  --accent-2: #ffd166;
+  --vert: #3ddc84;
+  --rouge: #ff5c5c;
+  /* --tete : fond de l'en-tête collant (il doit suivre le thème, sinon une
+     bande sombre resterait en haut d'un thème clair).
+     --sur-accent : couleur du texte posé SUR la couleur d'accent. Un accent
+     clair demande du texte sombre, un accent sombre demande du texte clair :
+     sans cette variable, un thème à accent foncé donnait du texte illisible. */
+  --tete: rgba(12, 13, 16, .94); --sur-tete: #eceef3;
+  --sur-accent: #1b1206;
+  --rayon: 14px;
+  /* Polices de l'identité (voir fonts.css). Deux variables : les onze thèmes
+     en héritent sans avoir à les redéfinir. */
+  --police-titre: "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --police-texte: "Open Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  /* --anneau : l'anneau de focus des champs. Par défaut l'accent ; un thème
+     dont l'accent est trop clair pour se détacher du bord du champ peut le
+     durcir (c'est le cas du thème « kazendra », voir plus bas). */
+  --anneau: var(--accent);
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--fond);
+  color: var(--texte);
+  font-family: var(--police-texte);
+  font-size: 15px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+  padding-bottom: 40px;
+}
+
+/* Titres en Montserrat (identité). Le PRIX est traité comme un titre : dans une
+   carte de promo, c'est lui qu'on lit en premier — d'où sa présence ici. */
+h1, h2, h3, h4, .marque b, .prix { font-family: var(--police-titre); }
+
+/* ---------- En-tête ---------- */
+.tete {
+  position: sticky; top: 0; z-index: 10;
+  background: var(--tete);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--bord);
+  padding: 10px 12px 0;
+}
+.tete-in { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.marque { display: flex; align-items: center; gap: 8px; font-size: 17px; letter-spacing: .2px; }
+.pastille { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 12px var(--accent); }
+/* Le logo de marque : un carré arrondi bleu et le K blanc. Taille fixe pour que
+   l'en-tête ne bouge pas d'un pixel quand la police système change. */
+/* L'icone EST deja un carre arrondi : pas de border-radius, il rognerait son
+   propre galbe. 26 px et non 22 : a 22 px le liseré blanc et les pistes se
+   noient (mesure faite sur les rendus). */
+.logo { width: 26px; height: 26px; display: block; flex: 0 0 auto; }
+
+/* Le mot et l'accroche, empiles : l'accroche est SOUS le nom, comme sur le
+   logotype fourni. */
+.marque-txt { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+/* Le mot KAZENDRA portait un dégradé bleu -> orange, de gauche à droite
+   (« Le dégradé est pour le mot Kazendra »). B a demandé de l'ENLEVER le
+   08/10/2026 : « Tu peux enlever le dégradé ». Le mot est désormais en APLAT,
+   de la couleur du texte de l'en-tête — blanc sur les neuf en-têtes sombres,
+   encre sur les trois thèmes clairs.
+   « inherit » et non une teinte figée : la couleur suit donc DÉJÀ le thème.
+   Une teinte en dur aurait obligé à re-mesurer le contraste sur les douze
+   thèmes, et à maintenir une déclinaison « sombre / clair » comme avant. */
+.marque-nom {
+  color: inherit;
+}
+.accroche {
+  font-size: 9.5px; font-weight: 600; letter-spacing: .55px;
+  text-transform: uppercase; opacity: .72; white-space: nowrap;
+}
+.comptes { color: var(--doux); font-size: 12px; text-align: right; }
+.barre { display: flex; gap: 8px; margin: 10px 0; align-items: stretch; }
+#recherche {
+  flex: 1; min-width: 0; background: var(--carte); color: var(--texte);
+  border: 1px solid var(--bord); border-radius: 10px; padding: 10px 10px; font-size: 14px;
+}
+/* Le texte d'aide est un peu plus petit que la saisie : sans cela, « Chercher un
+   produit, un marchand… » débordait du champ et se faisait COUPER (« un
+   marcha »). Défaut apparu le jour où l'identité a remplacé la police du système
+   par Open Sans, plus large à taille égale. Le mot « marchand » et son ellipse
+   doivent tenir EN ENTIER : une phrase tronquée a l'air d'un bug. */
+#recherche::placeholder { font-size: 12.5px; }
+#recherche:focus { outline: 2px solid var(--anneau); outline-offset: -1px;}
+/* Le sélecteur de pays vit à côté de la recherche, pas dans la barre du bas :
+   celle-ci est déjà pleine (tri, affichage, éco, favoris, réglages) et y ajouter
+   un champ de plus écraserait tout le reste. */
+#pays {
+  flex: 0 0 auto; max-width: 42%;
+  background: var(--carte); color: var(--texte); border: 1px solid var(--bord);
+  border-radius: 10px; padding: 8px 6px; font-size: 13px;
+}
+#pays:focus { outline: 2px solid var(--anneau); outline-offset: -1px;}
+#paysReglages {
+  width: 100%; background: var(--carte); color: var(--texte);
+  border: 1px solid var(--bord); border-radius: 10px; padding: 10px 8px; font-size: 14px;
+}
+#tri {
+  background: var(--carte); color: var(--texte); border: 1px solid var(--bord);
+  border-radius: 10px; padding: 8px 6px; font-size: 13px; flex: 1; min-width: 0;
+}
+/* Barre d'outils : tri, affichage, économie de données, favoris. */
+.outils { display: flex; gap: 6px; margin: 0 0 10px; align-items: stretch; }
+.outil {
+  flex: 0 0 auto; background: var(--carte); color: var(--doux);
+  border: 1px solid var(--bord); border-radius: 10px; padding: 8px 10px;
+  font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;
+}
+.outil.on { background: var(--accent); border-color: var(--accent); color: var(--sur-accent); font-weight: 600; }
+.outil .n { font-size: 11px; opacity: .85; }
+/* Sélecteur d'affichage : trois boutons, l'actif en orange. */
+/* Les trois modes d'affichage. Le GRAND CADRE qui les entourait est retiré
+   (demande de B : « il faut minimiser le grand rectangle qui entoure les trois
+   possibilités. Il faut que ce soit plus propre »). Chaque mode se présente
+   comme un bouton ordinaire, de la même famille que les autres réglages : plus
+   de boîte dans la boîte, qui mangeait de la place et alourdissait la ligne. */
+.vues { display: inline-flex; gap: 6px; flex: 0 0 auto; }
+.vue {
+  background: var(--carte-2); border: 1px solid var(--bord); color: var(--doux);
+  cursor: pointer; font-size: 15px; line-height: 1; padding: 9px 13px; border-radius: 9px;
+}
+.vue:hover { border-color: var(--accent-2); }
+.vue.on { background: var(--accent); border-color: var(--accent); color: var(--sur-accent); font-weight: 700; }
+.puces { display: flex; gap: 6px; overflow-x: auto; padding: 0 0 10px; scrollbar-width: none; }
+.puces::-webkit-scrollbar { display: none; }
+.puce {
+  flex: 0 0 auto; background: var(--carte); color: var(--doux); border: 1px solid var(--bord);
+  border-radius: 999px; padding: 6px 12px; font-size: 13px; cursor: pointer; white-space: nowrap;
+}
+.puce.on { background: var(--accent); border-color: var(--accent); color: var(--sur-accent); font-weight: 600; }
+.puce .n { opacity: .65; font-size: 11px; margin-left: 4px; }
+
+/* ---------- Bandeau d'information ---------- */
+.bandeau { margin: 12px; padding: 10px 12px; border-radius: var(--rayon); font-size: 13px; display: none; }
+.bandeau.on { display: block; }
+.bandeau.info { background: #16202b; border: 1px solid #24405a; color: #cfe4f7; }
+.bandeau.alerte { background: #2a1717; border: 1px solid #5a2626; color: #ffd4d4; }
+
+/* ---------- Grille d'offres ----------
+   Trois modes d'affichage, choisis par l'utilisateur (voir .vues) :
+     - grille   : deux offres côte à côte, même sur téléphone ;
+     - liste    : une offre par ligne, grand visuel — le confort de lecture ;
+     - compacte : vignette à gauche, texte à droite — on en balaie beaucoup.
+   Le mode vit sur <body data-vue="…"> : le CSS fait le travail, pas le JS, et
+   l'affichage reste juste même si le script échoue (défaut = grille). */
+main { padding: 0 12px; }
+.grille { display: grid; gap: 10px; grid-template-columns: 1fr; }
+
+body[data-vue="grille"] .grille { grid-template-columns: 1fr 1fr; }
+@media (min-width: 620px) { body[data-vue="grille"] .grille { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 980px) { body[data-vue="grille"] .grille { grid-template-columns: repeat(4, 1fr); } }
+
+/* En tableau, les cartes sont étroites : on resserre le visuel et la typo,
+   sinon deux offres côte à côte ne tiennent pas sur un téléphone. */
+body[data-vue="grille"] .offre .visuel { height: 118px; }
+body[data-vue="grille"] .offre .corps { padding: 9px 10px 10px; gap: 6px; }
+body[data-vue="grille"] .offre h3 { font-size: 13px; }
+body[data-vue="grille"] .prix { font-size: 16px; }
+body[data-vue="grille"] .btn { font-size: 13px; padding: 9px 10px; }
+body[data-vue="grille"] .etiquette { font-size: 10.5px; padding: 2px 7px; }
+
+body[data-vue="liste"] .offre .visuel { height: 200px; }
+
+/* Compacte : la carte devient une ligne, le visuel une vignette. */
+body[data-vue="compacte"] .grille { gap: 8px; }
+body[data-vue="compacte"] .offre { flex-direction: row; }
+body[data-vue="compacte"] .offre .visuel {
+  flex: 0 0 88px; width: 88px; height: 88px;
+  border-bottom: 0; border-right: 1px solid var(--bord);
+  background-size: cover;
+}
+body[data-vue="compacte"] .offre .corps { padding: 9px 10px; gap: 5px; }
+body[data-vue="compacte"] .offre h3 {
+  font-size: 13.5px;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+body[data-vue="compacte"] .offre .ligne { gap: 5px; }
+body[data-vue="compacte"] .prix { font-size: 16px; }
+body[data-vue="compacte"] .btn { font-size: 13px; padding: 8px 10px; }
+body[data-vue="compacte"] .quand { font-size: 11px; }
+
+.offre {
+  position: relative;   /* repère des éléments positionnés de la carte */
+  background: var(--carte); border: 1px solid var(--bord); border-radius: var(--rayon);
+  overflow: hidden; display: flex; flex-direction: column;
+}
+/* Étoile « garder de côté » : dans l'encadré de la carte, posée sur la ligne du
+   prix — donc entre le prix et le bouton, et JAMAIS sur la photo. Sa largeur est
+   fixe et elle ne se laisse pas comprimer : c'est le bouton qui garde sa place. */
+.favori {
+  flex: 0 0 auto;
+  width: 30px; height: 30px; border-radius: 9px; cursor: pointer;
+  background: var(--carte-2); border: 1px solid var(--bord);
+  color: var(--doux); font-size: 15px; line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+}
+.favori.on { color: var(--accent-2); border-color: var(--accent-2); }
+/* Favori dont l'offre a quitté la liste : on le dit, plutôt que de laisser
+   croire que le prix affiché est encore valable. */
+.etiquette.perime { background: transparent; border-style: dashed; color: var(--accent-2); }
+
+/* Économie de données : les visuels ne sont même pas DEMANDÉS (voir app.js) ;
+   cette règle ne sert qu'à rattraper une carte rendue avant l'activation. */
+body[data-eco="1"] .offre .visuel { display: none; }
+.offre .visuel {
+  height: 168px; background: var(--carte-2) center/contain no-repeat;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--doux); font-size: 12px; border-bottom: 1px solid var(--bord);
+}
+.offre .corps { padding: 11px 12px 12px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.offre h3 { margin: 0; font-size: 14.5px; font-weight: 600; line-height: 1.35; }
+.offre .ligne { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.etiquette {
+  font-size: 11.5px; padding: 3px 8px; border-radius: 999px;
+  background: var(--carte-2); border: 1px solid var(--bord); color: var(--doux);
+}
+.etiquette.marchand { color: var(--texte); font-weight: 600; }
+.remise { background: var(--accent); color: var(--sur-accent); font-weight: 700; border: 0; }
+.remise.calculee { background: transparent; color: var(--accent-2); border: 1px dashed var(--accent-2); font-weight: 600; }
+/* L'économie en euros — le chiffre qui décide d'un achat. Bordure d'accent
+   plutôt que fond plein : sur les dix thèmes, un fond coloré n'a pas toujours
+   de quoi écrire dessus lisiblement. */
+.etiquette.econ { background: transparent; border-color: var(--accent-2); color: var(--accent-2); font-weight: 700; }
+/* La « bonne affaire » : l'enseigne ne publie pas ses prix, donc la carte n'en
+   montre aucun. Bordure tiretée, comme « n'est plus dans la liste » — ici le
+   tiret signale une information ABSENTE, pas une promotion. Surtout pas de fond
+   plein coloré : rien qui puisse se confondre avec une remise. */
+.etiquette.affaire { background: transparent; border-style: dashed; color: var(--doux); }
+/* Issue de secours quand aucune promotion vérifiée n'existe dans ce rayon. */
+#voirTout {
+  margin-top: 10px; padding: 10px 16px; border-radius: 10px; font-size: 14px;
+  border: 1px solid var(--accent); background: var(--accent); color: var(--sur-accent);
+  font-weight: 600; cursor: pointer;
+}
+/* Ligne du prix : le montant, groupé. */
+.prix {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 19px; font-weight: 700; letter-spacing: -.3px;
+}
+.prix .avant { font-size: 12.5px; font-weight: 400; color: var(--doux); text-decoration: line-through; margin-left: 6px; }
+/* Le bas de l'encadré : à GAUCHE le rectangle de redirection et, SOUS lui, la
+   mise à jour de l'offre ; à DROITE les deux icônes empilées (étoile au-dessus,
+   partage en dessous) — demande de B : « l'icône partage et favoris doit être à
+   droite ». Les deux colonnes démarrent à la même hauteur (align-items:
+   flex-start), donc les icônes sont alignées sur le rectangle.
+   margin-top: auto garde le bas collé au pied d'une carte plus haute. */
+.offre .bas { margin-top: auto; display: flex; align-items: flex-start; gap: 8px; }
+.col-icones {
+  flex: 0 0 auto; width: 34px;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+}
+.col-envoi { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.btn {
+  flex: 1; text-align: center; text-decoration: none; font-size: 14px; font-weight: 600;
+  padding: 10px 12px; border-radius: 11px; background: var(--accent); color: var(--sur-accent);
+}
+.btn.ghost { background: transparent; color: var(--doux); border: 1px solid var(--bord); flex: 0 0 auto; font-weight: 500; }
+.quand { font-size: 11.5px; color: var(--doux); text-align: center; }
+
+/* ---------- Partage d'une offre ----------
+   L'ICÔNE SEULE, sans mot : c'est la flèche de partage que Facebook et WhatsApp
+   emploient, tout le monde la reconnaît. Le bouton reste rond et discret sous
+   l'heure de parution : il ne doit pas concurrencer le bouton d'achat.
+   Le titre et aria-label sont CONSERVÉS — sans eux, un lecteur d'écran
+   annoncerait un bouton sans nom.
+   Le bouton vit dans la colonne d'icônes, SOUS l'étoile : plus de marge haute.
+   La colonne étant désormais au bord DROIT de la carte, le menu s'ouvre vers la
+   GAUCHE (right: 0) ; ancré à gauche, il sortirait de la carte. */
+.ligne-partage { position: relative; display: flex; }
+.partager {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 34px; height: 34px; padding: 0;
+  background: transparent; border: 1px solid var(--bord); border-radius: 50%;
+  color: var(--doux); cursor: pointer;
+}
+.partager svg { width: 19px; height: 19px; fill: currentColor; display: block; }
+.partager:hover, .partager:focus-visible { color: var(--accent-2); border-color: var(--accent-2); }
+.col-envoi .btn { flex: 0 0 auto; }
+.menu-partage {
+  position: absolute; right: 0; bottom: calc(100% + 6px); z-index: 6;
+  display: flex; flex-direction: column; min-width: 158px;
+  background: var(--carte); border: 1px solid var(--bord); border-radius: 10px;
+  box-shadow: 0 8px 22px rgba(0,0,0,.20); overflow: hidden;
+}
+.menu-partage a, .menu-partage button {
+  display: block; width: 100%; text-align: left; text-decoration: none;
+  background: transparent; border: 0; color: var(--texte);
+  font: inherit; font-size: 13px; padding: 10px 12px; cursor: pointer;
+}
+.menu-partage a + a, .menu-partage a + button { border-top: 1px solid var(--bord); }
+.menu-partage button[disabled] { color: var(--vert); }
+
+/* ---------- Divers ---------- */
+.vide, .plus { text-align: center; color: var(--doux); margin: 26px 0; font-size: 14px; }
+.plus button {
+  background: var(--carte); color: var(--texte); border: 1px solid var(--bord);
+  border-radius: 11px; padding: 11px 18px; font-size: 14px; cursor: pointer;
+}
+.pied { margin: 26px 12px 0; padding-top: 16px; border-top: 1px solid var(--bord); color: var(--doux); font-size: 12px; }
+.pied p { margin: 0 0 8px; }
+.pied .note { opacity: .8; }
+
+/* Mentions de prix obligatoires (programme Partenaires) : lisibles et jamais
+   repliées — une mention cachée ne satisfait pas la condition. */
+.mentions-prix { margin: 10px 0; padding: 10px 12px; border: 1px solid var(--bord); border-radius: 10px; }
+.mentions-prix h2 { margin: 0 0 6px; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: var(--texte); opacity: .9; }
+.mentions-prix p { margin: 0 0 6px; }
+.mentions-prix p:last-child { margin-bottom: 0; }
+#prixReleves { font-weight: 600; color: var(--texte); opacity: .95; }
+
+/* Le VERDICT de la promo : une PHRASE, pas une pastille décorative. Elle vient
+   d'un historique réellement relevé — quand il n'y en a pas, elle ne s'affiche
+   pas du tout, plutôt que d'afficher du vide. */
+.verdict { margin: 6px 0 0; font-size: 12px; line-height: 1.35; color: var(--doux); }
+.verdict::before { content: '◆ '; }
+.verdict.v-bonPlanRare { color: var(--accent); font-weight: 700; }
+.verdict.v-sousPrixHabituel { color: var(--accent); }
+.verdict.v-remiseVerifiee { opacity: .85; }
+.verdict.v-referenceDouteuse,
+.verdict.v-incoherent { color: var(--accent-2); font-weight: 700; }
+
+/* ============================================================
+   THÈMES — onze palettes
+   Chaque thème ne fait que REdéfinir des variables : aucune règle de mise en
+   page n'y touche. Changer de thème ne peut donc rien casser dans la carte, la
+   grille ou les boutons. Le thème vit sur <html data-theme="…"> et « nuit »
+   reste le défaut si rien n'a été choisi.
+   ============================================================ */
+/* Thème de MARQUE — l'identité Kazendra.
+   Interface CLAIRE : fond blanc pur, cartes gris très clair, en-tête bleu nuit
+   (celui de la planche). Son texte est forcé en clair : sans cela le --texte
+   sombre du thème clair deviendrait illisible dessus.
+
+   PALETTE RELEVÉE PAR MESURE sur la planche, pas recopiée : les codes imprimés
+   sur la planche sont illisibles et CONTREDISENT leurs propres pastilles (ils
+   annoncent un vert et un cramoisi là où la planche dessine du bleu et de
+   l'orange). Les pastilles ont donc été échantillonnées : #2A93C1, #EB912D,
+   #2A689C, #0D3B5B, #B96C2A.
+
+   Chaque couple texte/fond est MESURÉ (seuil WCAG AA = 4,5:1) :
+     orange vif #EB912D porte du BLEU NUIT, jamais du blanc ...... 4,81:1
+       (blanc sur cet orange = 2,44:1 — insuffisant, mesuré puis écarté)
+     ambre #A85B10 sur carte ..................................... 4,78:1
+     bleu acier #2A689C sur carte ................................ 5,60:1
+     vert #1B7F4B 4,76:1 · rouge #C0392B 5,16:1 · doux 4,86:1
+   L'anneau de focus est durci en ambre : l'orange vif ne tient que 2,2:1
+   contre le bord des champs, sous le seuil de 3:1 des éléments d'interface. */
+html[data-theme="kazendra"] {
+  --fond: #ffffff; --carte: #f8f9fa; --carte-2: #eef2f6; --bord: #dce4ec;
+  --texte: #16324a; --doux: #5b7085;
+  --accent: #eb912d; --accent-2: #a85b10;
+  --vert: #1b7f4b; --rouge: #c0392b;
+  --tete: #0d3b5b; --sur-accent: #0d3b5b; --sur-tete: #ffffff;
+  --anneau: #a85b10;
+}
+html[data-theme="kazendra"] .marque,
+html[data-theme="kazendra"] .marque b { color: #ffffff; }
+/* (Le dégradé du mot — et ses deux déclinaisons « en-tête sombre » et
+   « en-tête clair » — a été retiré le 08/10/2026 : le mot est en aplat. Ne pas
+   réintroduire --mot-deg-*, la feuille n'en a plus besoin.) */
+html[data-theme="kazendra"] .marque b { letter-spacing: 1.3px; font-weight: 800; }
+html[data-theme="kazendra"] .comptes { color: rgba(255, 255, 255, .78); }
+/* Ici --accent est l'ORANGE vif (boutons, badges), donc trop clair pour servir
+   de couleur de TEXTE sur fond blanc : les verdicts passent au bleu acier et à
+   l'ambre, tous deux mesurés au-dessus du seuil. */
+html[data-theme="kazendra"] .verdict.v-bonPlanRare,
+html[data-theme="kazendra"] .verdict.v-sousPrixHabituel { color: #2a689c; }
+html[data-theme="nuit"] {
+  --fond: #0c0d10; --carte: #14161b; --carte-2: #1a1d24; --bord: #262a33;
+  --texte: #eceef3; --doux: #9aa1ae;
+  --accent: #ff8a3d; --accent-2: #ffd166;
+  --tete: rgba(12, 13, 16, .94); --sur-accent: #1b1206; --sur-tete: #eceef3;
+}
+html[data-theme="ardoise"] {
+  --fond: #0e1418; --carte: #131c21; --carte-2: #18242b; --bord: #22333c;
+  --texte: #e6eef2; --doux: #93a6b1;
+  --accent: #35c6e0; --accent-2: #8be9fd;
+  --tete: rgba(14, 20, 24, .94); --sur-accent: #04222a; --sur-tete: #e6eef2;
+}
+html[data-theme="foret"] {
+  --fond: #0d130f; --carte: #121b14; --carte-2: #17241a; --bord: #243526;
+  --texte: #e8f0e6; --doux: #9bb098;
+  --accent: #7ed957; --accent-2: #d9f99d;
+  --tete: rgba(13, 19, 15, .94); --sur-accent: #10230a; --sur-tete: #e8f0e6;
+}
+html[data-theme="bordeaux"] {
+  --fond: #140d10; --carte: #1d1317; --carte-2: #251820; --bord: #3a2430;
+  --texte: #f2e9ec; --doux: #b09aa4;
+  --accent: #e0567a; --accent-2: #ffd166;
+  --tete: rgba(20, 13, 16, .94); --sur-accent: #2a0714; --sur-tete: #f2e9ec;
+}
+html[data-theme="violette"] {
+  --fond: #100d18; --carte: #181326; --carte-2: #201a30; --bord: #2f2545;
+  --texte: #ece8f7; --doux: #a79ec2;
+  --accent: #b06bff; --accent-2: #ff7ae0;
+  --tete: rgba(16, 13, 24, .94); --sur-accent: #17072b; --sur-tete: #ece8f7;
+}
+html[data-theme="ocean"] {
+  --fond: #08111d; --carte: #0e1a2b; --carte-2: #132238; --bord: #1d3350;
+  --texte: #e6eefb; --doux: #8fa4c2;
+  --accent: #38bdf8; --accent-2: #5eead4;
+  --tete: rgba(8, 17, 29, .94); --sur-accent: #04202f; --sur-tete: #e6eefb;
+}
+/* Thèmes clairs : l'accent doit rester assez sombre pour que le texte posé
+   dessus soit lisible, et --accent-2 (étoile gardée, remise calculée) doit
+   contraster avec du blanc, sinon il disparaît. */
+html[data-theme="clair"] {
+  --fond: #f5f6f8; --carte: #ffffff; --carte-2: #eef0f4; --bord: #dcdfe6;
+  --texte: #14161b; --doux: #656c7a;
+  /* #c04d0a et non un orange vif : mesuré 4,88:1 avec le texte blanc du bouton
+     et 4,51:1 contre le fond — les deux au-dessus du seuil de lisibilité. */
+  --accent: #c04d0a; --accent-2: #b25b00;
+  --tete: rgba(245, 246, 248, .94); --sur-accent: #ffffff; --sur-tete: #14161b;
+}
+html[data-theme="sable"] {
+  --fond: #faf6ef; --carte: #ffffff; --carte-2: #f2ece1; --bord: #e2d9c9;
+  --texte: #2a241d; --doux: #7a6d5c;
+  --accent: #a3671a; --accent-2: #8a5a12;
+  --tete: rgba(250, 246, 239, .94); --sur-accent: #ffffff; --sur-tete: #2a241d;
+}
+html[data-theme="aube"] {
+  --fond: #fdf3f7; --carte: #ffffff; --carte-2: #f7e9f0; --bord: #ecd7e3;
+  --texte: #2b1b23; --doux: #806b76;
+  --accent: #c72c72; --accent-2: #9c2b60;
+  --tete: rgba(253, 243, 247, .94); --sur-accent: #ffffff; --sur-tete: #2b1b23;
+}
+/* Contraste : pensée pour la lisibilité extrême (malvoyance, plein soleil). */
+html[data-theme="contraste"] {
+  --fond: #000000; --carte: #0a0a0a; --carte-2: #171717; --bord: #6b6b6b;
+  --texte: #ffffff; --doux: #d8d8d8;
+  --accent: #ffd700; --accent-2: #ffff00;
+  --tete: rgba(0, 0, 0, .96); --sur-accent: #000000; --sur-tete: #ffffff;
+}
+
+/* ============================================================
+   RÉGLAGES — feuille plein écran (thèmes, affichage, profil, compte)
+   ============================================================ */
+.feuille {
+  position: fixed; inset: 0; z-index: 40; overflow-y: auto;
+  background: var(--fond); padding: 0 12px 48px;
+}
+.feuille[hidden] { display: none; }
+/* UN SEUL BLOC COLLANT POUR LE HAUT DES RÉGLAGES.
+   Défaut mesuré au navigateur, dans le thème de marque : `.feuille-tete` ET
+   `.onglets` étaient tous deux `position: sticky; top: 0`. Au défilement, les
+   deux se collaient au même endroit, et la barre des onglets — blanche, avec un
+   `z-index` supérieur — passait PAR-DESSUS le bandeau bleu. Le titre
+   « Réglages » disparaissait sous les onglets. Ce n'est pas un problème de
+   couleur : c'est un problème d'ordre d'empilement, et aucune couleur ne le
+   corrige.
+   Le remède n'est pas de jouer sur les z-index — ce serait reculer le défaut
+   d'un cran, et le prochain élément collant le ramènerait. On ne garde qu'UN
+   seul bloc collant, qui contient le bandeau ET ses onglets : ils deviennent
+   solidaires, comme l'en-tête de la page principale, et le recouvrement devient
+   impossible par construction. La hauteur du bandeau n'a plus à être connue :
+   elle change avec la police et avec la langue (« Thème et affichage » est plus
+   long que « Theme and display »), et un `top` en pixels codé en dur se
+   tromperait un jour sur deux. */
+.feuille-haut {
+  position: sticky; top: 0; z-index: 2;
+  background: var(--tete); backdrop-filter: blur(10px);
+  margin: 0 -12px; padding: 0 12px;
+}
+.feuille-tete {
+  margin: 0; padding: 12px 0;
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+}
+/* LE TITRE DU BANDEAU PREND --sur-tete, ET NON --texte. Le bandeau a un fond
+   pris dans --tete, qui n'a rien à voir avec le fond de la page : dans le thème
+   « kazendra », --tete est bleu nuit (#0D3B5B) alors que --texte est bleu foncé
+   (#16324A). Sans ce jeton, « Réglages » s'écrivait bleu foncé sur bleu nuit —
+   relevé au navigateur, illisible. Un test mesure les onze thèmes. */
+.feuille-tete h2 { margin: 0; font-size: 18px; color: var(--sur-tete); }
+.fermer {
+  background: var(--carte); color: var(--texte); border: 1px solid var(--bord);
+  border-radius: 10px; padding: 8px 14px; font-size: 14px; cursor: pointer;
+}
+.rubrique { margin: 20px 0 0; }
+.rubrique > h3 {
+  margin: 0 0 4px; font-size: 12.5px; letter-spacing: .8px;
+  text-transform: uppercase; color: var(--doux);
+}
+.rubrique > p { margin: 0 0 10px; font-size: 13px; color: var(--doux); }
+/* Grille des dix thèmes : chaque vignette montre fond, carte et accent. */
+.themes { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+@media (min-width: 520px) { .themes { grid-template-columns: repeat(3, 1fr); } }
+.theme {
+  display: flex; align-items: center; gap: 9px; text-align: left; cursor: pointer;
+  background: var(--carte); color: var(--texte); border: 1px solid var(--bord);
+  border-radius: 12px; padding: 8px 10px; font-size: 13.5px;
+}
+.theme.on { border-color: var(--accent); font-weight: 600; box-shadow: 0 0 0 1px var(--accent) inset; }
+.theme .pastilles { display: flex; flex: 0 0 auto; border-radius: 7px; overflow: hidden; border: 1px solid var(--bord); }
+.theme .pastilles i { display: block; width: 11px; height: 26px; }
+.theme .nom { flex: 1; min-width: 0; }
+.theme .coche { color: var(--accent); }
+.champ { display: flex; flex-direction: column; gap: 6px; margin: 10px 0; }
+.champ label { font-size: 13px; color: var(--doux); }
+.champ input {
+  background: var(--carte); color: var(--texte); border: 1px solid var(--bord);
+  border-radius: 10px; padding: 10px 12px; font-size: 15px;
+}
+.champ input:focus { outline: 2px solid var(--anneau); outline-offset: -1px;}
+
+/* ---------- Le petit œil des mots de passe ----------
+   Demande de B : « une fois tapé on ne voit que des étoiles et pas les lettres,
+   on ne sait pas vérifier si les mots de passe sont identiques. »
+   Le bouton est POSÉ DANS le champ, à droite, et non à côté : il ne prend pas
+   de place dans la colonne, et il reste au bord droit quelle que soit la
+   longueur du mot de passe. Le champ lui réserve sa largeur (padding-right),
+   sinon un mot de passe long passerait sous l'icône. */
+.avec-oeil { position: relative; display: flex; }
+.avec-oeil input { flex: 1; min-width: 0; padding-right: 44px; }
+.oeil {
+  position: absolute; right: 4px; top: 50%; transform: translateY(-50%);
+  display: flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px; padding: 0; cursor: pointer;
+  background: none; border: 0; border-radius: 8px; color: var(--doux);
+}
+.oeil:hover { color: var(--texte); background: var(--carte-2); }
+.oeil:focus-visible { outline: 2px solid var(--anneau); outline-offset: -2px; }
+.oeil svg { width: 20px; height: 20px; display: block; fill: currentColor; }
+.enregistrer {
+  background: var(--accent); color: var(--sur-accent); border: 0; border-radius: 11px;
+  padding: 11px 16px; font-size: 15px; font-weight: 600; cursor: pointer;
+}
+.ligne-profil { display: flex; align-items: center; gap: 12px; }
+.avatar {
+  width: 42px; height: 42px; flex: 0 0 auto; border-radius: 50%;
+  background: var(--accent); color: var(--sur-accent);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 17px;
+}
+.carte-bloc { background: var(--carte); border: 1px solid var(--bord); border-radius: var(--rayon); padding: 12px; font-size: 13.5px; }
+.carte-bloc h4 { margin: 0 0 6px; font-size: 14.5px; }
+.carte-bloc p { margin: 0 0 8px; color: var(--doux); }
+.carte-bloc ul { margin: 6px 0 0; padding-left: 18px; color: var(--doux); }
+.annonce { margin: 10px 0 0; font-size: 13px; color: var(--vert); }
+
+/* PIÈGE PAYÉ : l'attribut `hidden` du navigateur pose « display: none », mais
+   une règle de classe qui fixe « display: flex » est PLUS FORTE que lui. Le
+   verrou restait donc affiché en permanence et interceptait tous les appuis :
+   l'application ne répondait plus à rien. Il faut rendre explicitement la main
+   à `hidden`. */
+/* Le verrou et la question du pays partagent la même mécanique : un panneau qui
+   couvre tout. Deux classes, une seule mise en forme — et surtout la même
+   reprise explicite de `hidden`, sinon le panneau resterait posé sur l'écran et
+   intercepterait tous les appuis (défaut déjà payé une fois ici). */
+.verrou, .modale {
+  position: fixed; inset: 0; z-index: 60; padding: 20px;
+  background: rgba(8,9,12,.94);
+  display: flex; align-items: center; justify-content: center;
+}
+.verrou[hidden], .modale[hidden] { display: none; }
+.verrou-boite, .modale-boite {
+  width: 100%; max-width: 440px; padding: 20px; max-height: 86vh; overflow-y: auto;
+  background: var(--carte); border: 1px solid var(--bord); border-radius: var(--rayon);
+}
+.verrou-boite h2, .modale-boite h2 { margin: 0 0 10px; font-size: 18px; }
+.verrou-intro, .modale-intro { margin: 0 0 14px; font-size: 13px; line-height: 1.55; color: var(--doux); }
+.verrou-erreur { margin: 0 0 10px; font-size: 13px; color: var(--accent-2); }
+/* Choix du pays : une liste qu'on touche. Le pays conseillé (d'après la langue
+   de l'appareil) est marqué — mais rien n'est décidé à la place de personne. */
+.pays-liste { display: flex; flex-direction: column; gap: 6px; margin: 0 0 12px; }
+.pays-item {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 10px;
+  padding: 11px 13px; cursor: pointer; text-align: left;
+  background: var(--carte-2); color: var(--texte);
+  border: 1px solid var(--bord); border-radius: 11px; font-size: 14px;
+}
+.pays-item span { font-size: 12px; color: var(--doux); }
+.pays-item.conseille { border-color: var(--accent); }
+.pays-item:hover { border-color: var(--accent-2); }
+/* Pays ACTIF dans les réglages. La liste remplace un menu déroulant (demande de
+   B), donc elle doit dire lequel est choisi aussi clairement qu'un <select> le
+   ferait — même langage visuel que la langue active. */
+.pays-item.on { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; font-weight: 600; }
+/* La liste des pays, sur deux colonnes, chacune avec son drapeau (demande de B :
+   « il faut que le pays soit aussi avec le drapeau. Et partager sur deux
+   colonnes pour gagner de la place »).
+   « pays-2col » est désormais porté par le module PARTAGÉ : la question
+   d'ouverture et l'onglet Réglages affichent la MÊME liste, au même dessin
+   (demande de B du 08/10/2026 : « il faut proposer le même module qui est dans
+   les paramètres d'utilisateur avec les drapeaux, sur deux colonnes »).
+   Auparavant, seule la liste des Réglages avait cette classe : celle d'ouverture
+   restait sur une colonne, sans drapeau, avec « 1 664 offres » écrit en clair. */
+.pays-liste.pays-2col { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+@media (min-width: 620px) { .pays-liste.pays-2col { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.pays-2col .pays-item { align-items: center; padding: 9px 10px; font-size: 13px; gap: 7px; }
+.pays-2col .pays-item b { flex: 1 1 auto; min-width: 0; font-size: 12.5px; }
+.pays-2col .pays-item .n { flex: 0 0 auto; font-size: 11.5px; }
+
+/* ---------- Langues : drapeau + nom natif, en liste ----------
+   Demande de B : « mettre les drapeaux des pays avec la langue à côté » et
+   « pas besoin de menu déroulant ». Neuf langues tiennent sur deux colonnes,
+   toutes visibles d'un coup : un menu déroulant en cachait huit sur neuf. */
+.aide-reglages { margin: 0 0 10px; font-size: 12.5px; color: var(--doux); }
+.langues { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.langue {
+  display: flex; align-items: center; gap: 9px;
+  padding: 10px 11px; cursor: pointer; text-align: left;
+  background: var(--carte-2); color: var(--texte);
+  border: 1px solid var(--bord); border-radius: 11px;
+  font: inherit; font-size: 14px;
+}
+.langue:hover { border-color: var(--accent-2); }
+.langue.on { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; font-weight: 600; }
+/* Le drapeau est un DESSIN, pas une image : aucune requête réseau (règle
+   d'économie de données), et le même rendu sur toutes les machines — les emoji
+   drapeaux se transforment en lettres « FR » sous Windows. Le liseré est
+   nécessaire : un drapeau à bandes blanches (Pologne) se confondrait sinon avec
+   la carte claire des thèmes lumineux. */
+.drap { flex: 0 0 auto; display: block; line-height: 0; }
+.drap svg { display: block; width: 27px; height: 18px; border-radius: 3px; box-shadow: 0 0 0 1px rgba(0, 0, 0, .2); }
+.nom-langue { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.langue .coche { color: var(--accent); flex: 0 0 auto; }
+/* Bouton qui ressemble à un lien : pour les actions de secours (mot de passe
+   oublié), on ne veut pas qu'elles aient l'air d'une action principale. */
+.lien-bouton {
+  padding: 4px 0; border: 0; background: none; cursor: pointer;
+  color: var(--doux); font-size: 13px; text-decoration: underline;
+}
+.fiche-compte { display: flex; align-items: center; gap: 10px; margin: 0 0 10px; }
+.fiche-compte .qui { font-size: 14px; font-weight: 600; }
+.fiche-compte .quand { font-size: 12px; color: var(--doux); }
+.compte-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 0; }
+.danger { color: var(--accent-2); border-color: var(--accent-2); }
+
+/* ---------- Réglages en onglets ----------
+   Les réglages étaient une seule colonne si longue qu'on n'y trouvait plus
+   rien. Chaque famille a son onglet ; la barre reste collée en haut du
+   compartiment pour qu'on sache toujours où l'on est — mais c'est `.feuille-haut`
+   qui la porte et qui colle. Voir le commentaire de ce bloc plus haut : deux
+   éléments collants au même endroit finissent par se recouvrir. */
+.onglets {
+  display: flex; gap: 6px; overflow-x: auto; padding: 4px 0 10px;
+  position: static; background: transparent;
+  border-bottom: 1px solid var(--bord);
+}
+.onglet {
+  flex: 0 0 auto; padding: 8px 13px; border-radius: 999px; cursor: pointer;
+  background: var(--carte); border: 1px solid var(--bord); color: var(--doux);
+  font: inherit; font-size: 13.5px; font-weight: 600;
+}
+.onglet.on { background: var(--accent); border-color: var(--accent); color: var(--sur-accent); }
+.panneau { padding-top: 4px; }
+.panneau[hidden] { display: none; }
+.connexion:hover, .connexion:focus-visible { filter: brightness(.94); }
+
+/* Les icônes d'Android : même taille et même graisse que dans la barre
+   d'état, pour qu'on les reconnaisse au premier coup d'œil. */
+.outil svg, .favori svg { width: 18px; height: 18px; fill: currentColor; display: block; }
+.favori svg { width: 17px; height: 17px; }
+
+</style>
+<!-- FIN-FEUILLE-EN-LIGNE -->
 <style>
 /* =============================================================================
    FILET DE SÉCURITÉ — le seul style qui ne vient pas de app.css.

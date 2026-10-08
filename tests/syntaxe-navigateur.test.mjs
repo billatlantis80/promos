@@ -48,7 +48,10 @@ test('les commentaires CSS sont équilibrés dans app.css', () => {
 test('index.html ne référence que des fichiers qui existent', () => {
   const html = lire('index.html');
   const refs = [...html.matchAll(/(?:src|href)="([^"#?:]+\.(?:js|css))"/g)].map((m) => m[1]);
-  assert.ok(refs.length >= 2, `aucune ressource trouvée dans index.html : ${refs}`);
+  // Depuis le 08/10/2026 la feuille de style est EN LIGNE : le seul fichier
+  // .js/.css encore appelé est le programme. Le contrôle garde son sens :
+  // tout ce qui est appelé doit exister.
+  assert.ok(refs.includes('app.js'), `index.html doit charger app.js (trouvé : ${refs})`);
   for (const r of refs) {
     assert.doesNotThrow(() => lire(r.replace(/^\.\//, '')), `ressource manquante : ${r}`);
   }

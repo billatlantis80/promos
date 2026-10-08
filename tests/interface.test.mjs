@@ -35,7 +35,16 @@ const lire = (f) => fs.readFileSync(path.join(ICI, '..', 'public', f), 'utf8');
 
 const css = lire('app.css');
 const js = lire('app.js');
-const html = lire('index.html');
+// La feuille de style est posée EN LIGNE dans index.html (voir bin/inliner-css.mjs,
+// conséquence du défaut du 08/10/2026 : les .css externes étaient coupés sur le
+// PC de B). On la retire AVANT de lire la structure : ses sélecteurs
+// (`body[data-vue="grille"]`, `.logo`) et ses commentaires (le mot « étiquette »)
+// ressemblent sinon aux éléments que ces contrôles cherchent, et le test
+// accuserait du code juste. Le <style> du filet de secours, lui, reste en place.
+const html = lire('index.html').replace(
+  /<!-- DEBUT-FEUILLE-EN-LIGNE -->[\s\S]*?<!-- FIN-FEUILLE-EN-LIGNE -->/,
+  '<!-- feuille en ligne retirée : ces contrôles portent sur la structure -->',
+);
 
 test('la feuille de style n’a aucun commentaire laissé ouvert', () => {
   const ouverts = (css.match(/\/\*/g) || []).length;
