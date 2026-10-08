@@ -123,6 +123,8 @@ let etat = {
   // on ne montre que ce qui vaut le déplacement, et l'utilisateur qui veut tout
   // voir le demande (dernier choix du sélecteur de tri).
   portee: 'promos',
+  // Index ASIN → offres, construit une seule fois au chargement.
+  indexProduits: null,
 };
 
 /* ---------- Mode d'affichage ----------
@@ -844,6 +846,128 @@ const montant = (v, devise) => {
   return d.avant ? d.symbole + n : n + ' ' + d.symbole;
 };
 
+
+/* =============================================================================
+   LE MÊME PRODUIT, SUR UNE AUTRE PLACE DE MARCHÉ
+
+   Demande de B, 08/10/2026 : « Tu dois garder les mêmes produits qui viennent
+   d'Amazon, mais tu peux préciser qu'il y a moins cher dans un autre Amazon. »
+
+   Les places de marché Amazon vendent le MÊME produit, chacune à son prix :
+   mesuré sur le catalogue publié le 08/10/2026, 279 produits sont vendus sur au
+   moins deux places (837 offres). Exemple réel : le même home trainer Wahoo à
+   6 089 kr sur amazon.se et à 429,99 € sur amazon.de.
+
+   La clé qui dit « c'est le même produit » est l'ASIN, présent dans l'adresse
+   (« /dp/B0FLQDCR7X »). Le PAYS ne suffit pas : les offres autrichiennes
+   pointent vers amazon.de, comme les allemandes — deux pays, une seule boutique.
+   On regroupe donc par PLACE DE MARCHÉ, pas par pays.
+
+   CE QU'ON AFFIRME, ET CE QU'ON TAIT :
+     • « moins cher » n'est dit QUE si les deux prix sont dans LA MÊME monnaie :
+       là, la comparaison ne dépend d'aucun cours de change.
+     • entre deux monnaies, on nomme l'autre place et son prix DANS SA MONNAIE,
+       sans jamais convertir ni classer. Convertir exigerait un cours de change,
+       refusé par le projet (voir la note de la DEVISE ci-dessus).
+   ============================================================================= */
+
+/** L'adresse d'une offre, quelle que soit celle qui est renseignée. */
+const lienDe = (o) => String((o && (o.lienMarchand || o.lienPage)) || '');
+
+/** Une offre vendue par une place de marché Amazon. Lue sur le LIEN, pour que
+ *  cette tranche de code se suffise à elle-même (aucune voisine à appeler). */
+const estPlaceAmazon = (o) => /^(?:https?:\/\/)?(?:www\.)?amazon\.[a-z.]{2,7}\//i.test(lienDe(o));
+
+/** La place de marché d'une adresse : « amazon.de », « amazon.se »… */
+function placeAmazon(o) {
+  const m = lienDe(o).replace(/^https?:\/\/(?:www\.)?/i, '').match(/^(amazon\.[a-z.]{2,7})/i);
+  return m ? m[1].toLowerCase().replace(/\.$/, '') : '';
+}
+
+/** L'ASIN : la seule clé qui dise « c'est le même produit ». */
+function asinDe(o) {
+  const m = lienDe(o).match(/\/(?:dp|gp\/product|gp\/aw\/d)\/([A-Z0-9]{10})(?:[/?#]|$)/);
+  return m ? m[1] : '';
+}
+
+/** « amazon.de » → « Amazon.de » : une place se nomme comme elle s'écrit. */
+const nomPlace = (place) => place ? place.charAt(0).toUpperCase() + place.slice(1) : '';
+
+/** Index ASIN → offres, construit UNE SEULE FOIS au chargement. Le reconstruire
+ *  à chaque carte ferait parcourir 14 000 offres vingt-quatre fois par rendu. */
+function indexerProduits(offres) {
+  const index = new Map();
+  for (const o of offres || []) {
+    if (!o || !estPlaceAmazon(o)) continue;
+    const a = asinDe(o);
+    if (!a) continue;
+    if (!index.has(a)) index.set(a, []);
+    index.get(a).push(o);
+  }
+  return index;
+}
+
+/** Les autres places qui vendent CE produit, et si l'une est moins chère.
+ *
+ *  Renvoie { moinsCher, autres } :
+ *    moinsCher : la place MOINS CHÈRE DANS LA MÊME monnaie (null s'il n'y en a
+ *                pas — et null aussi quand le frère est en monnaie étrangère :
+ *                on ne classe pas ce qu'on ne peut pas comparer) ;
+ *    autres    : les autres places, une par place, chacune avec SON prix.
+ *
+ *  Ne convertit jamais rien et ne modifie jamais une offre : les prix rendus
+ *  sont exactement ceux du catalogue. */
+function autresPlaces(o, index) {
+  const vide = { moinsCher: null, autres: [] };
+  if (!o || !index || typeof index.get !== 'function' || !estPlaceAmazon(o)) return vide;
+  const asin = asinDe(o);
+  const maPlace = placeAmazon(o);
+  if (!asin || !maPlace) return vide;
+  const maDevise = deviseDe(o).code;
+
+  const vues = new Set([maPlace]);
+  const autres = [];
+  let moinsCher = null;
+  for (const x of index.get(asin) || []) {
+    if (x === o || x.id === o.id) continue;
+    const place = placeAmazon(x);
+    if (!place || vues.has(place)) continue;   // une seule ligne par place
+    if (x.prix == null) continue;
+    vues.add(place);
+    const devise = deviseDe(x);
+    if (devise.code === maDevise && o.prix != null && x.prix < o.prix) {
+      if (!moinsCher || x.prix < moinsCher.prix) {
+        moinsCher = { place, prix: x.prix, devise, id: x.id };
+      }
+    } else {
+      autres.push({ place, prix: x.prix, devise, id: x.id });
+    }
+  }
+  // Même monnaie d'abord (comparable), puis du moins cher au plus cher.
+  autres.sort((x, y) => ((x.devise.code === maDevise ? 0 : 1) - (y.devise.code === maDevise ? 0 : 1))
+    || (x.prix - y.prix));
+  return { moinsCher, autres: autres.slice(0, 2) };
+}
+
+/** La mention affichée sur la carte — vide quand il n'y a rien à dire. */
+function mentionAilleurs(o) {
+  const { moinsCher, autres } = autresPlaces(o, etat.indexProduits);
+  if (!moinsCher && !autres.length) return '';
+  const morceaux = [];
+  if (moinsCher) {
+    morceaux.push('<b>' + esc(t('Moins cher sur {place} : {prix}', {
+      place: nomPlace(moinsCher.place), prix: montant(moinsCher.prix, moinsCher.devise),
+    })) + '</b>');
+  }
+  for (const a of autres) {
+    morceaux.push(esc(t('Aussi sur {place} : {prix}', {
+      place: nomPlace(a.place), prix: montant(a.prix, a.devise),
+    })));
+  }
+  return '<p class="ailleurs" title="' + esc(t("Le même produit, sur une autre place de marché. Les prix ne sont pas convertis : chacun s'affiche dans sa monnaie.")) + '">'
+    + morceaux.join(' · ') + '</p>';
+}
+
 function ilYA(iso) {
   const mn = Math.round((Date.now() - new Date(iso).getTime()) / 60000);
   if (!Number.isFinite(mn)) return '';
@@ -1319,6 +1443,8 @@ function carte(o) {
     ? `${montant(o.prix, deviseDe(o))}${o.prixAvant ? `<span class="avant">${montant(o.prixAvant, deviseDe(o))}</span>` : ''}`
     : '';
   const prix = montantHtml ? `<div class="prix"><span class="montant">${montantHtml}</span></div>` : '';
+  // Le même produit ailleurs, et s'il y est moins cher : voir autresPlaces().
+  const ailleurs = mentionAilleurs(o);
   // Le VERDICT de la promo — ce que l'HISTORIQUE DES PRIX permet d'affirmer.
   // Il reste vide quand on n'a pas assez de recul : un badge inventé serait
   // pire que pas de badge du tout.
@@ -1349,6 +1475,7 @@ function carte(o) {
       <div class="ligne">${etiquettes}</div>
       ${verdict ? `<p class="verdict v-${esc(o.verdict.code)}">${verdict}</p>` : ''}
       ${prix}
+      ${ailleurs}
       <div class="bas">
         <!-- Le bouton de redirection, et SOUS lui la mise à jour de l'offre. -->
         <div class="col-envoi">
@@ -2189,6 +2316,9 @@ async function lancer() {
       else throw e;
     }
     etat.offres = (d.offres || []).filter((o) => o.lienPage || o.lienMarchand);
+    // L'index des produits multi-places se construit ICI, une fois : les cartes
+    // le consultent ensuite sans jamais reparcourir le catalogue.
+    etat.indexProduits = indexerProduits(etat.offres);
     etat.meta = { ...d, amazon: false, reseaux: false };
     const aff = await import('./affiliation.js');
     etat.meta.amazon = aff.marchesAmazonActifs().length > 0;
