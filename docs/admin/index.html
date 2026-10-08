@@ -160,10 +160,21 @@ details.pourquoi p b{color:var(--texte)}
 .defile{overflow-x:auto;margin:0 -4px}
 table{width:100%;border-collapse:collapse;font-size:13.5px}
 th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--bord)}
+/* L'EN-TÊTE COLLANT PASSE SOUS LA BARRE DU SITE, IL NE SE CACHE PAS DERRIÈRE.
+   Défaut mesuré en défilant : la barre « Kazendra » reste collée en haut avec un
+   z-index plus élevé, donc l'en-tête du tableau allait s'y cacher — on faisait
+   défiler un tableau sans jamais revoir le nom de ses colonnes. La hauteur de la
+   barre est mesurée au chargement et posée dans `--haut-tete`. */
 th{
   color:var(--doux);font-weight:600;font-size:11.5px;text-transform:uppercase;letter-spacing:.6px;
-  position:sticky;top:0;background:var(--carte);z-index:1
+  position:sticky;top:var(--haut-tete,61px);background:var(--carte);z-index:2
 }
+/* SAUF DANS UN CONTENEUR QUI DÉFILE. Là, le décalage prévu pour la barre du site
+   s'appliquerait à un défilement qui n'existe pas : l'en-tête descendrait de
+   soixante pixels au-dessus des premières lignes, et masquerait la donnée. Un
+   conteneur de défilement horizontal n'a de toute façon pas besoin d'en-tête
+   collant verticalement. */
+.defile th{position:static}
 tbody tr:hover td,table tr:hover td{background:rgba(63,159,208,.07)}
 td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
 /* LES NOMBRES NE PRENNENT QUE LEUR PLACE. Défaut mesuré à l'écran : un tableau à
@@ -783,9 +794,22 @@ function dessinerSources() {
   // identifiants de configuration. Ils venaient du journal, qui parle en
   // identifiants, alors que le catalogue publié porte le nom de chaque source
   // (`sources[].nom`). Le pont existe : on s'en sert.
+  //
+  // HUIT IDENTIFIANTS N'ONT AUCUN NOM, et ce sont les plus trompeurs : les
+  // requêtes THÉMATIQUES de Google News (`gnews-tech`, `gnews-jouets`…). Elles
+  // ne figurent pas dans le catalogue des sources — ce ne sont pas des sites,
+  // ce sont les recherches d'une porte d'entrée. Les laisser s'afficher en
+  // `gnews-tech` faisait passer une requête pour un site. On les NOMME, et on
+  // dit ce qu'elles sont.
   const nomDe = {};
   for (const s of (o.sources || [])) nomDe[s.id] = s.nom || s.id;
-  const nom = (x) => nomDe[x.source] || x.source;
+  const nom = (x) => {
+    const id = x.source || '?';
+    if (nomDe[id]) return nomDe[id];
+    if (/^gnews-/.test(id)) return `Google News — thème « ${id.slice(6)} »`;
+    if (/^bing-/.test(id)) return `Bing News — thème « ${id.slice(5)} »`;
+    return id;
+  };
 
   // Le journal écrit `items` (annonces LUES dans le flux) et `retenues` (gardées
   // après les filtres) — pas `n`. L'ancienne version affichait `x.n || 0` : la
@@ -1945,7 +1969,7 @@ function dessinerAffiliation() {
     <h2>Les réseaux qui comptent dans ce pays</h2>
     <p class="aide">C'est par ici qu'on s'inscrit : un réseau couvre plusieurs enseignes
       d'un coup. Le nombre est celui des programmes trouvés chez lui.</p>
-    <table>
+    <table class="etroite2">
       <tr><th>Réseau</th><th class="n">Programmes</th></tr>
       ${v.reseaux.map((r) => `<tr><td><b>${esc(r.nom)}</b></td><td class="n">${nf.format(r.n)}</td></tr>`).join('')}
     </table>` : '';
@@ -2259,6 +2283,13 @@ async function ouvrir() {
   // CLIQUANT. C'est exactement pour ça qu'on exerce l'artefact au lieu de le
   // regarder.
   brancher();
+  // La hauteur RÉELLE de la barre du site, mesurée et publiée en variable CSS :
+  // c'est elle qui dit où l'en-tête collant des tableaux doit s'arrêter. Écrite
+  // en dur, elle serait fausse dès que la barre change (logo, zoom, mobile).
+  try {
+    const t = document.getElementById('tete');
+    if (t) document.documentElement.style.setProperty('--haut-tete', `${t.offsetHeight}px`);
+  } catch { /* on garde la valeur de repli */ }
   const r = relais();
   try {
     const rep = await fetch('../offres.json', { cache: 'no-store' });
