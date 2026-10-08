@@ -600,6 +600,90 @@ function lienReel(lien) {
   return m ? decodeURIComponent(m[1]) : l;
 }
 
+/* ------------------------------------------------------------------ *
+ *  LA RUBRIQUE D'UN SITE, ET LA VOIE PAR LAQUELLE ON LE LIT.
+ *  (demande de B, 08/10/2026 : « classe-les par pays et par rubrique :
+ *   supermarché, presse, e-commerce… »)
+ *
+ *  DEUX NOTIONS QU'IL NE FAUT PAS CONFONDRE. Les mélanger rendrait la liste
+ *  inutilisable pour ce qu'elle doit servir — trouver des sites à activer.
+ *
+ *    - La RUBRIQUE dit ce que le site EST : « supermarché », « presse & médias »,
+ *      « communauté de bons plans », « électro & high-tech »… C'est le classement
+ *      demandé. Une rubrique se DÉDUIT (jamais saisie à la main plus loin que la
+ *      petite table ci-dessous, que les tests tiennent en place).
+ *
+ *    - La VOIE dit COMMENT on lit le site. « flux » : le site publie ses offres
+ *      et on les lit chez lui. « veille » : aucune offre n'est lisible chez le
+ *      marchand (page en JavaScript, 403, image seule — mesuré un par un, voir
+ *      SOURCES.md) et on ne l'atteint qu'à travers un moteur de recherche qui
+ *      parle de lui.
+ *
+ *  C'est la VOIE qui répond à la vraie question. Un site en « veille » n'est pas
+ *  branché : il est surveillé de loin, les annonces viennent d'articles de presse
+ *  qui le mentionnent. Le jour où il publie un flux lisible, on le branche et sa
+ *  ligne change de voie. Sans cette colonne, on chercherait longtemps pourquoi
+ *  « Delhaize » n'apporte pas de vraies promos : il est en veille, pas en flux.
+ * ------------------------------------------------------------------ */
+
+/** Le secteur d'un marchand, d'après son nom. Clés sans accent ni casse. */
+const SECTEUR_MARCHAND = {
+  colruyt: 'supermarché', delhaize: 'supermarché', lidl: 'supermarché',
+  aldi: 'supermarché', carrefour: 'supermarché', 'intermarche': 'supermarché',
+  spar: 'supermarché', 'bio-planet': 'supermarché', okay: 'supermarché',
+  'supermarches': 'supermarché', supermarkten: 'supermarché',
+  hubo: 'bricolage & jardin', brico: 'bricolage & jardin',
+  gamma: 'bricolage & jardin', toolstation: 'bricolage & jardin',
+  dreamland: 'jouets & enfants', fun: 'jouets & enfants', 'maxi toys': 'jouets & enfants',
+  'media markt': 'électro & high-tech', 'vanden borre': 'électro & high-tech',
+  'krefel': 'électro & high-tech', coolblue: 'électro & high-tech',
+  jbc: 'mode & chaussures', torfs: 'mode & chaussures',
+  kruidvat: 'droguerie & beauté', hema: 'maison & variété', action: 'maison & variété',
+  zooplus: 'animalerie', groupon: 'activités & sorties', amazon: 'e-commerce',
+  'social deal': 'activités & sorties',
+};
+
+/** Le secteur d'un marchand nommé, ou null. Tolère « Colruyt promotie (BE) » :
+ *  on cherche le préfixe marchand le plus long, pour que « Folder Colruyt » ne
+ *  se perde pas et que « Maxi Toys » ne se coupe pas en « Maxi ». */
+function secteurMarchand(nom) {
+  const n = sansAccents(String(nom || '').toLowerCase()).replace(/\s*\([a-z]{2}\)\s*$/, '').trim();
+  if (!n) return null;
+  const cles = Object.keys(SECTEUR_MARCHAND)
+    .filter((k) => n === k || n.startsWith(k + ' '))
+    .sort((a, b) => b.length - a.length);
+  return cles.length ? SECTEUR_MARCHAND[cles[0]] : null;
+}
+
+/** LA RUBRIQUE d'un site. Déduite, jamais saisie : la table ci-dessus ne porte
+ *  que ce que le NOM ne dit pas. Une source peut poser `rubrique` en clair pour
+ *  forcer la main. */
+function rubriqueDeSite(s) {
+  if (!s) return 'autre';
+  if (s.rubrique) return s.rubrique;
+  const u = String(s.url || '');
+  // Un MOTEUR : la rubrique du marchand qu'il surveille, sinon « moteur de veille ».
+  if (/news\.google\.com|\bbing\.com\/news/.test(u)) {
+    return secteurMarchand(s.marchandImpose || s.nom) || 'moteur de veille';
+  }
+  if (s.type === 'dealabs') return 'communauté de bons plans';
+  if (s.type === 'groupon' || s.type === 'socialdeal') return 'activités & sorties';
+  if (s.type === 'amazon' || s.type === 'flash') return 'e-commerce';
+  // Une enseigne branchée : son secteur si le nom le dit (Coolblue → électro,
+  // Zooplus → animalerie), sinon du commerce en ligne.
+  if (s.type === 'enseigne') return secteurMarchand(s.nom) || 'e-commerce';
+  if (s.type === 'presse') return 'presse & médias';
+  return 'autre';
+}
+
+/** LA VOIE : « flux » (lisible chez le marchand) ou « veille » (vu à travers un
+ *  moteur). C'est le champ qui dit quels sites sont réellement branchés. */
+function voieDeSite(s) {
+  if (s && s.voie) return s.voie;
+  const u = String((s && s.url) || '');
+  return /news\.google\.com|\bbing\.com\/news/.test(u) ? 'veille' : 'flux';
+}
+
 /** Toutes les sources, France et Europe. Exporté pour que les tests vérifient
     que chacune déclare bien un pays — une source sans pays enverrait ses offres
     dans le mauvais pays, sans que rien ne le signale. */
@@ -612,7 +696,7 @@ export { MOTS_PROMO, motsPromo, ecarterTuiles, veilleParPays, lienReel, dedupliq
    (outils/verificateur-categories.mjs) et les tests rejouent `famille()` sur
    les offres publiées. Un contrôle qui recopierait la table des mots serait un
    contrôle qui vérifie sa propre copie — donc rien du tout. */
-export { famille, FAMILLES, MARQUES, MOTS_FORTS, CATEGORIES_SOURCES, categorieDeSource, sansAccents, sansNegations, offresEnseigne, offresAmazon, offresVenteFlash, offresGroupon, offresSocialDeal, remiseCredibleSource, compterMots, remise, pourcentEcrit, SOURCES_VENTES_FLASH, SOURCES_ACTIVITES, prixReferenceEnseigne, estJeuNumerique, estSoin, ageEnfant, marqueurEnfant, MOTS_A_FRONTIERE, exigeFrontiere, retirerTrompeurs, estRepasDehors, preuveEpicerie, destinationEtrangere, estForfaitVoyage, DESTINATIONS, MOTS_FORFAIT_VOYAGE };
+export { famille, FAMILLES, MARQUES, MOTS_FORTS, CATEGORIES_SOURCES, categorieDeSource, sansAccents, sansNegations, offresEnseigne, offresAmazon, offresVenteFlash, offresGroupon, offresSocialDeal, remiseCredibleSource, compterMots, remise, pourcentEcrit, SOURCES_VENTES_FLASH, SOURCES_ACTIVITES, prixReferenceEnseigne, estJeuNumerique, estSoin, ageEnfant, marqueurEnfant, MOTS_A_FRONTIERE, exigeFrontiere, retirerTrompeurs, estRepasDehors, preuveEpicerie, destinationEtrangere, estForfaitVoyage, DESTINATIONS, MOTS_FORFAIT_VOYAGE, SECTEUR_MARCHAND, secteurMarchand, rubriqueDeSite, voieDeSite };
 
 /** Recherches Google News : un flux par famille de produits. Gratuit, sans clé. */
 const RECHERCHES = [
@@ -4617,6 +4701,11 @@ async function principal() {
     // sites sont dormants, puisque seuls les muets y figurent.
     sources: TOUTES_SOURCES.map((s) => ({
       id: s.id, nom: s.nom, type: s.type, pays: s.pays, url: s.url,
+      // LA RUBRIQUE (ce que le site est) et LA VOIE (comment on le lit). Calculées
+      // ici, à la publication, plutôt que saisies : le panneau n'a plus qu'à les
+      // lire, et la table qui les produit est éprouvée par un test. Demande de B
+      // (08/10/2026) : « classe-les par pays et par rubrique ».
+      rubrique: rubriqueDeSite(s), voie: voieDeSite(s),
     })),
     offres,
   };
