@@ -737,7 +737,58 @@ function listeFavoris() {
 const esc = (s) => String(s == null ? '' : s)
   .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
-const euros = (v) => (v == null ? '' : (Math.round(v * 100) / 100).toLocaleString('fr-FR', { minimumFractionDigits: v % 1 ? 2 : 0, maximumFractionDigits: 2 }) + ' €');
+/* =============================================================================
+   LA DEVISE — un prix s'affiche dans SA monnaie, jamais dans la nôtre.
+
+   DÉFAUT MESURÉ, rapporté par B le 08/10/2026 : « il faut que l'annonce affiche
+   le prix original dans l'annonce et l'adapter si ce n'est pas de l'euro ».
+   Avant ce correctif, tout se terminait par « € » : un seul formateur pour
+   toutes les places de marché.
+
+   Or le collecteur lit chaque place de marché DANS SA MONNAIE. Relevé
+   directement dans la charge des pages Amazon (goldbox), le 08/10/2026 :
+
+       amazon.co.uk →  "currencyCode":"GBP"
+       amazon.pl    →  "currencyCode":"PLN"
+       amazon.se    →  "currencyIsoCode":"SEK"
+       amazon.de    →  "currencyCode":"EUR"
+
+   Conséquence visible sur le site en ligne : un home trainer Wahoo qui vaut
+   environ 600 € s'affichait « 6 089 € » avec le badge « économise 24 163 € ».
+   Le pourcentage, lui, restait juste — un rapport ne dépend pas de la monnaie —
+   et c'est précisément ce qui rendait le montant crédible.
+
+   POURQUOI ON NE CONVERTIT PAS. Convertir exigerait un cours de change : soit
+   un service tiers (le projet refuse tout tiers et toute clé), soit un taux
+   recopié à la main, qui se périme en silence. On affiche donc le prix
+   D'ORIGINE, avec sa monnaie — c'est aussi la seule valeur que le visiteur
+   pourra vérifier lui-même sur la boutique qu'il ouvre.
+
+   ATTENTION : ce tableau est une DÉCLARATION, pas une déduction. Il a été
+   établi en lisant la devise que chaque place de marché annonce elle-même.
+   La correction de fond — faire lire cette devise par le collecteur au lieu de
+   la déclarer ici — est décrite dans PLAN-RESTE-A-FAIRE.md.
+   ============================================================================= */
+const DEVISE_PAR_PAYS = {
+  // `avant` : la monnaie se place AVANT le nombre (usage britannique : £153,39).
+  GB: { code: 'GBP', symbole: '£', avant: true },
+  SE: { code: 'SEK', symbole: 'kr', avant: false },
+  PL: { code: 'PLN', symbole: 'zł', avant: false },
+};
+const DEVISE_EURO = { code: 'EUR', symbole: '€', avant: false };
+
+/** La monnaie d'une offre, d'après son pays. Défaut : l'euro. */
+const deviseDe = (o) => (o && DEVISE_PAR_PAYS[o.pays]) || DEVISE_EURO;
+
+/** Un montant dans SA monnaie : « £153,39 » · « 6 089 kr » · « 830 zł » · « 1 234,56 € ». */
+const montant = (v, devise) => {
+  if (v == null) return '';
+  const d = devise || DEVISE_EURO;
+  const n = (Math.round(v * 100) / 100).toLocaleString('fr-FR', {
+    minimumFractionDigits: v % 1 ? 2 : 0, maximumFractionDigits: 2,
+  });
+  return d.avant ? d.symbole + n : n + ' ' + d.symbole;
+};
 
 function ilYA(iso) {
   const mn = Math.round((Date.now() - new Date(iso).getTime()) / 60000);
@@ -1190,7 +1241,7 @@ function carte(o) {
     // Ce que l'utilisateur gagne, en euros. C'est le chiffre qui décide d'un
     // achat — « économise 60 € » parle plus que « -67 % ».
     (o.prix != null && o.prixAvant != null && o.prixAvant > o.prix)
-      ? `<span class="etiquette econ" title="${esc(t('Économie par rapport au prix de référence'))}">${esc(t('économise {n}', { n: euros(o.prixAvant - o.prix) }))}</span>`
+      ? `<span class="etiquette econ" title="${esc(t('Économie par rapport au prix de référence'))}">${esc(t('économise {n}', { n: montant(o.prixAvant - o.prix, deviseDe(o)) }))}</span>`
       : '',
     o.encoreEnListe === false
       ? `<span class="etiquette perime" title="${esc(t("Cette offre n'est plus dans la liste du jour : le prix affiché est celui du moment où tu l'as gardée de côté."))}">${esc(t("n'est plus dans la liste"))}</span>`
@@ -1198,10 +1249,10 @@ function carte(o) {
   ].filter(Boolean).join('');
   // Le montant est groupé dans un seul élément : sans ce groupe, le prix
   // « avant » serait repoussé à l'autre bout de la ligne.
-  const montant = o.prix != null
-    ? `${euros(o.prix)}${o.prixAvant ? `<span class="avant">${euros(o.prixAvant)}</span>` : ''}`
+  const montantHtml = o.prix != null
+    ? `${montant(o.prix, deviseDe(o))}${o.prixAvant ? `<span class="avant">${montant(o.prixAvant, deviseDe(o))}</span>` : ''}`
     : '';
-  const prix = montant ? `<div class="prix"><span class="montant">${montant}</span></div>` : '';
+  const prix = montantHtml ? `<div class="prix"><span class="montant">${montantHtml}</span></div>` : '';
   // Le VERDICT de la promo — ce que l'HISTORIQUE DES PRIX permet d'affirmer.
   // Il reste vide quand on n'a pas assez de recul : un badge inventé serait
   // pire que pas de badge du tout.
@@ -1287,7 +1338,7 @@ function lienPartage(o) {
 
 /** Ce qu'on écrit à l'ami : le titre, le prix s'il est connu, et le lien. */
 function textePartage(o, lien) {
-  const prix = o.prix != null ? '\n' + euros(o.prix) : '';
+  const prix = o.prix != null ? '\n' + montant(o.prix, deviseDe(o)) : '';
   return o.titre + prix + '\n' + lien;
 }
 
