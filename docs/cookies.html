@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cookies — Kazendra</title>
+<meta name="description" content="Kazendra ne pose aucun cookie de mesure d'audience ni de publicité. Voici ce qu'il utilise à la place, et comment l'effacer.">
+<meta name="robots" content="index, follow">
+<!-- DEBUT-FEUILLE-EN-LIGNE -->
+<!--
+     FEUILLE DE STYLE EN LIGNE — écrite par bin/inliner-legal.mjs.
+
+     Elle n’est PAS appelée en fichier externe, volontairement : sur le PC de
+     B, les .css externes étaient coupés en chemin (antivirus, bloqueur, proxy).
+     Une page d’information dont l’habillage dépendrait d’un fichier bloqué ne
+     remplirait pas sa fonction.
+
+     Ne pas modifier à la main : éditer public/legal.css, puis relancer
+     « node bin/inliner-legal.mjs ». Le test tests/legal.test.mjs échoue si ce
+     bloc et le fichier divergent.
+-->
+<style>
+/* =============================================================================
+   HABILLAGE DES PAGES ADMINISTRATIVES — Kazendra.
+
+   Ces pages (mentions légales, confidentialité, cookies, conditions
+   d'utilisation) ont leur propre feuille, plus sobre que celle du site : ce sont
+   des documents à lire, pas un catalogue.
+
+   ELLE AUSSI EST POSÉE EN LIGNE DANS CHAQUE PAGE. Raison identique à celle du
+   site (voir bin/inliner-css.mjs) : le 08/10/2026, sur le PC de B, les fichiers
+   .css externes n'arrivaient pas au navigateur. Une page légale dont
+   l'habillage — ou pire, le TEXTE — dépendrait d'un fichier coupé en chemin ne
+   serait pas une page légale. On écrit donc la feuille dans la page.
+
+   NE PAS ÉDITER LE BLOC EN LIGNE À LA MAIN : éditer public/legal.css, puis
+   relancer « node bin/inliner-legal.mjs ». Le test tests/legal.test.mjs échoue
+   si le bloc et ce fichier divergent.
+   ============================================================================= */
+
+:root {
+  --bleu: #0d3b5b;
+  --orange: #eb912d;
+  --texte: #16324a;
+  --doux: #5a6b7b;
+  --bord: #dde1e6;
+  --fond: #ffffff;
+  --fond-doux: #f5f7f9;
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --texte: #e8edf2;
+    --doux: #a4b1be;
+    --bord: #2b3846;
+    --fond: #101a24;
+    --fond-doux: #17242f;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--fond);
+  color: var(--texte);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.doc { max-width: 820px; margin: 0 auto; padding: 0 18px 64px; }
+
+/* En-tête : le K de l'identité + un retour au site. Le lien de retour est
+   TOUJOURS visible : une page légale atteinte par obligation doit offrir la
+   sortie la plus évidente possible. */
+.tete {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  padding: 18px 0 14px; margin-bottom: 26px; border-bottom: 1px solid var(--bord);
+}
+.tete .k { width: 28px; height: 28px; flex: none; }
+.tete .nom { font-weight: 700; letter-spacing: .02em; color: var(--bleu); }
+@media (prefers-color-scheme: dark) { .tete .nom { color: #7fb8dd; } }
+.tete .retour {
+  margin-left: auto; color: var(--orange); text-decoration: none;
+  font-weight: 600; border-bottom: 1px solid transparent;
+}
+.tete .retour:hover, .tete .retour:focus { border-bottom-color: var(--orange); }
+
+h1 { font-size: 26px; line-height: 1.25; margin: 0 0 6px; }
+h2 { font-size: 18px; margin: 32px 0 8px; color: var(--bleu); }
+@media (prefers-color-scheme: dark) { h2 { color: #7fb8dd; } }
+h3 { font-size: 15px; margin: 20px 0 6px; }
+p, ul, ol { margin: 0 0 12px; }
+ul, ol { padding-left: 22px; }
+li { margin-bottom: 5px; }
+a { color: var(--bleu); }
+@media (prefers-color-scheme: dark) { a { color: #8cc4e6; } }
+code { background: var(--fond-doux); padding: 1px 5px; border-radius: 4px; font-size: 14px; }
+
+.maj { color: var(--doux); font-size: 14px; margin: 0 0 26px; }
+
+/* CE QUI RESTE À FOURNIR. Le surlignage est volontairement visible : une page
+   légale qui aurait l'air complète alors qu'il manque l'identité de l'éditeur
+   tromperait tout le monde, à commencer par son auteur. Le test
+   tests/legal.test.mjs compte ces marques et refuse qu'elles disparaissent
+   sans que la donnée soit réellement renseignée. */
+.a-completer {
+  background: #fff3cd; color: #6b4b00; border: 1px dashed #d9a400;
+  border-radius: 4px; padding: 0 5px; font-weight: 600;
+}
+@media (prefers-color-scheme: dark) {
+  .a-completer { background: #3a2e07; color: #ffd77a; border-color: #8a6d12; }
+}
+
+/* L'avis de chantier. Il n'est là que TANT QUE la page n'est pas finalisée. */
+.charte {
+  border: 1px solid var(--bord); border-left: 4px solid var(--orange);
+  background: var(--fond-doux); border-radius: 8px;
+  padding: 12px 14px; margin: 0 0 26px; font-size: 15px;
+}
+.charte b { color: var(--bleu); }
+@media (prefers-color-scheme: dark) { .charte b { color: #7fb8dd; } }
+
+table { border-collapse: collapse; width: 100%; margin: 0 0 16px; font-size: 15px; }
+th, td { border: 1px solid var(--bord); padding: 7px 9px; text-align: left; vertical-align: top; }
+th { background: var(--fond-doux); }
+
+.pied-doc {
+  margin-top: 44px; padding-top: 16px; border-top: 1px solid var(--bord);
+  color: var(--doux); font-size: 14px;
+}
+.pied-doc a { margin-right: 14px; }
+
+@media print {
+  .tete .retour, .charte { display: none; }
+  body { background: #fff; color: #000; }
+}
+</style>
+<!-- FIN-FEUILLE-EN-LIGNE -->
+</head>
+<body>
+<div class="doc">
+
+  <header class="tete">
+    <img class="k" src="favicon.svg" width="28" height="28" alt="">
+    <span class="nom">KAZENDRA</span>
+    <a class="retour" href="index.html">← Retour au site</a>
+  </header>
+
+  <h1>Cookies et stockage local</h1>
+  <p class="maj">Dernière mise à jour : 8 octobre 2026.</p>
+
+  <h2>1. En une phrase</h2>
+  <p>
+    <b>Kazendra ne pose aucun cookie</b> — ni de mesure d’audience, ni de publicité, ni de réseau social.
+    C’est pour cette raison qu’aucune bannière de consentement ne s’affiche&nbsp;: il n’y a rien à
+    consentir.
+  </p>
+
+  <h2>2. Pourquoi il n’y a pas de bannière</h2>
+  <p>
+    Une bannière n’est obligatoire que lorsqu’un cookie non strictement nécessaire est posé avant le
+    consentement. Ici, il n’y en a aucun&nbsp;: ni mesure d’audience tierce, ni régie, ni bouton de
+    réseau social, ni police de caractères distante, ni lecture vidéo embarquée.
+  </p>
+  <p>
+    Afficher une bannière « Accepter / Refuser » qui ne changerait rien serait un décor. Le site ne fait
+    pas de décor.
+  </p>
+
+  <h2>3. Ce que le site utilise à la place</h2>
+  <p>
+    Le site a besoin de se souvenir de quelques choix. Il les écrit dans le <b>stockage local</b> de votre
+    navigateur (localStorage et sessionStorage), qui n’est <b>pas</b> un cookie&nbsp;: cette mémoire
+    n’est jamais envoyée automatiquement à un serveur, et rien n’y est lisible par un autre site.
+  </p>
+  <table>
+    <tr><th>Mémoire</th><th>Ce qu’elle contient</th><th>Sur votre appareil seulement&nbsp;?</th></tr>
+    <tr><td>Compte</td><td>Nom d’utilisateur, empreinte du mot de passe, prénom affiché</td><td>Oui</td></tr>
+    <tr><td>Favoris</td><td>Les offres que vous avez gardées de côté</td><td>Oui</td></tr>
+    <tr><td>Réglages</td><td>Thème, mode d’affichage, langue, pays, économie de données</td><td>Oui</td></tr>
+    <tr><td>Fréquentation</td><td>Pays consulté, langue, provenance, type d’appareil, heure — sans adresse IP ni identifiant</td><td>Oui</td></tr>
+  </table>
+  <p>
+    <b>Aucun profilage, aucune revente, aucun partage.</b> L’éditeur du site ne reçoit rien de tout cela.
+    Le détail figure dans la <a href="confidentialite.html">politique de confidentialité</a>.
+  </p>
+
+  <h2>4. Les sites marchands, eux, en posent</h2>
+  <p>
+    Quand vous cliquez sur une offre, vous quittez Kazendra et arrivez chez le marchand. Ce site-là a
+    ses propres cookies et sa propre politique, sur laquelle Kazendra n’a aucun pouvoir. Les bandeaux de
+    consentement que vous y verrez ne viennent pas de nous.
+  </p>
+
+  <h2>5. Comment effacer ce que le site a mémorisé</h2>
+  <ul>
+    <li>
+      <b>Depuis le site&nbsp;:</b> les réglages proposent d’<b>exporter</b> puis de <b>supprimer</b>
+      votre paquet de données (compte, favoris, réglages).
+    </li>
+    <li>
+      <b>Depuis le navigateur&nbsp;:</b> effacer les données des sites (« cookies et données de sites »)
+      supprime tout ce que Kazendra a mémorisé. Le site repart alors à neuf.
+    </li>
+    <li>
+      <b>Navigation privée&nbsp;:</b> rien n’est conservé après la fermeture de la fenêtre. Le site
+      fonctionne normalement, simplement il ne se souvient de rien.
+    </li>
+  </ul>
+
+  <h2>6. Modifications</h2>
+  <p>
+    Si un cookie tiers était un jour ajouté au site — ce n’est pas prévu —, cette page serait mise à jour
+    <b>avant</b>, et une bannière de consentement deviendrait alors nécessaire. Elle ne l’est pas
+    aujourd’hui.
+  </p>
+
+  <footer class="pied-doc">
+    <a href="index.html">Retour au site</a>
+    <a href="mentions-legales.html">Mentions légales</a>
+    <a href="confidentialite.html">Confidentialité</a>
+    <a href="cgu.html">Conditions d’utilisation</a>
+  </footer>
+
+</div>
+</body>
+</html>

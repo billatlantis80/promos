@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Plan du site — kazendra.com. Absent jusqu'au 8 octobre 2026 (vérifié : 404).
+
+  Il ne liste QUE des pages qui existent réellement : un plan de site qui
+  annonce des adresses en erreur fait perdre du temps aux moteurs et dégrade
+  l'image du site. Le test tests/legal.test.mjs lit donc ce fichier et vérifie
+  que chaque adresse correspond à un fichier présent dans public/.
+
+  Le site lui-même est une page unique (index.html) : ses offres ne sont pas des
+  adresses distinctes, il n'y a donc rien à lister de plus — les inventer
+  produirait des milliers d'adresses mortes.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://kazendra.com/</loc>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>hourly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://kazendra.com/mentions-legales.html</loc>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://kazendra.com/confidentialite.html</loc>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://kazendra.com/cookies.html</loc>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://kazendra.com/cgu.html</loc>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+</urlset>

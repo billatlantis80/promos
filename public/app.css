@@ -309,6 +309,12 @@ body[data-eco="1"] .offre .visuel { display: none; }
 .pied { margin: 26px 12px 0; padding-top: 16px; border-top: 1px solid var(--bord); color: var(--doux); font-size: 12px; }
 .pied p { margin: 0 0 8px; }
 .pied .note { opacity: .8; }
+/* Les pages administratives (mentions, confidentialité, cookies, conditions).
+   Elles vivent dans le PIED DE PAGE : c'est là qu'on les cherche, et une
+   mention légale introuvable ne remplit pas son office. */
+.pied .liens-legaux { display: flex; flex-wrap: wrap; gap: 4px 14px; margin: 10px 0 0; }
+.pied .liens-legaux a { color: var(--doux); text-decoration: none; border-bottom: 1px solid transparent; }
+.pied .liens-legaux a:hover, .pied .liens-legaux a:focus { color: var(--accent); border-bottom-color: var(--accent); }
 
 /* Mentions de prix obligatoires (programme Partenaires) : lisibles et jamais
    repliées — une mention cachée ne satisfait pas la condition. */

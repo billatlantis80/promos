@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Politique de confidentialité — Kazendra</title>
+<meta name="description" content="Quelles données kazendra.com traite, où elles sont conservées, pendant combien de temps, et comment exercer vos droits.">
+<meta name="robots" content="index, follow">
+<!-- DEBUT-FEUILLE-EN-LIGNE -->
+<!--
+     FEUILLE DE STYLE EN LIGNE — écrite par bin/inliner-legal.mjs.
+
+     Elle n’est PAS appelée en fichier externe, volontairement : sur le PC de
+     B, les .css externes étaient coupés en chemin (antivirus, bloqueur, proxy).
+     Une page d’information dont l’habillage dépendrait d’un fichier bloqué ne
+     remplirait pas sa fonction.
+
+     Ne pas modifier à la main : éditer public/legal.css, puis relancer
+     « node bin/inliner-legal.mjs ». Le test tests/legal.test.mjs échoue si ce
+     bloc et le fichier divergent.
+-->
+<style>
+/* =============================================================================
+   HABILLAGE DES PAGES ADMINISTRATIVES — Kazendra.
+
+   Ces pages (mentions légales, confidentialité, cookies, conditions
+   d'utilisation) ont leur propre feuille, plus sobre que celle du site : ce sont
+   des documents à lire, pas un catalogue.
+
+   ELLE AUSSI EST POSÉE EN LIGNE DANS CHAQUE PAGE. Raison identique à celle du
+   site (voir bin/inliner-css.mjs) : le 08/10/2026, sur le PC de B, les fichiers
+   .css externes n'arrivaient pas au navigateur. Une page légale dont
+   l'habillage — ou pire, le TEXTE — dépendrait d'un fichier coupé en chemin ne
+   serait pas une page légale. On écrit donc la feuille dans la page.
+
+   NE PAS ÉDITER LE BLOC EN LIGNE À LA MAIN : éditer public/legal.css, puis
+   relancer « node bin/inliner-legal.mjs ». Le test tests/legal.test.mjs échoue
+   si le bloc et ce fichier divergent.
+   ============================================================================= */
+
+:root {
+  --bleu: #0d3b5b;
+  --orange: #eb912d;
+  --texte: #16324a;
+  --doux: #5a6b7b;
+  --bord: #dde1e6;
+  --fond: #ffffff;
+  --fond-doux: #f5f7f9;
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --texte: #e8edf2;
+    --doux: #a4b1be;
+    --bord: #2b3846;
+    --fond: #101a24;
+    --fond-doux: #17242f;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--fond);
+  color: var(--texte);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.doc { max-width: 820px; margin: 0 auto; padding: 0 18px 64px; }
+
+/* En-tête : le K de l'identité + un retour au site. Le lien de retour est
+   TOUJOURS visible : une page légale atteinte par obligation doit offrir la
+   sortie la plus évidente possible. */
+.tete {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  padding: 18px 0 14px; margin-bottom: 26px; border-bottom: 1px solid var(--bord);
+}
+.tete .k { width: 28px; height: 28px; flex: none; }
+.tete .nom { font-weight: 700; letter-spacing: .02em; color: var(--bleu); }
+@media (prefers-color-scheme: dark) { .tete .nom { color: #7fb8dd; } }
+.tete .retour {
+  margin-left: auto; color: var(--orange); text-decoration: none;
+  font-weight: 600; border-bottom: 1px solid transparent;
+}
+.tete .retour:hover, .tete .retour:focus { border-bottom-color: var(--orange); }
+
+h1 { font-size: 26px; line-height: 1.25; margin: 0 0 6px; }
+h2 { font-size: 18px; margin: 32px 0 8px; color: var(--bleu); }
+@media (prefers-color-scheme: dark) { h2 { color: #7fb8dd; } }
+h3 { font-size: 15px; margin: 20px 0 6px; }
+p, ul, ol { margin: 0 0 12px; }
+ul, ol { padding-left: 22px; }
+li { margin-bottom: 5px; }
+a { color: var(--bleu); }
+@media (prefers-color-scheme: dark) { a { color: #8cc4e6; } }
+code { background: var(--fond-doux); padding: 1px 5px; border-radius: 4px; font-size: 14px; }
+
+.maj { color: var(--doux); font-size: 14px; margin: 0 0 26px; }
+
+/* CE QUI RESTE À FOURNIR. Le surlignage est volontairement visible : une page
+   légale qui aurait l'air complète alors qu'il manque l'identité de l'éditeur
+   tromperait tout le monde, à commencer par son auteur. Le test
+   tests/legal.test.mjs compte ces marques et refuse qu'elles disparaissent
+   sans que la donnée soit réellement renseignée. */
+.a-completer {
+  background: #fff3cd; color: #6b4b00; border: 1px dashed #d9a400;
+  border-radius: 4px; padding: 0 5px; font-weight: 600;
+}
+@media (prefers-color-scheme: dark) {
+  .a-completer { background: #3a2e07; color: #ffd77a; border-color: #8a6d12; }
+}
+
+/* L'avis de chantier. Il n'est là que TANT QUE la page n'est pas finalisée. */
+.charte {
+  border: 1px solid var(--bord); border-left: 4px solid var(--orange);
+  background: var(--fond-doux); border-radius: 8px;
+  padding: 12px 14px; margin: 0 0 26px; font-size: 15px;
+}
+.charte b { color: var(--bleu); }
+@media (prefers-color-scheme: dark) { .charte b { color: #7fb8dd; } }
+
+table { border-collapse: collapse; width: 100%; margin: 0 0 16px; font-size: 15px; }
+th, td { border: 1px solid var(--bord); padding: 7px 9px; text-align: left; vertical-align: top; }
+th { background: var(--fond-doux); }
+
+.pied-doc {
+  margin-top: 44px; padding-top: 16px; border-top: 1px solid var(--bord);
+  color: var(--doux); font-size: 14px;
+}
+.pied-doc a { margin-right: 14px; }
+
+@media print {
+  .tete .retour, .charte { display: none; }
+  body { background: #fff; color: #000; }
+}
+</style>
+<!-- FIN-FEUILLE-EN-LIGNE -->
+</head>
+<body>
+<div class="doc">
+
+  <header class="tete">
+    <img class="k" src="favicon.svg" width="28" height="28" alt="">
+    <span class="nom">KAZENDRA</span>
+    <a class="retour" href="index.html">← Retour au site</a>
+  </header>
+
+  <h1>Politique de confidentialité</h1>
+  <p class="maj">Dernière mise à jour : 8 octobre 2026.</p>
+
+  <p class="charte">
+    <b>Cette page n’est pas encore définitive.</b> L’identité et le contact du responsable du traitement
+    doivent être renseignés&nbsp;: <span class="a-completer">À COMPLÉTER — nom, adresse, e-mail du
+    responsable du traitement</span>. Les descriptions ci-dessous, elles, sont relevées dans le
+    programme du site — elles décrivent ce qu’il fait réellement.
+  </p>
+
+  <h2>1. En résumé</h2>
+  <ul>
+    <li>Le site <b>ne pose aucun cookie</b> de mesure d’audience ni de publicité.</li>
+    <li>Le compte, les favoris et les réglages <b>ne quittent pas l’appareil</b>&nbsp;: ils vivent dans
+      le stockage local du navigateur, pas sur un serveur.</li>
+    <li>Le site <b>n’enregistre aucune adresse IP</b> et aucun identifiant d’appareil.</li>
+    <li>Une seule chose peut sortir de l’appareil&nbsp;: <b>l’adresse d’inscription</b>, et uniquement
+      si la personne l’a saisie elle-même. <b>Ce formulaire n’est pas encore actif</b> (voir §&nbsp;5).</li>
+  </ul>
+
+  <h2>2. Qui est responsable du traitement</h2>
+  <ul>
+    <li>Responsable du traitement&nbsp;: <span class="a-completer">À COMPLÉTER — nom ou raison sociale</span></li>
+    <li>Adresse&nbsp;: <span class="a-completer">À COMPLÉTER</span></li>
+    <li>Contact pour toute question relative aux données&nbsp;:
+      <span class="a-completer">À COMPLÉTER — adresse e-mail</span></li>
+  </ul>
+  <p>
+    Un délégué à la protection des données (DPO) n’est pas désigné&nbsp;: le traitement décrit ici ne
+    relève d’aucun des cas où il est obligatoire. Les demandes se font auprès du contact ci-dessus.
+  </p>
+
+  <h2>3. Ce qui est conservé sur votre appareil</h2>
+  <p>
+    Ces informations sont écrites dans le <b>stockage local</b> (localStorage) ou le stockage de session
+    (sessionStorage) du navigateur. Elles <b>ne sont transmises à personne</b>, y compris à l’éditeur du
+    site&nbsp;: sans serveur, il n’existe aucun endroit où les recevoir.
+  </p>
+  <table>
+    <tr><th>Ce qui est conservé</th><th>Pourquoi</th><th>Combien de temps</th></tr>
+    <tr>
+      <td>Nom d’utilisateur et <b>empreinte</b> du mot de passe (le mot de passe lui-même n’est jamais conservé)</td>
+      <td>Protéger l’accès à l’application sur cet appareil</td>
+      <td>Jusqu’à la suppression du compte par la personne, ou l’effacement des données du navigateur</td>
+    </tr>
+    <tr>
+      <td>Prénom affiché</td><td>Personnaliser l’interface</td><td>Idem</td>
+    </tr>
+    <tr>
+      <td>Favoris et réglages (thème, affichage, langue, pays)</td>
+      <td>Ne pas redemander à chaque ouverture ce qui a déjà été choisi</td>
+      <td>Idem</td>
+    </tr>
+    <tr>
+      <td>Journal de fréquentation&nbsp;: pays consulté, langue, provenance de la visite, type d’appareil, horodatage</td>
+      <td>Permettre à la personne de consulter sa propre fréquentation dans le panneau d’administration</td>
+      <td>2 000 relevés au maximum, puis les plus anciens sont remplacés</td>
+    </tr>
+  </table>
+  <p>
+    <b>Aucune donnée permettant de reconnaître quelqu’un</b> n’est enregistrée dans ce journal&nbsp;:
+    pas d’adresse IP, pas d’identifiant d’appareil, pas de cookie, pas d’empreinte de navigateur. Un pays,
+    une langue, une provenance, un type d’appareil et une heure.
+  </p>
+
+  <h2>4. Base légale</h2>
+  <ul>
+    <li>Compte, favoris et réglages&nbsp;: ces données ne sont pas traitées par l’éditeur, elles restent
+      chez la personne. Aucun traitement au sens du RGPD n’a lieu de son côté.</li>
+    <li>Journal local de fréquentation&nbsp;: <b>intérêt légitime</b> (article 6.1.f du RGPD) — mesurer
+      sa propre audience sans traceur et sans donnée personnelle.</li>
+    <li>Inscription&nbsp;: <b>consentement</b> (article 6.1.a), donné par la saisie volontaire de
+      l’adresse.</li>
+  </ul>
+
+  <h2>5. L’inscription — ce qui se passera, et ce qui se passe aujourd’hui</h2>
+  <p>
+    <b>Aujourd’hui (8 octobre 2026), le formulaire d’inscription n’envoie rien.</b> L’adresse du service
+    de réception n’est pas renseignée dans le programme&nbsp;: le formulaire refuse donc l’envoi au lieu
+    de faire croire à une inscription enregistrée. Aucune donnée n’est collectée à ce jour.
+  </p>
+  <p>Lorsqu’il sera actif, et seulement alors&nbsp;:</p>
+  <ul>
+    <li>sera transmise <b>la seule adresse saisie</b>, dans le but d’être prévenu des nouvelles
+      promotions&nbsp;;</li>
+    <li>elle sera reçue par un <b>tableur hébergé par l’éditeur du site</b> (service Google Sheets,
+      via un script Google Apps Script) — il n’y a pas de serveur Kazendra&nbsp;;</li>
+    <li>elle ne sera ni revendue, ni cédée, ni utilisée à d’autre fin&nbsp;;</li>
+    <li>elle sera conservée jusqu’à la demande de désinscription, qui se fait par simple réponse au
+      message reçu ou par le contact du §&nbsp;2.</li>
+  </ul>
+  <p>
+    Cette page sera mise à jour <b>avant</b> l’activation du formulaire, notamment pour nommer
+    précisément le destinataire et la durée de conservation.
+  </p>
+
+  <h2>6. Destinataires et transferts hors Union européenne</h2>
+  <ul>
+    <li>
+      <b>Hébergement du site&nbsp;:</b> GitHub, Inc. (GitHub Pages), États-Unis. Les visiteurs du site
+      passent donc par un hébergeur établi hors de l’Union. GitHub déclare se conformer au cadre de
+      protection des données UE–États-Unis et aux clauses contractuelles types.
+    </li>
+    <li><b>Aucun autre tiers</b> n’intervient&nbsp;: pas de régie publicitaire, pas d’outil de mesure
+      d’audience, pas de police de caractères distante, pas de réseau social embarqué.</li>
+  </ul>
+  <p>
+    <span class="a-completer">À VÉRIFIER — remplacer la phrase ci-dessus par la référence au contrat
+    d’hébergement réellement en vigueur au moment de la publication.</span>
+  </p>
+
+  <h2>7. Vos droits</h2>
+  <p>
+    Vous disposez des droits d’<b>accès</b>, de <b>rectification</b>, d’<b>effacement</b>, de
+    <b>limitation</b>, d’<b>opposition</b> et de <b>portabilité</b> sur les données qui vous concernent.
+  </p>
+  <p>
+    <b>Point important et inhabituel&nbsp;:</b> l’essentiel des données décrites au §&nbsp;3 n’est pas
+    détenu par l’éditeur — il est sur votre appareil. Pour les consulter ou les effacer, le geste le plus
+    direct est donc le vôtre&nbsp;: les réglages du site permettent d’exporter et de supprimer votre
+    paquet de données, et l’effacement des données du navigateur efface le reste.
+  </p>
+  <p>
+    Pour les données reçues par l’éditeur (l’adresse d’inscription, lorsque le formulaire sera actif),
+    écrivez au contact du §&nbsp;2. Une réponse est apportée dans le délai d’un mois.
+  </p>
+  <p>
+    Si la réponse ne vous satisfait pas, vous pouvez introduire une réclamation auprès de l’<b>Autorité
+    de protection des données</b>, Rue de la Presse 35, 1000 Bruxelles —
+    <a href="https://www.autoriteprotectiondonnees.be" rel="noopener noreferrer">autoriteprotectiondonnees.be</a>.
+  </p>
+
+  <h2>8. Sécurité</h2>
+  <p>
+    Le site est servi en HTTPS. Aucun mot de passe n’est transmis ni conservé&nbsp;: seule une empreinte
+    calculée à partir de lui est stockée, et elle ne permet pas de retrouver le mot de passe.
+  </p>
+  <p>
+    Un système d’information ne peut jamais être garanti exempt de faille. Le site ne collectant ni
+    identifiant, ni adresse IP, ni donnée de paiement, la portée d’une éventuelle atteinte reste
+    limitée aux données décrites au §&nbsp;3.
+  </p>
+
+  <h2>9. Modifications</h2>
+  <p>
+    Toute modification de cette politique est datée en tête de page. En cas de changement important sur
+    les données transmises, l’information est portée à la connaissance des personnes concernées par le
+    canal par lequel elles se sont inscrites.
+  </p>
+
+  <footer class="pied-doc">
+    <a href="index.html">Retour au site</a>
+    <a href="mentions-legales.html">Mentions légales</a>
+    <a href="cookies.html">Cookies</a>
+    <a href="cgu.html">Conditions d’utilisation</a>
+  </footer>
+
+</div>
+</body>
+</html>

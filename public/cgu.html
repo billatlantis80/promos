@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Conditions d’utilisation — Kazendra</title>
+<meta name="description" content="À quelles conditions kazendra.com est mis à disposition, et ce qu'il garantit — ou ne garantit pas.">
+<meta name="robots" content="index, follow">
+<!-- DEBUT-FEUILLE-EN-LIGNE -->
+<!--
+     FEUILLE DE STYLE EN LIGNE — écrite par bin/inliner-legal.mjs.
+
+     Elle n’est PAS appelée en fichier externe, volontairement : sur le PC de
+     B, les .css externes étaient coupés en chemin (antivirus, bloqueur, proxy).
+     Une page d’information dont l’habillage dépendrait d’un fichier bloqué ne
+     remplirait pas sa fonction.
+
+     Ne pas modifier à la main : éditer public/legal.css, puis relancer
+     « node bin/inliner-legal.mjs ». Le test tests/legal.test.mjs échoue si ce
+     bloc et le fichier divergent.
+-->
+<style>
+/* =============================================================================
+   HABILLAGE DES PAGES ADMINISTRATIVES — Kazendra.
+
+   Ces pages (mentions légales, confidentialité, cookies, conditions
+   d'utilisation) ont leur propre feuille, plus sobre que celle du site : ce sont
+   des documents à lire, pas un catalogue.
+
+   ELLE AUSSI EST POSÉE EN LIGNE DANS CHAQUE PAGE. Raison identique à celle du
+   site (voir bin/inliner-css.mjs) : le 08/10/2026, sur le PC de B, les fichiers
+   .css externes n'arrivaient pas au navigateur. Une page légale dont
+   l'habillage — ou pire, le TEXTE — dépendrait d'un fichier coupé en chemin ne
+   serait pas une page légale. On écrit donc la feuille dans la page.
+
+   NE PAS ÉDITER LE BLOC EN LIGNE À LA MAIN : éditer public/legal.css, puis
+   relancer « node bin/inliner-legal.mjs ». Le test tests/legal.test.mjs échoue
+   si le bloc et ce fichier divergent.
+   ============================================================================= */
+
+:root {
+  --bleu: #0d3b5b;
+  --orange: #eb912d;
+  --texte: #16324a;
+  --doux: #5a6b7b;
+  --bord: #dde1e6;
+  --fond: #ffffff;
+  --fond-doux: #f5f7f9;
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --texte: #e8edf2;
+    --doux: #a4b1be;
+    --bord: #2b3846;
+    --fond: #101a24;
+    --fond-doux: #17242f;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--fond);
+  color: var(--texte);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.doc { max-width: 820px; margin: 0 auto; padding: 0 18px 64px; }
+
+/* En-tête : le K de l'identité + un retour au site. Le lien de retour est
+   TOUJOURS visible : une page légale atteinte par obligation doit offrir la
+   sortie la plus évidente possible. */
+.tete {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  padding: 18px 0 14px; margin-bottom: 26px; border-bottom: 1px solid var(--bord);
+}
+.tete .k { width: 28px; height: 28px; flex: none; }
+.tete .nom { font-weight: 700; letter-spacing: .02em; color: var(--bleu); }
+@media (prefers-color-scheme: dark) { .tete .nom { color: #7fb8dd; } }
+.tete .retour {
+  margin-left: auto; color: var(--orange); text-decoration: none;
+  font-weight: 600; border-bottom: 1px solid transparent;
+}
+.tete .retour:hover, .tete .retour:focus { border-bottom-color: var(--orange); }
+
+h1 { font-size: 26px; line-height: 1.25; margin: 0 0 6px; }
+h2 { font-size: 18px; margin: 32px 0 8px; color: var(--bleu); }
+@media (prefers-color-scheme: dark) { h2 { color: #7fb8dd; } }
+h3 { font-size: 15px; margin: 20px 0 6px; }
+p, ul, ol { margin: 0 0 12px; }
+ul, ol { padding-left: 22px; }
+li { margin-bottom: 5px; }
+a { color: var(--bleu); }
+@media (prefers-color-scheme: dark) { a { color: #8cc4e6; } }
+code { background: var(--fond-doux); padding: 1px 5px; border-radius: 4px; font-size: 14px; }
+
+.maj { color: var(--doux); font-size: 14px; margin: 0 0 26px; }
+
+/* CE QUI RESTE À FOURNIR. Le surlignage est volontairement visible : une page
+   légale qui aurait l'air complète alors qu'il manque l'identité de l'éditeur
+   tromperait tout le monde, à commencer par son auteur. Le test
+   tests/legal.test.mjs compte ces marques et refuse qu'elles disparaissent
+   sans que la donnée soit réellement renseignée. */
+.a-completer {
+  background: #fff3cd; color: #6b4b00; border: 1px dashed #d9a400;
+  border-radius: 4px; padding: 0 5px; font-weight: 600;
+}
+@media (prefers-color-scheme: dark) {
+  .a-completer { background: #3a2e07; color: #ffd77a; border-color: #8a6d12; }
+}
+
+/* L'avis de chantier. Il n'est là que TANT QUE la page n'est pas finalisée. */
+.charte {
+  border: 1px solid var(--bord); border-left: 4px solid var(--orange);
+  background: var(--fond-doux); border-radius: 8px;
+  padding: 12px 14px; margin: 0 0 26px; font-size: 15px;
+}
+.charte b { color: var(--bleu); }
+@media (prefers-color-scheme: dark) { .charte b { color: #7fb8dd; } }
+
+table { border-collapse: collapse; width: 100%; margin: 0 0 16px; font-size: 15px; }
+th, td { border: 1px solid var(--bord); padding: 7px 9px; text-align: left; vertical-align: top; }
+th { background: var(--fond-doux); }
+
+.pied-doc {
+  margin-top: 44px; padding-top: 16px; border-top: 1px solid var(--bord);
+  color: var(--doux); font-size: 14px;
+}
+.pied-doc a { margin-right: 14px; }
+
+@media print {
+  .tete .retour, .charte { display: none; }
+  body { background: #fff; color: #000; }
+}
+</style>
+<!-- FIN-FEUILLE-EN-LIGNE -->
+</head>
+<body>
+<div class="doc">
+
+  <header class="tete">
+    <img class="k" src="favicon.svg" width="28" height="28" alt="">
+    <span class="nom">KAZENDRA</span>
+    <a class="retour" href="index.html">← Retour au site</a>
+  </header>
+
+  <h1>Conditions générales d’utilisation</h1>
+  <p class="maj">Dernière mise à jour : 8 octobre 2026.</p>
+
+  <h2>1. Objet</h2>
+  <p>
+    Les présentes conditions régissent l’utilisation du site <b>kazendra.com</b>, service d’information
+    qui rassemble des promotions publiées publiquement par des marchands européens et renvoie vers leurs
+    sites.
+  </p>
+  <p>
+    <b>Naviguer sur le site vaut acceptation</b> de ces conditions, dans leur version en vigueur au moment
+    de la visite. Si vous ne les acceptez pas, il vous suffit de quitter le site.
+  </p>
+
+  <h2>2. Ce que le site est, et ce qu’il n’est pas</h2>
+  <ul>
+    <li><b>Le site est</b> un service d’information gratuit et un intermédiaire de mise en relation.</li>
+    <li><b>Le site n’est pas</b> un vendeur. Il ne prend aucune commande, n’encaisse aucun paiement et
+      n’est pas partie aux contrats conclus avec les marchands.</li>
+    <li>Le contrat de vente, la garantie légale, le droit de rétractation et le service après-vente
+      relèvent <b>exclusivement</b> du marchand, pas de Kazendra.</li>
+  </ul>
+
+  <h2>3. Accès au service</h2>
+  <p>
+    Le service est fourni <b>gratuitement et « en l’état »</b>. Aucune disponibilité permanente n’est
+    garantie&nbsp;: le site peut être interrompu, modifié ou arrêté, notamment pour maintenance ou pour
+    une cause extérieure (hébergeur, réseau).
+  </p>
+  <p>
+    Certaines fonctions — compte, favoris, réglages — sont <b>locales à l’appareil</b>. Elles ne sont ni
+    synchronisées, ni récupérables sur un autre appareil, ni restaurées par l’éditeur en cas
+    d’effacement des données du navigateur.
+  </p>
+
+  <h2>4. Exactitude des prix et des informations</h2>
+  <p>
+    Les prix, remises et disponibilités proviennent des sites marchands et <b>changent à tout moment</b>.
+    La date du relevé est affichée sur le site.
+  </p>
+  <p>
+    <b>Seul le prix affiché chez le marchand au moment de l’achat fait foi.</b> Un écart peut exister
+    entre ce que le site affiche et ce que le marchand pratique, sans que cela constitue un engagement du
+    site.
+  </p>
+  <p>
+    Lorsqu’une offre n’est pas libellée en euros, elle est affichée <b>dans sa devise d’origine</b>, sans
+    conversion&nbsp;: le site n’applique ni ne maintient aucun taux de change. Le prix final dépend du
+    marchand et, le cas échéant, de la banque de l’acheteur.
+  </p>
+
+  <h2>5. Liens vers les marchands</h2>
+  <p>
+    Les liens sortants peuvent être des <b>liens d’affiliation</b>&nbsp;: une commission peut être versée
+    à Kazendra lorsque l’achat a lieu après un clic, <b>sans changer le prix payé</b>.
+  </p>
+  <p>
+    <b>Situation au 8 octobre 2026&nbsp;:</b> aucun identifiant d’affiliation n’est posé&nbsp;: les liens
+    sortants sont directs et aucune commission n’est perçue. Voir les
+    <a href="mentions-legales.html">mentions légales</a>.
+  </p>
+
+  <h2>6. Usage loyal</h2>
+  <p>Vous vous engagez à ne pas&nbsp;:</p>
+  <ul>
+    <li>extraire massivement le contenu du site de manière automatisée sans autorisation écrite&nbsp;;</li>
+    <li>tenter de contourner, d’endommager ou de surcharger le service&nbsp;;</li>
+    <li>reproduire le contenu du site en tout ou en partie sans autorisation&nbsp;;</li>
+    <li>utiliser le site à des fins illicites ou pour induire un tiers en erreur.</li>
+  </ul>
+
+  <h2>7. Propriété intellectuelle</h2>
+  <p>
+    Le code, la structure, les textes, l’identité visuelle et le logo sont protégés. La constitution du
+    catalogue est protégée au titre du droit des bases de données. Voir les
+    <a href="mentions-legales.html">mentions légales</a> pour le détail et pour la marque.
+  </p>
+
+  <h2>8. Responsabilité</h2>
+  <p>
+    Kazendra met en œuvre des moyens raisonnables pour que les informations publiées soient exactes et
+    datées. Sa responsabilité ne peut toutefois être engagée&nbsp;:
+  </p>
+  <ul>
+    <li>en cas d’information inexacte ou périmée provenant d’un marchand&nbsp;;</li>
+    <li>en cas de rupture, de suspension ou de mauvaise utilisation du service&nbsp;;</li>
+    <li>en raison du contenu des sites marchands vers lesquels le site renvoie&nbsp;;</li>
+    <li>en cas de perte des données locales (compte, favoris, réglages) consécutive à un effacement du
+      navigateur ou à une défaillance de l’appareil.</li>
+  </ul>
+  <p>
+    Rien dans ces conditions ne limite les droits que la loi reconnaît au consommateur, ni ne l’exonère
+    des responsabilités auxquelles elle ne permet pas de renoncer.
+  </p>
+
+  <h2>9. Données personnelles et cookies</h2>
+  <p>
+    Voir la <a href="confidentialite.html">politique de confidentialité</a> et la
+    <a href="cookies.html">page relative aux cookies</a>.
+  </p>
+
+  <h2>10. Modification des conditions</h2>
+  <p>
+    Ces conditions peuvent être modifiées, notamment en cas d’évolution du service ou de la loi. La
+    version applicable est celle en vigueur au moment de la visite, et la date de mise à jour figure en
+    tête de page.
+  </p>
+
+  <h2>11. Droit applicable et litiges</h2>
+  <p>Ces conditions sont soumises au <b>droit belge</b>.</p>
+  <p>
+    En cas de difficulté, écrivez d’abord au contact indiqué dans les
+    <a href="mentions-legales.html">mentions légales</a>. À défaut de solution amiable, un consommateur
+    en Belgique peut saisir le <b>Service de médiation pour le consommateur</b>, Boulevard du Roi
+    Albert II 8, 1000 Bruxelles —
+    <a href="https://www.mediationconsommateur.be" rel="noopener noreferrer">mediationconsommateur.be</a>
+    — ou, depuis un autre pays de l’Union, le <b>Centre européen des consommateurs</b> de son pays.
+  </p>
+  <p>
+    La version française de ces conditions fait foi. Il est noté ici, pour être exact, que les autres
+    versions linguistiques du site n’ont pas encore été publiées.
+  </p>
+
+  <footer class="pied-doc">
+    <a href="index.html">Retour au site</a>
+    <a href="mentions-legales.html">Mentions légales</a>
+    <a href="confidentialite.html">Confidentialité</a>
+    <a href="cookies.html">Cookies</a>
+  </footer>
+
+</div>
+</body>
+</html>

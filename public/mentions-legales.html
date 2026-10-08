@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mentions légales — Kazendra</title>
+<meta name="description" content="Qui édite kazendra.com, qui l'héberge, et à quelles conditions le site est mis à disposition.">
+<meta name="robots" content="index, follow">
+<!-- DEBUT-FEUILLE-EN-LIGNE -->
+<!--
+     FEUILLE DE STYLE EN LIGNE — écrite par bin/inliner-legal.mjs.
+
+     Elle n’est PAS appelée en fichier externe, volontairement : sur le PC de
+     B, les .css externes étaient coupés en chemin (antivirus, bloqueur, proxy).
+     Une page d’information dont l’habillage dépendrait d’un fichier bloqué ne
+     remplirait pas sa fonction.
+
+     Ne pas modifier à la main : éditer public/legal.css, puis relancer
+     « node bin/inliner-legal.mjs ». Le test tests/legal.test.mjs échoue si ce
+     bloc et le fichier divergent.
+-->
+<style>
+/* =============================================================================
+   HABILLAGE DES PAGES ADMINISTRATIVES — Kazendra.
+
+   Ces pages (mentions légales, confidentialité, cookies, conditions
+   d'utilisation) ont leur propre feuille, plus sobre que celle du site : ce sont
+   des documents à lire, pas un catalogue.
+
+   ELLE AUSSI EST POSÉE EN LIGNE DANS CHAQUE PAGE. Raison identique à celle du
+   site (voir bin/inliner-css.mjs) : le 08/10/2026, sur le PC de B, les fichiers
+   .css externes n'arrivaient pas au navigateur. Une page légale dont
+   l'habillage — ou pire, le TEXTE — dépendrait d'un fichier coupé en chemin ne
+   serait pas une page légale. On écrit donc la feuille dans la page.
+
+   NE PAS ÉDITER LE BLOC EN LIGNE À LA MAIN : éditer public/legal.css, puis
+   relancer « node bin/inliner-legal.mjs ». Le test tests/legal.test.mjs échoue
+   si le bloc et ce fichier divergent.
+   ============================================================================= */
+
+:root {
+  --bleu: #0d3b5b;
+  --orange: #eb912d;
+  --texte: #16324a;
+  --doux: #5a6b7b;
+  --bord: #dde1e6;
+  --fond: #ffffff;
+  --fond-doux: #f5f7f9;
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --texte: #e8edf2;
+    --doux: #a4b1be;
+    --bord: #2b3846;
+    --fond: #101a24;
+    --fond-doux: #17242f;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--fond);
+  color: var(--texte);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.doc { max-width: 820px; margin: 0 auto; padding: 0 18px 64px; }
+
+/* En-tête : le K de l'identité + un retour au site. Le lien de retour est
+   TOUJOURS visible : une page légale atteinte par obligation doit offrir la
+   sortie la plus évidente possible. */
+.tete {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  padding: 18px 0 14px; margin-bottom: 26px; border-bottom: 1px solid var(--bord);
+}
+.tete .k { width: 28px; height: 28px; flex: none; }
+.tete .nom { font-weight: 700; letter-spacing: .02em; color: var(--bleu); }
+@media (prefers-color-scheme: dark) { .tete .nom { color: #7fb8dd; } }
+.tete .retour {
+  margin-left: auto; color: var(--orange); text-decoration: none;
+  font-weight: 600; border-bottom: 1px solid transparent;
+}
+.tete .retour:hover, .tete .retour:focus { border-bottom-color: var(--orange); }
+
+h1 { font-size: 26px; line-height: 1.25; margin: 0 0 6px; }
+h2 { font-size: 18px; margin: 32px 0 8px; color: var(--bleu); }
+@media (prefers-color-scheme: dark) { h2 { color: #7fb8dd; } }
+h3 { font-size: 15px; margin: 20px 0 6px; }
+p, ul, ol { margin: 0 0 12px; }
+ul, ol { padding-left: 22px; }
+li { margin-bottom: 5px; }
+a { color: var(--bleu); }
+@media (prefers-color-scheme: dark) { a { color: #8cc4e6; } }
+code { background: var(--fond-doux); padding: 1px 5px; border-radius: 4px; font-size: 14px; }
+
+.maj { color: var(--doux); font-size: 14px; margin: 0 0 26px; }
+
+/* CE QUI RESTE À FOURNIR. Le surlignage est volontairement visible : une page
+   légale qui aurait l'air complète alors qu'il manque l'identité de l'éditeur
+   tromperait tout le monde, à commencer par son auteur. Le test
+   tests/legal.test.mjs compte ces marques et refuse qu'elles disparaissent
+   sans que la donnée soit réellement renseignée. */
+.a-completer {
+  background: #fff3cd; color: #6b4b00; border: 1px dashed #d9a400;
+  border-radius: 4px; padding: 0 5px; font-weight: 600;
+}
+@media (prefers-color-scheme: dark) {
+  .a-completer { background: #3a2e07; color: #ffd77a; border-color: #8a6d12; }
+}
+
+/* L'avis de chantier. Il n'est là que TANT QUE la page n'est pas finalisée. */
+.charte {
+  border: 1px solid var(--bord); border-left: 4px solid var(--orange);
+  background: var(--fond-doux); border-radius: 8px;
+  padding: 12px 14px; margin: 0 0 26px; font-size: 15px;
+}
+.charte b { color: var(--bleu); }
+@media (prefers-color-scheme: dark) { .charte b { color: #7fb8dd; } }
+
+table { border-collapse: collapse; width: 100%; margin: 0 0 16px; font-size: 15px; }
+th, td { border: 1px solid var(--bord); padding: 7px 9px; text-align: left; vertical-align: top; }
+th { background: var(--fond-doux); }
+
+.pied-doc {
+  margin-top: 44px; padding-top: 16px; border-top: 1px solid var(--bord);
+  color: var(--doux); font-size: 14px;
+}
+.pied-doc a { margin-right: 14px; }
+
+@media print {
+  .tete .retour, .charte { display: none; }
+  body { background: #fff; color: #000; }
+}
+</style>
+<!-- FIN-FEUILLE-EN-LIGNE -->
+</head>
+<body>
+<div class="doc">
+
+  <header class="tete">
+    <img class="k" src="favicon.svg" width="28" height="28" alt="">
+    <span class="nom">KAZENDRA</span>
+    <a class="retour" href="index.html">← Retour au site</a>
+  </header>
+
+  <h1>Mentions légales</h1>
+  <p class="maj">Dernière mise à jour : 8 octobre 2026.</p>
+
+  <p class="charte">
+    <b>Cette page n’est pas encore définitive.</b> Les champs <span class="a-completer">surlignés</span>
+    attendent des informations que seul l’éditeur peut fournir. Tant qu’ils sont vides, la page est
+    un <b>modèle</b> : la publier ne suffit pas à satisfaire les obligations d’information.
+  </p>
+
+  <h2>1. Éditeur du site</h2>
+  <p>Le site <b>kazendra.com</b> est édité par&nbsp;:</p>
+  <ul>
+    <li>Dénomination ou nom&nbsp;: <span class="a-completer">À COMPLÉTER — nom ou raison sociale</span></li>
+    <li>Forme juridique&nbsp;: <span class="a-completer">À COMPLÉTER — personne physique, société (SRL, SNC…), ASBL</span></li>
+    <li>Adresse géographique du siège&nbsp;: <span class="a-completer">À COMPLÉTER — rue, code postal, commune, pays</span></li>
+    <li>Numéro d’entreprise (BCE)&nbsp;: <span class="a-completer">À COMPLÉTER — 0xxx.xxx.xxx</span></li>
+    <li>Numéro de TVA&nbsp;: <span class="a-completer">À COMPLÉTER — ou « non assujetti » si régime de franchise</span></li>
+    <li>Adresse e-mail de contact&nbsp;: <span class="a-completer">À COMPLÉTER — adresse professionnelle</span></li>
+    <li>Téléphone&nbsp;: <span class="a-completer">À COMPLÉTER</span></li>
+  </ul>
+  <p>
+    <b>Responsable de la publication&nbsp;:</b>
+    <span class="a-completer">À COMPLÉTER — nom de la personne responsable</span>.
+  </p>
+  <p>
+    <b>Pourquoi ces informations sont obligatoires.</b> Un site qui propose un service en Belgique doit
+    permettre d’identifier son éditeur et de le joindre (loi du 11 mars 2003 sur certains aspects
+    juridiques des services de la société de l’information, et article VI.5 du Code de droit économique).
+    Une adresse e-mail de contact professionnelle et une adresse géographique sont exigées — un
+    formulaire de contact ne suffit pas.
+  </p>
+
+  <h2>2. Hébergement</h2>
+  <ul>
+    <li>
+      <b>Hébergeur du site&nbsp;:</b> GitHub, Inc. (service GitHub Pages),
+      88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, États-Unis —
+      <a href="https://github.com" rel="noopener noreferrer">github.com</a>.
+    </li>
+    <li>
+      <b>Nom de domaine&nbsp;:</b> enregistré chez OVH SAS, 2 rue Kellermann, 59100 Roubaix, France —
+      <a href="https://www.ovhcloud.com" rel="noopener noreferrer">ovhcloud.com</a>.
+    </li>
+  </ul>
+  <p>
+    L’hébergement aux États-Unis implique un transfert de données hors de l’Union européenne&nbsp;;
+    il est décrit dans la <a href="confidentialite.html">politique de confidentialité</a>.
+  </p>
+
+  <h2>3. Objet du site</h2>
+  <p>
+    Kazendra est un service d’information <b>gratuit</b>. Il rassemble des promotions publiées
+    publiquement par des marchands européens et <b>renvoie</b> vers leurs sites.
+  </p>
+  <p>
+    <b>Kazendra ne vend rien.</b> Le site ne prend aucune commande, n’encaisse aucun paiement et n’est
+    pas partie aux contrats conclus avec les marchands. Les transactions se font exclusivement entre
+    l’acheteur et le marchand, sur le site de ce dernier.
+  </p>
+
+  <h2>4. Propriété intellectuelle</h2>
+  <p>
+    Le code, la structure, les textes, l’identité visuelle et le logo du site sont protégés par le droit
+    d’auteur. Le site est protégé en outre au titre du droit des bases de données, la constitution de
+    son catalogue ayant demandé un investissement substantiel.
+  </p>
+  <p>
+    <b>Marque « Kazendra »&nbsp;:</b> <span class="a-completer">À COMPLÉTER — dépôt en cours / enregistrée
+    le … sous le numéro … / non déposée à ce jour</span>.
+  </p>
+  <p>
+    Les liens hypertextes vers kazendra.com sont libres. Toute reprise du contenu, en tout ou en partie,
+    est interdite sans autorisation écrite préalable.
+  </p>
+
+  <h2>5. Liens vers les marchands et transparence sur l’affiliation</h2>
+  <p>
+    Les liens sortants vers les marchands <b>peuvent être des liens d’affiliation</b>&nbsp;: lorsqu’un
+    achat est réalisé après un clic, le marchand peut verser une commission à Kazendra.
+  </p>
+  <p>
+    <b>Cette commission ne change pas le prix payé par l’acheteur</b> et n’influence pas la sélection
+    des offres publiées.
+  </p>
+  <p>
+    <b>Situation au 8 octobre 2026&nbsp;:</b> aucun identifiant d’affiliation n’est posé. Les liens
+    sortants sont donc <b>directs</b> et aucune commission n’est perçue. Cette mention sera mise à jour
+    le jour où des identifiants seront posés — pas avant.
+  </p>
+
+  <h2>6. Prix et informations fournies par les marchands</h2>
+  <p>
+    Les prix, remises et disponibilités proviennent des sites marchands. Ils peuvent changer à tout
+    moment, et certains marchands n’en publient pas du tout&nbsp;: le site l’indique alors au lieu
+    d’afficher un chiffre inventé.
+  </p>
+  <p>
+    <b>Seul le prix affiché chez le marchand au moment de l’achat fait foi.</b> Lorsqu’une devise
+    n’est pas l’euro, elle est affichée <b>dans sa devise d’origine</b>, sans conversion&nbsp;: le site
+    ne maintient aucun taux de change.
+  </p>
+  <p>La date du relevé des prix est affichée sur chaque page du site.</p>
+
+  <h2>7. Responsabilité</h2>
+  <p>
+    Le site est mis à disposition « en l’état ». Kazendra met en œuvre des moyens raisonnables pour que
+    les informations soient exactes et datées, mais ne peut garantir qu’elles le restent en permanence,
+    ni que le site sera disponible sans interruption.
+  </p>
+  <p>
+    Kazendra ne peut être tenu responsable des dommages résultant de l’utilisation des informations
+    publiées, ni du contenu des sites marchands vers lesquels il renvoie.
+  </p>
+
+  <h2>8. Données personnelles et cookies</h2>
+  <p>
+    Voir la <a href="confidentialite.html">politique de confidentialité</a> et la
+    <a href="cookies.html">politique relative aux cookies</a>.
+  </p>
+
+  <h2>9. Droit applicable et règlement des litiges</h2>
+  <p>Les présentes mentions sont soumises au <b>droit belge</b>.</p>
+  <p>
+    Consommateur en Belgique&nbsp;: <b>Service de médiation pour le consommateur</b>, Boulevard du Roi
+    Albert II 8, 1000 Bruxelles —
+    <a href="https://www.mediationconsommateur.be" rel="noopener noreferrer">mediationconsommateur.be</a>.
+  </p>
+  <p>
+    Consommateur dans un autre pays de l’Union&nbsp;: <b>Centre européen des consommateurs</b> de votre
+    pays.
+  </p>
+  <p>
+    <b>Note d’exactitude&nbsp;:</b> la plateforme européenne de règlement en ligne des litiges (RLL)
+    a cessé son activité&nbsp;; elle n’est donc pas mentionnée ici, contrairement à ce que reprennent
+    beaucoup de modèles encore en circulation.
+  </p>
+
+  <footer class="pied-doc">
+    <a href="index.html">Retour au site</a>
+    <a href="confidentialite.html">Confidentialité</a>
+    <a href="cookies.html">Cookies</a>
+    <a href="cgu.html">Conditions d’utilisation</a>
+  </footer>
+
+</div>
+</body>
+</html>

@@ -7,6 +7,7 @@ Demandes de B, dans l'ordre où il les a énoncées :
 3. **Rediriger** les domaines `.be`, `.fr`, `.eu`, `.app`
 4. **Créer les affiliations**
 5. **Promouvoir le site**
+6. **Officialiser le site** — la partie administrative (mentions légales, RGPD, cookies, CGU)
 
 Chaque affirmation ci-dessous porte sa mesure. Ce qui n'est pas mesuré est écrit **NON VÉRIFIÉ** —
 règle du projet : on n'annonce pas un chiffre qu'on ne peut pas prouver.
@@ -252,15 +253,23 @@ du 08/10) :
   convertir exigerait un cours de change, donc un tiers ou un taux à maintenir.
 
 - un **favori peut afficher une autre offre** que celle enregistrée (359 offres sous un identifiant
-  partagé) — **reste à corriger**.
+  partagé) — ✅ **CORRIGÉ le 08/10/2026.** L'identifiant était la fin du lien encodée puis tronquée à
+  14 caractères : deux offres distinctes pouvaient tomber sur le même. Il est désormais une empreinte
+  **SHA-1 du lien entier**, et les identifiants déjà en stock sont migrés à chaque collecte. Vérifié
+  sur le catalogue publié : **14 274 offres, 0 identifiant partagé** (contre 74 pour 287 offres).
 
 Promouvoir un site qui affichait « économise 24 163 € » sur un article à 600 € aurait détruit sa
-crédibilité en une journée. Ce qui reste à corriger : les identifiants dupliqués.
+crédibilité en une journée. **Les deux défauts sont corrigés.**
+
+Ajouté le 08/10/2026, à la demande de B : dans la portée « Bonnes promos » — le défaut de
+l'application —, les annonces s'affichent désormais dans l'**ordre chronologique**, la plus récente en
+tête. Mesuré sur le catalogue publié : **0 inversion d'ordre** (contre 486 avant). Le design n'a pas
+bougé : seul l'ordre change.
 
 **Ce qui est faisable sans budget et sans compte tiers :**
 
-- `robots.txt` et `sitemap.xml` — les deux sont **absents** aujourd'hui (404 vérifié). Un plan de site
-  est la première chose qu'un moteur cherche ; sans lui, l'indexation est lente et partielle.
+- `robots.txt` et `sitemap.xml` — ✅ **FAITS le 08/10/2026** (ils répondaient 404). Le plan de site ne
+  liste que des pages qui existent réellement, et `/admin/` est écarté des moteurs.
 - données structurées **schema.org** (`Product` + `Offer`) sur les pages d'offres : c'est ce qui permet
   aux offres d'apparaître enrichies dans les résultats de recherche.
 - `og:image` et balises **Open Graph** — pour que le partage sur les réseaux affiche un aperçu correct
@@ -275,20 +284,80 @@ tant qu'une décision de budget n'est pas prise, et je ne peux engager aucune d�
 
 ---
 
-## Ordre d'exécution proposé
+## 6. Officialiser le site — la partie administrative ✅ PAGES ÉCRITES
 
-1. **Redirections OVH** (`/ 3`) — gratuit, 10 minutes de votre part, aucun risque.
-2. **Recherche d'antériorité « Kazendra »** puis **dépôt de marque** (`/ 2`) — avant toute promotion.
-3. **Les deux corrections d'affichage** (prix, favoris) — avant toute promotion.
-4. **`robots.txt` + `sitemap.xml` + données structurées** (`/ 5`) — sans budget, gros effet.
-5. **Amazon Partenaires**, puis Awin et TradeTracker (`/ 4`) — inscriptions en votre nom.
-6. **Les tableurs marché** (`/ 1`) — le plus long ; à lancer quand la voie A ou B est tranchée.
-7. Promotion proprement dite.
+**Demande de B (08/10/2026)** : « Il faut aussi faire toute la partie administrative pour officialiser le site. »
+
+**Constat mesuré avant travaux** : `mentions-legales.html`, `confidentialite.html`, `cookies.html`,
+`cgu.html`, `robots.txt` et `sitemap.xml` répondaient **tous 404** sur le site publié. Rien n'existait.
+
+**Livré le 08/10/2026 :**
+
+| Fichier | Ce qu'il contient |
+|---|---|
+| `public/mentions-legales.html` | Éditeur, responsable de publication, hébergeur (GitHub, Inc. / OVH SAS), objet, propriété intellectuelle, transparence sur l'affiliation, prix, responsabilité, droit applicable et voie de médiation |
+| `public/confidentialite.html` | RGPD : ce qui est conservé **et où** (tout est sur l'appareil), bases légales, destinataires, transfert hors UE, droits, APD, sécurité |
+| `public/cookies.html` | L'absence de cookie **et sa conséquence** : pas de bannière de consentement, car il n'y a rien à consentir |
+| `public/cgu.html` | Le site n'est **pas le vendeur** ; primauté du prix affiché chez le marchand ; devise d'origine sans conversion ; usage loyal |
+| `public/robots.txt` | Interdit `/admin/`, déclare le plan du site |
+| `public/sitemap.xml` | Ne liste **que** des pages qui existent réellement |
+| `FICHE-ADMINISTRATIVE.md` | **Le point de passage unique** : tout ce qui doit venir de B, champ par champ |
+
+Les quatre pages ont leur **propre feuille, posée en ligne** (`public/legal.css` via
+`bin/inliner-legal.mjs`), pour la même raison que le site : une page d'information dont le contenu
+dépend d'un `.css` coupé en chemin ne remplit pas sa fonction. Les liens vers ces pages sont dans le
+**pied de page** du site — une mention introuvable ne remplit pas son office.
+
+**Ce qui n'est PAS fait, et pourquoi :**
+
+- **L'identité de l'éditeur n'est pas renseignée.** Nom, adresse, BCE, TVA, e-mail, téléphone sont des
+  champs surlignés « à compléter » dans les pages. **Aucune valeur n'a été inventée** — c'est la règle
+  du projet, et une épreuve (`tests/legal.test.mjs`) fait **échouer** la suite si un numéro BCE ou une
+  adresse e-mail apparaît hors de ces champs.
+- **Les traductions néerlandaise et anglaise** des pages restent à produire : une décision de B (voir
+  `FICHE-ADMINISTRATIVE.md`, § D). Les intitulés restent en français, car traduire un intitulé vers une
+  page qui n'existe pas dans cette langue serait un mensonge.
+- **L'activité est-elle commerciale ?** Décision fiscale de B (voir `FICHE-ADMINISTRATIVE.md`, § C) :
+  elle détermine s'il faut une inscription BCE et un numéro de TVA.
+
+⚠️ **Tant que l'identité n'est pas renseignée, ces pages sont des MODÈLES.** Les publier ne satisfait pas
+les obligations d'information — et le site le dit lui-même en tête de page, plutôt que de laisser
+croire le contraire.
 
 ---
 
-## Ce qui a déjà été fait ce jour
+## Ordre d'exécution proposé
+
+1. **Redirections OVH** (`/ 3`) — gratuit, 10 minutes de votre part, aucun risque.
+2. **Renseigner l'identité de l'éditeur** (`FICHE-ADMINISTRATIVE.md`, § B) — c'est ce qui transforme les
+   quatre pages administratives de modèles en pages valables. Rien d'autre ne bloque cette étape.
+3. **Trancher** : activité commerciale ou non (`FICHE-ADMINISTRATIVE.md`, § C) → inscription BCE + TVA ;
+   et les langues des pages légales (§ D).
+4. **Recherche d'antériorité « Kazendra »** puis **dépôt de marque** (`/ 2`) — avant toute promotion.
+5. **Corrections d'affichage** (`/ 5`) — ✅ **faites toutes les deux** le 08/10/2026 (devises, favoris,
+   et l'ordre chronologique des bonnes promos).
+6. **Ce qui reste sans budget sur le référencement** (`/ 5`) — `robots.txt` et `sitemap.xml` ✅ faits ;
+   restent les **données structurées schema.org** et les balises **Open Graph**.
+7. **Amazon Partenaires**, puis Awin et TradeTracker (`/ 4`) — inscriptions en votre nom.
+8. **Les tableurs marché** (`/ 1`) — le plus long ; à lancer quand la voie A ou B est tranchée.
+9. Promotion proprement dite.
+
+---
+
+## Ce qui a déjà été fait, à ce jour
+
+**08/10/2026**
 
 - Check-up complet de KAZENDRA : `CHECK-UP-KAZENDRA-2026-10-08.md` (à la racine du hub).
 - Écran de secours + page de diagnostic navigateur : voir `tests/ecran-de-secours.test.mjs`.
-  Suite de tests : **455 sur 455**.
+- **Devises** : chaque prix s'affiche dans sa devise d'origine (`6 089 kr`, `108,82 zł`, `£153,39`),
+  sans conversion — corrigé, vérifié en ligne.
+- **Favoris** : identifiant = empreinte SHA-1 du lien entier, migration des identifiants en stock —
+  corrigé, vérifié sur le catalogue publié (14 274 offres, 0 identifiant partagé).
+- **Ordre des « bonnes promos »** : chronologique, la plus récente en tête — 0 inversion d'ordre sur le
+  catalogue publié (contre 486 avant). Design inchangé, comme demandé.
+- **Partie administrative** : quatre pages légales créées (mentions, confidentialité, cookies, CGU),
+  `robots.txt` et `sitemap.xml` publiés, liens dans le pied de page. Voir `FICHE-ADMINISTRATIVE.md`
+  pour **ce qui reste à fournir de votre côté**.
+- Suite de tests : **527 sur 527**. Elle échoue si un numéro d'entreprise ou une adresse e-mail est
+  **inventé** dans une page légale.
