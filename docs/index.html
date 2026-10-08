@@ -800,17 +800,48 @@ html[data-theme="contraste"] {
   .pied { margin: 36px var(--gout) 0; padding-top: 20px; font-size: 12.5px; }
   .pied .liens-legaux { gap: 6px 20px; }
 
-  /* ---------- En-tête : un peu d'air, un peu plus grand ---------- */
-  .marque { font-size: 19px; gap: 10px; }
-  .logo { width: 30px; height: 30px; }
-  .accroche { font-size: 10.5px; }
-  /* Les compteurs tenaient sur TROIS lignes (un <br> les sépare) : dans un
-     bandeau collant, ces trois lignes coûtaient 34 px de haut sur toute la
-     page. Sur un écran large il y a la place de les mettre côte à côte, à
-     droite de la marque. La grille souple les écarte de 16 px, ce qui suffit à
-     les séparer — l'espace fait office de ponctuation. */
-  .comptes { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0 16px; font-size: 13px; }
-  .comptes br { display: none; }
+  /* ---------- La marque : plus grande et plus visible ----------
+     Demande de B, 08/10/2026 : « le logo et la marque doivent apparaître plus
+     grand, plus visible ». Sur téléphone, ces 26 px de logo sont justes : à
+     390 px de large, l'en-tête doit d'abord laisser la place aux offres. Sur PC,
+     la marque flottait dans un bandeau de 1 280 px — le bloc le plus important
+     de la page était le plus petit.
+
+     Les trois pièces grandissent ENSEMBLE, et dans le même rapport, sinon la
+     marque se casse : le logo 26 → 42 px (×1,6), le mot 17 → 25 px (×1,45),
+     l'accroche 9,5 → 12 px (×1,26). L'accroche grandit moins : à 25 px de mot,
+     une accroche de 15 px tirerait à elle seule tout le bloc vers le haut.
+     L'écart interne suit (10 → 13 px) et l'accroche s'écarte du mot de 2 px, au
+     lieu d'1 : à cette taille, 1 px se lit comme un défaut d'alignement.
+
+     Conséquence PRISE EN COMPTE : la ligne de marque passe de 34 à ~48 px, et
+     l'en-tête collant avec elle. C'est le prix de la demande, et il est mesuré
+     (bin/mesurer-pc.py) : ~209 px au total, contre 226 px AVANT toute cette
+     refonte d'affichage PC. Le bandeau reste donc plus court qu'à l'origine,
+     tout en portant une marque nettement plus grande. */
+  .marque { font-size: 25px; gap: 13px; }
+  .logo { width: 42px; height: 42px; }
+  .marque-txt { gap: 2px; }
+  .accroche { font-size: 12px; letter-spacing: .7px; opacity: .85; }
+  /* Alignement de la marque et des compteurs : on abandonne l'alignement sur la
+     LIGNE DE BASE, qui est celui du téléphone. Avec une marque de 25 px et trois
+     lignes de compteurs à droite, cet alignement fait DESCENDRE les trois lignes
+     sous la marque : la ligne d'en-tête montait à 86 px au lieu de 56, et
+     l'en-tête collant à 229 px au lieu de 199 (mesuré). On cale donc les
+     compteurs au centre de la ligne, ce qui est aussi plus juste à l'œil : une
+     colonne de trois lignes ne s'aligne pas sur la base d'un mot unique. */
+  .tete-in { align-items: flex-start; }
+  .comptes { align-self: center; }
+  /* Les compteurs : trois lignes serrées (un `<br>` les sépare dans le HTML).
+     On a essayé de les mettre côte à côte — c'est tentant, il y a la place sur
+     un écran large. IMPOSSIBLE sans toucher au HTML, et c'est mesuré : un
+     `<br>` force un retour à la ligne quoi qu'on en fasse (`display: block`,
+     `inline-block` avec une largeur, `visibility: hidden` — les trois essais
+     donnent toujours trois lignes), et le seul moyen de l'empêcher
+     (`display: none`) colle alors les morceaux de texte entre eux, faute de
+     séparateur : on lisait « good deals14504 dealsupdated 1 min ago ». On
+     garde donc les trois lignes, un peu resserrées. */
+  .comptes { font-size: 12.5px; line-height: 1.3; }
   .barre { margin: 10px 0; gap: 10px; }
   #recherche { padding: 11px 14px; font-size: 15px; }
   #recherche::placeholder { font-size: 14px; }
@@ -821,9 +852,13 @@ html[data-theme="contraste"] {
   /* Les puces se REPLIENT au lieu de défiler : sur PC la barre de défilement
      horizontale est masquée (scrollbar-width: none), donc rien n'indiquerait
      qu'il y a une suite à droite. Sur téléphone le glissement du doigt est
-     évident — ici il ne l'est pas. */
-  .puces { flex-wrap: wrap; padding-bottom: 12px; }
-  .puce { padding: 6px 13px; font-size: 13.5px; }
+     évident — ici il ne l'est pas.
+     Les 17 puces demandent ~1 600 px : elles tiennent donc sur deux lignes dans
+     un cadre de 1 280, et c'est très bien. Elles sont resserrées pour que ces
+     deux lignes coûtent le moins de hauteur possible — c'est un bandeau
+     collant, chaque pixel y est payé sur toute la page. */
+  .puces { flex-wrap: wrap; row-gap: 4px; padding-bottom: 10px; }
+  .puce { padding: 5px 12px; font-size: 13px; }
 
   /* ---------- Mode Tableau : trois colonnes, puis quatre au-delà de 1280 ----------
      TROIS colonnes entre 1024 et 1280, et non quatre : à 1024 px, quatre

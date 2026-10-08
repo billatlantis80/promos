@@ -163,6 +163,33 @@ th { background: var(--fond-doux); }
   .tete .retour, .charte { display: none; }
   body { background: #fff; color: #000; }
 }
+
+/* =============================================================================
+   AFFICHAGE PC — pages administratives, à partir de 1024 px
+
+   Ces pages étaient DÉJÀ centrées (`.doc`, 820 px) : c'est le seul endroit du
+   site qui avait un cadre. Le travail ici est donc plus fin — rendre au grand
+   écran ce qu'il permet : un titre qui a de l'autorité, des titres de section
+   qui se détachent vraiment, et un peu plus d'air entre les paragraphes. Rien
+   qui change la lecture : les mêmes mots, aux mêmes places, un peu mieux
+   posés. Le palier laisse le téléphone intact au caractère près.
+   ============================================================================= */
+/* DEBUT-COUCHE-PC — repère lu par tests/affichage-pc.test.mjs ; ne pas retirer. */
+@media (min-width: 1024px) {
+  body { font-size: 16.5px; }
+  .doc { max-width: 860px; padding: 0 28px 88px; }
+  h1 { font-size: 33px; letter-spacing: -.2px; }
+  h2 { font-size: 20px; margin: 40px 0 10px; }
+  h3 { font-size: 16px; margin: 24px 0 8px; }
+  .tete { padding: 26px 0 18px; margin-bottom: 34px; }
+  .tete .k { width: 32px; height: 32px; }
+  .langues-doc { margin-bottom: 28px; }
+  .maj { font-size: 14.5px; margin-bottom: 30px; }
+  .charte { padding: 14px 16px; font-size: 15.5px; }
+  table { font-size: 15.5px; }
+  th, td { padding: 9px 11px; }
+  .pied-doc { margin-top: 52px; }
+}
 </style>
 <!-- FIN-FEUILLE-EN-LIGNE -->
 </head>
