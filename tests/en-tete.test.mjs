@@ -55,7 +55,14 @@ test('le total de l’en-tête est celui de « Tous les pays »', () => {
   // nombres différents s'affichaient donc côte à côte pour la même grandeur
   // (9 782 dans l'en-tête contre 11 325 dans le sélecteur) — l'utilisateur a vu
   // l'écart et l'a signalé.
-  const i = js.indexOf("if (etat.portee === 'promos')");
+  // On cherche la branche DANS dessiner() : « if (etat.portee === 'promos') »
+  // apparaît aussi dans comparateur() (l'ordre chronologique des bonnes promos).
+  // S'ancrer sur la PREMIÈRE occurrence du fichier faisait dépendre cette
+  // épreuve de l'ordre des fonctions — un faux échec garanti à la prochaine
+  // règle qui écrira la même condition.
+  const iDessiner = js.indexOf('function dessiner()');
+  assert.ok(iDessiner > 0, 'dessiner() doit exister');
+  const i = js.indexOf("if (etat.portee === 'promos')", iDessiner);
   assert.ok(i > 0, 'la branche « bonnes promos » doit exister');
   const bloc = js.slice(i, js.indexOf('} else {', i));
   assert.match(bloc, /const totalPromos = etat\.offres\.length;/,

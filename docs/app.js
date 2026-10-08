@@ -1181,11 +1181,23 @@ function retenue(o) {
   return true;
 }
 
+/** Chronologique : la plus récente en tête. Écrit UNE seule fois, pour que
+ *  « Bonnes promos » et « Plus récentes » ne puissent pas diverger un jour. */
+const parRecence = (a, b) => new Date(b.date) - new Date(a.date);
+
 /** Le comparateur du tri courant. Extrait de « triees » parce que le MÉLANGE en
  *  a besoin : il trie chaque camp séparément avant d'alterner. */
 function comparateur() {
   if (etat.tri === 'prix') return (a, b) => (a.prix ?? 1e9) - (b.prix ?? 1e9) || (b.remise || 0) - (a.remise || 0);
-  if (etat.tri === 'recent') return (a, b) => new Date(b.date) - new Date(a.date);
+  if (etat.tri === 'recent') return parRecence;
+  // PORTÉE « Bonnes promos » — le défaut de l'application (demande de B,
+  // 08/10/2026) : les annonces s'affichent dans l'ordre CHRONOLOGIQUE, la plus
+  // récente tout en haut. Avant, cette portée classait par remise : l'ordre
+  // sautait d'une date à l'autre et la dernière offre trouvée n'était jamais en
+  // vue. RIEN ne change à l'affichage (design intact) — seul l'ORDRE change, et
+  // seulement pour cette portée : « Toutes les offres », « Plus récentes » et
+  // « Prix croissant » gardent exactement le tri qu'elles avaient.
+  if (etat.portee === 'promos') return parRecence;
   // Tri par remise : les promos à DEUX PRIX RÉELS passent devant les offres
   // d'enseigne — leur pourcentage est démontrable, il n'est pas seulement
   // annoncé. À qualité égale, la remise décide, puis le score de la
