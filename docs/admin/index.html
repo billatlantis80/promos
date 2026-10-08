@@ -236,6 +236,17 @@ details > table tr:first-child th{padding-top:2px}
           <div id="mNonActifs"></div>
         </div>
         <div class="rub">
+          <h2>Les sites, par pays et par rubrique</h2>
+          <p class="aide">Le classement demandé : chaque pays, puis chaque rubrique
+            (<b>supermarché</b>, <b>presse &amp; médias</b>, <b>e-commerce</b>…), et pour
+            chacune les sites qui la composent. La colonne <b>Voie</b> dit l'essentiel :
+            <b>flux</b> = le site publie ses offres et on les lit chez lui ;
+            <b>veille</b> = on ne l'atteint qu'à travers un moteur de recherche, faute de
+            flux lisible — c'est là qu'il y a un site à activer. C'est aussi la liste où
+            chercher une rubrique laissée vide dans un pays.</p>
+          <div id="mRubriquesSites"></div>
+        </div>
+        <div class="rub">
           <h2>Origine des annonces, par pays</h2>
           <p class="aide">Pour chaque pays, les sites qui lui fournissent ses annonces, du plus prolifique au plus discret. Déplie un pays pour le détail.</p>
           <div id="mOriginePays"></div>
@@ -579,6 +590,116 @@ function classementSites(catalogue) {
     totalAnnonces: offres.length,
     vueLe: o.genereLe || null,
     parEtat: Object.entries(parEtat).sort((a, b) => b[1] - a[1]),
+  };
+}
+
+/* ---------- Les sites rangés PAR PAYS puis PAR RUBRIQUE ----------
+ * Demande de B (08/10/2026) : « j'ai besoin que tu les classes par pays, et par
+ * rubrique : supermarché, presse, e-commerce… ce qui me permettra de trouver des
+ * nouveaux sites à activer. »
+ *
+ * FONCTION PURE, comme classementSites() : le test l'extrait de ce fichier et
+ * l'exécute sans navigateur.
+ *
+ * LA COLONNE QUI CHANGE TOUT, C'EST « LA VOIE ». Une liste rangée par rubrique
+ * ne sert à rien si elle ne dit pas LESQUELS SONT BRANCHÉS. « Delhaize » et
+ * « Amazon » se rangent tous deux dans le commerce de détail ; l'un est vu à
+ * travers la presse qui parle de lui (veille), l'autre publie ses promotions et
+ * on les lit chez lui (flux). Sans ce mot, on chercherait longtemps pourquoi les
+ * promos Delhaize manquent : il est en veille, pas en flux.
+ *
+ * Les rubriques et les voies ne sont PAS saisies ici : le collecteur les écrit
+ * dans le catalogue publié (`sources[].rubrique`, `sources[].voie`). Le panneau
+ * les lit. Deux listes tenues à la main finiraient par se contredire.
+ */
+function sitesParPaysEtRubrique(catalogue) {
+  const o = catalogue || {};
+  const offres = o.offres || [];
+  const cl = classementSites(o);
+
+  // 1. Les annonces de chaque site DANS chaque pays : une offre dit les deux,
+  //    donc un seul passage suffit — et le total retombe exactement sur le
+  //    catalogue, sans double compte.
+  const parPaysSite = {};
+  for (const x of offres) {
+    const p = x.pays || '—', s = x.source || '—';
+    parPaysSite[p] = parPaysSite[p] || {};
+    parPaysSite[p][s] = (parPaysSite[p][s] || 0) + 1;
+  }
+
+  // 2. Ce que le catalogue dit de chaque site. Par VOTE MAJORITAIRE, car un site
+  //    a souvent plusieurs sources : Coolblue en a dix, réparties sur la
+  //    Belgique, les Pays-Bas et l'Allemagne ; Groupon mêle activités et
+  //    produits. La rubrique majoritaire l'emporte, à égalité la première par
+  //    ordre alphabétique — jamais au hasard.
+  const fiche = {};
+  for (const s of (o.sources || [])) {
+    const nom = s.nom || s.id;
+    const f = fiche[nom] = fiche[nom] || { rubriques: {}, voies: {}, pays: {} };
+    const r = s.rubrique || 'autre', v = s.voie || 'flux';
+    f.rubriques[r] = (f.rubriques[r] || 0) + 1;
+    f.voies[v] = (f.voies[v] || 0) + 1;
+    if (s.pays) f.pays[s.pays] = (f.pays[s.pays] || 0) + 1;
+  }
+  const maj = (m, def) => Object.entries(m)
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0]?.[0] || def;
+
+  // 3. L'état de chaque site, calculé UNE fois par classementSites() : deux
+  //    calculs séparés finiraient par ne plus dire la même chose.
+  const etat = {};
+  for (const a of cl.actifs) etat[a.site] = { actif: true, etat: 'actif', raison: '' };
+  for (const x of cl.nonActifs) etat[x.site] = { actif: false, etat: x.etat, raison: x.raison };
+
+  // 4. Assemblage pays → rubrique → sites.
+  const pays = {};
+  for (const [nom, f] of Object.entries(fiche)) {
+    const rubrique = maj(f.rubriques, 'autre');
+    const voie = maj(f.voies, 'flux');
+    const liste = Object.keys(f.pays).length ? Object.keys(f.pays) : ['—'];
+    for (const p of liste) {
+      const annonces = (parPaysSite[p] || {})[nom] || 0;
+      const e = etat[nom] || { actif: false, etat: 'pas encore interrogée', raison: '' };
+      const P = pays[p] = pays[p] || { pays: p, total: 0, sites: 0, actifs: 0, flux: 0, veille: 0, rubriques: {} };
+      const R = P.rubriques[rubrique] = P.rubriques[rubrique] || { rubrique, annonces: 0, sites: [] };
+      R.sites.push({ site: nom, voie, annonces, actif: e.actif, etat: e.etat, raison: e.raison });
+      R.annonces += annonces;
+      P.total += annonces; P.sites += 1;
+      if (e.actif) P.actifs += 1;
+      P[voie === 'veille' ? 'veille' : 'flux'] += 1;
+    }
+  }
+  const listePays = Object.values(pays).map((P) => {
+    P.rubriques = Object.values(P.rubriques)
+      .map((R) => ({ ...R, sites: R.sites.sort((a, b) => b.annonces - a.annonces || a.site.localeCompare(b.site)) }))
+      .sort((a, b) => b.annonces - a.annonces || a.rubrique.localeCompare(b.rubrique));
+    return P;
+  }).sort((a, b) => b.total - a.total || a.pays.localeCompare(b.pays));
+
+  // 5. Le même classement, tous pays confondus — la vue d'ensemble, celle qui
+  //    montre d'un coup d'œil où le catalogue tient et où il ne tient à rien.
+  const parRubrique = {};
+  for (const [nom, f] of Object.entries(fiche)) {
+    const r = maj(f.rubriques, 'autre'), v = maj(f.voies, 'flux');
+    const g = parRubrique[r] = parRubrique[r] || { rubrique: r, sites: 0, flux: 0, veille: 0, actifs: 0, annonces: 0 };
+    g.sites += 1; g[v] += 1;
+    if ((etat[nom] || {}).actif) g.actifs += 1;
+  }
+  // Les annonces se recomptent SUR LES OFFRES, pas en additionnant les pays :
+  // un site présent dans trois pays y serait compté trois fois.
+  for (const x of offres) {
+    const f = fiche[x.source || '—'];
+    if (!f) continue;
+    const g = parRubrique[maj(f.rubriques, 'autre')];
+    if (g) g.annonces += 1;
+  }
+  const listeRubriques = Object.values(parRubrique)
+    .sort((a, b) => b.annonces - a.annonces || b.sites - a.sites || a.rubrique.localeCompare(b.rubrique));
+
+  return {
+    pays: listePays,
+    rubriques: listeRubriques,
+    totalSites: Object.keys(fiche).length,
+    totalAnnonces: offres.length,
   };
 }
 
