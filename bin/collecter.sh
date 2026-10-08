@@ -48,6 +48,70 @@ if [ -d .git/rebase-merge ] || [ -d .git/rebase-apply ]; then
   $GIT rebase --abort >/dev/null 2>&1 || true
 fi
 
+# --- DEBUT fonction de reparation du depot (extraite par tests/depot-auto-reparation.test.mjs) ---
+# LE DÉPÔT SE RÉPARE TOUT SEUL — et c'est une panne VÉCUE, pas une hypothèse.
+#
+# Le 08/10/2026, une coupure de courant est tombée pendant que git écrivait un
+# commit. Git a été interrompu en pleine écriture et a laissé un objet de
+# **0 octet** à la place du commit. Conséquence exacte : « fatal: bad object
+# HEAD », TOUTE commande git devient impossible, et plus rien ne peut être publié
+# vers GitHub. En silence : la collecte continuait, le site restait en ligne (il
+# est servi par GitHub, pas par cette machine), et la sauvegarde était morte sans
+# que personne ne le sache. Il a fallu une réparation à la main.
+#
+# Ça se reproduira à la prochaine coupure. On répare donc AVANT d'essayer de
+# publier, et on le DIT :
+#
+#   1. on regarde si l'état du dépôt est LISIBLE — le commit ET son arborescence
+#      (un paquet tronqué casse souvent la seconde sans empêcher le premier de
+#      répondre : s'arrêter au commit laisserait passer le cas) ;
+#   2. sinon, on efface les objets de 0 octet. Un objet git valide n'en fait
+#      JAMAIS 0 : c'est une écriture interrompue, rien d'autre. Il FAUT les
+#      effacer AVANT de récupérer — sinon git croit les avoir et ne les
+#      retélécharge pas ;
+#   3. on récupère depuis GitHub et on se replace sur la pointe de l'origine.
+#
+# Le CONTENU n'est jamais en danger : data/ et docs/ sont recalculés à chaque
+# passage. Ce qu'on sauve, c'est la CAPACITÉ À PUBLIER — et le fait de le savoir.
+reparer_depot() {
+  [ -d .git ] || return 0                       # pas un dépôt : rien à réparer
+  # L'état est-il lisible ? Deux lectures, pas une.
+  if $GIT cat-file -e HEAD 2>/dev/null && $GIT cat-file -e 'HEAD^{tree}' 2>/dev/null; then
+    return 0
+  fi
+  # Aucun commit n'a jamais existé : il n'y a rien à sauver, et rien à dire.
+  $GIT rev-parse --verify HEAD >/dev/null 2>&1 || return 0
+
+  vides=$(find .git/objects -type f -size 0 2>/dev/null | wc -l | tr -d ' ')
+  find .git/objects -type f -size 0 -delete 2>/dev/null
+  # Fichiers temporaires d'une écriture interrompue : git les nomme « tmp_obj_* ».
+  # Ce ne sont jamais des objets valides.
+  find .git/objects -type f -name 'tmp_obj_*' -delete 2>/dev/null
+
+  if ! $GIT fetch -q origin main >/dev/null 2>&1; then
+    alerte "⚠ Promos : dépôt abîmé et GitHub injoignable — publication impossible ($vides objet(s) tronqué(s))"
+    return 1
+  fi
+  # Remise à plat de l'index. Si l'index lui-même a souffert de la coupure, on
+  # l'efface : git le reconstruit à partir de l'arborescence récupérée.
+  $GIT reset --mixed FETCH_HEAD >/dev/null 2>&1 \
+    || { rm -f .git/index; $GIT reset --mixed FETCH_HEAD >/dev/null 2>&1; }
+
+  if $GIT cat-file -e HEAD 2>/dev/null && $GIT cat-file -e 'HEAD^{tree}' 2>/dev/null; then
+    alerte "⚠ Promos : dépôt abîmé (coupure de courant ?) — réparé tout seul depuis GitHub ($vides objet(s) tronqué(s))"
+    return 0
+  fi
+  alerte "⚠ Promos : dépôt abîmé, réparation insuffisante — intervention nécessaire"
+  return 1
+}
+# --- FIN fonction de reparation du depot ---
+
+# Réparer AVANT tout le reste : sans un dépôt lisible, ni le commit ni l'envoi
+# ne peuvent aboutir, et le passage échouerait sans rien dire d'utile.
+if ! reparer_depot; then
+  exit 1
+fi
+
 SORTIE=$(node collecteur.mjs --publier 2>&1)
 CODE=$?
 
