@@ -147,6 +147,23 @@ export function affiliationsDuPays(catalogue, base, mesures, pays) {
   return { pays, compteurs, reseaux, groupes };
 }
 
-/** Les adresses de programme VUES, pour un acteur — ce qui se clique. On ne
- *  fabrique rien : on ne rend que des adresses réellement observées. */
-export const preuvesAffiliation = (e) => ((e && e.indices) || []).filter((i) => /https?:\/\//.test(i));
+/** Les adresses de programme VUES, pour un acteur — ce qui se clique.
+ *
+ *  RENDU STRUCTURÉ, ET C'EST UN DÉFAUT CORRIGÉ. La première version rendait les
+ *  phrases entières (« page programme : https://x.be/affiliation ») et le panneau
+ *  tentait d'en extraire l'adresse par une expression régulière qui supposait des
+ *  parenthèses. Elles n'y étaient pas : le lien affiché aurait été la PHRASE, et
+ *  cliquer dessus n'aurait rien ouvert. On sépare donc ici ce qui se CLIQUE de ce
+ *  qui s'EXPLIQUE — le panneau n'a plus à deviner.
+ *
+ *  On ne fabrique rien : une preuve sans adresse n'est pas rendue. */
+export function preuvesAffiliation(e) {
+  const sortie = [];
+  for (const indice of ((e && e.indices) || [])) {
+    const m = String(indice).match(/https?:\/\/[^\s)]+/);
+    if (!m) continue;
+    const quoi = String(indice).slice(0, m.index).replace(/[\s:«»—–-]+$/, '').trim() || 'vu';
+    sortie.push({ url: m[0], quoi });
+  }
+  return sortie;
+}

@@ -463,7 +463,7 @@ details > table tr:first-child th{padding-top:2px}
             autres — <b>programme trouvé</b> (mesuré, avec l'adresse qui le prouve),
             <b>non mesuré</b> (le site a refusé la mesure : on ne sait pas), et
             <b>aucun signe trouvé</b> (le site a répondu, on a regardé, on n'a rien vu).
-            <b>« Aucun signe » ne veut pas dire « pas d'affiliation »</b> : un programme
+            <b>« Aucun signe » ne veut pas dire « pas d’affiliation »</b> : un programme
             privé ne laisse aucune trace publique. C'est là qu'une demande directe au
             commerçant a du sens.</p>
           <div class="grille" id="mAffCompteurs"></div>
@@ -1739,7 +1739,7 @@ function dessinerAffiliation() {
           <td class="n">${a.citations ? nf.format(a.citations) : '—'}</td>
           <td>${a.affiliation.reseaux.length ? a.affiliation.reseaux.map((r) => `<b>${esc(r)}</b>`).join(' · ') : '—'}</td>
           <td style="font-size:11.5px;max-width:340px">${preuves.length
-    ? preuves.map((p) => `<div><a href="${esc(p.replace(/^[^(]*\((https?:[^)]+)\)$/, '$1'))}" target="_blank" rel="noopener">${esc(p.replace(/^[^(]*\((https?:[^)]+)\)$/, '$1'))}</a></div>`).join('')
+    ? preuves.map((p) => `<div><span style="color:var(--tres-doux)">${esc(p.quoi)} : </span><a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.url.replace(/^https?:\/\/(www\.)?/, '').slice(0, 46))}</a></div>`).join('')
     : `<span class="vide">${esc(a.affiliation.raison || '—')}</span>`}</td>
           <td>${blocNote(a.nom)}</td></tr>`;
   }).join('')}
