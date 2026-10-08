@@ -292,6 +292,87 @@ export function portesEntree(catalogue) {
 }
 
 /**
+ * LE MARCHÉ, PAYS PAR PAYS — « Marché Euro ».
+ *
+ * B (08/10/2026) : « Comme on va rajouter les autres pays par la suite, tu vas
+ * adapter l'onglet "Marché Euro" uniquement. Et dedans j'aurais le choix du
+ * pays que je veux consulter. »
+ *
+ * CE QUE CETTE FONCTION REND : la liste des pays CONSULTABLES, avec ce que
+ * chacun porte déjà. Un pays sans base n'est pas une page vide qui a l'air
+ * cassée — c'est un pays « à constituer », et le dire est une information.
+ *
+ * L'UNION DE DEUX SOURCES, ET IL FAUT LES DEUX :
+ *   - le CATALOGUE dit quels pays l'application sert déjà (12 pays lus) ;
+ *   - la BASE dit quels pays ont des acteurs recensés (11 pays).
+ * N'en prendre qu'une ferait disparaître soit un pays servi sans aucune fiche,
+ * soit une fiche sans aucune lecture — les deux cas existent aujourd'hui.
+ *
+ * @param catalogue  le catalogue publié : { parPays, sources, offres }
+ * @param base       la base du marché : { acteurs: [...] }
+ */
+export function paysDuMarche(catalogue, base) {
+  const r = liaisonActeurs(catalogue, base);
+  const lus = (catalogue && catalogue.parPays) || {};
+  const noms = new Set(Object.keys(lus));
+  for (const a of ((base && base.acteurs) || [])) if (a.pays) noms.add(a.pays);
+
+  return [...noms].sort().map((pays) => {
+    const siens = r.acteurs.filter((a) => a.pays === pays);
+    const c = siens.reduce((t, a) => {
+      t.acteurs += 1; t[a.etat] += 1; t.annonces += a.annonces;
+      return t;
+    }, { acteurs: 0, flux: 0, veille: 0, aucun: 0, annonces: 0 });
+    return {
+      pays,
+      ...c,
+      // Les articles VUS dans ce pays (catalogue) : une autre mesure que le
+      // total des acteurs du pays — un acteur peut être lu depuis ailleurs.
+      articlesLus: lus[pays] || 0,
+      categories: new Set(siens.map((a) => a.categorie)).size,
+      base: siens.length ? 'constituée' : 'à constituer',
+    };
+  }).sort((x, y) => y.acteurs - x.acteurs || x.pays.localeCompare(y.pays));
+}
+
+/**
+ * LA VUE D'UN PAYS — le récapitulatif, puis les acteurs par catégorie.
+ *
+ * Ordre demandé par B : « Quand je rentre dans le pays consulté j'ai un tableau
+ * récapitulatif et en dessous, j'ai la liste des acteurs qui sont actifs ou pas.
+ * Par catégorie. »
+ *
+ * Le classement à l'intérieur d'une catégorie est par nombre d'articles
+ * décroissant : c'est l'ordre de travail. Un acteur qui apporte beaucoup
+ * d'articles sans être branché (il n'apparaît qu'à travers la presse) est
+ * exactement celui qu'il faut aller chercher.
+ */
+export function marcheDuPays(catalogue, base, pays) {
+  const r = liaisonActeurs(catalogue, base);
+  const siens = r.acteurs.filter((a) => a.pays === pays);
+
+  const parCat = {};
+  for (const a of siens) (parCat[a.categorie] = parCat[a.categorie] || []).push(a);
+
+  const categories = Object.entries(parCat).map(([categorie, liste]) => ({
+    categorie,
+    acteurs: liste.length,
+    flux: liste.filter((a) => a.etat === 'flux').length,
+    veille: liste.filter((a) => a.etat === 'veille').length,
+    aucun: liste.filter((a) => a.etat === 'aucun').length,
+    annonces: liste.reduce((n, a) => n + a.annonces, 0),
+    liste: [...liste].sort((a, b) => b.annonces - a.annonces || a.nom.localeCompare(b.nom)),
+  })).sort((x, y) => y.annonces - x.annonces || x.categorie.localeCompare(y.categorie));
+
+  const compteurs = siens.reduce((t, a) => {
+    t.acteurs += 1; t[a.etat] += 1; t.annonces += a.annonces;
+    return t;
+  }, { acteurs: 0, flux: 0, veille: 0, aucun: 0, annonces: 0 });
+
+  return { pays, compteurs, categories };
+}
+
+/**
  * LA LIAISON COMPLÈTE.
  *
  * @param catalogue  le catalogue publié : { sources: [...], offres: [...] }
