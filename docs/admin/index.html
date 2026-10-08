@@ -158,6 +158,12 @@ details.pourquoi p b{color:var(--texte)}
 
 /* ---------- Les tableaux, une seule grammaire ---------- */
 .defile{overflow-x:auto;margin:0 -4px}
+/* LE TABLEAU GARDE SA LARGEUR NATURELLE, et c'est le conteneur qui défile.
+   Défaut mesuré : `table{width:100%}` écrasait dix-sept colonnes dans la largeur
+   du cadre — la colonne du nom tombait à quatre-vingt-dix pixels et « Amazon
+   Belgique (.com.be) » s'étalait sur trois lignes. On obtenait exactement le
+   contraire de ce qui était demandé : une ligne par acteur. */
+.defile table{width:auto;min-width:100%}
 table{width:100%;border-collapse:collapse;font-size:13.5px}
 th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--bord)}
 /* L'EN-TÊTE COLLANT PASSE SOUS LA BARRE DU SITE, IL NE SE CACHE PAS DERRIÈRE.
@@ -315,13 +321,33 @@ details h3 span{font-weight:400;color:var(--doux);font-size:12px;text-transform:
    SOUS sa ligne : on garde le contexte sous les yeux, on ne quitte pas la liste,
    et on n'a pas à retenir ce qu'on était en train de corriger. */
 .editer{
+  display:inline-flex;align-items:center;gap:4px;
   background:transparent;border:1px solid var(--bord);color:var(--doux);border-radius:7px;
-  padding:0 6px;font-size:12px;line-height:1.7;margin-left:6px;vertical-align:1px
+  padding:1px 6px;line-height:1.6;margin-left:6px;vertical-align:1px
 }
+.editer svg{display:block;flex:0 0 auto}
+.editer b{font-size:10.5px;font-weight:700}
 .editer:hover{border-color:var(--accent);color:var(--accent)}
 .editer[aria-expanded="true"]{border-color:var(--accent);color:var(--accent);background:rgba(235,145,45,.12)}
 tr.edition > td{background:var(--carte2);border-bottom:2px solid var(--bord-clair);padding:0}
-.fiche-form{padding:14px 16px}
+/* Le nom d'un acteur est son IDENTITÉ : il ne se coupe pas. Sans ça, dix-sept
+   colonnes dans la largeur du cadre réduisaient la colonne du nom à quatre-vingt
+   dix pixels, et « Amazon Belgique (.com.be) » s'étalait sur trois lignes — le
+   contraire exact de la ligne unique demandée. */
+td.nom-acteur{white-space:nowrap}
+/* « Lu par » reçoit une largeur PLANCHER. Sans elle, la colonne tombait à
+   soixante-cinq pixels : « Amazon · Amazon (BE) » s'y étalait sur quatre lignes et
+   donnait à la ligne une hauteur de quatre-vingt-onze pixels — la ligne unique
+   demandée était perdue, et par la colonne qu'on venait d'ajouter pour ça. Un
+   plafond l'empêche à l'inverse de pousser un acteur à dix sources hors du
+   tableau. */
+td.lu-par,th.lu-par{min-width:150px;max-width:230px}
+/* ET LA FICHE RESTE VISIBLE. Mesuré : sur dix-sept colonnes, le tableau devient
+   plus large que l'écran et défile horizontalement. La fiche, qui s'étale sur
+   toute la ligne, partait donc hors de l'écran par la droite — on ouvrait un
+   formulaire dont on ne voyait que la moitié. Elle se colle au bord GAUCHE du
+   défilement : elle reste entière sous les yeux, quelle que soit la position. */
+.fiche-form{padding:14px 16px;position:sticky;left:0;width:min(100%,1100px)}
 .fiche-grille{
   display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px;margin:10px 0 14px
 }
@@ -380,7 +406,12 @@ tr.edition .principal{width:auto;padding:9px 18px;display:inline-block;margin-ri
    Chaque information a donc SA colonne, après l'adresse des promotions. Le
    liseré de gauche sépare visiblement le travail de la documentation : à droite
    du trait, rien ne sert à décider (règle de B). */
-td.info,th.info{font-size:11.5px;color:var(--doux);max-width:190px}
+/* Les colonnes informatives reçoivent une largeur PLANCHER elles aussi. Sans
+   elle, le navigateur les serrait à quatre-vingts pixels et « Papendorpseweg 100,
+   3528 BJ Utrecht (NL) » s'étalait sur quatre lignes : la ligne redevenait un
+   bloc, par les colonnes qu'on venait d'aplatir. Le tableau s'élargit d'autant —
+   c'est son conteneur qui défile, c'est prévu. */
+td.info,th.info{font-size:11.5px;color:var(--doux);min-width:132px;max-width:210px}
 th.info{color:var(--tres-doux)}
 td.info.sep,th.info.sep{border-left:2px solid var(--bord-clair)}
 </style>
@@ -1641,7 +1672,16 @@ function avecFiche(a, fiches) {
   return out;
 }
 
-/** Le crayon, à côté du nom. Un texte plutôt qu'une icône téléchargée : rien à
+/** LE CRAYON EST UN TRACÉ, JOURNAL UNE LETTRE DE POLICE.
+ *  Même règle que les drapeaux : un caractère « ✎ » s'affiche dans la police du
+ *  visiteur, et rien ne garantit qu'elle le porte — sur un poste qui ne l'a pas, on
+ *  obtient un carré vide à côté de chaque nom, sur cent quarante-neuf lignes. Un
+ *  tracé s'affiche identiquement partout et ne coûte AUCUNE requête réseau. */
+const SVG_CRAYON = '<svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"'
+  + ' fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round">'
+  + '<path d="M11.5 1.6l2.9 2.9-8.6 8.6-3.7.8.8-3.7z"/></svg>';
+
+/** Le crayon, à côté du nom. Un tracé plutôt qu'une icône téléchargée : rien à
  *  charger, et il porte le NOMBRE de champs déjà complétés — on repère d'un coup
  *  d'œil les fiches qu'on a touchées. */
 function boutonEditer(a) {
@@ -1650,7 +1690,7 @@ function boutonEditer(a) {
     ? `${n} champ(s) complété(s) à la main — cliquer pour modifier`
     : 'Modifier ou compléter cette fiche';
   return `<button type="button" class="editer" data-editer="${esc(a.nom)}" aria-expanded="false"
-      aria-label="${esc(quoi)}" title="${esc(quoi)}">✎${n ? ` ${n}` : ''}</button>`;
+      aria-label="${esc(quoi)}" title="${esc(quoi)}">${SVG_CRAYON}${n ? `<b>${n}</b>` : ''}</button>`;
 }
 
 /** La fiche dépliée, SOUS la ligne de l'acteur. Elle est toujours dans le HTML
@@ -1968,11 +2008,11 @@ function dessinerMarche() {
     // étages où l'œil ne pouvait plus comparer deux acteurs — or comparer est
     // exactement à quoi sert une colonne.
     return `<tr>
-          <td><b>${esc(a.nom)}</b>${a.provenance === 'application' ? ' <span class="ajout" title="Ajouté par l’application : ce site est lu, il ne figurait pas dans le tableur">ajouté</span>' : ''}${boutonEditer(a)}</td>
+          <td class="nom-acteur"><b>${esc(a.nom)}</b>${a.provenance === 'application' ? ' <span class="ajout" title="Ajouté par l’application : ce site est lu, il ne figurait pas dans le tableur">ajouté</span>' : ''}${boutonEditer(a)}</td>
           <td>${etiquette(a.etat)}</td>
           <td class="fin">${esc(a.type || '—')}</td>
           <td class="n">${a.annonces ? nf.format(a.annonces) : '—'}</td>
-          <td class="fin">${lu.length ? lu.map((n) => esc(n)).join(' · ') : '<span class="vide">—</span>'}</td>
+          <td class="fin lu-par">${lu.length ? lu.map((n) => esc(n)).join(' · ') : '<span class="vide">—</span>'}</td>
           <td>${site(a)}</td>
           <td>${blocAdresse(a)}</td>
           ${cellulesInfo(a)}

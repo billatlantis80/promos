@@ -158,6 +158,12 @@ details.pourquoi p b{color:var(--texte)}
 
 /* ---------- Les tableaux, une seule grammaire ---------- */
 .defile{overflow-x:auto;margin:0 -4px}
+/* LE TABLEAU GARDE SA LARGEUR NATURELLE, et c'est le conteneur qui défile.
+   Défaut mesuré : `table{width:100%}` écrasait dix-sept colonnes dans la largeur
+   du cadre — la colonne du nom tombait à quatre-vingt-dix pixels et « Amazon
+   Belgique (.com.be) » s'étalait sur trois lignes. On obtenait exactement le
+   contraire de ce qui était demandé : une ligne par acteur. */
+.defile table{width:auto;min-width:100%}
 table{width:100%;border-collapse:collapse;font-size:13.5px}
 th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--bord)}
 /* L'EN-TÊTE COLLANT PASSE SOUS LA BARRE DU SITE, IL NE SE CACHE PAS DERRIÈRE.
@@ -234,6 +240,7 @@ details h3 span{font-weight:400;color:var(--doux);font-size:12px;text-transform:
 .suite{margin-top:12px}
 .haut{margin-top:0}
 .gras{font-weight:700}
+.site{font-size:12.5px}
 
 /* La fiche d'un acteur : adresse, téléphone, e-mail, CA. Ce sont des
    INFORMATIONS (règle de B) — on les présente donc en petit, dans la ligne,
@@ -304,6 +311,68 @@ details h3 span{font-weight:400;color:var(--doux);font-size:12px;text-transform:
 .note textarea.rempli{border-color:rgba(235,145,45,.55)}
 .etat-note{font-size:10.5px;color:var(--tres-doux);font-style:italic}
 
+/* ---------- LE BOUTON « MODIFIER » ET SA FICHE ----------
+   B (08/10/2026) : « rajouter un petit bouton de modification du champ pour que je
+   puisse l'adapter, compléter moi-même si nécessaire. »
+
+   UN CRAYON, À CÔTÉ DU NOM. C'est le plus court à intégrer, et il ne coûte pas une
+   colonne de plus dans une ligne déjà large — le placer en fin de ligne aurait
+   repoussé la note, qui doit rester la dernière. Il ouvre la fiche de l'acteur
+   SOUS sa ligne : on garde le contexte sous les yeux, on ne quitte pas la liste,
+   et on n'a pas à retenir ce qu'on était en train de corriger. */
+.editer{
+  display:inline-flex;align-items:center;gap:4px;
+  background:transparent;border:1px solid var(--bord);color:var(--doux);border-radius:7px;
+  padding:1px 6px;line-height:1.6;margin-left:6px;vertical-align:1px
+}
+.editer svg{display:block;flex:0 0 auto}
+.editer b{font-size:10.5px;font-weight:700}
+.editer:hover{border-color:var(--accent);color:var(--accent)}
+.editer[aria-expanded="true"]{border-color:var(--accent);color:var(--accent);background:rgba(235,145,45,.12)}
+tr.edition > td{background:var(--carte2);border-bottom:2px solid var(--bord-clair);padding:0}
+/* Le nom d'un acteur est son IDENTITÉ : il ne se coupe pas. Sans ça, dix-sept
+   colonnes dans la largeur du cadre réduisaient la colonne du nom à quatre-vingt
+   dix pixels, et « Amazon Belgique (.com.be) » s'étalait sur trois lignes — le
+   contraire exact de la ligne unique demandée. */
+td.nom-acteur{white-space:nowrap}
+/* « Lu par » reçoit une largeur PLANCHER. Sans elle, la colonne tombait à
+   soixante-cinq pixels : « Amazon · Amazon (BE) » s'y étalait sur quatre lignes et
+   donnait à la ligne une hauteur de quatre-vingt-onze pixels — la ligne unique
+   demandée était perdue, et par la colonne qu'on venait d'ajouter pour ça. Un
+   plafond l'empêche à l'inverse de pousser un acteur à dix sources hors du
+   tableau. */
+td.lu-par,th.lu-par{min-width:150px;max-width:230px}
+/* ET LA FICHE RESTE VISIBLE. Mesuré : sur dix-sept colonnes, le tableau devient
+   plus large que l'écran et défile horizontalement. La fiche, qui s'étale sur
+   toute la ligne, partait donc hors de l'écran par la droite — on ouvrait un
+   formulaire dont on ne voyait que la moitié. Elle se colle au bord GAUCHE du
+   défilement : elle reste entière sous les yeux, quelle que soit la position. */
+.fiche-form{padding:14px 16px;position:sticky;left:0;width:min(100%,1100px)}
+.fiche-grille{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px;margin:10px 0 14px
+}
+.champ-fiche{display:flex;flex-direction:column;gap:4px;font-size:11.5px;color:var(--doux)}
+.champ-fiche input{
+  width:100%;background:var(--carte);color:var(--texte);border:1px solid var(--bord);
+  border-radius:8px;padding:7px 9px;font:inherit;font-size:12.5px
+}
+.champ-fiche input:focus{outline:2px solid var(--accent);outline-offset:-1px;background:var(--carte3)}
+.champ-fiche input.rempli{border-color:rgba(47,191,113,.55)}
+/* Le site accepte PLUSIEURS adresses : il lui faut un champ à plusieurs lignes.
+   Un `input` d'une seule ligne supprime les retours à la ligne, en silence — le
+   libellé promettait « une adresse par ligne » et le champ ne pouvait pas les
+   porter. */
+.champ-fiche textarea{
+  width:100%;background:var(--carte);color:var(--texte);border:1px solid var(--bord);
+  border-radius:8px;padding:7px 9px;font:inherit;font-size:12.5px;resize:vertical;min-height:46px;
+  line-height:1.35
+}
+.champ-fiche textarea:focus{outline:2px solid var(--accent);outline-offset:-1px;background:var(--carte3)}
+.champ-fiche textarea.rempli{border-color:rgba(47,191,113,.55)}
+/* Dans la fiche, le bouton d'enregistrement ne prend que SA largeur : le
+   `.principal` de l'écran de connexion, lui, occupe toute la ligne. */
+tr.edition .principal{width:auto;padding:9px 18px;display:inline-block;margin-right:8px}
+
 /* ---------- LE TABLEAU DE PAYS, AVEC DRAPEAUX ----------
    B (08/10/2026) : « Pour les pays je ne souhaite pas un menu déroulant, je
    souhaite un tableau comme il y a dans les paramètres de l'appli, avec les
@@ -337,7 +406,12 @@ details h3 span{font-weight:400;color:var(--doux);font-size:12px;text-transform:
    Chaque information a donc SA colonne, après l'adresse des promotions. Le
    liseré de gauche sépare visiblement le travail de la documentation : à droite
    du trait, rien ne sert à décider (règle de B). */
-td.info,th.info{font-size:11.5px;color:var(--doux);max-width:190px}
+/* Les colonnes informatives reçoivent une largeur PLANCHER elles aussi. Sans
+   elle, le navigateur les serrait à quatre-vingts pixels et « Papendorpseweg 100,
+   3528 BJ Utrecht (NL) » s'étalait sur quatre lignes : la ligne redevenait un
+   bloc, par les colonnes qu'on venait d'aplatir. Le tableau s'élargit d'autant —
+   c'est son conteneur qui défile, c'est prévu. */
+td.info,th.info{font-size:11.5px;color:var(--doux);min-width:132px;max-width:210px}
 th.info{color:var(--tres-doux)}
 td.info.sep,th.info.sep{border-left:2px solid var(--bord-clair)}
 </style>
@@ -559,6 +633,7 @@ td.info.sep,th.info.sep{border-left:2px solid var(--bord-clair)}
           </div>
           <button class="bouton" id="marcheCsv">Exporter en CSV (pour Excel)</button>
           <button class="bouton" id="marcheAdrJson">Exporter les adresses de promotions</button>
+          <button class="bouton" id="marcheFichesJson">Exporter mes fiches complétées</button>
           <div id="mMarche"></div>
         </div>
 
@@ -1516,6 +1591,148 @@ function blocNote(nom) {
     </div>`;
 }
 
+/* ---------- LA FICHE D'UN ACTEUR, MODIFIABLE À LA MAIN ----------
+ * B (08/10/2026) : « rajouter un petit bouton de modification du champ pour que je
+ * puisse l'adapter, compléter moi-même si nécessaire. »
+ *
+ * POURQUOI CE BLOC EXISTE. Le panneau affichait des champs que personne ne
+ * pouvait corriger : le site d'un acteur, son type, et les neuf informations de
+ * siège. Pour les acteurs AJOUTÉS par l'application, ces informations sont VIDES
+ * — et c'est voulu (on n'invente pas une adresse de siège). Restait donc à
+ * pouvoir les remplir soi-même, sans quoi la base ne serait jamais complète.
+ *
+ * OÙ C'EST CONSERVÉ, ET CE QUE ÇA CHANGE. Sur CET APPAREIL : le panneau publié
+ * est une page statique, il n'écrit rien côté serveur. Ce qui est saisi ici sert
+ * à TA lecture et sort à l'export ; la collecte ne s'en servira que le jour où
+ * l'export sera rejoué. Le dire à l'écran plutôt que de laisser croire à un
+ * enregistrement invisible — même règle que l'adresse de promotions.
+ */
+const CLE_FICHES = 'kazendra.fiches';
+
+/** Les champs qu'on peut compléter, dans l'ordre d'affichage : les deux champs de
+ *  travail qui s'affichent (site, type), puis les informations de la base — celles
+ *  que le programme n'utilise jamais pour décider (règle de B du 08/10/2026). */
+const CHAMPS_FICHE = [
+  ['type', 'Type'],
+  ['domaines', 'Site web — une adresse par ligne'],
+  ['adresse', 'Adresse du siège'],
+  ['telephone', 'Téléphone'],
+  ['email', 'E-mail'],
+  ['ca', 'CA indicatif'],
+  ['actionnariat', 'Actionnariat'],
+  ['positionnement', 'Positionnement'],
+  ['segment', 'Segment'],
+  ['distribution', 'Distribution'],
+  ['remarques', 'Remarques'],
+];
+
+function lireFiches() {
+  try {
+    const f = JSON.parse(localStorage.getItem(CLE_FICHES) || '{}');
+    return f && typeof f === 'object' && !Array.isArray(f) ? f : {};
+  } catch { return {}; }
+}
+
+/** Enregistre une fiche. Un champ vidé est RETIRÉ — garder une clé vide ferait
+ *  croire à une correction, et l'export la porterait (même règle que les notes et
+ *  les adresses). Une fiche entièrement vidée disparaît. */
+function ecrireFiche(nom, champs) {
+  const f = lireFiches();
+  const propre = {};
+  for (const [champ] of CHAMPS_FICHE) {
+    const v = String((champs || {})[champ] == null ? '' : champs[champ]).trim();
+    if (v) propre[champ] = v;
+  }
+  if (Object.keys(propre).length) f[nom] = propre; else delete f[nom];
+  try { localStorage.setItem(CLE_FICHES, JSON.stringify(f)); } catch { /* plein */ }
+  return f;
+}
+
+/** La correction, appliquée À L'ACTEUR avant l'affichage.
+ *
+ *  FONCTION PURE, et c'est délibéré : `ficheInfo()` garde sa signature d'origine
+ *  (les épreuves la découpent telle quelle), donc la correction ne peut pas s'y
+ *  glisser. On applique la fiche EN AMONT, une fois — et tout ce qui lit l'acteur
+ *  ensuite (la ligne, la recherche, les exports) voit la même version. Deux
+ *  endroits qui la reliraient séparément finiraient par diverger. */
+function avecFiche(a, fiches) {
+  const f = fiches && fiches[a.nom];
+  if (!f) return a;
+  const out = { ...a };
+  for (const [champ] of CHAMPS_FICHE) {
+    if (f[champ] == null || f[champ] === '') continue;
+    if (champ === 'domaines') {
+      // On découpe sur le RETOUR À LA LIGNE, la virgule, le point-virgule ET
+      // l'espace : deux adresses collées à la suite doivent faire deux liens.
+      out.domaines = String(f.domaines).split(/[\s,;]+/)
+        .map((x) => x.trim().replace(/^https?:\/\//i, '').replace(/\/+$/, ''))
+        .filter(Boolean);
+    } else out[champ] = f[champ];
+  }
+  return out;
+}
+
+/** LE CRAYON EST UN TRACÉ, JOURNAL UNE LETTRE DE POLICE.
+ *  Même règle que les drapeaux : un caractère « ✎ » s'affiche dans la police du
+ *  visiteur, et rien ne garantit qu'elle le porte — sur un poste qui ne l'a pas, on
+ *  obtient un carré vide à côté de chaque nom, sur cent quarante-neuf lignes. Un
+ *  tracé s'affiche identiquement partout et ne coûte AUCUNE requête réseau. */
+const SVG_CRAYON = '<svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"'
+  + ' fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round">'
+  + '<path d="M11.5 1.6l2.9 2.9-8.6 8.6-3.7.8.8-3.7z"/></svg>';
+
+/** Le crayon, à côté du nom. Un tracé plutôt qu'une icône téléchargée : rien à
+ *  charger, et il porte le NOMBRE de champs déjà complétés — on repère d'un coup
+ *  d'œil les fiches qu'on a touchées. */
+function boutonEditer(a) {
+  const n = Object.keys(lireFiches()[a.nom] || {}).length;
+  const quoi = n
+    ? `${n} champ(s) complété(s) à la main — cliquer pour modifier`
+    : 'Modifier ou compléter cette fiche';
+  return `<button type="button" class="editer" data-editer="${esc(a.nom)}" aria-expanded="false"
+      aria-label="${esc(quoi)}" title="${esc(quoi)}">${SVG_CRAYON}${n ? `<b>${n}</b>` : ''}</button>`;
+}
+
+/** La fiche dépliée, SOUS la ligne de l'acteur. Elle est toujours dans le HTML
+ *  (cachée) : le crayon ne fait que la montrer ou la cacher. La liste se redessine
+ *  à chaque lettre tapée dans la recherche — un écouteur posé sur un bouton
+ *  fabriqué à la volée mourrait au premier redessin, et la fiche ne s'ouvrirait
+ *  plus sans que rien ne le dise. L'écouteur va donc sur le CONTENEUR. */
+function ligneEdition(a) {
+  const f = lireFiches()[a.nom] || {};
+  // La largeur de la fiche se CALCULE : 8 colonnes de travail + les informations
+  // de siège. Écrite en dur, elle deviendrait fausse à la première colonne
+  // ajoutée — et la fiche sortirait du tableau sans prévenir.
+  return `<tr class="edition" data-edition="${esc(a.nom)}" hidden><td colspan="${8 + ORDRE_INFORMATIF.length}">
+      <div class="fiche-form">
+        <p class="aide haut"><b>${esc(a.nom)}</b> — complète ou corrige cette fiche. Ce que tu écris est
+          conservé <b>sur cet appareil</b> et sort à l'export ; un champ vidé reprend la valeur de la base.</p>
+        <div class="fiche-grille">
+          ${CHAMPS_FICHE.map(([cle, libelle]) => blocChampFiche(cle, libelle, f[cle])).join('')}
+        </div>
+        <p><button type="button" class="principal" data-enregistrer="${esc(a.nom)}">Enregistrer</button>
+          <button type="button" class="bouton" data-annuler="1">Annuler</button></p>
+      </div>
+    </td></tr>`;
+}
+
+/** UN CHAMP DE LA FICHE. Le site a droit à un `<textarea>`, et ce n'est pas un
+ *  détail : le libellé promet « une adresse par ligne », or un `<input>` d'une
+ *  seule ligne **supprime les retours à la ligne**. Mesuré : deux adresses
+ *  saisies comme annoncé arrivaient collées bout à bout, et le tableau affichait
+ *  un lien unique et faux vers « exemple-test.be exemple-2.be ». Le champ disait
+ *  une chose et en faisait une autre, en silence. */
+function blocChampFiche(cle, libelle, valeur) {
+  const v = esc(valeur || '');
+  const marque = valeur ? ' class="rempli"' : '';
+  return `<label class="champ-fiche">
+            <span>${esc(libelle)}</span>
+            ${cle === 'domaines'
+    ? `<textarea data-champ="${cle}" rows="2" spellcheck="false"${marque}>${v}</textarea>`
+    : `<input type="text" data-champ="${cle}" value="${v}" spellcheck="false" autocomplete="off"${marque}>`}
+          </label>`;
+}
+
 /* ---------- L'AFFILIATION ---------- */
 let affMesures = null;
 let paysChoisiAff = '';
@@ -1694,6 +1911,7 @@ function dessinerMarche() {
   const p = marcheDuPays(catalogue, marche, paysChoisi);
   const c = p.compteurs;
   const adresses = lireAdresses();
+  const fiches = lireFiches();
   const urls = urlsDesSources(catalogue);
   const uniques = clicsEtPartages();
   const totalClics = uniques.reduce((n, e) => n + e.clics, 0);
@@ -1760,11 +1978,15 @@ function dessinerMarche() {
     </div>`;
   };
   const site = (a) => (a.domaines || []).length
-    ? `<div style="font-size:12.5px">${(a.domaines || []).map((d) => `<a href="https://${esc(d)}" target="_blank" rel="noopener">${esc(d)}</a>`).join('<br>')}</div>`
+    ? `<div class="site">${(a.domaines || []).map((d) => `<a href="https://${esc(d)}" target="_blank" rel="noopener">${esc(d)}</a>`).join('<br>')}</div>`
     : '<span class="vide">—</span>';
 
+  // LA FICHE ÉCRITE À LA MAIN EST APPLIQUÉE ICI, UNE FOIS. Tout ce qui suit la
+  // voit : la ligne, la recherche, les colonnes de siège, le plan de
+  // régularisation et l'export. Un acteur qu'on vient de compléter se lit donc
+  // tout de suite, partout — sans quoi on douterait de son propre enregistrement.
   const cats = p.categories.map((k) => ({ ...k,
-    liste: k.liste.filter((a) => !f || a.nom.toLowerCase().includes(f)
+    liste: k.liste.map((a) => avecFiche(a, fiches)).filter((a) => !f || a.nom.toLowerCase().includes(f)
       || (a.categorie || '').toLowerCase().includes(f)
       || (a.domaines || []).some((d) => d.includes(f))) })).filter((k) => k.liste.length);
 
@@ -1775,33 +1997,40 @@ function dessinerMarche() {
         ${k.annonces ? nf.format(k.annonces) + ' articles' : 'aucun article'}</span></summary>
       <div class="defile">
       <table>
-        <tr><th>Acteur</th><th>État</th><th class="n">Articles</th>
+        <tr><th>Acteur</th><th>État</th><th>Type</th><th class="n">Articles</th><th>Lu par</th>
           <th>Site</th><th>Adresse des promotions</th>
           ${ORDRE_INFORMATIF.map((L, i) => `<th class="info${i === 0 ? ' sep' : ''}">${esc(L)}</th>`).join('')}
           <th>Note</th></tr>
-        ${k.liste.map((a) => `<tr>
-          <td><b>${esc(a.nom)}</b>${a.provenance === 'application' ? ' <span class="ajout" title="Ajouté par l’application : ce site est lu, il ne figurait pas dans le tableur">ajouté</span>' : ''}
-            <div style="font-size:11.5px;color:var(--doux)">${esc(a.type || '—')}</div>
-            ${[...(a.liaison.flux || []), ...(a.liaison.veille || [])].length
-    ? `<div style="font-size:11px;color:var(--tres-doux);margin-top:3px">lu par ${[...a.liaison.flux, ...a.liaison.veille].map((s) => esc(s.nom)).join(' · ')}</div>` : ''}</td>
+        ${k.liste.map((a) => {
+    const lu = [...(a.liaison.flux || []), ...(a.liaison.veille || [])].map((s) => s.nom);
+    // UNE SEULE LIGNE PAR ACTEUR : le type et les sources qui l'alimentent ont
+    // leur COLONNE. Empilés sous le nom, ils faisaient des lignes de trois
+    // étages où l'œil ne pouvait plus comparer deux acteurs — or comparer est
+    // exactement à quoi sert une colonne.
+    return `<tr>
+          <td class="nom-acteur"><b>${esc(a.nom)}</b>${a.provenance === 'application' ? ' <span class="ajout" title="Ajouté par l’application : ce site est lu, il ne figurait pas dans le tableur">ajouté</span>' : ''}${boutonEditer(a)}</td>
           <td>${etiquette(a.etat)}</td>
+          <td class="fin">${esc(a.type || '—')}</td>
           <td class="n">${a.annonces ? nf.format(a.annonces) : '—'}</td>
+          <td class="fin lu-par">${lu.length ? lu.map((n) => esc(n)).join(' · ') : '<span class="vide">—</span>'}</td>
           <td>${site(a)}</td>
           <td>${blocAdresse(a)}</td>
           ${cellulesInfo(a)}
-          <td>${blocNote(a.nom)}</td></tr>`).join('')}
+          <td>${blocNote(a.nom)}</td></tr>
+        ${ligneEdition(a)}`;
+  }).join('')}
       </table>
       </div>
     </details>`).join('')}
-  <p class="aide" style="margin-top:12px">${f
+  <p class="aide suite">${f
     ? `${cats.reduce((n, k) => n + k.liste.length, 0)} acteur(s) sur ${c.acteurs} correspondent à « ${esc(filtreMarche)} ».`
-    : `${nf.format(c.acteurs)} acteur(s) · ${nf.format(p.categories.length)} catégorie(s) · ${nf.format(totalPartages)} partage(s) relevés sur cet appareil · source : ${esc(marche.source || '—')}`}</p>`
+    : `${nf.format(c.acteurs)} acteur(s) · ${nf.format(p.categories.length)} catégorie(s) · ${nf.format(totalPartages)} partage(s) relevés sur cet appareil · source : ${esc(marche.source || '—')}${Object.keys(fiches).length ? ` · <b>${Object.keys(fiches).length} fiche(s) complétée(s) à la main</b>` : ''}`}</p>`
     : '<p class="vide">Aucun acteur ne correspond à cette recherche dans ce pays.</p>';
 
   // --- Le plan de régularisation, pour ce pays ----------------------------
-  const veille = p.categories.flatMap((k) => k.liste).filter((a) => a.etat === 'veille')
+  const veille = p.categories.flatMap((k) => k.liste).map((a) => avecFiche(a, fiches)).filter((a) => a.etat === 'veille')
     .sort((a, b) => b.annonces - a.annonces || a.nom.localeCompare(b.nom));
-  const aucun = p.categories.flatMap((k) => k.liste).filter((a) => a.etat === 'aucun');
+  const aucun = p.categories.flatMap((k) => k.liste).map((a) => avecFiche(a, fiches)).filter((a) => a.etat === 'aucun');
   zonePlan.innerHTML = `
     <h2>1. À brancher pour de vrai — ${nf.format(veille.length)} acteur(s) en veille</h2>
     <p class="aide">On les VOIT déjà, mais par des articles qui parlent d'eux : leurs propres
@@ -1843,7 +2072,8 @@ function csvMarche() {
   const r = liaisonActeurs(catalogue, marche);
   // Le pays CONSULTÉ, comme à l'écran : exporter autre chose que ce qu'on a sous
   // les yeux ferait douter du fichier ouvert dans Excel.
-  r.acteurs = r.acteurs.filter((a) => a.pays === paysChoisi);
+  const fiches = lireFiches();
+  r.acteurs = r.acteurs.map((a) => avecFiche(a, fiches)).filter((a) => a.pays === paysChoisi);
   const uniques = clicsEtPartages();
   const adresses = lireAdresses();
   const urls = urlsDesSources(catalogue);
@@ -1913,6 +2143,34 @@ function jsonAdresses() {
       nom: a.nom, categorie: a.categorie, pays: a.pays,
       domaines: a.domaines || [], adresse: adresses[a.nom],
     })),
+  }, null, 2);
+}
+
+/** L'export des fiches complétées à la main.
+ *
+ *  POURQUOI IL EST SÉPARÉ DE CELUI DES ADRESSES. Ce ne sont pas les mêmes
+ *  champs, et ils n'ont pas le même pouvoir : l'adresse de promotions dit **où
+ *  lire** — elle pilote la collecte ; les champs d'une fiche **documentent**
+ *  (site, type, siège, CA…). Les verser dans un même fichier ferait croire que
+ *  tout pilote, c'est-à-dire exactement la confusion que la règle de B interdit.
+ *  Le fichier dit donc, en clair, ce que chaque bloc change.
+ */
+function jsonFiches() {
+  const fiches = lireFiches();
+  const r = liaisonActeurs(catalogue, marche);
+  const parNom = new Map(r.acteurs.map((a) => [a.nom, a]));
+  return JSON.stringify({
+    pays: paysChoisi,
+    genereLe: new Date().toISOString(),
+    note: 'Fiches complétées à la main dans le panneau. Les champs « type », « domaines » '
+      + 'et « adresse » rectifient ce que le panneau AFFICHE pour cet acteur. Les champs de '
+      + 'siège (adresse, téléphone, e-mail, CA, actionnariat, positionnement, segment, '
+      + 'distribution, remarques) sont DOCUMENTAIRES : le programme ne s’en sert jamais pour '
+      + 'décider — la liaison se fait sur le nom et le site web seulement.',
+    fiches: Object.entries(fiches).map(([nom, champs]) => {
+      const a = parNom.get(nom) || {};
+      return { nom, pays: a.pays || paysChoisi, categorie: a.categorie || null, ...champs };
+    }),
   }, null, 2);
 }
 
@@ -2247,6 +2505,63 @@ function brancher() {
           : (val === derive ? 'relevée de la source lue' : 'saisie — utilisée par la collecte');
       }
     });
+  }
+
+  // LA FICHE MODIFIABLE À LA MAIN : le crayon, l'enregistrement, l'annulation.
+  //
+  // DÉLÉGATION SUR LE CONTENEUR, et c'est la quatrième fois que ce projet paie ce
+  // piège-là : la liste est redessinée à chaque lettre tapée dans la recherche.
+  // Un écouteur posé sur le crayon lui-même mourrait au premier redessin — le
+  // crayon resterait cliquable à l'écran et n'ouvrirait plus rien, sans que RIEN
+  // ne le dise. On reconnaît donc la cible par son attribut.
+  //
+  // La fiche vit SOUS la ligne, dans le même conteneur : on la remplit sans
+  // quitter la liste ni perdre de vue l'acteur qu'on corrige.
+  if (zoneMarche) {
+    zoneMarche.addEventListener('click', (e) => {
+      const t = e.target;
+      if (!t || !t.closest) return;
+      const crayon = t.closest('button[data-editer]');
+      if (crayon) {
+        const nom = crayon.dataset.editer;
+        const ligne = [...zoneMarche.querySelectorAll('tr.edition')]
+          .find((r) => r.dataset.edition === nom);
+        if (!ligne) return;
+        ligne.hidden = !ligne.hidden;
+        crayon.setAttribute('aria-expanded', String(!ligne.hidden));
+        if (!ligne.hidden) {
+          const premier = ligne.querySelector('[data-champ]');
+          if (premier) premier.focus();
+        }
+        return;
+      }
+      if (t.closest('button[data-annuler]')) {
+        const ligne = t.closest('tr.edition');
+        if (ligne) ligne.hidden = true;
+        return;
+      }
+      const enregistrer = t.closest('button[data-enregistrer]');
+      if (enregistrer) {
+        const ligne = enregistrer.closest('tr.edition');
+        if (!ligne) return;
+        const champs = {};
+        // `[data-champ]` couvre l'`input` ET le `textarea` du site : ne lire que les
+        // `input` aurait fait disparaître le site de toute fiche enregistrée.
+        for (const inp of ligne.querySelectorAll('[data-champ]')) champs[inp.dataset.champ] = inp.value;
+        ecrireFiche(ligne.dataset.edition, champs);
+        // On REDESSINE la liste : la ligne, la recherche et les compteurs doivent
+        // montrer la correction tout de suite. Une fiche enregistrée qui ne
+        // changerait rien à l'écran ferait douter de l'enregistrement.
+        dessinerMarche();
+      }
+    });
+  }
+
+  const boutonFiches = document.getElementById('marcheFichesJson');
+  if (boutonFiches) {
+    boutonFiches.addEventListener('click', () =>
+      telecharger(`kazendra-fiches-${paysChoisi || 'eu'}-${new Date().toISOString().slice(0, 10)}.json`,
+        jsonFiches(), 'application/json'));
   }
 
   document.getElementById('nOk').addEventListener('click', async () => {
