@@ -95,10 +95,17 @@ button{font:inherit;cursor:pointer}
 }
 .onglet{
   background:transparent;color:var(--doux);border:0;border-bottom:2px solid transparent;
-  border-radius:0;padding:11px 13px 10px;font-size:14px;white-space:nowrap
+  border-radius:6px 6px 0 0;padding:9px 14px 7px;font-size:14px;white-space:nowrap;
+  transition:color .12s ease,background .12s ease
 }
-.onglet:hover{color:var(--texte)}
+.onglet:hover{color:var(--texte);background:rgba(63,159,208,.07)}
 .onglet.on{color:var(--accent);border-bottom-color:var(--accent);font-weight:700}
+.onglet.on:hover{background:transparent}
+/* Le clavier doit voir où il est, comme la souris. */
+.onglet:focus-visible,.bouton:focus-visible,.pays-item:focus-visible,.principal:focus-visible,
+details > summary:focus-visible,details.pourquoi > summary:focus-visible{
+  outline:2px solid var(--accent2);outline-offset:2px
+}
 main{padding-top:18px}
 section[data-vue]{display:none}
 section[data-vue].on{display:block}
@@ -110,8 +117,38 @@ section[data-vue].on{display:block}
   letter-spacing:.9px;color:var(--accent);display:flex;align-items:center;gap:9px}
 .rub > h2:first-child::before{content:'';width:3px;height:15px;background:var(--accent);
   border-radius:2px;flex:0 0 auto}
-.rub h2{font-size:14px;margin:22px 0 4px;text-transform:uppercase;letter-spacing:.8px;color:var(--accent)}
-.rub p.aide{color:var(--doux);font-size:12.5px;margin:0 0 14px;max-width:105ch}
+/* UN SEUL TITRE DE CARTE, UN SEUL SOUS-TITRE, ET ILS NE SE RESSEMBLENT PAS.
+   Le sous-titre reprenait la couleur du titre de carte : dans une même carte,
+   deux titres orange se disputaient le regard et la hiérarchie disparaissait —
+   on ne voyait plus ce qui était le cadre et ce qui le découpait. Le sous-titre
+   passe donc en blanc, plus petit, sans barre. Et il n'est plus jamais écrit
+   avec un style en ligne : une taille ici, une autre là, c'était le défaut. */
+.rub h2{font-size:13px;margin:26px 0 4px;text-transform:uppercase;letter-spacing:.9px;color:var(--texte)}
+.rub h3{font-size:12px;margin:14px 0 4px;text-transform:uppercase;letter-spacing:.8px;color:var(--doux)}
+.rub h2:first-child{margin-top:0}
+.rub p.aide{color:var(--doux);font-size:12.5px;margin:0 0 14px;max-width:82ch}
+/* UNE PHRASE VISIBLE, LE RESTE REPLIABLE. Les explications longues servent une
+   fois, pas à chaque ouverture : empilées sous chaque titre, elles faisaient un
+   mur de petits caractères qu'on ne lisait plus. Elles restent là — derrière
+   « En savoir plus ». Rien n'est perdu, tout redevient lisible. */
+details.pourquoi{background:transparent;border:0;margin:0 0 14px;border-radius:0}
+details.pourquoi > summary{
+  display:inline-flex;align-items:center;justify-content:flex-start;gap:7px;
+  padding:2px 0;font-size:12px;color:var(--doux);width:auto
+}
+details.pourquoi > summary:hover{color:var(--texte)}
+details.pourquoi > summary::before{
+  content:'?';display:inline-flex;align-items:center;justify-content:center;
+  width:15px;height:15px;border-radius:50%;border:1px solid var(--bord-clair);
+  font-size:10px;font-weight:700;color:var(--accent2);flex:0 0 auto
+}
+details.pourquoi p{color:var(--doux);font-size:12.5px;line-height:1.55;margin:6px 0;max-width:88ch}
+details.pourquoi p b{color:var(--texte)}
+/* Un champ de recherche se place sous une grille de compteurs : il lui faut de
+   l'air, et il ne prend pas toute la largeur du cadre. */
+.grille + .champ{margin-top:14px}
+.champ.etroit{max-width:440px}
+.champ.moyen{max-width:620px}
 .grille{display:grid;grid-template-columns:repeat(auto-fit,minmax(152px,1fr));gap:10px}
 .mesure{
   background:var(--carte2);border:1px solid var(--bord);border-radius:var(--r-petit);padding:12px 13px
@@ -128,9 +165,23 @@ th{
   position:sticky;top:0;background:var(--carte);z-index:1
 }
 tbody tr:hover td,table tr:hover td{background:rgba(63,159,208,.07)}
-td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+/* LES NOMBRES NE PRENNENT QUE LEUR PLACE. Défaut mesuré à l'écran : un tableau à
+   deux ou trois colonnes, étiré sur les 1 180 px du cadre, posait le libellé à
+   l'extrême gauche et son compte sept cents pixels plus loin. On ne lisait plus
+   la ligne, on la cherchait. La colonne numérique se réduit donc à son chiffre,
+   et la colonne de texte prend le reste. */
+th.n{width:1%}
+/* Et un tableau qui n'a QUE deux ou trois colonnes n'a pas besoin de toute la
+   largeur : passé 620 px, le libellé et sa valeur se perdent de vue. */
+table.etroite{max-width:620px}
+table.etroite2{max-width:430px}
 .barre{height:7px;background:var(--carte3);border-radius:4px;overflow:hidden;min-width:60px;display:block}
 .barre i{display:block;height:100%;background:var(--accent2)}
+/* Le drapeau et le nom d'un pays, côte à côte, partout où un pays s'écrit —
+   dans le tableau de bord comme dans les onglets à choix de pays. Un code nu
+   (« DE ») ne se lit pas ; « Allemagne » avec son drapeau, si. */
+.pays-nom{display:inline-flex;align-items:center;gap:8px}
 
 /* ---------- Pastilles d'état ---------- */
 .pastille{
@@ -363,11 +414,17 @@ td.info.sep,th.info.sep{border-left:2px solid var(--bord-clair)}
       <section data-vue="sources">
         <div class="rub">
           <h2>Santé des sources</h2>
-          <p class="aide">Une source muette laisse l'application saine en apparence mais figée : c'est le défaut le plus dangereux.</p>
+          <p class="aide">Une source muette laisse l'application saine en apparence mais figée : c'est le défaut le plus dangereux. Les échecs sont en tête de liste.</p>
+          <div class="grille" id="mSourcesCompteurs"></div>
+          <div class="champ etroit">
+            <label for="rechercheSources">Chercher une source</label>
+            <input id="rechercheSources" type="search" placeholder="nom du site…" spellcheck="false">
+          </div>
           <div id="mSources"></div>
         </div>
         <div class="rub">
           <h2>Rubriques</h2>
+          <p class="aide">Ce que le catalogue contient, rubrique par rubrique.</p>
           <div id="mRubriques"></div>
         </div>
       </section>
@@ -376,27 +433,43 @@ td.info.sep,th.info.sep{border-left:2px solid var(--bord-clair)}
         <div class="rub">
           <h2>Sites actifs</h2>
           <p class="aide">Les sites qui ont des annonces en ligne à la dernière mise à jour,
-            du plus prolifique au plus discret. Le nombre d'annonces est celui des annonces
-            <b>retenues</b> (lues puis gardées après les filtres) — c'est ce que le visiteur voit.</p>
+            du plus prolifique au plus discret.</p>
+          <details class="pourquoi"><summary>Ce que compte la colonne « Annonces »</summary>
+            <p>C'est le nombre d'annonces <b>retenues</b> : lues dans le flux puis gardées
+              après les filtres. C'est ce que le visiteur voit, pas ce que le site publie.</p>
+          </details>
+          <div class="champ etroit">
+            <label for="rechercheSites">Chercher un site — filtre les deux listes</label>
+            <input id="rechercheSites" type="search" placeholder="nom du site…" spellcheck="false">
+          </div>
           <div id="mActifs"></div>
         </div>
         <div class="rub">
           <h2>Sites non actifs</h2>
-          <p class="aide">Tous les sites suivis qui n'ont rien apporté cette fois, <b>avec la raison</b> :
-            en échec, flux vide, annonces écartées par les filtres, ou simplement mis au repos
-            (délai non écoulé — ce n'est pas une panne). C'est la liste où chercher un site à
-            réparer, ou à remplacer par un nouveau.</p>
+          <p class="aide">Tous les sites suivis qui n'ont rien apporté cette fois, <b>avec la
+            raison</b>. C'est ici qu'on cherche un site à réparer — et « au repos » n'est
+            <b>pas</b> une panne : le délai d'interrogation n'était pas écoulé.</p>
+          <details class="pourquoi"><summary>Les cinq raisons possibles, dans l'ordre de gravité</summary>
+            <p><b>En échec</b> (le site n'a pas répondu), <b>flux vide</b> (rien à lire),
+              <b>écarté par les filtres</b> (des annonces lues, aucune gardée : catégorie,
+              prix ou mot écarté), <b>sans annonce en ligne</b> (lu, mais rien de publiable),
+              et <b>au repos</b> (délai non écoulé — réinterrogée au prochain passage).
+              Les quatre premières sont des choses à regarder ; la cinquième, non.</p>
+          </details>
           <div id="mNonActifs"></div>
         </div>
         <div class="rub">
           <h2>Les sites, par pays et par rubrique</h2>
-          <p class="aide">Le classement demandé : chaque pays, puis chaque rubrique
-            (<b>supermarché</b>, <b>presse &amp; médias</b>, <b>e-commerce</b>…), et pour
-            chacune les sites qui la composent. La colonne <b>Voie</b> dit l'essentiel :
-            <b>flux</b> = le site publie ses offres et on les lit chez lui ;
-            <b>veille</b> = on ne l'atteint qu'à travers un moteur de recherche, faute de
-            flux lisible — c'est là qu'il y a un site à activer. C'est aussi la liste où
-            chercher une rubrique laissée vide dans un pays.</p>
+          <p class="aide">Le classement demandé : chaque pays, puis chaque rubrique, et pour
+            chacune les sites qui la composent. C'est la liste où chercher une rubrique
+            laissée vide dans un pays.</p>
+          <details class="pourquoi"><summary>Ce que veut dire la colonne « Voie »</summary>
+            <p><b>Flux</b> = le site publie ses offres et on les lit chez lui.
+              <b>Veille</b> = on ne l'atteint qu'à travers un moteur de recherche, faute de
+              flux lisible — c'est là qu'il y a un site à activer le jour où il publiera un
+              flux. Une rubrique dont la colonne « Branchés » est à zéro ne donne
+              <b>rien de direct</b>.</p>
+          </details>
           <div id="mRubriquesSites"></div>
         </div>
         <div class="rub">
@@ -419,9 +492,8 @@ td.info.sep,th.info.sep{border-left:2px solid var(--bord-clair)}
              de s'ouvrir sur une page vide qui aurait l'air cassée. -->
         <div class="rub">
           <h2>Pays consulté</h2>
-          <p class="aide">Chaque pays porte son drapeau et ce qu'il contient. Tous sont
-            visibles d'un coup — un menu déroulant en cachait onze sur douze derrière
-            un clic, et ne disait rien de leur contenu.</p>
+          <p class="aide">Chaque pays porte son drapeau et ce qu'il contient. Tous sont visibles
+            d'un coup — un menu déroulant en cachait onze sur douze derrière un clic.</p>
           <div class="pays-liste pays-2col" id="paysMarche" role="radiogroup" aria-label="Pays consulté"></div>
           <p class="aide" id="resumePays" style="margin:11px 0 0"></p>
         </div>
@@ -532,17 +604,17 @@ td.info.sep,th.info.sep{border-left:2px solid var(--bord-clair)}
       <section data-vue="reglages">
         <div class="rub">
           <h2>Accès</h2>
-          <p class="aide">Identifiant et mot de passe du panneau.</p>
-          <div class="champ"><label for="nId">Identifiant</label><input id="nId" type="text" autocapitalize="off" spellcheck="false"></div>
-          <div class="champ"><label for="nMdp">Nouveau mot de passe</label><input id="nMdp" type="password" autocomplete="new-password"></div>
-          <div class="champ"><label for="nMdp2">Répète le mot de passe</label><input id="nMdp2" type="password" autocomplete="new-password"></div>
+          <p class="aide">Identifiant et mot de passe du panneau. Conservés sur cet appareil, jamais en clair : seule une empreinte l'est.</p>
+          <div class="champ etroit"><label for="nId">Identifiant</label><input id="nId" type="text" autocapitalize="off" spellcheck="false"></div>
+          <div class="champ etroit"><label for="nMdp">Nouveau mot de passe</label><input id="nMdp" type="password" autocomplete="new-password"></div>
+          <div class="champ etroit"><label for="nMdp2">Répète le mot de passe</label><input id="nMdp2" type="password" autocomplete="new-password"></div>
           <button class="principal" id="nOk" style="max-width:320px">Enregistrer</button>
           <p class="annonce" id="nMsg" role="alert"></p>
         </div>
         <div class="rub">
           <h2>Relais des données</h2>
-          <p class="aide">Adresse à laquelle les inscriptions et le trafic sont envoyés.</p>
-          <div class="champ"><label for="relais">Adresse du relais</label><input id="relais" type="url" placeholder="https://script.google.com/macros/s/…/exec" spellcheck="false"></div>
+          <p class="aide">Adresse à laquelle les inscriptions et le trafic sont envoyés. Tant qu'elle est vide, ce panneau ne montre que cet appareil.</p>
+          <div class="champ moyen"><label for="relais">Adresse du relais</label><input id="relais" type="url" placeholder="https://script.google.com/macros/s/…/exec" spellcheck="false"></div>
           <button class="bouton" id="relaisOk">Enregistrer l'adresse</button>
           <button class="bouton" id="relaisTest">Tester</button>
           <p class="annonce" id="relaisMsg" role="alert"></p>
