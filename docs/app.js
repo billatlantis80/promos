@@ -16,23 +16,6 @@ import {
 
 const $ = (id) => document.getElementById(id);
 
-/* TÉMOIN DE DÉMARRAGE — lu par la sentinelle d'index.html.
- *
- * Défaut réel (08/10/2026) : sur un PC ancien, le site n'affichait que
- * l'en-tête et « chargement… », sans un mot d'explication. app.js utilise
- * `?.` plus de 2 000 fois : un navigateur antérieur à février 2020 (Chrome 80)
- * lit le fichier, échoue à l'ANALYSER, et rien ne s'exécute — pas même un
- * message. Le même silence se produit si le fichier est bloqué en route.
- *
- * Cette ligne est posée EN PREMIER, avant toute lecture de données : la
- * sentinelle d'index.html doit pouvoir distinguer « le programme tourne mais
- * les offres arrivent lentement » (ici : le témoin est posé → elle se tait)
- * de « le programme n'a jamais démarré » (le témoin est absent → elle parle).
- * La poser après le chargement des données ferait accuser à tort une connexion
- * simplement lente.
- */
-window.KAZENDRA_PRET = true;
-
 /**
  * Où vivent les ressources (données + visuels) ?
  *
