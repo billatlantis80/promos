@@ -36,8 +36,24 @@ assert.ok(debut > 0 && fin > debut, 'les règles de sélection doivent rester ex
 const code = js.slice(debut, fin);
 
 const ctx = vm.createContext({});
-const R = vm.runInContext(`${code}
-  ;({ REMISE_MIN, CHALEUR_MIN, CHALEUR_AFFAIRE, REMISE_ANNONCEE_MAX, PART_AMAZON, MELANGE_MIN, estAmazon, estPromoVerifiee, estOffreEnseigne, estBonPlanPresse, estBonneAffaire, estBonnePromo, SOURCE_COMMUNAUTE, paysDe, PAYS_BOUTIQUE, dedoublonner, melanger, entrelacer })`, ctx);
+
+/* DEUX MONDES, ET POURQUOI IL EN FAUT DEUX.
+ *
+ * Le mélange 60/40 est EN PAUSE (B, 08/10/2026). Mais la règle est toujours
+ * écrite, et elle doit rester VRAIE : le jour où on la rallume, personne ne
+ * veut découvrir qu'elle a dérivé pendant sa dormance — une règle qu'on
+ * réécrit de mémoire est une règle qu'on réintroduit avec ses anciens défauts.
+ *
+ * Les épreuves du 60/40 sont donc rejouées dans un contexte où l'interrupteur
+ * est forcé sur « actif » (M). Celles qui suivent, sur R, vérifient ce que B
+ * voit AUJOURD'HUI : aucune préférence, et rien de sacrifié.
+ */
+const MELANGE_ACTIF = /const MELANGE_ACTIF = (true|false)/.exec(code)?.[1] === 'true';
+const codeActif = code.replace(/const MELANGE_ACTIF = (true|false);/, 'const MELANGE_ACTIF = true;');
+const EXPOSER = '({ REMISE_MIN, CHALEUR_MIN, CHALEUR_AFFAIRE, REMISE_ANNONCEE_MAX, PART_AMAZON, MELANGE_MIN, MELANGE_ACTIF, estAmazon, estPromoVerifiee, estOffreEnseigne, estBonPlanPresse, estBonneAffaire, estBonnePromo, SOURCE_COMMUNAUTE, paysDe, PAYS_BOUTIQUE, dedoublonner, melanger, entrelacer })';
+
+const R = vm.runInContext(`${code}\n  ;${EXPOSER}`, ctx);                              // en pause
+const M = vm.runInContext(`${codeActif}\n  ;${EXPOSER}`, vm.createContext({}));         // rallumé
 
 /* ------------------------------------------------- le pays de la boutique */
 
@@ -137,7 +153,7 @@ test('étage 2 : le nom de la source n’est pas un marchand', () => {
 });
 
 test('étage 2 : Amazon n’est jamais compté comme une autre enseigne', () => {
-  assert.equal(R.estAmazon(offre('Amazon')), true);
+  assert.equal(M.estAmazon(offre('Amazon')), true);
   assert.equal(R.estOffreEnseigne(offre('Amazon', { prix: 10, temperature: 900 })), false);
 });
 
@@ -242,44 +258,44 @@ test('deux produits différents au même prix restent deux offres', () => {
 
 /* --------------------------------------------------------------- mélange */
 
-test('le mélange tient la proportion 60 / 40', () => {
+test('rallumé : le mélange tient la proportion 60 / 40', () => {
   const amazon = Array.from({ length: 300 }, (_, i) => offre('Amazon', { prix: i + 1, remise: 50, prixAvant: (i + 1) * 2 }));
   const autres = Array.from({ length: 120 }, (_, i) => offre('MediaMarkt', { prix: i + 1, temperature: 200 }));
-  const l = R.melanger([...amazon, ...autres]);
-  const nAmz = l.filter(R.estAmazon).length;
+  const l = M.melanger([...amazon, ...autres]);
+  const nAmz = l.filter(M.estAmazon).length;
   const part = nAmz / l.length;
   assert.ok(part >= 0.55 && part <= 0.65, `part Amazon ${(part * 100).toFixed(1)} % — attendu ≈ 60 %`);
-  assert.equal(l.filter((o) => !R.estAmazon(o)).length, l.length - nAmz, 'aucune ligne Amazon ne doit être déguisée');
+  assert.equal(l.filter((o) => !M.estAmazon(o)).length, l.length - nAmz, 'aucune ligne Amazon ne doit être déguisée');
 });
 
-test('le mélange plafonne les enseignes quand elles sont trop nombreuses', () => {
+test('rallumé : le mélange plafonne les enseignes quand elles sont trop nombreuses', () => {
   // Cas belge mesuré : 44 promos Amazon pour 157 offres d'enseignes. Sans
   // plafond, l'application afficherait 22 % d'Amazon — l'inverse de la cible.
   const amazon = Array.from({ length: 44 }, (_, i) => offre('Amazon', { prix: i + 1, remise: 50, prixAvant: (i + 1) * 2 }));
   const autres = Array.from({ length: 157 }, (_, i) => offre('Coolblue', { prix: i + 1, temperature: 300 }));
-  const l = R.melanger([...amazon, ...autres]);
-  const nAmz = l.filter(R.estAmazon).length;
+  const l = M.melanger([...amazon, ...autres]);
+  const nAmz = l.filter(M.estAmazon).length;
   assert.ok(Math.abs(nAmz / l.length - 0.6) < 0.05, `part Amazon ${(nAmz / l.length * 100).toFixed(1)} %`);
   assert.ok(l.length <= 44 + 31, `total ${l.length} — les enseignes doivent être plafonnées, pas empilées`);
 });
 
-test('le mélange est VISIBLE sur la première ligne', () => {
+test('rallumé : le mélange est VISIBLE sur la première ligne', () => {
   const amazon = Array.from({ length: 60 }, (_, i) => offre('Amazon', { prix: i + 1, remise: 50, prixAvant: (i + 1) * 2 }));
   const autres = Array.from({ length: 40 }, (_, i) => offre('Lidl', { prix: i + 1, temperature: 300 }));
-  const l = R.melanger([...amazon, ...autres]);
-  assert.equal(R.estAmazon(l[0]), true, 'le premier résultat reste une annonce Amazon (c’est le revenu)');
-  assert.ok(l.slice(0, 10).some((o) => !R.estAmazon(o)), 'une enseigne doit apparaître dans les 10 premiers résultats');
+  const l = M.melanger([...amazon, ...autres]);
+  assert.equal(M.estAmazon(l[0]), true, 'le premier résultat reste une annonce Amazon (c’est le revenu)');
+  assert.ok(l.slice(0, 10).some((o) => !M.estAmazon(o)), 'une enseigne doit apparaître dans les 10 premiers résultats');
 });
 
-test('sans autre enseigne disponible, rien n’est perdu', () => {
+test('rallumé : sans autre enseigne disponible, rien n’est perdu', () => {
   // Pays sans source d'enseigne lisible (NL, PL, SE, IE, GB, PT mesurés) : le
   // plafond ne doit pas vider l'écran.
   const amazon = Array.from({ length: 29 }, (_, i) => offre('Amazon', { prix: i + 1, remise: 50, prixAvant: (i + 1) * 2 }));
-  const l = R.melanger(amazon);
+  const l = M.melanger(amazon);
   assert.equal(l.length, 29);
 });
 
-test('dans les 40 %, les boutiques passent avant la presse', () => {
+test('rallumé : dans les 40 %, les boutiques passent avant la presse', () => {
   // Les articles de presse portent souvent deux prix réels, donc un meilleur
   // rang au tri : sans départage explicite, la première page d'un Belge était
   // une suite de « lire le bon plan » au lieu de renvoyer vers les enseignes.
@@ -291,7 +307,7 @@ test('dans les 40 %, les boutiques passent avant la presse', () => {
   const amazon = Array.from({ length: 30 }, (_, i) => offre('Amazon', { prix: i + 1, remise: 50, prixAvant: (i + 1) * 2 }));
   const boutiques = Array.from({ length: 17 }, (_, i) => offre('Coolblue', { prix: i + 1, categorieSource: 'enseigne' }));
   const presse = [offre('Le Parisien', { prix: 50, prixAvant: 100, remise: 50 })];
-  const l = R.melanger([...amazon, ...boutiques, ...presse]);
+  const l = M.melanger([...amazon, ...boutiques, ...presse]);
   const iP = l.findIndex((o) => o.marchand === 'Le Parisien');
   const iB = l.findIndex((o) => o.marchand === 'Coolblue');
   assert.ok(iB >= 0, 'une boutique doit être présente');
@@ -299,21 +315,118 @@ test('dans les 40 %, les boutiques passent avant la presse', () => {
   assert.ok(iP > iB, 'la presse ne doit jamais passer devant la première boutique');
 });
 
-test('un pays qui manque d’un côté n’est pas puni deux fois', () => {
+test('rallumé : un pays qui manque d’un côté n’est pas puni deux fois', () => {
   // Cas polonais mesuré : 16 promos Amazon pour 1 seule offre d'enseigne. Tenir
   // la proportion ne laissait que 2 lignes à l'écran — une app qui paraît
   // cassée. Sous MELANGE_MIN, on montre tout, et l'en-tête dit la vraie part.
   const amazon = Array.from({ length: 16 }, (_, i) => offre('Amazon', { prix: i + 1, remise: 50, prixAvant: (i + 1) * 2 }));
   const autres = [offre('BIKER-BOARDER', { prix: 89, temperature: 140 })];
-  const l = R.melanger([...amazon, ...autres]);
+  const l = M.melanger([...amazon, ...autres]);
   assert.equal(l.length, 17, 'aucune offre réelle ne doit être sacrifiée à la proportion');
 });
 
-test('le mélange ne fabrique ni ne supprime aucune offre', () => {
+test('rallumé : le mélange ne fabrique ni ne supprime aucune offre', () => {
   const amazon = Array.from({ length: 20 }, (_, i) => offre('Amazon', { prix: i + 1, remise: 50, prixAvant: (i + 1) * 2 }));
   const autres = Array.from({ length: 20 }, (_, i) => offre('Carrefour', { prix: i + 1, temperature: 300 }));
-  const l = R.melanger([...amazon, ...autres]);
+  const l = M.melanger([...amazon, ...autres]);
   const ids = new Set([...amazon, ...autres]);
   for (const o of l) assert.ok(ids.has(o), 'une offre du mélange doit venir de l’entrée');
   assert.equal(new Set(l).size, l.length, 'aucun doublon');
+});
+
+/* ============================================================ LE 60/40 EN PAUSE
+ *
+ * B (08/10/2026) : « mettre en pause le 60/40 en faveur d'Amazon, tous les
+ * acteurs affichent en fonction de ce qu'il publie, sans préférence. »
+ *
+ * Ce que ces épreuves protègent : que la pause SOIT une pause — c'est-à-dire
+ * qu'aucun camp ne soit servi, qu'aucune offre réelle ne soit sacrifiée à un
+ * pourcentage, et que l'interrupteur soit le SEUL endroit qui décide. Une pause
+ * qu'on pourrait contourner ailleurs ne serait pas une pause, et c'est
+ * exactement le genre d'écart qu'on ne voit pas à l'œil sur une page qui marche.
+ */
+
+test('la pause est réelle dans le fichier publié', () => {
+  assert.equal(MELANGE_ACTIF, false, 'le mélange doit être en pause');
+  assert.equal(R.MELANGE_ACTIF, false, 'le monde des épreuves doit refléter le fichier');
+  assert.equal(M.MELANGE_ACTIF, true, 'et l’épreuve doit pouvoir le rallumer');
+});
+
+test('EN PAUSE : l’ordre suit ce que chaque acteur publie, sans préférence', () => {
+  // Amazon publie moins bien (intérêt 100), MediaMarkt publie mieux (300).
+  // En pause, c'est MediaMarkt qui vient en tête : aucun camp n'est servi —
+  // c'est précisément ce que « sans préférence » veut dire.
+  const amazon = Array.from({ length: 30 }, (_, i) => offre('Amazon', { prix: i + 1, remise: 50, prixAvant: (i + 1) * 2, temperature: 100 }));
+  const autres = Array.from({ length: 30 }, (_, i) => offre('MediaMarkt', { prix: i + 1, temperature: 300 }));
+  const parInteret = (a, b) => (b.temperature || 0) - (a.temperature || 0);
+  const l = R.melanger([...amazon, ...autres], parInteret);
+  assert.equal(l.length, 60);
+  assert.equal(l[0].marchand, 'MediaMarkt', 'le mieux classé doit passer devant, quel que soit l’acteur');
+  assert.equal(l[l.length - 1].marchand, 'Amazon');
+  // Et le résultat est EXACTEMENT l'entrée triée : rien d'autre n'est décidé.
+  // On compare une PROJECTION mise en TEXTE (marchand + prix), pas des
+  // tableaux : les valeurs rendues par les règles viennent d'un autre
+  // « royaume » JavaScript (vm.createContext), donc leurs tableaux n'ont pas
+  // le prototype du nôtre. Mesuré : une comparaison stricte de tableaux
+  // échouait avec « same structure but are not reference-equal » alors que le
+  // contenu était identique ligne pour ligne — un faux échec, exactement le
+  // genre qui fait perdre une heure et qu'on finit par « réparer » en
+  // affaiblissant l'épreuve.
+  const signature = (o) => `${o.marchand}#${o.prix}`;
+  assert.equal(l.map(signature).join(' | '),
+    [...amazon, ...autres].sort(parInteret).map(signature).join(' | '));
+});
+
+test('EN PAUSE : aucune offre réelle n’est sacrifiée à une proportion', () => {
+  // Le cas belge mesuré : 44 promos Amazon pour 157 offres d'enseignes.
+  // Rallumé, le plafond ramenait la liste à ~75 lignes — plus de 120 offres
+  // réelles disparaissaient de l'écran, et rien ne le disait.
+  const amazon = Array.from({ length: 44 }, (_, i) => offre('Amazon', { prix: i + 1, remise: 50, prixAvant: (i + 1) * 2 }));
+  const autres = Array.from({ length: 157 }, (_, i) => offre('Coolblue', { prix: i + 1, temperature: 300 }));
+  const enPause = R.melanger([...amazon, ...autres]);
+  const rallume = M.melanger([...amazon, ...autres]);
+  assert.equal(enPause.length, 201, 'en pause, TOUTES les offres doivent être rendues');
+  assert.ok(rallume.length < enPause.length,
+    'preuve que le plafond, lui, retire bien des offres : c’est ce qui justifie la pause');
+});
+
+test('EN PAUSE : rien d’inventé, rien de dupliqué', () => {
+  const amazon = Array.from({ length: 20 }, (_, i) => offre('Amazon', { prix: i + 1, remise: 50, prixAvant: (i + 1) * 2 }));
+  const autres = Array.from({ length: 20 }, (_, i) => offre('Carrefour', { prix: i + 1, temperature: 300 }));
+  const entree = [...amazon, ...autres];
+  const l = R.melanger(entree, (a, b) => (b.remise || 0) - (a.remise || 0));
+  assert.equal(l.length, entree.length, 'aucune offre ne doit être perdue ni ajoutée');
+  for (const o of l) assert.ok(entree.includes(o), 'une offre rendue doit venir de l’entrée');
+  assert.equal(new Set(l).size, l.length, 'aucun doublon');
+});
+
+test('EN PAUSE : la pause ne change QUE l’ordre, jamais la sélection', () => {
+  // Le 60/40 ne filtrait pas les offres : il décidait de leur ordre, et le
+  // plafond retirait la queue. En pause, on reçoit donc exactement ce que la
+  // sélection a laissé passer — ni plus (aucune offre « autorisée » en plus),
+  // ni moins. Sans cette épreuve, une pause mal placée pourrait faire entrer
+  // dans la liste des offres que les filtres avaient écartées.
+  const liste = Array.from({ length: 50 }, (_, i) => offre(i % 2 ? 'Amazon' : 'Lidl', { prix: i + 1, remise: 40, prixAvant: (i + 1) * 2 }));
+  const l = R.melanger(liste, (a, b) => b.remise - a.remise);
+  assert.deepEqual(new Set(l.map((o) => o.prix)).size, new Set(liste.map((o) => o.prix)).size);
+  assert.equal(l.length, liste.length);
+});
+
+test('l’interrupteur est le SEUL endroit qui décide', () => {
+  const corps = js.match(/function melanger\(liste, cmp\) \{[\s\S]*?\n\}/);
+  assert.ok(corps, 'melanger() doit exister dans app.js');
+  assert.match(corps[0], /if \(!MELANGE_ACTIF\) return \[\.\.\.liste\]\.sort\(tri\);/,
+    'la sortie de pause doit être la première décision de melanger()');
+  // Et la règle est toujours là, intacte, derrière la pause : le jour où on la
+  // rallume, on ne la réécrit pas de mémoire.
+  assert.match(corps[0], /PART_AMAZON/, 'la règle 60/40 doit rester écrite, pas effacée');
+  assert.match(corps[0], /QUOTA_PRESSE|nPresse/, 'ses quotas doivent rester en place');
+});
+
+test('la pause est annoncée dans le code, avec sa raison et sa date', () => {
+  // Une règle désactivée sans motif écrit se rallume par erreur six mois plus
+  // tard, ou se fait supprimer par quelqu'un qui la croit morte.
+  assert.match(js, /MÉLANGE 60 % \/ 40 % — EN PAUSE/);
+  assert.match(js, /sans préférence/, 'la décision de B doit être citée');
+  assert.match(js, /EN PAUSE, PAS SUPPRESSION/);
 });
