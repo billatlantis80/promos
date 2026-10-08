@@ -51,7 +51,23 @@ h1, h2, h3, h4, .marque b, .prix { font-family: var(--police-titre); }
   border-bottom: 1px solid var(--bord);
   padding: 10px 12px 0;
 }
-.tete-in { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+/* La marque (à gauche) et les compteurs (à droite) sont ALIGNÉS l'un sur
+   l'autre — demande de B, 08/10/2026, d'abord constatée sur PC puis réclamée
+   « aussi sur la page téléphone ».
+   L'alignement d'origine était celui des lignes de BASE, et il ne tient plus
+   dès que les deux blocs n'ont pas la même forme : la marque est un bloc de
+   deux lignes (le mot, puis l'accroche), les compteurs en comptent trois. Calés
+   sur la base du mot, les trois lignes de droite DESCENDENT sous la marque :
+   l'en-tête gagnait ~30 px de hauteur pour rien et les deux blocs paraissaient
+   décalés. Mesuré au navigateur : 86 px au lieu de 56 pour la ligne d'en-tête.
+   Les deux blocs sont donc CENTRÉS l'un sur l'autre. `center` et non
+   `flex-start` : selon l'affichage, ce n'est pas toujours le même bloc qui est
+   le plus haut — la marque domine sur PC (56 px contre 49), les compteurs
+   dominent sur téléphone (52 px contre 45). Avec `flex-start`, le plus court
+   restait collé en haut et les centres se décalaient de 3 à 4 px, ce qui se
+   voit à l'œil ; avec `center`, le plus haut occupe toute la ligne et l'autre
+   se cale au milieu, dans les deux cas. */
+.tete-in { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 .marque { display: flex; align-items: center; gap: 10px; font-size: 19px; letter-spacing: .2px; }
 .pastille { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 12px var(--accent); }
 /* Le logo de marque : un carré arrondi bleu et le K blanc. Taille fixe pour que
@@ -159,7 +175,15 @@ h1, h2, h3, h4, .marque b, .prix { font-family: var(--police-titre); }
      - compacte : vignette à gauche, texte à droite — on en balaie beaucoup.
    Le mode vit sur <body data-vue="…"> : le CSS fait le travail, pas le JS, et
    l'affichage reste juste même si le script échoue (défaut = grille). */
-main { padding: 0 12px; }
+/* Espace AU-DESSUS de la première rangée d'annonces. Demande de B,
+   08/10/2026 : « il n'y a pas d'espace entre la première ligne des objets et
+   l'encadrement bleu » — d'abord sur PC, puis « tu peux le mettre aussi sur le
+   téléphone ». Il avait raison : `main` n'avait aucune marge haute, la première
+   rangée butait contre le bord du bandeau alors que les suivantes respirent.
+   La valeur n'est pas choisie à l'œil : c'est l'écart de la grille lui-même
+   (10 px ici, 16 px sur grand écran), pour que le blanc du haut et celui du bas
+   soient le même blanc. */
+main { padding: 10px 12px 0; }
 .grille { display: grid; gap: 10px; grid-template-columns: 1fr; }
 
 body[data-vue="grille"] .grille { grid-template-columns: 1fr 1fr; }
@@ -766,25 +790,14 @@ html[data-theme="contraste"] {
      226 px AVANT toute cette refonte, sur PC. Le bandeau reste donc plus court
      qu'à l'origine, tout en portant une marque plus grande partout.
 
-     Défaut PAYÉ en agrandissant : la marque et les compteurs de droite étaient
-     alignés sur la ligne de base (comme sur téléphone). Avec un mot de 25 px
-     face à trois lignes de chiffres, cet alignement faisait DESCENDRE les trois
-     lignes sous la marque : la ligne d'en-tête montait à 86 px au lieu de 56,
-     et le bandeau à 229 px au lieu de 199. D'où l'alignement au centre, plus
-     bas dans ce palier. */
+     L'alignement de la marque et de ses compteurs, lui, ne se règle PLUS ici :
+     il est corrigé une fois pour les deux affichages, dans les règles de base
+     (voir `.tete-in`). C'est le premier défaut que cet agrandissement a révélé
+     — la marque et les compteurs se décollaient l'un de l'autre. */
   .marque { font-size: 25px; gap: 13px; }
   .logo { width: 42px; height: 42px; }
   .marque-txt { gap: 2px; }
   .accroche { font-size: 12px; letter-spacing: .7px; opacity: .85; }
-  /* Alignement de la marque et des compteurs : on abandonne l'alignement sur la
-     LIGNE DE BASE, qui est celui du téléphone. Avec une marque de 25 px et trois
-     lignes de compteurs à droite, cet alignement fait DESCENDRE les trois lignes
-     sous la marque : la ligne d'en-tête montait à 86 px au lieu de 56, et
-     l'en-tête collant à 229 px au lieu de 199 (mesuré). On cale donc les
-     compteurs au centre de la ligne, ce qui est aussi plus juste à l'œil : une
-     colonne de trois lignes ne s'aligne pas sur la base d'un mot unique. */
-  .tete-in { align-items: flex-start; }
-  .comptes { align-self: center; }
   /* Les compteurs : trois lignes serrées (un `<br>` les sépare dans le HTML).
      On a essayé de les mettre côte à côte — c'est tentant, il y a la place sur
      un écran large. IMPOSSIBLE sans toucher au HTML, et c'est mesuré : un
