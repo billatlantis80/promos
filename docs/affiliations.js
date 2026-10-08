@@ -70,8 +70,19 @@ export function etatAffiliation(mesures, nom) {
  * passe par Awin et un pays où tout passe par Adtraction ne se démarchent
  * pas au même guichet. C'est ce qui évite de s'inscrire à cinq réseaux pour rien.
  */
-export function paysAffiliation(base, mesures) {
+export function paysAffiliation(base, mesures, catalogue) {
   const parPays = {};
+  // LES MÊMES PAYS QUE LE MARCHÉ EURO, et pas seulement ceux qui ont des acteurs.
+  // B a demandé « tous les pays comme dans ce que tu viens de faire » : les deux
+  // tableaux doivent se ressembler. Un pays servi par l'application mais sans
+  // acteur recensé (l'Irlande) disparaissait ici, et les deux onglets
+  // n'annonçaient pas le même nombre de pays — un écart qu'on ne remarque qu'en
+  // les comparant, c'est-à-dire jamais.
+  const noms = new Set(((base && base.acteurs) || []).map((a) => a.pays || '—'));
+  for (const p of Object.keys((catalogue && catalogue.parPays) || {})) noms.add(p);
+  for (const pays of [...noms].sort()) {
+    parPays[pays] = parPays[pays] || { pays, acteurs: 0, programme: 0, aucunSigne: 0, nonMesure: 0, reseaux: {} };
+  }
   for (const a of ((base && base.acteurs) || [])) {
     const pays = a.pays || '—';
     const P = parPays[pays] = parPays[pays] || {

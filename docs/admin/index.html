@@ -1724,7 +1724,7 @@ function dessinerBarreAffiliation() {
   const resume = document.getElementById('resumeAffiliation');
   if (!liste) return;
   if (!marche || !marche.acteurs) { liste.innerHTML = ''; if (resume) resume.textContent = ''; return; }
-  const pays = paysAffiliation(marche, affMesures);
+  const pays = paysAffiliation(marche, affMesures, catalogue);
   if (!pays.length) { liste.innerHTML = '<p class="vide">Aucun pays.</p>'; return; }
   if (!pays.some((x) => x.pays === paysChoisiAff)) paysChoisiAff = pays[0].pays;
   liste.innerHTML = pays.map((x) => `<button type="button" class="pays-item${x.pays === paysChoisiAff ? ' on' : ''}"
