@@ -43,10 +43,32 @@ jobs:
           git add -A docs
           if git diff --cached --quiet; then
             echo "Rien de neuf depuis le dernier passage."
-          else
-            git commit -m "Collecte $(date -u +'%Y-%m-%d %H:%M UTC')"
-            # La collecte du NAS pousse ici aussi : on se remet sur ses épaules
-            # avant de pousser, sinon l'envoi est refusé.
-            git pull -q --rebase --autostash origin main
-            git push
+            exit 0
           fi
+          # MÊME MÉTHODE QUE LA COLLECTE DU NAS, et pour la même raison MESURÉE.
+          #
+          # La version précédente faisait `git commit` puis
+          # `git pull --rebase --autostash` : dès que la collecte du NAS (toutes
+          # les 5 minutes) avait poussé entre-temps, le rebasage tombait en
+          # CONFLIT sur `docs/offres.json` — un fichier GÉNÉRÉ, recalculé à
+          # chaque passage, qu'il n'y a donc rien à arbitrer. Vécu le 08/10/2026 :
+          # le workflow horaire échouait à chaque passage, et le propriétaire
+          # recevait un courriel « All jobs have failed » par heure.
+          #
+          # On se replace sur la pointe de l'origine, on pose UN SEUL commit
+          # par-dessus, on pousse : un commit posé sur la pointe part toujours en
+          # avance rapide, il ne peut pas entrer en conflit. Si la pointe a encore
+          # bougé, on recommence — c'est une course, elle se règle en réessayant.
+          for essai in 1 2 3; do
+            git fetch -q origin main || { sleep 3; continue; }
+            git reset --soft FETCH_HEAD
+            git add -A docs
+            git commit -q -m "Collecte $(date -u +'%Y-%m-%d %H:%M UTC')" || true
+            if git push -q origin main; then
+              echo "Publié (essai $essai)."
+              exit 0
+            fi
+            sleep 4
+          done
+          echo "::error::envoi vers GitHub impossible après trois essais — le site publié n'a pas été mis à jour"
+          exit 1
