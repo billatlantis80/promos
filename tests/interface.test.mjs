@@ -28,6 +28,9 @@ import { fileURLToPath } from 'node:url';
 import { t } from '../public/langues.js';
 
 const ICI = path.dirname(fileURLToPath(import.meta.url));
+// Les drapeaux sont dans un module partagé avec le panneau d'administration :
+// c'est là qu'on vérifie qu'aucun pays n'a un trou à la place de son drapeau.
+const DRAP = fs.readFileSync(path.join(ICI, '..', 'public', 'drapeaux.js'), 'utf8');
 const lire = (f) => fs.readFileSync(path.join(ICI, '..', 'public', f), 'utf8');
 
 const css = lire('app.css');
@@ -677,8 +680,8 @@ test('les neuf langues s’affichent en liste, avec leur drapeau', () => {
   for (const c of codes) {
     // Chaque drapeau est un DESSIN. Un drapeau manquant laisserait un trou dans
     // la liste — visible à l'œil, invisible dans les tests s'ils ne le disent pas.
-    assert.match(js, new RegExp(`^  ${c}: '<rect`, 'm'),
-      `le drapeau « ${c} » doit être dessiné dans DRAPEAUX`);
+    assert.match(DRAP, new RegExp(`^  ${c}: '<rect`, 'm'),
+      `le drapeau « ${c} » doit être dessiné dans drapeaux.js`);
   }
   assert.doesNotMatch(js, /langueReglages/,
     'plus de menu déroulant pour la langue : les neuf doivent être visibles');
@@ -750,16 +753,16 @@ test('les pays portent leur drapeau et se partagent sur deux colonnes', () => {
   // Plusieurs drapeaux tiennent sur une même ligne : on ne peut donc pas
   // ancrer la recherche au début de ligne, sinon on n'en compterait qu'un par
   // ligne — trois au lieu de neuf, et le test crierait au loup.
-  const pays = [...js.matchAll(/([a-z]{2}): DRAPEAUX\./g)].map((m) => m[1]);
+  const pays = [...DRAP.matchAll(/([a-z]{2}): DRAPEAUX\./g)].map((m) => m[1]);
   assert.ok(pays.length >= 9, `table de drapeaux trop maigre : ${pays.join(', ')}`);
   for (const c of ['at', 'be', 'ie', 'gb', 'se']) {
-    assert.match(js, new RegExp(`\\b${c}: (DRAPEAUX\\.|'<rect)`),
+    assert.match(DRAP, new RegExp(`\\b${c}: (DRAPEAUX\\.|'<rect)`),
       `le drapeau du pays « ${c} » manque : l’Autriche, la Belgique et l’Irlande `
       + `n’ont pas de langue propre, le Royaume-Uni et la Suède portent un autre code`);
   }
   // L'Europe entière a droit à son drapeau comme les autres pays.
-  assert.match(js, /tout: DRAPEAU_EUROPE/, '« Tous les pays d’Europe » doit avoir un drapeau');
-  assert.match(js, /i < 12;/, 'le drapeau européen doit porter DOUZE étoiles');
+  assert.match(DRAP, /tout: DRAPEAU_EUROPE/, '« Tous les pays d’Europe » doit avoir un drapeau');
+  assert.match(DRAP, /i < 12;/, 'le drapeau européen doit porter DOUZE étoiles');
 });
 
 test('le bloc « Prix et disponibilité » est dans Informations, plus en bas de page', () => {

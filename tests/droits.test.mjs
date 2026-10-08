@@ -24,6 +24,9 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
 const lire = (p) => readFileSync(new URL('../' + p, import.meta.url), 'utf8');
+// Les drapeaux vivent désormais dans un module PARTAGÉ avec le panneau
+// d'administration : une seule table de drapeaux pour toute l'application.
+const DRAP = lire('public/drapeaux.js');
 const APP = lire('public/app.js');
 const HTML = lire('public/index.html');
 const LANGUES_SRC = lire('public/langues.js');
@@ -136,7 +139,7 @@ test('chaque phrase du bloc des droits est écrite DIFFÉREMMENT en anglais', ()
 });
 
 test('le drapeau allemand porte bien ses TROIS bandes : noir, rouge, or', () => {
-  const bloc = APP.slice(APP.indexOf('const DRAPEAUX = {'), APP.indexOf('const DRAPEAU_EUROPE'));
+  const bloc = DRAP.slice(DRAP.indexOf('export const DRAPEAUX = {'), DRAP.indexOf('export const DRAPEAU_EUROPE'));
   const de = bloc.slice(bloc.indexOf('\n  de:'), bloc.indexOf('\n  en:'));
   assert.ok(de.length > 20, 'entrée « de » introuvable dans DRAPEAUX');
   // Le défaut historique, mot pour mot : la bande du MILIEU restait le fond

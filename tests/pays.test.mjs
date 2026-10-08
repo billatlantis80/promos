@@ -62,7 +62,11 @@ test('les sources étrangères prennent du repos', () => {
 
 test('l’interface connaît exactement les mêmes pays que le collecteur', () => {
   // Deux listes recopiées finissent toujours par diverger : on les compare.
-  const bloc = (app.match(/const NOMS_PAYS = \{([\s\S]*?)\};/) || [])[1];
+  // NOMS_PAYS vit dans `drapeaux.js`, partagé avec le panneau : c'est donc LÀ
+  // qu'il faut comparer, sinon on comparerait le collecteur à un fichier qui
+  // ne contient plus la table.
+  const drapeaux = lire('public/drapeaux.js');
+  const bloc = (drapeaux.match(/export const NOMS_PAYS = \{([\s\S]*?)\};/) || [])[1];
   assert.ok(bloc, 'la table des noms de pays doit exister dans l’interface');
   const codesApp = [...bloc.matchAll(/([A-Z]{2}):/g)].map((m) => m[1]).sort();
   assert.deepEqual(codesApp, Object.keys(PAYS_COLLECTEUR).sort(), 'les deux tables de pays doivent être identiques');
