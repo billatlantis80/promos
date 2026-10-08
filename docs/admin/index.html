@@ -774,6 +774,53 @@ function dessinerOrigines() {
       ${cl.parEtat.map(([e, n]) => `${n} ${esc(e)}`).join(' · ')}.</p>`
     : '<p class="vide">Tous les sites suivis ont des annonces en ligne.</p>';
 
+  // --- Les sites, PAR PAYS puis PAR RUBRIQUE -------------------------------
+  // Le calcul est dans `sitesParPaysEtRubrique()` (fonction pure, plus haut) :
+  // c'est elle que `tests/sites-rubriques.test.mjs` essaye hors navigateur.
+  const pr = sitesParPaysEtRubrique(o);
+  const voie = (v) => (v === 'veille'
+    ? '<span style="color:var(--accent);font-weight:600">veille</span>'
+    : '<span style="color:var(--doux)">flux</span>');
+  document.getElementById('mRubriquesSites').innerHTML = pr.rubriques.length ? `
+    <p class="aide" style="margin-top:0"><b>${pr.totalSites} sites suivis</b>,
+      ${nf.format(pr.totalAnnonces)} annonces en ligne. Une rubrique dont la colonne
+      « Branchés » est à zéro ne donne <b>rien de direct</b> : tout ce qui la concerne
+      n'arrive que par la presse ou un moteur. C'est la liste des sites à activer.</p>
+    <table>
+      <tr><th>Rubrique</th><th class="n">Sites</th><th class="n">Branchés (flux)</th>
+        <th class="n">En veille</th><th class="n">Annonces</th></tr>
+      ${pr.rubriques.map((r) => `<tr><td><b>${esc(r.rubrique)}</b></td>
+        <td class="n">${nf.format(r.sites)}</td>
+        <td class="n ${r.flux ? '' : 'ko'}">${nf.format(r.flux)}</td>
+        <td class="n">${nf.format(r.veille)}</td>
+        <td class="n">${nf.format(r.annonces)}</td></tr>`).join('')}
+    </table>
+
+    <h2 style="margin-top:24px">Détail par pays</h2>
+    <p class="aide">Déplie un pays : chaque rubrique du pays, puis ses sites, du plus
+      prolifique au plus discret.</p>
+    ${pr.pays.map((P) => `
+      <details>
+        <summary><b>${esc(P.pays)}</b><span>${nf.format(P.total)} annonces ·
+          ${P.sites} site(s) · ${P.flux} en flux, ${P.veille} en veille</span></summary>
+        ${P.rubriques.map((R) => `
+          <h2 style="margin:14px 12px 4px;font-size:13px">${esc(R.rubrique)}
+            <span style="font-weight:400;color:var(--doux);font-size:12px;text-transform:none;letter-spacing:0">
+              ${R.sites.length} site(s)${R.annonces ? ` · ${nf.format(R.annonces)} annonces` : ' · aucune annonce'}</span></h2>
+          <table>
+            <tr><th>Site</th><th class="n">Annonces</th><th>Voie</th><th>État</th></tr>
+            ${R.sites.map((s) => `<tr><td>${esc(s.site)}</td>
+              <td class="n">${s.annonces ? nf.format(s.annonces) : '—'}</td>
+              <td>${voie(s.voie)}</td>
+              <td class="${s.actif ? 'ok' : 'ko'}">${esc(s.actif ? 'actif' : s.etat)}</td></tr>`).join('')}
+          </table>`).join('')}
+      </details>`).join('')}
+    <p class="aide" style="margin-top:12px">« En veille » n'est <b>pas</b> une panne : le site
+      n'expose aucun flux lisible (page montée en JavaScript, refus, ou image seule — mesuré
+      un par un, voir SOURCES.md). On ne le voit qu'à travers un moteur de recherche qui parle
+      de lui. Chaque ligne en veille est un site à activer le jour où il publie un flux.</p>`
+    : '<p class="vide">Aucun site dans le catalogue publié.</p>';
+
   // --- Les candidats ------------------------------------------------------
   // PREMIÈRE TENTATIVE, ET POURQUOI ELLE A ÉTÉ JETÉE. J'avais écrit : un
   // marchand dont l'hôte n'apparaît jamais comme hôte de page n'a pas de source
