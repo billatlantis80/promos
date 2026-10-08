@@ -230,16 +230,32 @@ dépôt fait au mauvais nom serait pire que pas de dépôt du tout.
 **Le préalable, non négociable** : ne pas promouvoir avant d'avoir déposé la marque (§ 2). Promouvoir
 un nom non protégé, c'est inviter le dépôt par un tiers.
 
-**Le second préalable** : il reste deux défauts graves dans ce que le site AFFICHE (relevés au
-check-up du 08/10) :
+**Le second préalable** : il reste un défaut grave dans ce que le site AFFICHE (relevés au check-up
+du 08/10) :
 
-- les **prix suédois et polonais sont affichés en euros sans conversion** — un home trainer à ~600 €
-  s'affiche « 6 089 € », avec un badge « économise 24 163 € » (509 offres concernées) ;
+- ~~les **prix suédois et polonais sont affichés en euros sans conversion**~~ — ✅ **CORRIGÉ le
+  08/10/2026.** Demande de B : « il faut que l'annonce affiche le prix original dans l'annonce et
+  l'adapter si ce n'est pas de l'euro. l'Angleterre est aussi concerné. »
+
+  La devise de chaque place de marché a été **relevée, pas supposée**, en lisant la charge des pages
+  Amazon (goldbox) : `amazon.co.uk` → `"currencyCode":"GBP"` · `amazon.pl` → `"PLN"` ·
+  `amazon.se` → `"currencyIsoCode":"SEK"` · `amazon.de` → `"EUR"`.
+
+  **L'Angleterre était bien concernée** — B avait raison. Mon premier test l'avait écartée à tort :
+  le rapport de prix du même produit entre Grande-Bretagne et zone euro vaut 0,994, ce qui semblait
+  prouver une monnaie commune. C'était une erreur de méthode : beaucoup de marques affichent le
+  **même nombre** dans chaque pays (199 € / £199), donc la comparaison de prix ne peut pas distinguer
+  « même monnaie » de « parité de prix ».
+
+  Aujourd'hui : `6 089 kr` · `108,82 zł` · `£153,39` · `34,99 €`. Aucun montant hors zone euro ne
+  porte plus le symbole €, et le badge « économise » suit la même monnaie. On ne convertit pas —
+  convertir exigerait un cours de change, donc un tiers ou un taux à maintenir.
+
 - un **favori peut afficher une autre offre** que celle enregistrée (359 offres sous un identifiant
-  partagé).
+  partagé) — **reste à corriger**.
 
-Promouvoir un site qui affiche « économise 24 163 € » sur un article à 600 € détruirait sa crédibilité
-en une journée. Ces deux corrections passent avant toute campagne.
+Promouvoir un site qui affichait « économise 24 163 € » sur un article à 600 € aurait détruit sa
+crédibilité en une journée. Ce qui reste à corriger : les identifiants dupliqués.
 
 **Ce qui est faisable sans budget et sans compte tiers :**
 
