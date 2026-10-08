@@ -48,6 +48,41 @@ export const sansAccents = (s) => String(s || '')
   .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
   .replace(/['\u2019\u02bc`]/g, '');
 
+/* ------------------------------------------------------------------ *
+ *  CE QUI FAIT TOURNER LE PROGRAMME, ET CE QUI SEULEMENT S'INFORME.
+ *
+ *  RÈGLE POSÉE PAR B (08/10/2026) : « Les informations sur le siège social
+ *  m'en sont là qu'à titre informatif. Doivent apparaître dans la base de
+ *  données mais ne doivent pas être utilisées pour la programmation. »
+ *
+ *  Autrement dit : l'adresse, le téléphone, l'e-mail, le chiffre d'affaires et
+ *  l'actionnariat sont de la DOCUMENTATION. Ils doivent rester dans la base,
+ *  s'afficher dans le panneau, figurer dans l'export — mais aucun morceau de
+ *  programme ne doit s'en servir pour décider quoi que ce soit.
+ *
+ *  POURQUOI CETTE SÉPARATION, ET POURQUOI ELLE EST ÉCRITE ICI. Une adresse de
+ *  siège se périme sans prévenir (déménagement, rachat) ; un chiffre d'affaires
+ *  est « indicatif » d'après la base elle-même ; un e-mail générique ne dit rien
+ *  de qui publie des promotions. Bâtir une décision là-dessus produirait des
+ *  pannes silencieuses : le programme continuerait, avec une information fausse.
+ *  À l'inverse, le NOM et le SITE WEB sont ce qui relie un acteur à une source,
+ *  et cela se vérifie à tout instant.
+ *
+ *  CE N'EST PAS UNE INTENTION, C'EST UN CONTRAT VÉRIFIÉ : `tests/acteurs-liaison
+ *  .test.mjs` relit le corps de `liaisonActeurs()` et REFUSE le code qui touche
+ *  à ces champs. La règle ne se perdra pas dans six mois.
+ * ------------------------------------------------------------------ */
+
+/** Champs de TRAVAIL : les seuls qu'un programme a le droit de lire. */
+export const CHAMPS_DE_TRAVAIL = ['nom', 'domaines', 'categorie'];
+
+/** Champs INFORMATIFS : présents dans la base, affichés, exportés — et jamais
+ *  lus par un programme. Cette liste est le contrat ci-dessus, en clair. */
+export const CHAMPS_INFORMATIFS = [
+  'adresse', 'telephone', 'email', 'ca', 'actionnariat', 'positionnement',
+  'segment', 'type', 'distribution', 'remarques', 'site', 'domaine',
+];
+
 /** Mots qui ne distinguent pas deux enseignes. « Colruyt Group » et « Colruyt »
  *  sont le même acteur ; sans cette liste, la correspondance exacte échouerait
  *  et on se rabattrait sur une correspondance partielle, plus fragile. */

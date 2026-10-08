@@ -102,6 +102,12 @@ details summary span{font-size:12px;color:var(--doux)}
 details > table{margin:0 0 6px;padding:0 13px 8px}
 details > table tr:first-child th{padding-top:2px}
 .vide{color:var(--doux);font-size:13.5px;font-style:italic}
+/* La fiche d'un acteur : adresse, téléphone, e-mail, CA. Ce sont des
+   INFORMATIONS (règle de B) — on les présente donc en petit, sous le nom,
+   pour qu'elles documentent sans jamais ressembler à des critères de travail. */
+.fiche-info{margin:7px 0 0;font-size:11.5px;line-height:1.45}
+.fiche-info dt{color:var(--doux);text-transform:uppercase;font-size:10px;letter-spacing:.4px;margin-top:5px}
+.fiche-info dd{margin:0;color:var(--texte)}
 .avis{
   border-left:3px solid var(--accent);background:var(--carte2);border-radius:0 10px 10px 0;
   padding:11px 13px;font-size:13px;color:var(--texte);margin:0 0 14px
@@ -276,7 +282,10 @@ details > table tr:first-child th{padding-top:2px}
           <p class="aide">Le nombre d'articles est celui des annonces <b>en ligne</b> venant de
             cet acteur. Les clics et les partages sont ceux relevés <b>sur cet appareil</b>
             (voir l'onglet Trafic) : ils disent ce qui intéresse, pas seulement ce qui est
-            disponible.</p>
+            disponible. <b>Clique le nom d'un acteur</b> pour voir sa fiche (siège, téléphone,
+            e-mail, CA) — ces informations sont <b>documentaires</b> : elles figurent dans la
+            base et à l'export, mais <b>le programme ne s'en sert jamais</b>. La liaison se
+            fait uniquement sur le <b>nom</b> et le <b>site web</b>.</p>
           <div class="champ" style="max-width:360px">
             <label for="rechercheMarche">Chercher un acteur</label>
             <input id="rechercheMarche" type="search" placeholder="nom de l'enseigne…" spellcheck="false">
@@ -990,6 +999,22 @@ function actionsDe(fa, uniques) {
   return { clics, partages };
 }
 
+/** La FICHE d'un acteur — les informations de siège, INFORMATIVES.
+ *  Règle de B (08/10/2026) : elles doivent apparaître dans la base, donc ici et
+ *  dans l'export ; elles ne doivent jamais servir au programme. On les affiche
+ *  donc pour ce qu'elles sont : de la documentation, sous le nom de l'acteur,
+ *  et seulement quand elles existent vraiment. Rien de « n/d », rien de vide. */
+function ficheInfo(a) {
+  const lignes = [
+    ['Adresse', a.adresse], ['Téléphone', a.telephone], ['E-mail', a.email],
+    ['CA indicatif', a.ca], ['Actionnariat', a.actionnariat],
+    ['Positionnement', a.positionnement], ['Segment', a.segment],
+    ['Distribution', a.distribution], ['Remarques', a.remarques],
+  ].filter(([, v]) => v && String(v).trim() && String(v).trim().toLowerCase() !== 'n/d');
+  if (!lignes.length) return '';
+  return `<dl class="fiche-info">${lignes.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join('')}</dl>`;
+}
+
 function dessinerMarche() {
   const zoneCompteurs = document.getElementById('mMarcheCompteurs');
   const zone = document.getElementById('mMarche');
@@ -1046,7 +1071,7 @@ function dessinerMarche() {
           const act = actionsDe(formesDe(a.nom), uniques);
           const liens = [...a.liaison.flux, ...a.liaison.veille].map((s) => esc(s.nom));
           return `<tr>
-            <td><b>${esc(a.nom)}</b>${liens.length ? `<div style="font-size:11.5px;color:var(--doux)">${liens.join(' · ')}</div>` : ''}</td>
+            <td><details><summary><b>${esc(a.nom)}</b></summary>${ficheInfo(a)}</details>${liens.length ? `<div style="font-size:11.5px;color:var(--doux);margin-top:3px">${liens.join(' · ')}</div>` : ''}</td>
             <td style="font-size:12px;color:var(--doux)">${esc(a.type || '—')}</td>
             <td style="font-size:12px">${(a.domaines || []).length ? esc((a.domaines || []).join(' / ')) : '—'}</td>
             <td>${etiquette(a.etat)}</td>
@@ -1098,19 +1123,27 @@ function dessinerMarche() {
     </details>`).join('')}`;
 }
 
-/** L'export CSV du marché : la liste de travail, ouvrable dans Excel. */
+/** L'export CSV du marché : la liste de travail, ouvrable dans Excel.
+ *  Les informations de siège y figurent (règle de B : elles DOIVENT apparaître
+ *  dans la base) et sont placées EN FIN de ligne, après tout ce qui sert à
+ *  travailler — pour qu'on ne les prenne pas pour des critères. */
 function csvMarche() {
   const r = liaisonActeurs(catalogue, marche);
   const uniques = clicsEtPartages();
-  const entetes = ['Acteur', 'Categorie', 'Type', 'Segment', 'Site', 'Domaines',
-    'Etat', 'Sources flux', 'Sources veille', 'Articles en ligne', 'Clics', 'Partages',
-    'Distribution', 'CA indicatif', 'Remarques'];
+  const entetes = ['Acteur', 'Categorie', 'Type', 'Etat',
+    'Sources flux', 'Sources veille', 'Articles en ligne', 'Clics', 'Partages',
+    'Site', 'Domaines',
+    '--- INFORMATIF ---', 'Adresse', 'Telephone', 'Email', 'CA indicatif',
+    'Actionnariat', 'Segment', 'Distribution', 'Remarques'];
   const cell = (v) => `"${String(v == null ? '' : v).replace(/"/g, '""')}"`;
   const lignes = r.acteurs.map((a) => {
     const act = actionsDe(formesDe(a.nom), uniques);
-    return [a.nom, a.categorie, a.type, a.segment, a.site, (a.domaines || []).join(' / '),
-      a.etat, a.liaison.flux.map((s) => s.nom).join(' · '), a.liaison.veille.map((s) => s.nom).join(' · '),
-      a.annonces, act.clics, act.partages, a.distribution, a.ca, a.remarques].map(cell).join(';');
+    return [a.nom, a.categorie, a.type, a.etat,
+      a.liaison.flux.map((s) => s.nom).join(' · '), a.liaison.veille.map((s) => s.nom).join(' · '),
+      a.annonces, act.clics, act.partages,
+      a.site, (a.domaines || []).join(' / '),
+      '', a.adresse, a.telephone, a.email, a.ca, a.actionnariat, a.segment, a.distribution, a.remarques,
+    ].map(cell).join(';');
   });
   // BOM UTF-8 + point-virgule : ce qu'Excel attend en français.
   return '\ufeff' + [entetes.map(cell).join(';'), ...lignes].join('\r\n');
