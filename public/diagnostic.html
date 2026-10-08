@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kazendra — diagnostic du navigateur</title>
+<!--
+  PAGE DE DIAGNOSTIC — écrite exprès en ES5 (var, fonctions, XMLHttpRequest).
+
+  POURQUOI. Défaut réel : sur un PC ancien, kazendra.com ne s'affichait pas —
+  aucun message, juste l'en-tête et « chargement… » à vie. Le site charge
+  UN SEUL script, `<script type="module">` : un navigateur qui ne connaît pas
+  les modules ES n'exécute RIEN, et rien ne le dit. Le site utilise aussi
+  `?.` (chaînage optionnel) plus de 2 000 fois, ce qui exige Chrome 80
+  (février 2020) — un Chrome plus ancien lit le fichier, échoue à l'analyser
+  et laisse la page vide.
+
+  Cette page doit donc s'ouvrir et RÉPONDRE là où l'application ne s'ouvre
+  pas, y compris dans Internet Explorer 11. C'est la raison de son style
+  volontairement pauvre : aucune variable CSS, aucune fonction fléchée,
+  aucun gabarit — uniquement des choses qu'IE11 sait lire.
+
+  Elle ne fait que MESURER. Elle n'envoie rien nulle part.
+-->
+<style>
+  body { margin:0; padding:24px 16px; background:#0d1b26; color:#e8eef2;
+         font:16px/1.5 "Segoe UI", Arial, Helvetica, sans-serif; }
+  .boite { max-width:760px; margin:0 auto; }
+  h1 { font-size:22px; margin:0 0 4px; }
+  .sous { color:#9fb3c0; font-size:14px; margin:0 0 20px; }
+  .verdict { padding:16px 18px; border-radius:10px; margin:0 0 22px; font-size:17px; font-weight:bold; }
+  .ok   { background:#12402a; border:1px solid #2f7d52; color:#c8f0da; }
+  .ko   { background:#4a1a1a; border:1px solid #a4453f; color:#ffd9d6; }
+  .att  { background:#4a3d12; border:1px solid #a4862f; color:#f6ecc8; }
+  table { width:100%; border-collapse:collapse; font-size:14px; }
+  td { padding:7px 6px; border-bottom:1px solid #22333f; vertical-align:top; }
+  td.marque { width:26px; font-size:16px; }
+  td.quoi { width:44%; }
+  .detail { color:#9fb3c0; font-size:12.5px; }
+  .crit { color:#ffb4ae; font-size:11px; font-weight:bold; }
+  h2 { font-size:15px; margin:26px 0 8px; color:#9fb3c0; text-transform:uppercase; letter-spacing:.06em; }
+  code { background:#132430; padding:1px 5px; border-radius:4px; font-size:13px; }
+  p.aide { font-size:14px; color:#c6d5df; background:#132430; border-radius:8px; padding:12px 14px; }
+  a { color:#f0a34a; }
+</style>
+</head>
+<body>
+<div class="boite">
+
+  <h1>Kazendra — qu'est-ce que ton navigateur sait faire ?</h1>
+  <p class="sous">Cette page mesure. Elle n'envoie aucune donnée et ne dépose rien.</p>
+
+  <div class="verdict att" id="verdict">Mesure en cours…</div>
+
+  <h2>Capacités du navigateur</h2>
+  <table id="capacites"></table>
+
+  <h2>Téléchargement réel depuis ce site</h2>
+  <table id="reseau">
+    <tr><td class="marque" id="r1m">…</td><td class="quoi">Lecture en cours</td><td class="detail" id="r1d"></td></tr>
+    <tr><td class="marque" id="r2m">…</td><td class="quoi">Lecture en cours</td><td class="detail" id="r2d"></td></tr>
+  </table>
+  <p class="sous" id="rurl"></p>
+
+  <h2>Ton appareil</h2>
+  <table id="appareil"></table>
+
+  <p class="aide" id="conseil"></p>
+  <p class="sous">Empreinte technique : <span id="ua"></span></p>
+
+</div>
+
+<script>
+/* ---------------------------------------------------------------- outils --- */
+var PROBLEMES = [];
+
+function ligne(marque, quoi, detail, critique) {
+  var t = document.getElementById('capacites');
+  var tr = t.insertRow(-1);
+  tr.innerHTML = '<td class="marque">' + marque + '</td>'
+    + '<td class="quoi">' + quoi + (critique ? ' <span class="crit">NÉCESSAIRE</span>' : '') + '</td>'
+    + '<td class="detail">' + (detail || '') + '</td>';
+}
+
+/* Éprouve une syntaxe sans l'exécuter : le navigateur refuse de CONSTRUIRE la
+   fonction, et lève une exception. C'est exactement ce qu'il fait sur app.js. */
+function syntaxeAcceptee(source) {
+  try { var f = new Function(source); return !!f; } catch (e) { return false; }
+}
+
+function capacite(marque, quoi, valeur, critique) {
+  if (!valeur && critique) PROBLEMES.push(quoi);
+  ligne(marque, quoi, valeur ? '' : 'non supporté par ce navigateur', critique);
+}
+
+/* -------------------------------------------------------- le navigateur --- */
+var ua = navigator.userAgent;
+var navigateur = 'inconnu', version = '';
+function chercher(re, nom) {
+  var m = ua.match(re);
+  if (m) { navigateur = nom; version = m[1] || ''; return true; }
+  return false;
+}
+/* L'ordre compte : Edge et Opera se déclarent aussi « Chrome ». */
+if (chercher(/Edge\/([\d.]+)/, 'Microsoft Edge')) {}
+else if (chercher(/Edg\/([\d.]+)/, 'Microsoft Edge')) {}
+else if (chercher(/OPR\/([\d.]+)/, 'Opera')) {}
+else if (chercher(/Trident\/[\d.]+.*rv:([\d.]+)/, 'Internet Explorer')) {}
+else if (chercher(/MSIE ([\d.]+)/, 'Internet Explorer')) {}
+else if (chercher(/Chrome\/([\d.]+)/, 'Google Chrome')) {}
+else if (chercher(/Firefox\/([\d.]+)/, 'Mozilla Firefox')) {}
+else if (chercher(/Version\/([\d.]+).*Safari/, 'Safari')) {}
+
+ligne('&#128241;', 'Navigateur détecté', navigateur + (version ? ' ' + version : '') + ' — <span class="detail">' + ua + '</span>');
+
+/* ----------------------------------------------------- capacités requises -- */
+/* Les modules ES se testent EN DIFFÉRÉ : un `<script type="module">` inséré
+   dans la page ne s'exécute qu'après l'analyse du document, jamais tout de
+   suite. Le vérifier ici, sur-le-champ, renverrait « non supporté » même dans
+   Chrome 148 — mesuré. On pose donc une sonde, et on la lit à la fin. */
+var sondeModules = false;
+try {
+  var s = document.createElement('script');
+  s.type = 'module';
+  s.textContent = 'window.__kazendra_module = true;';
+  document.head.appendChild(s);
+} catch (e) { sondeModules = false; }
+
+var chainageOk = syntaxeAcceptee('var a = {}; return a && a.b;') && syntaxeAcceptee('var a = {}; return a?.b;');
+capacite(chainageOk ? '&#9989;' : '&#10060;', 'Chaînage optionnel (la notation « ?. »)', chainageOk, true);
+
+var coalescenceOk = syntaxeAcceptee('var a = null; return a === null ? 1 : a;')
+  && syntaxeAcceptee('var a = null; return a ?? 1;');
+capacite(coalescenceOk ? '&#9989;' : '&#10060;', 'Coalescence nulle (la notation « ?? »)', coalescenceOk, true);
+
+/* Les deuxièmes éprouvent VRAIMENT la syntaxe moderne : placée dans une chaîne
+   de caractères, elle ne casse pas ce fichier — mais `new Function` la refuse
+   si le navigateur ne la connaît pas. */
+var flechesOk = syntaxeAcceptee('var a = 1; return a + 1;')
+  && syntaxeAcceptee('var f = (x) => x + 1; return f(1);')
+  && syntaxeAcceptee('var s = `a${1}b`; return s;');
+capacite(flechesOk ? '&#9989;' : '&#10060;', 'Fonctions fléchées et gabarits de chaîne', flechesOk, true);
+
+var asyncOk = (function () { try { new Function('return (async function () { await 1; })'); return true; } catch (e) { return false; } })();
+capacite(asyncOk ? '&#9989;' : '&#10060;', 'Fonctions asynchrones (async / await)', asyncOk, true);
+
+var fetchOk = (typeof window.fetch === 'function');
+capacite(fetchOk ? '&#9989;' : '&#10060;', 'Téléchargement réseau moderne (fetch)', fetchOk, true);
+
+var promiseOk = (typeof window.Promise === 'function');
+capacite(promiseOk ? '&#9989;' : '&#10060;', 'Promesses (Promise)', promiseOk, true);
+
+var abortOk = (typeof window.AbortController === 'function');
+capacite(abortOk ? '&#9989;' : '&#10060;', 'Interruption d\'un téléchargement (AbortController)', abortOk, true);
+
+var stockageOk = false;
+try { window.localStorage.setItem('kazendra.essai', '1'); window.localStorage.removeItem('kazendra.essai'); stockageOk = true; } catch (e) { stockageOk = false; }
+capacite(stockageOk ? '&#9989;' : '&#10060;', 'Mémoire locale (réglages, favoris)', stockageOk, true);
+
+/* ------------------------------------------------------------- CSS requis -- */
+var cssOk = !!(window.CSS && window.CSS.supports);
+/* DEUX arguments, et pas un : `CSS.supports('display')` sans valeur est une
+   condition INVALIDE, qui renvoie faux — y compris dans Chrome 148. Défaut
+   commis puis corrigé ici même : le diagnostic accusait un navigateur
+   parfaitement à jour. */
+function cssSupporte(propriete, valeur) { return cssOk ? window.CSS.supports(propriete, valeur) : false; }
+
+/* Les variables CSS ne se testent PAS par `CSS.supports('color','var(--x)')` :
+   cette forme renvoie faux partout, `var()` n'étant pas résolu à l'analyse.
+   On pose la variable et on la relit — c'est la seule mesure honnête. */
+function variablesMarchent() {
+  try {
+    var temoin = document.createElement('div');
+    temoin.style.setProperty('--kazendra-essai', '42px');
+    var lu = temoin.style.getPropertyValue('--kazendra-essai');
+    return (lu === '42px');
+  } catch (e) { return false; }
+}
+var variables = variablesMarchent();
+capacite(variables ? '&#9989;' : '&#10060;', 'Variables CSS (toutes les couleurs du site en dépendent)', variables, true);
+
+var grille = cssSupporte('display', 'grid');
+capacite(grille ? '&#9989;' : '&#10060;', 'Grille CSS (la disposition des offres)', grille, true);
+
+var espacements = cssSupporte('gap', '1px');
+capacite(espacements ? '&#9989;' : '&#10060;', 'Espacement flex (gap)', espacements, true);
+
+var flou = cssSupporte('backdrop-filter', 'blur(2px)') || cssSupporte('-webkit-backdrop-filter', 'blur(2px)');
+capacite(flou ? '&#9989;' : '&#9888;&#65039;', 'Flou d\'arrière-plan (le fond de l\'en-tête)', flou, false);
+
+var collant = cssSupporte('position', 'sticky');
+capacite(collant ? '&#9989;' : '&#9888;&#65039;', 'En-tête collant (position: sticky)', collant, false);
+
+/* --------------------------------------------------------- l'appareil ----- */
+(function () {
+  var t = document.getElementById('appareil');
+  function l(quoi, val) { var tr = t.insertRow(-1); tr.innerHTML = '<td class="marque"></td><td class="quoi">' + quoi + '</td><td class="detail">' + val + '</td>'; }
+  l('Taille de la fenêtre', window.innerWidth + ' × ' + window.innerHeight + ' pixels');
+  l('Taille de l\'écran', screen.width + ' × ' + screen.height + ' pixels');
+  l('Densité de pixels', (window.devicePixelRatio || 1) + '× (mise à l\'échelle Windows incluse)');
+  l('Zoom du navigateur estimé', Math.round((window.outerWidth / window.innerWidth) * 100) + ' %');
+  l('Langue déclarée', navigator.language || navigator.userLanguage || '—');
+  l('JavaScript activé', 'oui (sinon cette page ne s\'afficherait pas)');
+})();
+document.getElementById('ua').innerHTML = ua.replace(/</g, '&lt;');
+
+/* --------------------------------------------------- téléchargement réel -- */
+/* On télécharge pour de bon : c'est le SEUL moyen de voir un pare-feu, un
+   antivirus ou un bloqueur de publicité qui couperait les données. */
+function mesurer(url, quelle, cb) {
+  var m = document.getElementById(quelle === 'app.js' ? 'r1m' : 'r2m');
+  var d = document.getElementById(quelle === 'app.js' ? 'r1d' : 'r2d');
+  /* On AFFICHE l'adresse réellement appelée : « depuis kazendra.com » écrit en
+     dur serait faux dès que la page est ouverte ailleurs (le hub, un poste
+     local) — et un diagnostic qui nomme une mauvaise source fait chercher au
+     mauvais endroit.
+     On résout l'adresse avec un élément <a>, et NON avec `new URL()` : ce
+     constructeur n'existe pas dans Internet Explorer 11, précisément le
+     navigateur pour lequel cette page est écrite. */
+  var absolu = url;
+  try {
+    var resolveur = document.createElement('a');
+    resolveur.href = url;
+    absolu = resolveur.href;
+  } catch (e) { absolu = url; }
+  var ligneUrl = document.getElementById('rurl');
+  if (ligneUrl) {
+    ligneUrl.innerHTML = (ligneUrl.innerHTML ? ligneUrl.innerHTML + '<br>' : '') + 'Adresse mesurée : ' + absolu.replace(/</g, '&lt;');
+  }
+  if (typeof XMLHttpRequest === 'undefined') { m.innerHTML = '&#10060;'; d.innerHTML = 'pas de XMLHttpRequest'; cb(false, 0, 0); return; }
+  var x = new XMLHttpRequest();
+  var t0 = (new Date()).getTime();
+  var fini = false;
+  function terminer(ok, taille, texte) {
+    if (fini) { return; } fini = true;
+    var s = Math.round(((new Date()).getTime() - t0) / 100) / 10;
+    m.innerHTML = ok ? '&#9989;' : '&#10060;';
+    d.innerHTML = (ok ? 'reçu : ' + Math.round(taille / 1024) + ' Ko en ' + s + ' s' : texte);
+    cb(ok, taille, s);
+  }
+  x.open('GET', url, true);
+  x.onreadystatechange = function () {
+    if (x.readyState === 4) {
+      if (x.status >= 200 && x.status < 300) {
+        var taille = 0;
+        try { taille = (x.responseText || '').length; } catch (e) { taille = 0; }
+        terminer(true, taille, '');
+      } else {
+        terminer(false, 0, 'erreur HTTP ' + x.status + (x.status === 0 ? ' — téléchargement bloqué (pare-feu, antivirus ou hors ligne)' : ''));
+      }
+    }
+  };
+  x.onerror = function () { terminer(false, 0, 'téléchargement impossible — bloqué par le réseau, un antivirus ou un bloqueur'); };
+  x.ontimeout = function () { terminer(false, 0, 'délai dépassé (20 s)'); };
+  x.timeout = 20000;
+  try { x.send(null); } catch (e) { terminer(false, 0, 'envoi refusé : ' + e.message); }
+}
+
+function conclure() {
+  /* La sonde des modules ES est lue MAINTENANT — à ce stade le `<script
+     type="module">` inséré au début a eu tout le temps de s'exécuter, dans les
+     navigateurs qui le comprennent. C'est le contrôle le plus important : c'est
+     exactement ainsi que le site charge son programme. */
+  var modulesOk = (window.__kazendra_module === true);
+  if (!modulesOk) { PROBLEMES.unshift('Modules JavaScript (le site charge son programme ainsi)'); }
+  (function () {
+    var t = document.getElementById('capacites');
+    var tr = t.insertRow(0);
+    tr.innerHTML = '<td class="marque">' + (modulesOk ? '&#9989;' : '&#10060;') + '</td>'
+      + '<td class="quoi">Modules JavaScript (le site charge son programme ainsi) <span class="crit">NÉCESSAIRE</span></td>'
+      + '<td class="detail">' + (modulesOk ? '' : 'non supporté par ce navigateur') + '</td>';
+  })();
+
+  var v = document.getElementById('verdict');
+  var conseil = document.getElementById('conseil');
+  if (PROBLEMES.length === 0 && window.__prixOk) {
+    v.className = 'verdict ok';
+    v.innerHTML = 'Ce navigateur peut afficher Kazendra. Si le site ne s\'affiche toujours pas, vide son cache (Ctrl + Maj + Suppr) puis recharge avec Ctrl + F5.';
+    conseil.innerHTML = 'Le site a besoin d\'un navigateur de <b>2020 ou plus récent</b> : c\'est son unique exigence. Si les deux téléchargements ci-dessus sont au vert et que la page reste vide, c\'est le cache du navigateur — ou l\'application elle-même, et non ta machine.';
+  } else if (PROBLEMES.length === 0) {
+    v.className = 'verdict att';
+    v.innerHTML = 'Le navigateur sait tout faire, mais les données n\'arrivent pas.';
+    conseil.innerHTML = 'Le logiciel du navigateur n\'est pas en cause : c\'est le <b>téléchargement</b> qui échoue (ligne rouge ci-dessus). Regarde un pare-feu, un antivirus, un bloqueur de publicité, ou un réseau d\'entreprise.';
+  } else {
+    v.className = 'verdict ko';
+    v.innerHTML = 'Ce navigateur est trop ancien : il ne peut pas afficher Kazendra.';
+    conseil.innerHTML = 'Ce qui manque, exactement : <b>' + PROBLEMES.join('</b>, <b>') + '</b>.<br><br>'
+      + 'Ce n\'est pas ta machine qui est en cause, c\'est l\'âge du logiciel. Un navigateur à jour coûte zéro et se télécharge en deux minutes :'
+      + '<br>• <b>Google Chrome</b> — google.com/chrome<br>• <b>Microsoft Edge</b> — microsoft.com/edge<br>• <b>Mozilla Firefox</b> — mozilla.org<br><br>'
+      + 'Le site a été écrit avec des outils de 2020 et plus récents. Il fonctionne sur tout téléphone de ces cinq dernières années.';
+  }
+}
+
+/* app.js sert de témoin de bonne santé du réseau : s'il arrive, le reste arrive. */
+mesurer('app.js', 'app.js', function (ok1) {
+  mesurer('offres.json', 'offres.json', function (ok2) {
+    window.__prixOk = (ok1 && ok2);
+    conclure();
+  });
+});
+</script>
+</body>
+</html>
