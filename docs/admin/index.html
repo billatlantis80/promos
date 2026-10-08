@@ -227,6 +227,43 @@ details > table tr:first-child th{padding-top:2px}
 .note textarea:focus{outline:2px solid var(--accent);outline-offset:-1px;background:var(--carte3)}
 .note textarea.rempli{border-color:rgba(235,145,45,.55)}
 .etat-note{font-size:10.5px;color:var(--tres-doux);font-style:italic}
+
+/* ---------- LE TABLEAU DE PAYS, AVEC DRAPEAUX ----------
+   B (08/10/2026) : « Pour les pays je ne souhaite pas un menu déroulant, je
+   souhaite un tableau comme il y a dans les paramètres de l'appli, avec les
+   drapeaux. Pour l'onglet marché et affiliation. »
+
+   Un menu déroulant cachait onze pays sur douze derrière un clic, et ne disait
+   rien de ce qu'ils contenaient. Ici, tous sont visibles d'un coup, chacun avec
+   son drapeau et son compte. Le DESSIN des drapeaux vient du module partagé
+   `drapeaux.js` — le même que l'application, jamais des emoji (sous Windows, un
+   emoji drapeau s'affiche « FR » dans un carré). */
+.pays-liste{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+@media (min-width:780px){.pays-liste.pays-2col{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.pays-item{
+  display:flex;align-items:center;gap:9px;padding:10px 11px;cursor:pointer;text-align:left;
+  background:var(--carte2);color:var(--texte);border:1px solid var(--bord);
+  border-radius:11px;font:inherit;font-size:13.5px
+}
+.pays-item:hover{border-color:var(--bord-clair)}
+.pays-item.on{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset;font-weight:600}
+.pays-item b{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pays-item .n{flex:0 0 auto;font-size:11.5px;color:var(--doux)}
+.drap{flex:0 0 auto;display:block;line-height:0}
+.drap svg{display:block;width:27px;height:18px;border-radius:3px;box-shadow:0 0 0 1px rgba(0,0,0,.35)}
+
+/* ---------- Les colonnes INFORMATIVES, à l'horizontale ----------
+   B (08/10/2026) : « Au niveau de l'affichage des adresses administratives des
+   entreprises, tu les as mis en vertical, j'ai besoin qu'elle s'affiche en
+   horizontal, après la colonne des adresses Internet des promotions. Toutes les
+   informations de la même entreprise, sur une seule ligne horizontal. »
+
+   Chaque information a donc SA colonne, après l'adresse des promotions. Le
+   liseré de gauche sépare visiblement le travail de la documentation : à droite
+   du trait, rien ne sert à décider (règle de B). */
+td.info,th.info{font-size:11.5px;color:var(--doux);max-width:190px}
+th.info{color:var(--tres-doux)}
+td.info.sep,th.info.sep{border-left:2px solid var(--bord-clair)}
 </style>
 </head>
 <body>
@@ -380,10 +417,13 @@ details > table tr:first-child th{padding-top:2px}
              pays que je veux consulter. » Les pays viennent de l'application ET
              de la base : un pays sans fiche s'annonce « à constituer » au lieu
              de s'ouvrir sur une page vide qui aurait l'air cassée. -->
-        <div id="barrePays">
-          <label for="paysMarche">Pays consulté</label>
-          <select id="paysMarche"></select>
-          <span class="resume" id="resumePays"></span>
+        <div class="rub">
+          <h2>Pays consulté</h2>
+          <p class="aide">Chaque pays porte son drapeau et ce qu'il contient. Tous sont
+            visibles d'un coup — un menu déroulant en cachait onze sur douze derrière
+            un clic, et ne disait rien de leur contenu.</p>
+          <div class="pays-liste pays-2col" id="paysMarche" role="radiogroup" aria-label="Pays consulté"></div>
+          <p class="aide" id="resumePays" style="margin:11px 0 0"></p>
         </div>
 
         <div class="rub">
@@ -449,10 +489,12 @@ details > table tr:first-child th{padding-top:2px}
              permettra d'avoir une vue claire de quelle affiliation j'ai ou pas. […]
              s'il y a des affiliations, ils apparaissent en haut, s'il n'y en a pas
              ils apparaissent plus bas. » -->
-        <div id="barrePays">
-          <label for="paysAffiliation">Pays consulté</label>
-          <select id="paysAffiliation"></select>
-          <span class="resume" id="resumeAffiliation"></span>
+        <div class="rub">
+          <h2>Pays consulté</h2>
+          <p class="aide">Le même tableau que le Marché Euro : tous les pays, avec leur
+            drapeau. Le nombre annoncé est celui des programmes <b>trouvés</b> dans ce pays.</p>
+          <div class="pays-liste pays-2col" id="paysAffiliation" role="radiogroup" aria-label="Pays consulté en affiliation"></div>
+          <p class="aide" id="resumeAffiliation" style="margin:11px 0 0"></p>
         </div>
 
         <div class="rub">
@@ -538,6 +580,7 @@ details > table tr:first-child th{padding-top:2px}
 import { liaisonActeurs, portesEntree, paysDuMarche, marcheDuPays,
   formesDe, memeFormes } from '../acteurs.js';
 import { paysAffiliation, affiliationsDuPays, preuvesAffiliation } from '../affiliations.js';
+import { svgDrapeau, NOMS_PAYS } from '../drapeaux.js';
 import { lireActions } from '../trafic.js';
 
 const CLE_ADMIN = 'kazendra.admin';
@@ -1304,19 +1347,38 @@ function actionsDe(fa, uniques) {
 }
 
 /** La FICHE d'un acteur — les informations de siège, INFORMATIVES.
+ *
  *  Règle de B (08/10/2026) : elles doivent apparaître dans la base, donc ici et
- *  dans l'export ; elles ne doivent jamais servir au programme. On les affiche
- *  donc pour ce qu'elles sont : de la documentation, sous le nom de l'acteur,
- *  et seulement quand elles existent vraiment. Rien de « n/d », rien de vide. */
+ *  dans l'export ; elles ne doivent jamais servir au programme. On les présente
+ *  donc pour ce qu'elles sont — de la documentation — et rien de plus : ni
+ *  « n/d », ni case vide décorative.
+ *
+ *  ELLES SONT RENDUES EN PAIRES, PAS EN BLOC. B (08/10/2026) : « tu les as mis
+ *  en vertical, j'ai besoin qu'elle s'affiche en horizontal, après la colonne
+ *  des adresses Internet des promotions. Toutes les informations de la même
+ *  entreprise, sur une seule ligne horizontal. » Une fonction qui rend des
+ *  paires laisse l'appelant les étaler en colonnes ; une fonction qui rend du
+ *  HTML finit par imposer sa mise en page. */
+const ORDRE_INFORMATIF = ['Adresse', 'Téléphone', 'E-mail', 'CA indicatif',
+  'Actionnariat', 'Positionnement', 'Segment', 'Distribution', 'Remarques'];
+
 function ficheInfo(a) {
-  const lignes = [
+  return [
     ['Adresse', a.adresse], ['Téléphone', a.telephone], ['E-mail', a.email],
     ['CA indicatif', a.ca], ['Actionnariat', a.actionnariat],
     ['Positionnement', a.positionnement], ['Segment', a.segment],
     ['Distribution', a.distribution], ['Remarques', a.remarques],
   ].filter(([, v]) => v && String(v).trim() && String(v).trim().toLowerCase() !== 'n/d');
-  if (!lignes.length) return '';
-  return `<dl class="fiche-info">${lignes.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join('')}</dl>`;
+}
+
+/** Les informations de siège, ÉTALÉES EN COLONNES sur la même ligne que le
+ *  reste. La première porte un liseré : à droite de ce trait, rien ne sert à
+ *  décider — c'est la frontière de la règle de B, rendue visible. */
+function cellulesInfo(a) {
+  const parLibelle = new Map(ficheInfo(a));
+  return ORDRE_INFORMATIF.map((libelle, i) => `<td class="info${i === 0 ? ' sep' : ''}">${
+    parLibelle.has(libelle) ? esc(parLibelle.get(libelle)) : '<span class="vide">—</span>'
+  }</td>`).join('');
 }
 
 /* ---------- Les portes d'entrée -------------------------------------------
@@ -1370,6 +1432,11 @@ function dessinerPortes() {
 /** Le nom lisible d'un pays. « BE » se lit mal dans une barre de choix ;
  *  « Belgique » se lit tout seul, dans la langue du lecteur. */
 const nomDuPays = (code) => {
+  // La table PARTAGÉE d'abord : c'est celle qui sert aussi à l'application, donc
+  // le même pays porte le même nom des deux côtés. Le calcul de repli couvre les
+  // pays qui n'y sont pas encore (on en ajoutera).
+  const connu = NOMS_PAYS[String(code || '').toUpperCase()];
+  if (connu) return connu;
   try { return new Intl.DisplayNames(['fr'], { type: 'region' }).of(code) || code; }
   catch { return code; }
 };
@@ -1388,21 +1455,22 @@ const nomDuPays = (code) => {
  * qu'on ne peut essayer que dans un navigateur ne se vérifie pas.
  */
 function dessinerBarrePays() {
-  const sel = document.getElementById('paysMarche');
+  const liste = document.getElementById('paysMarche');
   const resume = document.getElementById('resumePays');
-  if (!sel) return;
-  if (!catalogue || !marche) { sel.innerHTML = ''; if (resume) resume.textContent = ''; return; }
+  if (!liste) return;
+  if (!catalogue || !marche) { liste.innerHTML = ''; if (resume) resume.textContent = ''; return; }
   const pays = paysDuMarche(catalogue, marche);
-  if (!pays.length) { sel.innerHTML = '<option value="">Aucun pays</option>'; if (resume) resume.textContent = ''; return; }
+  if (!pays.length) { liste.innerHTML = '<p class="vide">Aucun pays.</p>'; if (resume) resume.textContent = ''; return; }
   // Le pays choisi a pu disparaître (base modifiée) : on retombe sur le premier.
   if (!pays.some((x) => x.pays === paysChoisi)) paysChoisi = pays[0].pays;
-  sel.innerHTML = pays.map((x) => `<option value="${esc(x.pays)}"${x.pays === paysChoisi ? ' selected' : ''}>`
-    + `${esc(nomDuPays(x.pays))} (${esc(x.pays)}) — ${nf.format(x.acteurs)} acteur(s), ${nf.format(x.flux)} branché(s)`
-    + `${x.base === 'à constituer' ? ' · base à constituer' : ''}</option>`).join('');
+  liste.innerHTML = pays.map((x) => `<button type="button" class="pays-item${x.pays === paysChoisi ? ' on' : ''}"
+      data-pays="${esc(x.pays)}" role="radio" aria-checked="${x.pays === paysChoisi}">
+      ${svgDrapeau(x.pays)}<b>${esc(nomDuPays(x.pays))}</b>
+      <span class="n">${nf.format(x.acteurs)} acteur(s)</span></button>`).join('');
   const cur = pays.find((x) => x.pays === paysChoisi);
   if (resume) {
     resume.innerHTML = cur && cur.base !== 'à constituer'
-      ? `${nf.format(cur.categories)} catégorie(s) · ${nf.format(cur.veille)} en veille · ${nf.format(cur.aucun)} non suivi(s)`
+      ? `${nf.format(cur.categories)} catégorie(s) · ${nf.format(cur.flux)} branché(s) · ${nf.format(cur.veille)} en veille · ${nf.format(cur.aucun)} non suivi(s)`
       : (cur ? 'aucun acteur recensé pour ce pays' : '');
   }
 }
@@ -1504,7 +1572,8 @@ function dessinerMarche() {
       <div class="defile">
       <table>
         <tr><th>Acteur</th><th>État</th><th class="n">Articles</th>
-          <th>Informations de siège</th><th>Site</th><th>Adresse des promotions</th>
+          <th>Site</th><th>Adresse des promotions</th>
+          ${ORDRE_INFORMATIF.map((L, i) => `<th class="info${i === 0 ? ' sep' : ''}">${esc(L)}</th>`).join('')}
           <th>Note</th></tr>
         ${k.liste.map((a) => `<tr>
           <td><b>${esc(a.nom)}</b>${a.provenance === 'application' ? ' <span class="ajout" title="Ajouté par l’application : ce site est lu, il ne figurait pas dans le tableur">ajouté</span>' : ''}
@@ -1513,9 +1582,9 @@ function dessinerMarche() {
     ? `<div style="font-size:11px;color:var(--tres-doux);margin-top:3px">lu par ${[...a.liaison.flux, ...a.liaison.veille].map((s) => esc(s.nom)).join(' · ')}</div>` : ''}</td>
           <td>${etiquette(a.etat)}</td>
           <td class="n">${a.annonces ? nf.format(a.annonces) : '—'}</td>
-          <td>${ficheInfo(a) || '<span class="vide">—</span>'}</td>
           <td>${site(a)}</td>
           <td>${blocAdresse(a)}</td>
+          ${cellulesInfo(a)}
           <td>${blocNote(a.nom)}</td></tr>`).join('')}
       </table>
       </div>
@@ -1651,24 +1720,21 @@ function jsonAdresses() {
  * règle enfouie dans ce fichier ne se vérifierait qu'à l'œil.
  */
 function dessinerBarreAffiliation() {
-  const sel = document.getElementById('paysAffiliation');
+  const liste = document.getElementById('paysAffiliation');
   const resume = document.getElementById('resumeAffiliation');
-  if (!sel) return;
-  if (!marche || !marche.acteurs) {
-    sel.innerHTML = '<option value="">—</option>';
-    if (resume) resume.textContent = '';
-    return;
-  }
+  if (!liste) return;
+  if (!marche || !marche.acteurs) { liste.innerHTML = ''; if (resume) resume.textContent = ''; return; }
   const pays = paysAffiliation(marche, affMesures);
-  if (!pays.length) { sel.innerHTML = '<option value="">Aucun pays</option>'; if (resume) resume.textContent = ''; return; }
+  if (!pays.length) { liste.innerHTML = '<p class="vide">Aucun pays.</p>'; return; }
   if (!pays.some((x) => x.pays === paysChoisiAff)) paysChoisiAff = pays[0].pays;
-  sel.innerHTML = pays.map((x) => `<option value="${esc(x.pays)}"${x.pays === paysChoisiAff ? ' selected' : ''}>`
-    + `${esc(nomDuPays(x.pays))} (${esc(x.pays)}) — ${nf.format(x.programme)} programme(s) trouvé(s)`
-    + ` sur ${nf.format(x.acteurs)} acteur(s)</option>`).join('');
+  liste.innerHTML = pays.map((x) => `<button type="button" class="pays-item${x.pays === paysChoisiAff ? ' on' : ''}"
+      data-pays="${esc(x.pays)}" role="radio" aria-checked="${x.pays === paysChoisiAff}">
+      ${svgDrapeau(x.pays)}<b>${esc(nomDuPays(x.pays))}</b>
+      <span class="n">${nf.format(x.programme)} / ${nf.format(x.acteurs)}</span></button>`).join('');
   const cur = pays.find((x) => x.pays === paysChoisiAff);
   if (resume) {
     resume.innerHTML = cur
-      ? `${nf.format(cur.nonMesure)} à vérifier · ${nf.format(cur.aucunSigne)} sans signe${cur.reseaux.length ? ` · réseaux : ${cur.reseaux.map((r) => esc(r.nom)).join(', ')}` : ''}`
+      ? `${nf.format(cur.programme)} programme(s) trouvé(s) · ${nf.format(cur.nonMesure)} à vérifier à la main · ${nf.format(cur.aucunSigne)} sans signe${cur.reseaux.length ? ` · réseaux : ${cur.reseaux.map((r) => esc(r.nom)).join(', ')}` : ''}`
       : '';
   }
 }
@@ -1810,8 +1876,13 @@ function brancher() {
   // tapée rendait la saisie poussive, et une frappe perdue fait douter du champ.
   const choix = document.getElementById('paysMarche');
   if (choix) {
-    choix.addEventListener('change', () => {
-      paysChoisi = choix.value;
+    // Délégation : les tuiles sont REDESSINÉES à chaque fois (elles portent les
+    // compteurs), donc un écouteur par tuile disparaîtrait avec elle — le pays
+    // ne changerait plus et rien ne le dirait.
+    choix.addEventListener('click', (e) => {
+      const tuile = e.target.closest('button[data-pays]');
+      if (!tuile) return;
+      paysChoisi = tuile.dataset.pays;
       try { localStorage.setItem('kazendra.pays', paysChoisi); } catch { /* privé */ }
       filtreMarche = '';
       const c = document.getElementById('rechercheMarche');
@@ -1846,8 +1917,10 @@ function brancher() {
   // L'ONGLET AFFILIATION : le pays, la recherche, l'export.
   const choixAff = document.getElementById('paysAffiliation');
   if (choixAff) {
-    choixAff.addEventListener('change', () => {
-      paysChoisiAff = choixAff.value;
+    choixAff.addEventListener('click', (e) => {
+      const tuile = e.target.closest('button[data-pays]');
+      if (!tuile) return;
+      paysChoisiAff = tuile.dataset.pays;
       try { localStorage.setItem('kazendra.paysAffiliation', paysChoisiAff); } catch { /* privé */ }
       filtreAffiliation = '';
       const c = document.getElementById('rechercheAffiliation');
