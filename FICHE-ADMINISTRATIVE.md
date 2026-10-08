@@ -39,11 +39,11 @@ surlignés en jaune. **Une seule saisie**, recopiée aux deux endroits.
 
 | Champ | Valeur |
 |---|---|
-| Nom ou raison sociale |  |
-| Forme juridique (personne physique, SRL, SNC, ASBL…) |  |
-| Adresse du siège (rue, code postal, commune, pays) |  |
+| Nom et prénom |  |
+| Forme juridique | ✅ **personne physique** — tranché le 08/10/2026 |
+| Adresse géographique (rue, code postal, commune, pays) |  |
 | Numéro d'entreprise (BCE) — format `0xxx.xxx.xxx` |  |
-| Numéro de TVA (ou « non assujetti » si franchise) |  |
+| Régime de TVA | ✅ **non assujetti** — franchise de la petite entreprise, tranché le 08/10/2026 |
 | Adresse e-mail de contact **professionnelle** |  |
 | Téléphone |  |
 | Responsable de la publication (nom) |  |
@@ -55,26 +55,39 @@ identifiable **et joignable**. Un formulaire de contact ne suffit pas.
 
 ---
 
-## C. DÉCISION N° 1 — l'activité est-elle commerciale ?
+## C. ✅ DÉCISION N° 1 — TRANCHÉE le 08/10/2026
 
-C'est **la** question qui change le reste. Elle a deux issues, et une seule vous appartient :
+**Réponse de B** : « Pour l'instant ça va être un régime fiscal de petite entreprise en personne
+physique. »
 
-**Si le site doit un jour percevoir des commissions d'affiliation** (Amazon Partenaires, Awin,
-TradeTracker… — voir § 4 du plan), l'activité est commerciale en Belgique. Il faut alors :
+**Ce qui a été appliqué dans les pages, tout de suite :**
 
-1. **S'inscrire à la BCE** (Banque-Carrefour des Entreprises) via un guichet d'entreprises →
-   obtention d'un **numéro d'entreprise** ;
-2. **S'identifier à la TVA** — avec, si le chiffre d'affaires reste sous les seuils, le régime de
-   **franchise de la petite entreprise** (dispense de TVA, mention « non assujetti » sur les
-   factures) ;
-3. Mentionner le numéro d'entreprise sur le site (c'est le champ du § B).
+- **Forme juridique = personne physique** exerçant une activité indépendante. Les mentions légales ne
+  parlent plus de « raison sociale » ni de société : un nom et un prénom.
+- **Régime de TVA = franchise de la petite entreprise** → **non assujetti**. C'est écrit noir sur blanc
+  dans les mentions légales (§ 1), avec la conséquence : le site est gratuit, donc aucune opération
+  soumise à la TVA n'y est réalisée envers ses visiteurs.
 
-**Si le site reste entièrement gratuit et sans aucune rémunération**, l'obligation d'immatriculation
-ne se pose pas de la même façon — mais une **activité commerciale non déclarée** reste un risque
-(redressement, amendes). Je ne peux pas trancher à votre place : c'est une décision fiscale.
+**Ce que ce choix ne dispense PAS de faire :**
 
-**Ce que je peux faire, moi** : préparer les mentions dans la forme « personne physique » **ou** dans
-la forme « société », et basculer d'une forme à l'autre dès que vous avez tranché.
+**Le numéro d'entreprise (BCE) reste obligatoire.** La franchise de la petite entreprise dispense de la
+**TVA**, pas de l'**immatriculation** : une activité commerciale exercée en personne physique doit être
+inscrite à la BCE pour obtenir son numéro. Tant qu'il manque, les mentions légales restent incomplètes —
+c'est le dernier champ bloquant de la page.
+
+**Ce qu'il reste à faire de votre côté, dans cet ordre :**
+
+1. **S'inscrire à la BCE** via un guichet d'entreprises (la démarche se fait en ligne pour la plupart)
+   → vous recevez un **numéro d'entreprise**.
+2. Reporter dans le tableau du § B : ce numéro, **votre adresse**, un **e-mail professionnel** et un
+   **téléphone**.
+3. Me le dire : je retire le bandeau « page non définitive » et les surlignages dans la même passe.
+
+⚠️ **Un point à regarder en face.** La mention légale exige une **adresse géographique**. Pour une
+personne physique sans local d'exploitation, c'est en pratique **l'adresse du domicile** qui se retrouve
+publiée. Si cela vous gêne, il existe des solutions (domiciliation de l'activité, adresse de
+contact) — elles ont un coût et ne dispensent pas toujours de la mention. C'est votre décision ; je ne
+l'anticipe pas, et je n'écrirai aucune adresse avant que vous me la donniez.
 
 ---
 

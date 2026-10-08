@@ -147,6 +147,34 @@ test('les conditions d’utilisation disent que le site n’est PAS le vendeur',
   assert.match(texte, /droit belge/i, 'droit applicable');
 });
 
+/* ------------------------------- la forme juridique, une fois tranchée (08/10) */
+
+test('la forme juridique TRANCHÉE est écrite : personne physique, non assujetti à la TVA', () => {
+  // Décision de B, 08/10/2026 : « régime fiscal de petite entreprise en personne
+  // physique ». Elle doit être DANS la page, pas seulement dans la fiche : c'est
+  // la page que lisent le public et l'administration.
+  const texte = texteNu(lire('mentions-legales.html'));
+  assert.match(texte, /personne physique/i,
+    'la forme « personne physique » doit être écrite, pas laissée en champ à compléter');
+  assert.match(texte, /non assujetti/i, 'le régime « non assujetti » doit être écrit');
+  assert.match(texte, /franchise de la petite entreprise/i,
+    'le régime de franchise doit être nommé, pas supposé connu du lecteur');
+  // L'ancienne formulation, qui proposait encore plusieurs formes, a disparu.
+  assert.doesNotMatch(texte, /raison sociale/i,
+    'les mentions ne doivent plus parler de « raison sociale » : c’est une personne physique');
+});
+
+test('le numéro BCE reste EXIGÉ, malgré la franchise de TVA', () => {
+  // Piège réel, et c'est le genre qu'on ne voit pas : la franchise de la petite
+  // entreprise dispense de la TVA, PAS de l'immatriculation. Une page qui ne
+  // demanderait plus le numéro d'entreprise laisserait croire l'inverse.
+  const texte = texteNu(lire('mentions-legales.html'));
+  assert.match(texte, /Numéro d.entreprise \(BCE\)/i, 'le numéro d’entreprise reste exigé');
+  const fiche = readFileSync(join(ICI, '..', 'FICHE-ADMINISTRATIVE.md'), 'utf8');
+  assert.match(fiche, /BCE[\s\S]{0,500}(obligatoire|pas de l.immatriculation)/i,
+    'la fiche doit dire que la franchise ne dispense PAS de l’immatriculation');
+});
+
 /* ================================ 4. RIEN N'EST INVENTÉ (la règle du projet) */
 
 test('les champs qui manquent sont SIGNALÉS comme tels', () => {

@@ -317,8 +317,11 @@ dépend d'un `.css` coupé en chemin ne remplit pas sa fonction. Les liens vers 
 - **Les traductions néerlandaise et anglaise** des pages restent à produire : une décision de B (voir
   `FICHE-ADMINISTRATIVE.md`, § D). Les intitulés restent en français, car traduire un intitulé vers une
   page qui n'existe pas dans cette langue serait un mensonge.
-- **L'activité est-elle commerciale ?** Décision fiscale de B (voir `FICHE-ADMINISTRATIVE.md`, § C) :
-  elle détermine s'il faut une inscription BCE et un numéro de TVA.
+- ✅ **L'activité est tranchée (08/10/2026, B)** : « régime fiscal de petite entreprise en personne
+  physique ». Les mentions légales sont donc écrites dans cette forme — nom et prénom, pas de raison
+  sociale — et la TVA y est déclarée **non assujettie** (franchise de la petite entreprise).
+  **Le numéro d'entreprise (BCE) reste obligatoire** et reste à obtenir : la franchise dispense de la
+  TVA, pas de l'immatriculation. C'est le dernier champ bloquant.
 
 ⚠️ **Tant que l'identité n'est pas renseignée, ces pages sont des MODÈLES.** Les publier ne satisfait pas
 les obligations d'information — et le site le dit lui-même en tête de page, plutôt que de laisser
@@ -329,10 +332,12 @@ croire le contraire.
 ## Ordre d'exécution proposé
 
 1. **Redirections OVH** (`/ 3`) — gratuit, 10 minutes de votre part, aucun risque.
-2. **Renseigner l'identité de l'éditeur** (`FICHE-ADMINISTRATIVE.md`, § B) — c'est ce qui transforme les
-   quatre pages administratives de modèles en pages valables. Rien d'autre ne bloque cette étape.
-3. **Trancher** : activité commerciale ou non (`FICHE-ADMINISTRATIVE.md`, § C) → inscription BCE + TVA ;
-   et les langues des pages légales (§ D).
+2. **S'inscrire à la BCE** → obtenir le **numéro d'entreprise**, puis renseigner l'identité
+   (`FICHE-ADMINISTRATIVE.md`, § B et § C). C'est ce qui transforme les quatre pages administratives de
+   modèles en pages valables. Le régime est déjà tranché : **personne physique**, franchise de la petite
+   entreprise, donc **non assujetti à la TVA**.
+3. **Trancher les langues** des pages légales (`FICHE-ADMINISTRATIVE.md`, § D) — seule décision encore
+   ouverte.
 4. **Recherche d'antériorité « Kazendra »** puis **dépôt de marque** (`/ 2`) — avant toute promotion.
 5. **Corrections d'affichage** (`/ 5`) — ✅ **faites toutes les deux** le 08/10/2026 (devises, favoris,
    et l'ordre chronologique des bonnes promos).
