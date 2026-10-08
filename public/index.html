@@ -125,18 +125,24 @@ h1, h2, h3, h4, .marque b, .prix { font-family: var(--police-titre); }
   padding: 10px 12px 0;
 }
 .tete-in { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
-.marque { display: flex; align-items: center; gap: 8px; font-size: 17px; letter-spacing: .2px; }
+.marque { display: flex; align-items: center; gap: 10px; font-size: 19px; letter-spacing: .2px; }
 .pastille { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 12px var(--accent); }
 /* Le logo de marque : un carré arrondi bleu et le K blanc. Taille fixe pour que
    l'en-tête ne bouge pas d'un pixel quand la police système change. */
 /* L'icone EST deja un carre arrondi : pas de border-radius, il rognerait son
-   propre galbe. 26 px et non 22 : a 22 px le liseré blanc et les pistes se
-   noient (mesure faite sur les rendus). */
-.logo { width: 26px; height: 26px; display: block; flex: 0 0 auto; }
+   propre galbe.
+   32 px sur téléphone, ET NON 22 : à 22 px le liseré blanc et les pistes se
+   noient (mesure faite sur les rendus). B a demandé le 08/10/2026 une marque
+   « plus grande, plus visible » — 26 px ne suffisait plus, et il a étendu la
+   demande au téléphone le même jour (« il y a de la place »). Sur PC, la couche
+   « AFFICHAGE PC » le porte à 42 px : c'est LÀ que la place manquait le moins.
+   Taille fixe en pixels : l'en-tête ne bouge pas quand la police système
+   change de métrique. */
+.logo { width: 32px; height: 32px; display: block; flex: 0 0 auto; }
 
 /* Le mot et l'accroche, empiles : l'accroche est SOUS le nom, comme sur le
    logotype fourni. */
-.marque-txt { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.marque-txt { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 /* Le mot KAZENDRA portait un dégradé bleu -> orange, de gauche à droite
    (« Le dégradé est pour le mot Kazendra »). B a demandé de l'ENLEVER le
    08/10/2026 : « Tu peux enlever le dégradé ». Le mot est désormais en APLAT,
@@ -149,8 +155,8 @@ h1, h2, h3, h4, .marque b, .prix { font-family: var(--police-titre); }
   color: inherit;
 }
 .accroche {
-  font-size: 9.5px; font-weight: 600; letter-spacing: .55px;
-  text-transform: uppercase; opacity: .72; white-space: nowrap;
+  font-size: 10.5px; font-weight: 600; letter-spacing: .6px;
+  text-transform: uppercase; opacity: .8; white-space: nowrap;
 }
 .comptes { color: var(--doux); font-size: 12px; text-align: right; }
 .barre { display: flex; gap: 8px; margin: 10px 0; align-items: stretch; }
@@ -795,30 +801,50 @@ html[data-theme="contraste"] {
 
   /* ---------- Le cadre : en-tête, contenu, pied sur les mêmes bords ---------- */
   .tete { padding: 12px var(--gout) 0; }
-  main { padding: 0 var(--gout); }
-  .bandeau { margin: 14px 0; }          /* sa marge de 12 px ferait doublon */
+  /* Espace au-dessus de la PREMIÈRE rangée d'annonces. Demande de B,
+     08/10/2026 : « il n'y a pas d'espace entre la première ligne des objets et
+     l'encadrement bleu. Il faut y mettre un espace blanc classique, le même que
+     celui entre deux annonces plus bas. » Il avait raison : `main` n'avait
+     aucune marge haute, donc la première rangée venait buter CONTRE le bord du
+     bandeau bleu, alors que les rangées suivantes respirent de 16 px. On prend
+     donc la mesure sur l'écart de la grille elle-même (16 px en Tableau et en
+     Liste) : le blanc du haut est le même que celui du bas, l'œil ne voit pas
+     deux espacements différents dans la même page. */
+  main { padding: 16px var(--gout) 0; }
+  /* Le bandeau d'information, lui, se pose DANS cet espace : sa marge haute
+     passerait par-dessus et donnerait 30 px au lieu de 16 des que le bandeau
+     s'affiche (règle d'annonce, filtre vide, données indisponibles). */
+  .bandeau { margin: 0 0 14px; }
   .pied { margin: 36px var(--gout) 0; padding-top: 20px; font-size: 12.5px; }
   .pied .liens-legaux { gap: 6px 20px; }
 
   /* ---------- La marque : plus grande et plus visible ----------
      Demande de B, 08/10/2026 : « le logo et la marque doivent apparaître plus
-     grand, plus visible ». Sur téléphone, ces 26 px de logo sont justes : à
-     390 px de large, l'en-tête doit d'abord laisser la place aux offres. Sur PC,
-     la marque flottait dans un bandeau de 1 280 px — le bloc le plus important
-     de la page était le plus petit.
+     grand, plus visible ». Sur PC, la marque flottait dans un bandeau de
+     1 280 px — le bloc le plus important de la page était le plus petit, alors
+     que le téléphone avait la même taille depuis le début. B a ensuite étendu
+     la demande au téléphone (« il y a de la place ») : les tailles de base de la
+     feuille sont donc montées AUSSI (26 → 32 px de logo, 17 → 19 px de mot),
+     et c'est ce que ce palier agrandit encore.
 
      Les trois pièces grandissent ENSEMBLE, et dans le même rapport, sinon la
-     marque se casse : le logo 26 → 42 px (×1,6), le mot 17 → 25 px (×1,45),
-     l'accroche 9,5 → 12 px (×1,26). L'accroche grandit moins : à 25 px de mot,
-     une accroche de 15 px tirerait à elle seule tout le bloc vers le haut.
-     L'écart interne suit (10 → 13 px) et l'accroche s'écarte du mot de 2 px, au
-     lieu d'1 : à cette taille, 1 px se lit comme un défaut d'alignement.
+     marque se casse : de 32 à 42 px de logo (×1,31), de 19 à 25 px de mot
+     (×1,32), de 10,5 à 12 px d'accroche (×1,14). L'accroche grandit MOINS, et
+     c'est voulu : à 25 px de mot, une accroche deux fois plus grosse tirerait à
+     elle seule tout le bloc vers le haut. L'écart interne suit (10 → 13 px).
 
      Conséquence PRISE EN COMPTE : la ligne de marque passe de 34 à ~48 px, et
      l'en-tête collant avec elle. C'est le prix de la demande, et il est mesuré
-     (bin/mesurer-pc.py) : ~209 px au total, contre 226 px AVANT toute cette
-     refonte d'affichage PC. Le bandeau reste donc plus court qu'à l'origine,
-     tout en portant une marque nettement plus grande. */
+     au navigateur à chaque étape (bin/mesurer-pc.py) : 199 px au total, contre
+     226 px AVANT toute cette refonte, sur PC. Le bandeau reste donc plus court
+     qu'à l'origine, tout en portant une marque plus grande partout.
+
+     Défaut PAYÉ en agrandissant : la marque et les compteurs de droite étaient
+     alignés sur la ligne de base (comme sur téléphone). Avec un mot de 25 px
+     face à trois lignes de chiffres, cet alignement faisait DESCENDRE les trois
+     lignes sous la marque : la ligne d'en-tête montait à 86 px au lieu de 56,
+     et le bandeau à 229 px au lieu de 199. D'où l'alignement au centre, plus
+     bas dans ce palier. */
   .marque { font-size: 25px; gap: 13px; }
   .logo { width: 42px; height: 42px; }
   .marque-txt { gap: 2px; }
@@ -1066,12 +1092,13 @@ html[data-theme="contraste"] {
          pas redessine a l'oeil. L'icone de l'en-tete et favicon.svg sont le
          MEME dessin : un test le verifie. -->
     <div class="marque">
-      <!-- width/height EXPLICITES : app.css fait le vrai travail (26 px dans
-           l'en-tête), mais si la feuille de style n'arrive pas, un <svg> sans
+      <!-- width/height EXPLICITES : app.css fait le vrai travail (32 px sur
+           téléphone, 42 px sur PC dans l'en-tête), mais si la feuille de style
+           n'arrive pas, un <svg> sans
            dimensions prend TOUTE la largeur disponible — c'est ce qui donnait
            « le K est énorme » (panne du 08/10/2026). Ces deux attributs rendent
            le logo juste même sans aucune feuille de style. -->
-      <svg class="logo" viewBox="0 0 222 265" width="26" height="26" aria-hidden="true" focusable="false"><defs><linearGradient id="gpastille" x1="4.4" y1="48.3" x2="225.3" y2="96.9" gradientUnits="userSpaceOnUse"><stop offset="0.145" stop-color="#EFF7F9"/><stop offset="0.496" stop-color="#F5FBFB"/><stop offset="0.822" stop-color="#E8F2F8"/></linearGradient><linearGradient id="ghampe" x1="103.2" y1="108.0" x2="164.6" y2="238.8" gradientUnits="userSpaceOnUse"><stop offset="0.174" stop-color="#327989"/><stop offset="0.498" stop-color="#076C92"/><stop offset="0.805" stop-color="#0F83A0"/></linearGradient><linearGradient id="gjambe" x1="67.7" y1="42.6" x2="64.1" y2="213.5" gradientUnits="userSpaceOnUse"><stop offset="0.168" stop-color="#0784A4"/><stop offset="0.467" stop-color="#196285"/><stop offset="0.808" stop-color="#21526F"/></linearGradient><linearGradient id="gorange" x1="160.6" y1="35.6" x2="44.4" y2="217.2" gradientUnits="userSpaceOnUse"><stop offset="0.174" stop-color="#EE9A3D"/><stop offset="0.490" stop-color="#DF8738"/><stop offset="0.838" stop-color="#DF792E"/></linearGradient></defs><rect x="0.6" y="0.6" width="220.5" height="262.8" rx="49.0" ry="49.0" fill="url(#gpastille)"/><path d="M64.4 189.1 L63.1 189.0 L63.2 187.5 L114.2 108.0 L123.8 101.7 L129.4 96.2 L147.5 87.1 L156.9 85.1 L156.9 86.5 L123.7 127.5 L121.1 129.2 L120.2 132.0 L108.8 142.2 L108.4 143.8 L105.2 145.5 L64.4 189.1 Z" fill="url(#ghampe)"/><path d="M180.8 230.2 L168.1 229.9 L162.6 226.3 L141.4 224.8 L138.6 222.7 L135.0 224.1 L135.1 219.9 L129.3 214.1 L123.7 202.8 L119.9 199.8 L108.3 178.2 L100.3 167.9 L97.8 162.1 L98.6 159.6 L115.8 139.2 L122.6 133.8 L125.0 133.8 L130.7 139.6 L137.9 152.1 L142.6 156.1 L153.8 175.5 L157.7 177.4 L158.8 180.5 L167.6 190.6 L170.9 198.5 L174.8 201.9 L178.2 208.4 L188.3 218.2 L188.9 224.5 L185.9 225.1 L185.0 229.3 L180.8 230.2 Z" fill="url(#ghampe)"/><path d="M46.8 213.2 L45.4 213.1 L46.3 190.2 L48.2 190.2 L52.6 185.1 L67.9 157.2 L80.7 140.1 L106.1 113.6 L110.5 112.4 L46.8 213.2 Z" fill="url(#gjambe)"/><path d="M47.9 143.6 L46.1 142.2 L46.4 43.9 L48.6 42.2 L82.1 43.4 L85.8 45.2 L86.8 47.4 L86.8 96.6 L81.7 105.6 L47.9 143.6 Z" fill="url(#gjambe)"/><path d="M48.2 190.2 L46.2 190.1 L46.1 187.2 L47.1 162.0 L53.4 146.4 L66.9 129.6 L78.4 118.5 L129.2 55.2 L134.5 50.1 L140.4 46.8 L170.2 47.6 L183.9 50.4 L183.9 53.4 L177.9 63.8 L158.8 83.9 L147.5 87.1 L128.1 96.9 L123.8 101.7 L116.0 106.3 L109.4 112.4 L106.1 113.6 L89.1 130.4 L69.2 155.2 L58.1 173.9 L55.4 180.6 L48.2 190.2 Z" fill="url(#gorange)"/><path d="M75.6 223.2 L51.2 221.7 L48.7 218.8 L48.7 216.1 L51.2 209.9 L68.4 189.2 L80.1 178.2 L84.4 176.7 L86.8 179.4 L87.9 183.9 L89.7 216.4 L87.4 221.7 L75.6 223.2 Z" fill="url(#gorange)"/></svg>
+      <svg class="logo" viewBox="0 0 222 265" width="32" height="32" aria-hidden="true" focusable="false"><defs><linearGradient id="gpastille" x1="4.4" y1="48.3" x2="225.3" y2="96.9" gradientUnits="userSpaceOnUse"><stop offset="0.145" stop-color="#EFF7F9"/><stop offset="0.496" stop-color="#F5FBFB"/><stop offset="0.822" stop-color="#E8F2F8"/></linearGradient><linearGradient id="ghampe" x1="103.2" y1="108.0" x2="164.6" y2="238.8" gradientUnits="userSpaceOnUse"><stop offset="0.174" stop-color="#327989"/><stop offset="0.498" stop-color="#076C92"/><stop offset="0.805" stop-color="#0F83A0"/></linearGradient><linearGradient id="gjambe" x1="67.7" y1="42.6" x2="64.1" y2="213.5" gradientUnits="userSpaceOnUse"><stop offset="0.168" stop-color="#0784A4"/><stop offset="0.467" stop-color="#196285"/><stop offset="0.808" stop-color="#21526F"/></linearGradient><linearGradient id="gorange" x1="160.6" y1="35.6" x2="44.4" y2="217.2" gradientUnits="userSpaceOnUse"><stop offset="0.174" stop-color="#EE9A3D"/><stop offset="0.490" stop-color="#DF8738"/><stop offset="0.838" stop-color="#DF792E"/></linearGradient></defs><rect x="0.6" y="0.6" width="220.5" height="262.8" rx="49.0" ry="49.0" fill="url(#gpastille)"/><path d="M64.4 189.1 L63.1 189.0 L63.2 187.5 L114.2 108.0 L123.8 101.7 L129.4 96.2 L147.5 87.1 L156.9 85.1 L156.9 86.5 L123.7 127.5 L121.1 129.2 L120.2 132.0 L108.8 142.2 L108.4 143.8 L105.2 145.5 L64.4 189.1 Z" fill="url(#ghampe)"/><path d="M180.8 230.2 L168.1 229.9 L162.6 226.3 L141.4 224.8 L138.6 222.7 L135.0 224.1 L135.1 219.9 L129.3 214.1 L123.7 202.8 L119.9 199.8 L108.3 178.2 L100.3 167.9 L97.8 162.1 L98.6 159.6 L115.8 139.2 L122.6 133.8 L125.0 133.8 L130.7 139.6 L137.9 152.1 L142.6 156.1 L153.8 175.5 L157.7 177.4 L158.8 180.5 L167.6 190.6 L170.9 198.5 L174.8 201.9 L178.2 208.4 L188.3 218.2 L188.9 224.5 L185.9 225.1 L185.0 229.3 L180.8 230.2 Z" fill="url(#ghampe)"/><path d="M46.8 213.2 L45.4 213.1 L46.3 190.2 L48.2 190.2 L52.6 185.1 L67.9 157.2 L80.7 140.1 L106.1 113.6 L110.5 112.4 L46.8 213.2 Z" fill="url(#gjambe)"/><path d="M47.9 143.6 L46.1 142.2 L46.4 43.9 L48.6 42.2 L82.1 43.4 L85.8 45.2 L86.8 47.4 L86.8 96.6 L81.7 105.6 L47.9 143.6 Z" fill="url(#gjambe)"/><path d="M48.2 190.2 L46.2 190.1 L46.1 187.2 L47.1 162.0 L53.4 146.4 L66.9 129.6 L78.4 118.5 L129.2 55.2 L134.5 50.1 L140.4 46.8 L170.2 47.6 L183.9 50.4 L183.9 53.4 L177.9 63.8 L158.8 83.9 L147.5 87.1 L128.1 96.9 L123.8 101.7 L116.0 106.3 L109.4 112.4 L106.1 113.6 L89.1 130.4 L69.2 155.2 L58.1 173.9 L55.4 180.6 L48.2 190.2 Z" fill="url(#gorange)"/><path d="M75.6 223.2 L51.2 221.7 L48.7 218.8 L48.7 216.1 L51.2 209.9 L68.4 189.2 L80.1 178.2 L84.4 176.7 L86.8 179.4 L87.9 183.9 L89.7 216.4 L87.4 221.7 L75.6 223.2 Z" fill="url(#gorange)"/></svg>
       <!-- Le mot : TOUT le mot porte le dégradé du logo, de GAUCHE à DROITE
            (demande de B le 07/10 : « de gauche vers la droite pour le dégradé.
            Le dégradé est pour le mot Kazendra. »). -->

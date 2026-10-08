@@ -728,8 +728,20 @@ html[data-theme="contraste"] {
 
   /* ---------- Le cadre : en-tête, contenu, pied sur les mêmes bords ---------- */
   .tete { padding: 12px var(--gout) 0; }
-  main { padding: 0 var(--gout); }
-  .bandeau { margin: 14px 0; }          /* sa marge de 12 px ferait doublon */
+  /* Espace au-dessus de la PREMIÈRE rangée d'annonces. Demande de B,
+     08/10/2026 : « il n'y a pas d'espace entre la première ligne des objets et
+     l'encadrement bleu. Il faut y mettre un espace blanc classique, le même que
+     celui entre deux annonces plus bas. » Il avait raison : `main` n'avait
+     aucune marge haute, donc la première rangée venait buter CONTRE le bord du
+     bandeau bleu, alors que les rangées suivantes respirent de 16 px. On prend
+     donc la mesure sur l'écart de la grille elle-même (16 px en Tableau et en
+     Liste) : le blanc du haut est le même que celui du bas, l'œil ne voit pas
+     deux espacements différents dans la même page. */
+  main { padding: 16px var(--gout) 0; }
+  /* Le bandeau d'information, lui, se pose DANS cet espace : sa marge haute
+     passerait par-dessus et donnerait 30 px au lieu de 16 des que le bandeau
+     s'affiche (règle d'annonce, filtre vide, données indisponibles). */
+  .bandeau { margin: 0 0 14px; }
   .pied { margin: 36px var(--gout) 0; padding-top: 20px; font-size: 12.5px; }
   .pied .liens-legaux { gap: 6px 20px; }
 

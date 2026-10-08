@@ -46,9 +46,14 @@ function filet() {
 // --------------------------------------------------------------------------
 
 test('le logo SVG porte des dimensions explicites (plus de K géant)', () => {
+  // On éprouve la PRÉSENCE de dimensions en pixels, pas une valeur figée : la
+  // valeur, elle, est liée à app.css par le test suivant. Elle a déjà changé
+  // deux fois (26 px, puis 32 px quand B a demandé une marque plus grande sur
+  // téléphone) ; un test qui l'écrit en dur oblige à le rouvrir à chaque
+  // demande d'affichage, sans rien protéger de plus.
   assert.match(
     html,
-    /<svg class="logo" viewBox="0 0 222 265" width="26" height="26"/,
+    /<svg class="logo" viewBox="0 0 222 265" width="\d+" height="\d+"/,
     'sans width/height, un <svg> prend toute la largeur disponible dès que la '
     + 'feuille de style manque : c’est le « k énorme » signalé',
   );
@@ -63,7 +68,7 @@ test('les dimensions en attribut sont celles que app.css applique', () => {
   const hauteur = regle[1].match(/height:\s*(\d+)px/);
   assert.ok(largeur && hauteur, '.logo doit fixer width et height en px');
   assert.match(html, new RegExp(`<svg class="logo"[^>]*width="${largeur[1]}" height="${hauteur[1]}"`),
-    `l’attribut du SVG (26×26) doit suivre app.css (.logo = ${largeur[1]}×${hauteur[1]} px)`);
+    `l’attribut du SVG doit suivre app.css (.logo = ${largeur[1]}×${hauteur[1]} px)`);
 });
 
 // --------------------------------------------------------------------------
