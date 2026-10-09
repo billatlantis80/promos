@@ -13,6 +13,7 @@ import {
   envoyerInscription, adresseValide, tableauConfigure,
   inscriptionLocale, retenirInscription, oublierInscription,
 } from './inscription.js';
+import { FICHIER_TEMOIN, DELAI_CONTROLE_MS, peutControler, doitRafraichir, dateDuTemoin } from './maj.js';
 
 const $ = (id) => document.getElementById(id);
 
