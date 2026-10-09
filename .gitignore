@@ -12,3 +12,7 @@ _avant-tmp.mjs
 # un cache de travail, reconstituable par outils/rendus-navigateur.py.
 # Sans cette ligne, un « git add -A » pousserait 99 Mo de HTML brut.
 donnees/rendus/
+
+# Journal de chantier du remplissage des adresses (repris, non durable :
+# la version durable est donnees/adresses-verifications.json)
+donnees/adresses-partiel.jsonl

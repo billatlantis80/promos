@@ -24,7 +24,7 @@
       Laisser vide tant que le programme n'est pas ouvert : les liens de ce
       pays sortiront alors en direct, sans commission. */
 export const AMAZON_TAGS = {
-  'amazon.fr': '',      // France
+  'amazon.fr': 'kazendra-21',  // France — partenariat ouvert le 09/10/2026
   'amazon.de': '',      // Allemagne
   'amazon.it': '',      // Italie
   'amazon.es': '',      // Espagne

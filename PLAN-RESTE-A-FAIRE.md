@@ -54,7 +54,31 @@ il ne restait que l'exécution.
 
 ---
 
-## 4. Créer les affiliations — la liste est déjà mesurée, il reste à s'inscrire
+## 4. Créer les affiliations — la liste est déjà mesurée, il ne reste à s'inscrire
+
+**DÉCISION DE B, 09/10/2026 : « On passe aux affiliations. »**
+
+⚠️ **MESURE DU 09/10/2026, qui commande tout le reste** (catalogue publié, 16 680 offres, classées par
+**destination réelle du lien sortant** — le dossier complet est dans `AFFILIATIONS-PAR-Ou-COMMENCER.md`) :
+
+| Destination du clic | Offres | Part | Commission possible |
+|---|---|---|---|
+| Un **agrégateur** (MyDealz, HotUKDeals, Chollometro, Dealabs, Pepper…) | 11 385 | **68,3 %** | ❌ **aucune, quel que soit le réseau** |
+| **Amazon** (10 marchés) | 4 528 | **27,1 %** | ✅ oui |
+| Autres marchands à lien direct | 767 | 4,6 % | ⚠️ partiellement |
+
+**Conséquence : Amazon Partenaires d'abord, et de très loin** — une seule inscription ouvre 27,1 % du
+catalogue, six fois tout le reste réuni. Les quinze autres réseaux couvrent aujourd'hui ~80 offres
+(0,5 %) : les inscrire d'abord serait du travail pour presque rien.
+
+**Les identifiants se posent à UN SEUL endroit** : la table `AMAZON_TAGS` de `public/affiliation.js`
+(les dix lignes existent, toutes vides). Poser un identifiant fait basculer tout seul la mention du
+pied de page, qui cesse d'annoncer « liens directs, sans commission ».
+
+**Le vrai sujet, plus gros que les inscriptions** : les 68 % dont le lien part vers un site de bons
+plans. Le marchand est **connu** (le champ `marchand` du catalogue porte Lidl, MediaMarkt, Cdiscount,
+AliExpress…) mais son **adresse** ne l'est pas. Deux voies : laisser tel quel (honnête, non monétisé),
+ou résoudre 11 385 liens marchands un par un — un vrai chantier, à trancher.
 
 **Base mesurée** : `donnees/affiliations.json`, 165 acteurs interrogés un par un le 08/10/2026 à 12:56 UTC.
 
@@ -125,6 +149,35 @@ sont écrits en dur. Pour les autres pays il faut donc : un tableur par pays, et
 ### Les 11 pays restants
 
 `FR · DE · GB · ES · IT · NL · AT · PL · IE · PT · SE`
+
+### RÈGLE (09/10/2026) — toute adresse trouvée se documente AUSSI dans le tableur du pays
+
+**B : « En même temps tu dois les documenter dans le fichier xls concerné par pays, pour pouvoir
+garder la base de donnée. »**
+
+Le fichier `public/adresses-promotions.json` est un réglage de SITE : il est lu par le panneau et par
+la collecte. Ce n'est pas une base de données. Le tableur, lui, est la **provenance** — c'est de lui
+que `acteurs-depuis-xlsx.py` tire `public/acteurs.json`. Une adresse qui ne vit que dans le fichier de
+publication ne vit nulle part.
+
+Trois colonnes sont donc ajoutées à la fin de **chaque feuille de données** (les 23 feuilles de
+catégories + « Vue densemble » — jamais « Lisez-moi », qui n'en est pas une) :
+
+- **Adresse des promotions** — l'adresse retenue, ou **vide**. Vide veut dire vide : on n'écrit jamais
+  une adresse devinée dans la base, parce qu'une adresse fausse recopiée de tableur en tableur se
+  transmet pendant des années sans que personne ne la revérifie.
+- **Résultat de la vérification** — ce que la page a réellement donné : « liste — 22 offre(s) à deux
+  prix », « page de promotions reconnue, 0 offre lisible », « rien trouvé ». C'est ce qui distingue
+  une adresse qui **rapporte** d'une adresse qui existe.
+- **Relevée le** — la date.
+
+Outil : `outils/documenter-adresses-xlsx.py` (à lancer avec `uv run --with openpyxl`). Il **relit**
+chaque tableur après écriture, restaure l'original en cas d'échec, et vérifie à la fin que la base
+produite est identique — c'est cette dernière épreuve qui prouve que la documentation n'a rien cassé.
+
+État au 09/10/2026 : BE 78 · DE 188 · FR 168 adresses écrites. Les 9 autres pays de la collecte n'ont
+**pas encore de tableur** (voir ci-dessus) : leurs adresses n'existent donc, pour l'heure, que dans le
+JSON. C'est un trou à combler en même temps que les 11 tableurs manquants.
 
 ### La difficulté, dite franchement
 
@@ -202,20 +255,41 @@ la promotion (§ 5) : promouvoir le site, c'est faire connaître le nom à des g
    faut un délai de propagation), ni les noms de société déposés aux registres du commerce, ni un
    usage non enregistré. Il reste donc une **bonne présomption**, pas une certitude juridique.
 
-2. **Déposer une marque.** Deux voies :
-   - **BOIP (Benelux)** — couvre BE, NL, LU. Le moins cher, le plus rapide, et suffisant pour
-     commencer (c'est votre marché).
-   - **EUIPO (UE)** — couvre les 27. Plus cher, à envisager quand le site s'ouvre vraiment aux
-     11 pays.
+2. **Déposer une marque.** Décision de B (09/10/2026) : **« toute l'Europe »** → c'est l'**EUIPO**,
+   pas le BOIP. Le dossier complet, chiffré et prêt à signer, est dans **`PROTECTION-KAZENDRA.md`**
+   (§ 3 pour l'Europe, § 3 bis pour le monde) :
+   - **EUIPO — les 27 pays : 1 050 €** pour 3 classes, dix ans *(850 + 50 + 150)*. Couvre 11 des
+     12 marchés du site. Relevé du 09/10/2026.
+   - **BOIP** (BE, NL, LU) : 352 € — n'est plus le bon choix si l'on vise l'Europe.
+   - **Le monde entier n'existe pas.** Le système de Madrid (OMPI) couvre **117 membres / 133 pays**
+     en une demande, mais chaque office examine et peut refuser. Émolument de base 653 CHF (701 €)
+     + une taxe par pays désigné (Royaume-Uni 395 €, États-Unis 1 482 €, Émirats 4 574 €…).
+     Désigner l'UE via Madrid coûte 1 755 € — soit 705 € de plus que l'EUIPO direct : **EUIPO
+     d'abord, Madrid ensuite pour AJOUTER des pays hors UE.**
 3. **Choisir les classes de Nice.** Pour ce projet, les plus pertinentes sont :
    - **classe 35** — publicité, gestion d'affaires commerciales, services de promotion (le cœur)
    - **classe 42** — services technologiques, logiciels, plateformes en ligne
    - **classe 9** — logiciels, applications téléchargeables (l'APK)
 4. **Déposer le logo** comme marque figurative, en plus du mot.
 
-**Prix : NON VÉRIFIÉ.** Je n'écris pas de montant que je n'ai pas lu sur le site officiel — les tarifs
-BOIP et EUIPO ont plusieurs grilles (dépôt électronique ou papier, nombre de classes, enregistrement
-en plusieurs fois). Je les relèverai au moment de préparer le dossier, avec la date de consultation.
+**Prix : RELEVÉS le 09/10/2026** aux deux sources officielles (le dossier complet est dans
+`PROTECTION-KAZENDRA.md`) :
+
+| | BOIP (Benelux) | EUIPO (UE 27) |
+|---|---|---|
+| Taxe de base, 1 classe | **244 €** | **850 €** (électronique ; 1 000 € papier) |
+| 2ᵉ classe | + **27 €** | + **50 €** |
+| 3ᵉ classe et au-delà | + **81 €** | + **150 €** |
+| **Total 3 classes (9+35+42)** | **352 €** | **1 050 €** |
+| Renouvellement (10 ans) | àpd **263 €** | **850 €** |
+
+Sources : `boip.int/fr/entrepreneurs/marques/tarifs` (onglet « Enregistrer ») et
+`euipo.europa.eu` → *Fees payable direct to EUIPO* — consultées le **09/10/2026**. Tarifs BOIP
+**exempts de TVA**. ⚠️ **Correction du 09/10/2026** : le logo **ne se dépose pas dans la même demande**
+que le mot — une demande ne peut porter que sur **un seul signe**. Le mot `Kazendra` en **marque
+verbale** protège le nom dans toutes ses formes : c'est **lui qu'il faut déposer d'abord**. Le logo
+est une **seconde marque** (figurative), donc une seconde demande et une seconde taxe.
+**Recommandation : BOIP d'abord** (c'est le marché actuel), EUIPO quand le site s'ouvre aux 27.
 
 **Ce qu'il faut de vous** : le dépôt engage votre identité (personne physique ou société) et un
 paiement. Je prépare tout — recherche d'antériorité, libellés de produits et services par classe,
@@ -228,8 +302,24 @@ dépôt fait au mauvais nom serait pire que pas de dépôt du tout.
 
 ## 5. Promouvoir le site
 
-**Le préalable, non négociable** : ne pas promouvoir avant d'avoir déposé la marque (§ 2). Promouvoir
-un nom non protégé, c'est inviter le dépôt par un tiers.
+**DÉCISION DE B, 09/10/2026 : « Oui j'aimerais le promouvoir. »**
+
+Conséquence directe, et elle est mécanique : **le dépôt de marque n'est plus une option, c'est le
+préalable.** Un site qu'on ne montre à personne n'attire personne ; un site qu'on montre à tout le
+monde attire aussi les gens qui déposent des noms. À partir du moment où la promotion est décidée,
+l'ordre n'est plus discutable : **EUIPO d'abord (§ 2 et `PROTECTION-KAZENDRA.md`), promotion ensuite.**
+
+**Séquence retenue :**
+
+1. **Déposer la marque verbale `Kazendra` à l'EUIPO** (1 050 €, 3 classes) — l'antériorité court à la
+   **date de dépôt**, pas à l'enregistrement : la protection commence le jour du paiement.
+2. **Pendant ce temps, ce qui ne se voit pas et ne coûte rien** : les données structurées schema.org
+   sur les offres (le seul prérequis technique encore manquant), les balises de partage (déjà faites).
+3. **Après le dépôt** : inscription aux annuaires de bons plans (elle publie le nom, donc jamais
+   avant), et le reste de la promotion.
+
+**Le préalable, non négociable** : ne pas promouvoir avant d'avoir déposé la marque (§ 2), pour la
+raison écrite juste au-dessus.
 
 **Le second préalable** : il reste un défaut grave dans ce que le site AFFICHE (relevés au check-up
 du 08/10) :
@@ -272,6 +362,21 @@ bougé : seul l'ordre change.
   liste que des pages qui existent réellement, et `/admin/` est écarté des moteurs.
 - données structurées **schema.org** (`Product` + `Offer`) sur les pages d'offres : c'est ce qui permet
   aux offres d'apparaître enrichies dans les résultats de recherche.
+  **Règle mesurée le 09/10/2026** (doc Google « Product snippet ») : les résultats enrichis produit ne
+  prennent en charge que les pages consacrées à **un seul produit** — donc les pages `o/<id>.html` sont
+  éligibles, la page d'accueil (qui liste des offres) **non**. À noter aussi, pour ne pas survendre :
+  Google précise que ce **n'est pas un facteur de classement** et qu'« il ne garantit pas les résultats
+  enrichis, même avec un balisage correct » ; le leader francophone Dealabs ne balise sur son accueil
+  que l'organisation (aucun `Product`, aucun `Offer`). Gain réel, mais modeste et gratuit.
+  ⚠️ **OBSTACLE MESURÉ le 09/10/2026 (en voulant lancer le chantier)** : les **16 614 pages**
+  `docs/o/*.html` portent **toutes** `<meta name="robots" content="noindex, follow">`, et elles **ne
+  sont pas** dans le sitemap (13 adresses : l'accueil et les pages légales). **Une page `noindex` n'est
+  pas indexée : des données structurées dessus ne s'afficheraient jamais.** Le chantier a donc été
+  arrêté avant d'écrire 16 614 fichiers pour rien.
+  **Décision qui reste à prendre** : indexer ou non les pages d'offres. Avis rendu : **ne pas indexer
+  les 16 614** — ce sont les données brutes des marchands (leurs titres, leurs photos, leurs prix),
+  republiées en masse, donc du contenu dupliqué sans valeur ajoutée ; le `noindex` est un choix sain.
+  Le vrai levier serait du **contenu propre** (pages éditoriales indexables), pas du balisage.
 - `og:image` et balises **Open Graph** — pour que le partage sur les réseaux affiche un aperçu correct
   plutôt qu'un lien nu.
 - inscription du site dans les annuaires belges et européens de bons plans.
@@ -371,3 +476,44 @@ croire le contraire.
 - Suite de tests : **534 sur 534**. Elle échoue si un numéro d'entreprise ou une adresse e-mail est
   **inventé** dans une page légale, si une section disparaît d'une seule langue, ou si une page
   recommence à affirmer que les autres langues n'existent pas.
+
+**09/10/2026**
+
+- **La France est le 3ᵉ marché.** Base passée de 346 à **609 acteurs** (139 BE + 182 DE + 263 FR + 25
+  ajoutés par l'application). Balayage HTTP des 263 acteurs français, puis **passe navigateur** sur les
+  pages refusées en HTTP (240 pages, 179 lues, 61 encore refusées) : programmes trouvés **16 → 31**.
+  Détail complet dans `NOTES-BASE-FRANCAISE.md`.
+- **Le logo ramène à l'accueil** : clic (ou Entrée/Espace) vide la recherche, remet catégorie, marchand,
+  tri et portée à zéro, revient en page 1 et remonte l'écran — **sans retélécharger le catalogue**, et
+  sans toucher aux préférences (pays, langue, thème, éco de données, favoris).
+- **Le partage porte la marque** : chaque partage social mène à `https://kazendra.com/o/<id>.html`, une
+  page statique avec la carte de prévisualisation (logo, nom, titre, prix, boutique, photo) et un **vrai
+  bouton** « Voir chez {marchand} » vers le même lien affilié — aucune commission perdue. Pas de
+  redirection automatique : le robot de prévisualisation suivrait la redirection et afficherait la carte
+  du marchand. 15 912 pages publiées (63 Mo), régénérées à chaque collecte ; carte générique de repli pour
+  les 1 422 offres sans visuel.
+- **APK : la vidéo d'introduction est REMISE, affichée à 90 %** (décision de B, 09/10/2026 : « tu peux
+  laisser la vidéo mais elle doit être affichée à 90 pour cent à la place de 80 »). Historique complet,
+  parce qu'il explique le code : la vidéo a été construite, puis corrigée **deux fois** — des moments
+  noirs (découpés, dernière image prolongée : 2,000 s pile, 0 image noire), puis un cadrage près de deux
+  fois trop grand (le contenu d'une `TextureView` est déjà étiré : le facteur y était compté deux fois).
+  B a ensuite demandé l'annulation complète (« on va revenir à l'image initiale »), puis est revenu
+  dessus. **La leçon retenue, et elle est écrite dans le code : les deux défauts n'ont été vus QUE sur
+  son téléphone — donc on MONTRE un aperçu avant de livrer une animation.**
+  Réglage actuel : l'**image de B reste visible au fond** (elle comble les bandes, même bokeh, aucune
+  couture) et la vidéo est posée dessus, sans son, centrée, à l'échelle
+  `largeurÉcran / (largeurVidéo × PART_VISIBLE)`. `PART_VISIBLE` est une **constante unique** dans
+  `MainActivity` : 0,90 = 90 % de la largeur visible (1200 × 2133 sur un écran 1080 × 2400, bandes de
+  133 px) ; 0,80 = écran couvert (l'ancien cadrage) ; 1,00 = vidéo entière. Le nom affiché reste **1.0**,
+  les fichiers s'appellent `kazendra-1.0.apk` / `.aab`, le code interne monte à **11**. Checkpoint de
+  l'état livré : `kazendra-1.0-2026-10-09-video-90`. Les états intermédiaires (`-sans-noir`, `-cadrage`,
+  `-image-seule`) restent conservés : rien n'est perdu.
+- Suite de tests : **580 sur 580**.
+
+**09/10/2026 — plus tard (état lu dans le code, non re-mesuré sur téléphone)**
+
+- **APK, réglage final : la vidéo d'introduction est SEULE, à `PART_VISIBLE = 1.00`** (vidéo entière,
+  plus d'image de fond) — l'image de lancement a été retirée, ce sont les bords de l'écran qui prennent
+  la couleur de fond `#062F3B` relevée sur la vidéo. `versionCode = 18`, nom affiché toujours `1.0`.
+  Dernier checkpoint : `kazendra-1.0-2026-10-09-noir-retire`. Le paragraphe ci-dessus (90 %, image au
+  fond) décrit un état intermédiaire de la journée, conservé pour l'historique.
