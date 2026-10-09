@@ -248,3 +248,25 @@ test('un jeu NUMÉRIQUE n’est pas un jouet', () => {
   assert.equal(famille('Casino Jeu de société familial', 'Gaming'), 'jouets');
 });
 
+test('une HOTTE est un appareil ménager, et « niveaux » n’est pas « Nivea »', () => {
+  // Défaut MESURÉ le 09/10/2026 sur une offre réelle signalée par B. Deux
+  // causes, dans le même titre — le défaut en cachait un second :
+  //   1. la marque « nivea » était lue en SOUS-CHAÎNE : « 3 niveaux de
+  //      puissance » réveillait le cosmétique, et l'offre partait en BEAUTÉ ;
+  //   2. « hotte », l'appareil nommé, n'était dans aucune liste : corrigé le
+  //      point 1, l'offre serait tombée en « Autres ».
+  // Les deux sont donc vérifiés ensemble : c'est le titre exact qui a servi à
+  // les trouver, et il doit rester classé correctement.
+  const hotte = 'Klarstein Valeria Hotte Îlot - 230W, débit max. 642 m³/h, 3 niveaux de puissance,'
+    + ' éclairage LED, panneau tactile, verre, inox, éco-énergétique, PureAmbience Concept, argent';
+  assert.equal(famille(hotte, ''), 'electromenager', 'le titre réel doit aller en électroménager');
+  assert.equal(famille('Hotte aspirante 60 cm inox', ''), 'electromenager');
+  assert.equal(famille('Plaque de cuisson induction 4 zones', ''), 'electromenager');
+  // La marque Nivea, elle, doit continuer de ranger un cosmétique en Beauté :
+  // la frontière de mot retire la collision, pas le mot.
+  assert.equal(famille('Crème hydratante Nivea Soft 200 ml', ''), 'beaute');
+  // Et le mot ORDINAIRE ne réveille plus la marque, dans les deux sens.
+  assert.notEqual(famille('Niveau à bulle magnétique 60 cm', ''), 'beaute');
+  assert.notEqual(famille('Grille-pain 3 niveaux de brunissage', ''), 'beaute');
+});
+

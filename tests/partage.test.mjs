@@ -95,9 +95,35 @@ test('le pont Android ouvre une vraie feuille de partage', { skip: sansJava }, (
   assert.match(java, /Intent\.ACTION_SEND/, 'il faut une intention de partage');
   assert.match(java, /Intent\.createChooser/, 'et le sélecteur d’applications');
   assert.match(java, /@JavascriptInterface/, 'sans cette annotation, l’appel JS est ignoré en silence');
-  // Le lien doit voyager DANS le texte : certains clients ignorent EXTRA_TEXT vide.
-  assert.match(java, /EXTRA_TEXT, texte \+ "\\n" \+ url/,
-    'le texte partagé doit contenir l’adresse');
+  // Le lien doit voyager DANS le texte : certains clients ignorent EXTRA_TEXT
+  // vide. Mais UNE SEULE FOIS : le texte le porte déjà, donc le pont ne l'ajoute
+  // que s'il manque. Défaut corrigé le 09/10/2026 — l'ancien code ajoutait
+  // l'adresse inconditionnellement, et l'application destinataire l'affichait
+  // deux fois (signalé par B).
+  assert.match(java, /texte\.contains\(url\)/,
+    'le pont ne doit pas ajouter le lien quand le texte le porte déjà');
+  assert.ok(!/EXTRA_TEXT, texte \+ "\\n" \+ url/.test(java),
+    'l’ancienne concaténation inconditionnelle ne doit pas revenir');
+});
+
+test('le lien partagé n’apparaît qu’UNE fois, quel que soit le chemin', () => {
+  // Le geste réel de B : partager une offre, coller le message, lire l'adresse
+  // DEUX fois. Cause mesurée : `textePartage()` finit par le lien, et le lien
+  // était EN PLUS donné à part — `url` pour `navigator.share`, `+ "\n" + url`
+  // pour le pont Android. Les clients qui assemblent les deux champs (WhatsApp,
+  // Gmail, Messenger) écrivaient donc l'adresse deux fois.
+  const appel = js.match(/navigator\.share\(\{[\s\S]*?\}\)/);
+  assert.ok(appel, 'la feuille du navigateur doit être appelée');
+  assert.match(appel[0], /text: texte/,
+    'le texte doit être transmis à la feuille de partage');
+  assert.ok(!/url:/.test(appel[0]),
+    'le lien ne doit PAS être donné aussi à part : il est déjà dans le texte');
+  // …et il doit bien y être, sinon le lien disparaîtrait chez les clients qui
+  // ignorent un champ vide : le texte le porte, et une seule fois.
+  const texte = js.match(/function textePartage\([\s\S]*?\n\}/);
+  assert.ok(texte, 'textePartage doit exister');
+  assert.equal((texte[0].match(/\+ lien/g) || []).length, 1,
+    'le lien doit apparaître exactement une fois dans le texte partagé');
 });
 
 test('le bouton de partage est une icône seule, discrète mais lisible', () => {

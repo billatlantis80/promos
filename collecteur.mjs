@@ -547,17 +547,39 @@ const SOURCES_ACTIVITES = [
  *  les deux prix de la même carte (49 % annoncés là où les prix disent 19 %).
  * ------------------------------------------------------------------ */
 const SOURCES_AMAZON = [
-  { id: 'amazon-be-deals', nom: 'Amazon', type: 'amazon', pays: 'BE', langue: 'fr', reposMin: 90, url: 'https://www.amazon.com.be/s?rh=p_n_deal_type%3A210770357031' },
+  { id: 'amazon-be-deals', nom: 'Amazon', type: 'amazon', pays: 'BE', langue: 'fr', reposMin: 90, url: 'https://www.amazon.com.be/s?rh=p_n_deal_type%3A210770357031&s=discount-desc-rank' },
   // Trois rayons nommés par l'utilisateur — bricolage, jouets, maison — pour que
   // ces rubriques ne dépendent pas du hasard d'une page « toutes promotions ».
   // Aucune catégorie n'est IMPOSÉE : le titre décide, car une recherche Amazon
   // ramène aussi des résultats sponsorisés hors sujet.
-  { id: 'amazon-be-bricolage', nom: 'Amazon', type: 'amazon', pays: 'BE', langue: 'fr', reposMin: 120, url: 'https://www.amazon.com.be/s?k=bricolage&rh=p_n_deal_type%3A210770357031' },
-  { id: 'amazon-be-jouets', nom: 'Amazon', type: 'amazon', pays: 'BE', langue: 'fr', reposMin: 120, url: 'https://www.amazon.com.be/s?k=jouet+enfant&rh=p_n_deal_type%3A210770357031' },
-  { id: 'amazon-be-maison', nom: 'Amazon', type: 'amazon', pays: 'BE', langue: 'fr', reposMin: 120, url: 'https://www.amazon.com.be/s?k=cuisine+maison&rh=p_n_deal_type%3A210770357031' },
+  //
+  // ⚠ LE FILTRE `rh=p_n_deal_type` A ÉTÉ RETIRÉ DES QUATRE RECHERCHES — mesuré
+  // le 09/10/2026, à la demande de B (« en Belgique, dans la catégorie meuble il
+  // y a beaucoup d'annonces sans promotion… peux-tu revérifier ce paramètre ? »).
+  // Sur `amazon.com.be`, ce paramètre NE FILTRE PAS les promotions : il donne
+  // MOINS de vrais bons plans que pas de filtre du tout.
+  //
+  //   recherche « bricolage », 3 passages cumulés, cartes portant un prix barré :
+  //       avec le filtre (l'ancienne adresse)  31/182 = 17 %
+  //       filtre + tri par remise              29/154 = 19 %
+  //       SANS filtre, tri par remise          57/173 = 33 %   ← retenu
+  //   recherche « cuisine maison », 3 passages :
+  //       avec le filtre 20 % · sans filtre 29 % · tri par remise 34 %
+  //
+  // Le tri `s=discount-desc-rank` classe par remise décroissante : il ne RETIRE
+  // rien, il remonte les vrais bons plans — deux fois plus de prix barrés par
+  // page. C'est le seul levier qui augmente la part de promotions réelles.
+  //
+  // La source `amazon-be-deals` fait exception : sans mot-clé, la même adresse
+  // privée du filtre rend une page VIDE (HTTP 202, zéro article). Le filtre y
+  // reste donc, mais avec le tri : mesuré 43 % de prix barrés, contre 20 %
+  // avant (2 passages, 21/49 les deux fois).
+  { id: 'amazon-be-bricolage', nom: 'Amazon', type: 'amazon', pays: 'BE', langue: 'fr', reposMin: 120, url: 'https://www.amazon.com.be/s?k=bricolage&s=discount-desc-rank' },
+  { id: 'amazon-be-jouets', nom: 'Amazon', type: 'amazon', pays: 'BE', langue: 'fr', reposMin: 120, url: 'https://www.amazon.com.be/s?k=jouet+enfant&s=discount-desc-rank' },
+  { id: 'amazon-be-maison', nom: 'Amazon', type: 'amazon', pays: 'BE', langue: 'fr', reposMin: 120, url: 'https://www.amazon.com.be/s?k=cuisine+maison&s=discount-desc-rank' },
   // Version néerlandaise : la Belgique est bilingue, et les intitulés de
   // produits diffèrent (« speelgoed » n'est pas « jouet »).
-  { id: 'amazon-be-nl', nom: 'Amazon', type: 'amazon', pays: 'BE', langue: 'nl', reposMin: 120, url: 'https://www.amazon.com.be/s?k=aanbieding&language=nl_BE&rh=p_n_deal_type%3A210770357031' },
+  { id: 'amazon-be-nl', nom: 'Amazon', type: 'amazon', pays: 'BE', langue: 'nl', reposMin: 120, url: 'https://www.amazon.com.be/s?k=aanbieding&language=nl_BE&s=discount-desc-rank' },
 ];
 
 /* VENTES FLASH DU JOUR — la page « goldbox » de chaque Amazon.
@@ -1243,6 +1265,13 @@ const FAMILLES = {
   electromenager: [
     // fr
     'electromenager', 'frigo', 'refrigerateur', 'congelateur', 'lave-linge', 'lave-vaisselle', 'seche-linge', 'aspirateur', 'cafetiere', 'machine a cafe', 'micro-ondes', 'bouilloire', 'grille-pain', 'friteuse', 'seche-cheveux', 'lisseur', 'fer a repasser', 'tondeuse a cheveux', 'ventilateur', 'chauffage', 'purificateur', 'cuisiniere',
+    //  A8 : la HOTTE de cuisine manquait. Signalé par B le 09/10/2026 avec une
+    //  offre réelle — « Klarstein Valeria Hotte Îlot - 230W, débit max. 642 m³/h
+    //  … éclairage LED, panneau tactile » — qui partait en BEAUTÉ (à cause de
+    //  « niveaux » lu dans « Nivea », voir MOTS_A_FRONTIERE) et serait tombée en
+    //  « Autres » une fois ce défaut corrigé. Une hotte est un appareil ménager,
+    //  dans les neuf langues.
+    'hotte', 'hotte aspirante', 'hotte de cuisine', 'plaque de cuisson', 'plaque a induction',
     // en
     'appliance', 'appliances', 'vacuum cleaner', 'kettle', 'toaster', 'air fryer', 'coffee machine', 'espresso machine', 'fridge', 'refrigerator', 'freezer', 'dishwasher', 'washing machine', 'dryer', 'microwave', 'blender', 'food processor', 'hair dryer', 'straightener', 'clothes iron', 'fan', 'heater', 'air purifier',
     // de
@@ -2377,6 +2406,12 @@ const MOTS_FORTS_NORM = Object.fromEntries(
  *  et un routeur NETGEAR se rangeait dans les accessoires auto. Les mots justes
  *  de la même famille (« autoband », « autobanden ») restent en place. */
 const MOTS_A_FRONTIERE = new Set(['auto', 'moto', 'tire', 'wagen', 'wiel', 'mota',
+  // E7 (09/10/2026) : « nivea », la marque de cosmétiques, attrapait le mot
+  //  ORDINAIRE « niveaux ». Mesuré sur une offre RÉELLE signalée par B : la hotte
+  //  « Klarstein Valeria Hotte Îlot - 230W … 3 niveaux de puissance, éclairage
+  //  LED, panneau tactile » était rangée en BEAUTÉ — à cause de « niveaux ».
+  //  Entre deux frontières, la marque ne matche plus, les niveaux non plus.
+  'nivea',
   // E4 : mots d'ENFANT courts ou glissants, lus entre deux frontières pour ne
   //  pas attraper un nom qui les contient — « Kindle » (kind), « barniz »
   //  (barn, espagnol : vernis), « junger/junges » (junge, allemand).
@@ -4857,7 +4892,24 @@ async function principal() {
   //  pages d'enseigne le sont. Les enseignes qui ne publient aucun prix
   //  (prix == null) gardent leur carte « bonne affaire » : la règle ne vise que
   //  le prix catalogue NU, jamais l'absence de prix.
-  const idsEnseigne = new Set(TOUTES_SOURCES.filter((s) => s.type === 'enseigne').map((s) => s.id));
+  //
+  //  ÉTENDU AUX SOURCES AMAZON le 09/10/2026 — même demande, même défaut, autre
+  //  rayon. B : « en Belgique, dans la catégorie meuble, je trouve qu'il y a
+  //  beaucoup d'annonces sans promotion… même chose pour la catégorie maison…
+  //  il y en a un peu partout, peux-tu revérifier ce paramètre ? » Mesuré sur le
+  //  catalogue publié : les recherches `amazon.com.be` avaient laissé entrer
+  //  **591 offres à prix nu** — 167 en jouets, 92 en maison, 85 en autre, 64 en
+  //  bricolage, 48 en tech, **43 en meubles**, 35 en électroménager, 15 en mode…
+  //  exactement les rubriques qu'il citait. Aucune n'était visible dans
+  //  « Bonnes promos » (Amazon n'y entre que par DEUX prix réels), mais elles
+  //  remplissaient « Toutes les offres ».
+  //
+  //  L'exception accordée jusqu'ici à Amazon n'avait aucune raison : pour Amazon,
+  //  la règle est même la plus stricte de toutes — l'application ne montre un bon
+  //  plan Amazon QUE s'il a deux prix. Un produit Amazon à un seul prix n'est donc
+  //  jamais une promotion, ici comme ailleurs.
+  const TYPES_PRIX_CATALOGUE = new Set(['enseigne', 'amazon']);
+  const idsEnseigne = new Set(TOUTES_SOURCES.filter((s) => TYPES_PRIX_CATALOGUE.has(s.type)).map((s) => s.id));
   let purgees = 0;
   const purgeesParMarchand = {};
   for (const [cle, o] of connues) {
@@ -4868,13 +4920,13 @@ async function principal() {
     purgees++;
   }
   if (purgees) {
-    console.log(`Règle des deux prix : ${purgees} offre(s) de page d'enseigne écartée(s) — prix catalogue sans prix de référence`);
+    console.log(`Règle des deux prix : ${purgees} offre(s) écartée(s) — prix catalogue sans prix de référence (pages d'enseigne et recherches Amazon)`);
     journal.push({
       source: 'regle-deux-prix',
       ok: true,
       ecartees: purgees,
       parMarchand: purgeesParMarchand,
-      raison: 'une promotion sans deuxième prix n’est pas une promotion (pages d’enseigne)',
+      raison: 'une promotion sans deuxième prix n’est pas une promotion (pages d’enseigne et recherches Amazon)',
     });
   }
 
