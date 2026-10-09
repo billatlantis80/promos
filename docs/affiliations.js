@@ -37,18 +37,41 @@ export const ORDRE_AFFILIATION = ['programme trouvé', 'non mesuré', 'aucun sig
 
 /** Les mesures, indexées par nom d'acteur. Le rapprochement se fait sur le NOM
  *  (comme la liaison acteurs↔sources) : c'est la seule clé que les deux bases
- *  partagent, et elle est stable. */
+ *  partagent, et elle est stable.
+ *
+ *  LE MÊME NOM PEUT EXISTER DANS DEUX PAYS — et c'est un ajout mesuré du
+ *  09/10/2026, pas une hypothèse. Les tableurs belge et allemand nomment tous
+ *  les deux « Lidl », « Zalando », « MediaMarkt », « C&A », « Ryanair »… Or ce
+ *  ne sont pas les mêmes sites : lidl.be et lidl.de, mediamarkt.be et
+ *  mediamarkt.de. Mesurer l'un et l'afficher pour l'autre serait une liaison
+ *  fausse — le genre d'erreur qui fait croire qu'un marché est couvert.
+ *
+ *  On indexe donc DEUX clés : le nom seul (l'ancien contrat, la clé que les
+ *  deux bases partagent) et le nom accompagné de son pays. La seconde a la
+ *  priorité quand elle existe ; sinon on retombe sur la première, ce qui laisse
+ *  fonctionner les mesures d'avant, qui n'étaient que par nom. */
 export function indexAffiliation(mesures) {
   const m = {};
-  for (const a of ((mesures && mesures.acteurs) || [])) if (a && a.nom) m[a.nom] = a;
+  for (const a of ((mesures && mesures.acteurs) || [])) {
+    if (!a || !a.nom) continue;
+    if (!(a.nom in m)) m[a.nom] = a;
+    if (a.pays) {
+      const cle = `${a.nom}|${a.pays}`;
+      if (!(cle in m)) m[cle] = a;
+    }
+  }
   return m;
 }
 
 /** L'état d'affiliation d'un acteur, ramené à trois valeurs. Un acteur absent
  *  des mesures est « non mesuré », jamais « aucun signe » : l'absence de
- *  mesure n'est pas une mesure. */
-export function etatAffiliation(mesures, nom) {
-  const m = indexAffiliation(mesures)[nom];
+ *  mesure n'est pas une mesure.
+ *
+ *  Le pays est FACULTATIF : sans lui, on rend la mesure du nom — c'est ainsi
+ *  que sont lues les mesures d'avant le 09/10/2026. */
+export function etatAffiliation(mesures, nom, pays) {
+  const idx = indexAffiliation(mesures);
+  const m = (pays && idx[`${nom}|${pays}`]) || idx[nom];
   if (!m) return { etat: 'non mesuré', reseaux: [], indices: [], raison: 'acteur absent du balayage' };
   const etat = ORDRE_AFFILIATION.includes(m.etat) ? m.etat : 'non mesuré';
   return {
@@ -88,7 +111,7 @@ export function paysAffiliation(base, mesures, catalogue) {
     const P = parPays[pays] = parPays[pays] || {
       pays, acteurs: 0, programme: 0, aucunSigne: 0, nonMesure: 0, reseaux: {},
     };
-    const e = etatAffiliation(mesures, a.nom);
+    const e = etatAffiliation(mesures, a.nom, pays);
     P.acteurs += 1;
     if (e.etat === 'programme trouvé') {
       P.programme += 1;
@@ -123,7 +146,7 @@ export function affiliationsDuPays(catalogue, base, mesures, pays) {
 
   const siens = ((base && base.acteurs) || []).filter((a) => (a.pays || '—') === pays);
   const enrichis = siens.map((a) => {
-    const e = etatAffiliation(mesures, a.nom);
+    const e = etatAffiliation(mesures, a.nom, pays);
     return {
       ...a,
       affiliation: e,
