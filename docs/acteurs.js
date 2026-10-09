@@ -384,12 +384,25 @@ export function liaisonActeurs(catalogue, base) {
   const offres = (catalogue && catalogue.offres) || [];
   const acteurs = (base && base.acteurs) || [];
 
-  // 1. Les annonces de chaque source, comptées UNE fois.
+  // 1. Les annonces de chaque source, comptées UNE fois — et comptées AUSSI par
+  //    pays. Le catalogue publie ses offres avec le NOM de la source et le pays
+  //    de l'offre ; or quinze entrées différentes s'appellent « Amazon », une
+  //    par marché. Compter par nom seul attribuait à Amazon.de les articles
+  //    d'Amazon Belgique, de France, d'Italie… MESURÉ le 09/10/2026, en
+  //    ajoutant l'Allemagne : 23 754 articles attribués pour 15 322 offres.
+  //    C'est le même défaut que le ×10 de Coolblue, un an plus tard et par une
+  //    autre porte : on ne compte un article qu'une fois, et pour le marché
+  //    dont il vient.
   const annoncesDe = {};
+  const annoncesDePays = {};
   for (const o of offres) {
     const s = o.source || '—';
     annoncesDe[s] = (annoncesDe[s] || 0) + 1;
+    const cle = `${s}|${o.pays || ''}`;
+    annoncesDePays[cle] = (annoncesDePays[cle] || 0) + 1;
   }
+  /** Les articles d'un SITE — par (nom, pays) quand la source porte son pays. */
+  const articlesDe = (s) => (s.pays ? (annoncesDePays[`${s.nom}|${s.pays}`] || 0) : (annoncesDe[s.nom] || 0));
 
   // 2. Indexer les sources : par domaine (quand ce n'en est pas un moteur) et
   //    par nom. On indexe les deux, on interroge les deux.
@@ -419,7 +432,16 @@ export function liaisonActeurs(catalogue, base) {
     // 3b. Par nom — le seul chemin possible pour les sources de veille.
     for (const s of sources) {
       if (trouvees.has(s.id)) continue;
-      if (memeActeur(a.nom, s.nom)) trouvees.set(s.id, s);
+      if (!memeActeur(a.nom, s.nom)) continue;
+      // UNE SOURCE APPARTIENT AU MARCHÉ QU'ELLE LIT. Depuis que la base couvre
+      // plusieurs pays, deux marchés partagent des noms : le « MediaMarkt »
+      // allemand et le belge ne sont pas le même site, et relier l'un à la
+      // source de l'autre ferait afficher des articles belges sur une ligne
+      // allemande — une liaison fausse, qui fait croire un marché couvert.
+      // Le chemin par DOMAINE, lui, ne se trompe pas : le filtre ne porte donc
+      // que sur le nom.
+      if (s.pays && a.pays && s.pays !== a.pays) continue;
+      trouvees.set(s.id, s);
     }
 
     const liste = [...trouvees.values()];
@@ -442,7 +464,18 @@ export function liaisonActeurs(catalogue, base) {
     // Un acteur relié par les DEUX voies est « flux » : dès qu'une source le lit
     // directement, il est branché. On garde les deux listes pour l'affichage.
     const etat = flux.length ? 'flux' : (veille.length ? 'veille' : 'aucun');
-    const annonces = sites.reduce((n, s) => n + (annoncesDe[s.nom] || 0), 0);
+    // LES ARTICLES SE COMPTENT PAR SITE, ET PAR MARCHÉ. On part des sources
+    // RÉELLEMENT trouvées (et non du représentant retenu pour l'affichage) :
+    // un même nom peut couvrir plusieurs marchés (« Coolblue » en Belgique et
+    // aux Pays-Bas), et chaque couple (nom, pays) ne compte qu'une fois. Sans
+    // ça, le chiffre dépendrait de quelle source le regroupement a gardée —
+    // un tableau qui bouge tout seul n'est pas vérifiable.
+    const parSitePays = new Map();
+    for (const s of liste) {
+      const cle = `${s.nom}|${s.pays || ''}`;
+      if (!parSitePays.has(cle)) parSitePays.set(cle, s);
+    }
+    const annonces = [...parSitePays.values()].reduce((n, s) => n + articlesDe(s), 0);
 
     return {
       ...a,
