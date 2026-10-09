@@ -1,5 +1,5 @@
 {
- "genereLe": "2026-10-09T08:12:31.922Z",
+ "genereLe": "2026-10-09T11:25:25.015Z",
  "methode": "Signatures de réseaux d’affiliation dans le HTML du site, et page « programme d’affiliation ». « aucun signe trouvé » ne veut PAS dire « pas d’affiliation » : un programme privé ne laisse aucune trace publique.",
  "acteurs": [
   {
@@ -3930,16 +3930,2434 @@
    "methode": "navigateur (échec)"
   },
   {
+   "nom": "01net",
+   "pays": "FR",
+   "domaine": "01net.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "60 Millions de Consommateurs (INC)",
+   "pays": "FR",
+   "domaine": "60millions-mag.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Action France",
+   "pays": "FR",
+   "domaine": "action.com",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Acuitis",
+   "pays": "FR",
+   "domaine": "acuitis.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Afflelou",
+   "pays": "FR",
+   "domaine": "afflelou.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Air Caraïbes",
+   "pays": "FR",
+   "domaine": "aircaraibes.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Air Corsica",
+   "pays": "FR",
+   "domaine": "aircorsica.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Air France",
+   "pays": "FR",
+   "domaine": "airfrance.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Airbnb France",
+   "pays": "FR",
+   "domaine": "airbnb.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "ALDI France",
+   "pays": "FR",
+   "domaine": "aldi.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "AliExpress",
+   "pays": "FR",
+   "domaine": "aliexpress.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Alinea",
+   "pays": "FR",
+   "domaine": "alinea.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Alliance Automotive Group France",
+   "pays": "FR",
+   "domaine": "allianceautomotivegroup.eu",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Amazon France",
+   "pays": "FR",
+   "domaine": "amazon.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 202
+  },
+  {
+   "nom": "Amelia (Regourd Aviation)",
+   "pays": "FR",
+   "domaine": "flyamelia.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Amplifon France",
+   "pays": "FR",
+   "domaine": "amplifon.com",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "André",
+   "pays": "FR",
+   "domaine": "andre.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Animalis",
+   "pays": "FR",
+   "domaine": "animalis.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Asia (Voyages)",
+   "pays": "FR",
+   "domaine": "asia.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Atol",
+   "pays": "FR",
+   "domaine": "atol.fr",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Atout France",
+   "pays": "FR",
+   "domaine": "atout-france.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Auchan Retail France",
+   "pays": "FR",
+   "domaine": "auchan.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Audika",
+   "pays": "FR",
+   "domaine": "audika.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Autodistribution",
+   "pays": "FR",
+   "domaine": "autodistribution.com",
+   "etat": "non mesuré",
+   "raison": "réponse vide ou trop courte (HTTP —, 0 octets)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Autodoc",
+   "pays": "FR",
+   "domaine": "autodoc.fr",
+   "etat": "non mesuré",
+   "raison": "réponse vide ou trop courte (HTTP —, 0 octets)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "B&You",
+   "pays": "FR",
+   "domaine": "bouyguestelecom.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Beauty Success",
+   "pays": "FR",
+   "domaine": "beautysuccess.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Belambra",
+   "pays": "FR",
+   "domaine": "belambra.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Besson Chaussures",
+   "pays": "FR",
+   "domaine": "besson-chaussures.com",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Biocoop",
+   "pays": "FR",
+   "domaine": "biocoop.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "BlaBlaCar",
+   "pays": "FR",
+   "domaine": "blablacar.fr",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "BlaBlaCar Bus",
+   "pays": "FR",
+   "domaine": "blablacar.fr",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Bonobo",
+   "pays": "FR",
+   "domaine": "bonoboplanet.com",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Booking.com France",
+   "pays": "FR",
+   "domaine": "booking.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 202
+  },
+  {
+   "nom": "Botanic",
+   "pays": "FR",
+   "domaine": "botanic.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Boulanger",
+   "pays": "FR",
+   "domaine": "boulanger.com",
+   "etat": "non mesuré",
+   "raison": "réponse vide ou trop courte (HTTP 400, 310 octets)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Bouygues Telecom",
+   "pays": "FR",
+   "domaine": "bouyguestelecom.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Brico Dépôt",
+   "pays": "FR",
+   "domaine": "bricodepot.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Bricoman",
+   "pays": "FR",
+   "domaine": "bricoman.fr",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Bricomarché",
+   "pays": "FR",
+   "domaine": "bricomarche.com",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Bricorama",
+   "pays": "FR",
+   "domaine": "bricorama.fr",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Brittany Ferries",
+   "pays": "FR",
+   "domaine": "brittany-ferries.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Bureau Vallée",
+   "pays": "FR",
+   "domaine": "bureau-vallee.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "BUT",
+   "pays": "FR",
+   "domaine": "but.fr",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "C&A France",
+   "pays": "FR",
+   "domaine": "c-and-a.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Cache Cache",
+   "pays": "FR",
+   "domaine": "cache-cache.fr",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Canal+",
+   "pays": "FR",
+   "domaine": "canalplus.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Capfun",
+   "pays": "FR",
+   "domaine": "capfun.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Carrefour",
+   "pays": "FR",
+   "domaine": "carrefour.fr",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Carter-Cash",
+   "pays": "FR",
+   "domaine": "carter-cash.com",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Casino / Géant",
+   "pays": "FR",
+   "domaine": "groupe-casino.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Castorama",
+   "pays": "FR",
+   "domaine": "castorama.fr",
+   "etat": "programme trouvé",
+   "reseaux": [],
+   "indices": [
+    "page programme : https://www.castorama.fr/avantages-carte-castorama"
+   ],
+   "http": 200
+  },
+  {
+   "nom": "Cavavin",
+   "pays": "FR",
+   "domaine": "cavavin.coop",
+   "etat": "non mesuré",
+   "raison": "réponse vide ou trop courte (HTTP —, 0 octets)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Cdiscount",
+   "pays": "FR",
+   "domaine": "cdiscount.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Celio",
+   "pays": "FR",
+   "domaine": "celio.com",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Centres auto E.Leclerc",
+   "pays": "FR",
+   "domaine": "auto.leclerc",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Chaussea",
+   "pays": "FR",
+   "domaine": "chaussea.com",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Clévacances",
+   "pays": "FR",
+   "domaine": "clevacances.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Club Med",
+   "pays": "FR",
+   "domaine": "clubmed.fr",
+   "etat": "non mesuré",
+   "raison": "réponse vide ou trop courte (HTTP —, 0 octets)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Conforama",
+   "pays": "FR",
+   "domaine": "conforama.fr",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Coopérative U (Système U)",
+   "pays": "FR",
+   "domaine": "magasins-u.com",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Cora France",
+   "pays": "FR",
+   "domaine": "cora.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Corsair",
+   "pays": "FR",
+   "domaine": "corsair.fr",
+   "etat": "non mesuré",
+   "raison": "réponse vide ou trop courte (HTTP —, 0 octets)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Corsica Ferries",
+   "pays": "FR",
+   "domaine": "corsica-ferries.fr",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Corsica Linea",
+   "pays": "FR",
+   "domaine": "corsicalinea.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Costa Croisières",
+   "pays": "FR",
+   "domaine": "costacroisieres.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Courir",
+   "pays": "FR",
+   "domaine": "courir.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "CroisiEurope",
+   "pays": "FR",
+   "domaine": "croisieurope.travel",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Cuisinella",
+   "pays": "FR",
+   "domaine": "cuisinella.fr",
+   "etat": "non mesuré",
+   "raison": "réponse vide ou trop courte (HTTP —, 0 octets)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Cultura",
+   "pays": "FR",
+   "domaine": "cultura.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Cultura (culture)",
+   "pays": "FR",
+   "domaine": "cultura.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Darty",
+   "pays": "FR",
+   "domaine": "darty.com",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Decathlon",
+   "pays": "FR",
+   "domaine": "decathlon.fr",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Decitre",
+   "pays": "FR",
+   "domaine": "decitre.fr",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Deliveroo France",
+   "pays": "FR",
+   "domaine": "deliveroo.fr",
+   "etat": "programme trouvé",
+   "reseaux": [],
+   "indices": [
+    "page programme : https://deliveroo.fr/fr/partner-ranking"
+   ],
+   "http": 200
+  },
+  {
+   "nom": "DFDS France",
+   "pays": "FR",
+   "domaine": "dfds.com",
+   "etat": "programme trouvé",
+   "reseaux": [],
+   "indices": [
+    "page programme : https://www.dfds.com/en/passenger-ferries/affiliates"
+   ],
+   "http": 200
+  },
+  {
+   "nom": "Direct Optic",
+   "pays": "FR",
+   "domaine": "direct-optic.fr",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "E.Leclerc",
+   "pays": "FR",
+   "domaine": "e.leclerc",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "easyJet",
+   "pays": "FR",
+   "domaine": "easyjet.com",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "eBay France",
+   "pays": "FR",
+   "domaine": "ebay.fr",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "eDreams ODIGEO (Opodo, GO Voyages)",
+   "pays": "FR",
+   "domaine": "govoyages.com",
+   "etat": "programme trouvé",
+   "reseaux": [],
+   "indices": [
+    "programme annoncé sur la page d'accueil (https://govoyages.com)"
+   ],
+   "http": 200
+  },
+  {
+   "nom": "Electro Dépôt",
+   "pays": "FR",
+   "domaine": "electrodepot.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Eram",
+   "pays": "FR",
+   "domaine": "eram.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Espace Culturel E.Leclerc",
+   "pays": "FR",
+   "domaine": "culture.leclerc",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Euromaster",
+   "pays": "FR",
+   "domaine": "euromaster.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Eurostar",
+   "pays": "FR",
+   "domaine": "eurostar.com",
+   "etat": "programme trouvé",
+   "reseaux": [
+    "Impact"
+   ],
+   "indices": [
+    "signature « prf.hn » sur https://eurostar.com"
+   ],
+   "http": 200
+  },
+  {
+   "nom": "Feu Vert",
+   "pays": "FR",
+   "domaine": "feuvert.fr",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "First Stop",
+   "pays": "FR",
+   "domaine": "firststop.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "FlixBus",
+   "pays": "FR",
+   "domaine": "flixbus.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Fnac",
+   "pays": "FR",
+   "domaine": "fnac.com",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Fnac (culture)",
+   "pays": "FR",
+   "domaine": "fnac.com",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Foodette",
+   "pays": "FR",
+   "domaine": "foodette.fr",
+   "etat": "non mesuré",
+   "raison": "réponse vide ou trop courte (HTTP —, 0 octets)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Foot Locker France",
+   "pays": "FR",
+   "domaine": "footlocker.fr",
+   "etat": "programme trouvé",
+   "reseaux": [],
+   "indices": [
+    "page programme : https://www.footlocker.fr/affiliation"
+   ],
+   "http": 200
+  },
+  {
+   "nom": "FRAM",
+   "pays": "FR",
+   "domaine": "fram.fr",
+   "etat": "programme trouvé",
+   "reseaux": [
+    "Tradedoubler"
+   ],
+   "indices": [
+    "page programme : https://www.fram.fr/affiliation/",
+    "signature « tradedoubler.com » sur https://www.fram.fr/affiliation/"
+   ],
+   "http": 200
+  },
+  {
+   "nom": "Frandroid",
+   "pays": "FR",
+   "domaine": "frandroid.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Franprix",
+   "pays": "FR",
+   "domaine": "franprix.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Fransat",
+   "pays": "FR",
+   "domaine": "fransat.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Free (Iliad)",
+   "pays": "FR",
+   "domaine": "free.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "French bee",
+   "pays": "FR",
+   "domaine": "frenchbee.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Furet du Nord",
+   "pays": "FR",
+   "domaine": "furet.com",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Gamecash",
+   "pays": "FR",
+   "domaine": "gamecash.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Games Workshop France",
+   "pays": "FR",
+   "domaine": "warhammer.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 202
+  },
+  {
+   "nom": "Gamm Vert",
+   "pays": "FR",
+   "domaine": "gammvert.fr",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Gautier",
+   "pays": "FR",
+   "domaine": "gautier.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Gedimat",
+   "pays": "FR",
+   "domaine": "gedimat.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Générale d'Optique",
+   "pays": "FR",
+   "domaine": "generaleoptique.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Gibert",
+   "pays": "FR",
+   "domaine": "gibert.com",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Gifi",
+   "pays": "FR",
+   "domaine": "gifi.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Giphar",
+   "pays": "FR",
+   "domaine": "giphar.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Gîtes de France",
+   "pays": "FR",
+   "domaine": "gites-de-france.com",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Go Sport",
+   "pays": "FR",
+   "domaine": "go-sport.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 402
+  },
+  {
+   "nom": "Grand Audition",
+   "pays": "FR",
+   "domaine": "grandaudition.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Grand Frais",
+   "pays": "FR",
+   "domaine": "grandfrais.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "GrandOptical",
+   "pays": "FR",
+   "domaine": "grandoptical.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "GrosBill",
+   "pays": "FR",
+   "domaine": "grosbill.com",
+   "etat": "programme trouvé",
+   "reseaux": [
+    "Awin"
+   ],
+   "indices": [
+    "signature « awin.com » sur https://grosbill.com/programme-affiliation",
+    "page programme : https://www.grosbill.com/programme-affiliation"
+   ],
+   "http": 200
+  },
+  {
+   "nom": "Groupe Samse",
+   "pays": "FR",
+   "domaine": "samse.fr",
+   "etat": "non mesuré",
+   "raison": "réponse vide ou trop courte (HTTP 200, 212 octets)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "H&M France",
+   "pays": "FR",
+   "domaine": "www2.hm.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Habitat",
+   "pays": "FR",
+   "domaine": "habitat.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Havas Voyages",
+   "pays": "FR",
+   "domaine": "havas-voyages.fr",
+   "etat": "non mesuré",
+   "raison": "réponse vide ou trop courte (HTTP —, 0 octets)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "HelloFresh France",
+   "pays": "FR",
+   "domaine": "hellofresh.fr",
+   "etat": "programme trouvé",
+   "reseaux": [
+    "Kwanko",
+    "Impact"
+   ],
+   "indices": [
+    "signature « kwanko.com » sur https://hellofresh.fr/about/affiliates",
+    "signature « impact.com » sur https://hellofresh.fr/about/affiliates",
+    "page programme : https://www.hellofresh.fr/about/affiliates"
+   ],
+   "http": 200
+  },
+  {
+   "nom": "Homair Vacances",
+   "pays": "FR",
+   "domaine": "homair.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "idealo France",
+   "pays": "FR",
+   "domaine": "idealo.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "IKEA France",
+   "pays": "FR",
+   "domaine": "ikea.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Inter Caves",
+   "pays": "FR",
+   "domaine": "intercaves.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Intermarché",
+   "pays": "FR",
+   "domaine": "intermarche.com",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Intersport France",
+   "pays": "FR",
+   "domaine": "intersport.fr",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Jardiland",
+   "pays": "FR",
+   "domaine": "jardiland.com",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Jardiland (animalerie)",
+   "pays": "FR",
+   "domaine": "jardiland.com",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "JD Sports France",
+   "pays": "FR",
+   "domaine": "jdsports.fr",
+   "etat": "non mesuré",
+   "raison": "réponse vide ou trop courte (HTTP —, 0 octets)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Jet tours",
+   "pays": "FR",
+   "domaine": "jettours.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Jimmy Fairly",
+   "pays": "FR",
+   "domaine": "jimmyfairly.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "JouéClub",
+   "pays": "FR",
+   "domaine": "joueclub.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
    "nom": "Journal du Geek",
    "pays": "FR",
    "domaine": "journaldugeek.com",
    "etat": "aucun signe trouvé",
    "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.journaldugeek.com/ (HTTP 200, 480510 octets)"
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "JYSK France",
+   "pays": "FR",
+   "domaine": "jysk.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Kelkoo",
+   "pays": "FR",
+   "domaine": "kelkoo.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Kiabi",
+   "pays": "FR",
+   "domaine": "kiabi.com",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Kiko Milano France",
+   "pays": "FR",
+   "domaine": "kikocosmetics.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "King Jouet",
+   "pays": "FR",
+   "domaine": "king-jouet.com",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Krys",
+   "pays": "FR",
+   "domaine": "krys.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "L'Occitane en Provence",
+   "pays": "FR",
+   "domaine": "fr.loccitane.com",
+   "etat": "non mesuré",
+   "raison": "réponse vide ou trop courte (HTTP —, 0 octets)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "La Belle Vie",
+   "pays": "FR",
+   "domaine": "labellevie.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "La Compagnie",
+   "pays": "FR",
+   "domaine": "lacompagnie.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "La Foir'Fouille",
+   "pays": "FR",
+   "domaine": "lafoirfouille.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "La Grande Récré",
+   "pays": "FR",
+   "domaine": "lagranderecre.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "La Halle",
+   "pays": "FR",
+   "domaine": "lahalle.com",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "La Poste Mobile",
+   "pays": "FR",
+   "domaine": "lapostemobile.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "La Redoute",
+   "pays": "FR",
+   "domaine": "laredoute.fr",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "La Vie Claire",
+   "pays": "FR",
+   "domaine": "lavieclaire.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "La Vie Claire (bio)",
+   "pays": "FR",
+   "domaine": "lavieclaire.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "lastminute.com",
+   "pays": "FR",
+   "domaine": "fr.lastminute.com",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Lavinia",
+   "pays": "FR",
+   "domaine": "lavinia.com",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "LDLC",
+   "pays": "FR",
+   "domaine": "ldlc.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "leboncoin",
+   "pays": "FR",
+   "domaine": "leboncoin.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "LeDénicheur",
+   "pays": "FR",
+   "domaine": "ledenicheur.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Leroy Merlin France",
+   "pays": "FR",
+   "domaine": "leroymerlin.fr",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Les Numériques",
+   "pays": "FR",
+   "domaine": "lesnumeriques.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Lidl France",
+   "pays": "FR",
+   "domaine": "lidl.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Lyreco",
+   "pays": "FR",
+   "domaine": "lyreco.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Maisons du Monde",
+   "pays": "FR",
+   "domaine": "maisonsdumonde.com",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "ManoMano",
+   "pays": "FR",
+   "domaine": "manomano.fr",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Marionnaud",
+   "pays": "FR",
+   "domaine": "marionnaud.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Match France",
+   "pays": "FR",
+   "domaine": "supermarchesmatch.fr",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Materiel.net",
+   "pays": "FR",
+   "domaine": "materiel.net",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Maxi Zoo France",
+   "pays": "FR",
+   "domaine": "maxizoo.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Micromania-Zing",
+   "pays": "FR",
+   "domaine": "micromania.fr",
+   "etat": "non mesuré",
+   "raison": "réponse vide ou trop courte (HTTP 200, 212 octets)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Midas France",
+   "pays": "FR",
+   "domaine": "midas.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Mister-Auto",
+   "pays": "FR",
+   "domaine": "mister-auto.com",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Mobalpa",
+   "pays": "FR",
+   "domaine": "mobalpa.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Mollat",
+   "pays": "FR",
+   "domaine": "mollat.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Monoprix",
+   "pays": "FR",
+   "domaine": "monoprix.fr",
+   "etat": "non mesuré",
+   "raison": "réponse vide ou trop courte (HTTP —, 0 octets)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Mr.Bricolage",
+   "pays": "FR",
+   "domaine": "mr-bricolage.fr",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "MSC Croisières",
+   "pays": "FR",
+   "domaine": "msccroisieres.fr",
+   "etat": "non mesuré",
+   "raison": "réponse vide ou trop courte (HTTP 401, 489 octets)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Naturalia",
+   "pays": "FR",
+   "domaine": "naturalia.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Nestor",
+   "pays": "FR",
+   "domaine": "nestorparis.com",
+   "etat": "non mesuré",
+   "raison": "réponse vide ou trop courte (HTTP —, 0 octets)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Netto",
+   "pays": "FR",
+   "domaine": "netto.fr",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Nicolas",
+   "pays": "FR",
+   "domaine": "nicolas.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Nocibé",
+   "pays": "FR",
+   "domaine": "nocibe.fr",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Norauto",
+   "pays": "FR",
+   "domaine": "norauto.fr",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Nordnet",
+   "pays": "FR",
+   "domaine": "nordnet.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Noz",
+   "pays": "FR",
+   "domaine": "noz-europe.com",
+   "etat": "non mesuré",
+   "raison": "réponse vide ou trop courte (HTTP —, 0 octets)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "NRJ Mobile",
+   "pays": "FR",
+   "domaine": "nrjmobile.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Odalys Vacances",
+   "pays": "FR",
+   "domaine": "odalys-vacances.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Optic 2000",
+   "pays": "FR",
+   "domaine": "optic2000.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Orange",
+   "pays": "FR",
+   "domaine": "orange.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Oscaro",
+   "pays": "FR",
+   "domaine": "oscaro.com",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Oxybul",
+   "pays": "FR",
+   "domaine": "oxybul.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Paris je t'aime (OTCP)",
+   "pays": "FR",
+   "domaine": "parisjetaime.com",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Passion Beauté",
+   "pays": "FR",
+   "domaine": "passionbeaute.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Pharmabest",
+   "pays": "FR",
+   "domaine": "pharmabest.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Philibert",
+   "pays": "FR",
+   "domaine": "philibertnet.com",
+   "etat": "programme trouvé",
+   "reseaux": [
+    "Affilae"
    ],
-   "http": 200,
-   "methode": "navigateur"
+   "indices": [
+    "signature « affilae.com » sur https://philibertnet.com"
+   ],
+   "http": 200
+  },
+  {
+   "nom": "Picard",
+   "pays": "FR",
+   "domaine": "picard.fr",
+   "etat": "non mesuré",
+   "raison": "réponse vide ou trop courte (HTTP —, 0 octets)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "PicWicToys",
+   "pays": "FR",
+   "domaine": "picwictoys.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Pierre & Vacances-Center Parcs",
+   "pays": "FR",
+   "domaine": "pierreetvacances.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Point S France",
+   "pays": "FR",
+   "domaine": "points.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Point.P",
+   "pays": "FR",
+   "domaine": "pointp.fr",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Ponant",
+   "pays": "FR",
+   "domaine": "ponant.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Presse-citron",
+   "pays": "FR",
+   "domaine": "presse-citron.net",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Primark France",
+   "pays": "FR",
+   "domaine": "primark.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Prixtel",
+   "pays": "FR",
+   "domaine": "prixtel.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Promod",
+   "pays": "FR",
+   "domaine": "promod.com",
+   "etat": "programme trouvé",
+   "reseaux": [
+    "Tradedoubler",
+    "Affilae",
+    "Rakuten Advertising"
+   ],
+   "indices": [
+    "signature « tradedoubler.com » sur https://promod.com",
+    "signature « affilae.com » sur https://promod.com",
+    "signature « linksynergy.com » sur https://promod.com"
+   ],
+   "http": 200
+  },
+  {
+   "nom": "Promovacances / Karavel",
+   "pays": "FR",
+   "domaine": "promovacances.com",
+   "etat": "programme trouvé",
+   "reseaux": [
+    "Tradedoubler"
+   ],
+   "indices": [
+    "page programme : https://www.promovacances.com/affiliation/",
+    "signature « tradedoubler.com » sur https://www.promovacances.com/affiliation/"
+   ],
+   "http": 200
+  },
+  {
+   "nom": "Quitoque",
+   "pays": "FR",
+   "domaine": "quitoque.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Rakuten France",
+   "pays": "FR",
+   "domaine": "rakuten.fr",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Recyclivre",
+   "pays": "FR",
+   "domaine": "recyclivre.com",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "RED by SFR",
+   "pays": "FR",
+   "domaine": "red-by-sfr.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Renfe France",
+   "pays": "FR",
+   "domaine": "renfe.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Repaire de Bacchus",
+   "pays": "FR",
+   "domaine": "repairedebachus.com",
+   "etat": "non mesuré",
+   "raison": "réponse vide ou trop courte (HTTP —, 0 octets)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Rituals France",
+   "pays": "FR",
+   "domaine": "rituals.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Rivages du Monde",
+   "pays": "FR",
+   "domaine": "rivagesdumonde.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Roady",
+   "pays": "FR",
+   "domaine": "roady.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Roche Bobois",
+   "pays": "FR",
+   "domaine": "roche-bobois.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "rue du commerce",
+   "pays": "FR",
+   "domaine": "rueducommerce.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Ryanair",
+   "pays": "FR",
+   "domaine": "ryanair.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Salaün Holidays",
+   "pays": "FR",
+   "domaine": "salaun-holidays.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Sandaya",
+   "pays": "FR",
+   "domaine": "sandaya.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Schmidt",
+   "pays": "FR",
+   "domaine": "home-design.schmidt",
+   "etat": "non mesuré",
+   "raison": "réponse vide ou trop courte (HTTP —, 0 octets)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Selectour",
+   "pays": "FR",
+   "domaine": "selectour.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Sensee",
+   "pays": "FR",
+   "domaine": "sensee.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Sephora France",
+   "pays": "FR",
+   "domaine": "sephora.fr",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "SFR",
+   "pays": "FR",
+   "domaine": "sfr.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Shein",
+   "pays": "FR",
+   "domaine": "shein.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Showroomprive",
+   "pays": "FR",
+   "domaine": "showroomprive.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Siblu",
+   "pays": "FR",
+   "domaine": "siblu.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Smyths Toys France",
+   "pays": "FR",
+   "domaine": "smythstoys.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "SNCF Voyageurs",
+   "pays": "FR",
+   "domaine": "sncf-connect.com",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "SoCoo'c",
+   "pays": "FR",
+   "domaine": "socooc.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Son-Vidéo.com",
+   "pays": "FR",
+   "domaine": "son-video.com",
+   "etat": "programme trouvé",
+   "reseaux": [
+    "Affilae"
+   ],
+   "indices": [
+    "signature « affilae.com » sur https://son-video.com"
+   ],
+   "http": 200
+  },
+  {
+   "nom": "Sosh",
+   "pays": "FR",
+   "domaine": "sosh.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Speedy France",
+   "pays": "FR",
+   "domaine": "speedy.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Sport 2000 France",
+   "pays": "FR",
+   "domaine": "sport2000.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Starlink",
+   "pays": "FR",
+   "domaine": "starlink.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Stokomani",
+   "pays": "FR",
+   "domaine": "stokomani.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Stuart",
+   "pays": "FR",
+   "domaine": "stuart.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Tedi France",
+   "pays": "FR",
+   "domaine": "tedi.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Temu",
+   "pays": "FR",
+   "domaine": "temu.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Thiriet",
+   "pays": "FR",
+   "domaine": "thiriet.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Tom&Co France",
+   "pays": "FR",
+   "domaine": "tomandco.fr",
+   "etat": "non mesuré",
+   "raison": "réponse vide ou trop courte (HTTP —, 0 octets)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Transavia France",
+   "pays": "FR",
+   "domaine": "transavia.com",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Trenitalia France",
+   "pays": "FR",
+   "domaine": "trenitalia.com",
+   "etat": "programme trouvé",
+   "reseaux": [
+    "Amazon Partenaires"
+   ],
+   "indices": [
+    "signature « amazon-adsystem.com » sur https://trenitalia.com"
+   ],
+   "http": 200
+  },
+  {
+   "nom": "Truffaut",
+   "pays": "FR",
+   "domaine": "truffaut.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Truffaut (animalerie)",
+   "pays": "FR",
+   "domaine": "truffaut.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Trustpilot",
+   "pays": "FR",
+   "domaine": "fr.trustpilot.com",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "TUI France",
+   "pays": "FR",
+   "domaine": "tui.fr",
+   "etat": "programme trouvé",
+   "reseaux": [
+    "TradeTracker"
+   ],
+   "indices": [
+    "signature « tradetracker.com » sur https://tui.fr/devenir-affilie/",
+    "page programme : https://www.tui.fr/devenir-affilie/"
+   ],
+   "http": 200
+  },
+  {
+   "nom": "Twin Jet",
+   "pays": "FR",
+   "domaine": "twinjet.fr",
+   "etat": "non mesuré",
+   "raison": "réponse vide ou trop courte (HTTP —, 0 octets)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Ubaldi",
+   "pays": "FR",
+   "domaine": "ubaldi.com",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Uber Eats France",
+   "pays": "FR",
+   "domaine": "ubereats.com",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "UFC-Que Choisir",
+   "pays": "FR",
+   "domaine": "quechoisir.org",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Ultra Jeux",
+   "pays": "FR",
+   "domaine": "ultrajeux.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Ultra Premium Direct",
+   "pays": "FR",
+   "domaine": "ultrapremiumdirect.com",
+   "etat": "programme trouvé",
+   "reseaux": [],
+   "indices": [
+    "programme annoncé sur la page d'accueil (https://ultrapremiumdirect.com)"
+   ],
+   "http": 200
+  },
+  {
+   "nom": "V and B",
+   "pays": "FR",
+   "domaine": "vandb.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Vacancéole",
+   "pays": "FR",
+   "domaine": "vacanceole.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Veepee",
+   "pays": "FR",
+   "domaine": "veepee.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Vinted",
+   "pays": "FR",
+   "domaine": "vinted.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Volotea",
+   "pays": "FR",
+   "domaine": "volotea.com",
+   "etat": "non mesuré",
+   "raison": "réponse vide ou trop courte (HTTP 200, 212 octets)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Wanimo",
+   "pays": "FR",
+   "domaine": "wanimo.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Weldom",
+   "pays": "FR",
+   "domaine": "weldom.fr",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Yelloh! Village",
+   "pays": "FR",
+   "domaine": "yellohvillage.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Yves Rocher",
+   "pays": "FR",
+   "domaine": "yves-rocher.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Zalando",
+   "pays": "FR",
+   "domaine": "zalando.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Zara France",
+   "pays": "FR",
+   "domaine": "zara.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Zeeman France",
+   "pays": "FR",
+   "domaine": "zeeman.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
+  },
+  {
+   "nom": "Zoomalia",
+   "pays": "FR",
+   "domaine": "zoomalia.com",
+   "etat": "non mesuré",
+   "raison": "le site a refusé la mesure (HTTP 403)",
+   "reseaux": [],
+   "indices": []
+  },
+  {
+   "nom": "Zooplus / Bitiba",
+   "pays": "FR",
+   "domaine": "zooplus.fr",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [],
+   "http": 200
   },
   {
    "nom": "HotUKDeals",
@@ -4103,9 +6521,8 @@
    "methode": "navigateur"
   }
  ],
- "nombreActeurs": 345,
- "avecProgramme": 64,
- "sansSigne": 214,
- "nonMesures": 67,
- "relusAuNavigateur": 324
+ "nombreActeurs": 607,
+ "avecProgramme": 80,
+ "sansSigne": 373,
+ "nonMesures": 154
 }
