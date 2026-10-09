@@ -62,15 +62,17 @@ const acteurDe = (nom, pays = 'BE') => parNom.get(`${pays}|${nom}`);
 /* ------------------------------------------------------- la base elle-même */
 
 test('la base est complète : les tableurs, pays par pays, plus ce que l’application lit', () => {
-  // 321 acteurs viennent des tableurs de B — 139 du marché belge et 182 du
-  // marché allemand (ajout du 09/10/2026) — et 25 ont été AJOUTÉS parce que
-  // l'application les lit sans qu'ils y figurent.
-  assert.equal(base.acteurs.length, 346, '346 acteurs : 139 (BE) + 182 (DE) + 25 de l’application');
-  assert.deepEqual(base.sources, ['marche-be-2026-10-08.xlsx', 'marche-de-2026-10-08.xlsx'],
-    'les deux tableurs fournis doivent rester la provenance de la base');
+  // 584 acteurs viennent des tableurs de B — 139 du marché belge, 182 du
+  // marché allemand (ajout du 09/10/2026) et 263 du marché français (ajout du
+  // même jour) — et 25 ont été AJOUTÉS parce que l'application les lit sans
+  // qu'ils y figurent.
+  assert.equal(base.acteurs.length, 609, '609 acteurs : 139 (BE) + 182 (DE) + 263 (FR) + 25 de l’application');
+  assert.deepEqual(base.sources,
+    ['marche-be-2026-10-08.xlsx', 'marche-de-2026-10-08.xlsx', 'marche-fr-2026-10-08.xlsx'],
+    'les trois tableurs fournis doivent rester la provenance de la base');
   const duFichier = base.acteurs.filter((a) => a.provenance === 'fichier');
   const ajoutes = base.acteurs.filter((a) => a.provenance === 'application');
-  assert.equal(duFichier.length, 321);
+  assert.equal(duFichier.length, 584);
   assert.equal(ajoutes.length, 25);
   // UN PAYS, UN TABLEUR : chaque acteur lu dans un tableur porte le pays de son
   // marché — c'est ce que lit le choix du pays, dans le Marché Euro comme dans
@@ -79,10 +81,11 @@ test('la base est complète : les tableurs, pays par pays, plus ce que l’appli
   for (const a of duFichier) parPays[a.pays] = (parPays[a.pays] || 0) + 1;
   assert.equal(parPays.BE, 139, 'le tableur belge apporte 139 acteurs');
   assert.equal(parPays.DE, 182, 'le tableur allemand apporte 182 acteurs');
+  assert.equal(parPays.FR, 263, 'le tableur français apporte 263 acteurs');
   assert.deepEqual(base.paysCouverts, [...new Set(base.acteurs.map((a) => a.pays))].sort(),
     'paysCouverts doit refléter exactement les pays présents dans la base');
-  assert.equal(base.categories.length, 24,
-    '24 catégories : les 22 communes aux deux tableurs, « Communautés de bons plans » et « Activités Touristiques & Séjours en Allemagne »');
+  assert.equal(base.categories.length, 36,
+    '36 libellés de catégorie : chaque marché nomme les siennes à sa façon (le tableur français écrit « Bricolage, Jardin & Extérieur » là où le belge écrit « … Aménagement Extérieur »), plus « Communautés de bons plans » et les activités touristiques par pays');
   for (const a of base.acteurs) {
     assert.ok(a.nom && a.nom.trim(), 'chaque acteur porte un nom');
     assert.ok(a.categorie && a.categorie.trim(), `${a.nom} doit avoir une catégorie`);
@@ -166,8 +169,8 @@ test('les informations de siège SONT dans la base (elles doivent y être)', () 
 /* ------------------------------------------------------------------ liaison */
 
 test('chaque acteur est rangé dans l’un des trois états, et aucun n’est oublié', () => {
-  assert.equal(r.acteurs.length, 346);
-  assert.equal(r.compteurs.flux + r.compteurs.veille + r.compteurs.aucun, 346);
+  assert.equal(r.acteurs.length, 609);
+  assert.equal(r.compteurs.flux + r.compteurs.veille + r.compteurs.aucun, 609);
   assert.ok(r.compteurs.flux > 0 && r.compteurs.veille > 0 && r.compteurs.aucun > 0);
   for (const a of r.acteurs) {
     assert.ok(['flux', 'veille', 'aucun'].includes(a.etat), `${a.nom} : état inconnu « ${a.etat} »`);
@@ -255,7 +258,7 @@ test('un acteur relié DEUX fois (flux et veille) est compté BRANCHÉ', () => {
 
 test('le bilan par catégorie couvre exactement les acteurs de la base', () => {
   const total = r.categories.reduce((n, c) => n + c.acteurs, 0);
-  assert.equal(total, 346);
+  assert.equal(total, 609);
   for (const c of r.categories) {
     assert.equal(c.flux + c.veille + c.aucun, c.acteurs, `${c.categorie} : les états ne totalisent pas les acteurs`);
   }

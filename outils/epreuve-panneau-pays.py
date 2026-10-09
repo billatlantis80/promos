@@ -13,7 +13,7 @@ CE QU'ELLE PROUVE, ET POURQUOI UN TEST DE FICHIER NE SUFFIT PAS.
 CE QU'ELLE VÉRIFIE (la partition, sur les deux onglets) :
    - Marché Euro : somme des acteurs par catégorie = total du pays ;
      branchés + en veille + non suivis = total du pays ;
-     somme des acteurs de TOUS les pays = taille de la base (346) ;
+     somme des acteurs de TOUS les pays = taille de la base (609) ;
    - Affiliation : trouvé + non mesuré + aucun signe = acteurs du pays ;
      les deux onglets annoncent le MÊME nombre de pays ;
    - aucun pays ne s'ouvre sur un écran vide sans l'annoncer.
@@ -194,8 +194,8 @@ def main():
             ok = False
     if total_base != base["taille"]:
         print("✗ la partition par pays ne retombe pas sur la base"); ok = False
-    if base["taille"] != 346:
-        print(f"✗ la base n'a pas 346 acteurs ({base['taille']})"); ok = False
+    if base["taille"] != 609:
+        print(f"✗ la base n'a pas 609 acteurs ({base['taille']})"); ok = False
     if base["parPays"].get(PAYS, 0) == 0:
         print(f"✗ aucun acteur pour {PAYS}"); ok = False
     if erreurs:

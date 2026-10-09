@@ -64,6 +64,7 @@ RACINE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SOURCES = [
     {"pays": "BE", "fichier": "marche-be-2026-10-08.xlsx"},
     {"pays": "DE", "fichier": "marche-de-2026-10-08.xlsx"},
+    {"pays": "FR", "fichier": "marche-fr-2026-10-08.xlsx"},
 ]
 SOURCE_APPLICATION = os.path.join(RACINE, "donnees", "acteurs-application.json")
 SORTIE = os.path.join(RACINE, "public", "acteurs.json")
