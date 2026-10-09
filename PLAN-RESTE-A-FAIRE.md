@@ -529,3 +529,39 @@ croire le contraire.
   la couleur de fond `#062F3B` relevée sur la vidéo. `versionCode = 18`, nom affiché toujours `1.0`.
   Dernier checkpoint : `kazendra-1.0-2026-10-09-noir-retire`. Le paragraphe ci-dessus (90 %, image au
   fond) décrit un état intermédiaire de la journée, conservé pour l'historique.
+
+**09/10/2026 — nuit : le catalogue belge perd ses annonces sans promotion — ET LA RÈGLE S'ARRÊTE LÀ**
+
+Demande de B, mot pour mot : *« En Belgique, dans la catégorie meuble je trouve qu'il y a beaucoup
+d'annonces sans promotion… peux-tu revérifier ce paramètre ? »*
+
+- **Le paramètre en cause ne filtrait pas.** Les quatre recherches `amazon.com.be` portaient
+  `rh=p_n_deal_type=210770357031`. Mesuré, 3 passages cumulés, cartes portant un prix barré :
+  **avec** le filtre 17 % · **sans** filtre 29 % · **avec tri par remise 33 %** (« cuisine maison » :
+  20 % / 29 % / 34 %). Le filtre donnait donc MOINS de vrais bons plans que pas de filtre du tout.
+  Il a été remplacé par `s=discount-desc-rank` sur les quatre recherches. Seule exception :
+  `amazon-be-deals`, qui sans mot-clé rend une page **vide** sans son filtre — il le garde, avec le
+  tri (mesuré 43 % contre 20 %).
+- **591 annonces belges à prix nu sont sorties du catalogue** (aucun prix de référence) : 167 jouets,
+  92 maison, 85 autre, 64 bricolage, 48 tech, **43 meubles**, 35 électroménager, 15 mode… Les
+  rubriques citées par B, exactement. La règle des deux prix, qui visait déjà les pages d'enseigne,
+  s'applique désormais aussi aux recherches Amazon : pour Amazon, l'application n'accepte de toute
+  façon un bon plan QUE s'il a deux prix réels. Ce qui reste : meubles 50 offres, **0 sans remise**.
+- **⛔ DÉCISION DE B, 09/10/2026 : « Pour l'instant il n'est pas nécessaire d'appliquer la règle. »**
+  La règle des deux prix **reste donc limitée** aux pages d'enseigne et aux recherches Amazon. Elle
+  n'est **PAS** étendue aux quatre sources communautaires. Leurs **4 513 annonces Amazon sans second
+  prix** restent au catalogue : ES 1 015 (chollometro), GB 1 001 (hotukdeals), DE 973 (mydealz),
+  FR 616 (dealabs), PL 530, NL 203, AT 175.
+  ⚠️ **Ne pas « finir le travail » de sa propre initiative** : c'est une décision, pas un oubli. Il
+  faudra une nouvelle demande explicite de B pour l'appliquer.
+- **Classement (deux défauts dans un même titre, signalé par B)** : « nivea », la marque, était lue en
+  SOUS-CHAÎNE — « 3 niveaux de puissance » réveillait le cosmétique, et une **hotte de cuisine**
+  partait en Beauté ; et « hotte » n'était dans aucune liste. « nivea » exige maintenant une frontière
+  de mot ; `hotte`, `hotte aspirante`, `hotte de cuisine`, `plaque de cuisson`, `plaque à induction`
+  sont entrés en Électroménager. Reclassement rétroactif (le collecteur rejuge tout le stock à chaque
+  passage), vérificateur de catégories **conforme**.
+- **Partage** : le lien ne s'écrit plus deux fois. Le texte finissait par le lien ET l'adresse était
+  donnée à part (`url:` pour la feuille du navigateur, `+ "\n" + url` pour le pont Android) ; le pont
+  n'ajoute plus l'adresse que si elle manque. Exercé sur le site en ligne, les deux chemins : **une
+  seule occurrence**. Application **code 20**.
+- Suite de tests : **606 sur 606** (dont 2 neufs).
