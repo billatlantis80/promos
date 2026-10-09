@@ -361,6 +361,93 @@ const SOURCES_ENSEIGNES = [
 ];
 
 /* ------------------------------------------------------------------ *
+ *  LES ADRESSES DE PROMOTIONS PUBLIÉES AVEC LE SITE — LE TUYAU.
+ *
+ *  Le panneau possède une colonne « Adresse des promotions », une ligne par
+ *  acteur, modifiable. Jusqu'au 09/10/2026, cette colonne ne servait à RIEN :
+ *  elle n'était conservée que dans le navigateur, et aucun programme ne la
+ *  lisait — l'aide du panneau promettait « il sera utilisé par la collecte »,
+ *  ce qui était faux. `public/adresses-promotions.json` est le tuyau qui
+ *  manquait : écrit par `outils/remplir-adresses-promotions.mjs`, lu ici, publié
+ *  avec le site.
+ *
+ *  Une adresse y devient une source de type `enseigne` — donc lue par
+ *  `offresEnseigne` (JSON-LD), exactement comme Coolblue ou Zooplus. Le pays
+ *  vient de la base d'acteurs, la langue du pays.
+ *
+ *  DEUX GARDE-FOUS, appris en câblant les enseignes une par une :
+ *    — une adresse DÉJÀ dans SOURCES_ENSEIGNES est ignorée. La lire deux fois
+ *      ne double pas la couverture : elle compte deux fois les mêmes articles.
+ *    — le repos est long (3 h). Ces pages n'ont pas été mesurées une à une comme
+ *      les autres enseignes ; on les visite avec prudence, sans presser un
+ *      marchand qui ne nous a rien demandé.
+ * ------------------------------------------------------------------ */
+const LANGUE_PAR_PAYS = {
+  FR: 'fr', BE: 'fr', DE: 'de', AT: 'de', NL: 'nl', ES: 'es', IT: 'it',
+  PT: 'pt', PL: 'pl', SE: 'sv', IE: 'en', GB: 'en',
+};
+const FICHIER_ADRESSES = path.join(__dirname, 'public', 'adresses-promotions.json');
+const REPOS_ADRESSE_MIN = 180;
+
+/** Un identifiant de source à partir d'un nom d'enseigne. Les identifiants
+ *  paraissent dans le journal et dans les URL d'état : ils doivent être stables
+ *  (recalculer le même nom deux fois donne le même identifiant, sinon deux
+ *  passages créeraient deux sources pour une seule adresse). */
+const identifiantAdresse = (nom) => String(nom).normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+  .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40) || 'acteur';
+
+/** Les sources tirées du fichier publié. Rend TOUJOURS un tableau : un fichier
+ *  absent, vide ou illisible donne une liste vide, jamais une exception — la
+ *  collecte ne doit pas mourir parce qu'un fichier annexe manque. */
+function sourcesAdresses() {
+  let table = {};
+  try {
+    const d = JSON.parse(fs.readFileSync(FICHIER_ADRESSES, 'utf8'));
+    if (d && d.adresses && typeof d.adresses === 'object' && !Array.isArray(d.adresses)) table = d.adresses;
+  } catch { return []; }
+  // Le pays par nom d'acteur : la base du marché le porte, et c'est elle qui
+  // décide dans quel pays ranger les offres lues.
+  let acteurs = [];
+  try {
+    const b = JSON.parse(fs.readFileSync(path.join(__dirname, 'public', 'acteurs.json'), 'utf8'));
+    acteurs = (b && b.acteurs) || [];
+  } catch { /* base manquante : on retombera sur BE */ }
+  return sourcesAdressesDepuis(table, acteurs, SOURCES_ENSEIGNES);
+}
+
+/** LA RÈGLE, ISOLÉE DE LA LECTURE DU DISQUE — c'est elle que les tests exercent.
+ *
+ *  Prend la table {nom: url}, la base d'acteurs, et les sources déjà câblées.
+ *  Rend les sources de type `enseigne` correspondantes. Séparer la règle de la
+ *  lecture permet de l'éprouver sur des cas fabriqués (URL vide, adresse déjà
+ *  câblée, nom inconnu de la base) sans dépendre d'un fichier présent. */
+export function sourcesAdressesDepuis(table, acteurs, dejaCablees = []) {
+  const paysDe = new Map();
+  for (const a of (acteurs || [])) if (!paysDe.has(a.nom)) paysDe.set(a.nom, a.pays);
+  const dejaLue = new Set((dejaCablees || []).map((s) => s.url));
+  const vues = new Set();
+  const faites = [];
+  for (const [nom, url] of Object.entries(table || {})) {
+    const u = String(url || '').trim();
+    if (!/^https?:\/\//i.test(u) || dejaLue.has(u) || vues.has(u)) continue;
+    vues.add(u);
+    const pays = paysDe.get(nom) || 'BE';
+    faites.push({
+      id: `adr-${identifiantAdresse(nom)}-${faites.length + 1}`,
+      nom,
+      type: 'enseigne',
+      pays,
+      langue: LANGUE_PAR_PAYS[pays] || 'fr',
+      reposMin: REPOS_ADRESSE_MIN,
+      url: u,
+    });
+  }
+  return faites;
+}
+
+const SOURCES_ADRESSES = sourcesAdresses();
+
+/* ------------------------------------------------------------------ *
  *  ACTIVITÉS — les bons plans de SERVICE.
  *
  *  Demande explicite du propriétaire du produit : « spa, centre de beauté,
@@ -798,7 +885,7 @@ function voieDeSite(s) {
 /** Toutes les sources, France et Europe. Exporté pour que les tests vérifient
     que chacune déclare bien un pays — une source sans pays enverrait ses offres
     dans le mauvais pays, sans que rien ne le signale. */
-export const TOUTES_SOURCES = [...SOURCES, ...SOURCES_ENSEIGNES, ...SOURCES_ACTIVITES, ...SOURCES_AMAZON, ...SOURCES_VENTES_FLASH, ...VEILLE_PAYS, ...VEILLE_BING, ...VEILLE_ENSEIGNES];
+export const TOUTES_SOURCES = [...SOURCES, ...SOURCES_ENSEIGNES, ...SOURCES_ADRESSES, ...SOURCES_ACTIVITES, ...SOURCES_AMAZON, ...SOURCES_VENTES_FLASH, ...VEILLE_PAYS, ...VEILLE_BING, ...VEILLE_ENSEIGNES];
 
 /** Exportés pour les TESTS : le filtre par langue et l'anti-tuile se vérifient
  *  en les exécutant, pas en relisant le fichier. */
