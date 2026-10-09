@@ -638,8 +638,10 @@ td.info.sep,th.info.sep{border-left:2px solid var(--bord-clair)}
           <h2>Les acteurs, par catégorie</h2>
           <p class="aide">Chaque acteur tient sur <b>une seule ligne</b>. La colonne
             <b>Adresse des promotions</b> est <b>modifiable</b> : colle un lien vers la page
-            de promotions de l'enseigne et il sera utilisé par la collecte. La <b>note</b> en
-            fin de ligne est libre, et commune avec l'onglet Affiliation.</p>
+            de promotions de l'enseigne et il sera utilisé par la collecte. Les adresses déjà
+            <b>publiées avec le site</b> (<code>adresses-promotions.json</code>) s'affichent
+            d'elles-mêmes ; ce que tu saisis ici les surcharge et reste sur cet appareil.
+            La <b>note</b> en fin de ligne est libre, et commune avec l'onglet Affiliation.</p>
           <details class="pourquoi"><summary>Ce que sont les colonnes à droite du trait, et en quoi elles ne décident rien</summary>
             <p>Les informations de siège (adresse, téléphone, e-mail, CA) sont
               <b>documentaires</b> : elles figurent dans la base et à l'export, mais
@@ -1529,6 +1531,38 @@ try { paysChoisi = localStorage.getItem('kazendra.pays') || ''; } catch { /* pri
  */
 const CLE_ADRESSES = 'kazendra.adressesPromo';
 
+/** LES ADRESSES PUBLIÉES AVEC LE SITE (fichier `adresses-promotions.json`).
+ *
+ *  Jusqu'ici, le champ « Adresse des promotions » ne vivait QUE dans le
+ *  navigateur : une adresse remplie ici était invisible partout ailleurs, et la
+ *  collecte ne la lisait pas. Le fichier comble ce trou : c'est la MÊME adresse,
+ *  mais publiée, donc lisible par le programme et par tout appareil.
+ *
+ *  Elle arrive par le réseau, donc pas tout de suite : la variable reste un
+ *  objet vide tant que le fichier n'a pas répondu, jamais `null`, pour que
+ *  `adressePubliee()` n'ait pas deux formes à gérer. */
+let ADRESSES_PUBLIEES = {};
+
+/** Charge le fichier publié. Son ABSENCE n'est pas une panne : c'est l'état
+ *  normal d'un dépôt qui n'en a pas encore. Le panneau se dessine quand même. */
+async function chargerAdressesPubliees() {
+  try {
+    const rep = await fetch('../adresses-promotions.json', { cache: 'no-store' });
+    const d = await rep.json();
+    const a = d && d.adresses;
+    if (a && typeof a === 'object' && !Array.isArray(a)) ADRESSES_PUBLIEES = a;
+  } catch { /* fichier absent : on garde un objet vide */ }
+}
+
+/** L'adresse publiée pour un acteur, s'il y en a une. */
+function adressePubliee(nom) {
+  const u = ADRESSES_PUBLIEES[nom];
+  return typeof u === 'string' ? u : '';
+}
+
+/** Ce que cet appareil a SAISI. Volontairement séparé du fichier publié : la
+ *  distinction sert à l'écran (« saisie ici » / « publiée avec le site »), et
+ *  à l'export, qui ne doit porter que le travail de la main. */
 function lireAdresses() {
   try {
     const d = JSON.parse(localStorage.getItem(CLE_ADRESSES) || '{}');
@@ -1559,9 +1593,16 @@ function urlsDesSources(catalogue) {
   return m;
 }
 
-/** L'adresse affichée pour un acteur, et d'où elle vient. */
+/** L'adresse affichée pour un acteur, et d'où elle vient.
+ *
+ *  TROIS ORIGINES, dans cet ordre, et il compte : ta saisie sur cet appareil
+ *  gagne (c'est la plus récente), puis l'adresse publiée avec le site, puis
+ *  celle relevée de la source lue. Les trois restent distinctes à l'écran —
+ *  sans quoi une adresse qu'on n'a pas tapée ici passerait pour la sienne. */
 function adresseActeur(a, adresses, urls) {
   if (adresses[a.nom]) return { url: adresses[a.nom], origine: 'saisie' };
+  const publiee = adressePubliee(a.nom);
+  if (publiee) return { url: publiee, origine: 'publiee' };
   for (const s of (a.liaison.flux || [])) if (urls[s.nom]) return { url: urls[s.nom], origine: 'source' };
   return { url: '', origine: 'aucune' };
 }
@@ -2003,8 +2044,9 @@ function dessinerMarche() {
   const blocAdresse = (a) => {
     const d = adresseActeur(a, adresses, urls);
     const note = d.origine === 'saisie' ? '<span class="etat-adr">saisie — utilisée par la collecte</span>'
-      : (d.origine === 'source' ? '<span class="etat-adr">relevée de la source lue</span>'
-        : '<span class="etat-adr">non renseignée</span>');
+      : (d.origine === 'publiee' ? '<span class="etat-adr">publiée avec le site</span>'
+        : (d.origine === 'source' ? '<span class="etat-adr">relevée de la source lue</span>'
+          : '<span class="etat-adr">non renseignée</span>'));
     return `<div class="adr">
       <input type="text" data-acteur="${esc(a.nom)}" value="${esc(d.url)}"
         placeholder="colle ici l’adresse des promotions" spellcheck="false" autocomplete="off">
@@ -2653,6 +2695,11 @@ async function ouvrir() {
     const rep = await fetch('../acteurs.json', { cache: 'no-store' });
     marche = await rep.json();
   } catch (e) { marche = null; }
+  // LES ADRESSES DE PROMOTIONS PUBLIÉES AVEC LE SITE — chargées AVANT le
+  // premier dessin, sinon la colonne s'afficherait vide une seconde avant de se
+  // remplir, et on croirait à un fichier perdu. Leur absence n'est pas une
+  // panne : la fonction ne lève jamais.
+  await chargerAdressesPubliees();
   // Les mesures d'affiliation. Leur absence n'est PAS une panne : c'est un
   // balayage qui n'a pas encore tourné. Le panneau le dira, il ne plantera pas.
   try {

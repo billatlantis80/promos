@@ -1,0 +1,6 @@
+{
+ "version": 1,
+ "genereLe": "2026-10-09",
+ "note": "Pages de promotions des enseignes, une par acteur. Écrites par outils/remplir-adresses-promotions.mjs, lues par le panneau (colonne « Adresse des promotions ») et par la collecte (sources de type enseigne).",
+ "adresses": {}
+}
