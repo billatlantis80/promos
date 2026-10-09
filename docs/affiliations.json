@@ -1,5 +1,5 @@
 {
- "genereLe": "2026-10-09T08:05:36.376Z",
+ "genereLe": "2026-10-09T08:11:04.659Z",
  "methode": "Signatures de réseaux d’affiliation dans le HTML du site, et page « programme d’affiliation ». « aucun signe trouvé » ne veut PAS dire « pas d’affiliation » : un programme privé ne laisse aucune trace publique.",
  "acteurs": [
   {
@@ -33,7 +33,7 @@
    "etat": "aucun signe trouvé",
    "reseaux": [],
    "indices": [
-    "page lue au navigateur : https://www.action.com/ (HTTP 200, 230479 octets)"
+    "page lue au navigateur : https://www.action.com/ (HTTP 200, 230487 octets)"
    ],
    "methode": "navigateur"
   },
@@ -279,7 +279,7 @@
    "etat": "aucun signe trouvé",
    "reseaux": [],
    "indices": [
-    "page lue au navigateur : https://www.c-and-a.com/be/nl/shop?showCountrySelector=true (HTTP 200, 762222 octets)"
+    "page lue au navigateur : https://www.c-and-a.com/be/nl/shop?showCountrySelector=true (HTTP 200, 762340 octets)"
    ],
    "http": 200,
    "methode": "navigateur"
@@ -1228,7 +1228,7 @@
    "etat": "aucun signe trouvé",
    "reseaux": [],
    "indices": [
-    "page lue au navigateur : https://www.ryanair.com/be/fr (HTTP 200, 376923 octets)"
+    "page lue au navigateur : https://www.ryanair.com/be/fr (HTTP 200, 371898 octets)"
    ],
    "http": 200,
    "methode": "navigateur"
@@ -1351,7 +1351,7 @@
    "etat": "aucun signe trouvé",
    "reseaux": [],
    "indices": [
-    "page lue au navigateur : https://starlink.com/ (HTTP 200, 188233 octets)"
+    "page lue au navigateur : https://starlink.com/ (HTTP 200, 182596 octets)"
    ],
    "http": 200,
    "methode": "navigateur"
@@ -1550,7 +1550,7 @@
     "Amazon Partenaires"
    ],
    "indices": [
-    "page lue au navigateur : https://www.ubereats.com/be (HTTP 200, 430653 octets)",
+    "page lue au navigateur : https://www.ubereats.com/be (HTTP 200, 430675 octets)",
     "signature « amazon-adsystem.com » sur https://ubereats.com"
    ],
    "methode": "navigateur"
@@ -1655,7 +1655,7 @@
    "etat": "aucun signe trouvé",
    "reseaux": [],
    "indices": [
-    "page lue au navigateur : https://www.wizzair.com/en-gb (HTTP 200, 2096193 octets)"
+    "page lue au navigateur : https://www.wizzair.com/en-gb (HTTP 200, 2020265 octets)"
    ],
    "http": 200,
    "methode": "navigateur"
@@ -1854,10 +1854,17 @@
    "nom": "Amazon (livres)",
    "pays": "DE",
    "domaine": "amazon.de",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [],
-   "http": 202
+   "etat": "programme trouvé",
+   "reseaux": [
+    "Amazon Partenaires"
+   ],
+   "indices": [
+    "page lue au navigateur : https://www.amazon.de/ (HTTP 200, 1659745 octets)",
+    "signature « amazon-adsystem.com » sur https://amazon.de",
+    "programme annoncé sur la page (lue au navigateur)"
+   ],
+   "http": 202,
+   "methode": "navigateur"
   },
   {
    "nom": "Amazon.de",
@@ -2814,10 +2821,12 @@
    "nom": "Kaufland",
    "pays": "DE",
    "domaine": "kaufland.de",
-   "etat": "non mesuré",
-   "raison": "le site a refusé la mesure (HTTP 403)",
+   "etat": "aucun signe trouvé",
    "reseaux": [],
-   "indices": []
+   "indices": [
+    "page lue au navigateur : https://www.kaufland.de/?__cf_chl_rt_tk=NCjAhbQrfVGFolKPmqtlJx.V7lcRPEymKMoXQE2.26o-1791532693-1.0.1.1-Eo0ojtbmGwaJB2yqxqvj1raYySTgnfq7bZ6blQ4H7PU (HTTP 403, 12302 octets)"
+   ],
+   "methode": "navigateur"
   },
   {
    "nom": "Kaufland.de",
@@ -3020,8 +3029,11 @@
    "domaine": "mueller.de",
    "etat": "aucun signe trouvé",
    "reseaux": [],
-   "indices": [],
-   "http": 200
+   "indices": [
+    "page lue au navigateur : https://www.mueller.de/ (HTTP 200, 708914 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
   },
   {
    "nom": "Müller (Drogerie)",
@@ -3152,8 +3164,11 @@
    "domaine": "otto.de",
    "etat": "aucun signe trouvé",
    "reseaux": [],
-   "indices": [],
-   "http": 200
+   "indices": [
+    "page lue au navigateur : https://www.otto.de/ (HTTP 200, 860612 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
   },
   {
    "nom": "Otto Group (mode)",
@@ -3375,8 +3390,11 @@
    "domaine": "shein.com",
    "etat": "aucun signe trouvé",
    "reseaux": [],
-   "indices": [],
-   "http": 200
+   "indices": [
+    "page lue au navigateur : https://euqs.shein.com/?cdn_rsite=ak&ref=www&rep=dir&ret=euqs (HTTP 200, 2530047 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
   },
   {
    "nom": "Shein (mode)",
@@ -3996,8 +4014,8 @@
   }
  ],
  "nombreActeurs": 345,
- "avecProgramme": 63,
+ "avecProgramme": 64,
  "sansSigne": 237,
- "nonMesures": 45,
- "relusAuNavigateur": 267
+ "nonMesures": 44,
+ "relusAuNavigateur": 287
 }
