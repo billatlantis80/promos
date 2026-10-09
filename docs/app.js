@@ -1627,7 +1627,16 @@ function lienPartage(o) {
   return `${SITE_PARTAGE}/o/${encodeURIComponent(o.id)}.html`;
 }
 
-/** Ce qu'on écrit à l'ami : le titre, le prix s'il est connu, et le lien. */
+/** Ce qu'on écrit à l'ami : le titre, le prix s'il est connu, et le lien.
+ *
+ *  ⚠ LE LIEN NE DOIT FIGURER QU'UNE FOIS — défaut corrigé le 09/10/2026, signalé
+ *  par B : « le lien de partage, quand je le colle, présente deux fois l'adresse
+ *  kazendra ». Mesuré : ce texte finit DÉJÀ par le lien, et l'adresse était en
+ *  PLUS transmise à part — `url` pour `navigator.share`, et `texte + "\n" + url`
+ *  côté pont Android. Les applications qui assemblent les deux (WhatsApp, Gmail,
+ *  Messenger, Telegram) affichaient donc l'adresse deux fois. Le lien n'est plus
+ *  donné qu'ICI ; la feuille du navigateur reçoit le texte seul, et le pont
+ *  Android n'ajoute l'adresse que si elle manque. */
 function textePartage(o, lien) {
   const prix = o.prix != null ? '\n' + montant(o.prix, deviseDe(o)) : '';
   return o.titre + prix + '\n' + lien;
@@ -1674,7 +1683,10 @@ function partagerOffre(id, bouton) {
     try { window.AndroidPartage.partager(o.titre, texte, lien); return; } catch (e) { /* on essaie la suite */ }
   }
   if (navigator.share) {
-    navigator.share({ title: o.titre, text: texte, url: lien }).catch(() => { /* l'utilisateur a refusé */ });
+    // PAS de `url` ici : elle est DÉJÀ à la fin du texte. La donner aussi à part
+    // faisait écrire l'adresse deux fois par les applications qui assemblent les
+    // deux champs (défaut signalé par B le 09/10/2026).
+    navigator.share({ title: o.titre, text: texte }).catch(() => { /* l'utilisateur a refusé */ });
     return;
   }
   ouvrirMenuPartage(o.titre, texte, lien, bouton);
