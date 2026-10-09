@@ -91,6 +91,27 @@ test('la même adresse sous deux noms ne passe qu’une fois', () => {
   assert.equal(r.length, 1, 'une adresse identique ne doit pas être interrogée deux fois par passage');
 });
 
+test('l’étiquette ne traîne pas le pays — le pays vit dans son champ, pas dans le nom', () => {
+  // Régression réelle, trouvée par `tests/veille-noms.test.mjs` après la pose du
+  // tuyau : la base du marché nomme ses acteurs « Corendon Belgique », « Orange
+  // Belgique », « Sunweb Belgique », et ces libellés partaient tels quels sur la
+  // carte de l'offre. L'étiquette publiée doit dire le MARCHAND, le pays est
+  // porté à part et c'est lui qui range l'offre dans le bon marché.
+  const r = sourcesAdressesDepuis(
+    { 'Corendon Belgique': 'https://www.corendon.be/promos', 'Orange Belgique': 'https://www.orange.be/promo', 'Media Markt Belgique': 'https://www.mediamarkt.be/promo' },
+    [{ nom: 'Corendon Belgique', pays: 'BE' }, { nom: 'Orange Belgique', pays: 'BE' }, { nom: 'Media Markt Belgique', pays: 'BE' }],
+    [],
+  );
+  // L'ordre d'insertion est celui de la table : Corendon, Orange, Media Markt.
+  assert.deepEqual(r.map((s) => s.nom), ['Corendon', 'Orange', 'Media Markt'],
+    `les étiquettes doivent perdre leur pays (reçu : ${r.map((s) => `« ${s.nom} »`).join(', ')})`);
+  for (const s of r) {
+    assert.ok(!/\b(belgique|belgi[eë])\b/i.test(s.nom), `« ${s.nom} » porte encore son pays`);
+    assert.equal(s.pays, 'BE', 'le pays, lui, doit rester intact');
+    assert.ok(s.id.startsWith('adr-'), 'l’identifiant doit rester calculé sur le nom d’origine, sinon il changerait à chaque correction');
+  }
+});
+
 test('la langue suit le pays — un Suédois n’est pas lu en français', () => {
   const r = sourcesAdressesDepuis(
     { Suedois: 'https://www.exemple.se/erbjudanden', Allemand: 'https://www.exemple.de/angebote', Anglais: 'https://www.exemple.co.uk/sale' },

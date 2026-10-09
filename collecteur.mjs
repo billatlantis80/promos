@@ -396,6 +396,30 @@ const REPOS_ADRESSE_MIN = 180;
 const identifiantAdresse = (nom) => String(nom).normalize('NFD').replace(/[\u0300-\u036f]/g, '')
   .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40) || 'acteur';
 
+/* L'ÉTIQUETTE PUBLIÉE NE PORTE PAS LE PAYS — ET CE N'EST PAS UN DÉTAIL.
+ *
+ *  La base du marché nomme ses acteurs tels qu'ils se présentent sur leur
+ *  papier : « Corendon Belgique », « Orange Belgique », « Sunweb Belgique ».
+ *  Reprendre ce libellé tel quel ferait signer l'offre d'un marchand que
+ *  personne ne connaît : la carte afficherait « Corendon Belgique » au lieu de
+ *  « Corendon ». C'est le défaut déjà corrigé une fois sur la veille marchande
+ *  (« Media Markt » s'affichait « Media »), et `tests/veille-noms.test.mjs`
+ *  veille dessus — c'est lui qui a attrapé cette régression.
+ *
+ *  POURQUOI ON NE RETIRE QUE « Belgique / België », ET PAS TOUS LES PAYS.
+ *  Parce qu'un pays dans un nom n'est pas toujours un qualificatif : « Air
+ *  France », « Transavia France », « Rakuten France » sont des NOMS DE MARQUE.
+ *  Les tronquer en « Air », « Transavia », « Rakuten » fabriquerait exactement
+ *  le défaut qu'on répare — une carte signée d'un marchand qui n'existe pas.
+ *  La règle du projet ne demande que le qualificatif belge, et c'est celui-là,
+ *  et lui seul, qu'on retire. Un test le tient.
+ *
+ *  Le PAYS n'est jamais perdu : il est porté à part, par le champ `pays`, et
+ *  c'est lui qui range l'offre dans le bon marché. */
+const QUALIFICATIF_PAYS = /[\s\-–(]*(belgique|belgi[eë])\s*\)?\s*$/i;
+
+const etiquetteMarchand = (nom) => String(nom).replace(QUALIFICATIF_PAYS, '').replace(/\s{2,}/g, ' ').trim() || String(nom).trim();
+
 /** Les sources tirées du fichier publié. Rend TOUJOURS un tableau : un fichier
  *  absent, vide ou illisible donne une liste vide, jamais une exception — la
  *  collecte ne doit pas mourir parce qu'un fichier annexe manque. */
@@ -434,7 +458,7 @@ export function sourcesAdressesDepuis(table, acteurs, dejaCablees = []) {
     const pays = paysDe.get(nom) || 'BE';
     faites.push({
       id: `adr-${identifiantAdresse(nom)}-${faites.length + 1}`,
-      nom,
+      nom: etiquetteMarchand(nom),
       type: 'enseigne',
       pays,
       langue: LANGUE_PAR_PAYS[pays] || 'fr',
