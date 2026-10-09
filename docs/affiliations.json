@@ -1,5 +1,5 @@
 {
- "genereLe": "2026-10-09T08:11:04.659Z",
+ "genereLe": "2026-10-09T08:12:31.922Z",
  "methode": "Signatures de réseaux d’affiliation dans le HTML du site, et page « programme d’affiliation ». « aucun signe trouvé » ne veut PAS dire « pas d’affiliation » : un programme privé ne laisse aucune trace publique.",
  "acteurs": [
   {
@@ -42,9 +42,10 @@
    "pays": "BE",
    "domaine": "airfrance.com",
    "etat": "non mesuré",
-   "raison": "réponse vide ou trop courte (HTTP —, 0 octets)",
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: Timeout 20000ms exceeded.)",
    "reseaux": [],
-   "indices": []
+   "indices": [],
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "Albert Heijn",
@@ -107,9 +108,10 @@
    "pays": "BE",
    "domaine": "amplifon.com",
    "etat": "non mesuré",
-   "raison": "le site a refusé la mesure (HTTP 403)",
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 403, 198 octets)",
    "reseaux": [],
-   "indices": []
+   "indices": [],
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "Ardennes-Etape",
@@ -128,9 +130,10 @@
    "pays": "BE",
    "domaine": "auto5.be",
    "etat": "non mesuré",
-   "raison": "le site a refusé la mesure (HTTP 403)",
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 403, 1462 octets)",
    "reseaux": [],
-   "indices": []
+   "indices": [],
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "AutoDoc",
@@ -202,9 +205,10 @@
    "pays": "BE",
    "domaine": "bol.com",
    "etat": "non mesuré",
-   "raison": "le site a refusé la mesure (HTTP 403)",
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: Timeout 20000ms exceeded.)",
    "reseaux": [],
-   "indices": []
+   "indices": [],
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "Bongo & Wonderbox",
@@ -248,18 +252,20 @@
    "pays": "BE",
    "domaine": "bricoplanit.be",
    "etat": "non mesuré",
-   "raison": "réponse vide ou trop courte (HTTP —, 0 octets)",
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: net::ERR_NAME_NOT_RESOLVED at https://bricoplanit.be/)",
    "reseaux": [],
-   "indices": []
+   "indices": [],
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "British Airways",
    "pays": "BE",
    "domaine": "britishairways.com",
    "etat": "non mesuré",
-   "raison": "réponse vide ou trop courte (HTTP —, 0 octets)",
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: Timeout 20000ms exceeded.)",
    "reseaux": [],
-   "indices": []
+   "indices": [],
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "Brussels Airlines",
@@ -289,9 +295,10 @@
    "pays": "BE",
    "domaine": "cameleon.be",
    "etat": "non mesuré",
-   "raison": "réponse vide ou trop courte (HTTP —, 0 octets)",
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: net::ERR_CERT_DATE_INVALID at https://cameleon.be/)",
    "reseaux": [],
-   "indices": []
+   "indices": [],
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "Carrefour Belgique",
@@ -309,9 +316,10 @@
    "pays": "BE",
    "domaine": "casa.be",
    "etat": "non mesuré",
-   "raison": "réponse vide ou trop courte (HTTP —, 0 octets)",
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: Timeout 20000ms exceeded.)",
    "reseaux": [],
-   "indices": []
+   "indices": [],
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "Club",
@@ -409,10 +417,12 @@
    "nom": "Dealabs",
    "pays": "BE",
    "domaine": "dealabs.com",
-   "etat": "aucun signe trouvé",
+   "etat": "non mesuré",
    "reseaux": [],
    "indices": [],
-   "http": 200
+   "http": 200,
+   "raison": "le navigateur n’a pas pu lire la page (Page.content: Unable to retrieve content because the page is navigating and chan)",
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "Decathlon",
@@ -479,9 +489,10 @@
    "pays": "BE",
    "domaine": "digi.be",
    "etat": "non mesuré",
-   "raison": "réponse vide ou trop courte (HTTP —, 0 octets)",
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: net::ERR_CONNECTION_REFUSED at https://digi.be/)",
    "reseaux": [],
-   "indices": []
+   "indices": [],
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "DreamLand",
@@ -499,9 +510,10 @@
    "pays": "BE",
    "domaine": "easyjet.com",
    "etat": "non mesuré",
-   "raison": "le site a refusé la mesure (HTTP 403)",
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 403, 291 octets)",
    "reseaux": [],
-   "indices": []
+   "indices": [],
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "Èggo",
@@ -595,18 +607,20 @@
    "pays": "BE",
    "domaine": "fnac.be",
    "etat": "non mesuré",
-   "raison": "le site a refusé la mesure (HTTP 403)",
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 403, 1454 octets)",
    "reseaux": [],
-   "indices": []
+   "indices": [],
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "Fox & Compagnie",
    "pays": "BE",
    "domaine": "foxcompagnie.be",
    "etat": "non mesuré",
-   "raison": "réponse vide ou trop courte (HTTP —, 0 octets)",
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: net::ERR_NAME_NOT_RESOLVED at https://foxcompagnie.be/)",
    "reseaux": [],
-   "indices": []
+   "indices": [],
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "Frandroid / 01net",
@@ -658,9 +672,10 @@
    "pays": "BE",
    "domaine": "grandoptical.be",
    "etat": "non mesuré",
-   "raison": "réponse vide ou trop courte (HTTP —, 0 octets)",
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: net::ERR_NAME_NOT_RESOLVED at https://grandoptical.be/)",
    "reseaux": [],
-   "indices": []
+   "indices": [],
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "Groupon",
@@ -677,10 +692,12 @@
    "nom": "H&M",
    "pays": "BE",
    "domaine": "hm.com",
-   "etat": "aucun signe trouvé",
+   "etat": "non mesuré",
    "reseaux": [],
    "indices": [],
-   "http": 200
+   "http": 200,
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 403, 282 octets)",
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "Hans Anders",
@@ -735,9 +752,10 @@
    "pays": "BE",
    "domaine": "hey.be",
    "etat": "non mesuré",
-   "raison": "réponse vide ou trop courte (HTTP —, 0 octets)",
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: net::ERR_CONNECTION_REFUSED at https://hey.be/)",
    "reseaux": [],
-   "indices": []
+   "indices": [],
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "Hubo",
@@ -767,10 +785,12 @@
    "nom": "ICI PARIS XL",
    "pays": "BE",
    "domaine": "iciparisxl.be",
-   "etat": "aucun signe trouvé",
+   "etat": "non mesuré",
    "reseaux": [],
    "indices": [],
-   "http": 200
+   "http": 200,
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 403, 287 octets)",
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "IKEA",
@@ -852,9 +872,10 @@
    "pays": "BE",
    "domaine": "kiabi.be",
    "etat": "non mesuré",
-   "raison": "le site a refusé la mesure (HTTP 403)",
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 403, 1462 octets)",
    "reseaux": [],
-   "indices": []
+   "indices": [],
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "King Jouet (ex-Maxi Toys)",
@@ -884,10 +905,12 @@
    "nom": "Kruidvat",
    "pays": "BE",
    "domaine": "kruidvat.be",
-   "etat": "aucun signe trouvé",
+   "etat": "non mesuré",
    "reseaux": [],
    "indices": [],
-   "http": 200
+   "http": 200,
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 403, 287 octets)",
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "Lapperre",
@@ -965,9 +988,10 @@
    "pays": "BE",
    "domaine": "maisonsdumonde.com",
    "etat": "non mesuré",
-   "raison": "le site a refusé la mesure (HTTP 403)",
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 403, 1482 octets)",
    "reseaux": [],
-   "indices": []
+   "indices": [],
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "Maniet! Luxus",
@@ -1038,9 +1062,10 @@
    "pays": "BE",
    "domaine": "mister-auto.be",
    "etat": "non mesuré",
-   "raison": "le site a refusé la mesure (HTTP 403)",
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 403, 1474 octets)",
    "reseaux": [],
-   "indices": []
+   "indices": [],
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "Mobile Vikings",
@@ -1094,9 +1119,10 @@
    "pays": "BE",
    "domaine": "normal.be",
    "etat": "non mesuré",
-   "raison": "réponse vide ou trop courte (HTTP —, 0 octets)",
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: net::ERR_NAME_NOT_RESOLVED at https://normal.be/)",
    "reseaux": [],
-   "indices": []
+   "indices": [],
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "Oh'Green",
@@ -1163,36 +1189,41 @@
    "pays": "BE",
    "domaine": "playerone.be",
    "etat": "non mesuré",
-   "raison": "réponse vide ou trop courte (HTTP 404, 0 octets)",
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 404, 39 octets)",
    "reseaux": [],
-   "indices": []
+   "indices": [],
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "Poils et Plumes",
    "pays": "BE",
    "domaine": "poils-et-plumes.be",
    "etat": "non mesuré",
-   "raison": "réponse vide ou trop courte (HTTP —, 0 octets)",
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: net::ERR_NAME_NOT_RESOLVED at https://poils-et-plumes.be/)",
    "reseaux": [],
-   "indices": []
+   "indices": [],
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "Prik&Tik",
    "pays": "BE",
    "domaine": "prik-et-tik.be",
    "etat": "non mesuré",
-   "raison": "réponse vide ou trop courte (HTTP —, 0 octets)",
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: net::ERR_NAME_NOT_RESOLVED at https://prik-et-tik.be/)",
    "reseaux": [],
-   "indices": []
+   "indices": [],
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "Primark",
    "pays": "BE",
    "domaine": "primark.com",
-   "etat": "aucun signe trouvé",
+   "etat": "non mesuré",
    "reseaux": [],
    "indices": [],
-   "http": 200
+   "http": 200,
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 200, 1509 octets)",
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "Proximus",
@@ -1262,9 +1293,10 @@
    "pays": "BE",
    "domaine": "skydsl.be",
    "etat": "non mesuré",
-   "raison": "réponse vide ou trop courte (HTTP —, 0 octets)",
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: net::ERR_CERT_COMMON_NAME_INVALID at https://skydsl.be/)",
    "reseaux": [],
-   "indices": []
+   "indices": [],
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "Sleepworld",
@@ -1327,10 +1359,12 @@
    "nom": "Sports Direct",
    "pays": "BE",
    "domaine": "sportsdirect.com",
-   "etat": "aucun signe trouvé",
+   "etat": "non mesuré",
    "reseaux": [],
    "indices": [],
-   "http": 200
+   "http": 200,
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://sportsdirect.com/)",
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "Standaard Boekhandel",
@@ -1514,18 +1548,20 @@
    "pays": "BE",
    "domaine": "trekpleister.be",
    "etat": "non mesuré",
-   "raison": "réponse vide ou trop courte (HTTP —, 0 octets)",
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: net::ERR_CERT_COMMON_NAME_INVALID at https://trekpleister.be/)",
    "reseaux": [],
-   "indices": []
+   "indices": [],
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "TUI Belgique (TUI.be)",
    "pays": "BE",
    "domaine": "tui.be",
    "etat": "non mesuré",
-   "raison": "le site a refusé la mesure (HTTP 403)",
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 403, 288 octets)",
    "reseaux": [],
-   "indices": []
+   "indices": [],
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "TUI fly Belgium",
@@ -1596,9 +1632,10 @@
    "pays": "BE",
    "domaine": "volotea.com",
    "etat": "non mesuré",
-   "raison": "réponse vide ou trop courte (HTTP 200, 212 octets)",
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 200, 879 octets)",
    "reseaux": [],
-   "indices": []
+   "indices": [],
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "VOO",
@@ -1700,10 +1737,12 @@
    "nom": "Zara",
    "pays": "BE",
    "domaine": "zara.com",
-   "etat": "aucun signe trouvé",
+   "etat": "non mesuré",
    "reseaux": [],
    "indices": [],
-   "http": 200
+   "http": 200,
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 403, 286 octets)",
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "Zeeman",
@@ -1745,9 +1784,10 @@
    "pays": "DE",
    "domaine": "atu.de",
    "etat": "non mesuré",
-   "raison": "le site a refusé la mesure (HTTP 403)",
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 403, 1458 octets)",
    "reseaux": [],
-   "indices": []
+   "indices": [],
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "About You",
@@ -1787,10 +1827,12 @@
    "nom": "Air France-KLM",
    "pays": "DE",
    "domaine": "airfrance.de",
-   "etat": "aucun signe trouvé",
+   "etat": "non mesuré",
    "reseaux": [],
    "indices": [],
-   "http": 200
+   "http": 200,
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: Timeout 20000ms exceeded.)",
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "Aldi Nord",
@@ -1887,9 +1929,10 @@
    "pays": "DE",
    "domaine": "amplifon.com",
    "etat": "non mesuré",
-   "raison": "le site a refusé la mesure (HTTP 403)",
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 403, 198 octets)",
    "reseaux": [],
-   "indices": []
+   "indices": [],
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "Apollo-Optik",
@@ -1975,18 +2018,20 @@
    "pays": "DE",
    "domaine": "blablacar.de",
    "etat": "non mesuré",
-   "raison": "le site a refusé la mesure (HTTP 403)",
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 403, 1470 octets)",
    "reseaux": [],
-   "indices": []
+   "indices": [],
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "British Airways / IAG",
    "pays": "DE",
    "domaine": "britishairways.com",
    "etat": "non mesuré",
-   "raison": "réponse vide ou trop courte (HTTP —, 0 octets)",
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: Timeout 20000ms exceeded.)",
    "reseaux": [],
-   "indices": []
+   "indices": [],
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "Budnikowsky (Budni)",
@@ -2223,9 +2268,10 @@
    "pays": "DE",
    "domaine": "douglas.de",
    "etat": "non mesuré",
-   "raison": "le site a refusé la mesure (HTTP 403)",
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 403, 290 octets)",
    "reseaux": [],
-   "indices": []
+   "indices": [],
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "Dursty",
@@ -2267,27 +2313,31 @@
    "pays": "DE",
    "domaine": "easyjet.com",
    "etat": "non mesuré",
-   "raison": "le site a refusé la mesure (HTTP 403)",
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 403, 291 octets)",
    "reseaux": [],
-   "indices": []
+   "indices": [],
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "eBay.de",
    "pays": "DE",
    "domaine": "ebay.de",
    "etat": "non mesuré",
-   "raison": "le site a refusé la mesure (HTTP 403)",
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 403, 1831 octets)",
    "reseaux": [],
-   "indices": []
+   "indices": [],
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "Edeka",
    "pays": "DE",
    "domaine": "edeka.de",
-   "etat": "aucun signe trouvé",
+   "etat": "non mesuré",
    "reseaux": [],
    "indices": [],
-   "http": 200
+   "http": 200,
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 403, 290 octets)",
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "Elbenwald",
@@ -2328,9 +2378,10 @@
    "pays": "DE",
    "domaine": "divers",
    "etat": "non mesuré",
-   "raison": "réponse vide ou trop courte (HTTP —, 0 octets)",
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: net::ERR_NAME_NOT_RESOLVED at https://divers/)",
    "reseaux": [],
-   "indices": []
+   "indices": [],
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "Euromaster Deutschland",
@@ -2373,9 +2424,10 @@
    "pays": "DE",
    "domaine": "euroshop-24.de",
    "etat": "non mesuré",
-   "raison": "réponse vide ou trop courte (HTTP —, 0 octets)",
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: net::ERR_NAME_NOT_RESOLVED at https://euroshop-24.de/)",
    "reseaux": [],
-   "indices": []
+   "indices": [],
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "Eurowings",
@@ -2392,10 +2444,12 @@
    "nom": "Eventim",
    "pays": "DE",
    "domaine": "eventim.de",
-   "etat": "aucun signe trouvé",
+   "etat": "non mesuré",
    "reseaux": [],
    "indices": [],
-   "http": 200
+   "http": 200,
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: Timeout 20000ms exceeded.)",
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "Expert",
@@ -2462,9 +2516,10 @@
    "pays": "DE",
    "domaine": "goflink.com",
    "etat": "non mesuré",
-   "raison": "le site a refusé la mesure (HTTP 403)",
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 403, 1473 octets)",
    "reseaux": [],
-   "indices": []
+   "indices": [],
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "FlixBus / FlixTrain",
@@ -2521,9 +2576,10 @@
    "pays": "DE",
    "domaine": "—",
    "etat": "non mesuré",
-   "raison": "réponse vide ou trop courte (HTTP —, 0 octets)",
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: net::ERR_NAME_NOT_RESOLVED at https://xn--8ug/)",
    "reseaux": [],
-   "indices": []
+   "indices": [],
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "Games Only",
@@ -2542,18 +2598,21 @@
    "pays": "DE",
    "domaine": "fermé",
    "etat": "non mesuré",
-   "raison": "réponse vide ou trop courte (HTTP —, 0 octets)",
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: net::ERR_NAME_NOT_RESOLVED at https://xn--ferm-epa/)",
    "reseaux": [],
-   "indices": []
+   "indices": [],
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "Geers Hörgeräte",
    "pays": "DE",
    "domaine": "geers.de",
-   "etat": "aucun signe trouvé",
+   "etat": "non mesuré",
    "reseaux": [],
    "indices": [],
-   "http": 200
+   "http": 200,
+   "raison": "le navigateur n’a pas pu lire la page (Page.eval_on_selector_all: Execution context was destroyed, most likely because )",
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "Geizhals",
@@ -2630,10 +2689,12 @@
    "nom": "H&M Allemagne",
    "pays": "DE",
    "domaine": "hm.com",
-   "etat": "aucun signe trouvé",
+   "etat": "non mesuré",
    "reseaux": [],
    "indices": [],
-   "http": 200
+   "http": 200,
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 403, 282 octets)",
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "hagebau",
@@ -2756,9 +2817,10 @@
    "pays": "DE",
    "domaine": "ideeundspiel.de",
    "etat": "non mesuré",
-   "raison": "réponse vide ou trop courte (HTTP —, 0 octets)",
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: net::ERR_CERT_COMMON_NAME_INVALID at https://ideeundspiel.de/)",
    "reseaux": [],
-   "indices": []
+   "indices": [],
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "IKEA Allemagne",
@@ -2776,10 +2838,12 @@
    "nom": "Inditex / Zara",
    "pays": "DE",
    "domaine": "zara.com",
-   "etat": "aucun signe trouvé",
+   "etat": "non mesuré",
    "reseaux": [],
    "indices": [],
-   "http": 200
+   "http": 200,
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 403, 286 octets)",
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "Intersport Deutschland",
@@ -2986,9 +3050,10 @@
    "pays": "DE",
    "domaine": "mindfactory.de",
    "etat": "non mesuré",
-   "raison": "le site a refusé la mesure (HTTP 403)",
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 403, 1253 octets)",
    "reseaux": [],
-   "indices": []
+   "indices": [],
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "Mister Spex",
@@ -3019,9 +3084,10 @@
    "pays": "DE",
    "domaine": "msccruises.de",
    "etat": "non mesuré",
-   "raison": "réponse vide ou trop courte (HTTP 401, 490 octets)",
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 401, 488 octets)",
    "reseaux": [],
-   "indices": []
+   "indices": [],
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "Müller",
@@ -3075,10 +3141,12 @@
    "nom": "Netto Marken-Discount",
    "pays": "DE",
    "domaine": "netto-online.de",
-   "etat": "aucun signe trouvé",
+   "etat": "non mesuré",
    "reseaux": [],
    "indices": [],
-   "http": 200
+   "http": 200,
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 403, 297 octets)",
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "Norma",
@@ -3096,10 +3164,12 @@
    "nom": "Notebooksbilliger.de",
    "pays": "DE",
    "domaine": "notebooksbilliger.de",
-   "etat": "aucun signe trouvé",
+   "etat": "non mesuré",
    "reseaux": [],
    "indices": [],
-   "http": 404
+   "http": 404,
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 403, 999 octets)",
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "O2 Telefónica",
@@ -3130,9 +3200,10 @@
    "pays": "DE",
    "domaine": "obletter.de",
    "etat": "non mesuré",
-   "raison": "réponse vide ou trop courte (HTTP —, 0 octets)",
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: net::ERR_CERT_DATE_INVALID at https://obletter.de/)",
    "reseaux": [],
-   "indices": []
+   "indices": [],
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "Öko-Test",
@@ -3279,19 +3350,22 @@
    "nom": "Primark",
    "pays": "DE",
    "domaine": "primark.com",
-   "etat": "aucun signe trouvé",
+   "etat": "non mesuré",
    "reseaux": [],
    "indices": [],
-   "http": 200
+   "http": 200,
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 200, 1509 octets)",
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "Pro Optik",
    "pays": "DE",
    "domaine": "pro-optik.de",
    "etat": "non mesuré",
-   "raison": "réponse vide ou trop courte (HTTP —, 0 octets)",
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: net::ERR_CERT_COMMON_NAME_INVALID at https://pro-optik.de/)",
    "reseaux": [],
-   "indices": []
+   "indices": [],
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "reifen.com / reifendirekt",
@@ -3332,10 +3406,12 @@
    "nom": "Rossmann",
    "pays": "DE",
    "domaine": "rossmann.de",
-   "etat": "aucun signe trouvé",
+   "etat": "non mesuré",
    "reseaux": [],
    "indices": [],
-   "http": 200
+   "http": 200,
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 429, 168 octets)",
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "Ryanair",
@@ -3464,18 +3540,21 @@
    "pays": "DE",
    "domaine": "à vérifier",
    "etat": "non mesuré",
-   "raison": "réponse vide ou trop courte (HTTP —, 0 octets)",
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: net::ERR_NAME_NOT_RESOLVED at https://à vérifier)",
    "reseaux": [],
-   "indices": []
+   "indices": [],
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "SportScheck",
    "pays": "DE",
    "domaine": "sportscheck.com",
-   "etat": "aucun signe trouvé",
+   "etat": "non mesuré",
    "reseaux": [],
    "indices": [],
-   "http": 200
+   "http": 200,
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://sportscheck.com/)",
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "Starlink Allemagne",
@@ -3630,10 +3709,12 @@
    "nom": "Turkish Airlines",
    "pays": "DE",
    "domaine": "turkishairlines.com",
-   "etat": "aucun signe trouvé",
+   "etat": "non mesuré",
    "reseaux": [],
    "indices": [],
-   "http": 200
+   "http": 200,
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: Timeout 20000ms exceeded.)",
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "Uber Eats Allemagne",
@@ -3713,9 +3794,10 @@
    "pays": "DE",
    "domaine": "à vérifier",
    "etat": "non mesuré",
-   "raison": "réponse vide ou trop courte (HTTP —, 0 octets)",
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: net::ERR_NAME_NOT_RESOLVED at https://à vérifier)",
    "reseaux": [],
-   "indices": []
+   "indices": [],
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "Weltbild",
@@ -3779,19 +3861,23 @@
    "nom": "Zalando",
    "pays": "DE",
    "domaine": "zalando.de",
-   "etat": "aucun signe trouvé",
+   "etat": "non mesuré",
    "reseaux": [],
    "indices": [],
-   "http": 200
+   "http": 200,
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: Timeout 20000ms exceeded.)",
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "Zalando (mode)",
    "pays": "DE",
    "domaine": "zalando.de",
-   "etat": "aucun signe trouvé",
+   "etat": "non mesuré",
    "reseaux": [],
    "indices": [],
-   "http": 200
+   "http": 200,
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: Timeout 20000ms exceeded.)",
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "Zoo & Co. / Sagaflor",
@@ -3836,10 +3922,12 @@
    "nom": "Chollometro",
    "pays": "ES",
    "domaine": "chollometro.com",
-   "etat": "aucun signe trouvé",
+   "etat": "non mesuré",
    "reseaux": [],
    "indices": [],
-   "http": 200
+   "http": 200,
+   "raison": "le navigateur n’a pas pu lire la page (Page.eval_on_selector_all: Execution context was destroyed, most likely because )",
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "Journal du Geek",
@@ -3857,10 +3945,12 @@
    "nom": "HotUKDeals",
    "pays": "GB",
    "domaine": "hotukdeals.com",
-   "etat": "aucun signe trouvé",
+   "etat": "non mesuré",
    "reseaux": [],
    "indices": [],
-   "http": 200
+   "http": 200,
+   "raison": "le navigateur n’a pas pu lire la page (Page.content: Unable to retrieve content because the page is navigating and chan)",
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "HDblog",
@@ -4015,7 +4105,7 @@
  ],
  "nombreActeurs": 345,
  "avecProgramme": 64,
- "sansSigne": 237,
- "nonMesures": 44,
- "relusAuNavigateur": 287
+ "sansSigne": 214,
+ "nonMesures": 67,
+ "relusAuNavigateur": 324
 }

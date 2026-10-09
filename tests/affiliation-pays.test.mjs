@@ -118,6 +118,90 @@ test('les mesures s’indexent par NOM, la seule clé partagée par les deux bas
   assert.equal(indexAffiliation(null).constructor, Object);
 });
 
+test('UN MÊME NOM DANS DEUX PAYS ne mélange pas les deux mesures', () => {
+  // Ajout du 09/10/2026, sur un cas réel : les tableurs belge et allemand
+  // nomment tous les deux « Lidl », « MediaMarkt », « Zalando »… mais ce sont
+  // deux sites (lidl.be / lidl.de). Sans le pays dans la clé, la mesure
+  // allemande s'affichait sur la ligne belge (ou l'inverse, selon l'ordre du
+  // fichier) — une liaison fausse, du genre qui fait croire qu'un marché est
+  // couvert alors qu'il ne l'est pas.
+  const mesures = { acteurs: [
+    { nom: 'Lidl', pays: 'BE', domaine: 'lidl.be', etat: 'aucun signe trouvé', reseaux: [] },
+    { nom: 'Lidl', pays: 'DE', domaine: 'lidl.de', etat: 'programme trouvé', reseaux: ['Awin'] },
+  ] };
+  assert.equal(etatAffiliation(mesures, 'Lidl', 'DE').etat, 'programme trouvé');
+  assert.equal(etatAffiliation(mesures, 'Lidl', 'DE').domaine, 'lidl.de');
+  assert.equal(etatAffiliation(mesures, 'Lidl', 'BE').etat, 'aucun signe trouvé');
+  assert.equal(etatAffiliation(mesures, 'Lidl', 'BE').domaine, 'lidl.be');
+  // Sans pays, on retombe sur la première mesure du nom — l'ancien contrat,
+  // celui des mesures d'avant l'ajout des pays.
+  assert.equal(etatAffiliation(mesures, 'Lidl').domaine, 'lidl.be');
+  // Et l'index garde les deux clés.
+  const idx = indexAffiliation(mesures);
+  assert.ok(idx['Lidl|DE'] && idx['Lidl|BE'] && idx.Lidl);
+});
+
+test('les deux marchés homonymes restent distincts dans la vue du pays', () => {
+  const b = { acteurs: [
+    { nom: 'Lidl', pays: 'BE', categorie: 'Grande Distribution Alimentaire', domaines: ['lidl.be'] },
+    { nom: 'Lidl', pays: 'DE', categorie: 'Grande Distribution Alimentaire', domaines: ['lidl.de'] },
+  ] };
+  const m = { acteurs: [
+    { nom: 'Lidl', pays: 'BE', domaine: 'lidl.be', etat: 'aucun signe trouvé', reseaux: [] },
+    { nom: 'Lidl', pays: 'DE', domaine: 'lidl.de', etat: 'programme trouvé', reseaux: ['Awin'] },
+  ] };
+  const de = affiliationsDuPays(null, b, m, 'DE');
+  assert.equal(de.compteurs.programme, 1, 'le Lidl allemand a un programme');
+  assert.equal(de.compteurs.aucunSigne, 0);
+  const be = affiliationsDuPays(null, b, m, 'BE');
+  assert.equal(be.compteurs.programme, 0, 'le Lidl belge n’a aucun signe : ne pas lui prêter celui du DE');
+  assert.equal(be.compteurs.aucunSigne, 1);
+});
+
+test('la mesure COUVRE la base : aucun acteur sans mesure, aucun « absent »', () => {
+  // Ajout du 09/10/2026. La mesure suit la base : après le balayage allemand,
+  // chaque acteur doit trouver SA ligne. Un acteur que la mesure ignore est
+  // rangé « non mesuré » — et sur 346 lignes, un oubli se lirait comme un refus
+  // du site, pas comme une lacune du balayage. On l'écrit donc en clair.
+  if (!mesures) return; // pas de balayage dans cette copie du dépôt
+  const absents = base.acteurs.filter(
+    (a) => etatAffiliation(mesures, a.nom, a.pays).raison === 'acteur absent du balayage');
+  assert.deepEqual(absents.map((a) => `${a.pays}:${a.nom}`), [],
+    'tout acteur de la base doit avoir sa ligne de mesure (ou une raison mesurée)');
+});
+
+test('deux lignes de la MÊME entreprise partagent une mesure — et c’est voulu', () => {
+  // Le tableur allemand range « AIDA Cruises » deux fois : en « Croisières » et
+  // en « Voyages ». Ce sont deux lignes, une seule entreprise, un seul site
+  // (aida.de) — donc UNE mesure, et elle vaut pour les deux lignes. Le décompte
+  // des mesures peut donc être plus petit que celui de la base : c'est une
+  // propriété, pas une perte. Ce test l'exige explicitement pour qu'un futur
+  // « il manque une mesure » ne soit pas corrigé en inventant une seconde.
+  if (!mesures) return;
+  const aida = base.acteurs.filter((a) => a.nom === 'AIDA Cruises');
+  assert.ok(aida.length >= 2, 'AIDA Cruises est bien deux lignes dans la base allemande');
+  assert.equal(new Set(aida.map((a) => `${a.nom}|${a.pays}`)).size, 1,
+    'les deux lignes portent la même clé : elles partagent leur mesure');
+  const lignes = mesures.acteurs.filter((a) => a.nom === 'AIDA Cruises');
+  assert.equal(lignes.length, 1, 'et la mesure ne la duplique pas');
+  // Le décompte publié est celui des MESURES, jamais un chiffre inventé.
+  assert.equal(mesures.nombreActeurs, mesures.acteurs.length);
+});
+
+test('chaque pays de la base a ses mesures du bon pays', () => {
+  if (!mesures) return;
+  const parPays = {};
+  for (const a of mesures.acteurs) parPays[a.pays] = (parPays[a.pays] || 0) + 1;
+  const parPaysBase = {};
+  for (const a of base.acteurs) parPaysBase[a.pays] = (parPaysBase[a.pays] || 0) + 1;
+  for (const [p, n] of Object.entries(parPaysBase)) {
+    assert.ok(parPays[p] > 0, `${p} a ${n} acteur(s) dans la base et aucune mesure`);
+    // Le nombre de mesures ne peut pas DÉPASSER celui de la base : une mesure
+    // sans acteur est orpheline, et elle ferait croire à un acteur de plus.
+    assert.ok(parPays[p] <= n, `${p} : ${parPays[p]} mesures pour ${n} acteurs — mesure orpheline`);
+  }
+});
+
 test('les preuves sont STRUCTURÉES : ce qui se clique, et ce qui s’explique', () => {
   // Défaut corrigé : la première version rendait la phrase entière et le
   // panneau en extrayait l'adresse par une expression qui supposait des

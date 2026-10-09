@@ -1,25 +1,40 @@
 #!/usr/bin/env python3
 """
-LA BASE DU MARCHÉ BELGE — du tableur à un fichier que le PROJET peut lire.
+LES BASES DE MARCHÉ — du (des) tableur(s) à un fichier que le PROJET peut lire.
 =============================================================================
 
 CE QUE CE SCRIPT FAIT, ET POURQUOI IL EXISTE
-   B a fourni un tableur : 139 entreprises et organisations du marché belge,
-   réparties en 22 catégories, avec 13 colonnes (positionnement, segment,
-   siège, site web, CA indicatif, actionnariat, distribution, remarques).
+   B a fourni des tableurs : 139 entreprises et organisations du marché belge,
+   puis 182 du marché allemand, réparties en 22 catégories chacune, avec 13
+   colonnes (positionnement, segment, siège, site web, CA indicatif,
+   actionnariat, distribution, remarques).
 
    Un tableur ne se lit pas depuis un site : le panneau d'administration doit
    pouvoir charger la base en une requête, et la version publiée ne doit jamais
    dépendre de la présence d'Excel. On convertit donc UNE FOIS en JSON, et le
    JSON est versionné avec le projet.
 
-   Le tableur source reste versionné lui aussi (donnees/) : c'est la provenance.
-   Sans lui, personne ne pourrait plus vérifier d'où viennent les chiffres.
+   Les tableurs source restent versionnés eux aussi (donnees/) : c'est la
+   provenance. Sans eux, personne ne pourrait plus vérifier d'où viennent les
+   chiffres.
 
 POURQUOI UN SCRIPT ET PAS UNE COPIE À LA MAIN
    Une conversion faite à la main se périme au premier ajout d'acteur, et
    personne ne s'en aperçoit. Là, on relance la commande et la base est refaite
-   à l'identique — la seule chose qui compte est le fichier source.
+   à l'identique — la seule chose qui compte sont les fichiers source.
+
+POURQUOI UNE LISTE DE SOURCES, ET PAS UN FICHIER (ajout du 09/10/2026)
+   B : « Peux-tu rajouter cette base de données, AU PAYS CONCERNÉ dans le
+   tableau admin ». Un pays = un tableur = une liste de pays. Ajouter un pays
+   se fait donc en ajoutant une ligne dans SOURCES, et rien d'autre : chaque
+   acteur porte son `pays`, ce que lisent déjà le Marché Euro et l'Affiliation.
+
+   ATTENTION, ET C'EST LE PIÈGE DE CETTE EXTENSION : deux tableurs peuvent
+   nommer le MÊME acteur (Lidl est en Belgique et en Allemagne, avec deux sites
+   différents — lidl.be et lidl.de). On ne les fusionne donc PAS : ils
+   appartiennent à deux marchés et se mesurent séparément. Le dédoublonnage ne
+   porte que sur les acteurs AJOUTÉS par l'application, qui, eux, n'ont pas de
+   pays de rattachement dans un tableur.
 
 CE QU'ON AJOUTE, ET CE QU'ON N'INVENTE PAS
    - on ajoute le DOMAINE extrait du site web (« https://www.delhaize.be » →
@@ -44,10 +59,14 @@ from datetime import datetime, timezone
 from openpyxl import load_workbook
 
 RACINE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SOURCE = os.path.join(RACINE, "donnees", "marche-be-2026-10-08.xlsx")
+
+# UN PAYS, UN TABLEUR. Ajouter un marché = ajouter une ligne ici.
+SOURCES = [
+    {"pays": "BE", "fichier": "marche-be-2026-10-08.xlsx"},
+    {"pays": "DE", "fichier": "marche-de-2026-10-08.xlsx"},
+]
 SOURCE_APPLICATION = os.path.join(RACINE, "donnees", "acteurs-application.json")
 SORTIE = os.path.join(RACINE, "public", "acteurs.json")
-PAYS = "BE"
 
 # Les colonnes du tableur, dans l'ordre, et le nom que porte chaque champ dans
 # le JSON. L'ordre compte : c'est lui qui fait le pont entre les deux.
@@ -106,8 +125,9 @@ def texte(valeur):
     return " ".join(str(valeur).split())
 
 
-def lire_lignes():
-    wb = load_workbook(SOURCE, read_only=True, data_only=True)
+def lire_lignes(chemin, pays):
+    """Les acteurs d'un tableur de marché, marqués de LEUR pays."""
+    wb = load_workbook(chemin, read_only=True, data_only=True)
     ws = wb["Vue densemble"]
     entetes = None
     index = {}
@@ -118,7 +138,7 @@ def lire_lignes():
             entetes = valeurs
             for cle, titre in COLONNES:
                 if titre not in entetes:
-                    sys.exit(f"colonne introuvable dans le tableur : « {titre} »")
+                    sys.exit(f"colonne introuvable dans {os.path.basename(chemin)} : « {titre} »")
                 index[cle] = entetes.index(titre)
             continue
         if not any(valeurs):
@@ -130,21 +150,24 @@ def lire_lignes():
         # liaison. Un acteur à deux enseignes doit pouvoir être relié par l'une
         # ou par l'autre.
         acteur["domaine"] = liste[0] if liste else ""
-        # D'OÙ VIENT CET ACTEUR. Le panneau doit pouvoir dire ce qui vient du
-        # tableur de B et ce qui a été ajouté parce que l'application le lit.
+        # D'OÙ VIENT CET ACTEUR. Le panneau doit pouvoir dire ce qui vient des
+        # tableurs de B et ce qui a été ajouté parce que l'application le lit.
         acteur["provenance"] = "fichier"
-        acteur["pays"] = PAYS
+        # LE PAYS EST CELUI DU TABLEUR, jamais celui deviné sur l'adresse : un
+        # acteur du marché allemand reste allemand même si son siège est à
+        # Dublin (Temu) ou à Singapour (Shein). C'est le marché qu'on décrit.
+        acteur["pays"] = pays
         lignes.append(acteur)
     return lignes
 
 
 def lire_acteurs_application():
-    """Les acteurs LUS par l'application mais absents du tableur.
+    """Les acteurs LUS par l'application mais absents des tableurs.
     Liste tenue dans `donnees/acteurs-application.json` et ÉTABLIE PAR MESURE
     (outils/mesure-acteurs-manquants.mjs) : ce sont les sites que le collecteur
-    interroge vraiment et qu'aucun acteur du tableur ne revendique. Pourquoi un
-    second fichier, et pas une retouche du tableur : le tableur est la pièce
-    fournie par B — on ne la modifie pas. Chaque acteur garde donc son origine.
+    interroge vraiment et qu'aucun acteur des tableurs ne revendique. Pourquoi un
+    second fichier, et pas une retouche des tableurs : les tableurs sont la pièce
+    fournie par B — on ne les modifie pas. Chaque acteur garde donc son origine.
     """
     if not os.path.exists(SOURCE_APPLICATION):
         return []
@@ -154,14 +177,23 @@ def lire_acteurs_application():
 
 
 def main():
-    if not os.path.exists(SOURCE):
-        sys.exit(f"tableur introuvable : {SOURCE}")
-    du_fichier = lire_lignes()
+    par_fichier = []
+    for s in SOURCES:
+        chemin = os.path.join(RACINE, "donnees", s["fichier"])
+        if not os.path.exists(chemin):
+            sys.exit(f"tableur introuvable : {chemin}")
+        lignes = lire_lignes(chemin, s["pays"])
+        print(f"  {len(lignes):>3} acteurs lus dans {s['fichier']} (pays {s['pays']})")
+        par_fichier.append((s, lignes))
+
+    du_fichier = [a for _, lignes in par_fichier for a in lignes]
     de_l_application = lire_acteurs_application()
 
-    # DEUX ORIGINES, UNE SEULE BASE. Le tableur de B, et les acteurs que
-    # l'application lit sans qu'ils y figurent. On refuse les doublons : un
-    # acteur déjà présent dans le tableur ne doit pas être ajouté deux fois.
+    # DEUX ORIGINES, UNE SEULE BASE. Les tableurs de B, et les acteurs que
+    # l'application lit sans qu'ils y figurent. On refuse les doublons UNIQUEMENT
+    # pour les acteurs ajoutés par l'application : deux tableurs peuvent
+    # légitimement nommer le même acteur dans deux pays (Lidl en BE et en DE),
+    # et les fondre ferait disparaître un marché de la liste.
     noms = {a["nom"].strip().lower() for a in du_fichier}
     ajoutes = []
     for a in de_l_application:
@@ -169,7 +201,7 @@ def main():
         a.setdefault("provenance", "application")
         a.setdefault("pays", "")
         if a["nom"].strip().lower() in noms:
-            print(f"⚠ « {a['nom']} » est déjà dans le tableur : non ajouté", file=sys.stderr)
+            print(f"⚠ « {a['nom']} » est déjà dans un tableur : non ajouté", file=sys.stderr)
             continue
         ajoutes.append(a)
 
@@ -191,10 +223,14 @@ def main():
     # l'ordre change à chaque génération rendrait tout diff illisible.
     acteurs.sort(key=lambda a: (a.get("pays") or "", a["categorie"], a["nom"]))
 
+    fichiers = [s["fichier"] for s, _ in par_fichier]
     base = {
         "version": 1,
-        "pays": PAYS,
-        "source": os.path.basename(SOURCE),
+        # Le marché d'ORIGINE (le premier tableur), et la liste des pays servis.
+        "pays": par_fichier[0][0]["pays"] if par_fichier else "",
+        "paysCouverts": sorted({a.get("pays") for a in acteurs if a.get("pays")}),
+        "source": " + ".join(fichiers),
+        "sources": fichiers,
         "sourceApplication": os.path.basename(SOURCE_APPLICATION) if ajoutes else "",
         "genereLe": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "categories": sorted({a["categorie"] for a in acteurs}),
@@ -205,15 +241,13 @@ def main():
         f.write("\n")
 
     print(f"√ {len(acteurs)} acteurs · {len(base['categories'])} catégories → {SORTIE}")
-    print(f"    dont {len(du_fichier)} du tableur et {len(ajoutes)} ajoutés parce que l'application les lit")
     par_pays = {}
     for a in acteurs:
         p = a.get("pays") or "?"
         par_pays[p] = par_pays.get(p, 0) + 1
+    print("    dont " + " · ".join(f"{len(lignes)} de {s['fichier']}" for s, lignes in par_fichier)
+          + f" · {len(ajoutes)} ajoutés par l'application")
     print("    par pays : " + " · ".join(f"{p} {n}" for p, n in sorted(par_pays.items(), key=lambda x: -x[1])))
-    for cat, n in sorted({a["categorie"]: sum(1 for x in acteurs if x["categorie"] == a["categorie"])
-                          for a in acteurs}.items()):
-        print(f"    {n:>3}  {cat}")
 
 
 if __name__ == "__main__":

@@ -1,10 +1,6 @@
 {
- "genereLe": "2026-10-08T12:56:30.306Z",
+ "genereLe": "2026-10-09T08:12:31.922Z",
  "methode": "Signatures de réseaux d’affiliation dans le HTML du site, et page « programme d’affiliation ». « aucun signe trouvé » ne veut PAS dire « pas d’affiliation » : un programme privé ne laisse aucune trace publique.",
- "nombreActeurs": 165,
- "avecProgramme": 22,
- "sansSigne": 118,
- "nonMesures": 25,
  "acteurs": [
   {
    "nom": "Preisjäger",
@@ -19,6 +15,105 @@
    "methode": "navigateur"
   },
   {
+   "nom": "A.S.Adventure",
+   "pays": "BE",
+   "domaine": "asadventure.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.asadventure.com/nl.html (HTTP 200, 769807 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Action",
+   "pays": "BE",
+   "domaine": "action.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.action.com/ (HTTP 200, 230487 octets)"
+   ],
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Air France & KLM",
+   "pays": "BE",
+   "domaine": "airfrance.com",
+   "etat": "non mesuré",
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: Timeout 20000ms exceeded.)",
+   "reseaux": [],
+   "indices": [],
+   "methode": "navigateur (échec)"
+  },
+  {
+   "nom": "Albert Heijn",
+   "pays": "BE",
+   "domaine": "ah.be",
+   "etat": "programme trouvé",
+   "reseaux": [
+    "Impact",
+    "Partnerize"
+   ],
+   "indices": [
+    "page lue au navigateur : https://www.ah.be/ (HTTP 200, 1089771 octets)",
+    "signature « prf.hn » sur https://ah.be/cookiebeleid",
+    "signature « partnerize.com » sur https://ah.be/cookiebeleid"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "ALDI",
+   "pays": "BE",
+   "domaine": "aldi.be",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.aldi.be/ (HTTP 200, 186666 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Alternate.be",
+   "pays": "BE",
+   "domaine": "alternate.be",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.alternate.be/ (HTTP 200, 213884 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Amazon Belgique (.com.be)",
+   "pays": "BE",
+   "domaine": "amazon.com.be",
+   "etat": "programme trouvé",
+   "reseaux": [
+    "Amazon Partenaires"
+   ],
+   "indices": [
+    "page lue au navigateur : https://www.amazon.com.be/ (HTTP 200, 1318426 octets)",
+    "signature « amazon-adsystem.com » sur https://amazon.com.be"
+   ],
+   "http": 202,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Amplifon",
+   "pays": "BE",
+   "domaine": "amplifon.com",
+   "etat": "non mesuré",
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 403, 198 octets)",
+   "reseaux": [],
+   "indices": [],
+   "methode": "navigateur (échec)"
+  },
+  {
    "nom": "Ardennes-Etape",
    "pays": "BE",
    "domaine": "ardennes-etape.be",
@@ -31,120 +126,14 @@
    "methode": "navigateur"
   },
   {
-   "nom": "Bongo & Wonderbox",
-   "pays": "BE",
-   "domaine": "bongo.be",
-   "etat": "programme trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.bongo.be/ (HTTP 200, 1584994 octets)",
-    "page programme : https://www.bongo.be/nl/affiliate-programma/"
-   ],
-   "http": 200,
-   "methode": "navigateur"
-  },
-  {
-   "nom": "Groupon",
-   "pays": "BE",
-   "domaine": "groupon.be",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.groupon.be/ (HTTP 200, 692303 octets)"
-   ],
-   "methode": "navigateur"
-  },
-  {
-   "nom": "Social Deal & Outspot",
-   "pays": "BE",
-   "domaine": "socialdeal.be",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.socialdeal.be/#join (HTTP 200, 741818 octets)"
-   ],
-   "http": 200,
-   "methode": "navigateur"
-  },
-  {
-   "nom": "Ticketmaster Belgique & Eventim",
-   "pays": "BE",
-   "domaine": "ticketmaster.be",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.ticketmaster.be/ (HTTP 200, 657764 octets)"
-   ],
-   "http": 200,
-   "methode": "navigateur"
-  },
-  {
-   "nom": "VISITWALLONIA / Visit Brussels / Visit Flanders",
-   "pays": "BE",
-   "domaine": "visitwallonia.be",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://visitwallonia.be/ (HTTP 200, 514806 octets)"
-   ],
-   "methode": "navigateur"
-  },
-  {
-   "nom": "Maxi Zoo",
-   "pays": "BE",
-   "domaine": "maxizoo.be",
-   "etat": "programme trouvé",
-   "reseaux": [
-    "Smartclip / Sovendus"
-   ],
-   "indices": [
-    "page lue au navigateur : https://www.maxizoo.be/nl/ (HTTP 200, 863772 octets)",
-    "signature « sovendus.com » sur https://maxizoo.be"
-   ],
-   "http": 200,
-   "methode": "navigateur"
-  },
-  {
-   "nom": "Poils et Plumes",
-   "pays": "BE",
-   "domaine": "poils-et-plumes.be",
-   "etat": "non mesuré",
-   "raison": "réponse vide ou trop courte (HTTP —, 0 octets)",
-   "reseaux": [],
-   "indices": []
-  },
-  {
-   "nom": "Tom&Co",
-   "pays": "BE",
-   "domaine": "tomandco.be",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.tomandco.com/nl-be/ (HTTP 200, 648226 octets)"
-   ],
-   "http": 200,
-   "methode": "navigateur"
-  },
-  {
-   "nom": "Zooplus.be",
-   "pays": "BE",
-   "domaine": "zooplus.be",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.zooplus.be/ (HTTP 200, 1734033 octets)"
-   ],
-   "http": 200,
-   "methode": "navigateur"
-  },
-  {
    "nom": "Auto5",
    "pays": "BE",
    "domaine": "auto5.be",
    "etat": "non mesuré",
-   "raison": "le site a refusé la mesure (HTTP 403)",
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 403, 1462 octets)",
    "reseaux": [],
-   "indices": []
+   "indices": [],
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "AutoDoc",
@@ -165,92 +154,6 @@
    "methode": "navigateur"
   },
   {
-   "nom": "Mister Auto",
-   "pays": "BE",
-   "domaine": "mister-auto.be",
-   "etat": "non mesuré",
-   "raison": "le site a refusé la mesure (HTTP 403)",
-   "reseaux": [],
-   "indices": []
-  },
-  {
-   "nom": "Action",
-   "pays": "BE",
-   "domaine": "action.com",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.action.com/ (HTTP 200, 230479 octets)"
-   ],
-   "methode": "navigateur"
-  },
-  {
-   "nom": "Flying Tiger Copenhagen",
-   "pays": "BE",
-   "domaine": "flyingtiger.com",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://flyingtiger.com/ (HTTP 200, 1890804 octets)"
-   ],
-   "http": 200,
-   "methode": "navigateur"
-  },
-  {
-   "nom": "HEMA",
-   "pays": "BE",
-   "domaine": "hema.be",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.hema.com/nl-be (HTTP 200, 420407 octets)"
-   ],
-   "http": 200,
-   "methode": "navigateur"
-  },
-  {
-   "nom": "Normal",
-   "pays": "BE",
-   "domaine": "normal.be",
-   "etat": "non mesuré",
-   "raison": "réponse vide ou trop courte (HTTP —, 0 octets)",
-   "reseaux": [],
-   "indices": []
-  },
-  {
-   "nom": "Wibra",
-   "pays": "BE",
-   "domaine": "wibra.be",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.wibra.be/fr/ (HTTP 200, 908746 octets)"
-   ],
-   "http": 200,
-   "methode": "navigateur"
-  },
-  {
-   "nom": "Zeeman",
-   "pays": "BE",
-   "domaine": "zeeman.com",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.zeeman.com/fr-be (HTTP 200, 735987 octets)"
-   ],
-   "http": 200,
-   "methode": "navigateur"
-  },
-  {
-   "nom": "Prik&Tik",
-   "pays": "BE",
-   "domaine": "prik-et-tik.be",
-   "etat": "non mesuré",
-   "raison": "réponse vide ou trop courte (HTTP —, 0 octets)",
-   "reseaux": [],
-   "indices": []
-  },
-  {
    "nom": "Aveve",
    "pays": "BE",
    "domaine": "aveve.be",
@@ -260,6 +163,76 @@
     "page lue au navigateur : https://www.aveve.be/nl/ (HTTP 200, 1313622 octets)"
    ],
    "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Babelio / SensCritique",
+   "pays": "BE",
+   "domaine": "babelio.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.babelio.com/ (HTTP 200, 198278 octets)"
+   ],
+   "methode": "navigateur"
+  },
+  {
+   "nom": "BASE",
+   "pays": "BE",
+   "domaine": "base.be",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.base.be/fr (HTTP 200, 800633 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Bio-Planet",
+   "pays": "BE",
+   "domaine": "bioplanet.be",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.bioplanet.be/fr (HTTP 200, 446722 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Bol.com",
+   "pays": "BE",
+   "domaine": "bol.com",
+   "etat": "non mesuré",
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: Timeout 20000ms exceeded.)",
+   "reseaux": [],
+   "indices": [],
+   "methode": "navigateur (échec)"
+  },
+  {
+   "nom": "Bongo & Wonderbox",
+   "pays": "BE",
+   "domaine": "bongo.be",
+   "etat": "programme trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.bongo.be/ (HTTP 200, 1584994 octets)",
+    "page programme : https://www.bongo.be/nl/affiliate-programma/"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Booking.com & Expedia",
+   "pays": "BE",
+   "domaine": "booking.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.booking.com/ (HTTP 202, 536875 octets)"
+   ],
+   "http": 202,
    "methode": "navigateur"
   },
   {
@@ -279,98 +252,20 @@
    "pays": "BE",
    "domaine": "bricoplanit.be",
    "etat": "non mesuré",
-   "raison": "réponse vide ou trop courte (HTTP —, 0 octets)",
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: net::ERR_NAME_NOT_RESOLVED at https://bricoplanit.be/)",
    "reseaux": [],
-   "indices": []
-  },
-  {
-   "nom": "Floralux",
-   "pays": "BE",
-   "domaine": "floralux.be",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.floralux.be/fr/ (HTTP 200, 237025 octets)"
-   ],
-   "http": 200,
-   "methode": "navigateur"
-  },
-  {
-   "nom": "Gamma",
-   "pays": "BE",
-   "domaine": "gamma.be",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.gamma.be/nl (HTTP 200, 668817 octets)"
-   ],
-   "methode": "navigateur"
-  },
-  {
-   "nom": "Hubo",
-   "pays": "BE",
-   "domaine": "hubo.be",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.hubo.be/fr/ (HTTP 200, 1326695 octets)"
-   ],
-   "http": 200,
-   "methode": "navigateur"
-  },
-  {
-   "nom": "Mr.Bricolage",
-   "pays": "BE",
-   "domaine": "mr-bricolage.be",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.mr-bricolage.be/ (HTTP 200, 659980 octets)"
-   ],
-   "http": 200,
-   "methode": "navigateur"
-  },
-  {
-   "nom": "Oh'Green",
-   "pays": "BE",
-   "domaine": "ohgreen.be",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.ohgreen.be/fr (HTTP 200, 399542 octets)"
-   ],
-   "http": 200,
-   "methode": "navigateur"
-  },
-  {
-   "nom": "Toolstation",
-   "pays": "BE",
-   "domaine": "toolstation.be",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.toolstation.be/ (HTTP 200, 519363 octets)"
-   ],
-   "http": 200,
-   "methode": "navigateur"
-  },
-  {
-   "nom": "Air France & KLM",
-   "pays": "BE",
-   "domaine": "airfrance.com",
-   "etat": "non mesuré",
-   "raison": "réponse vide ou trop courte (HTTP —, 0 octets)",
-   "reseaux": [],
-   "indices": []
+   "indices": [],
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "British Airways",
    "pays": "BE",
    "domaine": "britishairways.com",
    "etat": "non mesuré",
-   "raison": "réponse vide ou trop courte (HTTP —, 0 octets)",
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: Timeout 20000ms exceeded.)",
    "reseaux": [],
-   "indices": []
+   "indices": [],
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "Brussels Airlines",
@@ -384,137 +279,124 @@
    "methode": "navigateur"
   },
   {
-   "nom": "EasyJet",
+   "nom": "C&A",
    "pays": "BE",
-   "domaine": "easyjet.com",
+   "domaine": "c-and-a.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.c-and-a.com/be/nl/shop?showCountrySelector=true (HTTP 200, 762340 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Cameleon",
+   "pays": "BE",
+   "domaine": "cameleon.be",
    "etat": "non mesuré",
-   "raison": "le site a refusé la mesure (HTTP 403)",
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: net::ERR_CERT_DATE_INVALID at https://cameleon.be/)",
    "reseaux": [],
-   "indices": []
+   "indices": [],
+   "methode": "navigateur (échec)"
   },
   {
-   "nom": "Eurowings",
+   "nom": "Carrefour Belgique",
    "pays": "BE",
-   "domaine": "eurowings.com",
+   "domaine": "carrefour.be",
    "etat": "aucun signe trouvé",
    "reseaux": [],
    "indices": [
-    "page lue au navigateur : https://www.eurowings.com/en.html (HTTP 200, 774266 octets)"
+    "page lue au navigateur : https://www.carrefour.be/nl (HTTP 200, 261080 octets)"
    ],
    "methode": "navigateur"
   },
   {
-   "nom": "Iberia",
+   "nom": "Casa",
    "pays": "BE",
-   "domaine": "iberia.com",
-   "etat": "aucun signe trouvé",
+   "domaine": "casa.be",
+   "etat": "non mesuré",
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: Timeout 20000ms exceeded.)",
    "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.iberia.com/ (HTTP 403, 218899 octets)"
-   ],
-   "http": 200,
-   "methode": "navigateur"
+   "indices": [],
+   "methode": "navigateur (échec)"
   },
   {
-   "nom": "Lufthansa",
+   "nom": "Club",
    "pays": "BE",
-   "domaine": "lufthansa.com",
+   "domaine": "club.be",
    "etat": "aucun signe trouvé",
    "reseaux": [],
    "indices": [
-    "page lue au navigateur : https://www.lufthansa.com/be/fr/homepage (HTTP 200, 351557 octets)"
-   ],
-   "methode": "navigateur"
-  },
-  {
-   "nom": "Pegasus Airlines",
-   "pays": "BE",
-   "domaine": "flypgs.com",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.flypgs.com/ (HTTP 403, 2851 octets)"
-   ],
-   "methode": "navigateur"
-  },
-  {
-   "nom": "Ryanair",
-   "pays": "BE",
-   "domaine": "ryanair.com",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.ryanair.com/be/fr (HTTP 200, 376923 octets)"
+    "page lue au navigateur : https://www.librairieclub.be/ (HTTP 200, 761251 octets)"
    ],
    "http": 200,
    "methode": "navigateur"
   },
   {
-   "nom": "TAP Air Portugal",
+   "nom": "Clubic",
    "pays": "BE",
-   "domaine": "flytap.com",
+   "domaine": "clubic.com",
    "etat": "aucun signe trouvé",
    "reseaux": [],
    "indices": [
-    "page lue au navigateur : https://www.flytap.com/en-be (HTTP 200, 709443 octets)"
+    "page lue au navigateur : https://www.clubic.com/ (HTTP 200, 1358069 octets)"
    ],
    "http": 200,
    "methode": "navigateur"
   },
   {
-   "nom": "TUI fly Belgium",
+   "nom": "Colruyt Group",
    "pays": "BE",
-   "domaine": "tuifly.be",
+   "domaine": "colruytgroup.be",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.colruytgroup.com/fr (HTTP 200, 552758 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Connections",
+   "pays": "BE",
+   "domaine": "connections.be",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.connections.be/ (HTTP 200, 940293 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Coolblue",
+   "pays": "BE",
+   "domaine": "coolblue.be",
+   "etat": "programme trouvé",
+   "reseaux": [
+    "Awin"
+   ],
+   "indices": [
+    "page lue au navigateur : https://www.coolblue.be/fr (HTTP 200, 1354814 octets)",
+    "signature « awin.com » sur https://coolblue.be",
+    "programme annoncé sur la page (lue au navigateur)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Corendon Belgique",
+   "pays": "BE",
+   "domaine": "corendon.be",
    "etat": "programme trouvé",
    "reseaux": [
     "TradeTracker"
    ],
    "indices": [
-    "signature « tradetracker.com » sur https://tuifly.be/fr/affiliates-fr",
-    "page programme : https://www.tuifly.be/fr/affiliates-fr"
-   ],
-   "http": 200
-  },
-  {
-   "nom": "Transavia",
-   "pays": "BE",
-   "domaine": "transavia.com",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.transavia.com/ (HTTP 200, 60997 octets)"
-   ],
-   "methode": "navigateur"
-  },
-  {
-   "nom": "Volotea",
-   "pays": "BE",
-   "domaine": "volotea.com",
-   "etat": "non mesuré",
-   "raison": "réponse vide ou trop courte (HTTP 200, 212 octets)",
-   "reseaux": [],
-   "indices": []
-  },
-  {
-   "nom": "Vueling",
-   "pays": "BE",
-   "domaine": "vueling.com",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.vueling.com/en (HTTP 200, 1563509 octets)"
-   ],
-   "http": 200,
-   "methode": "navigateur"
-  },
-  {
-   "nom": "Wizz Air",
-   "pays": "BE",
-   "domaine": "wizzair.com",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.wizzair.com/en-gb (HTTP 200, 2096193 octets)"
+    "page lue au navigateur : https://www.corendon.be/ (HTTP 200, 131977 octets)",
+    "signature « tradetracker.com » sur https://www.corendon.be/affiliates",
+    "page programme : https://www.corendon.be/affiliates"
    ],
    "http": 200,
    "methode": "navigateur"
@@ -532,151 +414,25 @@
    "methode": "navigateur"
   },
   {
-   "nom": "FlixBus & BlaBlaCar",
+   "nom": "Dealabs",
    "pays": "BE",
-   "domaine": "flixbus.be",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.flixbus.be/ (HTTP 200, 299367 octets)"
-   ],
-   "http": 200,
-   "methode": "navigateur"
-  },
-  {
-   "nom": "MSC Croisières & Costa Croisières",
-   "pays": "BE",
-   "domaine": "msccroisieres.be",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.msccruises.be/fr (HTTP 200, 937398 octets)"
-   ],
-   "http": 200,
-   "methode": "navigateur"
-  },
-  {
-   "nom": "SNCB / SNCB International",
-   "pays": "BE",
-   "domaine": "belgiantrain.be",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.belgiantrain.be/fr (HTTP 200, 360006 octets)"
-   ],
-   "methode": "navigateur"
-  },
-  {
-   "nom": "Amazon Belgique (.com.be)",
-   "pays": "BE",
-   "domaine": "amazon.com.be",
-   "etat": "programme trouvé",
-   "reseaux": [
-    "Amazon Partenaires"
-   ],
-   "indices": [
-    "page lue au navigateur : https://www.amazon.com.be/ (HTTP 200, 1318426 octets)",
-    "signature « amazon-adsystem.com » sur https://amazon.com.be"
-   ],
-   "http": 202,
-   "methode": "navigateur"
-  },
-  {
-   "nom": "Bol.com",
-   "pays": "BE",
-   "domaine": "bol.com",
+   "domaine": "dealabs.com",
    "etat": "non mesuré",
-   "raison": "le site a refusé la mesure (HTTP 403)",
    "reseaux": [],
-   "indices": []
-  },
-  {
-   "nom": "Veepee / Zalando Lounge",
-   "pays": "BE",
-   "domaine": "veepee.com",
-   "etat": "programme trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.veepee.fr/gr/home/default (HTTP 200, 967371 octets)",
-    "programme annoncé sur la page (lue au navigateur)"
-   ],
+   "indices": [],
    "http": 200,
-   "methode": "navigateur"
+   "raison": "le navigateur n’a pas pu lire la page (Page.content: Unable to retrieve content because the page is navigating and chan)",
+   "methode": "navigateur (échec)"
   },
   {
-   "nom": "Zalando",
+   "nom": "Decathlon",
    "pays": "BE",
-   "domaine": "zalando.be",
+   "domaine": "decathlon.be",
    "etat": "aucun signe trouvé",
    "reseaux": [],
    "indices": [
-    "page lue au navigateur : https://www.zalando.be/ (HTTP 403, 69590 octets)"
+    "page lue au navigateur : https://www.decathlon.be/?__cf_chl_rt_tk=wXRYwDFIL58Nkjj.1phulfgoHEVUMc8bS3hbXhZNQRE-1791463788-1.0.1.1-iOX5fln1UUgRijSF.0.FE94Nzw2jcb3hLAgynDJMNGo (HTTP 403, 28859 octets)"
    ],
-   "http": 200,
-   "methode": "navigateur"
-  },
-  {
-   "nom": "ALDI",
-   "pays": "BE",
-   "domaine": "aldi.be",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.aldi.be/ (HTTP 200, 186666 octets)"
-   ],
-   "http": 200,
-   "methode": "navigateur"
-  },
-  {
-   "nom": "Albert Heijn",
-   "pays": "BE",
-   "domaine": "ah.be",
-   "etat": "programme trouvé",
-   "reseaux": [
-    "Impact",
-    "Partnerize"
-   ],
-   "indices": [
-    "page lue au navigateur : https://www.ah.be/ (HTTP 200, 1089771 octets)",
-    "signature « prf.hn » sur https://ah.be/cookiebeleid",
-    "signature « partnerize.com » sur https://ah.be/cookiebeleid"
-   ],
-   "http": 200,
-   "methode": "navigateur"
-  },
-  {
-   "nom": "Bio-Planet",
-   "pays": "BE",
-   "domaine": "bioplanet.be",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.bioplanet.be/fr (HTTP 200, 446722 octets)"
-   ],
-   "http": 200,
-   "methode": "navigateur"
-  },
-  {
-   "nom": "Carrefour Belgique",
-   "pays": "BE",
-   "domaine": "carrefour.be",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.carrefour.be/nl (HTTP 200, 261080 octets)"
-   ],
-   "methode": "navigateur"
-  },
-  {
-   "nom": "Colruyt Group",
-   "pays": "BE",
-   "domaine": "colruytgroup.be",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.colruytgroup.com/fr (HTTP 200, 552758 octets)"
-   ],
-   "http": 200,
    "methode": "navigateur"
   },
   {
@@ -692,50 +448,51 @@
    "methode": "navigateur"
   },
   {
-   "nom": "Intermarché",
+   "nom": "Deliveroo",
    "pays": "BE",
-   "domaine": "intermarche.be",
-   "etat": "aucun signe trouvé",
+   "domaine": "deliveroo.be",
+   "etat": "programme trouvé",
    "reseaux": [],
    "indices": [
-    "page lue au navigateur : https://www.intermarche.be/ (HTTP 200, 360764 octets)"
+    "page lue au navigateur : https://deliveroo.be/fr/ (HTTP 200, 416523 octets)",
+    "page programme : https://deliveroo.be/fr/partner-ranking"
    ],
    "http": 200,
    "methode": "navigateur"
   },
   {
-   "nom": "Lidl",
+   "nom": "DHnet",
    "pays": "BE",
-   "domaine": "lidl.be",
+   "domaine": "dhnet.be",
    "etat": "aucun signe trouvé",
    "reseaux": [],
    "indices": [
-    "page lue au navigateur : https://www.lidl.be/ (HTTP 200, 711195 octets)"
-   ],
-   "methode": "navigateur"
-  },
-  {
-   "nom": "OKay",
-   "pays": "BE",
-   "domaine": "okay.be",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.okay.be/fr (HTTP 200, 442169 octets)"
+    "page lue au navigateur : https://www.dhnet.be/ (HTTP 200, 3941529 octets)"
    ],
    "http": 200,
    "methode": "navigateur"
   },
   {
-   "nom": "Spar",
+   "nom": "Di",
    "pays": "BE",
-   "domaine": "spar.be",
+   "domaine": "di.be",
    "etat": "aucun signe trouvé",
    "reseaux": [],
    "indices": [
-    "page lue au navigateur : https://www.spar.be/ (HTTP 200, 130712 octets)"
+    "page lue au navigateur : https://di.be/fr/ (HTTP 200, 6847858 octets)"
    ],
+   "http": 200,
    "methode": "navigateur"
+  },
+  {
+   "nom": "DIGI Belgique",
+   "pays": "BE",
+   "domaine": "digi.be",
+   "etat": "non mesuré",
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: net::ERR_CONNECTION_REFUSED at https://digi.be/)",
+   "reseaux": [],
+   "indices": [],
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "DreamLand",
@@ -749,13 +506,133 @@
    "methode": "navigateur"
   },
   {
+   "nom": "EasyJet",
+   "pays": "BE",
+   "domaine": "easyjet.com",
+   "etat": "non mesuré",
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 403, 291 octets)",
+   "reseaux": [],
+   "indices": [],
+   "methode": "navigateur (échec)"
+  },
+  {
+   "nom": "Èggo",
+   "pays": "BE",
+   "domaine": "eggo.be",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.eggo.be/fr/ (HTTP 200, 674221 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Electro Dépôt",
+   "pays": "BE",
+   "domaine": "electrodepot.be",
+   "etat": "programme trouvé",
+   "reseaux": [
+    "Awin"
+   ],
+   "indices": [
+    "page lue au navigateur : https://www.electrodepot.be/ (HTTP 200, 677404 octets)",
+    "signature « awin1.com » sur https://electrodepot.be"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Eurowings",
+   "pays": "BE",
+   "domaine": "eurowings.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.eurowings.com/en.html (HTTP 200, 774266 octets)"
+   ],
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Farmaline",
+   "pays": "BE",
+   "domaine": "farmaline.be",
+   "etat": "programme trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.farmaline.be/nl/ (HTTP 200, 476377 octets)",
+    "page programme : https://www.farmaline.be/nl/partner/partnerprogramma/"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "FlixBus & BlaBlaCar",
+   "pays": "BE",
+   "domaine": "flixbus.be",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.flixbus.be/ (HTTP 200, 299367 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Floralux",
+   "pays": "BE",
+   "domaine": "floralux.be",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.floralux.be/fr/ (HTTP 200, 237025 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Flying Tiger Copenhagen",
+   "pays": "BE",
+   "domaine": "flyingtiger.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://flyingtiger.com/ (HTTP 200, 1890804 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Fnac",
+   "pays": "BE",
+   "domaine": "fnac.be",
+   "etat": "non mesuré",
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 403, 1454 octets)",
+   "reseaux": [],
+   "indices": [],
+   "methode": "navigateur (échec)"
+  },
+  {
    "nom": "Fox & Compagnie",
    "pays": "BE",
    "domaine": "foxcompagnie.be",
    "etat": "non mesuré",
-   "raison": "réponse vide ou trop courte (HTTP —, 0 octets)",
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: net::ERR_NAME_NOT_RESOLVED at https://foxcompagnie.be/)",
    "reseaux": [],
-   "indices": []
+   "indices": [],
+   "methode": "navigateur (échec)"
+  },
+  {
+   "nom": "Frandroid / 01net",
+   "pays": "BE",
+   "domaine": "frandroid.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.frandroid.com/ (HTTP 200, 594563 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
   },
   {
    "nom": "Fun",
@@ -769,69 +646,67 @@
    "methode": "navigateur"
   },
   {
-   "nom": "JouéClub",
+   "nom": "Gamma",
    "pays": "BE",
-   "domaine": "joueclub.be",
+   "domaine": "gamma.be",
    "etat": "aucun signe trouvé",
    "reseaux": [],
    "indices": [
-    "page lue au navigateur : https://www.joueclub.fr/ (HTTP 200, 531882 octets)"
-   ],
-   "http": 200,
-   "methode": "navigateur"
-  },
-  {
-   "nom": "King Jouet (ex-Maxi Toys)",
-   "pays": "BE",
-   "domaine": "king-jouet.be",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.king-jouet.be/ (HTTP 200, 226144 octets)"
-   ],
-   "http": 200,
-   "methode": "navigateur"
-  },
-  {
-   "nom": "ToyChamp",
-   "pays": "BE",
-   "domaine": "toychamp.be",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.dreamland.be/nl/ (HTTP 403, 115790 octets)"
+    "page lue au navigateur : https://www.gamma.be/nl (HTTP 200, 668817 octets)"
    ],
    "methode": "navigateur"
   },
   {
-   "nom": "Player / PlayerOne",
+   "nom": "Gazet van Antwerpen",
    "pays": "BE",
-   "domaine": "playerone.be",
+   "domaine": "gva.be",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.gva.be/ (HTTP 200, 1915766 octets)"
+   ],
+   "methode": "navigateur"
+  },
+  {
+   "nom": "GrandOptical",
+   "pays": "BE",
+   "domaine": "grandoptical.be",
    "etat": "non mesuré",
-   "raison": "réponse vide ou trop courte (HTTP 404, 0 octets)",
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: net::ERR_NAME_NOT_RESOLVED at https://grandoptical.be/)",
    "reseaux": [],
-   "indices": []
+   "indices": [],
+   "methode": "navigateur (échec)"
   },
   {
-   "nom": "Smartoys",
+   "nom": "Groupon",
    "pays": "BE",
-   "domaine": "smartoys.be",
+   "domaine": "groupon.be",
    "etat": "aucun signe trouvé",
    "reseaux": [],
    "indices": [
-    "page lue au navigateur : https://smartoys.be/catalog/ (HTTP 200, 439327 octets)"
+    "page lue au navigateur : https://www.groupon.be/ (HTTP 200, 692303 octets)"
    ],
    "methode": "navigateur"
   },
   {
-   "nom": "Deliveroo",
+   "nom": "H&M",
    "pays": "BE",
-   "domaine": "deliveroo.be",
-   "etat": "programme trouvé",
+   "domaine": "hm.com",
+   "etat": "non mesuré",
+   "reseaux": [],
+   "indices": [],
+   "http": 200,
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 403, 282 octets)",
+   "methode": "navigateur (échec)"
+  },
+  {
+   "nom": "Hans Anders",
+   "pays": "BE",
+   "domaine": "hansanders.be",
+   "etat": "aucun signe trouvé",
    "reseaux": [],
    "indices": [
-    "page lue au navigateur : https://deliveroo.be/fr/ (HTTP 200, 416523 octets)",
-    "page programme : https://deliveroo.be/fr/partner-ranking"
+    "page lue au navigateur : https://www.hansanders.be/ (HTTP 200, 1693686 octets)"
    ],
    "http": 200,
    "methode": "navigateur"
@@ -850,86 +725,72 @@
    "methode": "navigateur"
   },
   {
-   "nom": "Marley Spoon",
+   "nom": "HEMA",
    "pays": "BE",
-   "domaine": "marleyspoon.be",
-   "etat": "programme trouvé",
+   "domaine": "hema.be",
+   "etat": "aucun signe trouvé",
    "reseaux": [],
    "indices": [
-    "page lue au navigateur : https://marleyspoon.be/ (HTTP 200, 199240 octets)",
-    "programme annoncé sur la page (lue au navigateur)"
+    "page lue au navigateur : https://www.hema.com/nl-be (HTTP 200, 420407 octets)"
    ],
    "http": 200,
    "methode": "navigateur"
   },
   {
-   "nom": "Takeaway.com (Takeaway.be)",
+   "nom": "Het Nieuwsblad",
    "pays": "BE",
-   "domaine": "takeaway.com",
+   "domaine": "nieuwsblad.be",
    "etat": "aucun signe trouvé",
    "reseaux": [],
    "indices": [
-    "page lue au navigateur : https://www.takeaway.com/be-fr (HTTP 200, 1122747 octets)"
+    "page lue au navigateur : https://www.nieuwsblad.be/ (HTTP 200, 2146701 octets)"
    ],
    "methode": "navigateur"
   },
   {
-   "nom": "Uber Eats",
+   "nom": "Hey!",
    "pays": "BE",
-   "domaine": "ubereats.com",
-   "etat": "programme trouvé",
-   "reseaux": [
-    "Amazon Partenaires"
-   ],
-   "indices": [
-    "page lue au navigateur : https://www.ubereats.com/be (HTTP 200, 430653 octets)",
-    "signature « amazon-adsystem.com » sur https://ubereats.com"
-   ],
-   "methode": "navigateur"
-  },
-  {
-   "nom": "Babelio / SensCritique",
-   "pays": "BE",
-   "domaine": "babelio.com",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.babelio.com/ (HTTP 200, 198278 octets)"
-   ],
-   "methode": "navigateur"
-  },
-  {
-   "nom": "Club",
-   "pays": "BE",
-   "domaine": "club.be",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.librairieclub.be/ (HTTP 200, 761251 octets)"
-   ],
-   "http": 200,
-   "methode": "navigateur"
-  },
-  {
-   "nom": "Standaard Boekhandel",
-   "pays": "BE",
-   "domaine": "standaardboekhandel.be",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.standaardboekhandel.be/ (HTTP 200, 455188 octets)"
-   ],
-   "http": 200,
-   "methode": "navigateur"
-  },
-  {
-   "nom": "Casa",
-   "pays": "BE",
-   "domaine": "casa.be",
+   "domaine": "hey.be",
    "etat": "non mesuré",
-   "raison": "réponse vide ou trop courte (HTTP —, 0 octets)",
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: net::ERR_CONNECTION_REFUSED at https://hey.be/)",
    "reseaux": [],
-   "indices": []
+   "indices": [],
+   "methode": "navigateur (échec)"
+  },
+  {
+   "nom": "Hubo",
+   "pays": "BE",
+   "domaine": "hubo.be",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.hubo.be/fr/ (HTTP 200, 1326695 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Iberia",
+   "pays": "BE",
+   "domaine": "iberia.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.iberia.com/ (HTTP 403, 218899 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "ICI PARIS XL",
+   "pays": "BE",
+   "domaine": "iciparisxl.be",
+   "etat": "non mesuré",
+   "reseaux": [],
+   "indices": [],
+   "http": 200,
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 403, 287 octets)",
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "IKEA",
@@ -939,6 +800,18 @@
    "reseaux": [],
    "indices": [
     "page lue au navigateur : https://www.ikea.com/ (HTTP 200, 620469 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Intermarché",
+   "pays": "BE",
+   "domaine": "intermarche.be",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.intermarche.be/ (HTTP 200, 360764 octets)"
    ],
    "http": 200,
    "methode": "navigateur"
@@ -956,6 +829,33 @@
    "methode": "navigateur"
   },
   {
+   "nom": "JBC",
+   "pays": "BE",
+   "domaine": "jbc.be",
+   "etat": "programme trouvé",
+   "reseaux": [
+    "Amazon Partenaires"
+   ],
+   "indices": [
+    "page lue au navigateur : https://www.jbc.be/nl-be/home/ (HTTP 200, 504189 octets)",
+    "signature « amazon-adsystem.com » sur https://jbc.be"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "JouéClub",
+   "pays": "BE",
+   "domaine": "joueclub.be",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.joueclub.fr/ (HTTP 200, 531882 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
    "nom": "JYSK",
    "pays": "BE",
    "domaine": "jysk.be",
@@ -963,6 +863,75 @@
    "reseaux": [],
    "indices": [
     "page lue au navigateur : https://jysk.be/nl (HTTP 200, 679767 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Kiabi",
+   "pays": "BE",
+   "domaine": "kiabi.be",
+   "etat": "non mesuré",
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 403, 1462 octets)",
+   "reseaux": [],
+   "indices": [],
+   "methode": "navigateur (échec)"
+  },
+  {
+   "nom": "King Jouet (ex-Maxi Toys)",
+   "pays": "BE",
+   "domaine": "king-jouet.be",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.king-jouet.be/ (HTTP 200, 226144 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Krëfel",
+   "pays": "BE",
+   "domaine": "krefel.be",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.krefel.be/ (HTTP 500, 7324 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Kruidvat",
+   "pays": "BE",
+   "domaine": "kruidvat.be",
+   "etat": "non mesuré",
+   "reseaux": [],
+   "indices": [],
+   "http": 200,
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 403, 287 octets)",
+   "methode": "navigateur (échec)"
+  },
+  {
+   "nom": "Lapperre",
+   "pays": "BE",
+   "domaine": "lapperre.be",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.lapperre.be/fr/ (HTTP 200, 517640 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "LDLC",
+   "pays": "BE",
+   "domaine": "ldlc.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.ldlc.com/fr-be/?origin=www.ldlc.com (HTTP 200, 170395 octets)"
    ],
    "http": 200,
    "methode": "navigateur"
@@ -981,150 +950,48 @@
    "methode": "navigateur"
   },
   {
+   "nom": "Les Numériques",
+   "pays": "BE",
+   "domaine": "lesnumeriques.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.lesnumeriques.com/ (HTTP 200, 744922 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Lidl",
+   "pays": "BE",
+   "domaine": "lidl.be",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.lidl.be/ (HTTP 200, 711195 octets)"
+   ],
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Lufthansa",
+   "pays": "BE",
+   "domaine": "lufthansa.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.lufthansa.com/be/fr/homepage (HTTP 200, 351557 octets)"
+   ],
+   "methode": "navigateur"
+  },
+  {
    "nom": "Maisons du Monde",
    "pays": "BE",
    "domaine": "maisonsdumonde.com",
    "etat": "non mesuré",
-   "raison": "le site a refusé la mesure (HTTP 403)",
-   "reseaux": [],
-   "indices": []
-  },
-  {
-   "nom": "Sleepworld",
-   "pays": "BE",
-   "domaine": "sleepworld.be",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.sleepworld.be/ (HTTP 200, 1119851 octets)"
-   ],
-   "http": 200,
-   "methode": "navigateur"
-  },
-  {
-   "nom": "Swiss Sense",
-   "pays": "BE",
-   "domaine": "swiss-sense.be",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.swisssense.be/ (HTTP 200, 1270240 octets)"
-   ],
-   "http": 200,
-   "methode": "navigateur"
-  },
-  {
-   "nom": "Trafic",
-   "pays": "BE",
-   "domaine": "trafic.be",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://trafic.com/fr_BE/ (HTTP 200, 685961 octets)"
-   ],
-   "http": 200,
-   "methode": "navigateur"
-  },
-  {
-   "nom": "X²O Badkamers",
-   "pays": "BE",
-   "domaine": "x2o.be",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.x2o.be/nl (HTTP 200, 1276062 octets)"
-   ],
-   "http": 200,
-   "methode": "navigateur"
-  },
-  {
-   "nom": "Èggo",
-   "pays": "BE",
-   "domaine": "eggo.be",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.eggo.be/fr/ (HTTP 200, 674221 octets)"
-   ],
-   "http": 200,
-   "methode": "navigateur"
-  },
-  {
-   "nom": "A.S.Adventure",
-   "pays": "BE",
-   "domaine": "asadventure.com",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.asadventure.com/nl.html (HTTP 200, 769807 octets)"
-   ],
-   "http": 200,
-   "methode": "navigateur"
-  },
-  {
-   "nom": "C&A",
-   "pays": "BE",
-   "domaine": "c-and-a.com",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.c-and-a.com/be/nl/shop?showCountrySelector=true (HTTP 200, 762222 octets)"
-   ],
-   "http": 200,
-   "methode": "navigateur"
-  },
-  {
-   "nom": "Cameleon",
-   "pays": "BE",
-   "domaine": "cameleon.be",
-   "etat": "non mesuré",
-   "raison": "réponse vide ou trop courte (HTTP —, 0 octets)",
-   "reseaux": [],
-   "indices": []
-  },
-  {
-   "nom": "Decathlon",
-   "pays": "BE",
-   "domaine": "decathlon.be",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.decathlon.be/?__cf_chl_rt_tk=wXRYwDFIL58Nkjj.1phulfgoHEVUMc8bS3hbXhZNQRE-1791463788-1.0.1.1-iOX5fln1UUgRijSF.0.FE94Nzw2jcb3hLAgynDJMNGo (HTTP 403, 28859 octets)"
-   ],
-   "methode": "navigateur"
-  },
-  {
-   "nom": "H&M",
-   "pays": "BE",
-   "domaine": "hm.com",
-   "etat": "aucun signe trouvé",
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 403, 1482 octets)",
    "reseaux": [],
    "indices": [],
-   "http": 200
-  },
-  {
-   "nom": "JBC",
-   "pays": "BE",
-   "domaine": "jbc.be",
-   "etat": "programme trouvé",
-   "reseaux": [
-    "Amazon Partenaires"
-   ],
-   "indices": [
-    "page lue au navigateur : https://www.jbc.be/nl-be/home/ (HTTP 200, 504189 octets)",
-    "signature « amazon-adsystem.com » sur https://jbc.be"
-   ],
-   "http": 200,
-   "methode": "navigateur"
-  },
-  {
-   "nom": "Kiabi",
-   "pays": "BE",
-   "domaine": "kiabi.be",
-   "etat": "non mesuré",
-   "raison": "le site a refusé la mesure (HTTP 403)",
-   "reseaux": [],
-   "indices": []
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "Maniet! Luxus",
@@ -1139,82 +1006,156 @@
    "methode": "navigateur"
   },
   {
-   "nom": "Primark",
+   "nom": "Marley Spoon",
    "pays": "BE",
-   "domaine": "primark.com",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [],
-   "http": 200
-  },
-  {
-   "nom": "Schoenen Torfs",
-   "pays": "BE",
-   "domaine": "torfs.be",
-   "etat": "aucun signe trouvé",
+   "domaine": "marleyspoon.be",
+   "etat": "programme trouvé",
    "reseaux": [],
    "indices": [
-    "page lue au navigateur : https://www.torfs.be/nl/home (HTTP 200, 638545 octets)"
+    "page lue au navigateur : https://marleyspoon.be/ (HTTP 200, 199240 octets)",
+    "programme annoncé sur la page (lue au navigateur)"
    ],
    "http": 200,
    "methode": "navigateur"
   },
   {
-   "nom": "Sports Direct",
+   "nom": "Maxi Zoo",
    "pays": "BE",
-   "domaine": "sportsdirect.com",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [],
-   "http": 200
-  },
-  {
-   "nom": "Zara",
-   "pays": "BE",
-   "domaine": "zara.com",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [],
-   "http": 200
-  },
-  {
-   "nom": "Amplifon",
-   "pays": "BE",
-   "domaine": "amplifon.com",
-   "etat": "non mesuré",
-   "raison": "le site a refusé la mesure (HTTP 403)",
-   "reseaux": [],
-   "indices": []
-  },
-  {
-   "nom": "GrandOptical",
-   "pays": "BE",
-   "domaine": "grandoptical.be",
-   "etat": "non mesuré",
-   "raison": "réponse vide ou trop courte (HTTP —, 0 octets)",
-   "reseaux": [],
-   "indices": []
-  },
-  {
-   "nom": "Hans Anders",
-   "pays": "BE",
-   "domaine": "hansanders.be",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
+   "domaine": "maxizoo.be",
+   "etat": "programme trouvé",
+   "reseaux": [
+    "Smartclip / Sovendus"
+   ],
    "indices": [
-    "page lue au navigateur : https://www.hansanders.be/ (HTTP 200, 1693686 octets)"
+    "page lue au navigateur : https://www.maxizoo.be/nl/ (HTTP 200, 863772 octets)",
+    "signature « sovendus.com » sur https://maxizoo.be"
    ],
    "http": 200,
    "methode": "navigateur"
   },
   {
-   "nom": "Lapperre",
+   "nom": "Medi-Market",
    "pays": "BE",
-   "domaine": "lapperre.be",
+   "domaine": "medi-market.be",
    "etat": "aucun signe trouvé",
    "reseaux": [],
    "indices": [
-    "page lue au navigateur : https://www.lapperre.be/fr/ (HTTP 200, 517640 octets)"
+    "page lue au navigateur : https://medi-market.be/fr (HTTP 200, 4670527 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "MediaMarkt",
+   "pays": "BE",
+   "domaine": "mediamarkt.be",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.mediamarkt.be/nl/ (HTTP 200, 1226832 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Mister Auto",
+   "pays": "BE",
+   "domaine": "mister-auto.be",
+   "etat": "non mesuré",
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 403, 1474 octets)",
+   "reseaux": [],
+   "indices": [],
+   "methode": "navigateur (échec)"
+  },
+  {
+   "nom": "Mobile Vikings",
+   "pays": "BE",
+   "domaine": "mobilevikings.be",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://mobilevikings.be/fr/ (HTTP 200, 589527 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Mr.Bricolage",
+   "pays": "BE",
+   "domaine": "mr-bricolage.be",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.mr-bricolage.be/ (HTTP 200, 659980 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "MSC Croisières & Costa Croisières",
+   "pays": "BE",
+   "domaine": "msccroisieres.be",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.msccruises.be/fr (HTTP 200, 937398 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Newpharma",
+   "pays": "BE",
+   "domaine": "newpharma.be",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.newpharma.be/pharmacie/ (HTTP 200, 661106 octets)"
+   ],
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Normal",
+   "pays": "BE",
+   "domaine": "normal.be",
+   "etat": "non mesuré",
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: net::ERR_NAME_NOT_RESOLVED at https://normal.be/)",
+   "reseaux": [],
+   "indices": [],
+   "methode": "navigateur (échec)"
+  },
+  {
+   "nom": "Oh'Green",
+   "pays": "BE",
+   "domaine": "ohgreen.be",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.ohgreen.be/fr (HTTP 200, 399542 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "OKay",
+   "pays": "BE",
+   "domaine": "okay.be",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.okay.be/fr (HTTP 200, 442169 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Orange Belgique",
+   "pays": "BE",
+   "domaine": "orange.be",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.orange.be/fr (HTTP 200, 397409 octets)"
    ],
    "http": 200,
    "methode": "navigateur"
@@ -1233,167 +1174,65 @@
    "methode": "navigateur"
   },
   {
-   "nom": "Di",
+   "nom": "Pegasus Airlines",
    "pays": "BE",
-   "domaine": "di.be",
+   "domaine": "flypgs.com",
    "etat": "aucun signe trouvé",
    "reseaux": [],
    "indices": [
-    "page lue au navigateur : https://di.be/fr/ (HTTP 200, 6847858 octets)"
-   ],
-   "http": 200,
-   "methode": "navigateur"
-  },
-  {
-   "nom": "Farmaline",
-   "pays": "BE",
-   "domaine": "farmaline.be",
-   "etat": "programme trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.farmaline.be/nl/ (HTTP 200, 476377 octets)",
-    "page programme : https://www.farmaline.be/nl/partner/partnerprogramma/"
-   ],
-   "http": 200,
-   "methode": "navigateur"
-  },
-  {
-   "nom": "ICI PARIS XL",
-   "pays": "BE",
-   "domaine": "iciparisxl.be",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [],
-   "http": 200
-  },
-  {
-   "nom": "Kruidvat",
-   "pays": "BE",
-   "domaine": "kruidvat.be",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [],
-   "http": 200
-  },
-  {
-   "nom": "Medi-Market",
-   "pays": "BE",
-   "domaine": "medi-market.be",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://medi-market.be/fr (HTTP 200, 4670527 octets)"
-   ],
-   "http": 200,
-   "methode": "navigateur"
-  },
-  {
-   "nom": "Newpharma",
-   "pays": "BE",
-   "domaine": "newpharma.be",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.newpharma.be/pharmacie/ (HTTP 200, 661106 octets)"
+    "page lue au navigateur : https://www.flypgs.com/ (HTTP 403, 2851 octets)"
    ],
    "methode": "navigateur"
   },
   {
-   "nom": "Trekpleister",
+   "nom": "Player / PlayerOne",
    "pays": "BE",
-   "domaine": "trekpleister.be",
+   "domaine": "playerone.be",
    "etat": "non mesuré",
-   "raison": "réponse vide ou trop courte (HTTP —, 0 octets)",
-   "reseaux": [],
-   "indices": []
-  },
-  {
-   "nom": "Yves Rocher",
-   "pays": "BE",
-   "domaine": "yves-rocher.be",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.yves-rocher.be/ (HTTP 403, 7848 octets)"
-   ],
-   "http": 200,
-   "methode": "navigateur"
-  },
-  {
-   "nom": "Clubic",
-   "pays": "BE",
-   "domaine": "clubic.com",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.clubic.com/ (HTTP 200, 1358069 octets)"
-   ],
-   "http": 200,
-   "methode": "navigateur"
-  },
-  {
-   "nom": "DHnet",
-   "pays": "BE",
-   "domaine": "dhnet.be",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.dhnet.be/ (HTTP 200, 3941529 octets)"
-   ],
-   "http": 200,
-   "methode": "navigateur"
-  },
-  {
-   "nom": "Dealabs",
-   "pays": "BE",
-   "domaine": "dealabs.com",
-   "etat": "aucun signe trouvé",
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 404, 39 octets)",
    "reseaux": [],
    "indices": [],
-   "http": 200
+   "methode": "navigateur (échec)"
   },
   {
-   "nom": "Frandroid / 01net",
+   "nom": "Poils et Plumes",
    "pays": "BE",
-   "domaine": "frandroid.com",
-   "etat": "aucun signe trouvé",
+   "domaine": "poils-et-plumes.be",
+   "etat": "non mesuré",
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: net::ERR_NAME_NOT_RESOLVED at https://poils-et-plumes.be/)",
    "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.frandroid.com/ (HTTP 200, 594563 octets)"
-   ],
+   "indices": [],
+   "methode": "navigateur (échec)"
+  },
+  {
+   "nom": "Prik&Tik",
+   "pays": "BE",
+   "domaine": "prik-et-tik.be",
+   "etat": "non mesuré",
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: net::ERR_NAME_NOT_RESOLVED at https://prik-et-tik.be/)",
+   "reseaux": [],
+   "indices": [],
+   "methode": "navigateur (échec)"
+  },
+  {
+   "nom": "Primark",
+   "pays": "BE",
+   "domaine": "primark.com",
+   "etat": "non mesuré",
+   "reseaux": [],
+   "indices": [],
    "http": 200,
-   "methode": "navigateur"
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 200, 1509 octets)",
+   "methode": "navigateur (échec)"
   },
   {
-   "nom": "Gazet van Antwerpen",
+   "nom": "Proximus",
    "pays": "BE",
-   "domaine": "gva.be",
+   "domaine": "proximus.be",
    "etat": "aucun signe trouvé",
    "reseaux": [],
    "indices": [
-    "page lue au navigateur : https://www.gva.be/ (HTTP 200, 1915766 octets)"
-   ],
-   "methode": "navigateur"
-  },
-  {
-   "nom": "Het Nieuwsblad",
-   "pays": "BE",
-   "domaine": "nieuwsblad.be",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.nieuwsblad.be/ (HTTP 200, 2146701 octets)"
-   ],
-   "methode": "navigateur"
-  },
-  {
-   "nom": "Les Numériques",
-   "pays": "BE",
-   "domaine": "lesnumeriques.com",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.lesnumeriques.com/ (HTTP 200, 744922 octets)"
+    "page lue au navigateur : https://www.proximus.be/en/id_personal/personal.html (HTTP 200, 145757 octets)"
    ],
    "http": 200,
    "methode": "navigateur"
@@ -1414,79 +1253,13 @@
    "methode": "navigateur"
   },
   {
-   "nom": "Test-Achats",
+   "nom": "Ryanair",
    "pays": "BE",
-   "domaine": "test-achats.be",
+   "domaine": "ryanair.com",
    "etat": "aucun signe trouvé",
    "reseaux": [],
    "indices": [
-    "page lue au navigateur : https://www.test-achats.be/ (HTTP 200, 552527 octets)"
-   ],
-   "http": 200,
-   "methode": "navigateur"
-  },
-  {
-   "nom": "BASE",
-   "pays": "BE",
-   "domaine": "base.be",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.base.be/fr (HTTP 200, 800633 octets)"
-   ],
-   "http": 200,
-   "methode": "navigateur"
-  },
-  {
-   "nom": "DIGI Belgique",
-   "pays": "BE",
-   "domaine": "digi.be",
-   "etat": "non mesuré",
-   "raison": "réponse vide ou trop courte (HTTP —, 0 octets)",
-   "reseaux": [],
-   "indices": []
-  },
-  {
-   "nom": "Hey!",
-   "pays": "BE",
-   "domaine": "hey.be",
-   "etat": "non mesuré",
-   "raison": "réponse vide ou trop courte (HTTP —, 0 octets)",
-   "reseaux": [],
-   "indices": []
-  },
-  {
-   "nom": "Mobile Vikings",
-   "pays": "BE",
-   "domaine": "mobilevikings.be",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://mobilevikings.be/fr/ (HTTP 200, 589527 octets)"
-   ],
-   "http": 200,
-   "methode": "navigateur"
-  },
-  {
-   "nom": "Orange Belgique",
-   "pays": "BE",
-   "domaine": "orange.be",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.orange.be/fr (HTTP 200, 397409 octets)"
-   ],
-   "http": 200,
-   "methode": "navigateur"
-  },
-  {
-   "nom": "Proximus",
-   "pays": "BE",
-   "domaine": "proximus.be",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.proximus.be/en/id_personal/personal.html (HTTP 200, 145757 octets)"
+    "page lue au navigateur : https://www.ryanair.com/be/fr (HTTP 200, 371898 octets)"
    ],
    "http": 200,
    "methode": "navigateur"
@@ -1504,13 +1277,106 @@
    "methode": "navigateur"
   },
   {
+   "nom": "Schoenen Torfs",
+   "pays": "BE",
+   "domaine": "torfs.be",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.torfs.be/nl/home (HTTP 200, 638545 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
    "nom": "SkyDSL",
    "pays": "BE",
    "domaine": "skydsl.be",
    "etat": "non mesuré",
-   "raison": "réponse vide ou trop courte (HTTP —, 0 octets)",
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: net::ERR_CERT_COMMON_NAME_INVALID at https://skydsl.be/)",
    "reseaux": [],
-   "indices": []
+   "indices": [],
+   "methode": "navigateur (échec)"
+  },
+  {
+   "nom": "Sleepworld",
+   "pays": "BE",
+   "domaine": "sleepworld.be",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.sleepworld.be/ (HTTP 200, 1119851 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Smartoys",
+   "pays": "BE",
+   "domaine": "smartoys.be",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://smartoys.be/catalog/ (HTTP 200, 439327 octets)"
+   ],
+   "methode": "navigateur"
+  },
+  {
+   "nom": "SNCB / SNCB International",
+   "pays": "BE",
+   "domaine": "belgiantrain.be",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.belgiantrain.be/fr (HTTP 200, 360006 octets)"
+   ],
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Social Deal & Outspot",
+   "pays": "BE",
+   "domaine": "socialdeal.be",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.socialdeal.be/#join (HTTP 200, 741818 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Spar",
+   "pays": "BE",
+   "domaine": "spar.be",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.spar.be/ (HTTP 200, 130712 octets)"
+   ],
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Sports Direct",
+   "pays": "BE",
+   "domaine": "sportsdirect.com",
+   "etat": "non mesuré",
+   "reseaux": [],
+   "indices": [],
+   "http": 200,
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://sportsdirect.com/)",
+   "methode": "navigateur (échec)"
+  },
+  {
+   "nom": "Standaard Boekhandel",
+   "pays": "BE",
+   "domaine": "standaardboekhandel.be",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.standaardboekhandel.be/ (HTTP 200, 455188 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
   },
   {
    "nom": "Starlink",
@@ -1519,7 +1385,54 @@
    "etat": "aucun signe trouvé",
    "reseaux": [],
    "indices": [
-    "page lue au navigateur : https://starlink.com/ (HTTP 200, 188233 octets)"
+    "page lue au navigateur : https://starlink.com/ (HTTP 200, 182596 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Sunweb Belgique",
+   "pays": "BE",
+   "domaine": "sunweb.be",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.sunweb.be/nl (HTTP 200, 1240965 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Swiss Sense",
+   "pays": "BE",
+   "domaine": "swiss-sense.be",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.swisssense.be/ (HTTP 200, 1270240 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Takeaway.com (Takeaway.be)",
+   "pays": "BE",
+   "domaine": "takeaway.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.takeaway.com/be-fr (HTTP 200, 1122747 octets)"
+   ],
+   "methode": "navigateur"
+  },
+  {
+   "nom": "TAP Air Portugal",
+   "pays": "BE",
+   "domaine": "flytap.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.flytap.com/en-be (HTTP 200, 709443 octets)"
    ],
    "http": 200,
    "methode": "navigateur"
@@ -1549,176 +1462,133 @@
    "methode": "navigateur"
   },
   {
-   "nom": "VOO",
+   "nom": "Test-Achats",
    "pays": "BE",
-   "domaine": "voo.be",
+   "domaine": "test-achats.be",
    "etat": "aucun signe trouvé",
    "reseaux": [],
    "indices": [
-    "page lue au navigateur : https://www.voo.be/ (HTTP 200, 399847 octets)"
+    "page lue au navigateur : https://www.test-achats.be/ (HTTP 200, 552527 octets)"
    ],
    "http": 200,
    "methode": "navigateur"
   },
   {
-   "nom": "Booking.com & Expedia",
+   "nom": "Ticketmaster Belgique & Eventim",
    "pays": "BE",
-   "domaine": "booking.com",
+   "domaine": "ticketmaster.be",
    "etat": "aucun signe trouvé",
    "reseaux": [],
    "indices": [
-    "page lue au navigateur : https://www.booking.com/ (HTTP 202, 536875 octets)"
-   ],
-   "http": 202,
-   "methode": "navigateur"
-  },
-  {
-   "nom": "Connections",
-   "pays": "BE",
-   "domaine": "connections.be",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.connections.be/ (HTTP 200, 940293 octets)"
+    "page lue au navigateur : https://www.ticketmaster.be/ (HTTP 200, 657764 octets)"
    ],
    "http": 200,
    "methode": "navigateur"
   },
   {
-   "nom": "Corendon Belgique",
+   "nom": "Tom&Co",
    "pays": "BE",
-   "domaine": "corendon.be",
-   "etat": "programme trouvé",
-   "reseaux": [
-    "TradeTracker"
-   ],
+   "domaine": "tomandco.be",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
    "indices": [
-    "page lue au navigateur : https://www.corendon.be/ (HTTP 200, 131977 octets)",
-    "signature « tradetracker.com » sur https://www.corendon.be/affiliates",
-    "page programme : https://www.corendon.be/affiliates"
+    "page lue au navigateur : https://www.tomandco.com/nl-be/ (HTTP 200, 648226 octets)"
    ],
    "http": 200,
    "methode": "navigateur"
   },
   {
-   "nom": "Sunweb Belgique",
+   "nom": "Toolstation",
    "pays": "BE",
-   "domaine": "sunweb.be",
+   "domaine": "toolstation.be",
    "etat": "aucun signe trouvé",
    "reseaux": [],
    "indices": [
-    "page lue au navigateur : https://www.sunweb.be/nl (HTTP 200, 1240965 octets)"
+    "page lue au navigateur : https://www.toolstation.be/ (HTTP 200, 519363 octets)"
    ],
    "http": 200,
    "methode": "navigateur"
+  },
+  {
+   "nom": "ToyChamp",
+   "pays": "BE",
+   "domaine": "toychamp.be",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.dreamland.be/nl/ (HTTP 403, 115790 octets)"
+   ],
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Trafic",
+   "pays": "BE",
+   "domaine": "trafic.be",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://trafic.com/fr_BE/ (HTTP 200, 685961 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Transavia",
+   "pays": "BE",
+   "domaine": "transavia.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.transavia.com/ (HTTP 200, 60997 octets)"
+   ],
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Trekpleister",
+   "pays": "BE",
+   "domaine": "trekpleister.be",
+   "etat": "non mesuré",
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: net::ERR_CERT_COMMON_NAME_INVALID at https://trekpleister.be/)",
+   "reseaux": [],
+   "indices": [],
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "TUI Belgique (TUI.be)",
    "pays": "BE",
    "domaine": "tui.be",
    "etat": "non mesuré",
-   "raison": "le site a refusé la mesure (HTTP 403)",
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 403, 288 octets)",
    "reseaux": [],
-   "indices": []
+   "indices": [],
+   "methode": "navigateur (échec)"
   },
   {
-   "nom": "Voyage Privé",
+   "nom": "TUI fly Belgium",
    "pays": "BE",
-   "domaine": "voyage-prive.be",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.voyage-prive.be/login/index#signin (HTTP 200, 124069 octets)"
-   ],
-   "http": 200,
-   "methode": "navigateur"
-  },
-  {
-   "nom": "Alternate.be",
-   "pays": "BE",
-   "domaine": "alternate.be",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.alternate.be/ (HTTP 200, 213884 octets)"
-   ],
-   "http": 200,
-   "methode": "navigateur"
-  },
-  {
-   "nom": "Coolblue",
-   "pays": "BE",
-   "domaine": "coolblue.be",
+   "domaine": "tuifly.be",
    "etat": "programme trouvé",
    "reseaux": [
-    "Awin"
+    "TradeTracker"
    ],
    "indices": [
-    "page lue au navigateur : https://www.coolblue.be/fr (HTTP 200, 1354814 octets)",
-    "signature « awin.com » sur https://coolblue.be",
-    "programme annoncé sur la page (lue au navigateur)"
+    "signature « tradetracker.com » sur https://tuifly.be/fr/affiliates-fr",
+    "page programme : https://www.tuifly.be/fr/affiliates-fr"
    ],
-   "http": 200,
-   "methode": "navigateur"
+   "http": 200
   },
   {
-   "nom": "Electro Dépôt",
+   "nom": "Uber Eats",
    "pays": "BE",
-   "domaine": "electrodepot.be",
+   "domaine": "ubereats.com",
    "etat": "programme trouvé",
    "reseaux": [
-    "Awin"
+    "Amazon Partenaires"
    ],
    "indices": [
-    "page lue au navigateur : https://www.electrodepot.be/ (HTTP 200, 677404 octets)",
-    "signature « awin1.com » sur https://electrodepot.be"
+    "page lue au navigateur : https://www.ubereats.com/be (HTTP 200, 430675 octets)",
+    "signature « amazon-adsystem.com » sur https://ubereats.com"
    ],
-   "http": 200,
-   "methode": "navigateur"
-  },
-  {
-   "nom": "Fnac",
-   "pays": "BE",
-   "domaine": "fnac.be",
-   "etat": "non mesuré",
-   "raison": "le site a refusé la mesure (HTTP 403)",
-   "reseaux": [],
-   "indices": []
-  },
-  {
-   "nom": "Krëfel",
-   "pays": "BE",
-   "domaine": "krefel.be",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.krefel.be/ (HTTP 500, 7324 octets)"
-   ],
-   "http": 200,
-   "methode": "navigateur"
-  },
-  {
-   "nom": "LDLC",
-   "pays": "BE",
-   "domaine": "ldlc.com",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.ldlc.com/fr-be/?origin=www.ldlc.com (HTTP 200, 170395 octets)"
-   ],
-   "http": 200,
-   "methode": "navigateur"
-  },
-  {
-   "nom": "MediaMarkt",
-   "pays": "BE",
-   "domaine": "mediamarkt.be",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://www.mediamarkt.be/nl/ (HTTP 200, 1226832 octets)"
-   ],
-   "http": 200,
    "methode": "navigateur"
   },
   {
@@ -1734,22 +1604,2330 @@
    "methode": "navigateur"
   },
   {
-   "nom": "MyDealz",
+   "nom": "Veepee / Zalando Lounge",
+   "pays": "BE",
+   "domaine": "veepee.com",
+   "etat": "programme trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.veepee.fr/gr/home/default (HTTP 200, 967371 octets)",
+    "programme annoncé sur la page (lue au navigateur)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "VISITWALLONIA / Visit Brussels / Visit Flanders",
+   "pays": "BE",
+   "domaine": "visitwallonia.be",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://visitwallonia.be/ (HTTP 200, 514806 octets)"
+   ],
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Volotea",
+   "pays": "BE",
+   "domaine": "volotea.com",
+   "etat": "non mesuré",
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 200, 879 octets)",
+   "reseaux": [],
+   "indices": [],
+   "methode": "navigateur (échec)"
+  },
+  {
+   "nom": "VOO",
+   "pays": "BE",
+   "domaine": "voo.be",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.voo.be/ (HTTP 200, 399847 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Voyage Privé",
+   "pays": "BE",
+   "domaine": "voyage-prive.be",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.voyage-prive.be/login/index#signin (HTTP 200, 124069 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Vueling",
+   "pays": "BE",
+   "domaine": "vueling.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.vueling.com/en (HTTP 200, 1563509 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Wibra",
+   "pays": "BE",
+   "domaine": "wibra.be",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.wibra.be/fr/ (HTTP 200, 908746 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Wizz Air",
+   "pays": "BE",
+   "domaine": "wizzair.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.wizzair.com/en-gb (HTTP 200, 2020265 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "X²O Badkamers",
+   "pays": "BE",
+   "domaine": "x2o.be",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.x2o.be/nl (HTTP 200, 1276062 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Yves Rocher",
+   "pays": "BE",
+   "domaine": "yves-rocher.be",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.yves-rocher.be/ (HTTP 403, 7848 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Zalando",
+   "pays": "BE",
+   "domaine": "zalando.be",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.zalando.be/ (HTTP 403, 69590 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Zara",
+   "pays": "BE",
+   "domaine": "zara.com",
+   "etat": "non mesuré",
+   "reseaux": [],
+   "indices": [],
+   "http": 200,
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 403, 286 octets)",
+   "methode": "navigateur (échec)"
+  },
+  {
+   "nom": "Zeeman",
+   "pays": "BE",
+   "domaine": "zeeman.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.zeeman.com/fr-be (HTTP 200, 735987 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Zooplus.be",
+   "pays": "BE",
+   "domaine": "zooplus.be",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.zooplus.be/ (HTTP 200, 1734033 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "1&1",
+   "pays": "DE",
+   "domaine": "1und1.de",
+   "etat": "programme trouvé",
+   "reseaux": [],
+   "indices": [
+    "programme annoncé sur la page d'accueil (https://1und1.de)"
+   ],
+   "http": 200
+  },
+  {
+   "nom": "A.T.U",
+   "pays": "DE",
+   "domaine": "atu.de",
+   "etat": "non mesuré",
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 403, 1458 octets)",
+   "reseaux": [],
+   "indices": [],
+   "methode": "navigateur (échec)"
+  },
+  {
+   "nom": "About You",
+   "pays": "DE",
+   "domaine": "aboutyou.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.aboutyou.de/ (HTTP 200, 1051635 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Action",
+   "pays": "DE",
+   "domaine": "action.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.action.com/ (HTTP 200, 230487 octets)"
+   ],
+   "methode": "navigateur"
+  },
+  {
+   "nom": "AIDA Cruises",
+   "pays": "DE",
+   "domaine": "aida.de",
+   "etat": "programme trouvé",
+   "reseaux": [],
+   "indices": [
+    "page programme : https://aida.de/unternehmen/affiliate"
+   ],
+   "http": 200
+  },
+  {
+   "nom": "Air France-KLM",
+   "pays": "DE",
+   "domaine": "airfrance.de",
+   "etat": "non mesuré",
+   "reseaux": [],
+   "indices": [],
+   "http": 200,
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: Timeout 20000ms exceeded.)",
+   "methode": "navigateur (échec)"
+  },
+  {
+   "nom": "Aldi Nord",
+   "pays": "DE",
+   "domaine": "aldi-nord.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.aldi-nord.de/ (HTTP 200, 183320 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Aldi Süd",
+   "pays": "DE",
+   "domaine": "aldi-sued.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.aldi-sued.de/ (HTTP 200, 1275855 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Aldi Talk",
+   "pays": "DE",
+   "domaine": "alditalk.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.alditalk.de/ (HTTP 200, 236297 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Alltours",
+   "pays": "DE",
+   "domaine": "alltours.de",
+   "etat": "programme trouvé",
+   "reseaux": [],
+   "indices": [
+    "programme annoncé sur la page d'accueil (https://alltours.de)"
+   ],
+   "http": 200
+  },
+  {
+   "nom": "Alternate",
+   "pays": "DE",
+   "domaine": "alternate.de",
+   "etat": "programme trouvé",
+   "reseaux": [],
+   "indices": [
+    "programme annoncé sur la page d'accueil (https://alternate.de)"
+   ],
+   "http": 200
+  },
+  {
+   "nom": "Amazon (livres)",
+   "pays": "DE",
+   "domaine": "amazon.de",
+   "etat": "programme trouvé",
+   "reseaux": [
+    "Amazon Partenaires"
+   ],
+   "indices": [
+    "page lue au navigateur : https://www.amazon.de/ (HTTP 200, 1659745 octets)",
+    "signature « amazon-adsystem.com » sur https://amazon.de",
+    "programme annoncé sur la page (lue au navigateur)"
+   ],
+   "http": 202,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Amazon.de",
+   "pays": "DE",
+   "domaine": "amazon.de",
+   "etat": "programme trouvé",
+   "reseaux": [
+    "Amazon Partenaires"
+   ],
+   "indices": [
+    "page lue au navigateur : https://www.amazon.de/ (HTTP 200, 1659745 octets)",
+    "signature « amazon-adsystem.com » sur https://amazon.de",
+    "programme annoncé sur la page (lue au navigateur)"
+   ],
+   "http": 202,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Amplifon Deutschland",
+   "pays": "DE",
+   "domaine": "amplifon.com",
+   "etat": "non mesuré",
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 403, 198 octets)",
+   "reseaux": [],
+   "indices": [],
+   "methode": "navigateur (échec)"
+  },
+  {
+   "nom": "Apollo-Optik",
+   "pays": "DE",
+   "domaine": "apollo.de",
+   "etat": "programme trouvé",
+   "reseaux": [],
+   "indices": [
+    "page programme : https://www.apollo.de/ueber-uns/unternehmen/affiliate-werden"
+   ],
+   "http": 200
+  },
+  {
+   "nom": "Aurum Tours",
+   "pays": "DE",
+   "domaine": "aurumtours.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.aurumtours.de/ (HTTP 200, 82848 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Autodoc",
+   "pays": "DE",
+   "domaine": "autodoc.de",
+   "etat": "programme trouvé",
+   "reseaux": [
+    "Awin",
+    "Tradedoubler",
+    "Webgains",
+    "Admitad"
+   ],
+   "indices": [
+    "page lue au navigateur : https://www.autodoc.de/ (HTTP 200, 620480 octets)",
+    "signature « awin.com » sur https://autodoc.de",
+    "signature « tradedoubler.com » sur https://autodoc.de",
+    "signature « webgains.com » sur https://autodoc.de",
+    "signature « admitad.com » sur https://autodoc.de"
+   ],
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Bauhaus",
+   "pays": "DE",
+   "domaine": "bauhaus.info",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.bauhaus.info/ (HTTP 200, 1527057 octets)"
+   ],
+   "methode": "navigateur"
+  },
+  {
+   "nom": "bett1.de",
+   "pays": "DE",
+   "domaine": "bett1.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.bett1.de/ (HTTP 200, 876630 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "billiger.de",
+   "pays": "DE",
+   "domaine": "billiger.de",
+   "etat": "programme trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.billiger.de/ (HTTP 200, 558358 octets)",
+    "programme annoncé sur la page (lue au navigateur)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "BlaBlaCar",
+   "pays": "DE",
+   "domaine": "blablacar.de",
+   "etat": "non mesuré",
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 403, 1470 octets)",
+   "reseaux": [],
+   "indices": [],
+   "methode": "navigateur (échec)"
+  },
+  {
+   "nom": "British Airways / IAG",
+   "pays": "DE",
+   "domaine": "britishairways.com",
+   "etat": "non mesuré",
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: Timeout 20000ms exceeded.)",
+   "reseaux": [],
+   "indices": [],
+   "methode": "navigateur (échec)"
+  },
+  {
+   "nom": "Budnikowsky (Budni)",
+   "pays": "DE",
+   "domaine": "budni.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.budni.de/ (HTTP 200, 432096 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "C&A",
+   "pays": "DE",
+   "domaine": "c-and-a.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.c-and-a.com/be/nl/shop?showCountrySelector=true (HTTP 200, 762340 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Center Parcs Deutschland",
+   "pays": "DE",
+   "domaine": "centerparcs.de",
+   "etat": "programme trouvé",
+   "reseaux": [],
+   "indices": [
+    "programme annoncé sur la page d'accueil (https://centerparcs.de)"
+   ],
+   "http": 200
+  },
+  {
+   "nom": "Check24",
+   "pays": "DE",
+   "domaine": "check24.de",
+   "etat": "programme trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.check24.de/ (HTTP 200, 606628 octets)",
+    "programme annoncé sur la page (lue au navigateur)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Chip",
+   "pays": "DE",
+   "domaine": "chip.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.chip.de/ (HTTP 200, 991748 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Computer Bild",
+   "pays": "DE",
+   "domaine": "computerbild.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.computerbild.de/ (HTTP 200, 703058 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Condor",
+   "pays": "DE",
+   "domaine": "condor.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.condor.com/fr-fr/ (HTTP 200, 1124902 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "congstar",
+   "pays": "DE",
+   "domaine": "congstar.de",
+   "etat": "programme trouvé",
+   "reseaux": [],
+   "indices": [
+    "page programme : https://www.congstar.de/werben-und-verdienen/partnerprogramm/"
+   ],
+   "http": 200
+  },
+  {
+   "nom": "Conrad Electronic",
+   "pays": "DE",
+   "domaine": "conrad.de",
+   "etat": "programme trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.conrad.de/ (HTTP 200, 2034287 octets)",
+    "programme annoncé sur la page (lue au navigateur)"
+   ],
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Cyberport",
+   "pays": "DE",
+   "domaine": "cyberport.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.cyberport.de/ (HTTP 200, 1097510 octets)"
+   ],
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Das Futterhaus",
+   "pays": "DE",
+   "domaine": "futterhaus.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.futterhaus.de/ (HTTP 200, 1185082 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Decathlon Allemagne",
+   "pays": "DE",
+   "domaine": "decathlon.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.decathlon.de/?__cf_chl_rt_tk=j6yumNvqd3z8m0N14oUu3LXfaJAa.Yb.EVHSXU43yhg-1791532507-1.0.1.1-O.wWE2XSU5F4K8.xUTq7BQXUAnRHxX2lvhhzP0MMITo (HTTP 403, 28881 octets)"
+   ],
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Dehner",
+   "pays": "DE",
+   "domaine": "dehner.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.dehner.de/ (HTTP 200, 2119147 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Deichmann",
+   "pays": "DE",
+   "domaine": "deichmann.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.vanharen.be/nl-be/ (HTTP 200, 646532 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "DERTOUR Group",
+   "pays": "DE",
+   "domaine": "dertour.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.dertour.de/ (HTTP 200, 797105 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Deutsche Bahn",
+   "pays": "DE",
+   "domaine": "bahn.de",
+   "etat": "programme trouvé",
+   "reseaux": [
+    "Awin"
+   ],
+   "indices": [
+    "signature « awin.com » sur https://www.bahn.de/partnerprogramm/affiliate-uebersicht?dbkanal_007=footer-affiliate",
+    "page programme : https://www.bahn.de/partnerprogramm/affiliate-uebersicht?dbkanal_007=footer-affiliate"
+   ],
+   "http": 200
+  },
+  {
+   "nom": "Deutsche Telekom",
+   "pays": "DE",
+   "domaine": "telekom.de",
+   "etat": "programme trouvé",
+   "reseaux": [
+    "Awin"
+   ],
+   "indices": [
+    "page lue au navigateur : https://www.telekom.de/start (HTTP 200, 179874 octets)",
+    "signature « awin.com » sur https://www.telekom.de/ueber-das-unternehmen/datenschutz"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "dm-drogerie markt",
+   "pays": "DE",
+   "domaine": "dm.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.dm.de/ (HTTP 200, 252207 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "DocMorris",
+   "pays": "DE",
+   "domaine": "docmorris.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.docmorris.de/ (HTTP 200, 471404 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Douglas",
+   "pays": "DE",
+   "domaine": "douglas.de",
+   "etat": "non mesuré",
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 403, 290 octets)",
+   "reseaux": [],
+   "indices": [],
+   "methode": "navigateur (échec)"
+  },
+  {
+   "nom": "Dursty",
+   "pays": "DE",
+   "domaine": "dursty.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.hoffmannbringts.de/ (HTTP 200, 773521 octets)"
+   ],
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Dussmann das KulturKaufhaus",
+   "pays": "DE",
+   "domaine": "dussmann.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://de.dussmann.de/ (HTTP 200, 133444 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "DZT (Germany Tourism)",
+   "pays": "DE",
+   "domaine": "germany.travel",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.germany.travel/fr/home.html (HTTP 200, 456319 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "easyJet",
+   "pays": "DE",
+   "domaine": "easyjet.com",
+   "etat": "non mesuré",
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 403, 291 octets)",
+   "reseaux": [],
+   "indices": [],
+   "methode": "navigateur (échec)"
+  },
+  {
+   "nom": "eBay.de",
+   "pays": "DE",
+   "domaine": "ebay.de",
+   "etat": "non mesuré",
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 403, 1831 octets)",
+   "reseaux": [],
+   "indices": [],
+   "methode": "navigateur (échec)"
+  },
+  {
+   "nom": "Edeka",
+   "pays": "DE",
+   "domaine": "edeka.de",
+   "etat": "non mesuré",
+   "reseaux": [],
+   "indices": [],
+   "http": 200,
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 403, 290 octets)",
+   "methode": "navigateur (échec)"
+  },
+  {
+   "nom": "Elbenwald",
+   "pays": "DE",
+   "domaine": "elbenwald.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://elbenwald.de/ (HTTP 200, 1030358 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Emirates",
+   "pays": "DE",
+   "domaine": "emirates.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.emirates.com/error/accessrestricted.html?refid=18.6c6b1102.1791532551.908da55 (HTTP 403, 83349 octets)"
+   ],
+   "methode": "navigateur"
+  },
+  {
+   "nom": "EMP",
+   "pays": "DE",
+   "domaine": "emp.de",
+   "etat": "programme trouvé",
+   "reseaux": [],
+   "indices": [
+    "programme annoncé sur la page d'accueil (https://emp.de)"
+   ],
+   "http": 200
+  },
+  {
+   "nom": "Erlebnisparks régionaux (Phantasialand, Heide Park, Legoland DE)",
+   "pays": "DE",
+   "domaine": "divers",
+   "etat": "non mesuré",
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: net::ERR_NAME_NOT_RESOLVED at https://divers/)",
+   "reseaux": [],
+   "indices": [],
+   "methode": "navigateur (échec)"
+  },
+  {
+   "nom": "Euromaster Deutschland",
+   "pays": "DE",
+   "domaine": "euromaster.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.euromaster.de/ (HTTP 200, 407573 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Euronics Deutschland",
+   "pays": "DE",
+   "domaine": "euronics.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://euronics.de/ (HTTP 202, 9951 octets)"
+   ],
+   "http": 202,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Europa-Park",
+   "pays": "DE",
+   "domaine": "europapark.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.europapark.de/fr (HTTP 200, 1445039 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Euroshop",
+   "pays": "DE",
+   "domaine": "euroshop-24.de",
+   "etat": "non mesuré",
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: net::ERR_NAME_NOT_RESOLVED at https://euroshop-24.de/)",
+   "reseaux": [],
+   "indices": [],
+   "methode": "navigateur (échec)"
+  },
+  {
+   "nom": "Eurowings",
+   "pays": "DE",
+   "domaine": "eurowings.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.eurowings.com/en.html (HTTP 200, 774266 octets)"
+   ],
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Eventim",
+   "pays": "DE",
+   "domaine": "eventim.de",
+   "etat": "non mesuré",
+   "reseaux": [],
+   "indices": [],
+   "http": 200,
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: Timeout 20000ms exceeded.)",
+   "methode": "navigateur (échec)"
+  },
+  {
+   "nom": "Expert",
+   "pays": "DE",
+   "domaine": "expert.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.expert.de/ (HTTP 200, 2430935 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "eyes + more",
+   "pays": "DE",
+   "domaine": "eyesandmore.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.eyesandmore.de/ (HTTP 200, 2061080 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Fielmann",
+   "pays": "DE",
+   "domaine": "fielmann.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.fielmann.de/ (HTTP 200, 1707804 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Flaconi",
+   "pays": "DE",
+   "domaine": "flaconi.de",
+   "etat": "programme trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.flaconi.de/ (HTTP 200, 1997757 octets)",
+    "programme annoncé sur la page (lue au navigateur)"
+   ],
+   "methode": "navigateur"
+  },
+  {
+   "nom": "flaschenpost",
+   "pays": "DE",
+   "domaine": "flaschenpost.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.flaschenpost.de/ (HTTP 200, 260423 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Flink",
+   "pays": "DE",
+   "domaine": "goflink.com",
+   "etat": "non mesuré",
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 403, 1473 octets)",
+   "reseaux": [],
+   "indices": [],
+   "methode": "navigateur (échec)"
+  },
+  {
+   "nom": "FlixBus / FlixTrain",
+   "pays": "DE",
+   "domaine": "flixbus.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.flixbus.de/ (HTTP 200, 355112 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "fraenk",
+   "pays": "DE",
+   "domaine": "fraenk.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://fraenk.de/ (HTTP 200, 490933 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "freenet",
+   "pays": "DE",
+   "domaine": "freenet.de",
+   "etat": "programme trouvé",
+   "reseaux": [],
+   "indices": [
+    "programme annoncé sur la page d'accueil (https://freenet.de)"
+   ],
+   "http": 200
+  },
+  {
+   "nom": "Fressnapf",
+   "pays": "DE",
+   "domaine": "fressnapf.de",
+   "etat": "programme trouvé",
+   "reseaux": [
+    "Smartclip / Sovendus"
+   ],
+   "indices": [
+    "page lue au navigateur : https://www.fressnapf.de/ (HTTP 200, 1217154 octets)",
+    "signature « sovendus.com » sur https://fressnapf.de"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "FTI Group",
+   "pays": "DE",
+   "domaine": "—",
+   "etat": "non mesuré",
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: net::ERR_NAME_NOT_RESOLVED at https://xn--8ug/)",
+   "reseaux": [],
+   "indices": [],
+   "methode": "navigateur (échec)"
+  },
+  {
+   "nom": "Games Only",
+   "pays": "DE",
+   "domaine": "gamesonly.at",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.gamesonly.at/ (HTTP 200, 121251 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "GameStop Allemagne",
+   "pays": "DE",
+   "domaine": "fermé",
+   "etat": "non mesuré",
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: net::ERR_NAME_NOT_RESOLVED at https://xn--ferm-epa/)",
+   "reseaux": [],
+   "indices": [],
+   "methode": "navigateur (échec)"
+  },
+  {
+   "nom": "Geers Hörgeräte",
+   "pays": "DE",
+   "domaine": "geers.de",
+   "etat": "non mesuré",
+   "reseaux": [],
+   "indices": [],
+   "http": 200,
+   "raison": "le navigateur n’a pas pu lire la page (Page.eval_on_selector_all: Execution context was destroyed, most likely because )",
+   "methode": "navigateur (échec)"
+  },
+  {
+   "nom": "Geizhals",
+   "pays": "DE",
+   "domaine": "geizhals.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://geizhals.de/ (HTTP 200, 388902 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Getränke Hoffmann",
+   "pays": "DE",
+   "domaine": "getraenke-hoffmann.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.getraenke-hoffmann.de/ (HTTP 200, 212604 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Getränke-Quelle",
+   "pays": "DE",
+   "domaine": "getraenke-quelle.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://getraenke-quelle.net/ (HTTP 200, 76985 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "GetYourGuide",
+   "pays": "DE",
+   "domaine": "getyourguide.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.getyourguide.com/fr-fr/?visitor-id=KTM0WJ5STKTRXD48VBEDXPDD9480P0CH&locale_autoredirect_optout=true (HTTP 200, 481131 octets)"
+   ],
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Globus Baumarkt",
+   "pays": "DE",
+   "domaine": "globus-baumarkt.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.globus-baumarkt.de/ (HTTP 200, 2463702 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Globus SB-Warenhaus",
+   "pays": "DE",
+   "domaine": "globus.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.globus.de/maerkte.php (HTTP 200, 509305 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "H&M Allemagne",
+   "pays": "DE",
+   "domaine": "hm.com",
+   "etat": "non mesuré",
+   "reseaux": [],
+   "indices": [],
+   "http": 200,
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 403, 282 octets)",
+   "methode": "navigateur (échec)"
+  },
+  {
+   "nom": "hagebau",
+   "pays": "DE",
+   "domaine": "hagebau.de",
+   "etat": "programme trouvé",
+   "reseaux": [
+    "Awin"
+   ],
+   "indices": [
+    "page programme : https://www.hagebau.de/affiliate/",
+    "signature « awin.com » sur https://www.hagebau.de/affiliate/"
+   ],
+   "http": 200
+  },
+  {
+   "nom": "Hapag-Lloyd Cruises",
+   "pays": "DE",
+   "domaine": "hl-cruises.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.hl-cruises.de/ (HTTP 200, 1329247 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "HelloFresh",
+   "pays": "DE",
+   "domaine": "hellofresh.de",
+   "etat": "programme trouvé",
+   "reseaux": [
+    "Awin",
+    "Impact"
+   ],
+   "indices": [
+    "signature « awin.com » sur https://hellofresh.de/about/affiliate-kontakt",
+    "signature « impact.com » sur https://hellofresh.de/about/affiliate-kontakt",
+    "page programme : https://www.hellofresh.de/about/affiliate-kontakt"
+   ],
+   "http": 200
+  },
+  {
+   "nom": "Hellweg",
+   "pays": "DE",
+   "domaine": "hellweg.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.hellweg.de/ (HTTP 200, 71886 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "HolidayCheck",
+   "pays": "DE",
+   "domaine": "holidaycheck.de",
+   "etat": "programme trouvé",
+   "reseaux": [
+    "Awin"
+   ],
+   "indices": [
+    "signature « awin.com » sur https://holidaycheck.de",
+    "programme annoncé sur la page d'accueil (https://holidaycheck.de)"
+   ],
+   "http": 200
+  },
+  {
+   "nom": "Home24",
+   "pays": "DE",
+   "domaine": "home24.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://home24.de/ (HTTP 403, 4038 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Hornbach",
+   "pays": "DE",
+   "domaine": "hornbach.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.hornbach.de/ (HTTP 200, 16994 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Hugendubel",
+   "pays": "DE",
+   "domaine": "hugendubel.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.hugendubel.de/de (HTTP 200, 992160 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "idealo",
+   "pays": "DE",
+   "domaine": "idealo.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.idealo.de/ (HTTP 403, 3932 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Idee+Spiel",
+   "pays": "DE",
+   "domaine": "ideeundspiel.de",
+   "etat": "non mesuré",
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: net::ERR_CERT_COMMON_NAME_INVALID at https://ideeundspiel.de/)",
+   "reseaux": [],
+   "indices": [],
+   "methode": "navigateur (échec)"
+  },
+  {
+   "nom": "IKEA Allemagne",
+   "pays": "DE",
+   "domaine": "ikea.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.ikea.com/ (HTTP 200, 620469 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Inditex / Zara",
+   "pays": "DE",
+   "domaine": "zara.com",
+   "etat": "non mesuré",
+   "reseaux": [],
+   "indices": [],
+   "http": 200,
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 403, 286 octets)",
+   "methode": "navigateur (échec)"
+  },
+  {
+   "nom": "Intersport Deutschland",
+   "pays": "DE",
+   "domaine": "intersport.de",
+   "etat": "programme trouvé",
+   "reseaux": [],
+   "indices": [
+    "programme annoncé sur la page d'accueil (https://intersport.de)"
+   ],
+   "http": 200
+  },
+  {
+   "nom": "Jochen Schweizer mydays",
+   "pays": "DE",
+   "domaine": "mydays.de",
+   "etat": "programme trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.mydays.de/ (HTTP 200, 421222 octets)",
+    "programme annoncé sur la page (lue au navigateur)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "JYSK (ex-Dänisches Bettenlager)",
+   "pays": "DE",
+   "domaine": "jysk.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://jysk.de/ (HTTP 200, 769884 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Kaufland",
+   "pays": "DE",
+   "domaine": "kaufland.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.kaufland.de/?__cf_chl_rt_tk=NCjAhbQrfVGFolKPmqtlJx.V7lcRPEymKMoXQE2.26o-1791532693-1.0.1.1-Eo0ojtbmGwaJB2yqxqvj1raYySTgnfq7bZ6blQ4H7PU (HTTP 403, 12302 octets)"
+   ],
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Kaufland.de",
+   "pays": "DE",
+   "domaine": "kaufland.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.kaufland.de/?__cf_chl_rt_tk=NCjAhbQrfVGFolKPmqtlJx.V7lcRPEymKMoXQE2.26o-1791532693-1.0.1.1-Eo0ojtbmGwaJB2yqxqvj1raYySTgnfq7bZ6blQ4H7PU (HTTP 403, 12302 octets)"
+   ],
+   "methode": "navigateur"
+  },
+  {
+   "nom": "kfzteile24",
+   "pays": "DE",
+   "domaine": "kfzteile24.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.kfzteile24.de/ (HTTP 200, 117962 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "KiK",
+   "pays": "DE",
+   "domaine": "kik.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.kik.de/ (HTTP 200, 1107444 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "KIND Hörgeräte",
+   "pays": "DE",
+   "domaine": "kind.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.kind.com/de-de (HTTP 200, 461843 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Knuspr",
+   "pays": "DE",
+   "domaine": "knuspr.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.knuspr.de/ (HTTP 200, 1297189 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Kölle Zoo",
+   "pays": "DE",
+   "domaine": "koelle-zoo.de",
+   "etat": "programme trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.koelle-zoo.de/ (HTTP 200, 1751235 octets)",
+    "programme annoncé sur la page (lue au navigateur)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Lidl",
+   "pays": "DE",
+   "domaine": "lidl.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.lidl.de/ (HTTP 200, 1135144 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Lidl Connect",
+   "pays": "DE",
+   "domaine": "lidl-connect.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.lidl.de/c/lidl-connect/s10007717 (HTTP 200, 488747 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Lieferando",
+   "pays": "DE",
+   "domaine": "lieferando.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.lieferando.de/fr (HTTP 200, 1162118 octets)"
+   ],
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Lufthansa",
+   "pays": "DE",
+   "domaine": "lufthansa.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.lufthansa.com/be/fr/homepage (HTTP 200, 351557 octets)"
+   ],
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Marley Spoon",
+   "pays": "DE",
+   "domaine": "marleyspoon.de",
+   "etat": "programme trouvé",
+   "reseaux": [],
+   "indices": [
+    "programme annoncé sur la page d'accueil (https://marleyspoon.de)"
+   ],
+   "http": 200
+  },
+  {
+   "nom": "McPaper",
+   "pays": "DE",
+   "domaine": "mcpaper.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://mcpaper.de/ (HTTP 200, 267110 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "MediaMarkt",
+   "pays": "DE",
+   "domaine": "mediamarkt.de",
+   "etat": "programme trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.mediamarkt.de/ (HTTP 200, 811255 octets)",
+    "programme annoncé sur la page (lue au navigateur)"
+   ],
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Mindfactory",
+   "pays": "DE",
+   "domaine": "mindfactory.de",
+   "etat": "non mesuré",
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 403, 1253 octets)",
+   "reseaux": [],
+   "indices": [],
+   "methode": "navigateur (échec)"
+  },
+  {
+   "nom": "Mister Spex",
+   "pays": "DE",
+   "domaine": "misterspex.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.misterspex.de/ (HTTP 200, 439401 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Möbel Höffner",
+   "pays": "DE",
+   "domaine": "hoeffner.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.hoeffner.de/ (HTTP 200, 532079 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "MSC Croisières Allemagne",
+   "pays": "DE",
+   "domaine": "msccruises.de",
+   "etat": "non mesuré",
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 401, 488 octets)",
+   "reseaux": [],
+   "indices": [],
+   "methode": "navigateur (échec)"
+  },
+  {
+   "nom": "Müller",
+   "pays": "DE",
+   "domaine": "mueller.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.mueller.de/ (HTTP 200, 708914 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Müller (Drogerie)",
+   "pays": "DE",
+   "domaine": "mueller.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.mueller.de/ (HTTP 200, 708914 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "mydealz",
    "pays": "DE",
    "domaine": "mydealz.de",
    "etat": "aucun signe trouvé",
    "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.mydealz.de/ (HTTP 200, 377128 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "myToys",
+   "pays": "DE",
+   "domaine": "mytoys.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.otto.de/mytoys/ (HTTP 200, 622045 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Netto Marken-Discount",
+   "pays": "DE",
+   "domaine": "netto-online.de",
+   "etat": "non mesuré",
+   "reseaux": [],
    "indices": [],
+   "http": 200,
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 403, 297 octets)",
+   "methode": "navigateur (échec)"
+  },
+  {
+   "nom": "Norma",
+   "pays": "DE",
+   "domaine": "norma-online.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.norma-online.de/de/angebote/ (HTTP 200, 125789 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Notebooksbilliger.de",
+   "pays": "DE",
+   "domaine": "notebooksbilliger.de",
+   "etat": "non mesuré",
+   "reseaux": [],
+   "indices": [],
+   "http": 404,
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 403, 999 octets)",
+   "methode": "navigateur (échec)"
+  },
+  {
+   "nom": "O2 Telefónica",
+   "pays": "DE",
+   "domaine": "o2online.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.o2online.de/ (HTTP 200, 728860 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "OBI",
+   "pays": "DE",
+   "domaine": "obi.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.obi.de/ (HTTP 200, 895592 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Obletter",
+   "pays": "DE",
+   "domaine": "obletter.de",
+   "etat": "non mesuré",
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: net::ERR_CERT_DATE_INVALID at https://obletter.de/)",
+   "reseaux": [],
+   "indices": [],
+   "methode": "navigateur (échec)"
+  },
+  {
+   "nom": "Öko-Test",
+   "pays": "DE",
+   "domaine": "oekotest.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.oekotest.de/ (HTTP 200, 3200976 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Osiander",
+   "pays": "DE",
+   "domaine": "osiander.de",
+   "etat": "programme trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.thalia.de/vorteile/osiander/informationen#osiander (HTTP 200, 224946 octets)",
+    "programme annoncé sur la page (lue au navigateur)"
+   ],
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Otto (otto.de)",
+   "pays": "DE",
+   "domaine": "otto.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.otto.de/ (HTTP 200, 860612 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Otto Group (mode)",
+   "pays": "DE",
+   "domaine": "otto.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.otto.de/ (HTTP 200, 860612 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Pegasus",
+   "pays": "DE",
+   "domaine": "flypgs.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.flypgs.com/ (HTTP 403, 2851 octets)"
+   ],
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Penny",
+   "pays": "DE",
+   "domaine": "penny.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.penny.de/ (HTTP 200, 258468 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Pflanzen Kölle",
+   "pays": "DE",
+   "domaine": "pflanzen-koelle.de",
+   "etat": "programme trouvé",
+   "reseaux": [
+    "Smartclip / Sovendus"
+   ],
+   "indices": [
+    "page lue au navigateur : https://www.pflanzen-koelle.de/ (HTTP 200, 1447188 octets)",
+    "signature « sovendus.com » sur https://pflanzen-koelle.de"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Picnic",
+   "pays": "DE",
+   "domaine": "picnic.app",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://picnic.app/nl/ (HTTP 200, 108813 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Pkwteile (Dida)",
+   "pays": "DE",
+   "domaine": "pkwteile.de",
+   "etat": "programme trouvé",
+   "reseaux": [
+    "Awin",
+    "Tradedoubler",
+    "Webgains"
+   ],
+   "indices": [
+    "page lue au navigateur : https://www.pkwteile.de/ (HTTP 200, 398927 octets)",
+    "signature « awin.com » sur https://pkwteile.de",
+    "signature « tradedoubler.com » sur https://pkwteile.de",
+    "signature « webgains.com » sur https://pkwteile.de"
+   ],
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Poco Einrichtungsmärkte",
+   "pays": "DE",
+   "domaine": "poco.de",
+   "etat": "programme trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.poco.de/ (HTTP 200, 429124 octets)",
+    "programme annoncé sur la page (lue au navigateur)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Porta Möbel",
+   "pays": "DE",
+   "domaine": "porta.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://porta.de/ (HTTP 200, 626124 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Primark",
+   "pays": "DE",
+   "domaine": "primark.com",
+   "etat": "non mesuré",
+   "reseaux": [],
+   "indices": [],
+   "http": 200,
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 200, 1509 octets)",
+   "methode": "navigateur (échec)"
+  },
+  {
+   "nom": "Pro Optik",
+   "pays": "DE",
+   "domaine": "pro-optik.de",
+   "etat": "non mesuré",
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: net::ERR_CERT_COMMON_NAME_INVALID at https://pro-optik.de/)",
+   "reseaux": [],
+   "indices": [],
+   "methode": "navigateur (échec)"
+  },
+  {
+   "nom": "reifen.com / reifendirekt",
+   "pays": "DE",
+   "domaine": "reifen.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.rubbex.com/fr-be (HTTP 200, 310960 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Rewe Group",
+   "pays": "DE",
+   "domaine": "rewe.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.rewe.de/ (HTTP 200, 2009233 octets)"
+   ],
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Roller (Tessner)",
+   "pays": "DE",
+   "domaine": "roller.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.roller.de/ (HTTP 200, 428711 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Rossmann",
+   "pays": "DE",
+   "domaine": "rossmann.de",
+   "etat": "non mesuré",
+   "reseaux": [],
+   "indices": [],
+   "http": 200,
+   "raison": "réponse vide ou trop courte au navigateur (HTTP 429, 168 octets)",
+   "methode": "navigateur (échec)"
+  },
+  {
+   "nom": "Ryanair",
+   "pays": "DE",
+   "domaine": "ryanair.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.ryanair.com/be/fr (HTTP 200, 371898 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Saturn",
+   "pays": "DE",
+   "domaine": "saturn.de",
+   "etat": "programme trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.saturn.de/ (HTTP 200, 976815 octets)",
+    "programme annoncé sur la page (lue au navigateur)"
+   ],
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Schauinsland-Reisen",
+   "pays": "DE",
+   "domaine": "schauinsland-reisen.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.schauinsland-reisen.de/ (HTTP 200, 1381135 octets)"
+   ],
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Segmüller",
+   "pays": "DE",
+   "domaine": "segmueller.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.segmueller.de/ (HTTP 200, 1538468 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Shein",
+   "pays": "DE",
+   "domaine": "shein.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://euqs.shein.com/?cdn_rsite=ak&ref=www&rep=dir&ret=euqs (HTTP 200, 2530047 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Shein (mode)",
+   "pays": "DE",
+   "domaine": "shein.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://euqs.shein.com/?cdn_rsite=ak&ref=www&rep=dir&ret=euqs (HTTP 200, 2530047 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Shop Apotheke (Redcare Pharmacy)",
+   "pays": "DE",
+   "domaine": "shop-apotheke.com",
+   "etat": "programme trouvé",
+   "reseaux": [
+    "Awin"
+   ],
+   "indices": [
+    "signature « awin.com » sur https://shop-apotheke.com/partner/",
+    "page programme : https://www.shop-apotheke.com/partner/"
+   ],
+   "http": 200
+  },
+  {
+   "nom": "Sky Deutschland",
+   "pays": "DE",
+   "domaine": "sky.de",
+   "etat": "programme trouvé",
+   "reseaux": [],
+   "indices": [
+    "programme annoncé sur la page d'accueil (https://sky.de)"
+   ],
+   "http": 200
+  },
+  {
+   "nom": "Smyths Toys",
+   "pays": "DE",
+   "domaine": "smythstoys.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.smythstoys.com/ (HTTP 200, 6273 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Snipes",
+   "pays": "DE",
+   "domaine": "snipes.com",
+   "etat": "programme trouvé",
+   "reseaux": [
+    "Awin"
+   ],
+   "indices": [
+    "page programme : https://www.snipes.com/affiliate",
+    "signature « awin.com » sur https://www.snipes.com/affiliate"
+   ],
+   "http": 200
+  },
+  {
+   "nom": "Space Games",
+   "pays": "DE",
+   "domaine": "à vérifier",
+   "etat": "non mesuré",
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: net::ERR_NAME_NOT_RESOLVED at https://à vérifier)",
+   "reseaux": [],
+   "indices": [],
+   "methode": "navigateur (échec)"
+  },
+  {
+   "nom": "SportScheck",
+   "pays": "DE",
+   "domaine": "sportscheck.com",
+   "etat": "non mesuré",
+   "reseaux": [],
+   "indices": [],
+   "http": 200,
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: net::ERR_HTTP2_PROTOCOL_ERROR at https://sportscheck.com/)",
+   "methode": "navigateur (échec)"
+  },
+  {
+   "nom": "Starlink Allemagne",
+   "pays": "DE",
+   "domaine": "starlink.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://starlink.com/ (HTTP 200, 182596 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Stiftung Warentest",
+   "pays": "DE",
+   "domaine": "test.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.test.de/ (HTTP 200, 812660 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "TEDi",
+   "pays": "DE",
+   "domaine": "tedi.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.tedi.com/be_fr/ (HTTP 200, 227146 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Temu",
+   "pays": "DE",
+   "domaine": "temu.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.temu.com/ (HTTP 200, 127363 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Thalia (incl. Mayersche)",
+   "pays": "DE",
+   "domaine": "thalia.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://thalia.de/?__cf_chl_rt_tk=cDoLIXbqrGvYGq4bj7H9hHLeGXz3Z_A1QDnlngjbuW4-1791532924-1.0.1.1-3TvzbNPqyeHAOS3irEPcvI3YHpNRU7eZzm.xGtfbYHg (HTTP 403, 13442 octets)"
+   ],
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Thomas Philipps",
+   "pays": "DE",
+   "domaine": "thomas-philipps.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.thomas-philipps.de/ (HTTP 200, 422339 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "toom Baumarkt",
+   "pays": "DE",
+   "domaine": "toom.de",
+   "etat": "programme trouvé",
+   "reseaux": [
+    "Awin"
+   ],
+   "indices": [
+    "page lue au navigateur : https://toom.de/ (HTTP 200, 1004376 octets)",
+    "signature « awin.com » sur https://toom.de/wissen-service/toom-affiliate-programm/",
+    "page programme : https://toom.de/wissen-service/toom-affiliate-programm/"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Trinkgut",
+   "pays": "DE",
+   "domaine": "trinkgut.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.trinkgut.de/ (HTTP 200, 270772 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Tropical Islands",
+   "pays": "DE",
+   "domaine": "tropical-islands.de",
+   "etat": "programme trouvé",
+   "reseaux": [
+    "Awin"
+   ],
+   "indices": [
+    "page lue au navigateur : https://www.tropical-islands.de/ (HTTP 200, 442536 octets)",
+    "signature « awin1.com » sur https://tropical-islands.de"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "TUI Cruises (Mein Schiff)",
+   "pays": "DE",
+   "domaine": "meinschiff.com",
+   "etat": "programme trouvé",
+   "reseaux": [],
+   "indices": [
+    "programme annoncé sur la page d'accueil (https://meinschiff.com)"
+   ],
+   "http": 200
+  },
+  {
+   "nom": "TUI Deutschland",
+   "pays": "DE",
+   "domaine": "tui.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.tui.com/exp/v2/ (HTTP 200, 64178 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "TUIfly Deutschland",
+   "pays": "DE",
+   "domaine": "tuifly.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.tuifly.com/ (HTTP 200, 212336 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Turkish Airlines",
+   "pays": "DE",
+   "domaine": "turkishairlines.com",
+   "etat": "non mesuré",
+   "reseaux": [],
+   "indices": [],
+   "http": 200,
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: Timeout 20000ms exceeded.)",
+   "methode": "navigateur (échec)"
+  },
+  {
+   "nom": "Uber Eats Allemagne",
+   "pays": "DE",
+   "domaine": "ubereats.com",
+   "etat": "programme trouvé",
+   "reseaux": [
+    "Amazon Partenaires"
+   ],
+   "indices": [
+    "page lue au navigateur : https://www.ubereats.com/be (HTTP 200, 430675 octets)",
+    "signature « amazon-adsystem.com » sur https://ubereats.com"
+   ],
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Vedes",
+   "pays": "DE",
+   "domaine": "vedes.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.vedes.com/ (HTTP 200, 592161 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Vergölst",
+   "pays": "DE",
+   "domaine": "vergoelst.de",
+   "etat": "programme trouvé",
+   "reseaux": [],
+   "indices": [
+    "page programme : https://vergoelst.de/franchise.html"
+   ],
+   "http": 200
+  },
+  {
+   "nom": "Vinexus / Jacques' Wein-Depot",
+   "pays": "DE",
+   "domaine": "jacques.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.jacques.de/ (HTTP 200, 217413 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Vodafone Deutschland",
+   "pays": "DE",
+   "domaine": "vodafone.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.vodafone.de/ (HTTP 200, 731313 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "waipu.tv",
+   "pays": "DE",
+   "domaine": "waipu.tv",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.waipu.tv/ (HTTP 200, 925262 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "weiter Reisen : Anex / Coral Travel",
+   "pays": "DE",
+   "domaine": "à vérifier",
+   "etat": "non mesuré",
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: net::ERR_NAME_NOT_RESOLVED at https://à vérifier)",
+   "reseaux": [],
+   "indices": [],
+   "methode": "navigateur (échec)"
+  },
+  {
+   "nom": "Weltbild",
+   "pays": "DE",
+   "domaine": "weltbild.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.thalia.de/vorteile/weltbild-umstellung/weltbild?__cf_chl_rt_tk=1X2qWXGhW9CGW9u.QhAixiGpU8P9GdgiOWkIPGd1Obw-1791533006-1.0.1.1-H5zVMLdMI0ahWMx3ifMIQYklRlMx1JhiXUIbIQ2STnU (HTTP 403, 13603 octets)"
+   ],
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Wizz Air",
+   "pays": "DE",
+   "domaine": "wizzair.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.wizzair.com/en-gb (HTTP 200, 2020265 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Wolt Allemagne",
+   "pays": "DE",
+   "domaine": "wolt.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://wolt.com/ (HTTP 200, 969045 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Woolworth",
+   "pays": "DE",
+   "domaine": "woolworth.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://woolworth.de/ (HTTP 200, 437244 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "XXXLutz",
+   "pays": "DE",
+   "domaine": "xxxlutz.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.xxxlutz.de/ (HTTP 200, 1141938 octets)"
+   ],
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Zalando",
+   "pays": "DE",
+   "domaine": "zalando.de",
+   "etat": "non mesuré",
+   "reseaux": [],
+   "indices": [],
+   "http": 200,
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: Timeout 20000ms exceeded.)",
+   "methode": "navigateur (échec)"
+  },
+  {
+   "nom": "Zalando (mode)",
+   "pays": "DE",
+   "domaine": "zalando.de",
+   "etat": "non mesuré",
+   "reseaux": [],
+   "indices": [],
+   "http": 200,
+   "raison": "le navigateur n’a pas pu lire la page (Page.goto: Timeout 20000ms exceeded.)",
+   "methode": "navigateur (échec)"
+  },
+  {
+   "nom": "Zoo & Co. / Sagaflor",
+   "pays": "DE",
+   "domaine": "zooundco.de",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.zooundco.de/ (HTTP 200, 335155 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "Zooplus",
+   "pays": "DE",
+   "domaine": "zooplus.de",
+   "etat": "programme trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.zooplus.de/ (HTTP 200, 1129339 octets)",
+    "programme annoncé sur la page (lue au navigateur)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "ZooRoyal",
+   "pays": "DE",
+   "domaine": "zooroyal.de",
+   "etat": "programme trouvé",
+   "reseaux": [
+    "Awin"
+   ],
+   "indices": [
+    "signature « awin.com » sur https://zooroyal.de/partner-programm/",
+    "page programme : https://www.zooroyal.de/partner-programm/"
+   ],
    "http": 200
   },
   {
    "nom": "Chollometro",
    "pays": "ES",
    "domaine": "chollometro.com",
-   "etat": "aucun signe trouvé",
+   "etat": "non mesuré",
    "reseaux": [],
    "indices": [],
-   "http": 200
+   "http": 200,
+   "raison": "le navigateur n’a pas pu lire la page (Page.eval_on_selector_all: Execution context was destroyed, most likely because )",
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "Journal du Geek",
@@ -1767,10 +3945,12 @@
    "nom": "HotUKDeals",
    "pays": "GB",
    "domaine": "hotukdeals.com",
-   "etat": "aucun signe trouvé",
+   "etat": "non mesuré",
    "reseaux": [],
    "indices": [],
-   "http": 200
+   "http": 200,
+   "raison": "le navigateur n’a pas pu lire la page (Page.content: Unable to retrieve content because the page is navigating and chan)",
+   "methode": "navigateur (échec)"
   },
   {
    "nom": "HDblog",
@@ -1780,6 +3960,18 @@
    "reseaux": [],
    "indices": [
     "page lue au navigateur : https://www.hdblog.it/ (HTTP 200, 287617 octets)"
+   ],
+   "http": 200,
+   "methode": "navigateur"
+  },
+  {
+   "nom": "iPhoneItalia",
+   "pays": "IT",
+   "domaine": "iphoneitalia.com",
+   "etat": "aucun signe trouvé",
+   "reseaux": [],
+   "indices": [
+    "page lue au navigateur : https://www.iphoneitalia.com/ (HTTP 200, 384270 octets)"
    ],
    "http": 200,
    "methode": "navigateur"
@@ -1812,13 +4004,13 @@
    "methode": "navigateur"
   },
   {
-   "nom": "iPhoneItalia",
-   "pays": "IT",
-   "domaine": "iphoneitalia.com",
+   "nom": "Androidworld",
+   "pays": "NL",
+   "domaine": "androidworld.nl",
    "etat": "aucun signe trouvé",
    "reseaux": [],
    "indices": [
-    "page lue au navigateur : https://www.iphoneitalia.com/ (HTTP 200, 384270 octets)"
+    "page lue au navigateur : https://androidworld.nl/ (HTTP 200, 547630 octets)"
    ],
    "http": 200,
    "methode": "navigateur"
@@ -1831,18 +4023,6 @@
    "reseaux": [],
    "indices": [
     "page lue au navigateur : https://nl.pepper.com/ (HTTP 200, 336835 octets)"
-   ],
-   "http": 200,
-   "methode": "navigateur"
-  },
-  {
-   "nom": "Androidworld",
-   "pays": "NL",
-   "domaine": "androidworld.nl",
-   "etat": "aucun signe trouvé",
-   "reseaux": [],
-   "indices": [
-    "page lue au navigateur : https://androidworld.nl/ (HTTP 200, 547630 octets)"
    ],
    "http": 200,
    "methode": "navigateur"
@@ -1923,5 +4103,9 @@
    "methode": "navigateur"
   }
  ],
- "relusAuNavigateur": 144
+ "nombreActeurs": 345,
+ "avecProgramme": 64,
+ "sansSigne": 214,
+ "nonMesures": 67,
+ "relusAuNavigateur": 324
 }

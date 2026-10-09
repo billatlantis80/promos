@@ -44,6 +44,14 @@ def main():
     ap.add_argument("--fichier", default=FICHIER)
     ap.add_argument("--tous", action="store_true",
                     help="relire TOUS les acteurs, pas seulement les non mesurés")
+    ap.add_argument("--pays", default="",
+                    help="ne relire que les acteurs d'UN pays (ex. DE)")
+    ap.add_argument("--etats", default="non mesuré",
+                    help="les états à relire, séparés par des virgules "
+                         "(ex. « non mesuré,aucun signe trouvé »). La passe HTTP "
+                         "rate souvent un programme caché derrière du JavaScript "
+                         "ou une bannière : ne relire que les refus laisserait "
+                         "ces faux « aucun signe » en place.")
     args = ap.parse_args()
 
     from playwright.sync_api import sync_playwright
@@ -51,15 +59,33 @@ def main():
     with open(args.fichier, encoding="utf-8") as f:
         mesures = json.load(f)
 
+    etats = {e.strip() for e in args.etats.split(",") if e.strip()}
+    pays = args.pays.strip().upper()
     if args.tous:
         cibles = [a for a in mesures["acteurs"] if a.get("domaine")]
     else:
-        cibles = [a for a in mesures["acteurs"] if a.get("etat") == "non mesuré" and a.get("domaine")]
+        cibles = [a for a in mesures["acteurs"]
+                  if a.get("etat") in etats and a.get("domaine")]
+    if pays:
+        cibles = [a for a in cibles if (a.get("pays") or "").upper() == pays]
     if args.max:
         cibles = cibles[: args.max]
 
+    # UNE PAGE, UN RENDU — même si DEUX lignes décrivent le même site.
+    # Le tableur allemand porte « Zalando » ET « Zalando (mode) », « Otto
+    # (otto.de) » ET « Otto Group (mode) » : même domaine. Sans regroupement, la
+    # page était rendue deux fois et le second écrasait le premier fichier — si
+    # bien qu'une des deux lignes ne recevait jamais sa mesure. On regroupe par
+    # domaine et on note TOUS les noms que la page sert.
+    par_domaine = {}
+    for a in cibles:
+        par_domaine.setdefault(a["domaine"], []).append(a["nom"])
+    cibles = [{"domaine": d, "nom": noms[-1], "noms": noms}
+              for d, noms in par_domaine.items()]
+
     os.makedirs(SORTIE, exist_ok=True)
-    print(f"À relire au navigateur : {len(cibles)} acteur(s)")
+    print(f"À relire au navigateur : {len(cibles)} page(s)"
+          + (f" — pays {pays}" if pays else "") + f" — états : {', '.join(sorted(etats))}")
 
     fait, refus = 0, 0
     with sync_playwright() as p:
@@ -79,7 +105,8 @@ def main():
         for i, a in enumerate(cibles, 1):
             domaine = a["domaine"]
             base = f"https://{domaine}"
-            resultat = {"nom": a["nom"], "domaine": domaine, "base": base}
+            resultat = {"nom": a["nom"], "noms": a.get("noms") or [a["nom"]],
+                        "domaine": domaine, "base": base}
             try:
                 page = ctx.new_page()
                 rep = page.goto(base, wait_until="domcontentloaded", timeout=20000)
