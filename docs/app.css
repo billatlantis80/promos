@@ -68,7 +68,12 @@ h1, h2, h3, h4, .marque b, .prix { font-family: var(--police-titre); }
    voit à l'œil ; avec `center`, le plus haut occupe toute la ligne et l'autre
    se cale au milieu, dans les deux cas. */
 .tete-in { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-.marque { display: flex; align-items: center; gap: 10px; font-size: 19px; letter-spacing: .2px; }
+/* La marque est CLIQUABLE depuis le 09/10/2026 : un clic ramène à l'accueil
+   (demande de B : « quand on clique sur l'icône en haut à gauche, il faudrait
+   que ça refasse un refresh sur la page d'accueil »). `cursor: pointer` le dit
+   à la souris ; l'élément porte `role="button"` et `tabindex="0"`, donc Entrée
+   et Espace l'activent comme un vrai bouton. */
+.marque { display: flex; align-items: center; gap: 10px; font-size: 19px; letter-spacing: .2px; cursor: pointer; }
 .pastille { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 12px var(--accent); }
 /* Le logo de marque : un carré arrondi bleu et le K blanc. Taille fixe pour que
    l'en-tête ne bouge pas d'un pixel quand la police système change. */

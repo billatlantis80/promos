@@ -2049,7 +2049,51 @@ function basculerFavori(id) {
   }
 }
 
+/** LE RETOUR À L'ACCUEIL — clic sur la marque, en haut à gauche.
+ *
+ *  Demande de B (09/10/2026) : « quand on clique sur l'icône en haut à gauche,
+ *  il faudrait que ça refasse un refresh sur la page d'accueil ».
+ *
+ *  Ce qui repart à neuf : la recherche, la catégorie, le marchand, le tri et la
+ *  portée reviennent au réglage d'accueil, la liste repart à sa PREMIÈRE page,
+ *  et l'écran remonte en haut. Un accueil frais, tout de suite.
+ *
+ *  Ce qu'on NE TOUCHE PAS, et la raison : le pays, la langue, le thème, le mode
+ *  économie de données et les favoris sont des PRÉFÉRENCES de l'utilisateur,
+ *  pas des filtres du moment. Les remettre à zéro au passage éteindrait en
+ *  silence l'économie de données, ou ferait changer de pays sans qu'on l'ait
+ *  demandé — et ça ne se verrait qu'à l'ouverture suivante.
+ *
+ *  AUCUN TÉLÉCHARGEMENT : le catalogue pèse 13 Mo. Le retélécharger à chaque
+ *  clic sur le logo irait exactement contre la règle d'économie de données du
+ *  projet. La vue se reconstruit en mémoire : instantané, zéro octet.
+ */
+function retourAccueil() {
+  etat.categorie = 'tout';
+  etat.marchand = 'tout';
+  etat.portee = 'promos';
+  etat.tri = 'remise';
+  etat.recherche = '';
+  etat.affichees = PAR_PAGE;
+  const r = $('recherche');
+  if (r) r.value = '';
+  const s = $('tri');
+  if (s) s.value = 'promos';
+  dessinerPuces();
+  dessinerBandeau();
+  dessiner();
+  try { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+  catch { window.scrollTo(0, 0); }
+}
+
 function brancher() {
+  // La marque (icône + mot) ramène à l'accueil. Au clavier, Entrée et Espace
+  // font la même chose : l'élément porte role="button" et tabindex="0" dans
+  // index.html, donc il doit se comporter comme un vrai bouton.
+  $('marque').addEventListener('click', retourAccueil);
+  $('marque').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); retourAccueil(); }
+  });
   $('recherche').addEventListener('input', (e) => { etat.recherche = e.target.value.trim(); etat.affichees = PAR_PAGE; dessiner(); });
   $('tri').addEventListener('change', (e) => {
     // Le premier choix est une PORTÉE, pas un tri : il décide de ce qu'on
