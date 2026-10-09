@@ -71,9 +71,21 @@ il ne restait que l'exécution.
 catalogue, six fois tout le reste réuni. Les quinze autres réseaux couvrent aujourd'hui ~80 offres
 (0,5 %) : les inscrire d'abord serait du travail pour presque rien.
 
-**Les identifiants se posent à UN SEUL endroit** : la table `AMAZON_TAGS` de `public/affiliation.js`
-(les dix lignes existent, toutes vides). Poser un identifiant fait basculer tout seul la mention du
-pied de page, qui cesse d'annoncer « liens directs, sans commission ».
+**Les identifiants se posent à UN SEUL endroit** : la table `AMAZON_TAGS` de `public/affiliation.js`.
+Poser un identifiant fait basculer tout seul la mention du pied de page, qui cesse d'annoncer
+« liens directs, sans commission ».
+
+**Mise à jour du 09/10/2026, 23:18 UTC — c'est fait pour deux marchés, et mesuré :**
+
+- `kazendra-21` (amazon.fr) et `kazendra06-21` (amazon.com.be) sont **en ligne sur le site** : le pied
+  de page de `kazendra.com` affiche désormais la mention d'affiliation, plus la phrase « pas encore
+  d'identifiant ».
+- L'**application Android n'était PAS à jour** : l'APK/AAB du 09/10 à 15:21 UTC embarquait la table
+  vide et affichait donc la vieille phrase. Reconstruit en **code 19** (même nom affiché, « 1.0 »),
+  signé avec `kazendra.keystore` — identifiants embarqués, contrôle fait sur l'APK signé.
+- **Les huit autres marchés restent vides** (de, it, es, nl, co.uk, ie, se, pl) : leurs liens partent
+  en direct, volontairement, tant que le programme national n'est pas ouvert.
+
 
 **Le vrai sujet, plus gros que les inscriptions** : les 68 % dont le lien part vers un site de bons
 plans. Le marchand est **connu** (le champ `marchand` du catalogue porte Lidl, MediaMarkt, Cdiscount,

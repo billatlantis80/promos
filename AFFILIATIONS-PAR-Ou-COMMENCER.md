@@ -67,16 +67,34 @@ d'un pays sur le lien d'un autre — et refuse tout simplement de taguer un marc
 
 Mesuré dans `public/affiliation.js` :
 
-1. **`AMAZON_TAGS`** — un identifiant par marché Amazon. Les dix lignes existent déjà, **toutes
-   vides** aujourd'hui. C'est ce vide qui fait que les liens sortent « en direct, sans commission ».
+1. **`AMAZON_TAGS`** — un identifiant par marché Amazon. Les dix lignes existent ; **deux sont
+   remplies depuis le 09/10/2026** : `amazon.fr` → `kazendra-21`, `amazon.com.be` → `kazendra06-21`.
+   Les huit autres restent vides, et c'est voulu : un lien vers un marché non ouvert part **sans tag**
+   — jamais de faux paramètre, jamais l'identifiant d'un autre pays.
 2. **`RESEAUX`** — un tableau, **vide aujourd'hui**, avec un modèle de lien par réseau. Exemple déjà
    écrit en commentaire dans le fichier :
    `{ nom: 'Awin', modele: 'https://www.awin1.com/cread.php?awinmid=XXXX&awinaffid=YYYY&ued={url}' }`
 
-**Ce qui bascule automatiquement** : le pied de page affiche aujourd'hui
+**Ce qui bascule automatiquement** : le pied de page affichait
 *« Cette version ne contient pas encore d'identifiant d'affiliation : les liens sortants sont directs,
 sans commission. »* — cette phrase **disparaît d'elle-même** dès qu'un identifiant est posé, et est
 remplacée par la mention de transparence. Aucune autre modification à faire.
+
+**Vérifié le 09/10/2026 à 23:18 UTC, sur pièces** — le tag est bien posé à la sortie du lien :
+
+- site `kazendra.com` : pied de page = « Certains liens de cette page sont des liens affiliés… »
+  (page lue au navigateur), et `affiliation.js` servi en ligne porte les deux identifiants ;
+- application Android : l'APK/AAB livré le 09/10 à 15:21 UTC portait encore la table **vide** — d'où
+  la phrase « pas encore d'identifiant » à l'écran. Reconstruit en **code 19** : identifiants
+  embarqués, phrase basculée. Contrôle à la sortie du code, sur l'APK signé :
+  `amazon.com.be` → `?language=fr_BE&tag=kazendra06-21`, `amazon.fr` → `?language=fr_FR&tag=kazendra-21`,
+  `amazon.de` → **aucun tag** (marché non ouvert), lien déjà tagué → **non modifié**.
+
+⚠️ **L'application et le site se construisent séparément.** Le site est publié à chaque `push` ;
+l'application, elle, recopie `public/` **au moment du build** (`preparer-promos.sh`). Un identifiant
+posé la veille au soir n'est donc PAS dans l'APK du matin : il faut **refaire l'APK** à chaque fois
+que la table change — sinon la phrase exacte ci-dessus réapparaît devant l'utilisateur.
+
 
 ---
 
