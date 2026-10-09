@@ -67,9 +67,26 @@ test('le repli propose de VRAIS liens, qui marchent sans aucune API', () => {
   assert.match(js, /navigator\.clipboard\.writeText/, 'la copie du lien');
 });
 
-test('le lien partagé porte l’identifiant du marché, comme le bouton d’achat', () => {
-  assert.match(js, /function lienPartage\(o\) \{\s*return lienAffilie\(o\.lienMarchand \|\| o\.lienPage, o\.marchand(?:, langue\(\))?\);/,
-    'le partage doit réutiliser lienAffilie — sinon le lien partagé serait nu');
+test('le lien partagé est celui de KAZENDRA, pas celui du marchand', () => {
+  // CHANGÉ le 09/10/2026, sur demande de B : « Quand on fait un partage,
+  // actuellement ça affiche directement le lien Amazon, mais il n'y a pas de
+  // trace de Kazendra. Donc pas de publicité pour nous gratuite. »
+  //
+  // On envoie désormais notre page d'offre (kazendra.com/o/<id>.html) : elle
+  // porte les balises Open Graph, donc la conversation affiche une carte
+  // KAZENDRA, et son bouton mène au même lien affilié qu'avant. La commission
+  // est inchangée ; la marque, elle, s'affiche à chaque partage.
+  const m = js.match(/function lienPartage\([^)]*\) \{[\s\S]*?\n\}/);
+  assert.ok(m, 'lienPartage() doit exister');
+  assert.match(m[0], /SITE_PARTAGE/, 'le partage doit envoyer une adresse de Kazendra');
+  assert.match(m[0], /encodeURIComponent\(o\.id\)/, 'l’adresse doit porter l’identifiant de l’offre');
+  assert.doesNotMatch(m[0], /lienAffilie/,
+    'le partage ne doit plus envoyer le lien du marchand : c’est l’objet de la demande');
+  // L'adresse publique ne doit PAS suivre l'hébergement courant : le hub local
+  // ne répond pas chez la personne qui reçoit le lien.
+  assert.match(js, /const SITE_PARTAGE = 'https:\/\/kazendra\.com';/,
+    'l’adresse partagée doit être le domaine public');
+  assert.match(m[0], /\.html`/, 'l’adresse doit désigner la page écrite par la publication');
 });
 
 test('le pont Android ouvre une vraie feuille de partage', { skip: sansJava }, () => {

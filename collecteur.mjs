@@ -4327,6 +4327,21 @@ async function publier(sortie) {
 
   fs.writeFileSync(path.join(DOSSIER_PUBLIE, 'offres.json'), JSON.stringify(sortie, null, 0));
   console.log(`  → publié dans ${DOSSIER_PUBLIE} : ${pris} visuel(s) téléchargé(s), ${rates} indisponible(s), ${differes} reporté(s) au passage suivant, ${purges} ancien(s) retiré(s)`);
+
+  // 4. LES PAGES DE PARTAGE — une par offre, avec ses balises Open Graph.
+  //    On les écrit APRÈS le catalogue publié, et depuis `sortie.offres` :
+  //    les pages décrivent donc exactement ce que le site sert, et les chemins
+  //    de visuels ci-dessus sont déjà locaux (« img/<empreinte>.jpg »).
+  //    Demande de B (09/10/2026) : un partage doit porter la trace de Kazendra.
+  //    En cas d'échec on continue : un partage sans vignette ne doit pas
+  //    empêcher la collecte de publier.
+  try {
+    const { ecrirePagesPartage } = await import('./outils/pages-partage.mjs');
+    const compte = await ecrirePagesPartage(sortie.offres, { silencieux: true });
+    console.log(`  → partage : ${compte.ecrites} page(s) écrite(s), ${compte.inchangees} inchangée(s), ${compte.retirees} retirée(s) — ${compte.total} au total`);
+  } catch (e) {
+    console.error(`  ⚠ pages de partage non écrites : ${e.message}`);
+  }
 }
 
 /* ------------------------------------------------------------------ *
