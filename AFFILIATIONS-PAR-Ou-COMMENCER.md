@@ -179,6 +179,41 @@ Pologne, Italie, Royaume-Uni) et me transmettre les identifiants. Les dix lignes
 
 ---
 
+## MISE À JOUR — 09/10/2026 : LE PROGRAMME BELGE EST OUVERT ✅
+
+Capture d'écran de B, page Amazon Partenaires :
+
+> « Merci pour votre candidature au **Programme Partenaires d'Amazon.com.be** »
+> **Your unique Associate ID is `kazendra06-21`**
+
+C'est le marché le plus important : **`amazon.com.be` = 1 577 offres, 34 % des clics Amazon**, et
+c'est le pays du site. Il est désormais **couvert**.
+
+**Posé dans le code** : `public/affiliation.js`, ligne `AMAZON_TAGS` :
+
+```js
+'amazon.com.be': 'kazendra06-21',  // Belgique — partenariat ouvert le 09/10/2026
+```
+
+État des identifiants :
+
+| Marché | Offres | Identifiant | Couvert |
+|---|---|---|---|
+| **amazon.com.be** | 1 577 | **`kazendra06-21`** | ✅ **ouvert le 09/10/2026** |
+| amazon.fr | 303 | `kazendra-21` | ✅ ouvert le 09/10/2026 |
+| amazon.de · .es · .nl · .se · .ie · .pl · .it · .co.uk | ~2 700 | — | ❌ à ouvrir |
+
+**Ce qui bascule tout seul** : les liens vers `amazon.com.be` sortent maintenant en
+`…?language=…&tag=kazendra06-21`, et la phrase du pied de page « pas encore d'identifiant » change
+d'elle-même. Rien d'autre à modifier : le mécanisme refusait déjà de taguer un marché non ouvert, il
+suffisait de remplir la ligne.
+
+**Rappel utile** : la candidature Amazon est **acceptée sous condition d'une première vente dans les
+180 jours** — sans clic abouti, l'accès est retiré. Le marché belge étant le plus gros du catalogue,
+c'est aussi celui qui a la meilleure chance de déclencher cette première vente.
+
+---
+
 *Sources : `data/offres.json` (16 680 offres, relevé du 09/10/2026) ; `donnees/affiliations.json`
 (607 acteurs, 95 programmes, relevé du 09/10/2026) ; `partenaires.amazon.fr` (rémunération et pays,
 09/10/2026) ; `public/affiliation.js` (les deux points d'insertion).*

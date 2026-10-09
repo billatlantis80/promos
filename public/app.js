@@ -13,6 +13,7 @@ import {
   envoyerInscription, adresseValide, tableauConfigure,
   inscriptionLocale, retenirInscription, oublierInscription,
 } from './inscription.js';
+import { FICHIER_TEMOIN, DELAI_CONTROLE_MS, peutControler, doitRafraichir, dateDuTemoin } from './maj.js';
 
 const $ = (id) => document.getElementById(id);
 
@@ -134,6 +135,14 @@ let etat = {
   // Le taux de la BCE du jour, publié par le collecteur (devises.json).
   taux: null,
 };
+
+/* QUAND ON A REGARDÉ LE TÉMOIN POUR LA DERNIÈRE FOIS (voir rafraichirSiBesoin).
+   Volontairement à zéro : le tout premier retour au premier plan déclenche donc
+   un contrôle. C'est voulu — si l'application était ouverte AVANT que le témoin
+   n'existe, ou pendant une panne, ce premier retour est précisément le moment où
+   l'on veut qu'elle rattrape son retard. Le coût est d'environ trois cents
+   octets, une fois. */
+let dernierControle = 0;
 
 /* ---------- Mode d'affichage ----------
    Trois façons de parcourir les MÊMES offres. Le mode vit sur <body data-vue="…"> :
@@ -2108,6 +2117,13 @@ function retourAccueil() {
 }
 
 function brancher() {
+  // LE RETOUR AU PREMIER PLAN — le seul moment où l'on vérifie si du neuf est
+  // arrivé (voir rafraichirSiBesoin). `visibilitychange` couvre les deux cas :
+  // l'onglet qu'on réactive sur un ordinateur, et l'application qu'on ramène au
+  // premier plan sur un téléphone.
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') rafraichirSiBesoin();
+  });
   // La marque (icône + mot) ramène à l'accueil. Au clavier, Entrée et Espace
   // font la même chose : l'élément porte role="button" et tabindex="0" dans
   // index.html, donc il doit se comporter comme un vrai bouton.
@@ -2435,6 +2451,80 @@ async function chargerTaux() {
   } catch { return null; }
 }
 
+/** Installe des données servies dans l'état de l'application.
+ *
+ *  Extrait de `lancer()` le 09/10/2026, quand il a fallu pouvoir RECHARGER le
+ *  catalogue en cours de route (voir `rafraichirSiBesoin`). Recopier ces six
+ *  lignes dans la fonction de rafraîchissement aurait créé deux chemins qui
+ *  divergent au premier changement — l'index des produits mis à jour d'un côté
+ *  et pas de l'autre, par exemple, avec des cartes qui ouvrent la mauvaise
+ *  fiche. Une seule fonction, deux appels.
+ */
+async function appliquerDonnees(d) {
+  etat.offres = (d.offres || []).filter((o) => o.lienPage || o.lienMarchand);
+  // L'index des produits multi-places se construit ICI, une fois : les cartes
+  // le consultent ensuite sans jamais reparcourir le catalogue.
+  etat.indexProduits = indexerProduits(etat.offres);
+  // Le taux de la BCE, écrit par le collecteur : il sert à comparer des prix
+  // de monnaies différentes. Absent, il n'y a simplement aucune comparaison.
+  etat.taux = await chargerTaux();
+  etat.meta = { ...d, amazon: false, reseaux: false };
+  const aff = await import('./affiliation.js');
+  etat.meta.amazon = aff.marchesAmazonActifs().length > 0;
+  etat.meta.marches = aff.marchesAmazonActifs();
+  etat.meta.reseaux = (aff.RESEAUX || []).length > 0;
+}
+
+/** Le contrôle de fraîcheur, appelé AU RETOUR au premier plan.
+ *
+ *  POURQUOI ICI, ET PAS DANS UNE MINUTERIE. Une minuterie tourne même quand
+ *  personne ne regarde : elle consomme pour rien et, sur un téléphone, réveille
+ *  la radio. Le retour au premier plan est exactement le moment où
+ *  l'information affichée doit être juste — et il ne coûte rien le reste du
+ *  temps.
+ *
+ *  CE QU'ON TÉLÉCHARGE : d'abord le témoin (`etat-collecte.json`, quelques
+ *  centaines d'octets). Le catalogue de 13 Mo n'est repris QUE si la date du
+ *  témoin a changé — c'est `doitRafraichir` qui tranche, et cette règle est
+ *  éprouvée sans navigateur dans `tests/maj.test.mjs`.
+ *
+ *  EN MODE ÉCONOMIE DE DONNÉES, on ne fait rien du tout : c'est un choix
+ *  explicite de l'utilisateur, et le contourner pour trois cents octets serait
+ *  la petite trahison que ce projet s'interdit.
+ *
+ *  Un échec de réseau ne dit rien à l'écran : l'application garde ce qu'elle a,
+ *  on retentera au prochain retour. Crier « hors ligne » pour un contrôle raté
+ *  serait un faux incident — exactement ce qu'on veut éviter ici.
+ */
+async function rafraichirSiBesoin() {
+  // Le verrou d'écran est ouvert ? Alors l'application est derrière : ne rien
+  // faire, et surtout ne pas charger des données que personne ne regarde.
+  const verrou = $('verrou');
+  if (verrou && !verrou.hidden) return;
+  const depuisMs = Date.now() - dernierControle;
+  if (!peutControler({ eco: etat.eco, depuisMs, delaiMs: DELAI_CONTROLE_MS })) return;
+  // On note le contrôle AVANT la requête : si elle échoue, on ne la relance pas
+  // en boucle à chaque retour d'onglet.
+  dernierControle = Date.now();
+  let dateTemoin = '';
+  try {
+    const r = await fetch(BASE + FICHIER_TEMOIN, { cache: 'no-store' });
+    if (!r.ok) return;
+    dateTemoin = dateDuTemoin(await r.text());
+  } catch { return; }
+  if (!doitRafraichir({ dateLocale: (etat.meta && etat.meta.genereLe) || '', dateTemoin })) return;
+  try {
+    const d = await chargerDonnees();
+    await appliquerDonnees(d);
+    // Les favoris, le pays, la langue, le thème et les filtres du moment ne sont
+    // PAS touchés : on remplace le catalogue, pas la session de l'utilisateur.
+    // Redessiner suffit — la position de lecture, elle, remonte en haut, ce qui
+    // est le comportement attendu quand du contenu neuf arrive.
+    dessiner();
+    dessinerBandeau();
+  } catch { /* le réseau a lâché : on garde ce qu'on a, on retentera */ }
+}
+
 async function lancer() {
   dessinerMention();
   // Thème et profil AVANT le premier rendu : sinon l'écran s'affiche aux
@@ -2462,18 +2552,7 @@ async function lancer() {
       if (window.DONNEES && window.DONNEES.offres) d = { ...window.DONNEES, horsLigne: true };
       else throw e;
     }
-    etat.offres = (d.offres || []).filter((o) => o.lienPage || o.lienMarchand);
-    // L'index des produits multi-places se construit ICI, une fois : les cartes
-    // le consultent ensuite sans jamais reparcourir le catalogue.
-    etat.indexProduits = indexerProduits(etat.offres);
-    // Le taux de la BCE, écrit par le collecteur : il sert à comparer des prix
-    // de monnaies différentes. Absent, il n'y a simplement aucune comparaison.
-    etat.taux = await chargerTaux();
-    etat.meta = { ...d, amazon: false, reseaux: false };
-    const aff = await import('./affiliation.js');
-    etat.meta.amazon = aff.marchesAmazonActifs().length > 0;
-    etat.meta.marches = aff.marchesAmazonActifs();
-    etat.meta.reseaux = (aff.RESEAUX || []).length > 0;
+    await appliquerDonnees(d);
   } catch (e) {
     $('comptes').textContent = t('données indisponibles');
     $('vide').hidden = false;

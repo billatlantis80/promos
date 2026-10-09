@@ -18,6 +18,23 @@ set -u
 cd /opt/data/webdev/projects/promos || { echo "⚠ Promos : dossier du projet introuvable"; exit 1; }
 export PATH="/opt/data/bin:$PATH"
 
+# --- UN SEUL PASSAGE À LA FOIS ------------------------------------------------
+# Défaut mesuré le 09/10/2026 au soir : la collecte a dépassé le délai de 120 s
+# du planificateur, qui tuait le script… mais PAS le collecteur Node qu'il avait
+# lancé. Le Node orphelin continuait donc son travail pendant qu'un nouveau
+# passage démarrait cinq minutes plus tard : deux collecteurs à la fois sur le
+# même dépôt et les mêmes sites, chacun relisant tout ce que l'autre n'avait pas
+# fini d'écrire. C'est ce qui rendait la panne si tenace — chaque passage trouvait
+# l'état non écrit par le précédent, et relisait les 220 adresses de zéro.
+#
+# Le verrou rend l'empilement impossible : si un passage tourne encore, le
+# suivant s'efface sans bruit (exit 0 : ce n'est pas une erreur, juste « la
+# place est prise »). Il se libère tout seul à la mort du processus.
+exec 9>/tmp/promos-collecte.lock
+if ! flock -n 9; then
+  exit 0
+fi
+
 # --- Alerte qui ne radote pas -------------------------------------------------
 # Défaut mesuré : quand la synchronisation GitHub a cassé, le même message est
 # parti toutes les 5 minutes pendant quatorze heures — 88 fois. Un message qu'on

@@ -17,7 +17,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
-import { execFileSync } from 'node:child_process';
+import { execFile } from 'node:child_process';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import {
   noterPrix, elaguerHistorique, appliquerAnalyse,
@@ -4182,8 +4182,32 @@ export function classerOffre(o) {
 /* ------------------------------------------------------------------ *
  *  Collecte
  * ------------------------------------------------------------------ */
-async function lire(url, langue = 'fr-FR,fr;q=0.9') {
-  const r = await fetch(url, { headers: { 'user-agent': UA, 'accept-language': langue }, redirect: 'follow' });
+/* ------------------------------------------------------------------ *
+ *  TOUTE LECTURE PORTE UN DÉLAI MAXIMAL — ET C'EST UNE PANNE VÉCUE.
+ *
+ *  Le 09/10/2026 au soir, l'application s'est figée : plus aucune mise à jour
+ *  publiée pendant que la collecte tournait encore. Cause exacte : cette
+ *  fonction n'avait AUCUN délai. Tant que les sources étaient peu nombreuses et
+ *  toutes connues, aucun hôte ne pendait — le défaut dormait. Le jour où l'on a
+ *  branché 220 adresses de promotions d'un coup (`adresses-promotions.json`), il
+ *  a suffi qu'UNE d'elles ne réponde jamais : son `fetch` restait en attente
+ *  pour toujours, et comme toutes les sources sont interrogées en parallèle
+ *  (un seul `Promise.all`), TOUTE la collecte attendait avec elle. Le
+ *  planificateur tuait alors le script à 120 s — avant l'envoi vers GitHub —
+ *  d'où un site figé alors que la machine, elle, semblait travailler.
+ *
+ *  Le remède est le même que partout ailleurs dans ce fichier (« on est invité
+ *  chez des gens ») : un délai maximal, court, et l'échec est journalisé comme
+ *  les autres. Une source lente ne doit jamais retenir les autres.
+ * ------------------------------------------------------------------ */
+const DELAI_LECTURE_MS = 15000;
+
+async function lire(url, langue = 'fr-FR,fr;q=0.9', delai = DELAI_LECTURE_MS) {
+  const r = await fetch(url, {
+    headers: { 'user-agent': UA, 'accept-language': langue },
+    redirect: 'follow',
+    signal: AbortSignal.timeout(delai),
+  });
   if (!r.ok) throw new Error(`HTTP ${r.status}`);
   return r.text();
 }
@@ -4207,13 +4231,26 @@ async function lire(url, langue = 'fr-FR,fr;q=0.9') {
  *
  *  `-f` est essentiel : sans lui, curl sort avec le code 0 même sur un 403 et
  *  rendrait une page d'erreur que le lecteur prendrait pour une page vide.
+ *
+ *  ASYNCHRONE, ET PAS PAR GOÛT. La version précédente appelait `execFileSync` :
+ *  un appel SYNCHRONE qui gèle la boucle d'événements de Node pendant tout le
+ *  temps de la requête — jusqu'à 25 s par source. Comme les trois pages Groupon
+ *  se rafraîchissent au même moment, elles se bloquaient l'une après l'autre
+ *  pendant qu'AUCUN autre `fetch` ne pouvait avancer : jusqu'à 75 s de gel, à
+ *  eux seuls de quoi franchir la limite de 120 s du planificateur. Avec
+ *  `execFile` promisifié, le gel disparaît : les lectures Node continuent
+ *  pendant que curl travaille. Le délai est aussi ramené à 15 s, comme `lire`.
  */
 function lireParCurl(url, langue = 'fr-BE,fr;q=0.9') {
-  return execFileSync('curl', [
-    '-fsS', '-L', '--compressed', '--max-time', '25',
-    '-A', UA, '-H', `Accept-Language: ${langue}`,
-    url,
-  ], { encoding: 'utf8', maxBuffer: 32 * 1024 * 1024 });
+  return new Promise((resolve, reject) => {
+    execFile('curl', [
+      '-fsS', '-L', '--compressed', '--max-time', '15',
+      '-A', UA, '-H', `Accept-Language: ${langue}`,
+      url,
+    ], { encoding: 'utf8', maxBuffer: 32 * 1024 * 1024, timeout: 20000 }, (err, stdout) => {
+      if (err) reject(err); else resolve(stdout);
+    });
+  });
 }
 
 const journal = [];
@@ -4222,7 +4259,7 @@ async function collecterSource(source) {
     // Certains marchands refusent le client HTTP de Node (voir lireParCurl) :
     // la source le déclare, et on lit avec curl. Même page, même URL.
     const entete = source.entete || source.langue;
-    const corps = source.viaCurl ? lireParCurl(source.url, entete) : await lire(source.url, entete);
+    const corps = source.viaCurl ? await lireParCurl(source.url, entete) : await lire(source.url, entete);
     // Une enseigne ne rend pas un flux mais une PAGE : on lit son JSON-LD au
     // lieu de chercher des <item>. Deux lectures distinctes, jamais mélangées.
     if (source.type === 'enseigne') {
@@ -4414,6 +4451,7 @@ async function publier(sortie) {
     try {
       const r = await fetch(o.image, {
         headers: { 'user-agent': UA, 'referer': 'https://' + new URL(o.image).hostname + '/' },
+        signal: AbortSignal.timeout(15000),
       });
       if (!r.ok) throw new Error('HTTP ' + r.status);
       const buf = Buffer.from(await r.arrayBuffer());
@@ -4438,6 +4476,31 @@ async function publier(sortie) {
 
   fs.writeFileSync(path.join(DOSSIER_PUBLIE, 'offres.json'), JSON.stringify(sortie, null, 0));
   console.log(`  → publié dans ${DOSSIER_PUBLIE} : ${pris} visuel(s) téléchargé(s), ${rates} indisponible(s), ${differes} reporté(s) au passage suivant, ${purges} ancien(s) retiré(s)`);
+
+  // 3 bis. LE TÉMOIN DE FRAÎCHEUR — quelques centaines d'octets, à côté des 13 Mo.
+  //
+  //  Défaut mesuré le 09/10/2026 au soir, signalé par B : « l'application n'a
+  //  plus fait de mise à jour depuis plus de 3 heures ». L'application ne
+  //  rechargeait jamais ses données (voir public/maj.js) ; mais la corriger
+  //  posait une autre question : comment savoir qu'il y a du neuf SANS
+  //  télécharger le catalogue de 13 Mo ? Réponse : ce fichier-ci. C'est lui que
+  //  l'application interroge au retour au premier plan, et c'est seulement si sa
+  //  date a bougé qu'elle va chercher le catalogue. Le mode économie de données
+  //  du projet reste donc intact.
+  //
+  //  On l'écrit APRÈS le catalogue : il annonce une fraîcheur, il ne doit jamais
+  //  pouvoir l'annoncer avant qu'elle soit là. Un échec d'écriture ne fait pas
+  //  tomber la publication — le témoin est un confort, pas une donnée.
+  try {
+    fs.writeFileSync(path.join(DOSSIER_PUBLIE, 'etat-collecte.json'), JSON.stringify({
+      genereLe: sortie.genereLe,
+      total: sortie.total,
+      totalOffres: sortie.totalOffres,
+      totalVeille: sortie.totalVeille,
+    }), 'utf8');
+  } catch (e) {
+    console.log(`  ⚠ témoin de fraîcheur non écrit (${e.message}) — l'application ne se rafraîchira pas d'elle-même`);
+  }
 
   // 4. LES PAGES DE PARTAGE — une par offre, avec ses balises Open Graph.
   //    On les écrit APRÈS le catalogue publié, et depuis `sortie.offres` :

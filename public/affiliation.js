@@ -29,7 +29,7 @@ export const AMAZON_TAGS = {
   'amazon.it': '',      // Italie
   'amazon.es': '',      // Espagne
   'amazon.nl': '',      // Pays-Bas
-  'amazon.com.be': '',  // Belgique — notre marché
+  'amazon.com.be': 'kazendra06-21',  // Belgique — partenariat ouvert le 09/10/2026
   'amazon.co.uk': '',   // Royaume-Uni
   'amazon.ie': '',      // Irlande
   'amazon.se': '',      // Suède
