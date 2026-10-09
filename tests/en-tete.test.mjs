@@ -84,3 +84,40 @@ test('le mélange 60/40 n’a pas été supprimé du programme', () => {
   assert.match(js, /melanger\(dedoublonner\(etat\.offres\.filter\(estBonnePromo\)\)\)/,
     'le mélange doit continuer de décider ce qui est affiché');
 });
+
+test('la marque ramène à l’accueil, et remet la vue d’accueil à neuf', () => {
+  // Demande de B (09/10/2026) : « quand on clique sur l'icône en haut à gauche,
+  // il faudrait que ça refasse un refresh sur la page d'accueil ». L'icône ne
+  // faisait RIEN : aucun écouteur n'y était posé.
+  const html = fs.readFileSync(path.join(ICI, '..', 'public', 'index.html'), 'utf8');
+  assert.match(html, /class="marque" id="marque"[^>]*role="button"[^>]*tabindex="0"/,
+    'la marque doit être joignable (#marque) et se comporter comme un bouton (clavier)');
+
+  const m = js.match(/function retourAccueil\(\) \{[\s\S]*?\n\}/);
+  assert.ok(m, 'retourAccueil() doit exister');
+  const corps = m[0];
+  // Ce qui repart à neuf : les filtres du moment et la pagination.
+  for (const champ of ['categorie', 'marchand', 'portee', 'tri', 'recherche', 'affichees']) {
+    assert.match(corps, new RegExp(`etat\\.${champ}\\s*=`),
+      `retourAccueil() doit remettre ${champ}`);
+  }
+  // Les champs de saisie doivent suivre, sinon l'écran montre encore l'ancien
+  // texte alors que le filtre, lui, est bien vidé — un écart qui ne se voit pas.
+  assert.match(corps, /\$\('recherche'\)[\s\S]*?\.value = ''/, 'le champ de recherche doit se vider à l’écran');
+  assert.match(corps, /\$\('tri'\)[\s\S]*?\.value = 'promos'/, 'le sélecteur doit revenir sur « Bonnes promos »');
+  assert.match(corps, /dessiner\(\)/, 'la liste doit être redessinée');
+  assert.match(corps, /scrollTo/, 'l’écran doit remonter en haut');
+  // Ce qu'on ne touche PAS : des PRÉFÉRENCES, pas des filtres du moment.
+  assert.doesNotMatch(corps, /etat\.(eco|favoris|pays)\s*=/,
+    'pays, économie de données et favoris sont des préférences : pas au clic sur le logo');
+  // Et pas de retéléchargement : le catalogue pèse 13 Mo.
+  assert.doesNotMatch(corps, /chargerDonnees|fetch\s*\(/,
+    'on ne retélécharge pas le catalogue à chaque clic sur le logo');
+  // LE BRANCHEMENT. Une fonction juste que personne n'appelle est le piège déjà
+  // payé plusieurs fois dans ce projet : on lit la ligne d'appel, pas la
+  // présence de la fonction.
+  assert.match(js, /\$\('marque'\)\.addEventListener\('click', retourAccueil\)/,
+    'retourAccueil() doit être branchée sur #marque');
+  assert.match(js, /\$\('marque'\)\.addEventListener\('keydown'/,
+    'le clavier doit pouvoir activer la marque (role="button" oblige)');
+});
