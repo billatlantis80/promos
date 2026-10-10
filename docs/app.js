@@ -1874,7 +1874,20 @@ function dessinerPays() {
   $('pays').innerHTML = optionsPays();
   // Un pays mémorisé qui n'a plus d'offre retombe sur « tous » : mieux vaut un
   // écran rempli qu'un filtre respecté à la lettre et vide.
-  if (etat.pays !== 'tout' && !codes.includes(etat.pays)) etat.pays = 'tout';
+  //
+  // ⚠ LE CHOIX RÉPARÉ DOIT ÊTRE ÉCRIT, SINON LE TRAITEMENT SE RÉPÈTE À CHAQUE
+  // OUVERTURE — et le défaut est celui-ci, mesuré le 10/10/2026 : un code
+  // mémorisé que le catalogue ne connaît pas (un ancien code, une valeur écrite
+  // à la main, un pays retiré du catalogue) laissait `etat.pays` sur une valeur
+  // inconnue. Le sélecteur, lui, retombait sur « Tous les pays » — donc l'écran
+  // affichait « Tous les pays » ET des compteurs de rubriques à ZÉRO, sans un
+  // mot d'explication, à chaque chargement, indéfiniment : rien ne réécrivait
+  // jamais la valeur fautive. Voir aussi l'ordre des dessins dans lancer() :
+  // les puces sont comptées APRÈS ce contrôle, pas avant.
+  if (etat.pays !== 'tout' && !codes.includes(etat.pays)) {
+    etat.pays = 'tout';
+    enregistrerPays();
+  }
   $('pays').value = etat.pays;
 
   const rp = $('regPays');
@@ -2593,8 +2606,13 @@ async function lancer() {
   // commentaire ci-dessus disait déjà la règle ; l'ordre des appels la violait.
   dessinerReglages();
   dessinerCompte();
-  dessinerPuces();
+  // L'ORDRE COMPTE : le pays AVANT les puces. `dessinerPays` répare au passage un
+  // pays mémorisé que le catalogue ne connaît plus ; si les compteurs étaient
+  // dessinés d'abord, ils seraient calculés sur la valeur fautive et afficheraient
+  // des zéros sur un écran qui prétend montrer « Tous les pays » (défaut mesuré le
+  // 10/10/2026, et le temps d'affichage d'un chargement suffisait à le voir).
   dessinerPays();
+  dessinerPuces();
   dessinerBandeau();
   dessiner();
   demanderPays();     // première ouverture : on demande le pays, une fois
