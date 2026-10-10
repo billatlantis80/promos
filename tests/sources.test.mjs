@@ -342,3 +342,41 @@ test('la collecte tient dans le délai que le planificateur accorde', () => {
     assert.ok(Number.isFinite(ms) && ms > 0, `le délai « ${nom} » doit être un nombre positif`);
   }
 });
+
+/* ---------------------------------------------------------------------------
+ * Le pourcentage ÉCRIT : un signe de promotion, mais pas n'importe lequel
+ * ------------------------------------------------------------------------- */
+
+test('un pourcentage écrit au-delà de 90 % n’annonce pas une promotion', () => {
+  // Question de B, 09/10/2026, avec une offre RÉELLE : *« ”Je démissionne car
+  // que je sais que je ne pourrai plus me donner à 100 %” : le MR propose de
+  // réduire le nombre d'échevins — pourquoi ce genre d'article apparaît ? »*
+  // Cause exacte : la branche « pourcentage » du filtre acceptait n'importe quel
+  // nombre suivi d'un « % », y compris le « 100 % » d'une citation politique.
+  // Le motif s'arrête maintenant à 90 % — la borne que l'application applique
+  // déjà à l'affichage (REMISE_ANNONCEE_MAX dans app.js).
+  const cas = [
+    // [titre RÉEL de la collecte, langue, doit passer ?]
+    ['”Je démissionne car que je sais que je ne pourrai plus me donner à 100 %” : le MR propose de réduire le nombre d’échevins', 'fr', false],
+    ['Un podium 100 % brugeois, les Unionistes regroupés, Anderlecht et le Standard à la traîne', 'fr', false],
+    ['Test Hyundai Ioniq 3 N Line Evo 61 kWh : enfin une Hyundai 100 % électrique taillée pour l’Europe', 'fr', false],
+    ['Accusations d’écrits antisémites: Marine Le Pen "maintient à 1.000 % sa confiance en Jordan Bardella"', 'fr', false],
+    ['50 % de remise sur une sélection de vêtements', 'fr', true],
+    ['À 54% de desconto! Confira agora 6 ofertas em alta na Amazon hoje', 'pt', true],
+    ['Skylight Calendar Discount Codes: Up To $60 Off Family Smart Hubs Our Team Loves', 'en', true],
+    ['Utopia Bedding Spannbettlaken 160x200cm | 100% Polyester Mikrofaser', 'de', false],
+    ['85% Rabatt auf Fotobücher – jetzt ab 2,09 €', 'de', true],
+    ['Dodot Toallitas Pure Aqua | 99% agua, ayuda a restaurar el pH de la piel', 'es', false],
+  ];
+  for (const [titre, langue, attendu] of cas) {
+    assert.equal(MOTS_PROMO[langue].test(titre), attendu,
+      `« ${titre.slice(0, 60)}… » (${langue}) devrait ${attendu ? 'PASSER' : 'être ÉCARTÉ'}`);
+  }
+  // La borne est bien celle de l'application : 90 % passe, 91 % non.
+  assert.equal(MOTS_PROMO.fr.test('Remise de 90 % sur tout le magasin'), true, '90 % reste une promotion');
+  assert.equal(MOTS_PROMO.fr.test('Remise de 91 % sur tout le magasin'), false, '91 % n’en est plus une');
+  // Et un « 100 % » COLLÉ à son chiffre ne doit pas non plus passer par la petite
+  // porte d'un chiffre isolé (« 1 000 % » ne doit pas donner « 000 % », ni « 100 % »
+  // donner « 00 % »).
+  assert.equal(MOTS_PROMO.fr.test('1.000 % sa confiance'), false, '« 1.000 % » ne doit pas compter');
+});

@@ -3161,17 +3161,45 @@ function offreDealabs(bloc, source) {
  * Un mot isolé suffit à retenir (« deal », « offer », « Angebot ») : le but est
  * de ne pas jeter un bon plan, pas de trier finement — la veille est étiquetée
  * comme telle à l'écran, l'utilisateur voit ce qu'il consulte.
+ *
+ * ⚠ LE POURCENTAGE ÉCRIT AU-DELÀ DE 90 % N'EST PLUS UN SIGNAL (09/10/2026).
+ *
+ * Question de B, avec une offre réelle : *« ”Je démissionne car que je sais que
+ * je ne pourrai plus me donner à 100 %” : le MR propose de réduire le nombre
+ * d'échevins — pourquoi ce genre d'article apparaît ? »* Cause exacte : la
+ * branche `\d+\s?%` acceptait N'IMPORTE QUEL pourcentage. Un article politique
+ * entrait donc par le « 100 % » d'une citation.
+ *
+ * Le motif n'accepte plus que 1 à 90 % — la même borne que l'application, qui
+ * refuse déjà d'afficher une remise annoncée au-delà de 90 % (voir
+ * REMISE_ANNONCEE_MAX dans app.js : « au-delà de 90 %, ce n'est plus une
+ * remise »). Au-delà, ce n'est pas un prix qui baisse, c'est une qualité qu'on
+ * annonce : « 100 % coton », « 99 % sRGB », « 99 % d'eau », « 100 % électrique »,
+ * « jusqu'à 100 % plus longtemps ». Un pourcentage qui n'a pas de chiffre ni de
+ * virgule devant lui non plus (« 1 000 % ») ne compte pas.
+ *
+ * Mesuré sur les 1 612 cartes de veille sans prix du catalogue publié : la règle
+ * en écarte **6**, et ce sont très exactement des brèves — l'article de B, un
+ * podium de football « 100 % brugeois », deux faits divers anversois, un essai
+ * de Hyundai « 100 % électrique », un camping-car « 100 % made in France » — sans
+ * perdre un seul bon plan (« Até 54% de desconto », « Promo Code … 10% OFF »,
+ * « top-selling deal … $250 off » passent toujours).
+ *
+ * Ce que la règle NE fait PAS (limite connue, et mesurée) : une brève qui
+ * annonce « jusqu'à 70 % des dons restent invendus » passe encore — il faudrait
+ * exiger qu'un mot de promotion ACCOMPAGNE le pourcentage, ce qui se paierait en
+ * vrais bons plans. À trancher séparément.
  */
 const MOTS_PROMO = {
-  fr: /(bon plan|bons plans|promo|promotion|r[ée]duction|\d+\s?%|perd \d+|prix cass|petit prix|deal|affaire|soldes|black friday|chute à|tombe à|code promo)/i,
-  nl: /(koopje|aanbieding|korting|promotie|deal|actie|\d+\s?%|prijsval|gedaald|goedkoper|kortingscode)/i,
-  de: /(angebot|rabatt|aktion|schn[aä]ppchen|deal|preissturz|reduziert|g[uü]nstiger|\d+\s?%|statt \d|nur \d|gutschein)/i,
-  es: /(oferta|descuento|chollo|rebaja|promoci[oó]n|gan?a|\d+\s?%|precio|cup[oó]n)/i,
-  it: /(offerta|sconto|promozione|occasione|prezzo|ribass|\d+\s?%|miglior prezzo|coupon)/i,
-  pt: /(promo[çc][aã]o|desconto|oferta|saldo|barato|pre[çc]o|\d+\s?%|mais barato|cup[aã]o)/i,
-  pl: /(promocja|zni[żz]ka|okazja|przecena|taniej|\d+\s?%|cena|rabat)/i,
-  sv: /(erbjudande|rabatt|rea|kampanj|pris|s[aä]nkt|\d+\s?%|billigare)/i,
-  en: /(deal|offer|discount|sale|bargain|\d+\s?%|price drop|cheap|£\d|promo)/i,
+  fr: /(bon plan|bons plans|promo|promotion|r[ée]duction|(?<![\d.,])(?:[1-9]|[1-8]\d|90)\s?%|perd \d+|prix cass|petit prix|deal|affaire|soldes|black friday|chute à|tombe à|code promo)/i,
+  nl: /(koopje|aanbieding|korting|promotie|deal|actie|(?<![\d.,])(?:[1-9]|[1-8]\d|90)\s?%|prijsval|gedaald|goedkoper|kortingscode)/i,
+  de: /(angebot|rabatt|aktion|schn[aä]ppchen|deal|preissturz|reduziert|g[uü]nstiger|(?<![\d.,])(?:[1-9]|[1-8]\d|90)\s?%|statt \d|nur \d|gutschein)/i,
+  es: /(oferta|descuento|chollo|rebaja|promoci[oó]n|gan?a|(?<![\d.,])(?:[1-9]|[1-8]\d|90)\s?%|precio|cup[oó]n)/i,
+  it: /(offerta|sconto|promozione|occasione|prezzo|ribass|(?<![\d.,])(?:[1-9]|[1-8]\d|90)\s?%|miglior prezzo|coupon)/i,
+  pt: /(promo[çc][aã]o|desconto|oferta|saldo|barato|pre[çc]o|(?<![\d.,])(?:[1-9]|[1-8]\d|90)\s?%|mais barato|cup[aã]o)/i,
+  pl: /(promocja|zni[żz]ka|okazja|przecena|taniej|(?<![\d.,])(?:[1-9]|[1-8]\d|90)\s?%|cena|rabat)/i,
+  sv: /(erbjudande|rabatt|rea|kampanj|pris|s[aä]nkt|(?<![\d.,])(?:[1-9]|[1-8]\d|90)\s?%|billigare)/i,
+  en: /(deal|offer|discount|sale|bargain|(?<![\d.,])(?:[1-9]|[1-8]\d|90)\s?%|price drop|cheap|£\d|promo)/i,
 };
 
 /** Le filtre de la source, dans SA langue. Toutes les sources déclarent la
@@ -4951,6 +4979,43 @@ async function principal() {
       ecartees: purgees,
       parMarchand: purgeesParMarchand,
       raison: 'une promotion sans deuxième prix n’est pas une promotion (pages d’enseigne et recherches Amazon)',
+    });
+  }
+
+  // --- RÈGLE DU POURCENTAGE, ELLE AUSSI APPLIQUÉE AU STOCK -------------------
+  //  Même raison que la règle des deux prix : une carte engrangée avant la
+  //  correction ne sort jamais d'elle-même. Le filtre des sources de veille a été
+  //  resserré (voir MOTS_PROMO : un pourcentage écrit au-delà de 90 % n'annonce
+  //  pas une promotion) — les brèves entrées par un « 100 % » de citation doivent
+  //  donc partir, sinon la correction ne vaudrait que pour les nouvelles.
+  //
+  //  Périmètre ÉTROIT, et mesuré : seules les cartes SANS PRIX (type « article »)
+  //  sont rejugées, celles qui ne portent aucun bon plan chiffré. Un article de
+  //  presse qui a un prix est un vrai bon plan : jamais touché. Sur le catalogue
+  //  publié, la règle écarte 9 brèves — l'article politique signalé par B, un
+  //  podium de football « 100 % brugeois », deux faits divers anversois, l'essai
+  //  d'une Hyundai « 100 % électrique », un camping-car « 100 % made in France »,
+  //  une chute d'audience « -22,9 % », « 1.000 % sa confiance » et une enquête
+  //  « 55,6 % des 15-24 ans » — et AUCUN bon plan.
+  const langueParSource = new Map(TOUTES_SOURCES.map((s) => [s.id, s.langue || 'fr']));
+  let veilleEcartee = 0;
+  const veilleParSource = {};
+  for (const [cle, o] of connues) {
+    if (o.type !== 'article' || o.prix != null) continue;
+    const motif = MOTS_PROMO[langueParSource.get(o.sourceId)] || MOTS_PROMO.fr;
+    if (motif.test(String(o.titre || ''))) continue;
+    veilleParSource[o.source] = (veilleParSource[o.source] || 0) + 1;
+    connues.delete(cle);
+    veilleEcartee++;
+  }
+  if (veilleEcartee) {
+    console.log(`Règle du pourcentage : ${veilleEcartee} brève(s) de veille écartée(s) — aucun signe de promotion`);
+    journal.push({
+      source: 'regle-pourcentage',
+      ok: true,
+      ecartees: veilleEcartee,
+      parSource: veilleParSource,
+      raison: 'un pourcentage écrit au-delà de 90 % n’annonce pas une promotion (brèves de veille sans prix)',
     });
   }
 

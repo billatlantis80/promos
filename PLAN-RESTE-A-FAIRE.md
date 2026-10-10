@@ -590,3 +590,34 @@ d'éclairage… 20,57 € »* + son lien de partage.
   été touché** : ce que rien ne nomme y tombe, c'est honnête, et la remplir est une décision à part.
 - Vérifié après la collecte de 23:55 UTC : la lampe frontale signalée est en **Sport** (comme sa
   jumelle polonaise, qui était en « Autres »). Suite de tests : **607 sur 607** (3 neufs).
+
+**10/10/2026 — quatrième signalement : un article politique dans le catalogue**
+
+B a envoyé une brève et sa question, mot pour mot : *« ”Je démissionne car que je sais que je ne
+pourrai plus me donner à 100 %” : le MR propose de réduire le nombre d’échevins — pourquoi ce genre
+d'article apparaît ? »*
+
+- **Cause exacte, mesurée** : le filtre des sources de veille acceptait N'IMPORTE QUEL pourcentage
+  écrit (`\d+\s?%`). Cet article entrait donc par le « **100 %** » d'une citation — un pourcentage
+  d'énergie, pas un prix.
+- **Le motif s'arrête désormais à 90 %** — la même borne que l'application à l'écran
+  (`REMISE_ANNONCEE_MAX` dans app.js : « au-delà de 90 %, ce n'est plus une remise, c'est une
+  qualité qu'on annonce » : 100 % coton, 99 % sRGB, 100 % électrique). Un pourcentage collé à un
+  chiffre ou à une virgule ne compte pas non plus (« 1.000 % » ne donne plus « 000 % »).
+- **Règle appliquée au STOCK**, comme les deux prix : les brèves déjà engrangées sortent aussi.
+  Résultat de la collecte de 00:11 UTC : **9 brèves écartées** (DHnet 4, Gazet van Antwerpen 2,
+  Les Numériques 2, Frandroid 1) — l'article de B, un podium « 100 % brugeois », deux faits divers
+  anversois, une Hyundai « 100 % électrique », un camping-car « 100 % made in France », une chute
+  d'audience « -22,9 % », « 1.000 % sa confiance », une enquête « 55,6 % des 15-24 ans ».
+  **Aucun bon plan perdu** : « Até 54% de desconto », « Promo Code … 10% OFF », « top-selling deal …
+  $250 off » passent toujours.
+- ⚠️ **Limite connue, mesurée, et NON tranchée** : une brève qui annonce « jusqu'à 70 % des dons
+  restent invendus » passe encore. La resserrer demanderait qu'un mot de promotion ACCOMPAGNE le
+  pourcentage — ce qui se paie en vrais bons plans. Décision à prendre séparément.
+- Piège de rubrique découvert en passant : cet article était classé en **Auto**, parce que la
+  conjonction française « **car** » (« je démissionne car que je sais ») est un mot anglais de la
+  famille Auto. Mesuré : sur 321 offres en Auto, 9 ne tiennent qu'à ce mot, et 8 parlent vraiment
+  d'automobile — seul l'article fautif était à tort. **Non corrigé** : le risque de retirer « car »
+  ferait plus de dégâts que le défaut qu'il enlève (les brèves concernées sortent maintenant par la
+  règle du pourcentage).
+- Suite de tests : **608 sur 608** (1 neuf, 10 titres réels).
