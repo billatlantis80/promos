@@ -148,11 +148,20 @@ le balisage est déjà écrit (A2) et le drapeau `INDEXER_PAGES_OFFRES` passe à
 | A2 | Générateur de balisage `Product`/`Offer` | ✅ fait — `outils/donnees-structurees.mjs` |
 | A3 | Pages éditoriales par rubrique, indexables | ✅ fait — 45 pages, `outils/pages-rubriques.mjs` |
 | A4 | Décision « indexer les pages d'offres » documentée | ✅ fait (§ 5 ci-dessus) |
-| B1 | 9 classeurs marché (GB ES IT NL AT PL IE PT SE) | **en attente : voie A (~6 €) ou voie B (~45 €)** |
-| B2 | Feuille « Lisez-moi » complète dans les 9 | en attente |
-| B3 | 3 colonnes de suivi d'adresses remplies | en attente |
-| B4 | `acteurs-depuis-xlsx.py` étendu, sans régression | en attente |
-| B5 | `TABLEURS-MARCHE.md` | en attente |
+| B1 | 9 classeurs marché (GB ES IT NL AT PL IE PT SE) | ⏸ **EN PAUSE — décision de B, 10/10/2026** |
+| B2 | Feuille « Lisez-moi » complète dans les 9 | ⏸ en pause |
+| B3 | 3 colonnes de suivi d'adresses remplies | ⏸ en pause |
+| B4 | `acteurs-depuis-xlsx.py` étendu, sans régression | ⏸ en pause |
+| B5 | `TABLEURS-MARCHE.md` | ⏸ en pause |
+
+> **CE QUI EST EN ATTENTE POUR REPRENDRE LE CHANTIER B.** Décision de B du
+> 10/10/2026 : « *On met la création de 9 fichiers en pause pour l'instant.* »
+> Rien n'a été commencé : aucun classeur, aucun script. Pour reprendre, il faut
+> d'abord son arbitrage entre les deux voies (§ 4) :
+> **voie A ≈ 5-8 €** (colonnes commerciales vides et marquées « à compléter »)
+> ou **voie B ≈ 30-60 €** (adresse, téléphone, CA, actionnariat remplis par
+> recherche web, acteur par acteur, source citée). Solde DeepSeek au 10/10 :
+> **12,08 €** — la voie A en prend la moitié, la voie B le dépasse quatre fois.
 
 ### Ce que le chantier A a livré, mesuré (10/10/2026)
 
