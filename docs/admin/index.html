@@ -915,7 +915,13 @@ function dessinerSources() {
   // Deux lignes du journal ne décrivent PAS une source : « repos » (le groupe des
   // sources en attente, qui porte `saute`) et « visuels » (l'étape des images).
   // Les compter comme des sources faisait apparaître « repos » en tête de liste.
-  const passages = j.filter((x) => !x.saute && x.source !== 'visuels');
+  // ⚠ MÊME LISTE que dans classementSites() plus bas : les étapes INTERNES du
+  // collecteur (identifiants, règles appliquées au stock, images) ne sont pas des
+  // sites. « regle-pourcentage » a été ajoutée le 10/10/2026 : sans elle, le
+  // nombre d'annonces lues et gardées était faux d'autant, et le panneau
+  // affichait une règle interne comme s'il s'agissait d'une source.
+  const ETAPES_INTERNES = new Set(['repos', 'visuels', 'identifiants', 'regle-deux-prix', 'regle-pourcentage']);
+  const passages = j.filter((x) => !x.saute && !ETAPES_INTERNES.has(x.source));
   const auRepos = j.filter((x) => x.saute).reduce((n, x) => n + (x.sources || []).length, 0);
   const ko = passages.filter((x) => !x.ok);
   const lues = passages.reduce((n, x) => n + (x.items || 0), 0);
@@ -1079,7 +1085,11 @@ function classementSites(catalogue) {
   // un site la ferait apparaître en « non actif, flux vide » — un faux site
   // dans la liste de ceux qu'on cherche à activer. On ne garde donc, quand le
   // catalogue est publié, que les lignes qui correspondent à une source suivie.
-  const internes = new Set(['repos', 'visuels']);
+  // ⚠ MÊME LISTE que plus haut (bloc « catalogue ») : ajouter une étape interne
+  // au collecteur demande de l'inscrire ICI aussi, sinon le panneau la présente
+  // comme un site — et le test du contrat du journal (tests/origines-admin.test.mjs)
+  // lit cette liste-ci, donc il échoue AVANT que le défaut n'atteigne l'écran.
+  const internes = new Set(['repos', 'visuels', 'identifiants', 'regle-deux-prix', 'regle-pourcentage']);
   const connue = (id) => Object.prototype.hasOwnProperty.call(nomDe, id);
   const journal = journalBrut.filter((x) => !x.saute && !internes.has(x.source)
     && (suivis.length === 0 || connue(x.source)));
