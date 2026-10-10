@@ -26,6 +26,10 @@ import { fileURLToPath } from 'node:url';
  * qu'une doublure, pour que les onglets soient dessinés avec les vrais
  * dictionnaires. */
 import { t } from '../public/langues.js';
+// Les noms de pays viennent du module partagé avec le panneau d'administration :
+// le bac à sable des contrôles sur le pays doit employer LES VRAIS, sinon il
+// vérifierait sa propre copie.
+import { NOMS_PAYS } from '../public/drapeaux.js';
 
 const ICI = path.dirname(fileURLToPath(import.meta.url));
 // Les drapeaux sont dans un module partagé avec le panneau d'administration :
@@ -463,6 +467,68 @@ test('changer de pays replace aussi le surlignage et les onglets', () => {
   assert.match(choisir, /dessinerPuces\(\)/, 'choisirPays() doit redessiner les onglets');
   const brancher = js.slice(js.indexOf("$('tri').addEventListener"), js.lastIndexOf("document.querySelectorAll('.vue')"));
   assert.match(brancher, /\$\('pays'\)\.addEventListener[\s\S]*?dessinerPuces\(\)/, 'le sélecteur de pays de la barre doit redessiner les onglets');
+});
+
+/** Monte un bac à sable contenant les vraies fonctions du pays + un faux DOM.
+ *  `htmlListePays` est remplacée : le sujet de ces contrôles est la RÉPARATION
+ *  d'un pays inconnu, pas le dessin de la liste (qui a ses propres épreuves). */
+function bacAPays() {
+  const noeud = { innerHTML: '', value: '', querySelectorAll: () => [] };
+  const ecrits = [];
+  const ctx = vm.createContext({
+    PAR_PAGE: 24,
+    esc: (s) => String(s == null ? '' : s),
+    NOMS_PAYS,
+    t,
+    $: () => noeud,
+    htmlListePays: () => '',
+    enregistrerPays: () => ecrits.push(true),
+  });
+  vm.runInContext([
+    blocConstant('PAYS_BOUTIQUE'),
+    extraire('paysDe'),
+    extraire('compteParPays'),
+    extraire('codesPays'),
+    extraire('optionsPays'),
+    extraire('dessinerPays'),
+  ].join('\n'), ctx);
+  return { ctx, noeud, ecrits };
+}
+
+test('un pays mémorisé que le catalogue ne connaît plus est réparé ET écrit', () => {
+  // Défaut mesuré le 10/10/2026 : un code mémorisé absent du catalogue (un
+  // ancien code, un pays retiré) laissait le filtre sur une valeur inconnue
+  // pendant que le sélecteur affichait « Tous les pays » — l'écran montrait donc
+  // « Tous les pays » avec des compteurs de rubriques à ZÉRO, à chaque
+  // ouverture, indéfiniment. La réparation existait, mais elle n'était jamais
+  // ÉCRITE : la valeur fautive survivait au chargement suivant.
+  const { ctx, noeud, ecrits } = bacAPays();
+  ctx.etat = { offres: OFFRES_ESSAI, pays: 'be' };   // code inconnu du catalogue
+  ctx.dessinerPays();
+  assert.equal(ctx.etat.pays, 'tout', 'un pays inconnu doit retomber sur « tous les pays »');
+  assert.equal(noeud.value, 'tout', 'le sélecteur doit montrer le choix réellement appliqué');
+  assert.equal(ecrits.length, 1, 'la réparation doit être ENREGISTRÉE, sinon elle se répète à chaque ouverture');
+});
+
+test('un pays mémorisé VALIDE n’est ni changé ni réécrit', () => {
+  const { ctx, ecrits } = bacAPays();
+  ctx.etat = { offres: OFFRES_ESSAI, pays: 'BE' };
+  ctx.dessinerPays();
+  assert.equal(ctx.etat.pays, 'BE', 'un pays valide doit être conservé');
+  assert.equal(ecrits.length, 0, 'on n’écrit rien quand il n’y a rien à réparer');
+});
+
+test('le pays est réparé AVANT que les compteurs ne soient dessinés', () => {
+  // L'ordre des appels est le fond du défaut : `dessinerPays` répare au passage
+  // la valeur inconnue, et les compteurs étaient dessinés juste avant — donc
+  // calculés sur la valeur fautive, affichés à zéro. Ici on lit l'ordre dans
+  // lancer(), le seul endroit qui les enchaîne.
+  const lancer = js.slice(js.indexOf('async function lancer()'), js.indexOf('function demarrer()'));
+  assert.ok(lancer.length > 500, `découpage de lancer() invalide (${lancer.length} caractères)`);
+  const iPays = lancer.indexOf('dessinerPays()');
+  const iPuces = lancer.indexOf('dessinerPuces()');
+  assert.ok(iPays >= 0 && iPuces >= 0, 'lancer() doit dessiner le pays et les compteurs');
+  assert.ok(iPays < iPuces, `les compteurs doivent être comptés APRÈS la réparation du pays (positions ${iPays} / ${iPuces})`);
 });
 
 test('une catégorie que l’interface ne connaît pas retombe sur « Tout »', () => {

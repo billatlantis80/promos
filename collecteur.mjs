@@ -1362,6 +1362,45 @@ export function typeDeSource(id) {
 }
 
 /* ------------------------------------------------------------------ *
+ *  LES LECTEURS DONT LA PAGE NE DIT AUCUNE DATE — LEUR DATE EST UN RELEVÉ
+ *
+ *  Défaut signalé par B (10/10/2026), mot pour mot : « tantôt j'ai observé une
+ *  erreur d'affichage, pas du site mais des articles et de la mise à jour ».
+ *  Toutes les cartes d'un même marchand affichaient « il y a 1 min » —
+ *  exactement le chiffre de la ligne « mis à jour il y a 1 min » de l'en-tête.
+ *  L'âge d'une offre et l'heure de la collecte étaient devenus indiscernables,
+ *  et le tri « Plus récentes » ne triait plus rien.
+ *
+ *  Cause exacte, et non supposée : ces sept lecteurs FABRIQUENT la date au
+ *  moment du passage (`date: new Date().toISOString()`), et la fusion des offres
+ *  écrasait donc ce champ à chaque collecte. Or ces pages — enseignes (Coolblue,
+ *  Amazon, bol, Krefel, Zooplus…), Groupon, Socialdeal, ventes flash — ne
+ *  publient aucune date de bon plan. Ce qu'on sait d'elles, c'est la dernière
+ *  fois qu'on les a VUES : c'est `vuLe`, qui existe déjà et n'a pas à être
+ *  déguisé en date d'offre.
+ *
+ *  On ne prétend donc plus connaître une date qu'on ignore :
+ *
+ *    • le lecteur marque ses offres `dateRelevee: true` — c'est une date de
+ *      RELEVÉ, pas une date de publication ;
+ *    • la fusion conserve la date de la PREMIÈRE rencontre (voir la boucle de
+ *      fusion) : elle ne bouge plus d'un passage à l'autre ;
+ *    • `vuLe` continue de dire la fraîcheur du dernier contact, et l'en-tête
+ *      continue de dire l'heure de la collecte. Deux chiffres, deux vérités.
+ *
+ *  Réparation RÉTROACTIVE, comme le reclassement et la remise : les offres déjà
+ *  en base portent la date du dernier passage, donc un « il y a 1 min » faux.
+ *  On leur rend leur `premiereVue` — le seul repère honnête qu'on ait gardé.
+ * ------------------------------------------------------------------ */
+export const TYPES_DATE_RELEVEE = new Set([
+  'enseigne', 'amazon', 'bol', 'krefel', 'groupon', 'socialdeal', 'flash',
+]);
+
+/** Une source dont le LECTEUR fabrique la date : la seule qui puisse en
+ *  fabriquer une sur une page qui n'en publie pas (voir TYPES_DATE_RELEVEE). */
+export const dateEstUnReleve = (typeSource) => TYPES_DATE_RELEVEE.has(String(typeSource || ''));
+
+/* ------------------------------------------------------------------ *
  *  Analyse XML minimale, sans dépendance.
  * ------------------------------------------------------------------ */
 /* Décode les entités HTML.
@@ -3853,6 +3892,10 @@ function offresEnseigne(html, source) {
       categorieImposee: source.categorieImposee || null,
       image: p.image,
       date: new Date().toISOString(),
+      // La page ne dit AUCUNE date : ceci est l'instant du relevé, pas la date
+      // de l'offre. Voir TYPES_DATE_RELEVEE — la fusion refusera désormais de
+      // l'écraser, et la carte cessera d'annoncer « il y a 1 min » à vie.
+      dateRelevee: true,
       source: source.nom,
       sourceId: source.id,
       pays: source.pays || 'FR',
@@ -4149,6 +4192,7 @@ function offresGroupon(html, source) {
       categorieImposee: source.categorieImposee || null,
       image: /^https?:\/\//i.test(image) ? image : '',
       date: new Date().toISOString(),
+      dateRelevee: true,          // date de RELEVÉ — voir TYPES_DATE_RELEVEE
       source: source.nom,
       sourceId: source.id,
       pays: source.pays || 'BE',
@@ -4231,6 +4275,7 @@ function offresSocialDeal(html, source) {
       categorieImposee: source.categorieImposee || null,
       image: '',
       date: new Date().toISOString(),
+      dateRelevee: true,          // date de RELEVÉ — voir TYPES_DATE_RELEVEE
       source: source.nom,
       sourceId: source.id,
       pays: source.pays || 'BE',
@@ -4361,6 +4406,7 @@ export function offresBol(html, source) {
       categorieSource: 'bol',
       image,
       date: new Date().toISOString(),
+      dateRelevee: true,          // date de RELEVÉ — voir TYPES_DATE_RELEVEE
       source: source.nom,
       sourceId: source.id,
       pays: source.pays || 'BE',
@@ -4452,6 +4498,7 @@ export function offresKrefel(html, source) {
       categorieSource: 'krefel',
       image,
       date: new Date().toISOString(),
+      dateRelevee: true,          // date de RELEVÉ — voir TYPES_DATE_RELEVEE
       source: source.nom,
       sourceId: source.id,
       pays: source.pays || 'BE',
@@ -4533,6 +4580,7 @@ function offresAmazon(html, source) {
       categorieSource: 'amazon',
       image,
       date: new Date().toISOString(),
+      dateRelevee: true,          // date de RELEVÉ — voir TYPES_DATE_RELEVEE
       source: source.nom,
       sourceId: source.id,
       pays: source.pays || 'BE',
@@ -4623,6 +4671,7 @@ function offresVenteFlash(html, source) {
       categorieSource: 'vente flash',
       image,
       date: new Date().toISOString(),
+      dateRelevee: true,          // date de RELEVÉ — voir TYPES_DATE_RELEVEE
       source: source.nom,
       sourceId: source.id,
       pays: source.pays || 'BE',
@@ -5475,7 +5524,7 @@ async function principal() {
   // leur « température » collée devant (« 298° - Vente flash »). On les écarte —
   // elles reviendront propres à cette collecte.
   const avantAssainir = existant.offres.length;
-  let reclasses = 0, remisesRetirees = 0, remisesAjoutees = 0;
+  let reclasses = 0, remisesRetirees = 0, remisesAjoutees = 0, datesRelevees = 0;
   const propres = existant.offres
     .filter((o) => !/^\s*\d{1,4}\s*°\s*[-–—]/.test(o.titre || ''))
     // Les offres engrangées AVANT le décodeur d'entités gardent leurs échappements
@@ -5541,6 +5590,19 @@ async function principal() {
         if (relue != null) { c.remise = relue; remisesAjoutees++; }
         else if (actuelle != null && c.type === 'article') { c.remise = null; remisesRetirees++; }
       }
+      // LA DATE DE RELEVÉ, RÉPARÉE RÉTROACTIVEMENT — même raison que le
+      // reclassement, la remise et la purge ci-dessus : une offre engrangée
+      // avant la correction ne se corrige pas toute seule. Les 202 offres
+      // mesurées le 10/10/2026 portaient la date du DERNIER PASSAGE — leur carte
+      // annonçait « il y a 1 min » alors qu'elles étaient en base depuis près de
+      // quatre jours. On leur rend leur `premiereVue` : le seul repère honnête
+      // qu'on ait gardé. Sans `premiereVue` (offre vue une seule fois, donc
+      // datée du jour même), il n'y a rien à réparer — la date est déjà juste.
+      if (dateEstUnReleve(typeDeSource(c.sourceId))) {
+        c.dateRelevee = true;
+        if (c.premiereVue) c.date = c.premiereVue;
+        datesRelevees++;
+      }
       return c;
     });
   if (propres.length !== avantAssainir) {
@@ -5549,6 +5611,13 @@ async function principal() {
   if (reclasses) console.log(`Reclassement : ${reclasses} offre(s) rangée(s) dans la bonne rubrique`);
   if (remisesRetirees) console.log(`Assainissement : ${remisesRetirees} remise(s) invraisemblable(s) retirée(s) (prix barré ≥ 5× le prix demandé)`);
   if (remisesAjoutees) console.log(`Remises relues : ${remisesAjoutees} offre(s) dont le pourcentage était écrit dans le titre sans être enregistré`);
+  if (datesRelevees) {
+    console.log(`Dates de relevé : ${datesRelevees} offre(s) de marchand rendues à leur première vue (leur date n'est plus réécrite à chaque passage)`);
+    journal.push({
+      source: 'dates-relevees', ok: true, offres: datesRelevees,
+      raison: 'ces pages ne publient aucune date : la date écrite était celle du passage, si bien que la carte annonçait « il y a 1 min » à perpétuité, comme l’heure de la collecte',
+    });
+  }
   const connues = new Map(propres.map((o) => [cleDe(o), o]));
 
   // Chaque source a son propre délai de repos (« reposMin ») : la collecte passe
@@ -5658,9 +5727,24 @@ async function principal() {
     if (Number.isFinite(toursParSource[offre.sourceId])) {
       offre.serviceAuTour = toursParSource[offre.sourceId];
     }
-    if (!avant) { connues.set(cle, { ...offre, vuLe: new Date().toISOString() }); nouvelles++; continue; }
+    if (!avant) {
+      // `premiereVue` dès l'entrée en base, et non au deuxième passage : c'est
+      // LE repère qui dit depuis quand l'offre est chez nous — la réparation
+      // des dates de relevé s'appuie dessus (voir TYPES_DATE_RELEVEE).
+      const vu = new Date().toISOString();
+      connues.set(cle, { ...offre, premiereVue: vu, vuLe: vu });
+      nouvelles++; continue;
+    }
     // Mise à jour SANS écraser la date de première vue (qui sert à dater l'offre).
     const fusion = { ...avant, ...offre, vuLe: new Date().toISOString(), premiereVue: avant.premiereVue || avant.vuLe };
+    // UNE DATE DE RELEVÉ NE SE RAFRAÎCHIT PAS. Le lecteur vient de la fabriquer
+    // à l'instant (`date: new Date().toISOString()`) : si on la laissait passer,
+    // la carte annoncerait « il y a 1 min » à chaque passage, indéfiniment — et
+    // l'âge de l'offre deviendrait le clone de l'heure de la collecte, ce que B
+    // a vu à l'écran. L'offre garde donc la date de sa PREMIÈRE rencontre ;
+    // `vuLe`, écrit juste au-dessus, dit la fraîcheur du dernier contact. Voir
+    // TYPES_DATE_RELEVEE pour la liste des lecteurs concernés et le pourquoi.
+    if (offre.dateRelevee && avant.date) fusion.date = avant.date;
     // Une source qui ne fournit PAS d'image ne doit pas EFFACER celle qu'on a
     // déjà. Les flux d'actualité n'en donnent jamais : sans cette garde, tout
     // visuel gagné (récupéré sur la page de l'article, puis rapatrié sur notre
