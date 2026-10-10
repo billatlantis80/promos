@@ -538,6 +538,197 @@ const SOURCES_ADRESSES = sourcesAdresses();
  */
 const SEUIL_ARTICLES_ENSEIGNE = 10;
 
+/* ------------------------------------------------------------------ *
+ *  LA PÉREMPTION — TROIS VERROUS, ET POURQUOI TROIS ET PAS UN
+ *
+ *  Question de B (10/10/2026), mot pour mot : « quand cette mise à jour a lieu
+ *  est-ce qu'on enlève les promotions qui ne sont plus d'actualité ? » La
+ *  réponse était NON, et la mesure a dit par où le défaut entrait réellement.
+ *
+ *  Sur les 17 243 offres publiées, 239 portaient une date de source de plus de
+ *  7 jours — 179 de plus de 30 jours, la plus vieille datée de novembre 2018
+ *  (un bon de Noël Auchan). 100 % venaient de la PRESSE (Google News, Bing) ou
+ *  d'une source DISPARUE du catalogue. ZÉRO venaient de Dealabs, Amazon,
+ *  Coolblue, bol.com, Groupon, Socialdeal ou Krefel. Et toutes étaient entrées
+ *  dans la base la semaine même : le défaut n'était donc pas de la pourriture
+ *  accumulée, c'était du périmé qui ENTRE.
+ *
+ *  D'où trois verrous, chacun posé sur le seul signal qui parle pour sa
+ *  catégorie — jamais un délai unique, qui se tromperait sur les deux :
+ *
+ *    VERROU 1 — LA DATE, POUR LA PRESSE. Un article de 2018 réindexé par Google
+ *      News n'est pas un bon plan, et rien ne viendra jamais le contredire : la
+ *      presse republie son fil, pas ses archives. On écarte donc toute offre de
+ *      presse datée de plus de 7 jours. Un bon plan de presse est une actualité ;
+ *      au-delà d'une semaine, c'est une archive.
+ *
+ *    VERROU 2 — LA DISPARITION, POUR LES MARCHANDS. MESURÉ PUIS DÉSAMORCÉ : voir
+ *      la note ci-dessous, c'est la partie de cette page qui a coûté le plus cher
+ *      à comprendre, et elle ne retire plus rien.
+ *
+ *    VERROU 3 — LA SOURCE DISPARUE. Une offre dont la source a quitté le
+ *      catalogue n'a plus personne pour parler d'elle : on lui applique la
+ *      limite de la presse, faute de mieux. Mesuré : 678 offres étaient dans ce
+ *      cas, dont 674 venaient de `flash-at`, `flash-pt`, `dealabs-new` et
+ *      `dealabs-hot`, quatre adresses retirées du catalogue.
+ *
+ *  ────────────────────────────────────────────────────────────────────────
+ *  VERROU 2 : CE QUE LA MESURE A DÉTRUIT DANS MON PROPRE RAISONNEMENT
+ *
+ *  J'avais proposé, et fait valider : « une offre sort après deux tours réussis
+ *  de sa source sans republication ». L'idée semblait solide — la source a parlé,
+ *  l'offre n'y est plus, donc elle n'existe plus. Raisonnement CONTREDIT par la
+ *  mesure, avant que le moindre dégât ne soit fait, et de deux façons :
+ *
+ *    1. LE FLUX D'UNE SOURCE EST UNE FENÊTRE, PAS UNE LISTE. Le flux « tendance »
+ *       de Dealabs sert TRENTE offres par passage. La base en compte 1 407 —
+ *       c'est-à-dire six jours d'accumulation. Le raisonnement « elle n'y est plus
+ *       donc elle est morte » supposait une liste complète ; il n'y en a pas. Sur
+ *       les 17 038 offres publiées, 9 959 appartiennent à des sources de ce genre
+ *       (mydealz, chollometro, pepper, hotukdeals…). La règle aurait effacé près
+ *       de DIX MILLE offres en dix minutes.
+ *
+ *    2. SORTIR DE LA FENÊTRE NE VEUT PAS DIRE ÊTRE EXPIRÉ — vérifié sur les pages
+ *       elles-mêmes. Trois offres Dealabs absentes du flux du jour, contrôlées à
+ *       la main le 10/10/2026 : DEUX portent `isExpired: false`, `status:
+ *       Activated`, `isHot: true` — elles sont parfaitement valides — et UNE
+ *       porte `isExpired: true` (un lot de deux eyeliners Bourjois). La
+ *       disparition du flux n'est donc ni une preuve de péremption, ni une preuve
+ *       de validité : elle ne prouve RIEN.
+ *
+ *  Ce qu'on garde de ce travail : la comptabilité des tours reste tenue et
+ *  publiée, la règle continue d'être calculée, et le journal dit COMBIEN d'offres
+ *  elle écarterait. On ne les écarte pas. C'est une mesure en attente, pas une
+ *  règle déguisée : trente jours d'observation diront à quelle vitesse ces offres
+ *  meurent vraiment, et la règle définitive se choisira sur ce chiffre-là.
+ *
+ *  La leçon à garder du chantier : « la source ne le republie plus » n'est une
+ *  preuve que si la source publie une LISTE. Vérifier la forme de la source avant
+ *  de croire son silence.
+ *  ────────────────────────────────────────────────────────────────────────
+ *
+ *  LA RÈGLE QUI TRANCHE LES CAS DOUTEUX : en cas de doute, on RETIRE. Les deux
+ *  erreurs ne sont pas symétriques — montrer une offre morte fait cliquer pour
+ *  rien et coûte la confiance, alors qu'enlever une offre encore vivante ne
+ *  coûte rien : son marchand la republiera au passage suivant, et elle
+ *  reviendra. C'est la raison d'être du choix « le plus tôt » partout ci-dessous.
+ * ------------------------------------------------------------------ */
+export const LIMITE_PRESSE_JOURS = 7;
+export const LIMITE_SOURCE_DISPARUE_JOURS = 7;
+/** Tours réussis sans republication avant qu'une offre marchande sorte.
+ *
+ *  ⚠ NE SERT PAS ENCORE À RETIRER — voir « VERROU 2 : CE QUE LA MESURE A
+ *  DÉTRUIT ». La comptabilité tourne, le journal compte, rien ne sort. */
+export const TOURS_SANS_SERVICE = 2;
+/** Part du dernier rendu en dessous de laquelle un tour ne compte PAS. */
+export const PART_RENDU_MINIMUM = 0.5;
+
+/** L'âge d'une date ISO, en JOURS — ou null si elle est illisible.
+ *
+ *  Renvoie null plutôt qu'un nombre : une date qu'on ne sait pas lire ne doit
+ *  jamais servir de preuve, ni pour garder ni pour écarter. */
+export function ageJours(dateIso, maintenant = Date.now()) {
+  const t = new Date(dateIso || '').getTime();
+  if (!Number.isFinite(t) || t === 0) return null;
+  return (maintenant - t) / 86400000;
+}
+
+/** VERROUS 1 ET 3 — pourquoi cette offre doit sortir À CAUSE DE SA DATE, ou la
+ *  chaîne vide si elle reste.
+ *
+ *  `typeSource` est le type relevé au CATALOGUE (`presse`, `dealabs`, `amazon`…),
+ *  ou la chaîne vide quand l'identifiant n'y figure plus : c'est précisément ce
+ *  vide qui distingue l'offre ORPHELINE de l'offre surveillée.
+ *
+ *  Les MARCHANDS ne sont jamais jugés sur l'âge, et c'est volontaire : chez eux
+ *  la date est une date de publication que la source rafraîchit, pas une preuve
+ *  de validité — un marchand qui republie une offre de dix jours la garde
+ *  vivante. C'est le verrou 2 qui les surveille, et lui s'appuie sur une preuve.
+ */
+export function motifDeSortie(offre, { maintenant = Date.now(), typeSource = '' } = {}) {
+  if (!offre) return '';
+  // LES ARTICLES DE VEILLE ONT LEUR PROPRE RÈGLE, et elle est déjà en place :
+  // trente jours mesurés sur la date de publication (voir LIMITE_VEILLE). On ne
+  // la remplace PAS ici. Défaut attrapé avant livraison, par le garde-fou sur les
+  // données réelles : sans cette ligne, les 142 articles de plus de 7 jours
+  // auraient été rabotés en douce à une semaine — une règle que B n'a jamais
+  // demandée, appliquée à un autre produit (la veille, qui n'affiche aucun prix),
+  // et rien à l'écran ne l'aurait dit.
+  if (offre.type === 'article') return '';
+  const age = ageJours(offre.date, maintenant);
+  // Pas de date lisible : on ne juge pas sur rien.
+  if (age === null) return '';
+  // Date dans le futur : c'est une horloge de source mal réglée, pas une preuve
+  // de fraîcheur. On ne s'en sert ni pour garder ni pour écarter ici.
+  if (age < 0) return '';
+  if (typeSource === 'presse') return age > LIMITE_PRESSE_JOURS ? 'presse-hors-delai' : '';
+  if (!typeSource) return age > LIMITE_SOURCE_DISPARUE_JOURS ? 'source-disparue' : '';
+  return '';
+}
+
+/** VERROU 2 — LA COMPTABILITÉ DES TOURS, tenue d'un passage à l'autre.
+ *
+ *  `rendus` est ce que chaque source a RÉELLEMENT rendu ce passage-ci. Un tour ne
+ *  compte que si la source a parlé POUR DE VRAI :
+ *
+ *    • elle a rendu au moins un article — une source muette ou en panne ne dit
+ *      pas « l'offre n'existe plus », elle dit « je n'ai rien pu dire » ;
+ *    • et elle a rendu au moins la moitié de ce qu'elle rendait la dernière fois
+ *      qu'elle a parlé. C'est la garde qui compte : les murs anti-robot d'Amazon
+ *      rendent une page tronquée un passage sur deux — sans cette moitié, deux
+ *      passages tronqués condamneraient d'un coup tout un catalogue vivant, et
+ *      le défaut serait invisible (des offres qui disparaissent, sans erreur nulle
+ *      part).
+ */
+export function avancerTours({ tours = {}, rendus = {}, precedents = {} } = {}) {
+  const t = { ...tours };
+  const p = { ...precedents };
+  for (const [id, n] of Object.entries(rendus)) {
+    if (!(n > 0)) continue;
+    const attendu = Math.ceil((p[id] || 0) * PART_RENDU_MINIMUM);
+    if (n < Math.max(1, attendu)) continue;   // tour partiel : il ne compte pas
+    t[id] = (t[id] || 0) + 1;
+    p[id] = n;
+  }
+  return { tours: t, rendus: p };
+}
+
+/** VERROU 2 — cette offre a-t-elle manqué assez de tours réussis pour sortir ?
+ *
+ *  Sans compteur pour sa source, la réponse est non : on ne condamne pas une
+ *  offre sur une source qu'on n'a pas réussi à lire — ni sur une source mise au
+ *  repos, ni sur une source qui a répondu à côté.
+ */
+export function aManqueDesTours(offre, tours, { typeSource = '' } = {}) {
+  if (!offre || typeSource === 'presse') return false;   // la presse n'a que le verrou 1
+  const tour = tours ? tours[offre.sourceId] : undefined;
+  if (!Number.isFinite(tour) || tour <= 0) return false;
+  const servi = Number.isFinite(offre.serviceAuTour) ? offre.serviceAuTour : tour;
+  return tour - servi >= TOURS_SANS_SERVICE;
+}
+
+/** VERROU 2 — la MIGRATION : donner un numéro de tour aux offres d'AVANT.
+ *
+ *  Sans elle, la garde « pas de numéro, donc grâce » dure ÉTERNELLEMENT : l'écart
+ *  se recalcule à chaque passage sur le tour courant, et reste nul. Défaut
+ *  constaté sur la première exécution réelle, avant livraison : seize mille offres
+ *  sans numéro, donc seize mille offres que le verrou n'aurait jamais touchées.
+ *
+ *  On l'écrit donc UNE fois, au moment où la source de l'offre est enfin
+ *  surveillée. Les offres dont la source n'a pas de compteur ne sont pas
+ *  estampillées : elles resteront en grâce tant que leur source n'aura pas parlé.
+ */
+export function estampillerOffresDavant(offres, tours) {
+  let n = 0;
+  for (const o of offres) {
+    if (!o || o.serviceAuTour !== undefined) continue;
+    if (!Number.isFinite(tours ? tours[o.sourceId] : undefined)) continue;
+    o.serviceAuTour = tours[o.sourceId];
+    n++;
+  }
+  return n;
+}
+
 /** Une source qui vise une ENSEIGNE NOMMÉE : page de promotions d'un marchand
  *  (`enseigne`, `bol`, `krefel`), ou veille ciblée sur un marchand (identifiant
  *  `enseigne-…`). Les flux de presse, les communautés de bons plans et les
@@ -1146,6 +1337,29 @@ const RECHERCHES = [
   // n'avait aucune source derrière elle.
   ['auto', 'promo accessoires auto voiture moto casque réduction'],
 ];
+
+/** LE TYPE DE CHAQUE SOURCE, identifiant → type.
+ *
+ *  Il sert à décider LAQUELLE des trois règles de péremption s'applique à une
+ *  offre déjà engrangée : la DATE pour la presse (sa date ne prouve rien de la
+ *  validité), la DISPARITION pour un marchand (sa disparition est une preuve),
+ *  et rien du tout pour un identifiant inconnu — c'est la définition même de
+ *  l'offre orpheline, dont la source a quitté le catalogue.
+ *
+ *  ⚠ Les SEPT recherches Google News (`gnews-jouets`, `gnews-auto`…) sont des
+ *  sources ACTIVES qui ne figurent dans aucun catalogue publié : elles sont
+ *  construites à la volée par collecterRecherche(). Sans la seconde ligne, leurs
+ *  offres passeraient pour orphelines et seraient jugées à la légère. */
+const TYPE_PAR_SOURCE = new Map([
+  ...TOUTES_SOURCES.map((s) => [s.id, s.type || '']),
+  ...RECHERCHES.map(([familleId]) => ['gnews-' + familleId, 'presse']),
+]);
+
+/** Le type d'une source, ou la chaîne vide si l'identifiant n'est plus au
+ *  catalogue — ce vide EST le signal de l'offre orpheline. */
+export function typeDeSource(id) {
+  return TYPE_PAR_SOURCE.get(id == null ? '' : String(id)) || '';
+}
 
 /* ------------------------------------------------------------------ *
  *  Analyse XML minimale, sans dépendance.
@@ -5409,10 +5623,41 @@ async function principal() {
     renduParSource.set(o.sourceId, (renduParSource.get(o.sourceId) || 0) + 1);
   }
 
+  // --- LA COMPTABILITÉ DES TOURS (verrou 2) --------------------------------
+  // Tenue d'un passage à l'autre, dans l'état publié. Un tour ne compte que si
+  // la source a RÉELLEMENT parlé : voir avancerTours() pour le pourquoi de la
+  // moitié du rendu précédent.
+  const { tours: toursParSource, rendus: rendusParSource } = avancerTours({
+    tours: existant.toursParSource || {},
+    rendus: Object.fromEntries(renduParSource),
+    precedents: existant.rendusParSource || {},
+  });
+
+  // --- LA MIGRATION DES OFFRES D'AVANT --------------------------------------
+  //  Une offre engrangée avant ce mécanisme ne porte aucun numéro de tour, et elle
+  //  n'en recevra pas : elle n'est dans aucun paquet, donc la boucle de fusion ne
+  //  la touche pas. Sans cette écriture, la garde « pas de numéro = grâce »
+  //  durerait ÉTERNELLEMENT — écart toujours nul, aucune offre ancienne ne
+  //  sortirait jamais, et le verrou ne servirait à rien pour le stock existant.
+  //
+  //  Défaut vu en relisant l'état de la première exécution réelle (10/10/2026,
+  //  11:40) : les compteurs étaient bien là, mais seize mille offres restaient
+  //  sans numéro. On leur donne donc CELUI DU JOUR, une seule fois : à partir de
+  //  là, seules les disparitions CONSTATÉES après la mise en service comptent, et
+  //  chaque offre d'avant dispose de ses deux tours de grâce.
+  const estampillees = estampillerOffresDavant(connues.values(), toursParSource);
+
   let nouvelles = 0, misesAJour = 0;
   for (const offre of paquets.flat()) {
     const cle = cleDe(offre);
     const avant = connues.get(cle);
+    // Le NUMÉRO DE TOUR de la source au moment où elle nous sert cette offre.
+    // C'est le seul repère qui dira plus tard si elle a cessé de la republier.
+    // Une source dont le tour n'a pas compté (partiel) n'a pas de numéro : on ne
+    // lui en invente pas — l'offre garde celui de la dernière fois.
+    if (Number.isFinite(toursParSource[offre.sourceId])) {
+      offre.serviceAuTour = toursParSource[offre.sourceId];
+    }
     if (!avant) { connues.set(cle, { ...offre, vuLe: new Date().toISOString() }); nouvelles++; continue; }
     // Mise à jour SANS écraser la date de première vue (qui sert à dater l'offre).
     const fusion = { ...avant, ...offre, vuLe: new Date().toISOString(), premiereVue: avant.premiereVue || avant.vuLe };
@@ -5559,6 +5804,69 @@ async function principal() {
     });
   }
 
+  // --- VERROU 1 ET VERROU 3 : LA PÉREMPTION PAR LA DATE DE LA SOURCE --------
+  //  Appliqués au STOCK et pas seulement à l'entrée, comme les deux règles
+  //  ci-dessus et pour la même raison : une offre engrangée avant la correction
+  //  ne sort jamais d'elle-même. Les 239 offres périmées mesurées le 10/10/2026
+  //  étaient TOUTES déjà en base — elles seraient restées des mois.
+  //
+  //  Le tri est fait par motif pour que le journal dise la vérité : « presse
+  //  hors délai » (l'article de 2018 réindexé) et « source disparue » (l'adresse
+  //  retirée du catalogue) sont deux défauts différents, et deux corrections à
+  //  surveiller séparément.
+  let sortiesDate = 0;
+  const sortiesParMotif = {};
+  const exemplesParMotif = {};
+  for (const [cle, o] of connues) {
+    const motif = motifDeSortie(o, { typeSource: typeDeSource(o.sourceId) });
+    if (!motif) continue;
+    sortiesParMotif[motif] = (sortiesParMotif[motif] || 0) + 1;
+    if (!exemplesParMotif[motif]) {
+      exemplesParMotif[motif] = `${String(o.titre || '').slice(0, 60)} (${String(o.date || '').slice(0, 10)})`;
+    }
+    connues.delete(cle);
+    sortiesDate++;
+  }
+  if (sortiesDate) {
+    console.log(`Péremption : ${sortiesDate} offre(s) écartée(s) sur la date de leur source`, sortiesParMotif);
+    journal.push({
+      source: 'peremption-date', ok: true, ecartees: sortiesDate,
+      motifs: sortiesParMotif, exemples: exemplesParMotif,
+      raison: `une offre de presse de plus de ${LIMITE_PRESSE_JOURS} jours n'est plus une actualité, et une offre dont la source a quitté le catalogue n'a plus personne pour la confirmer`,
+    });
+  }
+
+  // --- VERROU 2 : LA DISPARITION CHEZ LES MARCHANDS — EN MESURE SEULEMENT -----
+  //  ⚠ CETTE BOUCLE NE RETIRE RIEN, ET C'EST VOULU. Voir « VERROU 2 : CE QUE LA
+  //  MESURE A DÉTRUIT DANS MON PROPRE RAISONNEMENT » en tête de fichier : la
+  //  disparition du flux d'une source n'est pas une preuve de péremption (le flux
+  //  est une fenêtre de trente offres, pas une liste) — vérifié sur les pages
+  //  Dealabs elles-mêmes, où deux offres absentes du flux sur trois sont encore
+  //  valides. La règle aurait effacé près de dix mille offres VIVANTES.
+  //
+  //  On garde donc le calcul, on publie son verdict dans le journal, et on ne
+  //  touche à rien. C'est une observation, pas une règle : le chiffre du journal
+  //  dira, au bout de quelques semaines, à quelle vitesse ces offres meurent
+  //  vraiment — et c'est sur cette mesure-là qu'on choisira la règle définitive.
+  let auraitEcartees = 0;
+  const mesuresParMarchand = {};
+  for (const o of connues.values()) {
+    if (!aManqueDesTours(o, toursParSource, { typeSource: typeDeSource(o.sourceId) })) continue;
+    mesuresParMarchand[o.marchand] = (mesuresParMarchand[o.marchand] || 0) + 1;
+    auraitEcartees++;
+  }
+  if (auraitEcartees || estampillees) {
+    console.log(`Disparition (MESURE, aucune offre retirée) : ${auraitEcartees} offre(s) auraient été écartées — ${TOURS_SANS_SERVICE} tour(s) réussi(s) de leur source sans republication`
+      + (estampillees ? ` (${estampillees} offre(s) d'avant ont reçu leur premier numéro de tour)` : ''));
+    journal.push({
+      source: 'peremption-tours', ok: true,
+      ecartees: 0,                 // rien n'est retiré : la règle est en observation
+      auraitEcartees, estampillees,
+      parMarchand: mesuresParMarchand, tours: TOURS_SANS_SERVICE,
+      raison: `MESURE : une source qui ne republie plus une offre ne prouve pas qu'elle est morte (son flux est une fenêtre, pas une liste). On compte, on ne retire pas — la règle définitive se choisira sur ce chiffre.`,
+    });
+  }
+
   // Les offres reprises du stock gardent l'identifiant qu'elles avaient : on les
   // migre AVANT tout le reste (visuels, tri, écriture), sinon la correction ne
   // vaudrait que pour ce que les sources ont bien voulu re-servir ce tour-ci.
@@ -5668,6 +5976,18 @@ async function principal() {
         .filter(([, n]) => n > 0),
     ),
     parPays,
+    // LA COMPTABILITÉ DES TOURS (verrou 2) : deux tables minuscules, une entrée
+    // par source VIVANTE, relues au passage suivant. Sans elles, rien ne
+    // distingue « la source ne propose plus cette offre » de « on n'a pas encore
+    // regardé » — et la purge se tairait, ce qui est exactement le défaut d'avant.
+    // On les élague des identifiants disparus du catalogue : une source retirée ne
+    // reçoit plus de tour, son compteur gelé ne servirait jamais.
+    toursParSource: Object.fromEntries(
+      Object.entries(toursParSource).filter(([id]) => TYPE_PAR_SOURCE.has(id)),
+    ),
+    rendusParSource: Object.fromEntries(
+      Object.entries(rendusParSource).filter(([id]) => TYPE_PAR_SOURCE.has(id)),
+    ),
     total: offres.length,
     totalOffres: vraies.length,
     totalVeille: veille.length,
