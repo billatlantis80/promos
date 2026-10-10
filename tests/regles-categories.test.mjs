@@ -270,3 +270,38 @@ test('une HOTTE est un appareil ménager, et « niveaux » n’est pas « Nivea 
   assert.notEqual(famille('Grille-pain 3 niveaux de brunissage', ''), 'beaute');
 });
 
+test('une LAMPE FRONTALE va en Sport, et « 8 Modes » n’est pas la Mode', () => {
+  // Deuxième signalement de B le 09/10/2026, une offre réelle : une lampe
+  // frontale Rechargeable rangée en MODE. Deux causes là encore — le mot faible
+  // « mode » (le rayon des vêtements) attrapait « 8 Modes d'éclairage », et les
+  // lampes portatives n'étaient nommées dans AUCUNE rubrique : les deux offres
+  // sœurs du catalogue ne devaient leur Sport qu'à « camping » ou « randonnée ».
+  const frontale = "Blukar Lampe Frontale Rechargeable 2 Pack 2000L Super Lumineux IPX5 Étanche |"
+    + " Léger Torche Frontale LED Puissante avec Voyant Rouge, 8 Modes d'éclairage, Capteur Mouvement,"
+    + " 30H d'autonomie pour Course";
+  assert.equal(famille(frontale, ''), 'sport', 'la lampe frontale signalée doit aller en Sport');
+  assert.equal(famille('Blukar Latarka Czołowa Ładowalna 2000L Super Jasna, 8 Trybów', ''), 'sport',
+    'et sa jumelle polonaise, qui était en « Autres »');
+  assert.equal(famille('Lampe torche LED rechargeable pour camping', ''), 'sport');
+  // Le mot de la famille Mode reste lu COMME UN MOT : « mode femme » est du vêtement.
+  assert.equal(famille('Pull femme mode hiver col roulé', ''), 'mode');
+  assert.equal(famille('Veste homme mode urbaine', ''), 'mode');
+  // …mais les mots qui le CONTIENNENT ne sont pas la mode — chacun a été mesuré
+  // dans les offres publiées : « modes » (d'éclairage), « modèle », « moderne »,
+  // « Modell », « modelli » envoyaient en Mode des articles de presse, un bureau,
+  // une machine à coudre et une lampe de salon.
+  for (const titre of [
+    'Ventilateur 8 modes de vitesse silencieux',
+    'Bureau Moderne en Bois de Noyer et Acier Chromé',
+    'Machine à coudre électronique Brother CX70PES (Nouveau Modèle)',
+    'Philips Avent sterilisator (modell SCF291/00)',
+    'Friggitrici ad aria: 8 modelli senza PFAS in offerta',
+  ]) {
+    assert.notEqual(famille(titre, ''), 'mode', `« ${titre} » ne doit pas aller en Mode`);
+  }
+  // Et les lampes de la MAISON ne doivent pas être aspirées par les portatives :
+  // « lampe » seule n'est pas dans la liste Sport, à dessein.
+  assert.notEqual(famille('Lampe de table design en bois pour salon', ''), 'sport');
+  assert.notEqual(famille('Lampe de chevet tactile LED chambre', ''), 'sport');
+});
+

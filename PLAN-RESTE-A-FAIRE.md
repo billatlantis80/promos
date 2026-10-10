@@ -565,3 +565,28 @@ d'annonces sans promotion… peux-tu revérifier ce paramètre ? »*
   n'ajoute plus l'adresse que si elle manque. Exercé sur le site en ligne, les deux chemins : **une
   seule occurrence**. Application **code 20**.
 - Suite de tests : **606 sur 606** (dont 2 neufs).
+
+**09/10/2026 — même soirée, troisième signalement : une lampe frontale rangée en MODE**
+
+B a envoyé l'offre seule, sans consigne : *« Blukar Lampe Frontale Rechargeable 2 Pack 2000L… 8 Modes
+d'éclairage… 20,57 € »* + son lien de partage.
+
+- **Même famille de défaut que la hotte, un cran plus loin.** Le mot FAIBLE `mode` (le rayon des
+  vêtements) était lu en sous-chaîne : « 8 **Modes** d'éclairage » le réveillait, et la lampe partait
+  en MODE. `mode` exige désormais une **frontière de mot** (MOTS_A_FRONTIERE) : « mode femme » et
+  « mode homme » continuent de matcher, « 8 Modes », « modèle », « Moderne », « Modell », « modelli »
+  non.
+- **Les lampes portatives n'étaient nommées dans aucune rubrique** : les deux offres sœurs du
+  catalogue ne devaient leur Sport qu'à « camping » ou « randonnée ». Entrent en **Sport**, dans les
+  9 langues : `lampe frontale`, `torche frontale`, `lampe torche`, `lampe de poche` · `headlamp`,
+  `head torch`, `flashlight` · `stirnlampe`, `taschenlampe` · `hoofdlamp`, `zaklamp` · `linterna` ·
+  `torcia` · `lanterna` · `latarka` · `ficklampa`. ⚠ `lampe` seule reste dehors, à dessein : une
+  lampe de table est un objet de maison (vérifié — « Lampe de table design » et « Lampe de chevet »
+  ne partent pas en Sport).
+- **Effet de bord mesuré, et assumé** : 36 offres changent de rubrique sur 16 456. Vingt-six
+  QUITTENT Mode — elles y étaient par accident (« modèle », « Moderne », « Modell », « modelli »),
+  dont des articles de presse (Claude Haiku, Skechers, Roborock, un test Motorola) ; dix rejoignent
+  une vraie rubrique (4 Sport, 2 Auto pour des casques moto, 1 High-tech…). ⛔ **« Autres » n'a pas
+  été touché** : ce que rien ne nomme y tombe, c'est honnête, et la remplir est une décision à part.
+- Vérifié après la collecte de 23:55 UTC : la lampe frontale signalée est en **Sport** (comme sa
+  jumelle polonaise, qui était en « Autres »). Suite de tests : **607 sur 607** (3 neufs).

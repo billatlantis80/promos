@@ -1368,22 +1368,40 @@ const FAMILLES = {
   sport: [
     // fr
     'sport', 'fitness', 'musculation', 'velo', 'randonnee', 'running', 'football', 'natation', 'yoga', 'tennis', 'ski', 'tente', 'camping', 'haltere', 'velo electrique', 'baskets de running',
+    //  A9 (09/10/2026) : LES LAMPES PORTATIVES DE PLEIN AIR — signalé par B avec
+    //  une offre réelle, une lampe frontale Rechargeable rangée en MODE. Elles
+    //  n'étaient rangées NULLE PART : les deux offres sœurs du catalogue ne
+    //  tenaient leur rubrique Sport que par accident, parce que leur titre
+    //  contenait « camping » ou « randonnée ». Une lampe frontale sert à courir,
+    //  camper, randonner — elle va donc en Sport, comme elles.
+    //  ⚠ « lampe » seule n'entre PAS dans la liste : une lampe de salon est un
+    //  objet de maison, et « lanterne » un objet de jardin. Seules les lampes
+    //  PORTATIVES (frontale, torche, de poche) sont nommées ici.
+    'lampe frontale', 'torche frontale', 'lampe torche', 'lampe de poche',
     // en
     'gym', 'bike', 'bicycle', 'cycling', 'hiking', 'swimming', 'tent', 'dumbbell', 'outdoor', 'running shoes', 'treadmill', 'fishing',
+    'headlamp', 'head torch', 'flashlight',
     // de
     'fahrrad', 'rad', 'wandern', 'laufen', 'fussball', 'schwimmen', 'zelt', 'hantel', 'outdoor', 'e-bike', 'laufband', 'angeln',
+    'stirnlampe', 'taschenlampe',
     // nl
     'fiets', 'wielrennen', 'wandelen', 'hardlopen', 'voetbal', 'zwemmen', 'tent', 'kamperen', 'halters', 'e-bike', 'loopband', 'vissen',
+    'hoofdlamp', 'zaklamp',
     // es
     'deporte', 'bicicleta', 'ciclismo', 'senderismo', 'correr', 'futbol', 'natacion', 'esqui', 'tienda de campana', 'mancuernas', 'cinta de correr', 'pesca',
+    'linterna',
     // it
     'bicicletta', 'bici', 'escursionismo', 'corsa', 'calcio', 'nuoto', 'sci', 'tenda', 'campeggio', 'manubri', 'tapis roulant', 'pesca',
+    'torcia',
     // pt
     'desporto', 'bicicleta', 'ciclismo', 'caminhada', 'corrida', 'futebol', 'natacao', 'esqui', 'tenda', 'campismo', 'halteres', 'passadeira', 'pesca',
+    'lanterna',
     // pl
     'rower', 'kolarstwo', 'trekking', 'bieganie', 'pilka nozna', 'plywanie', 'joga', 'tenis', 'narty', 'namiot', 'kemping', 'hantle', 'bieznia', 'wedkarstwo',
+    'latarka',
     // sv
     'cykel', 'cykling', 'vandring', 'lopning', 'fotboll', 'simning', 'skid', 'talt', 'hantlar', 'löparband', 'fiske',
+    'ficklampa',
   ],
   jouets: [
     // fr
@@ -2412,6 +2430,12 @@ const MOTS_A_FRONTIERE = new Set(['auto', 'moto', 'tire', 'wagen', 'wiel', 'mota
   //  LED, panneau tactile » était rangée en BEAUTÉ — à cause de « niveaux ».
   //  Entre deux frontières, la marque ne matche plus, les niveaux non plus.
   'nivea',
+  // E8 (09/10/2026), même soirée, même famille de défaut : « mode » — le mot de
+  //  la FAMILLE Mode — attrapait « 8 Modes d'éclairage ». Une lampe frontale
+  //  « Rechargeable … 8 Modes d'éclairage, Capteur Mouvement » partait donc en
+  //  MODE (le rayon des vêtements). Entre deux frontières, « mode femme » et
+  //  « mode homme » continuent de matcher ; « 8 Modes » non.
+  'mode',
   // E4 : mots d'ENFANT courts ou glissants, lus entre deux frontières pour ne
   //  pas attraper un nom qui les contient — « Kindle » (kind), « barniz »
   //  (barn, espagnol : vernis), « junger/junges » (junge, allemand).
