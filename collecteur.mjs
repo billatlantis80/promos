@@ -515,6 +515,66 @@ export function sourcesAdressesDepuis(table, acteurs, dejaCablees = [], niveaux 
 const SOURCES_ADRESSES = sourcesAdresses();
 
 /* ------------------------------------------------------------------ *
+ *  LE SEUIL D'ARTICLES PAR ENSEIGNE — décision de B, 10/10/2026
+ *
+ *    « Donc une enseigne qui n'apporte pas au moins 10 articles dans le
+ *      catalogue grâce au lien documenté, elle ne doit pas être interrogée,
+ *      jusqu'à quand on trouve une autre solution manuellement. »
+ *
+ *  Le problème qu'elle règle, mesuré : on avait chargé des enseignes dont on
+ *  savait déjà, ou dont on a découvert, qu'elles ne rendent RIEN — une visite
+ *  toutes les trois heures, un échec à chaque visite, et une alerte « plus de la
+ *  moitié des sources sont en échec » qui partait toutes les cinq minutes.
+ *
+ *  Deux points de conception, tous deux payés d'avance :
+ *
+ *   1. LE COMPTE SE FAIT PAR ENSEIGNE, PAS PAR SOURCE. Coolblue a dix adresses
+ *      câblées qui apportent 81 articles ensemble : aucune n'en apporte 10 à
+ *      elle seule, et juger source par source condamnerait la meilleure enseigne
+ *      du catalogue. Le nom de l'enseigne est le bon grain.
+ *   2. UNE SOURCE JAMAIS INTERROGÉE GARDE SA CHANCE. On ne condamne pas une
+ *      adresse qu'on n'a pas essayée : elle est visitée une fois, et le verdict
+ *      tombe au passage suivant, sur son résultat réel.
+ */
+const SEUIL_ARTICLES_ENSEIGNE = 10;
+
+/** Une source qui vise une ENSEIGNE NOMMÉE : page de promotions d'un marchand
+ *  (`enseigne`, `bol`, `krefel`), ou veille ciblée sur un marchand (identifiant
+ *  `enseigne-…`). Les flux de presse, les communautés de bons plans et les
+ *  ventes flash n'en font pas partie : ils ne visent pas un marchand. */
+export function sourceEnseigne(s) {
+  if (!s) return false;
+  if (['enseigne', 'bol', 'krefel'].includes(s.type)) return true;
+  return String(s.id || '').startsWith('enseigne-');
+}
+
+/** Les sources à NE PLUS interroger : leur enseigne est restée sous le seuil
+ *  d'articles du catalogue. Rend une Map {sourceId: nom de l'enseigne}.
+ *
+ *  @param {object[]} sources toutes les sources déclarées
+ *  @param {Map<string, number>} articlesParSource articles au catalogue, par source
+ *  @param {object} vuLe date du dernier passage réussi, par identifiant de source
+ *  @param {number} seuil nombre d'articles en dessous duquel on arrête
+ */
+export function enseignesSousLeSeuil(sources, articlesParSource, vuLe = {}, seuil = SEUIL_ARTICLES_ENSEIGNE) {
+  const total = new Map();
+  for (const s of (sources || [])) {
+    if (!sourceEnseigne(s)) continue;
+    const nom = String(s.nom || '');
+    total.set(nom, (total.get(nom) || 0) + (articlesParSource.get(s.id) || 0));
+  }
+  const sous = new Map();
+  for (const s of (sources || [])) {
+    if (!sourceEnseigne(s)) continue;
+    const nom = String(s.nom || '');
+    if ((total.get(nom) || 0) >= seuil) continue;
+    if (!vuLe || !vuLe[s.id]) continue; // jamais interrogée : on lui donne sa chance
+    sous.set(s.id, nom);
+  }
+  return sous;
+}
+
+/* ------------------------------------------------------------------ *
  *  ACTIVITÉS — les bons plans de SERVICE.
  *
  *  Demande explicite du propriétaire du produit : « spa, centre de beauté,
@@ -5268,11 +5328,48 @@ async function principal() {
     const t = vuLe[s.id] ? new Date(vuLe[s.id]).getTime() : 0;
     return Number.isFinite(t) && t > 0 && maintenant - t < min * 60000;
   };
-  const sources = TOUTES_SOURCES.filter((s) => !enRepos(s));
-  const sautees = TOUTES_SOURCES.filter(enRepos).map((s) => s.id);
+  // --- LE SEUIL D'ARTICLES PAR ENSEIGNE ------------------------------------
+  //  Décision de B, 10/10/2026, mot pour mot :
+  //
+  //    « Donc une enseigne qui n'apporte pas au moins 10 articles dans le
+  //      catalogue grâce au lien documenté, elle ne doit pas être interrogée,
+  //      jusqu'à quand on trouve une autre solution manuellement. »
+  //
+  //  La mesure se fait sur le CATALOGUE, pas sur une impression : on compte les
+  //  articles déjà engrangés pour chaque source, on les additionne par ENSEIGNE
+  //  (une enseigne a souvent plusieurs adresses : Coolblue en a dix, qui
+  //  apportent 81 articles ensemble — juger source par source la condamnerait à
+  //  tort), et une enseigne restée sous le seuil ne reçoit plus de visite.
+  //
+  //  Une source JAMAIS interrogée garde sa chance : on ne peut pas condamner
+  //  une adresse qu'on n'a pas essayée. Le verdict tombe donc au passage
+  //  suivant, une fois le premier résultat connu.
+  //
+  //  Ce que ça change, mesuré avant de l'écrire : sur 196 sources, 57 tombent
+  //  sous le seuil (55 veilles d'enseigne à 1 article, Zooplus/Bitiba 3,
+  //  Zooplus.be 5). Les 18 pages d'enseigne qui travaillent (Coolblue 81,
+  //  Zooplus 79, Krefel 30, Apollo-Optik 21, bol.com 14, Groupon 12) restent.
+  const articlesParSource = new Map();
+  for (const o of (existant.offres || [])) {
+    const id = o && o.sourceId;
+    if (id) articlesParSource.set(id, (articlesParSource.get(id) || 0) + 1);
+  }
+  const sousSeuil = enseignesSousLeSeuil(TOUTES_SOURCES, articlesParSource, vuLe);
+  const sources = TOUTES_SOURCES.filter((s) => !sousSeuil.has(s.id) && !enRepos(s));
+  const sautees = TOUTES_SOURCES.filter((s) => enRepos(s) && !sousSeuil.has(s.id)).map((s) => s.id);
   if (sautees.length) {
     journal.push({ source: 'repos', ok: true, saute: true, sources: sautees, raison: 'délai de repos non écoulé' });
     if (VERBEUX) console.log(`  en repos (interrogées récemment) : ${sautees.join(', ')}`);
+  }
+  if (sousSeuil.size) {
+    const parEnseigne = {};
+    for (const [, nom] of sousSeuil) parEnseigne[nom] = (parEnseigne[nom] || 0) + 1;
+    journal.push({
+      source: 'seuil-enseigne', ok: true, saute: true, sources: [...sousSeuil.keys()],
+      enseigne: parEnseigne, seuil: SEUIL_ARTICLES_ENSEIGNE,
+      raison: `enseigne à moins de ${SEUIL_ARTICLES_ENSEIGNE} articles au catalogue : plus interrogée tant qu'on n'a pas trouvé d'autre adresse`,
+    });
+    if (VERBEUX) console.log(`  sous le seuil de ${SEUIL_ARTICLES_ENSEIGNE} articles : ${[...sousSeuil.keys()].join(', ')}`);
   }
 
   console.log(`Collecte : ${sources.length}/${TOUTES_SOURCES.length} flux + ${RECHERCHES.length} recherches Google News`);
