@@ -149,7 +149,16 @@ test('le collecteur publie bien le catalogue des sources suivies', () => {
   const etat = JSON.parse(lireCatalogue());
   const j = (etat.journal || []).filter((x) => !x.saute);
   assert.ok(j.length > 0, 'le journal doit porter des passages de sources');
-  const ok = j.filter((x) => x.ok && x.source !== 'visuels');
+  // Les étapes INTERNES du collecteur (images, identifiants, règles appliquées au
+  // stock) ne sont PAS des sources : elles n'écrivent ni `items` ni `retenues`.
+  // La liste est lue DANS LE PANNEAU — une étape ajoutée au collecteur sans être
+  // déclarée là-bas fait donc échouer ce test. C'est exactement ce qui s'est
+  // produit le 10/10/2026 avec « regle-pourcentage », nouvelle règle du stock qui
+  // se présentait comme un site et faussait les totaux lus/gardés.
+  const declarees = admin.match(/const internes = new Set\(\[([^\]]*)\]\)/);
+  assert.ok(declarees, 'classementSites doit déclarer ses étapes internes');
+  const INTERNES = new Set([...declarees[1].matchAll(/'([^']+)'/g)].map((m) => m[1]));
+  const ok = j.filter((x) => x.ok && !INTERNES.has(x.source));
   assert.ok(ok.length > 0, 'au moins une source doit avoir répondu');
   assert.ok(ok.every((x) => 'items' in x && 'retenues' in x),
     'une source qui répond écrit TOUJOURS `items` et `retenues` — c’est le contrat que le panneau lit');
