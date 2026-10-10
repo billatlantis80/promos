@@ -726,3 +726,64 @@ motif). Même si la page devenait lisible, TUI n'apporterait **probablement aucu
 « Bonnes promos » sans changer cette règle-là.
 
 ⛔ **Rien n'a été branché. Décision en attente de B.**
+
+---
+
+## 10/10/2026 — MEDIAMARKT OUTLET (outlet.mediamarkt.be) : ÉCARTÉ, et c'est la décision de B
+
+Lien donné par B : `https://outlet.mediamarkt.be/index.php?route=common/home`
+
+Sa consigne, mot pour mot : « **Il ne faut pas rajouter ce lien parce qu'il n'est pas affiliable** ».
+
+Règle du projet, telle qu'elle s'applique ici : un lien sortant qui ne rapporte rien ne se branche
+pas. Le branchement avait commencé — il a été **entièrement retiré** (code remis à l'état d'avant,
+`git checkout`) et le catalogue nettoyé : **1 offre** (« SAMSUNG Cover Galaxy S24 ») et 26 entrées de
+repos retirées du stock ET du fichier publié, sinon l'offre revenait d'elle-même à chaque passage
+(le passage qui publie se réamorce sur `docs/offres.json`, pas sur `data/` — à savoir la prochaine
+fois).
+
+### Ce qui avait été MESURÉ, pour qu'aucune session ne refasse ce travail
+
+- l'accueil du lien rend **49 cartes**, toutes à deux prix réels (« Meestal € 899.– » / « € 629.30 ») ;
+- le listing **complet** du site est la RECHERCHE À CRITÈRE VIDE (`?route=product/search&search=`),
+  qui annonce « 100 van 2578 » et accepte `limit=100` : **2 578 produits, 26 pages** ;
+- **279 cartes vérifiées sur 3 pages : 279 avec leurs deux prix** (100 %) ;
+- prix écrits avec un **POINT** décimal et un **TIRET** pour l'absence de centimes (« € 899.– ») ;
+- **le site limite le débit par connexion** : 3 pages en 4,1 s, 6 en 7,1 s, 12 en 15,8 s, 26 au-delà
+  d'une minute → les 26 sources lancées ensemble ont **toutes** expiré au premier passage ;
+- **piège restant au moment de l'arrêt** : la clé d'unicité du stock est l'ADRESSE (sans paramètres),
+  or les 26 pages ne diffèrent que par leurs paramètres → **1 seule offre conservée sur 2 577 lues**.
+
+### La politique MediaMarkt, ce qui est CONFIRMÉ et ce qui ne l'est pas
+
+**Confirmé par la mesure** (le 10/10/2026, sur `www.mediamarkt.be`, page d'accueil FR et NL) :
+
+- **aucun** script ni pixel d'un réseau d'affiliation — 25 domaines testés (awin1/awin.com,
+  tradedoubler, tradetracker, daisycon, zanox, adcell, belboon, admitad, effiliation, kwanko,
+  cj.com, impact.com, partnerize, webgains, tradelab, affilae, digidip, skimlinks…) : **0 trouvé** ;
+- **aucune** occurrence des mots « affiliation » / « affiliate » dans la page ;
+- **aucune page** de partenaires : 14 adresses candidates (`/fr/affiliation`, `/nl/affiliate`,
+  `/nl/partnerprogramma`, `/fr/partenariat`, `/nl/zakelijke-partner`, cookies, CGV, confidentialité…)
+  → **toutes en 404** ;
+- l'audit du 09/10/2026 lu au navigateur disait déjà la même chose : MediaMarkt BE = « **aucun signe
+  trouvé** », réseaux : aucun (`public/affiliations.json`).
+
+**NON VÉRIFIÉ, et à ne pas confondre avec le point ci-dessus** :
+
+- l'existence d'un **programme privé** (sur invitation) — un programme privé ne laisse aucune trace
+  publique, c'est écrit dans la méthode du propre audit du projet ;
+- la règle exacte du marchand sur son **sous-domaine outlet** (les liens d'outlet/refurb sont
+  fréquemment exclus des programmes, mais je n'ai pas de source primaire qui le dise pour MediaMarkt BE).
+
+Les moteurs de recherche étaient **inaccessibles depuis le NAS** pour trancher (DuckDuckGo, Bing,
+Brave, Mojeek, searx → défi anti-robot), et `mediamarkt.de` / `mediamarkt.nl` refusent la lecture
+côté serveur (HTTP 403). Donc : **pas de confirmation d'un programme belge, seulement l'absence de
+tout signe public** — ce qui, pour la règle « pas d'affiliation, pas de lien », suffit à écarter le
+lien, mais ne doit pas être présenté comme une preuve.
+
+### Quand rouvrir ce dossier
+
+Le jour où un programme d'affiliation MediaMarkt **Belgique** ouvre : vérifier d'abord si le
+sous-domaine `outlet.mediamarkt.be` est commissionnable, et ne rebrancher qu'après. Le lecteur et ses
+mesures sont décrits ci-dessus — le travail de lecture est fait, il ne reste qu'à le réécrire si le
+feu passe au vert.
