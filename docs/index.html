@@ -25,6 +25,60 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
+<!-- DONNÉES STRUCTURÉES — L'IDENTITÉ DU SITE (10/10/2026).
+
+     À quoi ça sert, et à quoi ça ne sert PAS. Ça ne fait pas monter dans Google :
+     les données structurées ne sont pas un facteur de classement, et Google
+     écrit noir sur blanc qu'il « ne garantit pas les résultats enrichis, même
+     avec un balisage correct ». Ce que ça apporte : le nom, le logo et la
+     description du site sont lus de façon certaine au lieu d'être devinés.
+
+     POURQUOI ICI, ET PAS SUR LES OFFERTES. Google n'accepte les résultats
+     enrichis « produit » que sur une page consacrée à UN SEUL produit. L'accueil
+     liste des offres : il n'y est donc pas éligible, et y déclarer un `Product`
+     serait un balisage faux. Ce que l'accueil PEUT déclarer, c'est qui publie le
+     site (`Organization`) et quel site c'est (`WebSite`) — c'est ce bloc-ci.
+
+     POURQUOI PAS DE `SearchAction`. Elle exige une adresse de recherche à
+     paramètre (`?q=…`). Vérifié le 10/10/2026 : le site n'a AUCUNE adresse de
+     recherche — ni `URLSearchParams` ni `location.search` dans app.js. Déclarer
+     une recherche qui n'existe pas enverrait les moteurs vers une adresse morte.
+
+     POURQUOI PAS D'ADRESSE, DE TÉLÉPHONE NI DE NUMÉRO D'ENTREPRISE. Ces champs
+     ne sont pas connus (voir mentions-legales.html, où ils sont marqués « à
+     compléter »). On n'écrit pas ici un chiffre qu'on ne peut pas prouver.
+
+     Le robot de prévisualisation ne fait PAS tourner de JavaScript : ce bloc est
+     écrit en dur, comme les balises Open Graph ci-dessus. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://kazendra.com/#editeur",
+      "name": "Kazendra",
+      "url": "https://kazendra.com/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://kazendra.com/favicon.svg",
+        "contentUrl": "https://kazendra.com/favicon.svg",
+        "caption": "Kazendra"
+      },
+      "description": "Kazendra rassemble les meilleures promotions d'Europe : prix réel, boutique nommée, et remise vérifiée quand elle peut l'être."
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://kazendra.com/#site",
+      "url": "https://kazendra.com/",
+      "name": "Kazendra",
+      "description": "Les meilleures promotions d'Europe : prix réel, boutique nommée, et remise vérifiée quand elle peut l'être.",
+      "inLanguage": "fr",
+      "publisher": { "@id": "https://kazendra.com/#editeur" }
+    }
+  ]
+}
+</script>
 <!-- Le titre de l'onglet est un texte visible : il est traduit par le moteur
      (voir langues.js + traduireDOM dans app.js). -->
 <title data-i18n="Kazendra — Les meilleures promotions">Kazendra — Les meilleures promotions</title>
