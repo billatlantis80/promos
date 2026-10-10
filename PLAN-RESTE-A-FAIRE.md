@@ -691,3 +691,38 @@ Lien donné par B : `https://www.krefel.be/fr/deals-du-moment?currentPage=2`
 - Krefel était déjà connu du collecteur par deux autres entrées (`adr-krefel-120`, page d'adresse sans
   JSON-LD lisible ; `enseigne-be-nl-krefel-krefelpromotie`, flux néerlandais) — **les deux rendent 0**.
 - Suite de tests : **630 sur 630** (7 neufs pour Krefel, 5 pour l'enveloppe bol).
+
+---
+
+## 10/10/2026 — TUI (tui.be) : NON BRANCHABLE en l'état, et c'est MESURÉ
+
+Lien donné par B : `https://www.tui.be/fr/tuideals`
+
+Mesures, refaites plusieurs fois plutôt que supposées :
+
+1. `/fr/tuideals` répond **200**, mais c'est une **page-hub** : elle ne contient **aucune offre
+   chiffrée**. Texte utile : 5 309 caractères, dont DEUX mentions d'euro — un commentaire HTML
+   « *Kolom 2 : Jusqu'à 400 € de réduction* » et une accroche « *400 € par personne* ». Zéro carte
+   produit, zéro prix, zéro JSON-LD.
+2. **Vérifié AUSSI dans un vrai navigateur** (bannière de cookies acceptée) : le DOM fait 115 Ko,
+   contient **0 élément** de type carte/teaser/deal — et surtout **aucune requête vers une API
+   d'offres**. Les 138 ressources chargées sont des scripts, des images et du **suivi publicitaire**
+   (Adobe/Demdex, Gigya, Google Analytics, Tealium, WAF AWS). **Sans requête d'offres, il n'y a rien
+   à rendre** : la page n'est pas « mal lue », elle est vide.
+3. Les VRAIES pages d'offres — `/fr/chercher`, `/fr/last-minutes`, `/fr/rss.xml`, `/sitemap.xml` —
+   répondent **403 « Access Denied »**, signé **Akamai** (`errors.edgesuite.net`). Refusé à `curl`
+   (avec **et** sans compression, la leçon de bol ne s'applique donc pas ici) **et au `fetch` de
+   Node**, c'est-à-dire au lecteur du collecteur lui-même. Aucun flux de secours n'existe.
+
+→ **Conclusion : TUI n'est pas branchable avec l'architecture du projet** (lecture côté serveur,
+sans clé, sans navigateur). Il faudrait piloter un navigateur en permanence dans le collecteur —
+ce n'est pas une correction, c'est un changement d'architecture, et ce n'est pas à cette session
+d'en décider.
+
+⚠ **Question éditoriale, à trancher AVANT toute tentative technique** : les prix de TUI sont des
+prix « **à partir de** », par personne, **sans prix de référence**. Or la règle des DEUX PRIX du
+projet écarte précisément ces cartes (elle a écarté 2 cartes bol et 591 annonces Amazon pour ce
+motif). Même si la page devenait lisible, TUI n'apporterait **probablement aucune offre** à
+« Bonnes promos » sans changer cette règle-là.
+
+⛔ **Rien n'a été branché. Décision en attente de B.**
