@@ -387,6 +387,11 @@ const LANGUE_PAR_PAYS = {
   PT: 'pt', PL: 'pl', SE: 'sv', IE: 'en', GB: 'en',
 };
 const FICHIER_ADRESSES = path.join(__dirname, 'public', 'adresses-promotions.json');
+// Le VERDICT de lisibilité de chaque adresse (donnees/adresses-verifications.json,
+// mesuré le 09/10/2026) : c'est lui qui décide quelles pages on visite — voir
+// sourcesAdresses(). Niveaux : 2 = page qui rend des offres à deux prix,
+// 1 = page de promotions reconnue mais illisible, 0 = rien trouvé.
+const FICHIER_VERIFICATIONS = path.join(__dirname, 'donnees', 'adresses-verifications.json');
 const REPOS_ADRESSE_MIN = 180;
 
 /** Un identifiant de source à partir d'un nom d'enseigne. Les identifiants
@@ -429,6 +434,33 @@ function sourcesAdresses() {
     const d = JSON.parse(fs.readFileSync(FICHIER_ADRESSES, 'utf8'));
     if (d && d.adresses && typeof d.adresses === 'object' && !Array.isArray(d.adresses)) table = d.adresses;
   } catch { return []; }
+  // LE VERDICT DE LISIBILITÉ — et c'est lui qui décide quelles pages on visite.
+  //
+  //   Diagnostic de B, 10/10/2026, mot pour mot : « le lien de promo n'est pas
+  //   documenté correctement, ces sites-là ne doivent pas être mis à jour ».
+  //   Il avait raison, et le projet avait déjà la mesure : la vérification des
+  //   adresses du 09/10/2026 a classé les 573 acteurs par NIVEAU —
+  //     2 = page de liste qui rend des offres à DEUX PRIX ;
+  //     1 = page de promotions reconnue mais ILLISIBLE ;
+  //     0 = rien trouvé.
+  //   Résultat : **4** acteurs en niveau 2, **216** en niveau 1, **353** en
+  //   niveau 0. Or on branchait les 220 adresses de la table SANS REGARDER ce
+  //   verdict : 216 pages dont on savait déjà qu'elles ne rendent rien étaient
+  //   interrogées à chaque passage, échouaient à chaque passage, et faisaient
+  //   dire à la collecte « plus de la moitié des sources sont en échec » —
+  //   L'ALERTE SONNAIT DONC EN PERMANENCE, toutes les cinq minutes, et une
+  //   alarme qui sonne toujours ne signale plus rien.
+  //
+  //   On ne visite plus que le niveau 2. Les adresses écartées restent dans la
+  //   table (le panneau les affiche, et un jour de meilleur lecteur les
+  //   rouvrira) : on arrête de les INTERROGER, on ne les efface pas.
+  let niveaux = null;
+  try {
+    const v = JSON.parse(fs.readFileSync(FICHIER_VERIFICATIONS, 'utf8'));
+    if (v && v.acteurs && typeof v.acteurs === 'object' && !Array.isArray(v.acteurs)) {
+      niveaux = new Map(Object.entries(v.acteurs).map(([nom, a]) => [nom, a && a.niveau]));
+    }
+  } catch { /* pas de verdict disponible : on retombe sur le comportement d'avant */ }
   // Le pays par nom d'acteur : la base du marché le porte, et c'est elle qui
   // décide dans quel pays ranger les offres lues.
   let acteurs = [];
@@ -436,16 +468,23 @@ function sourcesAdresses() {
     const b = JSON.parse(fs.readFileSync(path.join(__dirname, 'public', 'acteurs.json'), 'utf8'));
     acteurs = (b && b.acteurs) || [];
   } catch { /* base manquante : on retombera sur BE */ }
-  return sourcesAdressesDepuis(table, acteurs, SOURCES_ENSEIGNES);
+  return sourcesAdressesDepuis(table, acteurs, SOURCES_ENSEIGNES, niveaux);
 }
 
 /** LA RÈGLE, ISOLÉE DE LA LECTURE DU DISQUE — c'est elle que les tests exercent.
  *
- *  Prend la table {nom: url}, la base d'acteurs, et les sources déjà câblées.
- *  Rend les sources de type `enseigne` correspondantes. Séparer la règle de la
- *  lecture permet de l'éprouver sur des cas fabriqués (URL vide, adresse déjà
- *  câblée, nom inconnu de la base) sans dépendre d'un fichier présent. */
-export function sourcesAdressesDepuis(table, acteurs, dejaCablees = []) {
+ *  Prend la table {nom: url}, la base d'acteurs, les sources déjà câblées, et
+ *  les NIVEAUX de lisibilité mesurés ({nom: 0|1|2}). Rend les sources de type
+ *  `enseigne` correspondantes. Séparer la règle de la lecture permet de
+ *  l'éprouver sur des cas fabriqués (URL vide, adresse déjà câblée, nom inconnu
+ *  de la base, page illisible) sans dépendre d'un fichier présent.
+ *
+ *  `niveaux` ABSENT (null) = pas de verdict disponible : on garde l'ancien
+ *  comportement (toutes les adresses valides), pour ne pas perdre la couverture
+ *  le jour où le fichier de vérification manquerait. Fourni, il est APPLIQUÉ :
+ *  seules les pages de niveau 2 — celles qui rendent des offres à deux prix —
+ *  sont visitées. */
+export function sourcesAdressesDepuis(table, acteurs, dejaCablees = [], niveaux = null) {
   const paysDe = new Map();
   for (const a of (acteurs || [])) if (!paysDe.has(a.nom)) paysDe.set(a.nom, a.pays);
   const dejaLue = new Set((dejaCablees || []).map((s) => s.url));
@@ -454,6 +493,10 @@ export function sourcesAdressesDepuis(table, acteurs, dejaCablees = []) {
   for (const [nom, url] of Object.entries(table || {})) {
     const u = String(url || '').trim();
     if (!/^https?:\/\//i.test(u) || dejaLue.has(u) || vues.has(u)) continue;
+    // Une page dont la mesure dit qu'elle ne rend rien ne se visite pas : la
+    // relire chaque passage ne la rendra pas lisible, et son échec permanent
+    // éteint l'alerte qui doit signaler les VRAIS problèmes.
+    if (niveaux && niveaux.get(nom) !== 2) continue;
     vues.add(u);
     const pays = paysDe.get(nom) || 'BE';
     faites.push({

@@ -222,3 +222,73 @@ test('l’aide du panneau ne promet plus ce qui n’existe pas', () => {
   assert.ok(!/sera utilisé par la collecte\.\s*La <b>note<\/b>/.test(admin),
     'la phrase d’origine ne doit pas avoir été laissée telle quelle');
 });
+
+/* ------------------------------------------------------------------ *
+ *  LE VERDICT DE LISIBILITÉ DÉCIDE QUI ON VISITE (10/10/2026)
+ *
+ *  Diagnostic de B : « le lien de promo n'est pas documenté correctement, ces
+ *  sites-là ne doivent pas être mis à jour ». Mesuré : sur 573 acteurs, 4 pages
+ *  rendent des offres à deux prix (niveau 2), 216 sont « reconnues mais
+ *  illisibles » (niveau 1), 353 n'ont rien donné (niveau 0). On branchait les
+ *  220 adresses publiées SANS regarder ce verdict : 216 pages qui ne rendent
+ *  rien étaient interrogées à chaque passage, échouaient à chaque passage, et
+ *  faisaient dire à la collecte « plus de la moitié des sources sont en échec »
+ *  — l'alerte sonnait donc en permanence, toutes les cinq minutes.
+ * ------------------------------------------------------------------ */
+
+test('seules les pages de niveau 2 (offres à deux prix) sont visitées', () => {
+  const niveaux = new Map([['Bonne', 2], ['Illisible', 1], ['Vide', 0], ['Jamais', undefined]]);
+  const r = sourcesAdressesDepuis(
+    {
+      Bonne: 'https://bonne.example/promo',
+      Illisible: 'https://illisible.example/promo',
+      Vide: 'https://vide.example/promo',
+      Jamais: 'https://jamais.example/promo',
+    },
+    [{ nom: 'Bonne', pays: 'FR' }, { nom: 'Illisible', pays: 'BE' },
+      { nom: 'Vide', pays: 'BE' }, { nom: 'Jamais', pays: 'BE' }],
+    [],
+    niveaux,
+  );
+  assert.equal(r.length, 1, 'une page illisible ou vide ne doit plus être interrogée');
+  assert.equal(r[0].nom, 'Bonne');
+  assert.equal(r[0].pays, 'FR', 'la source garde le pays de son acteur');
+});
+
+test('SANS verdict, on ne perd pas la couverture (ancien comportement)', () => {
+  // Le fichier de vérification peut manquer (dépôt frais) : on ne doit pas
+  // jeter les adresses pour autant, sinon la couverture disparaît en silence.
+  const r = sourcesAdressesDepuis(
+    { Une: 'https://une.example/promo', Deux: 'https://deux.example/promo' },
+    [{ nom: 'Une', pays: 'BE' }, { nom: 'Deux', pays: 'BE' }],
+    [],
+    null,
+  );
+  assert.equal(r.length, 2, 'sans verdict, toutes les adresses valides restent lues');
+});
+
+test('un nom absent du verdict n’est PAS visité quand le verdict existe', () => {
+  // Un acteur arrivé après la mesure : on ne sait rien de lui, donc on ne le
+  // visite pas — c'est le sens de la règle (« pas documenté correctement »).
+  const r = sourcesAdressesDepuis(
+    { Inconnu: 'https://inconnu.example/promo', Connu: 'https://connu.example/promo' },
+    [{ nom: 'Inconnu', pays: 'BE' }, { nom: 'Connu', pays: 'BE' }],
+    [],
+    new Map([['Connu', 2]]),
+  );
+  assert.equal(r.length, 1);
+  assert.equal(r[0].nom, 'Connu');
+});
+
+test('le dépôt réel ne branche plus qu’une poignée d’adresses mesurées', () => {
+  // LE GARDE-FOU DE RÉGRESSION, sur les VRAIS fichiers du dépôt : si un jour on
+  // remet à lire la table complète sans regarder les niveaux, ce test tombe.
+  const adresses = TOUTES_SOURCES.filter((s) => s.id.startsWith('adr-'));
+  assert.ok(adresses.length <= 10,
+    `${adresses.length} sources « adr- » : la table complète est repartie dans la collecte (216 pages illisibles)`);
+  const verdict = JSON.parse(fs.readFileSync(path.join(RACINE, 'donnees', 'adresses-verifications.json'), 'utf8'));
+  const niveau2 = Object.values(verdict.acteurs).filter((a) => a.niveau === 2).length;
+  assert.ok(niveau2 > 0, 'le verdict doit encore porter des pages de niveau 2 (sinon on ne lit plus rien)');
+  assert.ok(adresses.length <= niveau2,
+    `${adresses.length} adresses lues pour seulement ${niveau2} pages mesurées lisibles`);
+});
