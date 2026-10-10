@@ -54,6 +54,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { lienAffilie } from '../public/affiliation.js';
 import { LANGUES } from '../public/langues.js';
+import { INDEXER_PAGES_OFFRES, baliseOffre, scriptJSONLD } from './donnees-structurees.mjs';
 
 const RACINE = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const DOSSIER_PUBLIE = path.join(RACINE, 'docs');
@@ -146,7 +147,7 @@ export function descriptionDeLOffre(o, prix) {
 
 /** La page d'UNE offre. Tout ce qui peut être cliqué mène soit au marchand
  *  (le MÊME lien affilié que l'application), soit au site. */
-export function pageDeLOffre(o, outils) {
+export function pageDeLOffre(o, outils, { indexer = INDEXER_PAGES_OFFRES } = {}) {
   const { deviseDe, montant } = outils;
   const langue = LANGUE_DU_MARCHE[o.pays] || 'fr';
   const titre = String(o.titre || '').trim() || 'Bon plan';
@@ -160,6 +161,13 @@ export function pageDeLOffre(o, outils) {
   const avant = o.prixAvant != null && o.prixAvant !== '' ? montant(o.prixAvant, deviseDe(o)) : '';
   const description = descriptionDeLOffre(o, prix);
   const boutique = String(o.marchand || '').trim();
+  // LE BALISAGE N'EST ÉCRIT QUE SI LA PAGE EST INDEXABLE — voir la constante
+  // INDEXER_PAGES_OFFRES et son commentaire dans donnees-structurees.mjs.
+  // Aujourd'hui elle vaut `false` : la ligne ci-dessous rend donc une chaîne
+  // vide, et les 17 045 pages restent exactement ce qu'elles étaient.
+  const balisage = indexer && o.prix != null
+    ? scriptJSONLD(baliseOffre({ ...o, image }, { description: titre + (boutique ? ' — ' + boutique : '') }))
+    : '';
 
   return `<!DOCTYPE html>
 <html lang="${langue}">
@@ -170,7 +178,8 @@ export function pageDeLOffre(o, outils) {
 <meta name="description" content="${attr(description)}">
 <link rel="canonical" href="${attr(url)}">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<meta name="robots" content="noindex, follow">
+<meta name="robots" content="${indexer ? 'index, follow' : 'noindex, follow'}">
+${balisage}
 <meta property="og:type" content="product">
 <meta property="og:site_name" content="Kazendra">
 <meta property="og:locale" content="${attr(langue)}">

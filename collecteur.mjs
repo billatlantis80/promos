@@ -5047,6 +5047,30 @@ async function publier(sortie) {
   } catch (e) {
     console.error(`  ⚠ pages de partage non écrites : ${e.message}`);
   }
+
+  // 5. LES PAGES DE RUBRIQUE — le contenu PROPRE et INDEXABLE du site.
+  //
+  //    Défaut mesuré le 09/10/2026, qui explique pourquoi ce bloc existe : les
+  //    17 045 pages o/<id>.html sont TOUTES `noindex`, et elles doivent le
+  //    rester (elles republient titres, photos et prix des marchands). Sans
+  //    pages indexables, le site n'avait AUCUNE porte d'entrée que Google
+  //    accepte de lire. Ces pages-ci sont cette porte : contenu rédigé, chiffres
+  //    réels, balisage ItemList, et `hreflang` entre les trois langues.
+  //
+  //    Elles écrivent aussi le plan de site PUBLIÉ (docs/sitemap.xml), qui part
+  //    du fichier de public/ et lui ajoute les rubriques. C'est volontaire :
+  //    réécrire le plan de zéro ferait perdre l'accueil et les pages légales.
+  //
+  //    En cas d'échec on continue : une collecte ne doit pas être perdue parce
+  //    que des pages annexes n'ont pas pu être écrites.
+  try {
+    const { ecrirePagesRubriques } = await import('./outils/pages-rubriques.mjs');
+    const r = await ecrirePagesRubriques(sortie.offres, { silencieux: true });
+    console.log(`  → rubriques : ${r.ecrites} page(s) écrite(s), ${r.ecrites_total} au total, `
+      + `${r.ignorees} rubrique(s) sans page, ${r.retirees} retirée(s) — plan de site : ${r.sitemap.total} adresses`);
+  } catch (e) {
+    console.error(`  ⚠ pages de rubrique non écrites : ${e.message}`);
+  }
 }
 
 /* ------------------------------------------------------------------ *
