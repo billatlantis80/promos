@@ -621,3 +621,73 @@ d'article apparaît ? »*
   ferait plus de dégâts que le défaut qu'il enlève (les brèves concernées sortent maintenant par la
   règle du pourcentage).
 - Suite de tests : **608 sur 608** (1 neuf, 10 titres réels).
+
+---
+
+## 10/10/2026 — BOL.COM branché, publié sans commission (décision de B)
+
+Lien donné par B : `https://www.bol.com/be/fr/deals/?cid=…&promo=main_315_deals_B___`
+
+- **Lisible SANS navigateur** : le même `curl` rend **403 sans `--compressed`** et **200 avec**.
+  Le lecteur reste donc côté serveur (`fetch`), pas de navigateur à piloter.
+- **32 lignes pour 17 produits** — cause exacte mesurée : la clé d'unicité est l'ADRESSE, et
+  bol sert le MÊME article sous `/be/fr/p/<slug-fr>/<n°>` et `/be/nl/p/<slug-nl>/<n°>`. Seul le
+  NUMÉRO est identique. Correction : `doublonsBol()` garde la ligne **française**, par un tri
+  explicite — jamais l'ordre du fichier, sinon le survivant serait décidé au hasard. **15 lignes
+  écartées.** La clé `cleDe` n'a PAS été touchée : la changer aurait écrasé une des deux lignes
+  AVANT le contrôle, et remis le hasard dans la décision.
+- **Règle des DEUX PRIX étendue à bol** : 2 cartes sans prix de référence écartées. 15 offres.
+- **Décision explicite de B, mot pour mot** : *« Tu peux le publier sans commission juste pour
+  l'utilisateur, on trouvera une solution plus tard pour augmenter la quantité, et crée le lien
+  d'affiliation. »*
+- **L'enveloppe d'affiliation bol est écrite ET testée**, avec `BOL_SITE_ID` **VIDE**. Tant qu'il est
+  vide, les liens sortent EN DIRECT. Trois garde-fous, un test chacun : jamais d'enveloppe vide,
+  jamais sur un autre marchand, jamais deux fois. **Il ne reste qu'une ligne à coller.**
+- Faits **vérifiés** sur `affiliate.bol.com` (pas supposés) : programme ouvert ; commission jusqu'à
+  **8 %** selon la catégorie, et **sur TOUT le panier** ; inscription
+  `partner.bol.com/account/registratie/start` ; forme du lien
+  `https://partner.bol.com/click/click?p=1&t=url&s=<Site_ID>&f=TXL&url=<adresse>` ; suivi en
+  « **dernier clic** » (Last Cookie Counts) ; commission calculée hors TVA et hors port.
+  ⚠ bol **peut refuser sans motif**, et refuse en principe un canal « qui ne montre que des articles
+  de bol sans valeur ajoutée » — leur FAQ cite explicitement « *vergelijkingen tussen producten* ».
+  **C'est donc la comparaison entre marchands qui rendra la candidature défendable.**
+- ⛔ **Reste : un Site_ID à coller.** Sans lui : zéro commission, liens directs (état actuel, assumé).
+- **Limite annoncée honnêtement** : la page ne rend que **4 produits par rayon** côté serveur ; les 24
+  autres rayons passent par `POST /api/graphql`, **refusé de l'extérieur** (400 « InvalidRequest »,
+  avec cookies de session comme sans). On tire donc les promotions que bol **met en avant**, pas tout
+  son catalogue. C'est écrit dans le commentaire de la source, à l'endroit où on le lira.
+- **Résidu mesuré, NON traité** : **une ligne néerlandaise survit seule** (« Garnier … Reinigingswater »,
+  source `bol-be-nl` retirée). Son jumeau français n'a jamais été collecté : ce n'est donc **pas** un
+  doublon. Effet visible : un titre néerlandais et un lien `/be/nl/` au milieu d'un catalogue français.
+
+## 10/10/2026 — KREFEL branché : site en maintenance, puis vérifié EN DIRECT
+
+Lien donné par B : `https://www.krefel.be/fr/deals-du-moment?currentPage=2`
+
+- ⚠ À 01:15 UTC, krefel.be répondait **HTTP 500 sur TOUTES ses adresses** — accueil, `/fr`, deals FR
+  et NL, page produit — avec **sa propre phrase de maintenance** : *« Désolé, notre site internet est
+  temporairement indisponible. Nous procédons à d'importantes mises à jour. »* Ce n'était **pas** un
+  blocage anti-robot : l'enseigne était fermée. Aucune copie archivée de la page **française**.
+- Le lecteur a donc été écrit sur l'**instantané du 09/06/2026** de la page **néerlandaise**
+  (24 produits, 68 résultats), et une **sentinelle** posée (`outils/sentinelle-krefel.mjs`, silencieuse
+  tant que le site est fermé, parle une seule fois quand il revient).
+- **Le site est revenu pendant la séance, et la sentinelle a parlé** : HTTP 200, « 54 résultats », et
+  **0 carte reconnue**. Le doute était donc fondé — et la panne aurait été **silencieuse**.
+- **Cause exacte, mesurée** : le conteneur des cartes et les marqueurs (`line-through`, `font-bold`)
+  n'ont **pas** bougé. Ce qui a changé, c'est **la place de l'euro** : la page NÉERLANDAISE écrit
+  `€ 549,00`, la page FRANÇAISE écrit `849,00 €`. Une seule différence d'ordre → **0 offre sur
+  24 cartes**, sans erreur ni trace.
+- Corrigé : `prixKrefel()` accepte **les deux écritures**. Les épreuves figent désormais des cartes
+  réelles **des DEUX pages** (française vivante + néerlandaise archivée).
+- Résultat de la collecte de **01:20 UTC** : **27 offres Krefel** (54 résultats annoncés, 3 pages) —
+  Whirlpool micro-ondes 94 € au lieu de 189 € (**−50 %**), Tefal bouilloire 34,95 € au lieu de 64,95 €
+  (−46 %), LG 65" 699 € au lieu de 1 199 € (−42 %).
+- Pagination : `?currentPage=N`, suivie tant qu'elle apporte des produits **nouveaux**, plafonnée à 4
+  pages. Repos : 120 min. Le `zéro` est **journalisé avec sa raison** — un zéro silencieux se lirait
+  « rien à vendre » au lieu de « lecteur cassé ».
+- **Leçon générale, à réutiliser** : ne JAMAIS câbler un lecteur sur un détail de **langue**.
+  Chez bol c'était un **libellé** (« Prix conseillé » / « Adviesprijs ») ; chez Krefel c'est la
+  **place du symbole monétaire**. Les deux fois, la panne était **silencieuse** : zéro offre, zéro erreur.
+- Krefel était déjà connu du collecteur par deux autres entrées (`adr-krefel-120`, page d'adresse sans
+  JSON-LD lisible ; `enseigne-be-nl-krefel-krefelpromotie`, flux néerlandais) — **les deux rendent 0**.
+- Suite de tests : **630 sur 630** (7 neufs pour Krefel, 5 pour l'enveloppe bol).

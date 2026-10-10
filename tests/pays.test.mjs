@@ -48,7 +48,7 @@ test('chaque source a une adresse et un type connus', () => {
     // en trois fragments, ajoutée le 10/10/2026). Chacune a son lecteur, et un
     // type non listé enverrait la page au mauvais lecteur — donc zéro offre,
     // sans erreur.
-    assert.ok(['dealabs', 'presse', 'enseigne', 'groupon', 'socialdeal', 'amazon', 'flash', 'bol'].includes(s.type), `${s.id} : type inconnu (${s.type})`);
+    assert.ok(['dealabs', 'presse', 'enseigne', 'groupon', 'socialdeal', 'amazon', 'flash', 'bol', 'krefel'].includes(s.type), `${s.id} : type inconnu (${s.type})`);
     assert.ok(s.id && s.nom, `${s.id} : identifiant ou nom manquant`);
   }
 });

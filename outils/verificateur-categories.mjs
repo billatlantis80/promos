@@ -344,7 +344,7 @@ const brut = new Set(offres.map((o) => o.categorieSource).filter(Boolean));
 // non reconnus SOLEMENT parce que bol venait d'être branché — le seuil de
 // contrôle est à 10 — donc le test échouait sur du travail correct, ce qui est
 // la pire façon d'échouer : il pousse à « corriger » ce qui marche.
-const DELIBERES = new Set(['presse', 'enseigne', 'amazon', 'bol', 'vente flash', 'veille', ...Object.keys(FAMILLES)]);
+const DELIBERES = new Set(['presse', 'enseigne', 'amazon', 'bol', 'krefel', 'vente flash', 'veille', ...Object.keys(FAMILLES)]);
 const nonReconnues = [...brut].filter((c) => !categorieDeSource(c) && !DELIBERES.has(sansAccents(c).toLowerCase()));
 console.log(`   libellés bruts rencontrés dans les données : ${brut.size}, non traduits : ${nonReconnues.length}`);
 if (nonReconnues.length && VERBEUX) nonReconnues.slice(0, 20).forEach((c) => console.log(`      "${c}"`));

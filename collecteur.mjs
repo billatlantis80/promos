@@ -614,6 +614,62 @@ const SOURCES_BOL = [
   { id: 'bol-be-fr', nom: 'bol.com', type: 'bol', pays: 'BE', langue: 'fr', reposMin: 90, url: 'https://www.bol.com/be/fr/deals/' },
 ];
 
+/* KREFEL — la page « deals du moment », donnée par B le 10/10/2026.
+ *
+ *   « https://www.krefel.be/fr/deals-du-moment?currentPage=2 »
+ *
+ *  ⚠ LECTEUR ÉCRIT SUR UNE COPIE ARCHIVÉE, PAS SUR LA PAGE VIVANTE.
+ *  Le 10/10/2026 à 01:15 UTC, krefel.be répondait **HTTP 500 sur TOUTES ses
+ *  adresses** — accueil, `/fr`, page de deals française et néerlandaise, page
+ *  produit — et le corps de la réponse porte sa propre phrase de maintenance :
+ *
+ *    « Désolé, notre site internet est temporairement indisponible. Nous
+ *      procédons à d'importantes mises à jour sur notre site web. »
+ *
+ *  Ce n'est donc PAS un blocage anti-robot : l'enseigne est FERMÉE. Le lecteur a
+ *  été écrit sur l'instantané du 09/06/2026 de la page de deals
+ *  (`/nl/deals-van-het-moment`, HTTP 200 : 24 produits, 68 résultats).
+ *
+ *  Ce qui reste à faire, et qui est écrit ici pour ne pas l'oublier : VÉRIFIER la
+ *  structure sur la page vivante dès le retour du site, et compter les pages.
+ *  Tant que ce n'est pas fait, ce lecteur est une HYPOTHÈSE BIEN FONDÉE, pas un
+ *  fait — c'est dit aussi dans son journal, qui parle quand il ne trouve rien.
+ *
+ *  Ce qu'on y lit, et sur quoi on s'appuie (chaque point relevé sur le HTML) :
+ *
+ *    - les produits sont rendus CÔTÉ SERVEUR (Next.js App Router) : chacun dans
+ *      une carte `relative flex flex-row items-start justify-center gap-4 p-3…` ;
+ *    - le PRIX DE RÉFÉRENCE n'est annoncé par AUCUN mot : il porte la classe
+ *      **`line-through`**. C'est un marqueur STRUCTUREL, donc indépendant de la
+ *      langue — précisément ce qui manquait chez bol, où il fallait guetter
+ *      « Prix conseillé » ou « Adviesprijs » et où un mot oublié faisait tomber
+ *      des remises réelles ;
+ *    - le PRIX DEMANDÉ porte `font-bold`, juste après la référence ;
+ *    - l'écart est écrit en clair (« -13 % ») mais on ne s'en SERT PAS : la
+ *      remise est recalculée à partir des deux prix, règle du projet ;
+ *    - les montants s'écrivent « € <espace insécable>479,00 », et le séparateur
+ *      de MILLIERS est un POINT : « € 1.099,00 ». Un extracteur qui se contente
+ *      de remplacer la virgule lit 1,099 € — mille fois trop peu ;
+ *    - l'identifiant est le NUMÉRO du produit, premier segment de
+ *      `/fr/p/<numéro>-<slug>` : le slug est rédigé en français et changerait
+ *      avec la langue.
+ *
+ *  UNE SEULE LANGUE, ET C'EST VOULU — leçon de bol.com : `/fr/deals-du-moment` et
+ *  `/nl/deals-van-het-moment` sont le même catalogue. On lit le français, celui
+ *  du lien donné. Si le néerlandais vient un jour, l'identifiant par numéro de
+ *  produit les fera converger au lieu de faire deux lignes.
+ *
+ *  Délai de repos long (120 min) : la page est paginée et coûte plusieurs
+ *  requêtes par passage. On ne frappe pas toutes les cinq minutes à la porte
+ *  d'une enseigne qui vient de passer des heures en maintenance.
+ */
+const SOURCES_KREFEL = [
+  { id: 'krefel-be-fr', nom: 'Krefel', type: 'krefel', pays: 'BE', langue: 'fr', reposMin: 120, url: 'https://www.krefel.be/fr/deals-du-moment' },
+];
+
+/** Nombre de pages de deals suivies au maximum (voir la pagination de krefel). */
+const PLAFOND_PAGES_KREFEL = 4;
+
 /* VENTES FLASH DU JOUR — la page « goldbox » de chaque Amazon.
  *
  *  Demandé, et c'est la MEILLEURE porte d'Amazon : contrairement à l'accueil
@@ -944,7 +1000,7 @@ function rubriqueDeSite(s) {
   }
   if (s.type === 'dealabs') return 'communauté de bons plans';
   if (s.type === 'groupon' || s.type === 'socialdeal') return 'activités & sorties';
-  if (s.type === 'amazon' || s.type === 'flash' || s.type === 'bol') return 'e-commerce';
+  if (s.type === 'amazon' || s.type === 'flash' || s.type === 'bol' || s.type === 'krefel') return 'e-commerce';
   // Une enseigne branchée : son secteur si le nom le dit (Coolblue → électro,
   // Zooplus → animalerie), sinon du commerce en ligne.
   if (s.type === 'enseigne') return secteurMarchand(s.nom) || 'e-commerce';
@@ -963,7 +1019,7 @@ function voieDeSite(s) {
 /** Toutes les sources, France et Europe. Exporté pour que les tests vérifient
     que chacune déclare bien un pays — une source sans pays enverrait ses offres
     dans le mauvais pays, sans que rien ne le signale. */
-export const TOUTES_SOURCES = [...SOURCES, ...SOURCES_ENSEIGNES, ...SOURCES_ADRESSES, ...SOURCES_ACTIVITES, ...SOURCES_AMAZON, ...SOURCES_BOL, ...SOURCES_VENTES_FLASH, ...VEILLE_PAYS, ...VEILLE_BING, ...VEILLE_ENSEIGNES];
+export const TOUTES_SOURCES = [...SOURCES, ...SOURCES_ENSEIGNES, ...SOURCES_ADRESSES, ...SOURCES_ACTIVITES, ...SOURCES_AMAZON, ...SOURCES_BOL, ...SOURCES_KREFEL, ...SOURCES_VENTES_FLASH, ...VEILLE_PAYS, ...VEILLE_BING, ...VEILLE_ENSEIGNES];
 
 /** Exportés pour les TESTS : le filtre par langue et l'anti-tuile se vérifient
  *  en les exécutant, pas en relisant le fichier. */
@@ -3996,6 +4052,97 @@ export function offresBol(html, source) {
   return offres;
 }
 
+/* ------------------------------------------------------------------ *
+ *  KREFEL.BE — la page « deals du moment » (voir SOURCES_KREFEL pour le
+ *  contexte, la provenance de la mesure et ce qui reste à vérifier).
+ *
+ *  Deux marqueurs STRUCTURELS, donc indépendants de la langue du site :
+ *    - le prix de référence porte la classe `line-through` ;
+ *    - le prix demandé porte `font-bold`, juste après.
+ *  On ne se sert PAS du « -13 % » écrit à l'écran : la remise est recalculée à
+ *  partir des deux prix, comme partout ailleurs dans ce collecteur.
+ * ------------------------------------------------------------------ */
+
+/** Montant krefel : « 849,00 € » (français) comme « € 549,00 » (néerlandais). */
+export function prixKrefel(texte) {
+  const s = String(texte || '').replace(/\u00a0|\u202f/g, ' ');
+  //  ⚠ L'EURO CHANGE DE PLACE SELON LA LANGUE, ET ÇA A COÛTÉ CHER.
+  //  Le lecteur avait été écrit sur la page NÉERLANDAISE archivée, qui écrit
+  //  « € 549,00 ». La page FRANÇAISE vivante écrit « 849,00 € ». Une seule
+  //  différence d'ordre, et le lecteur rendait ZÉRO offre sur 24 cartes — sans
+  //  erreur, sans trace, exactement le mode de panne que ce projet combat.
+  //  On accepte donc les DEUX écritures : l'euro avant ou après.
+  const m = s.match(/(?:€\s*([\d][\d. ]*,\d{2})|([\d][\d. ]*,\d{2})\s*€)/);
+  if (!m) return null;
+  // Le POINT sépare les milliers (« 1.099,00 ») : le laisser en place ferait
+  // lire 1,099 € — soit mille fois moins. Mesuré sur la page : des montants à
+  // quatre chiffres, ce n'est pas un cas d'école.
+  const n = Number((m[1] || m[2]).replace(/[. ]/g, '').replace(',', '.'));
+  return Number.isFinite(n) && n > 0 && n < 100000 ? Math.round(n * 100) / 100 : null;
+}
+
+/** La carte produit : c'est elle qui découpe la page. */
+const CARTE_KREFEL = /<div class="[^"]*items-start justify-center gap-4 p-3[^"]*"/;
+
+export function offresKrefel(html, source) {
+  const blocs = String(html || '').split(CARTE_KREFEL).slice(1);
+  const offres = [];
+  const vus = new Set();
+  for (const bloc of blocs) {
+    // L'adresse : `/fr/p/<numéro>-<slug>`. On accepte aussi `/nl/` — la page
+    // néerlandaise a la même structure, et si elle est un jour lue, c'est le
+    // NUMÉRO qui fera converger les deux, pas la langue de l'adresse.
+    const href = (bloc.match(/href="(\/(?:fr|nl)\/p\/[^"]+)"/) || [])[1];
+    if (!href) continue;
+    const numero = (href.match(/\/p\/(\d{4,})/) || [])[1];
+    if (!numero || vus.has(numero)) continue;
+    // Le TITRE : le lien de titre porte `font-bold` ; à défaut, l'attribut alt
+    // de l'image dit la même chose. Deux chemins, parce qu'une seule des deux
+    // sources suffit et que le second sauve la carte si le premier change.
+    const titre = nettoyer(
+      (bloc.match(/<a class="[^"]*font-bold[^"]*"[^>]*>([^<]{5,220})<\/a>/) || [])[1]
+      || (bloc.match(/<img [^>]*alt="([^"]{5,220})"/) || [])[1] || '',
+    );
+    if (!titre) continue;
+    //  ⚠ L'EURO CHANGEAIT DE PLACE SELON LA LANGUE — et c'est ce qui a été
+    //  mesuré, pas supposé : le lecteur écrit sur la page néerlandaise
+    //  (« € 549,00 ») rendait ZÉRO offre sur la page française (« 849,00 € »),
+    //  sur 24 cartes, sans la moindre erreur. prixKrefel accepte les deux.
+    const demandes = [...bloc.matchAll(/<span class="[^"]*font-bold[^"]*"[^>]*>([^<]{0,24})<\/span>/g)]
+      .map((m) => prixKrefel(m[1]));
+    const prix = demandes.find((p) => p != null);
+    if (prix == null) continue;
+    const barres = [...bloc.matchAll(/<span class="[^"]*line-through[^"]*"[^>]*>([^<]{0,24})<\/span>/g)]
+      .map((m) => prixKrefel(m[1]));
+    // La référence n'est retenue que si elle DÉPASSE le prix demandé : sinon ce
+    // n'est pas une référence, c'est une variante ou une unité.
+    const reference = barres.find((p) => p != null && p > prix) ?? null;
+    const rem = remise(titre, prix, reference);
+    const image = (bloc.match(/<img [^>]*src="(https:\/\/media\.krefel\.be\/[^"]+)"/) || [])[1] || '';
+    vus.add(numero);
+    offres.push({
+      id: identifiant('k', numero),
+      type: 'offre',
+      titre: titre.slice(0, 220),
+      lienMarchand: 'https://www.krefel.be' + href,
+      lienPage: 'https://www.krefel.be' + href,
+      marchand: 'Krefel',
+      prix,
+      prixAvant: reference,
+      remise: rem ? rem.pourcent : null,
+      remiseCalculee: rem ? rem.calculee : false,
+      categorie: famille(titre, ''),
+      categorieSource: 'krefel',
+      image,
+      date: new Date().toISOString(),
+      source: source.nom,
+      sourceId: source.id,
+      pays: source.pays || 'BE',
+    });
+  }
+  return offres;
+}
+
 /**
  * Les lignes bol.com EN TROP, quand le même produit est servi deux fois.
  *
@@ -4542,6 +4689,35 @@ async function collecterSource(source) {
         ...(offres.length ? {} : { note: 'page « deals » sans produit lisible — les offres déjà engrangées sont conservées' }),
       });
       if (VERBEUX) console.log(`  ${source.id} : ${offres.length} offre(s) bol.com`);
+      return offres;
+    }
+    // Bon plans de Krefel : sa page « deals du moment », prix barré par carte.
+    if (source.type === 'krefel') {
+      let offres = offresKrefel(corps, source);
+      const vues = new Set(offres.map((o) => o.id));
+      // PAGINATION. La page annonce son total (« 68 resultaten ») mais n'en rend
+      // qu'une vingtaine : le reste est derrière `?currentPage=N`, le paramètre
+      // que B avait justement dans son lien. On suit les pages tant qu'elles
+      // apportent des produits NOUVEAUX, et on s'arrête là — jamais de boucle
+      // sur un site qui vient de passer des heures en maintenance.
+      const total = Number((corps.match(/>\s*(\d+)\s*(?:resultaten|résultats)/) || [])[1]) || 0;
+      const pages = total ? Math.min(PLAFOND_PAGES_KREFEL, Math.max(1, Math.ceil(total / 24))) : 1;
+      for (let p = 2; p <= pages; p++) {
+        const suite = await lire(`${source.url}?currentPage=${p}`, entete);
+        const nouvelles = offresKrefel(suite, source).filter((o) => !vues.has(o.id));
+        if (!nouvelles.length) break;                 // page vide ou identique : on arrête
+        for (const o of nouvelles) vues.add(o.id);
+        offres = offres.concat(nouvelles);
+      }
+      journal.push({
+        source: source.id, ok: true, items: total, pages, retenues: offres.length,
+        //  Le zéro doit être VISIBLE. Si la structure change, ce lecteur rend
+        //  zéro offre en silence — et un zéro silencieux se lit « rien à
+        //  vendre », pas « le lecteur est cassé ». Ce lecteur-ci n'a jamais été
+        //  vu fonctionner sur la page vivante : la note est donc explicite.
+        ...(offres.length ? {} : { note: 'page de deals sans produit lisible — structure à vérifier (le site était en maintenance le 10/10/2026, lecteur écrit sur une copie archivée)' }),
+      });
+      if (VERBEUX) console.log(`  ${source.id} : ${offres.length} offre(s) Krefel sur ${pages} page(s)`);
       return offres;
     }
     // Amazon : une page de résultats, pas un flux. Une page VIDE n'est pas une
