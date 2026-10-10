@@ -337,7 +337,14 @@ const brut = new Set(offres.map((o) => o.categorieSource).filter(Boolean));
 // ce sont des valeurs que le collecteur écrit lui-même, et categorieDeSource()
 // les refuse VOLONTAIREMENT (une rubrique interne n'est pas une rubrique de
 // source). Les compter comme « non traduits » fabriquerait un faux défaut.
-const DELIBERES = new Set(['presse', 'enseigne', ...Object.keys(FAMILLES)]);
+//
+// Même raison pour les marqueurs de VOIE que le collecteur pose lui-même sur ses
+// propres lectures : « amazon » (recherches), « bol » (page deals), « vente
+// flash », « veille ». Mesuré le 10/10/2026 : le compteur est passé de 10 à 11
+// non reconnus SOLEMENT parce que bol venait d'être branché — le seuil de
+// contrôle est à 10 — donc le test échouait sur du travail correct, ce qui est
+// la pire façon d'échouer : il pousse à « corriger » ce qui marche.
+const DELIBERES = new Set(['presse', 'enseigne', 'amazon', 'bol', 'vente flash', 'veille', ...Object.keys(FAMILLES)]);
 const nonReconnues = [...brut].filter((c) => !categorieDeSource(c) && !DELIBERES.has(sansAccents(c).toLowerCase()));
 console.log(`   libellés bruts rencontrés dans les données : ${brut.size}, non traduits : ${nonReconnues.length}`);
 if (nonReconnues.length && VERBEUX) nonReconnues.slice(0, 20).forEach((c) => console.log(`      "${c}"`));

@@ -24,8 +24,11 @@ import { readFileSync } from 'node:fs';
 const SRC = readFileSync(new URL('../public/affiliation.js', import.meta.url), 'utf8');
 
 /** Évalue le module avec une table d'identifiants donnée.
-    Sans argument : on charge la table RÉELLE du fichier (celle qu'on livre). */
-function charger(tags) {
+    Sans argument : on charge la table RÉELLE du fichier (celle qu'on livre).
+    `siteIdBol` : même principe pour le Site_ID de bol.com. Omis, la valeur
+    RÉELLE du fichier est utilisée — elle est VIDE aujourd'hui, puisque bol
+    n'attribue le Site_ID qu'après avoir accepté la candidature. */
+function charger(tags, siteIdBol) {
   let source = SRC;
   if (tags !== undefined) {
     source = source.replace(
@@ -33,10 +36,16 @@ function charger(tags) {
       'export const AMAZON_TAGS = ' + JSON.stringify(tags, null, 2) + ';',
     );
   }
+  if (siteIdBol !== undefined) {
+    source = source.replace(
+      /export const BOL_SITE_ID = '[^']*';/,
+      "export const BOL_SITE_ID = '" + String(siteIdBol).replace(/'/g, "\\'") + "';",
+    );
+  }
   source = source.replace(/\bexport\s+/g, '');
   return new Function(
-    source + '\nreturn { AMAZON_TAGS, RESEAUX, lienAffilie, marcheDe,'
-    + ' marchesAmazonActifs, affiliationActive, siteAmazon };',
+    source + '\nreturn { AMAZON_TAGS, BOL_SITE_ID, RESEAUX, lienAffilie, marcheDe,'
+    + ' marchesAmazonActifs, bolActif, affiliationActive, siteAmazon };',
   )();
 }
 
@@ -172,4 +181,75 @@ test('le libellé du bouton s’écrit dans la langue choisie, site compris', ()
   assert.equal(rendu('Acheter sur {site}'), 'Acheter sur Amazon.com.be');
   assert.equal(rendu('Bei {site} kaufen'), 'Bei Amazon.com.be kaufen');
   assert.equal(rendu('Kopen bij {site}'), 'Kopen bij Amazon.com.be');
+});
+
+/* ======================================================================== *
+ *  BOL.COM — l'enveloppe du programme bol (décidée le 10/10/2026).
+ *
+ *  Ce qui est protégé ici n'est pas « le lien rapporte » mais trois façons de
+ *  le casser pour de bon, toutes silencieuses à l'œil :
+ *
+ *   1. une enveloppe posée avec un Site_ID VIDE : le lien part, mais il ne
+ *      mène nulle part — pire qu'une absence de commission ;
+ *   2. l'enveloppe posée sur un AUTRE marchand : elle ne suivrait rien et
+ *      masquerait le vrai lien ;
+ *   3. l'enveloppe posée DEUX FOIS : à chaque passage, l'adresse s'allonge
+ *      jusqu'à devenir illisible.
+ * ======================================================================== */
+const BOL = 'https://www.bol.com/be/fr/p/gillette-venus-10-lames-de-rasoir/9300000123456/';
+
+test('sans Site_ID bol, le lien part EN DIRECT — jamais d’enveloppe vide', () => {
+  const m = charger({}, '');
+  assert.equal(m.bolActif(), false);
+  assert.equal(m.lienAffilie(BOL, 'bol.com'), BOL,
+    'tant que bol n’a pas attribué de Site_ID, le lien reste celui du produit');
+  assert.equal(m.affiliationActive(), false, 'aucun identifiant : l’affiliation est inactive');
+});
+
+test('avec un Site_ID, le lien bol passe par l’enveloppe de bol', () => {
+  const m = charger({}, '33456');
+  const u = new URL(m.lienAffilie(BOL, 'bol.com'));
+  assert.equal(u.hostname, 'partner.bol.com');
+  assert.equal(u.pathname, '/click/click');
+  assert.equal(u.searchParams.get('p'), '1');
+  assert.equal(u.searchParams.get('t'), 'url');
+  assert.equal(u.searchParams.get('s'), '33456', 'le Site_ID de bol est bien porté par « s »');
+  assert.equal(u.searchParams.get('f'), 'TXL');
+  assert.equal(u.searchParams.get('url'), BOL, 'l’adresse du produit est transportée intacte');
+  assert.equal(u.searchParams.get('name'), 'kazendra');
+  assert.equal(m.bolActif(), true);
+  assert.equal(m.affiliationActive(), true);
+  // Le Site_ID est détecté AUSSI depuis le nom du marchand, pas seulement depuis
+  // l'adresse : le site appelle la fonction avec les deux.
+  assert.ok(m.lienAffilie(BOL, 'Bol.com').startsWith('https://partner.bol.com/click/click'));
+});
+
+test('l’enveloppe bol ne se pose JAMAIS sur un autre marchand', () => {
+  const m = charger({ 'amazon.com.be': 'belgique-21' }, '33456');
+  const coolblue = 'https://www.coolblue.be/fr/produit/123';
+  assert.equal(m.lienAffilie(coolblue, 'Coolblue'), coolblue);
+  // Amazon garde SON mécanisme — le paramètre `tag` — et ne passe pas par bol.
+  const amz = m.lienAffilie('https://www.amazon.com.be/dp/B1', 'Amazon');
+  assert.ok(!amz.includes('partner.bol.com'), 'Amazon ne passe pas par le réseau de bol');
+  assert.equal(new URL(amz).searchParams.get('tag'), 'belgique-21');
+  // Piège de frontière : « notbol.com » n'est pas bol.com.
+  assert.equal(m.lienAffilie('https://www.notbol.com/p/1', 'Notbol'), 'https://www.notbol.com/p/1');
+});
+
+test('une adresse bol déjà enveloppée n’est jamais enveloppée deux fois', () => {
+  const m = charger({}, '33456');
+  const une = m.lienAffilie(BOL, 'bol.com');
+  const deux = m.lienAffilie(une, 'bol.com');
+  assert.equal(deux, une, 'le lien est STABLE : un second passage ne l’abîme pas');
+  assert.equal((deux.match(/partner\.bol\.com/g) || []).length, 1, 'une seule enveloppe');
+  assert.equal(new URL(deux).searchParams.get('url'), BOL, 'l’adresse encodée reste celle du produit');
+});
+
+test('le Site_ID livré est VIDE tant que bol ne l’a pas attribué', () => {
+  // Ce test n'est pas une formalité : il décrit l'état réel du partenariat. Le
+  // jour où B collera son Site_ID dans public/affiliation.js, ce test tombera —
+  // et il faudra le RÉÉCRIRE (pas le supprimer), en y consignant la date.
+  const m = charger();
+  assert.equal(m.BOL_SITE_ID, '');
+  assert.equal(m.bolActif(), false);
 });

@@ -582,6 +582,38 @@ const SOURCES_AMAZON = [
   { id: 'amazon-be-nl', nom: 'Amazon', type: 'amazon', pays: 'BE', langue: 'nl', reposMin: 120, url: 'https://www.amazon.com.be/s?k=aanbieding&language=nl_BE&s=discount-desc-rank' },
 ];
 
+/* BOL.COM BELGIQUE — la page « deals », donnée par B le 10/10/2026 :
+ *   « Voilà le lien pour bol.com. C'est de ce lien que tu dois rechercher toutes
+ *     les promotions. »
+ *
+ *  Trouvé lisible SANS navigateur et SANS clé, ce qui n'était pas gagné : bol.com
+ *  répond 403 à un client qui n'annonce pas de compression, et 200 avec. Mesuré :
+ *  16 cartes produit rendues par le serveur, chacune avec son prix DEMANDÉ et son
+ *  prix de RÉFÉRENCE (« Prix conseillé 29,99 », « En général 114,00 ») — donc deux
+ *  prix réels, la seule preuve de promotion que ce projet accepte.
+ *
+ *  ⚠ CE QUI RESTE FERMÉ, ET IL FAUT LE SAVOIR : la page n'affiche que 4 produits
+ *  par rayon (Jouets, Électronique, Livres, Soins personnels…) et charge les 24
+ *  autres rayons APRÈS coup, par une requête GraphQL (`/api/graphql`, requête
+ *  persistée) que le serveur REFUSE en dehors du navigateur — mesuré : 400
+ *  « InvalidRequest » avec les cookies de la page, comme sans. Le catalogue bol
+ *  complet n'est donc pas atteignable ici ; ce sont les promotions MISES EN AVANT
+ *  par bol qui le sont. C'est dit aux deux endroits (ici et dans le panneau).
+ *
+ *  UNE SEULE LANGUE, ET C'EST VOULU. La page néerlandaise (`/be/nl/deals/`)
+ *  existe et rend 16 autres cartes, mais 14 sont les MÊMES produits, avec un
+ *  titre néerlandais et une autre adresse — mesuré : la même Gillette porte
+ *  `…/fr/p/gillette-…-10-lames-de-rasoir/9300000139705119/` et
+ *  `…/nl/p/gillette-…-10-scheermesjes/9300000139705119/`. Les faire entrer toutes
+ *  les deux ferait apparaître chaque produit DEUX FOIS, et le titre basculerait
+ *  d'un passage à l'autre (l'écriture est parallèle : le dernier arrivé gagne).
+ *  On lit donc la page française, celle que B a donnée — et si le néerlandais
+ *  doit venir un jour, il faudra d'abord décider ce qu'on affiche.
+ */
+const SOURCES_BOL = [
+  { id: 'bol-be-fr', nom: 'bol.com', type: 'bol', pays: 'BE', langue: 'fr', reposMin: 90, url: 'https://www.bol.com/be/fr/deals/' },
+];
+
 /* VENTES FLASH DU JOUR — la page « goldbox » de chaque Amazon.
  *
  *  Demandé, et c'est la MEILLEURE porte d'Amazon : contrairement à l'accueil
@@ -912,7 +944,7 @@ function rubriqueDeSite(s) {
   }
   if (s.type === 'dealabs') return 'communauté de bons plans';
   if (s.type === 'groupon' || s.type === 'socialdeal') return 'activités & sorties';
-  if (s.type === 'amazon' || s.type === 'flash') return 'e-commerce';
+  if (s.type === 'amazon' || s.type === 'flash' || s.type === 'bol') return 'e-commerce';
   // Une enseigne branchée : son secteur si le nom le dit (Coolblue → électro,
   // Zooplus → animalerie), sinon du commerce en ligne.
   if (s.type === 'enseigne') return secteurMarchand(s.nom) || 'e-commerce';
@@ -931,7 +963,7 @@ function voieDeSite(s) {
 /** Toutes les sources, France et Europe. Exporté pour que les tests vérifient
     que chacune déclare bien un pays — une source sans pays enverrait ses offres
     dans le mauvais pays, sans que rien ne le signale. */
-export const TOUTES_SOURCES = [...SOURCES, ...SOURCES_ENSEIGNES, ...SOURCES_ADRESSES, ...SOURCES_ACTIVITES, ...SOURCES_AMAZON, ...SOURCES_VENTES_FLASH, ...VEILLE_PAYS, ...VEILLE_BING, ...VEILLE_ENSEIGNES];
+export const TOUTES_SOURCES = [...SOURCES, ...SOURCES_ENSEIGNES, ...SOURCES_ADRESSES, ...SOURCES_ACTIVITES, ...SOURCES_AMAZON, ...SOURCES_BOL, ...SOURCES_VENTES_FLASH, ...VEILLE_PAYS, ...VEILLE_BING, ...VEILLE_ENSEIGNES];
 
 /** Exportés pour les TESTS : le filtre par langue et l'anti-tuile se vérifient
  *  en les exécutant, pas en relisant le fichier. */
@@ -3878,6 +3910,129 @@ function prixAmazon(bloc) {
   return { courant, barre };
 }
 
+/* ------------------------------------------------------------------ *
+ *  BOL.COM — la page « deals » de la Belgique.
+ *
+ *  Ce qui est lu, et sur quoi on s'appuie (chaque point vérifié sur la page
+ *  réellement servie le 10/10/2026) :
+ *
+ *    - chaque produit est un bloc `data-testid="product"` — 16 par page ;
+ *    - le TITRE est porté deux fois (attribut `title` du lien ET de l'image) ;
+ *    - le LIEN propre est `/be/fr/p/<slug>/<id>/`, sans les paramètres de
+ *      campagne (`?promo=…`) que bol ajoute et qui changeraient d'un passage à
+ *      l'autre : le même produit doit garder le même identifiant ;
+ *    - le PRIX DEMANDÉ est écrit en TROIS fragments (entier, virgule, centimes),
+ *      et les centimes peuvent être un tiret : « 142,- » vaut 142,00 €. Un
+ *      extracteur naïf qui cherche « NN,NN » rate ces offres-là ;
+ *    - le PRIX DE RÉFÉRENCE suit un libellé, et bol en change le mot selon le
+ *      cas : « Prix conseillé » ou « En général » en français, « Adviesprijs »
+ *      ou « Meestal » en néerlandais. On accepte les quatre, on n'en invente
+ *      aucun ;
+ *    - une remise n'est CALCULÉE que si la référence dépasse le prix demandé.
+ *      Même règle que partout ailleurs : deux prix réels, rien d'autre.
+ *
+ *  Le reste du bloc (accroches, « jusqu'à 30 % de réduction cumulable »,
+ *  libellés de campagne) est IGNORÉ : ce sont des slogans, pas des prix.
+ * ------------------------------------------------------------------ */
+const LIBELLE_REFERENCE_BOL = /(?:Prix conseillé|En général|Adviesprijs|Meestal)(?:\s|<!--[^>]*-->)*([\d.,]+)/;
+
+export function offresBol(html, source) {
+  const blocs = String(html || '').split('data-testid="product"').slice(1);
+  const offres = [];
+  const vus = new Set();
+  for (const bloc of blocs) {
+    const brut = (bloc.match(/<p class="[^"]*" title="([^"]+)">/) || [])[1]
+      || (bloc.match(/<img [^>]*title="([^"]{10,220})"/) || [])[1] || '';
+    const titre = nettoyer(brut);
+    const href = (bloc.match(/href="(\/be\/(?:fr|nl)\/p\/[^"?]+)/) || [])[1];
+    if (!titre || !href) continue;
+    // Le prix demandé : les trois fragments. « 142 » + « , » + « - » = 142,00 €.
+    let prix = null;
+    const fragments = [...bloc.matchAll(/aria-hidden="true">\s*([^<]{1,8}?)\s*<\/span>/g)].map((m) => m[1].trim());
+    for (let i = 0; i + 2 < fragments.length; i++) {
+      const entier = fragments[i], separateur = fragments[i + 1], cents = fragments[i + 2];
+      if (!/^\d{1,5}$/.test(entier) || !/^[.,]$/.test(separateur)) continue;
+      if (!/^\d{2}$/.test(cents) && cents !== '-') continue;
+      prix = versNombre(`${entier}.${cents === '-' ? '00' : cents}`);
+      break;
+    }
+    if (prix == null) continue;
+    const mRef = bloc.match(LIBELLE_REFERENCE_BOL);
+    const reference = mRef ? versNombre(mRef[1]) : null;
+    const avant = reference != null && reference > prix ? reference : null;
+    const rem = remise(titre, prix, avant);
+    const lien = 'https://www.bol.com' + href;
+    const image = (bloc.match(/<img src="(https:\/\/media\.s-bol\.com\/[^"]+)"/) || [])[1] || '';
+    // L'identifiant de l'offre se calcule sur le NUMÉRO du produit, pas sur son
+    // adresse : bol fait varier les mots de l'adresse (« …-10-lames-de-rasoir »
+    // en français, « …-10-scheermesjes » en néerlandais) pour un même produit.
+    // Sur le numéro, l'offre reste la MÊME d'un passage à l'autre — et le jour
+    // où l'on lira aussi la page néerlandaise, les deux se rejoindront au lieu
+    // de faire deux lignes.
+    const numero = (href.match(/\/(\d{6,})\/?$/) || [])[1] || href;
+    const cle = numero;
+    if (vus.has(cle)) continue;
+    vus.add(cle);
+    offres.push({
+      id: identifiant('b', numero),
+      type: 'offre',
+      titre: titre.slice(0, 220),
+      lienMarchand: lien,
+      lienPage: lien,
+      marchand: 'bol.com',
+      prix,
+      prixAvant: avant,
+      remise: rem ? rem.pourcent : null,
+      remiseCalculee: rem ? rem.calculee : false,
+      categorie: famille(titre, ''),
+      categorieSource: 'bol',
+      image,
+      date: new Date().toISOString(),
+      source: source.nom,
+      sourceId: source.id,
+      pays: source.pays || 'BE',
+    });
+  }
+  return offres;
+}
+
+/**
+ * Les lignes bol.com EN TROP, quand le même produit est servi deux fois.
+ *
+ * bol publie le même article sous DEUX adresses, une par langue :
+ *   /be/fr/p/gillette-venus-10-lames-de-rasoir/9300000123456
+ *   /be/nl/p/gillette-venus-10-scheermesjes/9300000123456
+ * Seul le NUMÉRO final est identique — c'est lui qui porte l'identité du
+ * produit, et c'est donc sur lui qu'on regroupe. (On ne peut pas s'appuyer sur
+ * l'adresse : les mots du titre traduit y changent, et bol ajoute en plus des
+ * paramètres de campagne.)
+ *
+ * On GARDE la ligne française :
+ *   - c'est la langue de la page qu'on lit (« /be/fr/deals/ ») ;
+ *   - c'est celle du catalogue entier, donc celle que le lecteur voit déjà.
+ * Le choix ne dépend jamais de l'ordre du tableau : on trie explicitement.
+ *
+ * @returns {object[]} les offres à écarter (vide s'il n'y a aucun doublon).
+ */
+export const MOTIF_ADRESSE_BOL = /^https?:\/\/(?:www\.)?bol\.com\/be\/(fr|nl)\/p\/.*\/(\d{6,})\/?$/;
+
+export function doublonsBol(offres) {
+  const parNumero = new Map();
+  for (const o of offres) {
+    const m = String(o.lienPage || o.lienMarchand || '').match(MOTIF_ADRESSE_BOL);
+    if (!m) continue;
+    if (!parNumero.has(m[2])) parNumero.set(m[2], []);
+    parNumero.get(m[2]).push({ offre: o, langue: m[1] });
+  }
+  const enTrop = [];
+  for (const lignes of parNumero.values()) {
+    if (lignes.length < 2) continue;
+    const triees = [...lignes].sort((a, b) => (a.langue === 'fr' ? 0 : 1) - (b.langue === 'fr' ? 0 : 1));
+    for (const l of triees.slice(1)) enTrop.push(l.offre);
+  }
+  return enTrop;
+}
+
 function offresAmazon(html, source) {
   const positions = [...html.matchAll(/data-asin="([A-Z0-9]{10})"/g)];
   const offres = [], vus = new Set();
@@ -4377,6 +4532,16 @@ async function collecterSource(source) {
         ...(offres.length ? {} : { note: 'page de ventes flash sans offre lisible (Amazon limite par intermittence) — les offres déjà engrangées sont conservées' }),
       });
       if (VERBEUX) console.log(`  ${source.id} : ${offres.length} vente(s) flash ${source.pays}`);
+      return offres;
+    }
+    // Bon plans de bol.com : la page « deals », deux prix réels par carte.
+    if (source.type === 'bol') {
+      const offres = offresBol(corps, source);
+      journal.push({
+        source: source.id, ok: true, items: 0, retenues: offres.length,
+        ...(offres.length ? {} : { note: 'page « deals » sans produit lisible — les offres déjà engrangées sont conservées' }),
+      });
+      if (VERBEUX) console.log(`  ${source.id} : ${offres.length} offre(s) bol.com`);
       return offres;
     }
     // Amazon : une page de résultats, pas un flux. Une page VIDE n'est pas une
@@ -4923,6 +5088,36 @@ async function principal() {
     connues.set(cle, fusion);
   }
 
+  // --- DOUBLONS BOL.COM : LE MÊME PRODUIT EN FRANÇAIS ET EN NÉERLANDAIS ------
+  //  Défaut mesuré le 10/10/2026 sur le stock publié, après le premier
+  //  branchement de bol.com : **32 lignes pour 17 produits**. Cause exacte, et
+  //  non supposée : la clé d'unicité (cleDe) est l'ADRESSE canonique, or bol
+  //  sert le MÊME article sous deux adresses —
+  //  /be/fr/p/<slug-français>/<n°> et /be/nl/p/<slug-néerlandais>/<n°>. Les deux
+  //  adresses diffèrent, donc les deux lignes survivent ; le NUMÉRO du produit,
+  //  lui, est identique dans les deux : c'est lui qui porte l'identité.
+  //
+  //  Ce que l'utilisateur voyait : deux fois le même article, avec un titre qui
+  //  changeait de langue d'un passage à l'autre — le pire des affichages, parce
+  //  qu'il donne l'impression que le catalogue se répète.
+  //
+  //  La décision est prise par doublonsBol() (voir sa définition, à côté du
+  //  lecteur bol.com) : elle garde la ligne française et écarte l'autre, par un
+  //  choix EXPLICITE qui ne dépend pas de l'ordre du fichier — sans cela, la
+  //  ligne survivante serait celle arrivée en dernier, c'est-à-dire au hasard.
+  const enTrop = doublonsBol([...connues.values()]);
+  for (const o of enTrop) connues.delete(cleDe(o));
+  const nbDoublonsBol = enTrop.length;
+  if (nbDoublonsBol) {
+    console.log(`Doublons bol.com : ${nbDoublonsBol} ligne(s) écartée(s) — même produit servi en français et en néerlandais`);
+    journal.push({
+      source: 'bol-doublons',
+      ok: true,
+      ecartees: nbDoublonsBol,
+      raison: 'même numéro de produit servi sous deux adresses (/be/fr/ et /be/nl/) : une seule ligne gardée, la française',
+    });
+  }
+
   // --- RÈGLE DU PRODUIT APPLIQUÉE AU STOCK, PAS SEULEMENT AU LECTEUR ---------
   //  Défaut mesuré le 7/10, signalé par B : « je retrouve toujours des articles
   //  Coolblue sans véritable promotion, pourquoi s'affichent-ils encore en aussi
@@ -4960,7 +5155,12 @@ async function principal() {
   //  la règle est même la plus stricte de toutes — l'application ne montre un bon
   //  plan Amazon QUE s'il a deux prix. Un produit Amazon à un seul prix n'est donc
   //  jamais une promotion, ici comme ailleurs.
-  const TYPES_PRIX_CATALOGUE = new Set(['enseigne', 'amazon']);
+  //  ÉTENDU À BOL.COM le 10/10/2026, dès son branchement : sa page « deals »
+  //  publie elle aussi deux prix réels par carte (« Prix conseillé » ou
+  //  « En général » face au prix demandé). Une carte bol sans second prix n'est
+  //  donc pas une promotion non plus — la même règle, au même endroit, sans
+  //  exception de complaisance pour un marchand qu'on vient d'ajouter.
+  const TYPES_PRIX_CATALOGUE = new Set(['enseigne', 'amazon', 'bol']);
   const idsEnseigne = new Set(TOUTES_SOURCES.filter((s) => TYPES_PRIX_CATALOGUE.has(s.type)).map((s) => s.id));
   let purgees = 0;
   const purgeesParMarchand = {};
