@@ -90,8 +90,49 @@ export const RESEAUX = [
   // { nom: 'Awin', modele: 'https://www.awin1.com/cread.php?awinmid=XXXX&awinaffid=YYYY&ued={url}' },
 ];
 
+/* 1 ter. BOL.COM — l'identifiant s'appelle « Site_ID » chez bol.
+ *
+ *  Ce qui suit est VÉRIFIÉ, et non supposé ; tout a été lu le 10/10/2026 :
+ *
+ *    - bol.com a un programme d'affiliation ouvert (https://affiliate.bol.com,
+ *      inscription : https://partner.bol.com/account/registratie/start). Toute
+ *      personne de 18 ans et plus disposant d'un canal peut candidater ; bol
+ *      répond en principe sous sept jours, et peut refuser SANS MOTIF ;
+ *    - la commission va jusqu'à 8 % selon la catégorie du produit, et elle porte
+ *      sur TOUT LE PANIER, pas seulement sur l'article promu — c'est le point
+ *      qui la rend intéressante ;
+ *    - elle se calcule sur le prix de vente hors TVA, hors frais de port, et le
+ *      suivi se fait en « dernier clic » (Last Cookie Counts) ;
+ *    - le lien s'obtient en ENVELOPPANT l'adresse du produit. Forme exacte,
+ *      donnée par leur propre FAQ :
+ *
+ *        https://partner.bol.com/click/click?p=1&t=url&s=<Site_ID>&f=TXL&url=<adresse encodée>&name=<nom du lien>
+ *
+ *  ⚠ Le Site_ID N'EST PAS DEVINABLE, et il n'est pas encore connu : bol
+ *  l'attribue APRÈS acceptation de la candidature (il apparaît dans le compte,
+ *  sous les données du site). Tant qu'il est vide, les liens bol.com sortent EN
+ *  DIRECT, sans commission. C'est la même règle de sûreté que pour Amazon :
+ *  jamais de paramètre inventé, jamais l'identifiant d'un autre programme posé
+ *  sur un lien bol, jamais de lien cassé.
+ *
+ *  Il suffira de coller la valeur ici. Le reste — l'enveloppe, l'encodage, la
+ *  détection du marchand, la double enveloppe interdite — est déjà écrit et
+ *  éprouvé par un test. */
+export const BOL_SITE_ID = '';
+
+/** L'enveloppe d'affiliation de bol. « {s} » reçoit le Site_ID, « {url} » l'adresse. */
+const MODELE_BOL = 'https://partner.bol.com/click/click?p=1&t=url&s={s}&f=TXL&url={url}&name=kazendra';
+
+/** Vrai dès qu'un Site_ID bol est renseigné (donc : commissions possibles). */
+export const bolActif = () => !!String(BOL_SITE_ID || '').trim();
+
 /* Marchands dont le lien peut porter un tag Amazon. */
 const EST_AMAZON = /(^|\.)amazon\./i;
+
+/* Marchand bol.com — Belgique et Pays-Bas. Son enveloppe d'affiliation lui est
+   propre : elle n'a rien à voir avec un paramètre ajouté à l'adresse, comme
+   chez Amazon. On la traite donc à part, jamais par la table des réseaux. */
+const EST_BOL = /(^|\.)bol\.com$/i;
 
 /** Hôte d'une adresse : minuscules, sans « www. ». '' si l'adresse est illisible. */
 function hote(url) {
@@ -165,6 +206,29 @@ function habillerReseau(url) {
 }
 
 /**
+ * Enveloppe une adresse bol.com dans le lien d'affiliation de bol.
+ *
+ * Trois garde-fous, dans cet ordre — et chacun a une raison :
+ *   1. Site_ID absent  -> adresse inchangée. Une enveloppe avec un identifiant
+ *      vide pointerait sur un lien mort : mieux vaut un lien direct qui marche
+ *      qu'une commission imaginaire qui casse la sortie.
+ *   2. L'adresse n'est PAS bol.com -> adresse inchangée. L'enveloppe de bol
+ *      posée sur un autre marchand ne suivrait rien et salirait le lien.
+ *   3. L'adresse est DÉJÀ enveloppée -> adresse inchangée. Sans ce contrôle, un
+ *      passage de plus envelopperait l'enveloppe : l'adresse deviendrait
+ *      illisible et la sortie casserait. Le défaut est invisible à l'œil (le
+ *      lien reste bleu) mais ne mène plus nulle part.
+ */
+function habillerBol(url) {
+  if (!bolActif()) return url;
+  if (!EST_BOL.test(hote(url))) return url;
+  if (/^https?:\/\/partner\.bol\.com\//i.test(url)) return url;
+  return MODELE_BOL
+    .replace('{s}', encodeURIComponent(String(BOL_SITE_ID).trim()))
+    .replace('{url}', encodeURIComponent(url));
+}
+
+/**
  * Transforme l'adresse d'une offre en lien monétisé.
  * @param {string} url      adresse du marchand
  * @param {string} marchand nom du marchand (pour choisir la bonne règle)
@@ -195,6 +259,10 @@ export function lienAffilie(url, marchand = '', langueApp = '') {
     // langue, lui, doit être ajouté dans TOUS les cas.
     return habillerAmazon(langueAmazon(url, langueApp));
   }
+  // bol.com AVANT la table des réseaux : son enveloppe est nominative, et la
+  // laisser passer par la table la ferait dépendre d'une correspondance de
+  // domaine qui n'existe pas.
+  if (EST_BOL.test(marchand) || EST_BOL.test(url)) return habillerBol(url);
   const parReseau = habillerReseau(url);
   return parReseau || url;
 }
@@ -202,6 +270,7 @@ export function lienAffilie(url, marchand = '', langueApp = '') {
 /** Vrai dès qu'au moins une source de rémunération est configurée. */
 export const affiliationActive = () =>
   marchesAmazonActifs().length > 0
+  || bolActif()
   || RESEAUX.some((r) => r && r.modele && r.modele.includes('{url}'));
 
 /** Mention légale : obligatoire (DGCCRF + stores), et non négociable.
