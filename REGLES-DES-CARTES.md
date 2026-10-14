@@ -4,6 +4,61 @@
 à nouveau toutes les règles, une par une »*. L'écrit précédent a été effacé (il reste dans
 le commit `c5d7847d`).
 
+---
+
+## LA RÈGLE — celle qui remplace toutes les précédentes
+
+**Dessin arrêté par B le 14/10/2026. Pas encore appliquée : la simulation mesure encore le
+taux de retour (voir 1.29 et 1.31), et B a dit lui-même qu'on ne décidait pas sans lui.**
+**Tout ce qui suit cette section (la « Règle 1 » et ses lignes 1.1 à 1.32) est ABROGÉ :
+conservé comme trace des décisions, plus appliqué.**
+
+**R.1 — La vie d'une carte est de cinq jours.** Le compteur est la **première parution chez
+nous** (`premiereVue`). Rien d'autre ne le fait reculer.
+
+**R.2 — À cinq jours et une seconde, la carte est bloquée et tout ce qui la concerne est
+effacé** : la fiche, son visuel, son verdict, son analyse, ses marques. **Une seule exception,
+et c'est une décision de B du 14/10/2026 : l'historique des prix est conservé** — c'est lui qui
+construit l'`analyse` et le badge « bon plan », et il ne pèse que **3,4 Mo**.
+
+**R.3 — À la mise à jour suivante (quinze minutes), la source resert-elle l'offre ?**
+
+- **Oui** → elle **rentre comme une carte neuve** : cinq jours pleins. Et son âge affiché est
+  **celui que la source publie** — sa date de naissance, **redonnée à chaque passage**.
+- **Non** → elle **disparaît définitivement**. Rien n'est conservé.
+
+**R.4 — Aucune liste d'exclusion, aucun registre des premières vues, aucune trace des cartes
+disparues.** L'information vient de la **source**, pas de nous. Mesuré : **65,6 %** des cartes
+effacées portent une date publiée par la source, et cette date est redonnée à chaque service —
+donc l'âge total **survit sans que nous gardions rien**. Les 30 % restants sont les ventes
+flash Amazon, dont la fenêtre tourne d'un bloc : elles ne reviennent pas.
+
+**R.5 — Ce qu'on garde : l'historique des prix, et c'est tout.** Ni verdict, ni analyse, ni
+marque d'expiration sur une fiche disparue.
+
+**R.6 — Ce que la règle ne demande plus.** Aucune lecture de page pour décider d'une sortie :
+la sortie est une **échéance**, plus un jugement. Deviennent donc **sans objet pour la
+suppression** : le budget de vérification de 2 000 pages/jour (1.4), les conditions de
+politesse de lecture (1.27), la table des verdicts, et la règle de la page muette — celle des
+48 % de faux positifs, qui n'a plus rien à protéger.
+
+**R.7 — Ce qui reste à construire :** le blocage à cinq jours sur `premiereVue` · la
+réintroduction au passage suivant · l'effacement de la fiche **et** de son visuel · et
+l'extinction de `OFFRES_SORTENT_SUR_VERDICT_ACTIF` et `PROMOTION_DECIDE_LA_CARTE_ACTIF`.
+
+**R.8 — Ce que ça change à l'écran, mesuré le 14/10/2026 :** **10 055 cartes affichées** contre
+**15 764 aujourd'hui** — **36 % de contenu en moins** — et **348,8 Mo de visuels libérés**. Le
+nombre affiché remonte à mesure que les retours s'accumulent : **c'est ce que la simulation
+mesure**, et c'est la seule chose qui manque avant d'allumer.
+
+**R.9 — Ce qui n'est PAS touché : la veille de presse.** Les articles se jugent sur leur
+**date de publication**, pas sur un service, et leur règle fonctionne. Elle garde la sienne.
+
+**R.10 — La règle n'est pas allumée.** Elle attend **le taux de retour** de la simulation en
+situation réelle (job `d000ebf69467`, une ligne le soir, `data/simulation-5-jours.jsonl`).
+
+---
+
 ## Comment ce fichier se lit
 
 - Les règles s'écrivent **une par une**. Aujourd'hui, la première.
@@ -564,6 +619,22 @@ fois » — mais c'est un **choix**, pas une conséquence.
 **f. Et l'instrument de mesure est l'exception, temporairement.** La simulation (1.29) a besoin
 d'un registre pour compter les retours — elle en tient un, **8,1 Mo**, dans `data/` que git
 ignore. **Il disparaît avec la décision.**
+
+**1.32** **DÉCISION DE B, 14/10/2026 : L'HISTORIQUE DES PRIX EST CONSERVÉ.** Mot pour mot :
+*« Ok on peut garder l'historique des prix. »* C'était le dernier point ouvert du dessin.
+
+- **Ce qu'il est** : `data/historique-prix.json`, **3,4 Mo**, daté par jour, **8 jours** de
+  profondeur. C'est lui qui construit l'`analyse` d'une carte — `prixBas`, `prixHabituel`,
+  `prixHaut`, `estPlusBas` — donc le badge « bon plan ».
+- **Pourquoi il échappe à la règle du « rien »** : il ne pèse pas (0,5 % des visuels), et
+  l'effacer ferait repartir une carte revenue **sans passé**, avec un badge faible pendant sept
+  jours. Le garder coûte 3,4 Mo ; l'effacer coûte la qualité du seul signal qui dit si une
+  remise est réelle.
+- **Ce qui suit de cette décision** : une carte effacée laisse **une seule** trace possible —
+  ses prix passés. Ni fiche, ni visuel, ni verdict, ni analyse, ni marque d'expiration.
+- **Et c'est cohérent avec « traitée comme une première fois »** : elle *paraît* neuve (cinq
+  jours pleins, âge donné par la source), mais si elle revient, son histoire de prix est là
+  pour dire la vérité sur sa remise. **Neuve à l'écran, pas amnésique sur le fond.**
 
 ---
 
