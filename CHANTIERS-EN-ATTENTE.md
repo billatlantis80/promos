@@ -32,7 +32,9 @@ déjà en stock seraient à retirer du catalogue, et leurs cartes basculées sur
 
 ## 2. La règle des sept jours — non branchée, mode « mesure »
 
-**6 886 fiches (117 Mo)** dépassent sept jours sans qu'aucune source ne les reconfirme.
+**7 486 fiches (123 Mo)** dépassent sept jours sans qu'aucune source ne les reconfirme —
+relevé du 14/10/2026 à 17 h 01. Le chiffre bouge à chaque passage : la règle le recalcule
+en permanence et le publie.
 
 Elles **ne sont déjà plus affichées** : le collecteur pose un drapeau `perimee` et recalcule
 les compteurs publiés pour que le bandeau ne mente pas. Une fiche dont la source ressert
