@@ -151,12 +151,18 @@ du 14/10/2026 (18:01), **7 680 fiches** sont dans ce cas et leurs visuels pèsen
 Donc l'affichage augmente — presque tout est montré — et **le tri se fait sur la preuve**,
 plus sur une échéance.
 
-> **⚠ L'ORDRE COMPTE, ET C'EST UNE CONSÉQUENCE DU 14/10.** Démasquer les **7 680** cartes
-> d'un seul coup remettrait en vitrine des cartes **non vérifiées**, alors que la file n'en
-> contrôle que **2 000 par jour** : on montrerait avant d'avoir vu. Le démasquage doit donc
-> **suivre** le contrôle, carte par carte — une carte confirmée vivante se réaffiche, une
-> carte morte disparaît. **« On va voir » d'abord, « on montre » ensuite.** Cette ligne
-> reste à corriger par B dans ce sens.
+> **ARRÊTÉE PAR B, 14/10/2026** : « Carte par carte. »
+>
+> Le démasquage **suit** le contrôle, carte par carte : une carte **confirmée vivante** se
+> réaffiche, une carte **morte** disparaît. **Rien ne remonte avant d'avoir été vu** — c'est
+> la seule façon de tenir « on va voir » sans remettre en vitrine des cartes non vérifiées.
+> Démasquer les **7 680** d'un coup aurait montré avant d'avoir vu, alors que la file n'en
+> contrôle que **2 000 par jour**.
+>
+> **Le délai, tel que la règle le donne et pas autrement** : chaque carte remonte le jour où
+> elle a été vue, donc la remise en ligne complète prend **au plus sept jours** — le temps de
+> traiter la file entière (13 243 cartes à 2 000 par jour). Aucune carte ne peut rester
+> masquée plus longtemps que son passage dans la file.
 
 **1.18** Ce qui n'est **pas** touché par cette règle : les **articles de veille**, qui
 gardent leur propre délai (1 215 articles, tous dans les sept jours aujourd'hui — la règle
@@ -316,8 +322,14 @@ ligne par ligne. **Trois lignes étaient touchées mécaniquement ; les autres t
 **La priorité est tranchée** (1.3 : `temperature`, arrêtée par B le 14/10/2026 — les clics
 viendront au rang 1 le jour où la lecture de ta feuille sera branchée).
 
-**Il ne reste qu'un point ouvert, et un seul** : l'**ordre du démasquage** (1.17) — faire
-**suivre** le contrôle carte par carte, ou tout réafficher d'un coup.
+**Arrêté le 14/10/2026** : 1.3 (`temperature`), 1.13 (`premiereVue`), 1.17 (démasquage carte
+par carte), 1.21 (l'affichage n'est pas borné, le point est surveillé).
+
+**Il reste les deux écarts de 1.23, et ce sont les seuls points ouverts de la règle 1** :
+le **rythme** (ta demande : une fois par jour ; la règle propose une fois par semaine — le
+quotidien demande 13 243 pages, soit **+167 %** du trafic de la collecte) et le **prix**
+(adapter dès qu'il a changé, ou seulement quand la lecture est certaine — la lecture d'un
+prix marchand n'est fiable qu'**une fois sur trois**).
 
 ---
 
