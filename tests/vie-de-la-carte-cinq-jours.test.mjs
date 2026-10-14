@@ -1,0 +1,276 @@
+/* =============================================================================
+   LA VIE D'UNE CARTE — CINQ JOURS, PUIS LA QUESTION DU SERVICE.
+
+   Mise en production le 14/10/2026 sur le mot de B : « Ok, tu peux réécrire et
+   mettre en production. » C'est **la règle unique** du catalogue : elle remplace
+   l'appareil de jugement entier (le plafond de sept jours, le masquage, la table
+   des verdicts, le contrôle de page, le budget de politesse). Voir
+   REGLES-DES-CARTES.md, R.1 à R.16.
+
+   CE QUE CETTE ÉPREUVE DOIT REFUSER, ET C'EST SA RAISON D'ÊTRE (R.12). Une règle
+   qui EFFACE, sans période d'observation, doit être tenue des deux côtés :
+
+     1. les six cas de l'énoncé — dont quatre qui protègent la carte (cinq jours
+        pile, quatre jours, un article de veille, l'historique des prix) et deux
+        qui l'emportent ;
+     2. les DEUX GARDES, qui sont la différence entre une règle et un massacre :
+        on ne juge pas sur une date illisible, et **on ne condamne pas une carte
+        sur une source qu'on n'a pas réussi à relire**. La seconde est celle qui
+        compte : sans elle, un rendu tronqué par un mur anti-robot, une source au
+        repos (`reposMin`), un flux vide un tour sur deux — et la règle efface des
+        catalogues vivants, en silence.
+
+   ET LA MESURE AVANT (R.13) : les dernières épreuves comptent, sur le catalogue
+   RÉEL, ce que la règle effacerait au prochain passage. Un chiffre annoncé vaut
+   mieux qu'un chiffre promis.
+   ============================================================================= */
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import {
+  VIE_AFFICHEE_JOURS, verdictDeCalendrier, ageJours,
+  CONTROLES_COMMUNAUTE_PAR_PASSAGE, CONTROLES_ENSEIGNE_PAR_PASSAGE,
+  OFFRES_SORTENT_SUR_VERDICT_ACTIF, PROMOTION_DECIDE_LA_CARTE_ACTIF,
+} from '../collecteur.mjs';
+
+const JOUR = 86400000;
+const MAINTENANT = Date.parse('2026-10-14T22:00:00Z');
+const ilYA = (jours) => new Date(MAINTENANT - jours * JOUR).toISOString();
+
+const offre = (o = {}) => ({
+  id: 'x', type: 'offre', pays: 'BE', sourceId: 'dealabs-tendance',
+  // La source a servie cette offre au tour 10, et elle en est au tour 12 : elle a
+  // donc REPARLÉ depuis, sans la resservir. C'est le cas « plus servie ».
+  serviceAuTour: 10, premiereVue: ilYA(1), vuLe: ilYA(1),
+  ...o,
+});
+/** La source a reparlé depuis le dernier service de l'offre. */
+const RELUE = { 'dealabs-tendance': 12 };
+/** La source n'a PAS reparlé : son compteur de tour est resté où il était. */
+const MUETTE = { 'dealabs-tendance': 10 };
+/** La source a reparlé, mais elle est un cran plus haut : elle a resservi l'offre. */
+const RESSERVIE = { 'dealabs-tendance': 10 };
+
+test('la règle est de cinq jours, et elle est écrite une seule fois', () => {
+  assert.equal(VIE_AFFICHEE_JOURS, 5);
+  const src = readFileSync(new URL('../collecteur.mjs', import.meta.url), 'utf8');
+  assert.equal((src.match(/export const VIE_AFFICHEE_JOURS/g) || []).length, 1,
+    'une seule définition : deux constantes finiraient par diverger');
+  assert.equal((src.match(/export function verdictDeCalendrier/g) || []).length, 1,
+    'une seule règle : le compte et l’effacement doivent passer par elle');
+});
+
+/* =============================================================================
+   LES SIX CAS DE L'ÉPREUVE (R.12) — au mot près de ce qui a été annoncé à B.
+   ============================================================================= */
+
+test('CAS 1 — une carte de cinq jours PILE reste affichée', () => {
+  // Cinq jours, plus une seconde, suffisent à franchir (R.1) : le bord exact est
+  // donc encore DANS la garantie. C'est le test qui empêche un décalage d'une
+  // seconde de retirer une carte un jour trop tôt.
+  const pile = offre({ premiereVue: ilYA(5), vuLe: ilYA(5) });
+  assert.equal(verdictDeCalendrier(pile, { maintenant: MAINTENANT, tours: RELUE }), 'intacte');
+  assert.equal(verdictDeCalendrier(pile, { maintenant: MAINTENANT, tours: MUETTE }), 'intacte',
+    'le bord exact reste affiché même si la source est muette');
+});
+
+test('CAS 2 — cinq jours et une seconde, plus servie, est EFFACÉE', () => {
+  const depassee = offre({ premiereVue: ilYA(5 + 1e-5), vuLe: ilYA(5 + 1e-5) });
+  assert.equal(verdictDeCalendrier(depassee, { maintenant: MAINTENANT, tours: RELUE }), 'effacee');
+});
+
+test('CAS 3 — reservie au-delà des cinq jours : elle CONTINUE, et le compteur repart', () => {
+  // Le verdict : une carte servie à ce passage n'est jamais emportée, quel que
+  // soit son âge. C'est la promotion d'un mois (les soldes) qui ne doit jamais
+  // disparaître tant que sa source la publie.
+  const longue = offre({ premiereVue: ilYA(30), vuLe: ilYA(0), serviceAuTour: 12 });
+  assert.equal(verdictDeCalendrier(longue, { maintenant: MAINTENANT, tours: RELUE }), 'intacte',
+    'une promotion servie depuis trente jours reste en ligne');
+  // Le compteur : la remise à zéro vit dans la fusion du passage, là où l'on SAIT
+  // que l'offre vient du flux. On l'exige sur le code, parce qu'un verdict pur ne
+  // peut pas écrire — et une règle qui ne remet pas le compteur effacerait la
+  // carte au passage suivant, ce qui serait le défaut le plus coûteux.
+  const src = readFileSync(new URL('../collecteur.mjs', import.meta.url), 'utf8');
+  assert.match(src, /const reprise = ageJours\(avant\.premiereVue \|\| avant\.vuLe\) > VIE_AFFICHEE_JOURS/,
+    'la reprise se décide sur le compteur d’affichage, jamais sur `date`');
+  assert.match(src, /premiereVue: reprise \? horodatage : \(avant\.premiereVue \|\| avant\.vuLe\)/,
+    'la reprise remet `premiereVue` à maintenant : cinq jours pleins devant elle');
+});
+
+test('CAS 4 — quatre jours, plus servie : elle RESTE (c’est la garantie)', () => {
+  // Le cœur du scénario : cinq jours de vie garantis à TOUTE carte, servie ou
+  // non. Sans ce cas, la règle redeviendrait « on n'affiche que ce qu'une source
+  // sert à l'instant », et une offre publiée il y a deux heures sortirait.
+  const jeune = offre({ premiereVue: ilYA(4), vuLe: ilYA(4) });
+  assert.equal(verdictDeCalendrier(jeune, { maintenant: MAINTENANT, tours: RELUE }), 'intacte');
+  assert.equal(verdictDeCalendrier(offre({ premiereVue: ilYA(0.1), vuLe: ilYA(0.1) }),
+    { maintenant: MAINTENANT, tours: RELUE }), 'intacte');
+});
+
+test('CAS 5 — un article de veille n’est JAMAIS visé, quel que soit son âge', () => {
+  // La veille a sa règle à elle (R.8) : sa date de PUBLICATION. Elle ne se juge
+  // pas sur un service, donc elle ne peut pas être emportée par celle-ci.
+  for (const age of [1, 5, 6, 30, 365]) {
+    const article = offre({ type: 'article', premiereVue: ilYA(age), vuLe: ilYA(age) });
+    assert.equal(verdictDeCalendrier(article, { maintenant: MAINTENANT, tours: RELUE }), 'intacte',
+      `un article de ${age} jour(s) ne doit pas être visé`);
+  }
+});
+
+test('CAS 6 — l’historique des prix survit : son identifiant ne dépend pas de la carte', () => {
+  // R.6 : une carte effacée ne laisse AUCUNE trace — sauf l'historique des prix,
+  // qui est la seule chose conservée, et qui doit se raccrocher TOUT SEUL au
+  // retour. La preuve n'est pas une intention, c'est la forme de la clé : elle est
+  // l'identifiant de l'offre, dérivé de son ADRESSE (voir `identifiant`), donc
+  // elle survit à l'effacement de la fiche.
+  const hist = JSON.parse(readFileSync(new URL('../data/historique-prix.json', import.meta.url), 'utf8'));
+  const catalogue = JSON.parse(readFileSync(new URL('../docs/offres.json', import.meta.url), 'utf8'));
+  const jours = Object.keys(hist.jours || {});
+  assert.ok(jours.length > 0, 'l’historique doit porter au moins un jour');
+  const dernier = hist.jours[jours.sort().pop()];
+  // On cherche une offre du catalogue qui a un prix : c'est elle qui doit se
+  // retrouver dans l'historique sous SON identifiant, pas sous un numéro d'ordre.
+  const avecPrix = (catalogue.offres || []).filter((o) => o.id && Number.isFinite(Number(o.prix)) && Number(o.prix) > 0);
+  assert.ok(avecPrix.length > 0, 'des offres avec prix sont attendues dans le catalogue');
+  const trouvees = avecPrix.filter((o) => Array.isArray(dernier[o.id]));
+  assert.ok(trouvees.length > 0,
+    `l’historique doit retrouver une offre par son identifiant stable (clés essayées : ${Object.keys(dernier).length})`);
+  // Et rien, dans la règle, ne TOUCHE à l'historique : l'effacement retire la
+  // fiche du stock, la purge des visuels fait le reste. L'historique est écrit
+  // plus loin dans le passage, par `noterPrix`, sur la clé de l'offre.
+  const src = readFileSync(new URL('../collecteur.mjs', import.meta.url), 'utf8');
+  const bloc = src.slice(src.indexOf('LA RÈGLE DE LA VIE D\'UNE CARTE — CINQ JOURS, PUIS LA QUESTION DU SERVICE'),
+    src.indexOf('LES ARTICLES DE PLUS DE SEPT JOURS'));
+  assert.ok(bloc.length > 0, 'le bloc de la règle doit rester extractible');
+  assert.doesNotMatch(bloc, /historique/i,
+    'la règle n’a rien à faire dans l’historique des prix : elle efface la fiche, elle ne touche pas au souvenir');
+});
+
+/* =============================================================================
+   LES DEUX GARDES — sans elles, la règle efface ce qu'elle ne comprend pas.
+   ============================================================================= */
+
+test('GARDE 1 — une date illisible n’autorise AUCUN verdict', () => {
+  assert.equal(verdictDeCalendrier(offre({ premiereVue: '', vuLe: '' }), { maintenant: MAINTENANT, tours: RELUE }), 'intacte');
+  assert.equal(verdictDeCalendrier(offre({ premiereVue: 'pas une date', vuLe: 'pas une date' }), { maintenant: MAINTENANT, tours: RELUE }), 'intacte');
+  assert.equal(verdictDeCalendrier(null, { maintenant: MAINTENANT, tours: RELUE }), 'intacte');
+});
+
+test('GARDE 2 — une source qui n’a PAS reparlé ne condamne rien', () => {
+  // C'est LA garde qui protège. Sans elle, la règle lirait « l'offre n'est pas
+  // dans le flux » là où il faut lire « la source n'a rien pu dire » — et un mur
+  // anti-robot, une source au repos ou un flux tronqué effaceraient des
+  // catalogues vivants, sans le moindre message d'erreur.
+  const vieille = offre({ premiereVue: ilYA(9), vuLe: ilYA(9), serviceAuTour: 10 });
+  assert.equal(verdictDeCalendrier(vieille, { maintenant: MAINTENANT, tours: MUETTE }), 'intacte',
+    'tour inchangé (10 = 10) : la source n’a pas reparlé, on ne conclut rien');
+  // Et sans numéro de tour : même prudence. Une offre d'avant, jamais estampillée,
+  // garde sa grâce tant que sa source n'a pas parlé.
+  assert.equal(verdictDeCalendrier(offre({ premiereVue: ilYA(9), vuLe: ilYA(9), serviceAuTour: undefined }),
+    { maintenant: MAINTENANT, tours: RELUE }), 'intacte',
+    'pas de numéro de service : on ne condamne pas sur une source qu’on n’a pas réussi à lire');
+  assert.equal(verdictDeCalendrier(offre({ premiereVue: ilYA(9), vuLe: ilYA(9) }),
+    { maintenant: MAINTENANT, tours: {} }), 'intacte',
+    'source jamais comptée : aucun verdict');
+});
+
+test('LE VERDICT EST PUR — aucun état caché, et deux appels rendent le même', () => {
+  // C'est ce qui rend le retour possible et gratuit : une règle qui garderait une
+  // trace des cartes condamnées pourrait les condamner pour toujours ; celle-ci
+  // ne se souvient de rien, donc une offre reservie plus tard rentre comme une
+  // carte neuve, sans « dé-condamnation ».
+  const o = offre({ premiereVue: ilYA(9), vuLe: ilYA(9) });
+  const un = verdictDeCalendrier(o, { maintenant: MAINTENANT, tours: RELUE });
+  const deux = verdictDeCalendrier(o, { maintenant: MAINTENANT, tours: RELUE });
+  assert.equal(un, deux);
+  assert.deepEqual(o, offre({ premiereVue: ilYA(9), vuLe: ilYA(9) }), 'la règle ne doit RIEN écrire dans l’offre');
+});
+
+/* =============================================================================
+   LE BRANCHEMENT RÉEL — une règle juste que personne n'appelle ne vaut rien.
+   ============================================================================= */
+
+test('l’effacement passe par la règle, et par rien d’autre', () => {
+  const src = readFileSync(new URL('../collecteur.mjs', import.meta.url), 'utf8');
+  assert.match(src, /if \(verdictDeCalendrier\(o, \{ tours: toursParSource \}\) !== 'effacee'\) continue;/,
+    'le retrait doit passer par la règle, avec les tours du passage');
+  assert.match(src, /regleParPays\[p\]/, 'et il doit compter ce qu’il emporte, par pays');
+  assert.match(src, /connues\.delete\(cle\)/, 'effacer, c’est retirer du stock');
+  // L'ancien interrupteur du plafond ne doit pas revenir : la règle n'a plus
+  // d'interrupteur, elle a une échéance. On le vérifie sur les LIGNES DE CODE, et
+  // non sur le texte entier : la constante est encore NOMMÉE dans un commentaire
+  // d'histoire, et c'est très bien ainsi — un simple compte d'occurrences serait
+  // faux, exactement comme le note l'épreuve de la veille.
+  const lignesDeCode = src.split('\n').filter((l) => !/^\s*(\/\/|\*|\/\*)/.test(l));
+  assert.ok(!lignesDeCode.some((l) => l.includes('PLAFOND_OFFRES_ACTIF')),
+    'l’interrupteur du plafond ne doit plus exister dans le code');
+});
+
+test('les compteurs du passage ne sont plus recalculés : le publié EST ce qui s’affiche', () => {
+  // Le masquage obligeait à recaler `total`, `totalOffres` et `parPays` sur ce que
+  // l'écran montrait — sinon deux chiffres pour la même grandeur, le défaut que B
+  // avait signalé le 08/10/2026. Ces recalculs n'ont plus d'objet : une carte
+  // effacée est sortie du stock AVANT que les compteurs ne soient calculés.
+  const src = readFileSync(new URL('../collecteur.mjs', import.meta.url), 'utf8');
+  assert.doesNotMatch(src, /nonConfirmees/, 'le compteur des fiches masquées ne doit plus exister');
+  assert.doesNotMatch(src, /o\.perimee = true/, 'et le drapeau ne doit plus être posé nulle part');
+  const app = readFileSync(new URL('../public/app.js', import.meta.url), 'utf8');
+  assert.doesNotMatch(app, /!o\.perimee/, 'l’application n’a plus de fiche masquée à écarter');
+  assert.doesNotMatch(app, /cache: 'no-store', signal/, 'et le catalogue se garde chez le visiteur (ETag)');
+});
+
+test('la lecture de page est ÉTEINTE : budget nul, aucune sortie, aucune correction', () => {
+  // R.10 : le budget de pages, ses conditions de politesse, la table des verdicts
+  // et la correction des prix par page n'ont plus d'objet — le retrait ne se
+  // décide plus sur une preuve. Réduire le budget à zéro est ce qui rend la règle
+  // PLUS polie que celle d'avant : on retire des requêtes aux sources.
+  assert.equal(CONTROLES_COMMUNAUTE_PAR_PASSAGE, 0);
+  assert.equal(CONTROLES_ENSEIGNE_PAR_PASSAGE, 0);
+  assert.equal(OFFRES_SORTENT_SUR_VERDICT_ACTIF, false, 'une page ne décide plus d’une sortie');
+  assert.equal(PROMOTION_DECIDE_LA_CARTE_ACTIF, false, 'ni d’une correction de prix');
+});
+
+/* =============================================================================
+   LA MESURE AVANT (R.13) — sur le catalogue RÉEL, pas sur des cas fabriqués.
+   ============================================================================= */
+
+test('sur le catalogue réel : ce que la règle emporterait, et ce qu’elle ne touche pas', () => {
+  const d = JSON.parse(readFileSync(new URL('../docs/offres.json', import.meta.url), 'utf8'));
+  // LA TABLE DES TOURS EST À LA RACINE DE L'ÉTAT PUBLIÉ (`toursParSource`), pas
+  // dans `donnees` qui ne porte que le bilan d'exploitation. C'est elle qui dit,
+  // source par source, combien de fois elle a PARLÉ — et c'est tout ce dont la
+  // règle a besoin pour distinguer « elle ne la sert plus » de « on n'a pas
+  // regardé ». Lue ailleurs, elle vaudrait `{}` et la règle ne mordrait sur RIEN,
+  // en silence : le genre de défaut qui rend une épreuve verte pour de mauvaises
+  // raisons.
+  const tours = d.toursParSource || {};
+  assert.ok(Object.keys(tours).length > 0,
+    'la table des tours doit être dans l’état publié, sinon la règle ne peut rien conclure');
+  const offres = (d.offres || []);
+  const maintenant = Date.now();
+  const verdicts = offres.map((o) => verdictDeCalendrier(o, { maintenant, tours }));
+  const effacees = offres.filter((_, i) => verdicts[i] === 'effacee');
+  const articles = effacees.filter((o) => o.type === 'article');
+  assert.equal(articles.length, 0, 'aucun article de veille ne part par cette règle');
+  assert.ok(effacees.length > 0,
+    `la règle doit mordre sur le catalogue réel : ${effacees.length} carte(s) au-delà des cinq jours sans service`);
+  // ⚠ L'INVARIANT CI-DESSOUS NE DEVIENT EXIGIBLE QU'À PARTIR DU PREMIER PASSAGE.
+  //  Avant, le catalogue publié est celui de l'ancienne règle : il porte encore des
+  //  cartes de plus de cinq jours que plus personne ne sert — c'est précisément ce
+  //  que la règle vient enlever. Exiger l'invariant tout de suite ferait échouer
+  //  l'épreuve pour une raison qui n'est pas un défaut. On l'exige donc dès que le
+  //  catalogue porte la TRACE de la règle (`donnees.carte`), et on le dit.
+  if (!(d.donnees && d.donnees.carte)) {
+    console.log(`   (catalogue encore produit par l’ancienne règle : ${effacees.length} carte(s) à effacer au premier passage ; l’invariant sera exigé ensuite)`);
+    return;
+  }
+  const survivantesTropVieilles = offres.filter((o) => {
+    if (o.type === 'article') return false;
+    const age = ageJours(o.premiereVue || o.vuLe, maintenant);
+    if (age === null || age <= VIE_AFFICHEE_JOURS) return false;
+    const ageService = ageJours(o.vuLe, maintenant);
+    return ageService !== null && ageService > 1;   // servie il y a plus d'un jour
+  });
+  assert.equal(survivantesTropVieilles.length, 0,
+    `aucune carte de plus de cinq jours ne doit survivre sans avoir été resservie : ${survivantesTropVieilles.slice(0, 5).map((o) => o.id).join(' | ')}`);
+});

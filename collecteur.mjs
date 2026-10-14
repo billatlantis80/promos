@@ -974,19 +974,29 @@ export function motifDeSortie(offre, { maintenant = Date.now(), typeSource = '' 
 
 /** LE PLAFOND DE DONNÉES — sept jours, demande de B (12/10/2026).
  *
+ *  ⚠️ CE N'EST PLUS LA RÈGLE DU CATALOGUE, ET IL FAUT LE DIRE ICI. Depuis le
+ *  14/10/2026, la règle est `VIE_AFFICHEE_JOURS` (cinq jours, puis la question du
+ *  service, voir `verdictDeCalendrier`) : c'est ELLE qui efface. Ce qui suit est
+ *  conservé comme MESURE — l'outil d'observation `bin/mesurer-peremption-source.mjs`,
+ *  les tranches d'âge des visuels dans le bilan de données, et le délai d'entrée
+ *  dans l'ancienne file de contrôle (dont le budget est désormais nul). Un chiffre
+ *  faux ne s'efface pas d'un fichier en le supprimant : il s'efface en disant
+ *  lequel a remplacé l'autre.
+ *
+ *  La règle d'origine, pour mémoire :
+ *
  *  « Après 7 jours affiché sur le site, toutes les images et tout ce qui est en
  *  rapport avec l'annonce qui dépasse 7 jours doit être effacé, afin de ne rien
  *  stocker dans notre database inutile et qui pèserait dans l'usage quotidien
  *  entre les différents services. »
  *
- *  Le signal est `vuLe` — la dernière fois qu'une source a reservi l'offre — et
+ *  Le signal était `vuLe` — la dernière fois qu'une source a reservi l'offre — et
  *  JAMAIS `date` : la date d'une offre marchande est réécrite à chaque passage,
- *  donc elle ne dit pas depuis quand l'offre est en base. Une offre que personne
- *  ne reserve depuis sept jours n'a plus personne pour la confirmer.
+ *  donc elle ne dit pas depuis quand l'offre est en base.
  *
  *  Deux catégories gardent leur règle propre, et on ne les rabote pas ici : les
- *  ARTICLES DE VEILLE (trente jours, déjà en place) et les offres de PRESSE
- *  (sept jours sur leur date, déjà en place, tenue par `motifDeSortie`).
+ *  ARTICLES DE VEILLE (trente jours) et les offres de PRESSE (sept jours sur leur
+ *  date, tenue par `motifDeSortie`).
  */
 export const PLAFOND_DONNEES_JOURS = 7;
 
@@ -1035,32 +1045,70 @@ export function donneesPerimees(offre, { maintenant = Date.now() } = {}) {
   return reste !== null && reste < 0;
 }
 
-/** L'INTERRUPTEUR DU VOLET 1 — LES OFFRES. ÉTEINT, ET C'EST VOULU.
+/** LA RÈGLE DE LA VIE D'UNE CARTE — **CINQ JOURS**, puis une seule question.
  *
- *  Choix de B (12/10/2026, « B ») : le délai court depuis la **dernière
- *  confirmation de la source** (`vuLe`), pas depuis la vie de la fiche sur le
- *  site. C'est ce que ce fichier calcule déjà ; il ne reste qu'à l'allumer.
+ *  Mise en production le 14/10/2026, sur le mot de B : « Ok, tu peux réécrire et
+ *  mettre en production. » Elle remplace TOUT ce qui jugeait avant elle (voir
+ *  REGLES-DES-CARTES.md, R.1 à R.16) : l'appareil de mesure et de jugement
+ *  devient une règle de calendrier.
  *
- *  ⚠ ÉTEINT. Allumé, il EFFACE : des offres et leurs visuels. Le risque est
- *  MESURÉ, et il est élevé — sur les trois offres disparues des flux contrôlées
- *  à la main le 10/10/2026, DEUX étaient encore valides chez leur source
- *  (`isExpired: false`, `status: Activated`, `isHot: true`). Allumer ce volet
- *  avant d'avoir le verdict des pages elles-mêmes, c'est décider sur trois
- *  offres. L'épreuve `le volet des offres n'est pas allumé` refuse un allumage
- *  silencieux : le lever est un acte visible dans le diff, ou il n'a pas lieu.
+ *    • une carte s'affiche **cinq jours** — c'est la garantie donnée à TOUT ce qui
+ *      entre, servie ou non. Le compteur est `premiereVue` (la première parution
+ *      chez nous — décision de B du 14/10/2026), avec `vuLe` en repli pour les
+ *      fiches entrées avant que ce repère existe ;
+ *    • passé cinq jours **et une seconde**, une seule question : **la source
+ *      sert-elle encore cette offre ?** « Servir » = elle est présente dans le
+ *      flux de sa source à ce passage (R.2). **Aucune page n'est ouverte** ;
+ *    • **servie** → le compteur repart (cinq jours pleins), et l'âge AFFICHÉ reste
+ *      celui que la source publie ;
+ *    • **plus servie** → la carte est **EFFACÉE** : fiche, visuel, marques. Seul
+ *      l'historique des prix survit (R.6) et il se raccroche tout seul.
  *
- *  Ce qu'il fait, et rien d'autre : les offres dont plus aucune source n'a parlé
- *  depuis sept jours sortent (fiche + visuel). Elles reviennent si une source les
- *  sert à nouveau, par la collecte normale — aucune liste d'exclusion n'est
- *  écrite (voir joursDeServiceRestants et plafondDeDonnees, qui restent PURES).
+ *  POURQUOI ELLE EST SÛRE : une date ne peut pas se tromper. Il n'y a plus de
+ *  jugement, donc plus de faux positif possible — et c'est la seule règle du
+ *  fichier qui n'a rien à mesurer avant d'agir.
  *
- *  ⚠ SÉPARÉ DU VOLET 2 EXPRÈS (12/10/2026). Un seul booléen commandait les deux
- *  moitiés de la règle : la veille — sûre — ne pouvait pas être allumée sans
- *  emporter le retrait des offres — risqué. C'était poser à B un choix binaire
- *  qui n'existait pas. Un interrupteur doit séparer deux moitiés qui n'ont ni le
- *  même risque ni la même preuve.
+ *  CE QU'ELLE COÛTE, ET C'EST ASSUMÉ (R.15) : « on n'affiche que ce qu'une source
+ *  sert encore ». Une offre qu'une source ne republie plus sort, même si sa page
+ *  répond encore. Mesuré le 12/10/2026 sur 140 pages réelles : **47,7 %** des
+ *  cartes emportées par une échéance de service étaient encore vivantes. Le prix
+ *  payé est le volume : **−31 % de cartes** (15 359 → ~10 600).
  */
-export const PLAFOND_OFFRES_ACTIF = false;
+export const VIE_AFFICHEE_JOURS = 5;
+
+/** LE VERDICT DE LA RÈGLE, EN UN SEUL ENDROIT — et PUR.
+ *
+ *  Rend `'effacee'` ou `'intacte'`, et rien d'autre : c'est la seule décision que
+ *  le catalogue prend désormais sur une offre.
+ *
+ *  LES DEUX GARDES. Elles sont la différence entre une règle et un massacre, et
+ *  chacune répond à un défaut que ce fichier a déjà payé :
+ *
+ *   1. **On ne juge pas sur rien.** Sans date lisible, la carte reste — même
+ *      discipline que `motifDeSortie` pour la veille.
+ *   2. **On ne condamne pas sur une source qu'on n'a pas réussi à lire.** « La
+ *      source ne la sert plus » n'est vrai que si elle a **PARLÉ depuis** : son
+ *      numéro de tour doit avoir avancé (`tour > serviceAuTour`). Un passage où
+ *      la source est au repos (`reposMin`), un rendu tronqué par un mur
+ *      anti-robot, un flux vide un tour sur deux : dans les trois cas le tour
+ *      n'avance pas, et la carte **attend**. C'est la garde d'`avancerTours`
+ *      (`PART_RENDU_MINIMUM`) : sans elle, la règle effacerait des catalogues
+ *      vivants au premier passage raté, et le défaut serait muet.
+ *
+ *  PURE : elle ne garde aucune mémoire des offres qu'elle condamne. Rien n'est
+ *  donc définitif — une offre reservie plus tard rentre comme une carte neuve,
+ *  sans qu'aucune « dé-condamnation » soit nécessaire.
+ */
+export function verdictDeCalendrier(offre, { maintenant = Date.now(), tours = {} } = {}) {
+  if (!offre || offre.type === 'article') return 'intacte';   // la veille a sa règle (R.8)
+  const age = ageJours(offre.premiereVue || offre.vuLe, maintenant);
+  if (age === null) return 'intacte';                         // garde 1 : aucun verdict sur rien
+  if (age <= VIE_AFFICHEE_JOURS) return 'intacte';            // les cinq jours garantis
+  const servi = Number.isFinite(offre.serviceAuTour) ? offre.serviceAuTour : null;
+  const tour = Number.isFinite(tours ? tours[offre.sourceId] : undefined) ? tours[offre.sourceId] : null;
+  if (tour === null || servi === null || tour <= servi) return 'intacte';   // garde 2
+  return 'effacee';
+}
 
 /** L'INTERRUPTEUR DU VOLET 2 — LA VEILLE RAMENÉE DE TRENTE À SEPT JOURS.
  *  **ALLUMÉ LE 12/10/2026, SUR LE MOT DE B : « vas-y ».**
@@ -1358,14 +1406,23 @@ export function verdictPerime(enregistrement, maintenant = Date.now()) {
 export const CONTROLE_COMMUNAUTE_JOURS = 3;
 export const CONTROLE_ENSEIGNE_JOURS = PLAFOND_DONNEES_JOURS;
 
-/** LA PART DU BUDGET DE LECTURE PAR FAMILLE — 3 par passage au total, inchangé.
- *  Sans cette répartition, « les communautés d'abord » affamerait le volet des
- *  enseignes, qui porte la règle de B du même jour (« plus de promotion sur la
- *  page la carte sort ») — elles sont bien plus nombreuses à publier un verdict.
- *  Deux lectures qui décident, une qui instruit : c'est l'efficacité, pas la
- *  faveur. */
-export const CONTROLES_COMMUNAUTE_PAR_PASSAGE = 2;
-export const CONTROLES_ENSEIGNE_PAR_PASSAGE = 1;
+/** LA PART DU BUDGET DE LECTURE PAR FAMILLE — **ZÉRO, ET C'EST LA RÈGLE QUI L'A
+ *  DÉCIDÉ (14/10/2026).**
+ *
+ *  Ces deux constantes étaient la politesse du contrôle de page : deux lectures de
+ *  communauté, une d'enseigne, par passage. **La règle de la vie d'une carte les
+ *  ramène à zéro**, et pas par économie : le retrait ne se décide plus sur une
+ *  preuve. « La source sert-elle encore cette offre ? » se lit dans le FLUX, qui
+ *  est déjà collecté — donc **aucune page n'est ouverte**, et la contrainte de
+ *  politesse de 2 000 pages/jour (1.27) n'a plus d'objet non plus.
+ *  C'est le gain le plus net du scénario pour les sources : on leur RETIRE des
+ *  requêtes, on ne leur en ajoute aucune.
+ *
+ *  Garder le mécanisme branché à zéro, plutôt que de l'arracher, est un choix :
+ *  si une mesure future réclamait de relire une page, on saurait où. Mais un
+ *  budget de zéro est un budget de zéro — vérifié par une épreuve. */
+export const CONTROLES_COMMUNAUTE_PAR_PASSAGE = 0;
+export const CONTROLES_ENSEIGNE_PAR_PASSAGE = 0;
 
 /** LE POURCENTAGE QUE LA CARTE MONTRE — la règle de l'APPLICATION, à la lettre.
  *
@@ -1444,71 +1501,61 @@ export function candidatsVerdict(liste, { verdicts = {}, cle = (o) => o.id, limi
   return choisis;
 }
 
-/** L'INTERRUPTEUR DU RETRAIT PAR VERDICT — ÉTEINT.
+/** L'INTERRUPTEUR DU RETRAIT PAR VERDICT — **ÉTEINT DEPUIS LE 14/10/2026.**
  *
- *  Allumé, il ferait sortir les offres dont LA PAGE se déclare expirée
- *  (`statutSource === 'expiree'`) : une sortie AVEC PREUVE, au lieu d'une
- *  déduction sur le silence. C'est la solution retenue le 12/10/2026, mais
- *  **la mesure précède l'effacement** : le contrôle tourne, ses chiffres se
- *  publient dans l'état, et B décide sur eux.
+ *  Il a été ALLUMÉ le 13/10/2026 sur le mot de B (« la page décide de la carte »),
+ *  puis ÉTEINT le 14/10/2026 par la règle qui l'a remplacé : **la page ne décide
+ *  plus de rien**. Le retrait ne se décide plus sur une preuve, donc il n'y a plus
+ *  de verdict à lire — et plus une seule page n'est ouverte (voir
+ *  CONTROLES_COMMUNAUTE_PAR_PASSAGE, ramené à zéro).
  *
- *  ⚠ Ce qui est mesuré avant d'allumer : combien d'offres portent un verdict,
- *  combien de pages se déclarent expirées, combien encore vivantes. Tant que ce
- *  n'est pas lu, la question « combien d'annonces valides perdrait-on ? » n'a pas
- *  de réponse — et c'est exactement la question que la règle du silence laissait
- *  sans réponse. L'épreuve `le retrait par verdict n'est pas allumé` garde ce
- *  booléen.
- *
- *  Le volet des OFFRES reste donc commandé par deux décisions distinctes :
- *  le silence (`PLAFOND_OFFRES_ACTIF`, l'ancienne règle, mesurée à ~48 % de faux
- *  positifs — à ne PAS allumer telle quelle) et le verdict (celui-ci).
+ *  Il est laissé ici, à `false`, plutôt qu'arraché : c'est la trace de la décision
+ *  précédente, et le point de retour si un jour la question « la page répond-elle
+ *  encore ? » revenait. Mais il ne commande plus rien, et deux épreuves le
+ *  vérifient : il est éteint, et le budget de lecture est nul.
  */
-export const OFFRES_SORTENT_SUR_VERDICT_ACTIF = true;
+export const OFFRES_SORTENT_SUR_VERDICT_ACTIF = false;
 
 /** L'INTERRUPTEUR DE LA RÈGLE DE B — LA PAGE DÉCIDE DE LA CARTE.
- *  **ALLUMÉ LE 13/10/2026, SUR LE MOT DE B**, mot pour mot :
+ *  **ALLUMÉ LE 13/10/2026, PUIS ÉTEINT LE 14/10/2026.** Son histoire est son
+ *  intérêt, et elle est conservée telle quelle plus bas : elle raconte ce que la
+ *  lecture des pages savait faire, et pourquoi on a fini par ne plus la vouloir.
  *
+ *  ⚠ ÉTEINT, ET CE N'EST PAS UN RETOUR EN ARRIÈRE DE PRUDENCE : c'est le
+ *  remplacement. Ce booléen faisait sortir ou corriger une carte d'après ce que
+ *  LA PAGE répondait. La règle de la vie d'une carte (VIE_AFFICHEE_JOURS) a
+ *  remplacé ce mécanisme : **une carte vit cinq jours, puis on demande au FLUX si
+ *  la source la sert encore** — le flux ne coûte aucune requête, ne peut pas être
+ *  tronqué par un mur anti-robot, et sa réponse ne se discute pas.
+ *
+ *  CE QUI PROTÉGEAIT ICI NE DISPARAÎT PAS SANS REMPLAÇANT, et c'est le point à
+ *  retenir : le danger était de retirer une carte sur une réponse illisible. La
+ *  règle nouvelle a la même prudence en garde — on n'efface que si la source a
+ *  PARLÉ et n'a PLUS resservi l'offre (voir verdictDeCalendrier, garde 2).
+ *
+ *  Ce qui est conservé ci-dessous, comme trace de la décision précédente :
  *    « plus de promotion sur la page la carte sort, promotion toujours là prix
  *      changé on corrige le prix et la remise, promotion toujours là même prix
  *      on garde, page morte la carte sort »
  *
- *  Il commande les quatre branches, et rien d'autre :
+ *  Les quatre branches, pour mémoire :
  *
- *    1. la page ne publie plus AUCUN prix de référence → la carte sort. C'est
- *       la règle des deux prix (déjà appliquée à l'ENTRÉE, voir
- *       TYPES_PRIX_CATALOGUE) appliquée APRÈS COUP : un article au prix normal
- *       n'est pas une promotion, et il n'a rien à faire ici ;
- *    2. la promotion est là et le prix a changé → on CORRIGE le prix, le prix
- *       de référence et la remise. Jamais destructeur : la carte devient vraie ;
- *    3. la promotion est là et le prix n'a pas bougé → on garde, et on vient de
- *       récolter une PREUVE datée ;
+ *    1. la page ne publie plus AUCUN prix de référence → la carte sort ;
+ *    2. la promotion est là et le prix a changé → on CORRIGE prix et remise ;
+ *    3. la promotion est là et le prix n'a pas bougé → on garde ;
  *    4. la page répond 404 ou 410 → la carte sort.
  *
- *  ⚠ CE QUI PROTÈGE, ET QUI N'EST PAS NÉGOCIABLE : une page MUETTE (captcha,
-*  403, panne, bloc de prix disparu) ne prouve RIEN. `promotionDans` rend alors
+ *  ⚠ CE QUI PROTÉGEAIT, ET QUI N'EST PAS NÉGOCIABLE : une page MUETTE (captcha,
+ *  403, panne, bloc de prix disparu) ne prouve RIEN. `promotionDans` rend alors
  *  `lisible: false`, AUCUNE décision n'est prise et la carte RESTE. La faute
  *  inverse — prendre un silence pour une preuve — a déjà coûté 48 % de faux
  *  positifs, mesurés. Et un prix de référence cherché dans TOUTE la page avait
  *  sorti 53,99 € du JSON d'un article voisin : la lecture ne regarde que les
  *  abords du prix affiché.
  *
- *  ⚠ LE PÉRIMÈTRE S'EST OUVERT AUX COMMUNAUTÉS LE 13/10/2026, SUR LE MOT DE B
- *  (« oui tu peux étendre le contrôle du prix aux offres venues de dealabs et des
- *  autres communautés ») — mais en MESURE seulement, voir PRIX_COMMUNAUTE_ACTIF.
- *
- *  Ce qui l'a motivé : un bon plan communautaire peut vivre sept jours avec un
- *  prix que le marchand n'affiche plus. Mesuré le 13/10/2026 sur une bibliothèque
- *  Billy annoncée 49,99 € dont la page IKEA affiche 64,99 €.
- *
- *  Ce qui l'a retenu, et c'est une MESURE, pas une intuition : la page d'un
- *  marchand quelconque n'est pas la page d'une enseigne. Épreuve faite AVANT
- *  d'écrire quoi que ce soit — six offres communautaires réelles, page du marchand
- *  lue : DEUX prix lisibles sur six, et l'un des deux rend 83,99 € là où la carte
- *  annonce 63,99 € (le motif de prix attrape le produit voisin aussi bien que le
- *  produit affiché). Corriger sur cette base remplacerait des prix justes par des
- *  prix faux : on mesure donc d'abord, on tranche ensuite.
+ *  C'est cette discipline-là qui a survécu — pas la lecture elle-même.
  */
-export const PROMOTION_DECIDE_LA_CARTE_ACTIF = true;
+export const PROMOTION_DECIDE_LA_CARTE_ACTIF = false;
 /** L'interrupteur du contrôle de prix sur les offres des COMMUNAUTÉS.
  *
  *  ÉTEINT : le contrôle TOURNE — il lit la page du marchand, écrit son verdict
@@ -1660,8 +1707,10 @@ export function bilanDonnees({ connues, offres, journal = [], maintenant = Date.
   //  DEUX MODES DANS L'ÉTAT, parce qu'il y a deux moitiés : « mode » est celui
   //  des offres, « modeVeille » celui de la veille. Le panneau doit dire ce que
   //  la règle FAIT, pas ce qu'elle ferait — et laquelle des deux il parle.
-  const plafond = journal.find((j) => j.source === 'plafond-donnees') || {};
-  const v = journal.find((j) => j.source === 'verdict-source') || {};
+  // LE JOURNAL DE LA RÈGLE — ce que le passage VIENT DE FAIRE, jamais ce qu'il
+  // ferait. C'est la règle du tuyau de l'onglet « Données » : un chiffre qu'aucun
+  // programme ne calcule est une promesse fausse.
+  const carte = journal.find((j) => j.source === 'vie-de-la-carte') || {};
 
   return {
     calculeLe: new Date(maintenant).toISOString(),
@@ -1676,45 +1725,39 @@ export function bilanDonnees({ connues, offres, journal = [], maintenant = Date.
       lourds: { nb: lourdsNb, mo: +(lourdsOctets / 1e6).toFixed(1) },
     },
     ages: { ...ages, octetsPlus7j, moPlus7j: +(octetsPlus7j / 1e6).toFixed(1) },
-    plafond7j: {
-      jours: PLAFOND_DONNEES_JOURS,
-      // « mesure » ou « actif » : le panneau doit dire ce que chaque moitié
-      // FAIT, pas ce qu'elle ferait. Le mode est écrit par le passage, jamais
-      // déduit ici.
-      mode: plafond.mode || 'mesure',
-      modeVeille: plafond.modeVeille || 'mesure',
-      // La veille, comptée sur le PUBLIÉ (l'article de plus de sept jours que
-      // l'écran montre encore) : c'est le volet 2, et il ne retire rien du stock.
-      articles: { ...articles },
-      effacerait: plafond.avaitEffacees || 0,
-      effacees: plafond.effacees || 0,
-      octets: plafond.octets || 0,
-      parPays: plafond.parPays || {},
-      // LES RETOURS : ce que le plafond aurait emporté et qu'une source vient
-      // de reservir. C'est le chiffre des soldes — une promotion d'un mois
-      // reste en ligne tant qu'elle est servie, et ce compteur le prouve à
-      // chaque passage plutôt que de le promettre.
-      revenus: plafond.revenus || 0,
-      // LE SECOND VOLET : les articles de plus de sept jours, et la limite de
-      // veille réellement appliquée (30 jours, ou 7 quand la règle est allumée).
-      articlesHorsDelai: plafond.articlesHorsDelai || 0,
-      joursVeille: plafond.joursVeille || 30,
-      // LE CONTRÔLE DIRECT — le verdict des pages, et l'état du CATALOGUE (pas
-      // seulement le passage) : combien d'offres publiées portent un verdict,
-      // combien se déclarent expirées, combien encore vivantes. C'est ce que B
-      // lira pour décider du volet des offres.
-      verdict: {
-        mode: OFFRES_SORTENT_SUR_VERDICT_ACTIF ? 'actif' : 'mesure',
-        parPassage: VERDICT_SOURCE_PAR_PASSAGE,
-        // Deux niveaux, et ils ne se confondent pas : `duPassage` est ce que CE
-        // passage a lu ; le reste est l'ÉTAT DU CATALOGUE, qui est le seul à
-        // pouvoir dire combien d'annonces un retrait emporterait.
-        duPassage: {
-          verifiees: v.essais || 0, expirees: v.expirees || 0, vivantes: v.vivantes || 0,
-          sansVerdict: v.sansVerdict || 0, illisibles: v.illisibles || 0, octets: v.octets || 0,
-          sorties: v.sorties || 0,
-        },
-        ...verdicts,
+    // LA RÈGLE DE LA VIE D'UNE CARTE — cinq jours, puis la question du service.
+    //  Le bloc s'appelait `plafond7j` : il portait un plafond de sept jours qui
+    //  n'existe plus, et garder le nom aurait laissé le panneau annoncer sept
+    //  jours là où le catalogue en applique cinq. Un nom juste est une donnée.
+    carte: {
+      jours: VIE_AFFICHEE_JOURS,
+      mode: carte.mode || 'actif',
+      // CE QUE LE PASSAGE VIENT DE FAIRE — l'effacement est réel depuis le
+      //  14/10/2026 : `effacees` compte des cartes qui ne sont PLUS là.
+      effacees: carte.effacees || 0,
+      octets: carte.octets || 0,
+      parPays: carte.parPays || {},
+      // LES REPRISES : une carte au-delà des cinq jours que sa source vient de
+      //  RESSERVIR repart pour cinq jours pleins. C'est le chiffre des soldes — une
+      //  promotion d'un mois n'est jamais emportée, et ce compteur le prouve à
+      //  chaque passage au lieu de le promettre.
+      reprises: carte.revenus || 0,
+      // LA VEILLE — sa règle est à elle (R.8 : la date de publication, jamais un
+      //  service), et son interrupteur est à elle aussi.
+      veille: {
+        mode: carte.modeVeille || 'mesure',
+        jours: carte.joursVeille || 30,
+        articles: { ...articles },
+        horsDelaiEnStock: carte.articlesHorsDelai || 0,
+      },
+      // LE CONTRÔLE DE PAGE, RÉDUIT À L'ÉTAT DE TRACE. Le budget est nul et les
+      //  sorties sont éteintes : plus une seule page n'est ouverte. Le panneau
+      //  doit pouvoir le LIRE au lieu de le croire — c'est tout l'objet de ce bloc.
+      controleDePage: {
+        mode: 'eteint',
+        budgetParPassage: CONTROLES_COMMUNAUTE_PAR_PASSAGE + CONTROLES_ENSEIGNE_PAR_PASSAGE,
+        sortiesSurVerdict: OFFRES_SORTENT_SUR_VERDICT_ACTIF,
+        verdictsEnTable: verdicts.porteurs || 0,
       },
     },
     flux: {
@@ -1958,7 +2001,7 @@ export function poidsPublie({ dossier = DOSSIER_PUBLIE } = {}) {
  *  six mois qu'une proposition ne se déclenche jamais.
  */
 export function leviersExploitation(m = {}) {
-  const { poids = {}, energie = {}, trafic = {}, images = {}, plafond7j = {},
+  const { poids = {}, energie = {}, trafic = {}, images = {}, carte = {},
           rythme = {}, fichiers = {}, robots = {}, cadencePrevueMin = CADENCE_PREVUE_MIN } = m;
   const out = [];
   const pousser = (l) => out.push({ priorite: 0, effort: 'moyen', risque: 'moyen', ...l });
@@ -1998,46 +2041,25 @@ export function leviersExploitation(m = {}) {
     });
   }
 
-  // 3. LES OFFRES PÉRIMÉES. Déjà calculé par le plafond, mais il manquait la
-  //    phrase qui dit CE QU'ON EN FAIT — et le chiffre qui la fonde : la règle du
-  //    silence s'est révélée fausse une fois sur deux, mesurée sur 140 pages
-  //    réelles. Depuis le 12/10/2026, le contrôle DIRECT tourne : on lit le
-  //    verdict de la page, et c'est LUI qui décidera de ce volet.
-  if ((plafond7j.effacerait || 0) > 0 && plafond7j.mode !== 'actif') {
-    const mo = +((plafond7j.octets || 0) / 1e6).toFixed(1);
-    const v = plafond7j.verdict || {};
-    const juges = (v.expirees || 0) + (v.vivantes || 0);
-    const mesure = juges
-      ? ` Et le verdict des pages, lui, dit : ${v.expirees} expirée(s) contre ${v.vivantes} encore VIVANTE(S) sur ${juges} contrôlée(s) — ${v.tauxVivantesPct} % des annonces visées sont encore valables.`
-      : ' Le verdict des pages est en cours de constitution (3 contrôles par passage).';
-    pousser({
-      id: 'offres-perimees',
-      titre: 'Des offres dépassées gardent leurs images',
-      constat: `${plafond7j.effacerait} offre(s) sans service depuis plus de ${plafond7j.jours || 7} jours, ${mo} Mo d'images. Le silence ne prouve RIEN (mesuré : 48 % de faux positifs sur 140 pages).${mesure}`,
-      action: 'allumer le volet des OFFRES sur le VERDICT : seules les pages qui se déclarent expirées sortent. La veille se décide séparément : c’est l’autre interrupteur.',
-      gain: `${mo} Mo de dépôt`,
-      gainValeur: mo, gainUnite: 'Mo de dépôt',
-      priorite: 5 * mo,
-      // `effort` est une VALEUR FERMÉE ('faible' | 'moyen' | 'élevé') : l'écran
-      // l'affiche telle quelle et la compare. Une phrase ici — « faible, mais la
-      // décision est à B » — passait à l'écran et cassait la comparaison.
-      effort: 'faible',
-      risque: 'faible — la sortie n’a lieu que sur le verdict de la page, jamais sur un silence (les offres encore vivantes gardent sept nouveaux jours)',
-    });
-  }
+  // 3. LES OFFRES PÉRIMÉES — CE LEVIER N'EXISTE PLUS, ET C'EST UNE BONNE NOUVELLE.
+  //    Il proposait d'« allumer le volet des OFFRES sur le VERDICT ». La règle de
+  //    la vie d'une carte (14/10/2026) a supprimé la question : une carte vit cinq
+  //    jours, puis on demande au FLUX si sa source la sert encore. Il n'y a plus
+  //    d'interrupteur à lever, plus de verdict à lire, plus de levier à proposer —
+  //    le problème est RÉGLÉ, et un conseil sur un problème réglé est du bruit.
 
-  // 3 bis. LA VEILLE DE PLUS DE SEPT JOURS. L'autre moitié de la même règle, et
-  //    la SÛRE des deux : son verrou est la date de publication de l'article, qui
-  //    ne change jamais, donc aucun faux positif n'est possible (une date
-  //    illisible fait garder l'article). Elle ne retire rien du stock — elle cesse
-  //    de publier, et les visuels devenus orphelins sont purgés à la publication.
-  const veille = plafond7j.articles || {};
-  if ((veille.hors7j || 0) > 0 && plafond7j.modeVeille !== 'actif') {
+  // 3 bis. LA VEILLE DE PLUS DE SEPT JOURS. L'autre moitié, et la SÛRE des deux :
+  //    son verrou est la date de publication de l'article, qui ne change jamais,
+  //    donc aucun faux positif n'est possible (une date illisible fait garder
+  //    l'article). Elle ne retire rien du stock — elle cesse de publier, et les
+  //    visuels devenus orphelins sont purgés à la publication.
+  const veille = (carte.veille || {}).articles || {};
+  if ((veille.hors7j || 0) > 0 && (carte.veille || {}).mode !== 'actif') {
     const mo = veille.hors7jMo || 0;
     pousser({
       id: 'veille-sept-jours',
       titre: 'La veille garde des articles de plus de sept jours',
-      constat: `${veille.hors7j} article(s) publié(s) datent de plus de sept jours (sur ${veille.publies} publiés), ${mo} Mo de visuels — et ${plafond7j.articlesHorsDelai || 0} en stock.`,
+      constat: `${veille.hors7j} article(s) publié(s) datent de plus de sept jours (sur ${veille.publies} publiés), ${mo} Mo de visuels — et ${(carte.veille || {}).horsDelaiEnStock || 0} en stock.`,
       action: 'allumer le volet de la VEILLE : trente jours ramenés à sept, sans risque de faux positif.',
       gain: `${mo} Mo de dépôt`,
       gainValeur: mo, gainUnite: 'Mo de dépôt',
@@ -2176,7 +2198,7 @@ export function leviersExploitation(m = {}) {
  *  fabriqué — une cadence cassée, un hôte monstrueux, un dépôt au bord du
  *  seuil — sans attendre qu'un vrai passage produise la situation. */
 export function bilanExploitation({
-  passages = [], trafic = {}, images = {}, plafond7j = {}, poids = {}, robots = {},
+  passages = [], trafic = {}, images = {}, carte = {}, poids = {}, robots = {},
   partage = {},
   maintenant = Date.now(),
   prixKwh = PRIX_KWH_EUR, kwhParGo = KWH_PAR_GO, puissanceW = PUISSANCE_MACHINE_W,
@@ -2296,7 +2318,7 @@ export function bilanExploitation({
 
   const leviers = leviersExploitation({
     poids: poidsComplet, energie, trafic, images,
-    plafond7j, rythme, fichiers, robots, cadencePrevueMin,
+    carte, rythme, fichiers, robots, cadencePrevueMin,
   });
 
   return {
@@ -7228,7 +7250,7 @@ async function publier(sortie) {
     //  une promotion morte sous notre marque — exactement ce que B refuse. La
     //  laisser hors de la génération la fait PURGER par le ménage des orphelines
     //  du même générateur (elle n'est plus référencée nulle part).
-    partage = await ecrirePagesPartage(sortie.offres.filter((o) => !o.perimee), { silencieux: true });
+    partage = await ecrirePagesPartage(sortie.offres, { silencieux: true });
     console.log(`  → partage : ${partage.ecrites} page(s) écrite(s), ${partage.inchangees} inchangée(s), ${partage.retirees} retirée(s) — ${partage.total} au total`);
   } catch (e) {
     console.error(`  ⚠ pages de partage non écrites : ${e.message}`);
@@ -7810,16 +7832,23 @@ async function principal() {
       connues.set(cle, { ...offre, premiereVue: vu, vuLe: vu });
       nouvelles++; continue;
     }
-    // LE RETOUR D'UNE OFFRE — règle de B du 12/10/2026 (voir
-    // joursDeServiceRestants). Cette offre était au-delà du délai : le plafond
-    // l'aurait emportée. Sa source vient de la RESERVIR, donc elle repart pour
-    // sept jours pleins. On le COMPTE, parce que c'est le chiffre qui répond à
-    // la question des soldes : s'il est élevé, c'est la preuve que le plafond ne
-    // mord pas sur des promotions vivantes, mais sur ce que personne ne sert
-    // plus. Le compteur est publié dans le journal et dans l'état du site.
-    if (ageJours(avant.vuLe) > PLAFOND_DONNEES_JOURS) retours++;
+    // LA REPRISE D'UNE CARTE — c'est R.3 de la règle unique (14/10/2026).
+    // Cette offre a dépassé les cinq jours affichés, ET sa source vient de la
+    // RESERVIR : son compteur repart, elle a donc cinq jours pleins devant elle.
+    //  Ce n'est PAS un retour après effacement — la carte n'est jamais cachée
+    //  puis remontrée : elle est affichée, ou elle est effacée. C'est le cas des
+    //  promotions longues (soldes, un mois de remise) : elles ne sont jamais
+    //  emportées, et ce compteur le prouve à chaque passage au lieu de le promettre.
+    //  L'âge AFFICHÉ, lui, ne bouge pas : `date` reste celle que la source publie.
+    //  Le site trie sur `date`, jamais sur `premiereVue` (vérifié : `parRecence`,
+    //  app.js) — une carte reprise ne saute donc pas en tête des « plus récentes »,
+    //  ce qui serait un faux « neuf » fabriqué tous les cinq jours.
+    const horodatage = new Date().toISOString();
+    const reprise = ageJours(avant.premiereVue || avant.vuLe) > VIE_AFFICHEE_JOURS;
+    if (reprise) retours++;
     // Mise à jour SANS écraser la date de première vue (qui sert à dater l'offre).
-    const fusion = { ...avant, ...offre, vuLe: new Date().toISOString(), premiereVue: avant.premiereVue || avant.vuLe };
+    const fusion = { ...avant, ...offre, vuLe: horodatage,
+      premiereVue: reprise ? horodatage : (avant.premiereVue || avant.vuLe) };
     // UNE DATE DE RELEVÉ NE SE RAFRAÎCHIT PAS. Le lecteur vient de la fabriquer
     // à l'instant (`date: new Date().toISOString()`) : si on la laissait passer,
     // la carte annoncerait « il y a 1 min » à chaque passage, indéfiniment — et
@@ -8054,34 +8083,38 @@ async function principal() {
     });
   }
 
-  // --- PLAFOND DE 7 JOURS SUR LES DONNÉES — EN MESURE SEULEMENT ---------------
-  //  Demande de B (12/10/2026) : « après 7 jours affiché sur le site, toutes les
-  //  images et tout ce qui est en rapport avec l'annonce qui dépasse 7 jours doit
-  //  être effacé ».
+  // --- LA RÈGLE DE LA VIE D'UNE CARTE — CINQ JOURS, PUIS LA QUESTION DU SERVICE --
+  //  C'est LE bloc qui remplace tout l'appareil de jugement (R.10) : plus de
+  //  plafond, plus de masquage, plus de verdict de page, plus de budget de
+  //  lectures. Une carte est AFFICHÉE ou elle est EFFACÉE — il n'y a plus de
+  //  troisième état.
   //
-  //  ⚠ CETTE BOUCLE NE RETIRE RIEN, ET C'EST VOULU — même discipline que le
-  //  verrou 2, et pour une raison dure : ce fichier est exécuté toutes les cinq
-  //  minutes par le planificateur, code non commité compris. Une règle
-  //  destructrice s'appliquerait avant qu'on ait pu relire ses chiffres. On
-  //  calcule, on publie, et le passage en actif se décidera SUR ces chiffres.
+  //  L'effacement est RÉEL ici, et c'est la première règle de ce fichier qui
+  //  agisse sans période d'observation. Ce qui le permet n'est pas un pari : le
+  //  verdict ne repose sur aucun jugement (voir verdictDeCalendrier), donc aucun
+  //  faux positif n'est possible. La seule faute possible serait d'effacer une
+  //  carte dont la source n'a pas été RELUE — et c'est la garde « le tour a
+  //  avancé » qui l'interdit.
   //
-  //  Le signal est `vuLe` (dernière fois qu'une source a reservi l'offre), jamais
-  //  `date` — voir le commentaire de PLAFOND_DONNEES_JOURS.
-  let plafondOffres = 0, plafondOctets = 0;
-  const plafondParPays = {};
-  {
-    const verdict = plafondDeDonnees(connues.values());
-    plafondOffres = verdict.offres;
-    plafondOctets = verdict.octets;
-    Object.assign(plafondParPays, verdict.parPays);
+  //  CE QUE L'EFFACEMENT EMPORTE : la fiche et ses marques — et son VISUEL, purgé
+  //  à la publication par la purge des orphelins, qui est pilotée par les offres
+  //  AFFICHÉES (voir `attendus`, au bloc des visuels). Retirer la fiche du stock
+  //  suffit donc : rien à écrire de plus, et surtout RIEN À RETENIR.
+  let regleEffacees = 0, regleOctets = 0;
+  const regleParPays = {};
+  for (const cle of [...connues.keys()]) {
+    const o = connues.get(cle);
+    if (verdictDeCalendrier(o, { tours: toursParSource }) !== 'effacee') continue;
+    regleOctets += poidsDuVisuel(o.image);
+    const p = o.pays || 'FR';
+    regleParPays[p] = (regleParPays[p] || 0) + 1;
+    connues.delete(cle);
+    regleEffacees++;
   }
-  // LES ARTICLES DE PLUS DE SEPT JOURS — le second volet de la même règle. Ils ne
-  // se jugent pas comme les offres (leur verrou est leur date de publication, qui
-  // ne change pas : c'est ce qui les empêche de revenir), mais le panneau doit
-  // pouvoir dire COMBIEN la règle en emporte, et donc on les compte même en
-  // mesure.
-  //  Le volet de la VEILLE suit SON interrupteur, pas celui des offres : les
-  //  deux moitiés se décident séparément (voir VEILLE_SEPT_JOURS_ACTIVE).
+  // LES ARTICLES DE PLUS DE SEPT JOURS — la veille a sa PROPRE règle (R.8) : elle se
+  // juge sur sa date de PUBLICATION, jamais sur un service, et son verrou ne change
+  // donc jamais — aucun faux positif n'y est possible. Elle ne sort pas du stock :
+  // on refuse de la publier (voir VEILLE_SEPT_JOURS_ACTIVE).
   const JOURS_VEILLE = VEILLE_SEPT_JOURS_ACTIVE ? 7 : 30;
   let articlesHorsDelai = 0;
   {
@@ -8090,34 +8123,21 @@ async function principal() {
       if (o.type === 'article' && new Date(o.date || '').getTime() < limite7) articlesHorsDelai++;
     }
   }
-  // LE RETRAIT N'A LIEU QUE SI L'INTERRUPTEUR DU VOLET 1 EST LEVÉ. Sinon on
-  // compte, comme depuis le premier jour : une règle qui efface ne s'applique
-  // jamais sur une intention. Voir PLAFOND_OFFRES_ACTIF — et c'est LUI, et pas
-  // la veille, qui commande ce retrait.
-  let plafondEffacees = 0;
-  if (PLAFOND_OFFRES_ACTIF && plafondOffres) {
-    for (const cle of [...connues.keys()]) {
-      if (donneesPerimees(connues.get(cle))) { connues.delete(cle); plafondEffacees++; }
-    }
-  }
-  if (plafondOffres || retours || articlesHorsDelai) {
-    if (plafondOffres) console.log(`Plafond ${PLAFOND_DONNEES_JOURS} jours (VOLET OFFRES : ${PLAFOND_OFFRES_ACTIF ? 'ACTIF' : 'MESURE, rien effacé'}) : ${plafondOffres} offre(s) sans service depuis plus de ${PLAFOND_DONNEES_JOURS} jours — ${(plafondOctets / 1e6).toFixed(1)} Mo d'images`);
-    if (retours) console.log(`Plafond ${PLAFOND_DONNEES_JOURS} jours — RETOURS : ${retours} offre(s) au-delà du délai qu'une source vient de RESERVIR repartent pour ${PLAFOND_DONNEES_JOURS} jours`);
+  if (regleEffacees || retours || articlesHorsDelai) {
+    if (regleEffacees) console.log(`Vie de la carte (${VIE_AFFICHEE_JOURS} jours) : ${regleEffacees} carte(s) EFFACÉE(S) — leur source a reparlé sans les resservir — ${(regleOctets / 1e6).toFixed(1)} Mo de visuels libérés`);
+    if (retours) console.log(`Vie de la carte — REPRISES : ${retours} carte(s) au-delà des ${VIE_AFFICHEE_JOURS} jours que leur source vient de RESERVIR repartent pour ${VIE_AFFICHEE_JOURS} jours pleins`);
     if (articlesHorsDelai) console.log(`Veille : ${articlesHorsDelai} article(s) de plus de sept jours — ${VEILLE_SEPT_JOURS_ACTIVE ? `écartés, limite de veille ${JOURS_VEILLE} jours` : `gardés pour l'instant (limite ${JOURS_VEILLE} jours)`}`);
     journal.push({
-      source: 'plafond-donnees', ok: true,
-      // DEUX MODES, PARCE QU'IL Y A DEUX MOITIÉS. « mode » est le volet des
-      // offres (celui qui efface) ; « modeVeille » celui de la veille (celui qui
-      // refuse de publier). Les confondre était le défaut : un seul mot pour
-      // deux décisions de risque différent.
-      mode: PLAFOND_OFFRES_ACTIF ? 'actif' : 'mesure',
+      source: 'vie-de-la-carte', ok: true,
+      // LA RÈGLE EST ACTIVE, et le journal le dit sans détour : c'est la première
+      // du fichier qui efface sans observation préalable. Le mode reste écrit pour
+      // que le panneau n'ait jamais à le déduire.
+      mode: 'actif',
       modeVeille: VEILLE_SEPT_JOURS_ACTIVE ? 'actif' : 'mesure',
-      effacees: plafondEffacees, avaitEffacees: plafondOffres, octets: plafondOctets,
-      parPays: plafondParPays, jours: PLAFOND_DONNEES_JOURS,
+      effacees: regleEffacees, octets: regleOctets,
+      parPays: regleParPays, jours: VIE_AFFICHEE_JOURS,
       revenus: retours, articlesHorsDelai, joursVeille: JOURS_VEILLE,
-      raison: PLAFOND_OFFRES_ACTIF
-        ? `RÈGLE ACTIVE (VOLET OFFRES), choix de B : au-delà de ${PLAFOND_DONNEES_JOURS} jours sans être reservie, une offre n'a plus personne pour la confirmer et sort avec son visuel. Aucune liste d'exclusion n'est écrite : une offre reservie plus tard rentre par la collecte normale, comme une fiche neuve.`
-        : `MESURE (VOLET OFFRES) : au-delà de ${PLAFOND_DONNEES_JOURS} jours sans être reservie, une offre n'a plus personne pour la confirmer — et ses images pèsent dans le dépôt. On compte, on n'efface pas encore. Le RETOUR est garanti par la même règle : une offre RESERVIE repart pour ${PLAFOND_DONNEES_JOURS} jours, et le retrait n'écrit aucune liste d'exclusion — une offre revue plus tard rentre comme une offre neuve.`,
+      raison: `RÈGLE ACTIVE (décision de B, 14/10/2026) : une carte s'affiche ${VIE_AFFICHEE_JOURS} jours, servie ou non. Au-delà, une seule question — la source sert-elle encore cette offre ? Elle se lit dans le FLUX, gratuitement : aucune page n'est ouverte. Servie : le compteur repart pour ${VIE_AFFICHEE_JOURS} jours, et l'âge affiché reste celui que la source publie. Plus servie, et la source ayant reparlé depuis : la carte et son visuel sont EFFACÉS. Aucune liste d'exclusion n'est écrite : une offre reservie plus tard rentre comme une carte neuve.`,
       raisonVeille: VEILLE_SEPT_JOURS_ACTIVE
         ? `RÈGLE ACTIVE (VOLET VEILLE) : la veille est ramenée à ${JOURS_VEILLE} jours et ne revient pas — son verrou est la date de publication de l'article, qui ne change jamais. Rien n'est retiré du stock : on refuse de le publier. Un mot suffit pour revenir en arrière.`
         : `MESURE (VOLET VEILLE) : ${JOURS_VEILLE} jours appliqués, ${articlesHorsDelai} article(s) de plus de sept jours gardés. Ce volet est le SÛR des deux — aucun faux positif possible — et il se décide séparément du volet des offres.`,
@@ -8547,54 +8567,27 @@ async function principal() {
   // Toujours écrit : le hub local et le contrôle des sources lisent ce fichier,
   // avec des visuels DISTANTS (relayés par notre serveur). En publication, on
   // écrit EN PLUS le site (docs/), dont les visuels sont rapatriés sur place.
-  // --- LES FICHES QUE PLUS AUCUNE SOURCE NE CONFIRME : ELLES NE SONT PLUS
-  //     AFFICHÉES -----------------------------------------------------------
-  //  Demande de B, 13/10/2026, devant deux fiches mortes trouvées à la main :
-  //  « règle les problèmes des fiches qui sont encore affichées sur le site et
-  //  qui ne sont plus valables ». Mesuré le même jour : 4 629 fiches publiées
-  //  n'avaient plus été servies par aucune source depuis plus de sept jours, et
-  //  la page de la source de l'une des fiches signalées répondait
-  //  « isExpired »: true — la promotion était finie depuis trois jours.
+  // --- ICI SE TROUVAIT LE MASQUAGE (`perimee`) — IL N'EXISTE PLUS ------------
+  //  Du 13/10 au 14/10/2026, cette place portait un drapeau : les fiches que plus
+  //  aucune source ne servait depuis sept jours restaient dans le catalogue publié
+  //  avec `perimee: true`, et l'application refusait de les afficher. C'était un
+  //  troisième état — affichée, masquée, effacée — et c'est exactement ce que la
+  //  règle de la vie d'une carte a supprimé (R.10) :
   //
-  //  ON POSE UN DRAPEAU, ON NE SUPPRIME RIEN. `perimee: true` dit à
-  //  l'application « celle-ci, ne l'affiche plus » ; la fiche entière (prix,
-  //  visuel, historique) reste dans le catalogue publié. Trois raisons :
-  //   • la règle du retour est respectée — dès qu'une source reservit l'offre, sa
-  //     fraîcheur est réécrite et le drapeau disparaît tout seul : elle repart
-  //     affichée pour sept jours pleins ;
-  //   • le visuel n'est PAS purgé (la fiche est toujours dans le catalogue), donc
-  //     le retour ne coûte AUCUN téléchargement — c'est exactement le piège que
-  //     la fiche de méthode signale pour toute suppression de masse ;
-  //   • c'est réversible sans collecte : effacer le champ suffit.
+  //    • **une carte est affichée, ou elle est effacée** ;
+  //    • l'effacement a eu lieu plus haut, sur le verdict du calendrier
+  //      (`verdictDeCalendrier`), et il emporte la fiche ET son visuel ;
+  //    • la conséquence qu'on gagne au passage : **le catalogue publié ne porte
+  //      plus une seule fiche que l'écran cache**. `total`, `totalOffres` et
+  //      `parPays` n'ont donc plus rien à recalculer — ils décrivent ce qui est
+  //      publié, parce que ce qui est publié EST ce qui s'affiche.
   //
-  //  Le critère est la SEULE fonction de délai du fichier (`donneesPerimees`),
-  //  celle qui compte déjà le plafond : le chiffre publié et le drapeau ne
-  //  peuvent pas désigner deux ensembles différents. Les ARTICLES de veille ne
-  //  sont jamais visés (leur verrou est leur date de publication).
-  let nonConfirmees = 0;
-  for (const o of sortie.offres || []) {
-    if (donneesPerimees(o)) { o.perimee = true; nonConfirmees++; }
-    else if (o.perimee) delete o.perimee;      // reservie : elle repart affichée
-  }
-  if (nonConfirmees) {
-    console.log(`Fiches non confirmées (plus de ${PLAFOND_DONNEES_JOURS} jours sans service) : ${nonConfirmees} ne sont plus AFFICHÉES — conservées, et remises en ligne toutes seules au premier service de leur source`);
-    //  LES COMPTEURS PUBLIÉS DOIVENT SUIVRE CE QUI EST AFFICHÉ. Sans ce recalcul,
-    //  le bandeau et le bouton de pays annonceraient 22 530 quand l'écran en
-    //  montre 17 869 : deux chiffres pour la même grandeur, exactement l'écart que
-    //  B avait signalé le 08/10/2026 (« deux chiffres pour la même grandeur »).
-    //  Un compteur qui compte des fiches cachées est un mensonge de plus, et le
-    //  pire des mensonges : il ne se voit qu'en comparant deux écrans.
-    //  Le drapeau ne vise JAMAIS un article de veille (son verrou est sa date de
-    //  publication) : `totalVeille` ne bouge donc pas, et `totalOffres` baisse
-    //  exactement du nombre de fiches masquées.
-    sortie.total = (sortie.total || 0) - nonConfirmees;
-    sortie.totalOffres = (sortie.totalOffres || 0) - nonConfirmees;
-    for (const o of sortie.offres || []) {
-      if (!o.perimee) continue;
-      const p = o.pays || 'FR';
-      if (sortie.parPays && sortie.parPays[p] != null) sortie.parPays[p] -= 1;
-    }
-  }
+  //  Ce bloc avait lui-même remplacé une suppression de masse risquée (« on pose
+  //  un drapeau, on ne supprime rien »). Le progrès n'est pas qu'on supprime
+  //  maintenant : c'est que la suppression ne repose plus sur un jugement. Un
+  //  drapeau protégeait d'une décision douteuse ; il n'y a plus de décision
+  //  douteuse à protéger.
+
 
   fs.writeFileSync(FICHIER, JSON.stringify(sortie, null, 0));
   console.log(`√ ${offres.length} offres au total (${nouvelles} nouvelles, ${misesAJour} mises à jour, ${journal.filter((j) => !j.ok).length} source(s) en échec)`);
@@ -8656,7 +8649,7 @@ async function principal() {
       passages,
       trafic: sortie.donnees.trafic,
       images: sortie.donnees.images,
-      plafond7j: sortie.donnees.plafond7j,
+      carte: sortie.donnees.carte,
       poids: poidsPublie(),
       robots: sortie.donnees.robots,
       partage: apres

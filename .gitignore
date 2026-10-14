@@ -22,3 +22,7 @@ donnees/adresses-partiel.jsonl
 # par outils/diagnostic-niveau1.mjs, à côté du résultat qui compte
 # (donnees/diagnostic-niveau1.json, quelques dizaines de ko).
 donnees/niveau1-html/
+
+# Les caches de Python ne sont pas du code : ils n'ont rien à faire dans le dépôt.
+__pycache__/
+*.pyc

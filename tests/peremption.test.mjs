@@ -297,16 +297,17 @@ test('le verrou de la disparition MESURE sans retirer — la mesure l’a démen
   // sur trois offres Dealabs absentes du flux, vérifiées à la main le 10/10/2026,
   // DEUX portent `isExpired: false` / `status: Activated` / `isHot: true`.
   // Appliquer cette règle aurait effacé près de dix mille offres VIVANTES.
-  //  ⚠ LA BORNE DU BLOC A CHANGÉ LE 12/10/2026, et pas par commodité : la règle
-  //  des sept jours s'écrit MAINTENANT PLUS BAS dans le même fichier, et son
-  //  retrait (`connues.delete`) se trouvait donc entre ce verrou et l'ancienne
-  //  borne. Le test accusait le verrou 2 d'un retrait qui n'est pas le sien. Le
-  //  bloc s'arrête donc à la règle SUIVANTE, et cette règle-là a ses propres
-  //  épreuves (voir `donnees-plafond-7-jours.test.mjs`, qui vérifie qu'elle ne
-  //  retire RIEN tant que son interrupteur est éteint).
+  //  ⚠ LA BORNE DU BLOC A CHANGÉ DEUX FOIS, ET CHAQUE FOIS POUR LA MÊME RAISON :
+  //  le fichier grandit et la règle SUIVANTE s'installe plus bas. Le 12/10/2026,
+  //  la règle des sept jours s'était glissée entre ce verrou et l'ancienne borne.
+  //  Le 14/10/2026, cette règle a été remplacée par celle de la vie d'une carte
+  //  (« cinq jours, puis la question du service ») — qui, elle aussi, EFFACE. Si
+  //  la borne n'avait pas suivi, l'épreuve aurait accusé le verrou 2 d'un retrait
+  //  qui n'est pas le sien : elle serait devenue fausse en restant verte, ce qui
+  //  est le pire état d'une épreuve.
   const bloc = COLLECTEUR
     .split('VERROU 2 : LA DISPARITION CHEZ LES MARCHANDS — EN MESURE SEULEMENT')[1]
-    .split('PLAFOND DE 7 JOURS SUR LES DONNÉES')[0];
+    .split('LA RÈGLE DE LA VIE D\'UNE CARTE')[0];
   assert.ok(bloc.length > 300, `le bloc du verrou 2 doit être identifiable (${bloc.length} caractères)`);
   assert.ok(!bloc.includes('connues.delete'),
     'ce verrou ne doit RIEN retirer : sa justification a été démentie par la mesure');

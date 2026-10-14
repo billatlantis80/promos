@@ -551,6 +551,90 @@ ventes flash, où c'est sans conséquence.
 
 ---
 
+## MISE EN PRODUCTION — 14/10/2026, 21 h 16 UTC
+
+B : *« Ok, tu peux réécrire et mettre en production. »* La règle est **écrite et ACTIVE**.
+Cette section dit ce qui s'est passé — y compris ce qui n'aurait pas dû se passer.
+
+### ⚠ D'abord l'incident, parce qu'il est instructif
+
+**La règle a effacé AVANT d'être éprouvée.** L'ordre prévu était : couper la
+collecte, puis éprouver, puis appliquer. **Cet ordre n'a pas été tenu.** Le
+collecteur est exécuté par le planificateur *toutes les quinze minutes* : modifier
+le fichier pendant que le planificateur tourne, c'est modifier le programme en
+cours d'exécution. La passe de **21 h 16 UTC** a donc appliqué la règle à moitié
+écrite — sans épreuve, sans mesure préalable, et sans que personne l'ait décidé.
+
+Ce qu'elle a fait, relevé dans le journal du passage (`source: "vie-de-la-carte"`) :
+
+- **13 123 cartes effacées**, **322 119 944 octets** de visuels libérés ;
+- **90 cartes reprises** — au-delà des cinq jours et resservies par leur source ;
+- publication **poussée sur GitHub dans la foulée** (commit `a4607f49`, 12 448 fichiers).
+
+**LA LEÇON DE MÉTHODE, ET ELLE VAUT POUR TOUTE RÈGLE QUI EFFACE :** un fichier
+exécuté par un planificateur n'est pas un brouillon. « Couper la collecte » n'est
+pas une intention, c'est un **état à vérifier** — et le seul contrôle qui vaille
+est que **le passage suivant ne s'est pas produit**. Ici, la coupure a été faite
+à 21 h 25, neuf minutes après que le mal était fait. La prochaine fois : couper,
+**constater**, puis écrire.
+
+### La mesure avant / après (R.13) — la prévision était juste
+
+| | annoncé avant mise en service | relevé après |
+|---|---|---|
+| cartes emportées | 13 415 | **13 123** |
+| cartes affichées | ~10 600 | **10 573 offres** (+ 1 213 articles) |
+| visuels libérés | 348,8 Mo | **322,1 Mo** |
+
+**À 2 % près, la mesure faite sur la simulation a prédit l'effet réel.** C'est le
+premier chiffre de ce chantier qui se vérifie en production au lieu de se déduire,
+et il justifie la peine prise à mesurer avant d'agir.
+
+Le reste, relevé sur le disque le 14/10 après la passe :
+
+- `docs/` : **726,8 → 446 Mo** (−281 Mo) · visuels : **645,7 → 382,7 Mo** ;
+- `docs/img` : **21 759 → 10 179 fichiers** ;
+- `offres.json` servi par kazendra.com : **21 820 294 → 10 547 528 octets** (−51,7 %) ;
+- **0 visuel manquant, 0 orphelin** : chaque image référencée existe, aucune ne traîne.
+  La purge a suivi l'effacement exactement — la crainte des cartes grises est levée ;
+- **7 447 offres portent encore leur badge « bon plan »** : l'historique des prix a
+  survécu à l'effacement, comme R.6 le promettait. L'identité d'une offre est dérivée
+  de son adresse, elle se raccroche donc tout seule.
+
+### Le régime stable, et c'est le chiffre qui compte
+
+Le premier passage **après** l'effacement (à blanc, sans publier) dit l'équilibre
+réel de la règle :
+
+- **72 cartes effacées** — leur source a reparlé sans les resservir ;
+- **73 cartes reprises** — au-delà des cinq jours et resservies, cinq jours pleins ;
+- **0 source en échec**, **11 774 offres** au total, 668 nouvelles.
+
+**72 contre 73.** La règle emporte ce que personne ne sert, et laisse continuer
+ce qui vit : les promotions longues (soldes, un mois de remise) ne sont pas
+touchées. C'est exactement le partage promis, et il se mesure à chaque passage
+au lieu de se croire.
+
+### Ce qui n'est pas fait
+
+- **le commit seul (R.16)** — le code de la règle n'est pas encore dans un commit ;
+  à noter que le script de collecte ne pousse que `docs/` et `public/`, donc
+  `public/app.js` (le cache du visiteur) part **tout seul** au prochain passage,
+  tandis que `collecteur.mjs` resterait local. C'est un déséquilibre à fermer ;
+- **la reprise hebdomadaire du dépôt** — le point dur de la section 4 du scénario :
+  les 348,8 Mo libérés valent moins d'une demi-journée de croissance du dépôt.
+
+### Deux réserves de la vérification, confirmées en production
+
+- **Le prix n'est pas rafraîchi.** Le scénario ne relit aucun prix : il garantit la
+  fraîcheur de l'EXISTENCE, pas celle du prix. La carte affiche son âge, le lecteur sait.
+- **« Encore actif » ne suffit pas à revenir.** Le retour suppose que la source
+  **resserve** l'offre dans son flux. Pour les communautés, ce flux est une FENÊTRE
+  (30 offres par passage quand la base en porte 1 407) : une offre vivante peut ne
+  jamais y revenir. C'est le **47,7 %** déjà accepté, et c'est le vrai prix payé.
+
+---
+
 ## Comment ce fichier se lit
 
 - Les règles s'écrivent **une par une**. Aujourd'hui, la première.
