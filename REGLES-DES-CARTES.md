@@ -59,6 +59,15 @@ volume — mesuré sur les dernières 24 h : **7 928 requêtes** et **1,46 Go**
 (`data/trafic.json`, 94 passages, relevé du 14/10/2026 à 17:46). Le budget ne dépend pas de
 la taille du stock — sinon la dette grossit sans fin.
 
+> **ARRÊTÉ LE 14/10/2026, AU NOM DE LA POLITESSE.** Les deux options étaient 2 000 pages/jour
+> ou 13 243 (le contrôle quotidien). 2 000 pages/jour, c'est **une requête toutes les 43
+> secondes** en moyenne et **une toutes les 4 min 33** sur l'hôte le plus frappé (mydealz) ;
+> 13 243, c'est **une toutes les 7 secondes**, et **une toutes les 40 secondes** sur mydealz
+> seul. Le second est une signature de crawler. **2 000 est aussi le plancher** : ~1 726
+> cartes franchissent les cinq jours chaque jour, donc en dessous la file grandit sans fin et
+> la règle devient décorative. Les conditions qui rendent ces 2 000 acceptables sont écrites
+> en **1.27**, et elles sont contraignantes.
+
 **1.5** *(nombre mis à jour le 14/10 — la raison de cette ligne reste à corriger, voir 1.25
 et 1.26)* À ce rythme, la file des **13 243 cartes** de plus de cinq jours (relevé de 18:01 ;
 le chiffre monte chaque jour) se vide en **sept jours** : chaque carte ancienne est donc
@@ -209,10 +218,10 @@ surveille le point pour plus tard. »
 
 **1.23** Deux écarts entre cette demande et la règle ci-dessus, et c'est B qui tranche :
 
-- **le rythme** : B a demandé « une fois par jour ». La règle propose **une fois par
-  semaine**, parce que le quotidien demande **13 227 pages** — soit **+167 %** du trafic de
-  collecte, **1,67 fois la collecte entière** — au lieu de +25 %, et que le blocage par les
-  sources (403, 429) est déjà une réalité mesurée ;
+- **le rythme** : **TRANCHÉ LE 14/10/2026 — une fois par semaine.** B avait demandé « une
+  fois par jour » ; le quotidien demande **13 243 pages**, soit **une requête toutes les
+  7 secondes**, et **une toutes les 40 secondes** sur le seul *mydealz*. La décision est
+  prise **au nom de la politesse envers les sources**, et elle est écrite en **1.27** ;
 - **le prix** : B a demandé d'adapter le prix. La règle ne l'adapte **que si la lecture est
   certaine** — la lecture d'un prix marchand n'est fiable qu'une fois sur trois.
 
@@ -285,6 +294,43 @@ trancher : la file des cinq jours se vide **une fois** (13 227 cartes, ~7 jours 
 aujourd'hui ~une fois par semaine — et ce rythme **se dégrade avec le stock** tant que
 l'affichage n'est pas borné par pays et par rubrique.
 
+**1.27** **La politesse envers les sources — ARRÊTÉE LE 14/10/2026.** B a demandé la décision
+« la plus correcte au niveau politesse envers les sources ». Elle se mesure, elle ne
+s'apprécie pas.
+
+**1.27.a — La décision : le budget fixe de 2 000 pages/jour, pas le contrôle quotidien.**
+Le quotidien demanderait **13 243 pages/jour** : **une requête toutes les 7 secondes**, 24 h
+sur 24, et **une toutes les 40 secondes** sur le seul *mydealz* (2 093 pages/jour). À
+2 000 pages/jour : **une toutes les 43 secondes** en moyenne, et **une toutes les 4 min 33**
+sur l'hôte le plus frappé. C'est l'écart entre **un visiteur** et **un crawler** — et ces
+mêmes hôtes sont **déjà** interrogés toutes les 15 minutes pour la collecte (`reposMin`).
+Ajouter 167 % à cette empreinte, c'est signer nos requêtes.
+
+**1.27.b — 2 000 n'est pas un confort, c'est le plancher.** **~1 726 cartes** franchissent
+les cinq jours **chaque jour**. En dessous de ce chiffre, la file ne se vide plus, « une fois
+par semaine » devient un vœu, et la règle entière devient décorative. 2 000 par jour tient la
+promesse de justesse ; le quotidien la tiendrait six fois, pour rien.
+
+**1.27.c — Les conditions qui rendent ces 2 000 acceptables. Elles sont contraignantes.**
+
+- **réparties sur 24 h**, jamais en rafale : **83 par heure** au plus, et **une seule requête
+  en vol par hôte** ;
+- **`robots.txt` lu par chemin**, pas par hôte. Un chemin interdit **n'est pas appelé** : la
+  carte reste dans la file, sans verdict, et **rien n'est supprimé sur un refus**. Le
+  mécanisme existe déjà (`robotsInterdit`, cache d'un jour, `data/robots.json`, 51 hôtes lus) ;
+- **requêtes conditionnelles** (`ETag`, `Last-Modified` — déjà en place) : une page vivante
+  répond souvent **304 sans corps** et ne coûte presque rien à la source ;
+- **403 ou 429 = on s'arrête** pour cet hôte, pour la journée, sans réessai. C'est déjà la
+  réponse de bol.com, Darty et Currys. **On n'insiste jamais** ; les cartes concernées
+  restent dans la file ;
+- **plafond par hôte** : environ **350 pages/jour** — ce que la répartition donne déjà au
+  plus frappé.
+
+**1.27.d — Une piste écartée, après vérification.** « La source me sert encore l'offre, donc
+je n'ai pas besoin d'appeler sa page » était la piste la plus élégante : zéro requête. Elle
+ne vaut que **392 cartes sur 13 276 — 3,0 %**. Le reste a quitté la fenêtre de sa source
+depuis plus de cinq jours. Vérifié avant de s'y fier, puis abandonné comme argument.
+
 ---
 
 ## Reprise de tous les points — 14/10/2026, après l'adaptation
@@ -325,11 +371,12 @@ viendront au rang 1 le jour où la lecture de ta feuille sera branchée).
 **Arrêté le 14/10/2026** : 1.3 (`temperature`), 1.13 (`premiereVue`), 1.17 (démasquage carte
 par carte), 1.21 (l'affichage n'est pas borné, le point est surveillé).
 
-**Il reste les deux écarts de 1.23, et ce sont les seuls points ouverts de la règle 1** :
-le **rythme** (ta demande : une fois par jour ; la règle propose une fois par semaine — le
-quotidien demande 13 243 pages, soit **+167 %** du trafic de la collecte) et le **prix**
-(adapter dès qu'il a changé, ou seulement quand la lecture est certaine — la lecture d'un
-prix marchand n'est fiable qu'**une fois sur trois**).
+**Le rythme est tranché (1.27)** : une fois par semaine, au nom de la politesse envers les
+sources — 2 000 pages par jour, une requête toutes les 43 secondes en moyenne.
+
+**Il reste un seul point ouvert dans la règle 1, et un seul** : le **prix** (1.23) — adapter
+dès qu'il a changé, ou seulement quand la lecture est certaine, la lecture d'un prix marchand
+n'étant fiable qu'**une fois sur trois**.
 
 ---
 
