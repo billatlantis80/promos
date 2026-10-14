@@ -1,0 +1,24 @@
+# État local du hub : le collecteur le régénère, et le site publié a le sien
+# dans docs/offres.json. Pas la peine de versionner les deux.
+data/
+
+# Rien de généré à la main ici
+node_modules/
+*.log
+.DS_Store
+_avant-tmp.mjs
+
+# Pages lues au navigateur pour mesurer les affiliations (~100 Mo) :
+# un cache de travail, reconstituable par outils/rendus-navigateur.py.
+# Sans cette ligne, un « git add -A » pousserait 99 Mo de HTML brut.
+donnees/rendus/
+
+# Journal de chantier du remplissage des adresses (repris, non durable :
+# la version durable est donnees/adresses-verifications.json)
+donnees/adresses-partiel.jsonl
+
+# Les pages « niveau 1 » lues pour mesurer ce qu'elles portent (20 Mo) :
+# même règle que donnees/rendus/ ci-dessus — un cache de travail, reconstituable
+# par outils/diagnostic-niveau1.mjs, à côté du résultat qui compte
+# (donnees/diagnostic-niveau1.json, quelques dizaines de ko).
+donnees/niveau1-html/

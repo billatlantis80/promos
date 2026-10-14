@@ -1,0 +1,77 @@
+DIAGNOSTIC DES 216 PAGES « NIVEAU 1 » — 2026-10-11
+
+VERDICTS
+    61  UN_SEUL_PRIX
+    46  PROMO_LISIBLE
+    32  AUCUN_PRIX
+    24  PAGE_VIDE
+    23  MUR_OU_BLOCAGE
+    18  PRIX_SANS_PROMO
+     5  JAVASCRIPT_ONLY
+     5  STRUCTURE_PRETE
+     2  INJOIGNABLE
+
+PAR PAYS
+  AT : MUR_OU_BLOCAGE 1
+  BE : PAGE_VIDE 5 · PROMO_LISIBLE 8 · UN_SEUL_PRIX 11 · MUR_OU_BLOCAGE 5 · PRIX_SANS_PROMO 2 · AUCUN_PRIX 6 · INJOIGNABLE 2 · JAVASCRIPT_ONLY 1 · STRUCTURE_PRETE 1
+  DE : AUCUN_PRIX 13 · STRUCTURE_PRETE 4 · PRIX_SANS_PROMO 7 · UN_SEUL_PRIX 20 · PROMO_LISIBLE 25 · MUR_OU_BLOCAGE 7 · JAVASCRIPT_ONLY 4 · PAGE_VIDE 8
+  ES : UN_SEUL_PRIX 1
+  FR : PROMO_LISIBLE 11 · UN_SEUL_PRIX 28 · PRIX_SANS_PROMO 9 · PAGE_VIDE 11 · MUR_OU_BLOCAGE 8 · AUCUN_PRIX 11
+  GB : MUR_OU_BLOCAGE 1
+  IT : PROMO_LISIBLE 2
+  NL : AUCUN_PRIX 1 · UN_SEUL_PRIX 1
+  PL : MUR_OU_BLOCAGE 1
+  SE : AUCUN_PRIX 1
+
+PAGES EXPLOITABLES (à écrire dans le lecteur)
+  PROMO_LISIBLE    Bongo & Wonderbox (BE) — 62 forme(s) de prix · 47 prix structuré(s) · https://www.bongo.be/nl/acties
+  PROMO_LISIBLE    Zalando (BE) — 3 forme(s) de prix · 0 prix structuré(s) · https://www.zalando.be/promo/?sale=true
+  PROMO_LISIBLE    Standaard Boekhandel (BE) — 4 forme(s) de prix · 0 prix structuré(s) · https://www.standaardboekhandel.be/acties
+  PROMO_LISIBLE    Schoenen Torfs (BE) — 3 forme(s) de prix · 0 prix structuré(s) · https://www.torfs.be/nl/acties/1.html
+  PROMO_LISIBLE    X²O Badkamers (BE) — 4 forme(s) de prix · 0 prix structuré(s) · https://www.x2o.be/promotions
+  PROMO_LISIBLE    ICI PARIS XL (BE) — 2 forme(s) de prix · 0 prix structuré(s) · https://www.iciparisxl.be/nl/promotions
+  STRUCTURE_PRETE  Voyage Privé (BE) — 0 forme(s) de prix · 62 prix structuré(s) · https://www.voyage-prive.be/offres
+  PROMO_LISIBLE    Krëfel (BE) — 40 forme(s) de prix · 0 prix structuré(s) · https://www.krefel.be/fr/offres
+  PROMO_LISIBLE    Ultra Premium Direct (FR) — 23 forme(s) de prix · 0 prix structuré(s) · https://www.ultrapremiumdirect.com/promotions
+  PROMO_LISIBLE    Botanic (FR) — 100 forme(s) de prix · 0 prix structuré(s) · https://www.botanic.com/offres/nos-offres-du-moment.html
+  PROMO_LISIBLE    ALDI France (FR) — 128 forme(s) de prix · 0 prix structuré(s) · https://www.aldi.fr/bons-plans
+  PROMO_LISIBLE    Franprix (FR) — 22 forme(s) de prix · 0 prix structuré(s) · https://www.franprix.fr/promotions/slider/tout-ce-qui-fait-envie
+  PROMO_LISIBLE    La Belle Vie (FR) — 14 forme(s) de prix · 0 prix structuré(s) · https://www.labellevie.com/promotions
+  PROMO_LISIBLE    JYSK France (FR) — 160 forme(s) de prix · 0 prix structuré(s) · https://www.jysk.fr/offres
+  PROMO_LISIBLE    Courir (FR) — 5 forme(s) de prix · 0 prix structuré(s) · https://www.courir.com/fr/c/promotions
+  PROMO_LISIBLE    La Poste Mobile (FR) — 13 forme(s) de prix · 0 prix structuré(s) · https://www.lapostemobile.fr/offres/prepaye
+  PROMO_LISIBLE    SFR (FR) — 5 forme(s) de prix · 0 prix structuré(s) · https://www.sfr.fr/offre-mobile/bons-plans
+  PROMO_LISIBLE    GrosBill (FR) — 36 forme(s) de prix · 0 prix structuré(s) · https://www.grosbill.com/promotions
+  PROMO_LISIBLE    rue du commerce (FR) — 160 forme(s) de prix · 0 prix structuré(s) · https://www.rueducommerce.fr/promotions/
+  STRUCTURE_PRETE  Jochen Schweizer mydays (DE) — 22 forme(s) de prix · 24 prix structuré(s) · https://www.mydays.de/angebote/l/2phfz
+  STRUCTURE_PRETE  Das Futterhaus (DE) — 36 forme(s) de prix · 36 prix structuré(s) · https://www.futterhaus.de/shop/sale
+  PROMO_LISIBLE    ZooRoyal (DE) — 209 forme(s) de prix · 24 prix structuré(s) · https://www.zooroyal.de/angebote/sale
+  PROMO_LISIBLE    reifen.com / reifendirekt (DE) — 3 forme(s) de prix · 0 prix structuré(s) · https://www.reifen.com/aktionen
+  PROMO_LISIBLE    Thomas Philipps (DE) — 42 forme(s) de prix · 0 prix structuré(s) · https://www.thomas-philipps.de/sale
+  PROMO_LISIBLE    Trinkgut (DE) — 34 forme(s) de prix · 0 prix structuré(s) · https://www.trinkgut.de/angebote
+  PROMO_LISIBLE    Getränke Hoffmann (DE) — 34 forme(s) de prix · 0 prix structuré(s) · https://www.getraenke-hoffmann.de/angebote
+  PROMO_LISIBLE    OBI (DE) — 4 forme(s) de prix · 0 prix structuré(s) · https://www.obi.de/angebote
+  PROMO_LISIBLE    hagebau (DE) — 148 forme(s) de prix · 0 prix structuré(s) · https://www.hagebau.de/sale
+  PROMO_LISIBLE    Otto (otto.de) (DE) — 34 forme(s) de prix · 18 prix structuré(s) · https://www.otto.de/sale/deals-der-woche
+  PROMO_LISIBLE    Aldi Nord (DE) — 3 forme(s) de prix · 0 prix structuré(s) · https://www.aldi-nord.de/angebote
+  PROMO_LISIBLE    Edeka (DE) — 82 forme(s) de prix · 0 prix structuré(s) · https://www.edeka.de/angebote
+  PROMO_LISIBLE    eBay.de (DE) — 162 forme(s) de prix · 0 prix structuré(s) · https://www.ebay.de/deals
+  PROMO_LISIBLE    myToys (DE) — 36 forme(s) de prix · 18 prix structuré(s) · https://www.mytoys.de/sale
+  PROMO_LISIBLE    EMP (DE) — 37 forme(s) de prix · 0 prix structuré(s) · https://www.emp.de/sale
+  PROMO_LISIBLE    Knuspr (DE) — 166 forme(s) de prix · 0 prix structuré(s) · https://www.knuspr.de/aktionen
+  STRUCTURE_PRETE  Poco Einrichtungsmärkte (DE) — 8 forme(s) de prix · 80 prix structuré(s) · https://www.poco.de/k/sale
+  PROMO_LISIBLE    Porta Möbel (DE) — 27 forme(s) de prix · 0 prix structuré(s) · https://www.porta.de/sale
+  PROMO_LISIBLE    Home24 (DE) — 17 forme(s) de prix · 12 prix structuré(s) · https://www.home24.de/aktionen
+  PROMO_LISIBLE    Otto Group (mode) (DE) — 34 forme(s) de prix · 18 prix structuré(s) · https://www.otto.de/sale/deals-der-woche
+  PROMO_LISIBLE    Fielmann (DE) — 126 forme(s) de prix · 24 prix structuré(s) · https://www.fielmann.de/brillen/sale
+  PROMO_LISIBLE    DocMorris (DE) — 106 forme(s) de prix · 0 prix structuré(s) · https://www.docmorris.de/angebote/stark-reduziert
+  PROMO_LISIBLE    Shop Apotheke (Redcare Pharmacy) (DE) — 614 forme(s) de prix · 0 prix structuré(s) · https://www.shop-apotheke.com/angebote
+  PROMO_LISIBLE    billiger.de (DE) — 127 forme(s) de prix · 0 prix structuré(s) · https://www.billiger.de/deals
+  PROMO_LISIBLE    mydealz (DE) — 30 forme(s) de prix · 0 prix structuré(s) · https://www.mydealz.de/deals
+  PROMO_LISIBLE    Aldi Talk (DE) — 21 forme(s) de prix · 0 prix structuré(s) · https://www.alditalk.de/angebote
+  PROMO_LISIBLE    Deutsche Telekom (DE) — 11 forme(s) de prix · 0 prix structuré(s) · https://www.telekom.de/shop/aktionen
+  PROMO_LISIBLE    O2 Telefónica (DE) — 16 forme(s) de prix · 0 prix structuré(s) · https://www.o2online.de/deals
+  STRUCTURE_PRETE  DERTOUR Group (DE) — 0 forme(s) de prix · 24 prix structuré(s) · https://www.dertour.de/deals
+  PROMO_LISIBLE    iPhoneItalia (IT) — 6 forme(s) de prix · 0 prix structuré(s) · https://www.iphoneitalia.com/saldi
+  PROMO_LISIBLE    Macitynet (IT) — 13 forme(s) de prix · 0 prix structuré(s) · https://www.macitynet.it/saldi
+  PROMO_LISIBLE    Dealabs (BE) — 3 forme(s) de prix · 0 prix structuré(s) · https://www.dealabs.com/bons-plans

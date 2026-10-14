@@ -1,0 +1,1298 @@
+[
+ {
+  "nom": "VISITWALLONIA / Visit Brussels / Visit Flanders",
+  "pays": "BE",
+  "base": "https://visitwallonia.be",
+  "retenue": "https://visitwallonia.be/promotions"
+ },
+ {
+  "nom": "Bongo & Wonderbox",
+  "pays": "BE",
+  "base": "https://www.bongo.be",
+  "retenue": "https://www.bongo.be/nl/acties"
+ },
+ {
+  "nom": "Aveve",
+  "pays": "BE",
+  "base": "https://www.aveve.be",
+  "retenue": "https://www.aveve.be/fr/promotions"
+ },
+ {
+  "nom": "Hubo",
+  "pays": "BE",
+  "base": "https://www.hubo.be",
+  "retenue": "https://www.hubo.be/fr/promotions/offres-imbattables/action-imbattable-karcher-cleaning"
+ },
+ {
+  "nom": "Wibra",
+  "pays": "BE",
+  "base": "https://www.wibra.be",
+  "retenue": "https://www.wibra.be/fr/assortiment/c/promotions/?perpage=24"
+ },
+ {
+  "nom": "Pegasus Airlines",
+  "pays": "BE",
+  "base": "https://www.flypgs.com",
+  "retenue": "https://www.flypgs.com/promotions"
+ },
+ {
+  "nom": "Volotea",
+  "pays": "BE",
+  "base": "https://www.volotea.com",
+  "retenue": "https://www.volotea.com/promotions"
+ },
+ {
+  "nom": "TAP Air Portugal",
+  "pays": "BE",
+  "base": "https://www.flytap.com",
+  "retenue": "https://www.flytap.com/en-be/miles-and-go/promotions"
+ },
+ {
+  "nom": "Albert Heijn",
+  "pays": "BE",
+  "base": "https://www.ah.be",
+  "retenue": "https://www.ah.be/acties"
+ },
+ {
+  "nom": "Zalando",
+  "pays": "BE",
+  "base": "https://www.zalando.be",
+  "retenue": "https://www.zalando.be/promo/?sale=true"
+ },
+ {
+  "nom": "OKay",
+  "pays": "BE",
+  "base": "https://www.okay.be",
+  "retenue": "https://www.okay.be/fr/promos/promotions"
+ },
+ {
+  "nom": "Lidl",
+  "pays": "BE",
+  "base": "https://www.lidl.be",
+  "retenue": "https://www.lidl.be/q/fr-BE/query/promo"
+ },
+ {
+  "nom": "Spar",
+  "pays": "BE",
+  "base": "https://www.spar.be",
+  "retenue": "https://www.spar.be/acties"
+ },
+ {
+  "nom": "Standaard Boekhandel",
+  "pays": "BE",
+  "base": "https://www.standaardboekhandel.be",
+  "retenue": "https://www.standaardboekhandel.be/acties"
+ },
+ {
+  "nom": "JYSK",
+  "pays": "BE",
+  "base": "https://jysk.be",
+  "retenue": "https://jysk.be/soldes/"
+ },
+ {
+  "nom": "A.S.Adventure",
+  "pays": "BE",
+  "base": "https://www.asadventure.com",
+  "retenue": "https://www.asadventure.com/promotions"
+ },
+ {
+  "nom": "H&M",
+  "pays": "BE",
+  "base": "https://www.hm.com",
+  "retenue": "https://www.hm.com/promotions"
+ },
+ {
+  "nom": "Èggo",
+  "pays": "BE",
+  "base": "https://www.eggo.be",
+  "retenue": "https://www.eggo.be/promotions"
+ },
+ {
+  "nom": "Schoenen Torfs",
+  "pays": "BE",
+  "base": "https://www.torfs.be",
+  "retenue": "https://www.torfs.be/nl/acties/1.html"
+ },
+ {
+  "nom": "Di",
+  "pays": "BE",
+  "base": "https://www.di.be",
+  "retenue": "https://www.di.be/promotions/"
+ },
+ {
+  "nom": "X²O Badkamers",
+  "pays": "BE",
+  "base": "https://www.x2o.be",
+  "retenue": "https://www.x2o.be/promotions"
+ },
+ {
+  "nom": "Pearle Opticiens",
+  "pays": "BE",
+  "base": "https://www.pearle.be",
+  "retenue": "https://www.pearle.be/nl_BE/acties"
+ },
+ {
+  "nom": "Kruidvat",
+  "pays": "BE",
+  "base": "https://www.kruidvat.be",
+  "retenue": "https://www.kruidvat.be/nl/promo"
+ },
+ {
+  "nom": "ICI PARIS XL",
+  "pays": "BE",
+  "base": "https://www.iciparisxl.be",
+  "retenue": "https://www.iciparisxl.be/nl/promotions"
+ },
+ {
+  "nom": "Yves Rocher",
+  "pays": "BE",
+  "base": "https://www.yves-rocher.be",
+  "retenue": "https://www.yves-rocher.be/fr/promotions/c/promo"
+ },
+ {
+  "nom": "Clubic",
+  "pays": "BE",
+  "base": "https://www.clubic.com",
+  "retenue": "https://www.clubic.com/bons-plans"
+ },
+ {
+  "nom": "DHnet",
+  "pays": "BE",
+  "base": "https://www.dhnet.be",
+  "retenue": "https://www.dhnet.be/promo"
+ },
+ {
+  "nom": "Orange Belgique",
+  "pays": "BE",
+  "base": "https://www.orange.be",
+  "retenue": "https://www.orange.be/promo"
+ },
+ {
+  "nom": "Starlink",
+  "pays": "BE",
+  "base": "https://www.starlink.com",
+  "retenue": "https://www.starlink.com/promotions"
+ },
+ {
+  "nom": "Proximus",
+  "pays": "BE",
+  "base": "https://www.proximus.be",
+  "retenue": "https://www.proximus.be/promotions"
+ },
+ {
+  "nom": "Connections",
+  "pays": "BE",
+  "base": "https://www.connections.be",
+  "retenue": "https://www.connections.be/en/promotions"
+ },
+ {
+  "nom": "Corendon Belgique",
+  "pays": "BE",
+  "base": "https://www.corendon.be",
+  "retenue": "https://www.corendon.be/acties"
+ },
+ {
+  "nom": "Sunweb Belgique",
+  "pays": "BE",
+  "base": "https://www.sunweb.be",
+  "retenue": "https://www.sunweb.be/nl/skivakantie/aanbiedingen"
+ },
+ {
+  "nom": "Voyage Privé",
+  "pays": "BE",
+  "base": "https://www.voyage-prive.be",
+  "retenue": "https://www.voyage-prive.be/offres"
+ },
+ {
+  "nom": "Alternate.be",
+  "pays": "BE",
+  "base": "https://www.alternate.be",
+  "retenue": "https://www.alternate.be/Acties"
+ },
+ {
+  "nom": "Coolblue",
+  "pays": "BE",
+  "base": "https://www.coolblue.be",
+  "retenue": "https://www.coolblue.be/soldes"
+ },
+ {
+  "nom": "LDLC",
+  "pays": "BE",
+  "base": "https://www.ldlc.com",
+  "retenue": "https://www.ldlc.com/promotions"
+ },
+ {
+  "nom": "Krëfel",
+  "pays": "BE",
+  "base": "https://www.krefel.be",
+  "retenue": "https://www.krefel.be/fr/offres"
+ },
+ {
+  "nom": "Ultra Premium Direct",
+  "pays": "FR",
+  "base": "https://www.ultrapremiumdirect.com",
+  "retenue": "https://www.ultrapremiumdirect.com/promotions"
+ },
+ {
+  "nom": "Maxi Zoo France",
+  "pays": "FR",
+  "base": "https://www.maxizoo.fr",
+  "retenue": "https://www.maxizoo.fr/promotions/offres-catalogue"
+ },
+ {
+  "nom": "Animalis",
+  "pays": "FR",
+  "base": "https://www.animalis.com",
+  "retenue": "https://www.animalis.com/promotions"
+ },
+ {
+  "nom": "Wanimo",
+  "pays": "FR",
+  "base": "https://www.wanimo.com",
+  "retenue": "https://www.wanimo.com/collections/promo"
+ },
+ {
+  "nom": "Euromaster",
+  "pays": "FR",
+  "base": "https://www.euromaster.fr",
+  "retenue": "https://www.euromaster.fr/bons-plans"
+ },
+ {
+  "nom": "First Stop",
+  "pays": "FR",
+  "base": "https://www.firststop.fr",
+  "retenue": "https://www.firststop.fr/promotions/garantie-constructeur.html"
+ },
+ {
+  "nom": "Brico Dépôt",
+  "pays": "FR",
+  "base": "https://www.bricodepot.fr",
+  "retenue": "https://www.bricodepot.fr/promotions"
+ },
+ {
+  "nom": "Botanic",
+  "pays": "FR",
+  "base": "https://www.botanic.com",
+  "retenue": "https://www.botanic.com/offres/nos-offres-du-moment.html"
+ },
+ {
+  "nom": "Lavinia",
+  "pays": "FR",
+  "base": "https://www.lavinia.com",
+  "retenue": "https://www.lavinia.com/promotions"
+ },
+ {
+  "nom": "Groupe Samse",
+  "pays": "FR",
+  "base": "https://www.samse.fr",
+  "retenue": "https://www.samse.fr/promotions"
+ },
+ {
+  "nom": "Gedimat",
+  "pays": "FR",
+  "base": "https://www.gedimat.fr",
+  "retenue": "https://www.gedimat.fr/offres"
+ },
+ {
+  "nom": "Castorama",
+  "pays": "FR",
+  "base": "https://www.castorama.fr",
+  "retenue": "https://www.castorama.fr/soldes"
+ },
+ {
+  "nom": "Air France",
+  "pays": "FR",
+  "base": "https://www.airfrance.fr",
+  "retenue": "https://www.airfrance.fr/deals"
+ },
+ {
+  "nom": "Point S France",
+  "pays": "FR",
+  "base": "https://www.points.fr",
+  "retenue": "https://www.points.fr/promotions"
+ },
+ {
+  "nom": "Air Caraïbes",
+  "pays": "FR",
+  "base": "https://www.aircaraibes.com",
+  "retenue": "https://www.aircaraibes.com/promotions/offres-train-plus-air"
+ },
+ {
+  "nom": "Twin Jet",
+  "pays": "FR",
+  "base": "https://www.twinjet.fr",
+  "retenue": "https://www.twinjet.fr/promotions"
+ },
+ {
+  "nom": "Brittany Ferries",
+  "pays": "FR",
+  "base": "https://www.brittany-ferries.fr",
+  "retenue": "https://www.brittany-ferries.fr/offres"
+ },
+ {
+  "nom": "Corsica Ferries",
+  "pays": "FR",
+  "base": "https://www.corsica-ferries.fr",
+  "retenue": "https://www.corsica-ferries.fr/promo/offres-wifi.html"
+ },
+ {
+  "nom": "Costa Croisières",
+  "pays": "FR",
+  "base": "https://www.costacroisieres.fr",
+  "retenue": "https://www.costacroisieres.fr/offres"
+ },
+ {
+  "nom": "MSC Croisières",
+  "pays": "FR",
+  "base": "https://www.msccroisieres.fr",
+  "retenue": "https://www.msccroisieres.fr/promo"
+ },
+ {
+  "nom": "Ponant",
+  "pays": "FR",
+  "base": "https://www.ponant.com",
+  "retenue": "https://www.ponant.com/offres"
+ },
+ {
+  "nom": "Amazon France",
+  "pays": "FR",
+  "base": "https://www.amazon.fr",
+  "retenue": "https://www.amazon.fr/promotions"
+ },
+ {
+  "nom": "Cdiscount",
+  "pays": "FR",
+  "base": "https://www.cdiscount.com",
+  "retenue": "https://www.cdiscount.com/promotions/"
+ },
+ {
+  "nom": "Corsica Linea",
+  "pays": "FR",
+  "base": "https://www.corsicalinea.com",
+  "retenue": "https://www.corsicalinea.com/corse/offres"
+ },
+ {
+  "nom": "Temu",
+  "pays": "FR",
+  "base": "https://www.temu.com",
+  "retenue": "https://www.temu.com/promotions"
+ },
+ {
+  "nom": "ALDI France",
+  "pays": "FR",
+  "base": "https://www.aldi.fr",
+  "retenue": "https://www.aldi.fr/bons-plans"
+ },
+ {
+  "nom": "Auchan Retail France",
+  "pays": "FR",
+  "base": "https://www.auchan.fr",
+  "retenue": "https://www.auchan.fr/soldes/ca-8621163"
+ },
+ {
+  "nom": "eBay France",
+  "pays": "FR",
+  "base": "https://www.ebay.fr",
+  "retenue": "https://www.ebay.fr/promo"
+ },
+ {
+  "nom": "Casino / Géant",
+  "pays": "FR",
+  "base": "https://www.groupe-casino.fr",
+  "retenue": "https://www.groupe-casino.fr/promo"
+ },
+ {
+  "nom": "E.Leclerc",
+  "pays": "FR",
+  "base": "https://www.e.leclerc",
+  "retenue": "https://www.e.leclerc/promotions"
+ },
+ {
+  "nom": "Lidl France",
+  "pays": "FR",
+  "base": "https://www.lidl.fr",
+  "retenue": "https://www.lidl.fr/q/query/promotions"
+ },
+ {
+  "nom": "Franprix",
+  "pays": "FR",
+  "base": "https://www.franprix.fr",
+  "retenue": "https://www.franprix.fr/promotions/slider/tout-ce-qui-fait-envie"
+ },
+ {
+  "nom": "Match France",
+  "pays": "FR",
+  "base": "https://www.supermarchesmatch.fr",
+  "retenue": "https://www.supermarchesmatch.fr/promotions"
+ },
+ {
+  "nom": "Monoprix",
+  "pays": "FR",
+  "base": "https://www.monoprix.fr",
+  "retenue": "https://www.monoprix.fr/c/selection/promotions/le-cachemire"
+ },
+ {
+  "nom": "Naturalia",
+  "pays": "FR",
+  "base": "https://www.naturalia.fr",
+  "retenue": "https://www.naturalia.fr/promotions"
+ },
+ {
+  "nom": "Picard",
+  "pays": "FR",
+  "base": "https://www.picard.fr",
+  "retenue": "https://www.picard.fr/rayons/promotions"
+ },
+ {
+  "nom": "Oxybul",
+  "pays": "FR",
+  "base": "https://www.oxybul.com",
+  "retenue": "https://www.oxybul.com/soldes"
+ },
+ {
+  "nom": "Smyths Toys France",
+  "pays": "FR",
+  "base": "https://www.smythstoys.com",
+  "retenue": "https://www.smythstoys.com/promotions"
+ },
+ {
+  "nom": "Micromania-Zing",
+  "pays": "FR",
+  "base": "https://www.micromania.fr",
+  "retenue": "https://www.micromania.fr/promotions"
+ },
+ {
+  "nom": "Deliveroo France",
+  "pays": "FR",
+  "base": "https://deliveroo.fr",
+  "retenue": "https://deliveroo.fr/fr/deals"
+ },
+ {
+  "nom": "HelloFresh France",
+  "pays": "FR",
+  "base": "https://www.hellofresh.fr",
+  "retenue": "https://www.hellofresh.fr/promo"
+ },
+ {
+  "nom": "La Belle Vie",
+  "pays": "FR",
+  "base": "https://www.labellevie.com",
+  "retenue": "https://www.labellevie.com/promotions"
+ },
+ {
+  "nom": "Furet du Nord",
+  "pays": "FR",
+  "base": "https://www.furet.com",
+  "retenue": "https://www.furet.com/soldes"
+ },
+ {
+  "nom": "JYSK France",
+  "pays": "FR",
+  "base": "https://www.jysk.fr",
+  "retenue": "https://www.jysk.fr/offres"
+ },
+ {
+  "nom": "Habitat",
+  "pays": "FR",
+  "base": "https://www.habitat.fr",
+  "retenue": "https://www.habitat.fr/c/promotions"
+ },
+ {
+  "nom": "Courir",
+  "pays": "FR",
+  "base": "https://www.courir.com",
+  "retenue": "https://www.courir.com/fr/c/promotions"
+ },
+ {
+  "nom": "Foot Locker France",
+  "pays": "FR",
+  "base": "https://www.footlocker.fr",
+  "retenue": "https://www.footlocker.fr/promotions"
+ },
+ {
+  "nom": "Eram",
+  "pays": "FR",
+  "base": "https://www.eram.fr",
+  "retenue": "https://www.eram.fr/soldes"
+ },
+ {
+  "nom": "Atol",
+  "pays": "FR",
+  "base": "https://www.atol.fr",
+  "retenue": "https://www.atol.fr/soldes"
+ },
+ {
+  "nom": "Afflelou",
+  "pays": "FR",
+  "base": "https://www.afflelou.com",
+  "retenue": "https://www.afflelou.com/audition/offres"
+ },
+ {
+  "nom": "Sensee",
+  "pays": "FR",
+  "base": "https://www.sensee.com",
+  "retenue": "https://www.sensee.com/promotions"
+ },
+ {
+  "nom": "Sport 2000 France",
+  "pays": "FR",
+  "base": "https://www.sport2000.fr",
+  "retenue": "https://www.sport2000.fr/offres"
+ },
+ {
+  "nom": "Générale d'Optique",
+  "pays": "FR",
+  "base": "https://www.generaleoptique.com",
+  "retenue": "https://www.generaleoptique.com/promotions"
+ },
+ {
+  "nom": "Beauty Success",
+  "pays": "FR",
+  "base": "https://www.beautysuccess.fr",
+  "retenue": "https://www.beautysuccess.fr/soldes"
+ },
+ {
+  "nom": "Passion Beauté",
+  "pays": "FR",
+  "base": "https://www.passionbeaute.fr",
+  "retenue": "https://www.passionbeaute.fr/promotions"
+ },
+ {
+  "nom": "Marionnaud",
+  "pays": "FR",
+  "base": "https://www.marionnaud.fr",
+  "retenue": "https://www.marionnaud.fr/promotions"
+ },
+ {
+  "nom": "60 Millions de Consommateurs (INC)",
+  "pays": "FR",
+  "base": "https://www.60millions-mag.com",
+  "retenue": "https://www.60millions-mag.com/promo"
+ },
+ {
+  "nom": "Frandroid",
+  "pays": "FR",
+  "base": "https://www.frandroid.com",
+  "retenue": "https://www.frandroid.com/bons-plans"
+ },
+ {
+  "nom": "Presse-citron",
+  "pays": "FR",
+  "base": "https://www.presse-citron.net",
+  "retenue": "https://www.presse-citron.net/promotions"
+ },
+ {
+  "nom": "idealo France",
+  "pays": "FR",
+  "base": "https://www.idealo.fr",
+  "retenue": "https://www.idealo.fr/bons-plans"
+ },
+ {
+  "nom": "Belambra",
+  "pays": "FR",
+  "base": "https://www.belambra.fr",
+  "retenue": "https://www.belambra.fr/bons-plans/offres-speciales/ski-easy-neige"
+ },
+ {
+  "nom": "Journal du Geek",
+  "pays": "FR",
+  "base": "https://www.journaldugeek.com",
+  "retenue": "https://www.journaldugeek.com/promotions"
+ },
+ {
+  "nom": "Homair Vacances",
+  "pays": "FR",
+  "base": "https://www.homair.com",
+  "retenue": "https://www.homair.com/promotions"
+ },
+ {
+  "nom": "Odalys Vacances",
+  "pays": "FR",
+  "base": "https://www.odalys-vacances.com",
+  "retenue": "https://www.odalys-vacances.com/promotions"
+ },
+ {
+  "nom": "Vacancéole",
+  "pays": "FR",
+  "base": "https://www.vacanceole.com",
+  "retenue": "https://www.vacanceole.com/promotions"
+ },
+ {
+  "nom": "Bouygues Telecom",
+  "pays": "FR",
+  "base": "https://www.bouyguestelecom.fr",
+  "retenue": "https://www.bouyguestelecom.fr/bons-plans/offres-de-remboursement/filtre/offres-box"
+ },
+ {
+  "nom": "Canal+",
+  "pays": "FR",
+  "base": "https://www.canalplus.com",
+  "retenue": "https://www.canalplus.com/offres"
+ },
+ {
+  "nom": "La Poste Mobile",
+  "pays": "FR",
+  "base": "https://www.lapostemobile.fr",
+  "retenue": "https://www.lapostemobile.fr/offres/prepaye"
+ },
+ {
+  "nom": "RED by SFR",
+  "pays": "FR",
+  "base": "https://www.red-by-sfr.fr",
+  "retenue": "https://www.red-by-sfr.fr/bons-plans"
+ },
+ {
+  "nom": "SFR",
+  "pays": "FR",
+  "base": "https://www.sfr.fr",
+  "retenue": "https://www.sfr.fr/offre-mobile/bons-plans"
+ },
+ {
+  "nom": "Havas Voyages",
+  "pays": "FR",
+  "base": "https://www.havas-voyages.fr",
+  "retenue": "https://www.havas-voyages.fr/promo"
+ },
+ {
+  "nom": "eDreams ODIGEO (Opodo, GO Voyages)",
+  "pays": "FR",
+  "base": "https://www.govoyages.com",
+  "retenue": "https://www.govoyages.com/promo/destinations"
+ },
+ {
+  "nom": "Selectour",
+  "pays": "FR",
+  "base": "https://www.selectour.com",
+  "retenue": "https://www.selectour.com/promo"
+ },
+ {
+  "nom": "Boulanger",
+  "pays": "FR",
+  "base": "https://www.boulanger.com",
+  "retenue": "https://www.boulanger.com/soldes"
+ },
+ {
+  "nom": "GrosBill",
+  "pays": "FR",
+  "base": "https://www.grosbill.com",
+  "retenue": "https://www.grosbill.com/promotions"
+ },
+ {
+  "nom": "Materiel.net",
+  "pays": "FR",
+  "base": "https://www.materiel.net",
+  "retenue": "https://www.materiel.net/soldes/"
+ },
+ {
+  "nom": "rue du commerce",
+  "pays": "FR",
+  "base": "https://www.rueducommerce.fr",
+  "retenue": "https://www.rueducommerce.fr/promotions/"
+ },
+ {
+  "nom": "Son-Vidéo.com",
+  "pays": "FR",
+  "base": "https://www.son-video.com",
+  "retenue": "https://www.son-video.com/soldes"
+ },
+ {
+  "nom": "Eventim",
+  "pays": "DE",
+  "base": "https://www.eventim.de",
+  "retenue": "https://www.eventim.de/campaign/angebote/?affiliate=EVE"
+ },
+ {
+  "nom": "Jochen Schweizer mydays",
+  "pays": "DE",
+  "base": "https://www.mydays.de",
+  "retenue": "https://www.mydays.de/angebote/l/2phfz"
+ },
+ {
+  "nom": "Europa-Park",
+  "pays": "DE",
+  "base": "https://www.europapark.de",
+  "retenue": "https://www.europapark.de/angebote"
+ },
+ {
+  "nom": "Tropical Islands",
+  "pays": "DE",
+  "base": "https://www.tropical-islands.de",
+  "retenue": "https://www.tropical-islands.de/preise-oeffnungszeiten/angebote"
+ },
+ {
+  "nom": "Das Futterhaus",
+  "pays": "DE",
+  "base": "https://www.futterhaus.de",
+  "retenue": "https://www.futterhaus.de/shop/sale"
+ },
+ {
+  "nom": "ZooRoyal",
+  "pays": "DE",
+  "base": "https://www.zooroyal.de",
+  "retenue": "https://www.zooroyal.de/angebote/sale"
+ },
+ {
+  "nom": "Fressnapf",
+  "pays": "DE",
+  "base": "https://www.fressnapf.de",
+  "retenue": "https://www.fressnapf.de/angebote"
+ },
+ {
+  "nom": "Euromaster Deutschland",
+  "pays": "DE",
+  "base": "https://www.euromaster.de",
+  "retenue": "https://www.euromaster.de/aktionen"
+ },
+ {
+  "nom": "Kölle Zoo",
+  "pays": "DE",
+  "base": "https://www.koelle-zoo.de",
+  "retenue": "https://www.koelle-zoo.de/sale"
+ },
+ {
+  "nom": "reifen.com / reifendirekt",
+  "pays": "DE",
+  "base": "https://www.reifen.com",
+  "retenue": "https://www.reifen.com/aktionen"
+ },
+ {
+  "nom": "Thomas Philipps",
+  "pays": "DE",
+  "base": "https://www.thomas-philipps.de",
+  "retenue": "https://www.thomas-philipps.de/sale"
+ },
+ {
+  "nom": "KiK",
+  "pays": "DE",
+  "base": "https://www.kik.de",
+  "retenue": "https://www.kik.de/c/s/sale"
+ },
+ {
+  "nom": "Woolworth",
+  "pays": "DE",
+  "base": "https://www.woolworth.de",
+  "retenue": "https://www.woolworth.de/aktionen"
+ },
+ {
+  "nom": "Vinexus / Jacques' Wein-Depot",
+  "pays": "DE",
+  "base": "https://www.jacques.de",
+  "retenue": "https://www.jacques.de/angebote"
+ },
+ {
+  "nom": "Trinkgut",
+  "pays": "DE",
+  "base": "https://www.trinkgut.de",
+  "retenue": "https://www.trinkgut.de/angebote"
+ },
+ {
+  "nom": "Getränke Hoffmann",
+  "pays": "DE",
+  "base": "https://www.getraenke-hoffmann.de",
+  "retenue": "https://www.getraenke-hoffmann.de/angebote"
+ },
+ {
+  "nom": "Dursty",
+  "pays": "DE",
+  "base": "https://www.dursty.de",
+  "retenue": "https://www.dursty.de/angebote"
+ },
+ {
+  "nom": "Dehner",
+  "pays": "DE",
+  "base": "https://www.dehner.de",
+  "retenue": "https://www.dehner.de/angebote"
+ },
+ {
+  "nom": "flaschenpost",
+  "pays": "DE",
+  "base": "https://www.flaschenpost.de",
+  "retenue": "https://www.flaschenpost.de/aktionen/wochenangebote"
+ },
+ {
+  "nom": "Hornbach",
+  "pays": "DE",
+  "base": "https://www.hornbach.de",
+  "retenue": "https://www.hornbach.de/angebote/"
+ },
+ {
+  "nom": "OBI",
+  "pays": "DE",
+  "base": "https://www.obi.de",
+  "retenue": "https://www.obi.de/angebote"
+ },
+ {
+  "nom": "hagebau",
+  "pays": "DE",
+  "base": "https://www.hagebau.de",
+  "retenue": "https://www.hagebau.de/sale"
+ },
+ {
+  "nom": "Pflanzen Kölle",
+  "pays": "DE",
+  "base": "https://www.pflanzen-koelle.de",
+  "retenue": "https://www.pflanzen-koelle.de/angebote/pflanzen-sale"
+ },
+ {
+  "nom": "toom Baumarkt",
+  "pays": "DE",
+  "base": "https://www.toom.de",
+  "retenue": "https://www.toom.de/aktionen/gutscheinkarte"
+ },
+ {
+  "nom": "Air France-KLM",
+  "pays": "DE",
+  "base": "https://www.airfrance.de",
+  "retenue": "https://www.airfrance.de/deals"
+ },
+ {
+  "nom": "Pegasus",
+  "pays": "DE",
+  "base": "https://www.flypgs.com",
+  "retenue": "https://www.flypgs.com/angebote"
+ },
+ {
+  "nom": "Deutsche Bahn",
+  "pays": "DE",
+  "base": "https://www.bahn.de",
+  "retenue": "https://www.bahn.de/angebote"
+ },
+ {
+  "nom": "AIDA Cruises",
+  "pays": "DE",
+  "base": "https://www.aida.de",
+  "retenue": "https://www.aida.de/buchung/aktionen/gewinnspiele?onsite=startseitenslider_hi3000"
+ },
+ {
+  "nom": "Hapag-Lloyd Cruises",
+  "pays": "DE",
+  "base": "https://www.hl-cruises.de",
+  "retenue": "https://www.hl-cruises.de/reisen/angebote"
+ },
+ {
+  "nom": "About You",
+  "pays": "DE",
+  "base": "https://www.aboutyou.de",
+  "retenue": "https://www.aboutyou.de/c/frauen/sale/jeans-32623"
+ },
+ {
+  "nom": "Amazon.de",
+  "pays": "DE",
+  "base": "https://www.amazon.de",
+  "retenue": "https://www.amazon.de/angebote"
+ },
+ {
+  "nom": "Otto (otto.de)",
+  "pays": "DE",
+  "base": "https://www.otto.de",
+  "retenue": "https://www.otto.de/sale/deals-der-woche"
+ },
+ {
+  "nom": "Aldi Nord",
+  "pays": "DE",
+  "base": "https://www.aldi-nord.de",
+  "retenue": "https://www.aldi-nord.de/angebote"
+ },
+ {
+  "nom": "TUI Cruises (Mein Schiff)",
+  "pays": "DE",
+  "base": "https://www.meinschiff.com",
+  "retenue": "https://www.meinschiff.com/angebote"
+ },
+ {
+  "nom": "Edeka",
+  "pays": "DE",
+  "base": "https://www.edeka.de",
+  "retenue": "https://www.edeka.de/angebote"
+ },
+ {
+  "nom": "Aldi Süd",
+  "pays": "DE",
+  "base": "https://www.aldi-sued.de",
+  "retenue": "https://www.aldi-sued.de/angebote/2026-10-08?theme=Aktionen+%26+Angebote"
+ },
+ {
+  "nom": "Globus SB-Warenhaus",
+  "pays": "DE",
+  "base": "https://www.globus.de",
+  "retenue": "https://www.globus.de/angebote"
+ },
+ {
+  "nom": "British Airways / IAG",
+  "pays": "DE",
+  "base": "https://www.britishairways.com",
+  "retenue": "https://www.britishairways.com/sale"
+ },
+ {
+  "nom": "eBay.de",
+  "pays": "DE",
+  "base": "https://www.ebay.de",
+  "retenue": "https://www.ebay.de/deals"
+ },
+ {
+  "nom": "Netto Marken-Discount",
+  "pays": "DE",
+  "base": "https://www.netto-online.de",
+  "retenue": "https://www.netto-online.de/sale/c-S00"
+ },
+ {
+  "nom": "Norma",
+  "pays": "DE",
+  "base": "https://www.norma-online.de",
+  "retenue": "https://www.norma-online.de/at/angebote"
+ },
+ {
+  "nom": "Penny",
+  "pays": "DE",
+  "base": "https://www.penny.de",
+  "retenue": "https://www.penny.de/angebote"
+ },
+ {
+  "nom": "Müller (Drogerie)",
+  "pays": "DE",
+  "base": "https://www.mueller.de",
+  "retenue": "https://www.mueller.de/c/sale"
+ },
+ {
+  "nom": "Smyths Toys",
+  "pays": "DE",
+  "base": "https://www.smythstoys.com",
+  "retenue": "https://www.smythstoys.com/angebote"
+ },
+ {
+  "nom": "myToys",
+  "pays": "DE",
+  "base": "https://www.mytoys.de",
+  "retenue": "https://www.mytoys.de/sale"
+ },
+ {
+  "nom": "EMP",
+  "pays": "DE",
+  "base": "https://www.emp.de",
+  "retenue": "https://www.emp.de/sale"
+ },
+ {
+  "nom": "Knuspr",
+  "pays": "DE",
+  "base": "https://www.knuspr.de",
+  "retenue": "https://www.knuspr.de/aktionen"
+ },
+ {
+  "nom": "Elbenwald",
+  "pays": "DE",
+  "base": "https://www.elbenwald.de",
+  "retenue": "https://www.elbenwald.de/collections/angebote"
+ },
+ {
+  "nom": "McPaper",
+  "pays": "DE",
+  "base": "https://www.mcpaper.de",
+  "retenue": "https://www.mcpaper.de/sale"
+ },
+ {
+  "nom": "Möbel Höffner",
+  "pays": "DE",
+  "base": "https://www.hoeffner.de",
+  "retenue": "https://www.hoeffner.de/angebote"
+ },
+ {
+  "nom": "Roller (Tessner)",
+  "pays": "DE",
+  "base": "https://www.roller.de",
+  "retenue": "https://www.roller.de/sale"
+ },
+ {
+  "nom": "Poco Einrichtungsmärkte",
+  "pays": "DE",
+  "base": "https://www.poco.de",
+  "retenue": "https://www.poco.de/k/sale"
+ },
+ {
+  "nom": "Porta Möbel",
+  "pays": "DE",
+  "base": "https://www.porta.de",
+  "retenue": "https://www.porta.de/sale"
+ },
+ {
+  "nom": "Segmüller",
+  "pays": "DE",
+  "base": "https://www.segmueller.de",
+  "retenue": "https://www.segmueller.de/angebote"
+ },
+ {
+  "nom": "H&M Allemagne",
+  "pays": "DE",
+  "base": "https://www.hm.com",
+  "retenue": "https://www.hm.com/angebote"
+ },
+ {
+  "nom": "Home24",
+  "pays": "DE",
+  "base": "https://www.home24.de",
+  "retenue": "https://www.home24.de/aktionen"
+ },
+ {
+  "nom": "Inditex / Zara",
+  "pays": "DE",
+  "base": "https://www.zara.com",
+  "retenue": "https://www.zara.com/sale"
+ },
+ {
+  "nom": "Intersport Deutschland",
+  "pays": "DE",
+  "base": "https://www.intersport.de",
+  "retenue": "https://www.intersport.de/d/sale"
+ },
+ {
+  "nom": "Otto Group (mode)",
+  "pays": "DE",
+  "base": "https://www.otto.de",
+  "retenue": "https://www.otto.de/sale/deals-der-woche"
+ },
+ {
+  "nom": "Shein (mode)",
+  "pays": "DE",
+  "base": "https://www.shein.com",
+  "retenue": "https://www.shein.com/sale"
+ },
+ {
+  "nom": "Fielmann",
+  "pays": "DE",
+  "base": "https://www.fielmann.de",
+  "retenue": "https://www.fielmann.de/brillen/sale"
+ },
+ {
+  "nom": "eyes + more",
+  "pays": "DE",
+  "base": "https://www.eyesandmore.de",
+  "retenue": "https://www.eyesandmore.de/sale"
+ },
+ {
+  "nom": "Budnikowsky (Budni)",
+  "pays": "DE",
+  "base": "https://www.budni.de",
+  "retenue": "https://www.budni.de/aktionen/hamburg"
+ },
+ {
+  "nom": "Snipes",
+  "pays": "DE",
+  "base": "https://www.snipes.com",
+  "retenue": "https://www.snipes.com/sale"
+ },
+ {
+  "nom": "DocMorris",
+  "pays": "DE",
+  "base": "https://www.docmorris.de",
+  "retenue": "https://www.docmorris.de/angebote/stark-reduziert"
+ },
+ {
+  "nom": "Rossmann",
+  "pays": "DE",
+  "base": "https://www.rossmann.de",
+  "retenue": "https://www.rossmann.de/angebote"
+ },
+ {
+  "nom": "dm-drogerie markt",
+  "pays": "DE",
+  "base": "https://www.dm.de",
+  "retenue": "https://www.dm.de/neu/aktionen/lego-duplo-3547552"
+ },
+ {
+  "nom": "Check24",
+  "pays": "DE",
+  "base": "https://www.check24.de",
+  "retenue": "https://www.check24.de/strom-gas/schnaeppchen"
+ },
+ {
+  "nom": "Shop Apotheke (Redcare Pharmacy)",
+  "pays": "DE",
+  "base": "https://www.shop-apotheke.com",
+  "retenue": "https://www.shop-apotheke.com/angebote"
+ },
+ {
+  "nom": "Chip",
+  "pays": "DE",
+  "base": "https://www.chip.de",
+  "retenue": "https://www.chip.de/deals/schnaeppchen"
+ },
+ {
+  "nom": "Computer Bild",
+  "pays": "DE",
+  "base": "https://www.computerbild.de",
+  "retenue": "https://www.computerbild.de/deals"
+ },
+ {
+  "nom": "Stiftung Warentest",
+  "pays": "DE",
+  "base": "https://www.test.de",
+  "retenue": "https://www.test.de/angebote"
+ },
+ {
+  "nom": "billiger.de",
+  "pays": "DE",
+  "base": "https://www.billiger.de",
+  "retenue": "https://www.billiger.de/deals"
+ },
+ {
+  "nom": "idealo",
+  "pays": "DE",
+  "base": "https://www.idealo.de",
+  "retenue": "https://www.idealo.de/preisvergleich/deals"
+ },
+ {
+  "nom": "mydealz",
+  "pays": "DE",
+  "base": "https://www.mydealz.de",
+  "retenue": "https://www.mydealz.de/deals"
+ },
+ {
+  "nom": "Aldi Talk",
+  "pays": "DE",
+  "base": "https://www.alditalk.de",
+  "retenue": "https://www.alditalk.de/angebote"
+ },
+ {
+  "nom": "Deutsche Telekom",
+  "pays": "DE",
+  "base": "https://www.telekom.de",
+  "retenue": "https://www.telekom.de/shop/aktionen"
+ },
+ {
+  "nom": "Sky Deutschland",
+  "pays": "DE",
+  "base": "https://www.sky.de",
+  "retenue": "https://www.sky.de/angebote"
+ },
+ {
+  "nom": "O2 Telefónica",
+  "pays": "DE",
+  "base": "https://www.o2online.de",
+  "retenue": "https://www.o2online.de/deals"
+ },
+ {
+  "nom": "Starlink Allemagne",
+  "pays": "DE",
+  "base": "https://www.starlink.com",
+  "retenue": "https://www.starlink.com/angebote"
+ },
+ {
+  "nom": "Vodafone Deutschland",
+  "pays": "DE",
+  "base": "https://www.vodafone.de",
+  "retenue": "https://www.vodafone.de/de/angebote/kunden-werben?icmp=home:listcard:bnt:gen:gen__mgm"
+ },
+ {
+  "nom": "congstar",
+  "pays": "DE",
+  "base": "https://www.congstar.de",
+  "retenue": "https://www.congstar.de/handytarife/angebote"
+ },
+ {
+  "nom": "waipu.tv",
+  "pays": "DE",
+  "base": "https://www.waipu.tv",
+  "retenue": "https://www.waipu.tv/angebote"
+ },
+ {
+  "nom": "DERTOUR Group",
+  "pays": "DE",
+  "base": "https://www.dertour.de",
+  "retenue": "https://www.dertour.de/deals"
+ },
+ {
+  "nom": "HolidayCheck",
+  "pays": "DE",
+  "base": "https://www.holidaycheck.de",
+  "retenue": "https://www.holidaycheck.de/deals"
+ },
+ {
+  "nom": "freenet",
+  "pays": "DE",
+  "base": "https://www.freenet.de",
+  "retenue": "https://www.freenet.de/angebote"
+ },
+ {
+  "nom": "Alternate",
+  "pays": "DE",
+  "base": "https://www.alternate.de",
+  "retenue": "https://www.alternate.de/Angebote"
+ },
+ {
+  "nom": "TUI Deutschland",
+  "pays": "DE",
+  "base": "https://www.tui.com",
+  "retenue": "https://www.tui.com/sale"
+ },
+ {
+  "nom": "HotUKDeals",
+  "pays": "GB",
+  "base": "https://www.hotukdeals.com",
+  "retenue": "https://www.hotukdeals.com/deals/skechers-up-to-30-off-outlet-5001066"
+ },
+ {
+  "nom": "Chollometro",
+  "pays": "ES",
+  "base": "https://www.chollometro.com",
+  "retenue": "https://www.chollometro.com/ofertas/all-stars-bundle-steam-2029578"
+ },
+ {
+  "nom": "Pepper PL",
+  "pays": "PL",
+  "base": "https://www.pepper.pl",
+  "retenue": "https://www.pepper.pl/promocje/lidl-nektar-tymbark-1-l-1364649"
+ },
+ {
+  "nom": "Androidworld",
+  "pays": "NL",
+  "base": "https://www.androidworld.nl",
+  "retenue": "https://www.androidworld.nl/aanbiedingen"
+ },
+ {
+  "nom": "Pepper NL",
+  "pays": "NL",
+  "base": "https://nl.pepper.com",
+  "retenue": "https://nl.pepper.com/aanbiedingen/gratis-intertoys-speelboek-421762"
+ },
+ {
+  "nom": "Preisjäger",
+  "pays": "AT",
+  "base": "https://www.preisjaeger.at",
+  "retenue": "https://www.preisjaeger.at/deals/iphone-16e-512gb-370464"
+ },
+ {
+  "nom": "iPhoneItalia",
+  "pays": "IT",
+  "base": "https://www.iphoneitalia.com",
+  "retenue": "https://www.iphoneitalia.com/saldi"
+ },
+ {
+  "nom": "Macitynet",
+  "pays": "IT",
+  "base": "https://www.macitynet.it",
+  "retenue": "https://www.macitynet.it/saldi"
+ },
+ {
+  "nom": "M3",
+  "pays": "SE",
+  "base": "https://www.m3.se",
+  "retenue": "https://www.m3.se/erbjudanden"
+ },
+ {
+  "nom": "Dealabs",
+  "pays": "BE",
+  "base": "https://www.dealabs.com",
+  "retenue": "https://www.dealabs.com/bons-plans"
+ },
+ {
+  "nom": "Test-Achats",
+  "pays": "BE",
+  "base": "https://www.test-achats.be",
+  "retenue": "https://www.test-achats.be/famille-prive/soldes"
+ },
+ {
+  "nom": "BASE",
+  "pays": "BE",
+  "base": "https://www.base.be",
+  "retenue": "https://www.base.be/nl/promo/handset/october-deals.html?intcmp=home-prio_card-october-deals"
+ }
+]

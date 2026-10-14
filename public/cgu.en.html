@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Terms of use — Kazendra</title>
+<meta name="description" content="On what terms kazendra.com is made available, and what it guarantees — or does not guarantee.">
+<meta name="robots" content="index, follow">
+<!-- The three language versions of THIS page. hreflang tells search engines
+     that this is the SAME page in three languages — without which they would be
+     treated as three competing pages diluting one another. x-default designates
+     the version served by default. -->
+<link rel="alternate" hreflang="fr" href="https://kazendra.com/cgu.html">
+<link rel="alternate" hreflang="nl" href="https://kazendra.com/cgu.nl.html">
+<link rel="alternate" hreflang="en" href="https://kazendra.com/cgu.en.html">
+<link rel="alternate" hreflang="x-default" href="https://kazendra.com/cgu.html">
+<!-- DEBUT-FEUILLE-EN-LIGNE -->
+<!--
+     FEUILLE DE STYLE EN LIGNE — écrite par bin/inliner-legal.mjs.
+
+     Elle n’est PAS appelée en fichier externe, volontairement : sur le PC de
+     B, les .css externes étaient coupés en chemin (antivirus, bloqueur, proxy).
+     Une page d’information dont l’habillage dépendrait d’un fichier bloqué ne
+     remplirait pas sa fonction.
+
+     Ne pas modifier à la main : éditer public/legal.css, puis relancer
+     « node bin/inliner-legal.mjs ». Le test tests/legal.test.mjs échoue si ce
+     bloc et le fichier divergent.
+-->
+<style>
+/* =============================================================================
+   HABILLAGE DES PAGES ADMINISTRATIVES — Kazendra.
+
+   Ces pages (mentions légales, confidentialité, cookies, conditions
+   d'utilisation) ont leur propre feuille, plus sobre que celle du site : ce sont
+   des documents à lire, pas un catalogue.
+
+   ELLE AUSSI EST POSÉE EN LIGNE DANS CHAQUE PAGE. Raison identique à celle du
+   site (voir bin/inliner-css.mjs) : le 08/10/2026, sur le PC de B, les fichiers
+   .css externes n'arrivaient pas au navigateur. Une page légale dont
+   l'habillage — ou pire, le TEXTE — dépendrait d'un fichier coupé en chemin ne
+   serait pas une page légale. On écrit donc la feuille dans la page.
+
+   NE PAS ÉDITER LE BLOC EN LIGNE À LA MAIN : éditer public/legal.css, puis
+   relancer « node bin/inliner-legal.mjs ». Le test tests/legal.test.mjs échoue
+   si le bloc et ce fichier divergent.
+   ============================================================================= */
+
+:root {
+  --bleu: #0d3b5b;
+  --orange: #eb912d;
+  --texte: #16324a;
+  --doux: #5a6b7b;
+  --bord: #dde1e6;
+  --fond: #ffffff;
+  --fond-doux: #f5f7f9;
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --texte: #e8edf2;
+    --doux: #a4b1be;
+    --bord: #2b3846;
+    --fond: #101a24;
+    --fond-doux: #17242f;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--fond);
+  color: var(--texte);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.doc { max-width: 820px; margin: 0 auto; padding: 0 18px 64px; }
+
+/* En-tête : le K de l'identité + un retour au site. Le lien de retour est
+   TOUJOURS visible : une page légale atteinte par obligation doit offrir la
+   sortie la plus évidente possible. */
+.tete {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  padding: 18px 0 14px; margin-bottom: 26px; border-bottom: 1px solid var(--bord);
+}
+.tete .k { width: 28px; height: 28px; flex: none; }
+.tete .nom { font-weight: 700; letter-spacing: .02em; color: var(--bleu); }
+@media (prefers-color-scheme: dark) { .tete .nom { color: #7fb8dd; } }
+.tete .retour {
+  margin-left: auto; color: var(--orange); text-decoration: none;
+  font-weight: 600; border-bottom: 1px solid transparent;
+}
+.tete .retour:hover, .tete .retour:focus { border-bottom-color: var(--orange); }
+
+/* SÉLECTEUR DE LANGUE des pages administratives. Trois langues : français,
+   néerlandais, anglais. La page courante est marquée par aria-current="page",
+   ce qui la rend lisible par un lecteur d'écran ET stylable ici — un état qui
+   n'existerait qu'en couleur serait invisible pour qui ne distingue pas les
+   couleurs.
+   Les autres langues du site (de, es, it, pt, pl, sv) mènent à l'ANGLAIS :
+   c'est la règle de repli déjà appliquée aux liens sortants, et une page légale
+   en anglais vaut mieux qu'une page légale dans une langue qu'on n'a pas. */
+.langues-doc {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 16px;
+  margin: 0 0 24px; font-size: 14px;
+}
+.langues-doc a { color: var(--doux); text-decoration: none; border-bottom: 1px solid transparent; }
+.langues-doc a:hover, .langues-doc a:focus { color: var(--orange); border-bottom-color: var(--orange); }
+.langues-doc a[aria-current="page"] {
+  color: var(--texte); font-weight: 700; border-bottom-color: var(--bord);
+}
+
+h1 { font-size: 26px; line-height: 1.25; margin: 0 0 6px; }
+h2 { font-size: 18px; margin: 32px 0 8px; color: var(--bleu); }
+@media (prefers-color-scheme: dark) { h2 { color: #7fb8dd; } }
+h3 { font-size: 15px; margin: 20px 0 6px; }
+p, ul, ol { margin: 0 0 12px; }
+ul, ol { padding-left: 22px; }
+li { margin-bottom: 5px; }
+a { color: var(--bleu); }
+@media (prefers-color-scheme: dark) { a { color: #8cc4e6; } }
+code { background: var(--fond-doux); padding: 1px 5px; border-radius: 4px; font-size: 14px; }
+
+.maj { color: var(--doux); font-size: 14px; margin: 0 0 26px; }
+
+/* CE QUI RESTE À FOURNIR. Le surlignage est volontairement visible : une page
+   légale qui aurait l'air complète alors qu'il manque l'identité de l'éditeur
+   tromperait tout le monde, à commencer par son auteur. Le test
+   tests/legal.test.mjs compte ces marques et refuse qu'elles disparaissent
+   sans que la donnée soit réellement renseignée. */
+.a-completer {
+  background: #fff3cd; color: #6b4b00; border: 1px dashed #d9a400;
+  border-radius: 4px; padding: 0 5px; font-weight: 600;
+}
+@media (prefers-color-scheme: dark) {
+  .a-completer { background: #3a2e07; color: #ffd77a; border-color: #8a6d12; }
+}
+
+/* L'avis de chantier. Il n'est là que TANT QUE la page n'est pas finalisée. */
+.charte {
+  border: 1px solid var(--bord); border-left: 4px solid var(--orange);
+  background: var(--fond-doux); border-radius: 8px;
+  padding: 12px 14px; margin: 0 0 26px; font-size: 15px;
+}
+.charte b { color: var(--bleu); }
+@media (prefers-color-scheme: dark) { .charte b { color: #7fb8dd; } }
+
+table { border-collapse: collapse; width: 100%; margin: 0 0 16px; font-size: 15px; }
+th, td { border: 1px solid var(--bord); padding: 7px 9px; text-align: left; vertical-align: top; }
+th { background: var(--fond-doux); }
+
+.pied-doc {
+  margin-top: 44px; padding-top: 16px; border-top: 1px solid var(--bord);
+  color: var(--doux); font-size: 14px;
+}
+.pied-doc a { margin-right: 14px; }
+
+@media print {
+  .tete .retour, .charte { display: none; }
+  body { background: #fff; color: #000; }
+}
+
+/* =============================================================================
+   AFFICHAGE PC — pages administratives, à partir de 1024 px
+
+   Ces pages étaient DÉJÀ centrées (`.doc`, 820 px) : c'est le seul endroit du
+   site qui avait un cadre. Le travail ici est donc plus fin — rendre au grand
+   écran ce qu'il permet : un titre qui a de l'autorité, des titres de section
+   qui se détachent vraiment, et un peu plus d'air entre les paragraphes. Rien
+   qui change la lecture : les mêmes mots, aux mêmes places, un peu mieux
+   posés. Le palier laisse le téléphone intact au caractère près.
+   ============================================================================= */
+/* DEBUT-COUCHE-PC — repère lu par tests/affichage-pc.test.mjs ; ne pas retirer. */
+@media (min-width: 1024px) {
+  body { font-size: 16.5px; }
+  .doc { max-width: 860px; padding: 0 28px 88px; }
+  h1 { font-size: 33px; letter-spacing: -.2px; }
+  h2 { font-size: 20px; margin: 40px 0 10px; }
+  h3 { font-size: 16px; margin: 24px 0 8px; }
+  .tete { padding: 26px 0 18px; margin-bottom: 34px; }
+  .tete .k { width: 32px; height: 32px; }
+  .langues-doc { margin-bottom: 28px; }
+  .maj { font-size: 14.5px; margin-bottom: 30px; }
+  .charte { padding: 14px 16px; font-size: 15.5px; }
+  table { font-size: 15.5px; }
+  th, td { padding: 9px 11px; }
+  .pied-doc { margin-top: 52px; }
+}
+</style>
+<!-- FIN-FEUILLE-EN-LIGNE -->
+</head>
+<body>
+<div class="doc">
+
+  <header class="tete">
+    <img class="k" src="favicon.svg" width="28" height="28" alt="">
+    <span class="nom">KAZENDRA</span>
+    <a class="retour" href="index.html">← Back to the site</a>
+  </header>
+
+  <nav class="langues-doc" aria-label="Page language">
+    <a href="cgu.html" hreflang="fr" lang="fr">Français</a>
+    <a href="cgu.nl.html" hreflang="nl" lang="nl">Nederlands</a>
+    <a href="cgu.en.html" hreflang="en" lang="en" aria-current="page">English</a>
+  </nav>
+
+  <h1>General terms of use</h1>
+  <p class="maj">Last updated: 8 October 2026.</p>
+
+  <h2>1. Purpose</h2>
+  <p>
+    These terms govern the use of the site <b>kazendra.com</b>, an information service
+    that gathers promotions published publicly by European merchants and links to their
+    sites.
+  </p>
+  <p>
+    <b>Browsing the site constitutes acceptance</b> of these terms, in the version in force at the time
+    of the visit. If you do not accept them, you need only leave the site.
+  </p>
+
+  <h2>2. What the site is, and what it is not</h2>
+  <ul>
+    <li><b>The site is</b> a free information service and a connecting intermediary.</li>
+    <li><b>The site is not</b> a seller. It takes no orders, collects no payment and
+      is not a party to the contracts concluded with the merchants.</li>
+    <li>The contract of sale, the legal guarantee, the right of withdrawal and after-sales service
+      fall <b>exclusively</b> to the merchant, not to Kazendra.</li>
+  </ul>
+
+  <h2>3. Access to the service</h2>
+  <p>
+    The service is provided <b>free of charge and "as is"</b>. No permanent availability is
+    guaranteed&nbsp;: the site may be interrupted, modified or shut down, in particular for maintenance or for
+    an external cause (host, network).
+  </p>
+  <p>
+    Some functions — account, favourites, settings — are <b>local to the device</b>. They are neither
+    synchronised, nor recoverable on another device, nor restored by the publisher in the event
+    of the browser data being cleared.
+  </p>
+
+  <h2>4. Accuracy of prices and information</h2>
+  <p>
+    Prices, discounts and availability come from merchant sites and <b>change at any time</b>.
+    The date on which they were recorded is displayed on the site.
+  </p>
+  <p>
+    <b>Only the price displayed at the merchant at the time of purchase is authoritative.</b> A discrepancy may exist
+    between what the site displays and what the merchant applies, without this constituting a commitment by the
+    site.
+  </p>
+  <p>
+    Where an offer is not denominated in euros, it is displayed <b>in its original currency</b>, without
+    conversion&nbsp;: the site neither applies nor maintains any exchange rate. The final price depends on the
+    merchant and, where applicable, on the buyer's bank.
+  </p>
+
+  <h2>5. Links to merchants</h2>
+  <p>
+    Outgoing links may be <b>affiliate links</b>&nbsp;: a commission may be paid
+    to Kazendra when the purchase takes place after a click, <b>without changing the price paid</b>.
+  </p>
+  <p>
+    <b>Situation as at 8 October 2026&nbsp;:</b> no affiliate identifier is in place&nbsp;: the outgoing
+    links are direct and no commission is received. See the
+    <a href="mentions-legales.en.html">legal notice</a>.
+  </p>
+
+  <h2>6. Fair use</h2>
+  <p>You undertake not to&nbsp;:</p>
+  <ul>
+    <li>extract the site's content on a massive scale in an automated manner without written authorisation&nbsp;;</li>
+    <li>attempt to circumvent, damage or overload the service&nbsp;;</li>
+    <li>reproduce the site's content in whole or in part without authorisation&nbsp;;</li>
+    <li>use the site for unlawful purposes or to mislead a third party.</li>
+  </ul>
+
+  <h2>7. Intellectual property</h2>
+  <p>
+    The code, structure, texts, visual identity and logo are protected. The building of the
+    catalogue is protected under database rights. See the
+    <a href="mentions-legales.en.html">legal notice</a> for the details and for the trade mark.
+  </p>
+
+  <h2>8. Liability</h2>
+  <p>
+    Kazendra uses reasonable means to ensure that the information published is accurate and
+    dated. Its liability cannot, however, be incurred&nbsp;:
+  </p>
+  <ul>
+    <li>in the event of inaccurate or outdated information coming from a merchant&nbsp;;</li>
+    <li>in the event of interruption, suspension or misuse of the service&nbsp;;</li>
+    <li>by reason of the content of the merchant sites to which the site links&nbsp;;</li>
+    <li>in the event of loss of the local data (account, favourites, settings) following a browser wipe or
+      a device failure.</li>
+  </ul>
+  <p>
+    Nothing in these terms limits the rights that the law recognises for consumers, nor exempts them
+    from the liabilities that the law does not permit to be waived.
+  </p>
+
+  <h2>9. Personal data and cookies</h2>
+  <p>
+    See the <a href="confidentialite.en.html">privacy policy</a> and the
+    <a href="cookies.en.html">cookie page</a>.
+  </p>
+
+  <h2>10. Changes to the terms</h2>
+  <p>
+    These terms may be modified, in particular in the event of changes to the service or to the law. The
+    applicable version is the one in force at the time of the visit, and the update date appears at
+    the top of the page.
+  </p>
+
+  <h2>11. Applicable law and disputes</h2>
+  <p>These terms are governed by <b>Belgian law</b>.</p>
+  <p>
+    In the event of a difficulty, first write to the contact indicated in the
+    <a href="mentions-legales.en.html">legal notice</a>. Failing an amicable solution, a consumer
+    in Belgium may refer the matter to the <b>Belgian Consumer Mediation Service</b>, Boulevard du Roi
+    Albert II 8, 1000 Brussels —
+    <a href="https://www.mediationconsommateur.be" rel="noopener noreferrer">mediationconsommateur.be</a>
+    — or, from another country of the Union, to the <b>European Consumer Centre</b> of their country.
+  </p>
+  <p>
+    These terms are published in three languages: <b>French, Dutch and English</b>. In the event of any
+    divergence of interpretation between them, the <b>French</b> version shall prevail, being the
+    language in which they were drafted.
+  </p>
+
+  <footer class="pied-doc">
+    <a href="index.html">Back to the site</a>
+    <a href="mentions-legales.en.html">Legal notice</a>
+    <a href="confidentialite.en.html">Privacy</a>
+    <a href="cookies.en.html">Cookies</a>
+  </footer>
+
+</div>
+</body>
+</html>

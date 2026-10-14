@@ -1,0 +1,123 @@
+LECTEUR DE PAIRES — essai sur les 51 pages conservées — 2026-10-11
+
+Pages qui rendent AU MOINS un candidat : 13 / 51
+Candidats retenus au total : 183
+
+PAGE PAR PAGE (candidats décroissants)
+    34 cand. ·   72 zones · PROMO_LISIBLE   JYSK France (FR)
+    29 cand. ·   31 zones · PROMO_LISIBLE   Bongo & Wonderbox (BE)
+    21 cand. ·   21 zones · PROMO_LISIBLE   DocMorris (DE)
+    18 cand. ·   36 zones · PROMO_LISIBLE   myToys (DE)
+    16 cand. ·   16 zones · PROMO_LISIBLE   GrosBill (FR)
+    16 cand. ·   19 zones · PROMO_LISIBLE   eBay.de (DE)
+    15 cand. ·   34 zones · PROMO_LISIBLE   Otto Group (mode) (DE)
+    14 cand. ·   14 zones · PROMO_LISIBLE   Botanic (FR)
+     7 cand. ·   84 zones · PROMO_LISIBLE   ZooRoyal (DE)
+     4 cand. ·    4 zones · PROMO_LISIBLE   Macitynet (IT)
+     4 cand. ·    8 zones · PROMO_LISIBLE   billiger.de (DE)
+     3 cand. ·   31 zones · PROMO_LISIBLE   Knuspr (DE)
+     2 cand. ·    2 zones · PROMO_LISIBLE   Home24 (DE)
+     0 cand. ·    0 zones · PROMO_LISIBLE   ALDI France (FR)
+     0 cand. ·    0 zones · PROMO_LISIBLE   Aldi Nord (DE)
+     0 cand. ·    0 zones · PROMO_LISIBLE   Aldi Talk (DE)
+     0 cand. ·    0 zones · PROMO_LISIBLE   Courir (FR)
+     0 cand. ·    0 zones · STRUCTURE_PRETE DERTOUR Group (DE)
+     0 cand. ·   35 zones · STRUCTURE_PRETE Das Futterhaus (DE)
+     0 cand. ·    0 zones · PROMO_LISIBLE   Dealabs (BE)
+     0 cand. ·    0 zones · PROMO_LISIBLE   Deutsche Telekom (DE)
+     0 cand. ·   12 zones · PROMO_LISIBLE   EMP (DE)
+     0 cand. ·    0 zones · PROMO_LISIBLE   Edeka (DE)
+     0 cand. ·   24 zones · PROMO_LISIBLE   Fielmann (DE)
+     0 cand. ·    0 zones · PROMO_LISIBLE   Franprix (FR)
+     0 cand. ·    0 zones · PROMO_LISIBLE   Getränke Hoffmann (DE)
+     0 cand. ·    0 zones · PROMO_LISIBLE   ICI PARIS XL (BE)
+     0 cand. ·   11 zones · STRUCTURE_PRETE Jochen Schweizer mydays (DE)
+     0 cand. ·   20 zones · PROMO_LISIBLE   Krëfel (BE)
+     0 cand. ·    0 zones · PROMO_LISIBLE   La Belle Vie (FR)
+     0 cand. ·    0 zones · PROMO_LISIBLE   La Poste Mobile (FR)
+     0 cand. ·    7 zones · PROMO_LISIBLE   O2 Telefónica (DE)
+     0 cand. ·    0 zones · PROMO_LISIBLE   OBI (DE)
+     0 cand. ·    3 zones · PROMO_LISIBLE   Otto (otto.de) (DE)
+     0 cand. ·    0 zones · STRUCTURE_PRETE Poco Einrichtungsmärkte (DE)
+     0 cand. ·    0 zones · PROMO_LISIBLE   Porta Möbel (DE)
+     0 cand. ·    0 zones · PROMO_LISIBLE   SFR (FR)
+     0 cand. ·    0 zones · PROMO_LISIBLE   Schoenen Torfs (BE)
+     0 cand. ·    0 zones · PROMO_LISIBLE   Shop Apotheke (Redcare Pharmacy) (DE)
+     0 cand. ·    0 zones · PROMO_LISIBLE   Standaard Boekhandel (BE)
+     0 cand. ·   12 zones · PROMO_LISIBLE   Thomas Philipps (DE)
+     0 cand. ·    0 zones · PROMO_LISIBLE   Trinkgut (DE)
+     0 cand. ·    0 zones · PROMO_LISIBLE   Ultra Premium Direct (FR)
+     0 cand. ·    0 zones · STRUCTURE_PRETE Voyage Privé (BE)
+     0 cand. ·    0 zones · PROMO_LISIBLE   X²O Badkamers (BE)
+     0 cand. ·    0 zones · PROMO_LISIBLE   Zalando (BE)
+     0 cand. ·    0 zones · PROMO_LISIBLE   hagebau (DE)
+     0 cand. ·    1 zones · PROMO_LISIBLE   iPhoneItalia (IT)
+     0 cand. ·    0 zones · PROMO_LISIBLE   mydealz (DE)
+     0 cand. ·    0 zones · PROMO_LISIBLE   reifen.com / reifendirekt (DE)
+     0 cand. ·   80 zones · PROMO_LISIBLE   rue du commerce (FR)
+
+CE QUE LE LECTEUR A LU — il faut relire ces exemples à la main
+
+== JYSK France (FR) — 34 candidat(s)
+   « ole="img" class="relative inline-block text-border last:mr-0" data-testid="rating" aria-label="5 sur 5 étoiles">   25, » — 64.99 € → 25.00 € (-62 %) [classe-ancien-prix] 
+   « ss="relative inline-block text-border last:mr-0" data-testid="rating" aria-label="5 sur 5 étoiles">   9,00 € /pcs » — 22.99 € → 9.00 € (-61 %) [classe-ancien-prix] 
+   « le="img" class="relative inline-block text-border last:mr-0" data-testid="rating" aria-label="5 sur 5 étoiles">   65,0 » — 109.00 € → 65.00 € (-40 %) [classe-ancien-prix] 
+
+== Bongo & Wonderbox (BE) — 29 candidat(s)
+   « .25 7.0924 16.25 8.75Z" stroke="#595F7A" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/> 8 verblijv » — 144.90 € → 134.90 € (-7 %) [classe-ancien-prix] 
+   « .28733 11.5515 4.2771H9.62995M9.62995 4.2771V9.07894" stroke="#4F4F4F" stroke-width="1.5" stroke-linecap="round" stroke- » — 290.00 € → 239.80 € (-17 %) [classe-ancien-prix] 
+   « .28733 11.5515 4.2771H9.62995M9.62995 4.2771V9.07894" stroke="#4F4F4F" stroke-width="1.5" stroke-linecap="round" stroke- » — 335.90 € → 299.90 € (-11 %) [classe-ancien-prix] 
+
+== DocMorris (DE) — 21 candidat(s)
+   « .007z"> ( 3 ) » — 9.90 € → 8.39 € (-15 %) [balise-barrée] 
+   « 2.9z"> ( 0 ) » — 54.03 € → 42.17 € (-22 %) [balise-barrée] 
+   « data-testid="rating-star-100-percent" style="width:1rem" aria-hidden="true"> ( 2 ) » — 75.95 € → 59.87 € (-21 %) [balise-barrée] 
+
+== myToys (DE) — 18 candidat(s)
+   « n4" data-oc-sheet-v1-open="" data-oc-sheet-v1-open.id="reptile-ratings-sheet" data-secondary-action=""> (2) ab 37,59 € U » — 49.99 € → 37.59 € (-25 %) [classe-ancien-prix] 
+   « re> Barbie Puppenhaus Barbie Traumvilla (2026) 219,81 € UVP » — 309.99 € → 219.81 € (-29 %) [classe-ancien-prix] 
+   « n4" data-oc-sheet-v1-open="" data-oc-sheet-v1-open.id="reptile-ratings-sheet" data-secondary-action=""> (517) ab 29,99 € » — 48.99 € → 29.99 € (-39 %) [classe-ancien-prix] 
+
+== GrosBill (FR) — 16 candidat(s)
+   « title-row"> Ventes Flash Stocks réduits, prix cassés — ça part vite. Voir toutes les ventes flash › GeForce RTX 5060 Ti  » — 599.99 € → 179.99 € (-70 %) [classe-ancien-prix] /msi-geforce-rtx-5060-ti-8g-ventus-2x-oc-plus-152617
+   « S 559,00 € -6% 599,99 € --:--:-- Frame 4000D RS ARGB Noir + RM750e Gold 179,99 € -25% » — 239.99 € → 179.99 € (-25 %) [classe-ancien-prix] /corsair-frame-4000d-rs-argb-noir-rm750e-gold-170528
+   « 3db368.webp 520w" sizes="(max-width: 860px) 46vw, (max-width: 1280px) 31vw, 24vw" loading="eager" fetchpriority="high">  » — 194.99 € → 53.33 € (-73 %) [classe-ancien-prix] /kingston-snv3s-1to-m-2-146543
+
+== eBay.de (DE) — 16 candidat(s)
+   « Globo LED Außenwandleuchte Lampe Carme Silber IP44 2 x 5W GU10 warmweiß Up&Down » — 69.99 € → 9.99 € (-86 %) [classe-ancien-prix] 
+   « Dyson V15 Detect™ Absolute Kabelloser Staubsauger Generalüberholt » — 559.00 € → 389.00 € (-30 %) [classe-ancien-prix] 
+   « Dyson V10™ Absolute Kabelloser Staubsauger Nickel/Kupfer Generalüberholt » — 499.00 € → 279.00 € (-44 %) [classe-ancien-prix] 
+
+== Otto Group (mode) (DE) — 15 candidat(s)
+   « ;https://i.otto.de/i/otto/0f16dad9-16e5-5c43-8645-a37ab2e34e6a?$dv_energieetikett$&quot;,&quot;scale&quot;:&quot;UNIFORM » — 1499.00 € → 859.00 € (-43 %) [classe-ancien-prix] https://d.otto.de/files/2c9a7343-f157-5831-9c6a-cd3bff2948cd.pdf
+   « ;https://i.otto.de/i/otto/bd239bc3-8145-5341-aeeb-a1c291c4c13c?$dv_energieetikett$&quot;,&quot;scale&quot;:&quot;UNIFORM » — 849.00 € → 479.00 € (-44 %) [classe-ancien-prix] https://d.otto.de/files/c595ba65-8f44-5c8d-8cf6-0c3d8508420f.pdf
+   « 3n4" data-oc-sheet-v1-open="" data-oc-sheet-v1-open.id="reptile-ratings-sheet" data-secondary-action=""> (2424) 429,00 € » — 799.99 € → 429.00 € (-46 %) [classe-ancien-prix] 
+
+== Botanic (FR) — 14 candidat(s)
+   « 1" data-algolia-click="1" data-algolia-object-id="532538" data-algolia-user-token="anon_e8b8c82417c19b2f"> Photinia Red  » — 28.99 € → 18.99 € (-34 %) [balise-barrée] 
+   « lia-click="1" data-algolia-object-id="370808" data-algolia-user-token="anon_e8b8c82417c19b2f"> Plaquettes de châtaignier » — 7.49 € → 5.99 € (-20 %) [balise-barrée] 
+   « ata-algolia-click="1" data-algolia-object-id="410220" data-algolia-user-token="anon_e8b8c82417c19b2f"> Engrais Gazon Ant » — 52.99 € → 44.99 € (-15 %) [balise-barrée] 
+
+== ZooRoyal (DE) — 7 candidat(s)
+   « 19a.354.354 0 0 1-.513-.374l.587-3.426a1.41 1.41 0 0 0-.407-1.252L1.44 6.53a.353.353 0 0 1 .196-.604l3.443-.503a1.42 1.4 » — 37.96 € → 8.29 € (-78 %) [classe-ancien-prix] 
+   « text-16 leading-md " title="" rel="follow" href="#"> 160x30cm » — 54.99 € → 39.99 € (-27 %) [classe-ancien-prix] 
+   « > ( 11 ) UVP 14,49 € » — 39.16 € → 14.49 € (-63 %) [classe-ancien-prix] 
+
+== Macitynet (IT) — 4 candidat(s)
+   « ax, CPU 18 e GPU 32 core: progettato per l’AI, display Liquid Retina XDR da 16,2&#039;&#039;, 36GB di memoria unificata, » — 5199.00 € → 4199.00 € (-19 %) [balise-barrée] 
+   « UGREEN Docking Station Hub USB C con Supporto per Mac Mini M4 M5 Pro M6 » — 79.99 € → 59.99 € (-25 %) [balise-barrée] 
+   « UGREEN NASync DH4300 Plus NAS 4 vani per casa, ufficio e team (senza HDD) » — 439.99 € → 319.99 € (-27 %) [balise-barrée] 
+
+== billiger.de (DE) — 4 candidat(s)
+   « ck" class="prg-helper group cursor-pointer" data-target="_blank" title="AS090EUWH Crispi Pro White Heißluftfritteuse"> N » — 189.99 € → 169.99 € (-11 %) [balise-barrée] 
+   « ="prg-helper group cursor-pointer" data-target="_blank" title="eufyCam S4 Starter-Set 1+1 - Kamera mit HomeBase 3"> eufy » — 598.00 € → 369.95 € (-38 %) [balise-barrée] 
+   « lute inset-0 hidden items-center justify-center rounded-full bg-green-500 text-white"> Kopiert 1.839,20 €* » — 3399.00 € → 1839.20 € (-46 %) [balise-barrée] 
+
+== Knuspr (DE) — 3 candidat(s)
+   « emscope itemtype="https://schema.org/Offer" class="@container flex w-full flex-wrap items-end gap-x-100" data-test="prod » — 2.59 € → 2.07 € (-20 %) [classe-ancien-prix] 
+   « 99 € 2,59 € -23 % für dich » — 2.07 € → 1.99 € (-4 %) [classe-ancien-prix] 
+   « emscope itemtype="https://schema.org/Offer" class="@container flex w-full flex-wrap items-end gap-x-100" data-test="prod » — 1.99 € → 1.70 € (-15 %) [classe-ancien-prix] 
+
+== Home24 (DE) — 2 candidat(s)
+   « motion-cache-771wpf e1ip8esd0"> Neu 399 ,99 € » — 499.99 € → 399.99 € (-20 %) [classe-ancien-prix] 
+   « aria-label="Dies ist ein Produkt der Aktion ABVERKAUF" height="24px" display="inline-flex" class="elt494x1 emotion-cache » — 179.99 € → 170.99 € (-5 %) [classe-ancien-prix] 

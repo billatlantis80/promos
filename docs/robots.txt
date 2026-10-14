@@ -1,0 +1,15 @@
+# robots.txt — kazendra.com
+#
+# Rôle : dire aux moteurs de recherche ce qu'ils peuvent parcourir.
+# Absent jusqu'au 8 octobre 2026 (vérifié : 404), ce qui ralentissait
+# l'indexation sans qu'aucun test ne s'en aperçoive.
+
+User-agent: *
+Allow: /
+
+# Le panneau d'administration n'a rien à faire dans un moteur de recherche :
+# ce n'est pas une page publique, et l'indexer exposerait son adresse.
+Disallow: /admin/
+
+# Le plan du site. Les moteurs le lisent à cette adresse exacte.
+Sitemap: https://kazendra.com/sitemap.xml
