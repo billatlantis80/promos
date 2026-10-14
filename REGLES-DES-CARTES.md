@@ -440,6 +440,79 @@ va voir »). Le chiffre remonte à mesure que les retours s'accumulent — c'est
 que la simulation mesure, et sa raison d'être. **La décision ne peut pas être prise avant
 d'avoir ce taux.**
 
+**1.30** **LA COMMANDE DE B, 14/10/2026 AU SOIR — « TABLE RASE ».** Mot pour mot :
+
+> « Est-ce que tu peux effacer toutes les règles que nous avons mises en place depuis le
+> début, concernant la suppression des cartes. Toutes les règles qui ont été écrites depuis
+> que nous travaillons sur ce sujet. Il ne faut plus les prendre en considération et les
+> effacer pour que la base de données soit vierge de toutes ces règles ? Ensuite, on bloque
+> toutes les fiches de plus de 5 jours, une seconde et à la mise à jour suivante, toutes les
+> 15 minutes, si la promotion est toujours active, alors elle est réintroduite avec la durée
+> de vie complète depuis la première fois que la carte est apparue. Si la promotion n'est plus
+> active la carte est complètement effacée du système. »
+
+**VERDICT : l'intention est claire, la réalisation est possible — mais deux mots de cette
+phrase ont chacun deux sens, et c'est eux qu'il faut lever avant de toucher à quoi que ce
+soit.** Inventaire mesuré au 14/10/2026 (19:35 UTC).
+
+**A. Ce qui a été ÉCRIT** (les documents — effaçables, l'histoire reste dans git et dans le
+bundle de 2,97 Go) : `REGLES-DES-CARTES.md` (**507 lignes**) · `CHANTIERS-EN-ATTENTE.md`
+(31) · `REECRITURE-HISTORIQUE-2026-10-14.md` (78) · et **14 plans** dans `.hermes/plans/`,
+dont `2026-10-12-donnees-et-peremption-7-jours.md`, `2026-10-13-fiches-non-confirmees-masquees.md`,
+`2026-10-13-verification-duree-de-vie-et-poids.md`, `2026-10-13-controle-de-page-a-rendement.md`.
+
+**B. Ce qui AGIT** (les interrupteurs du code, `collecteur.mjs`) :
+
+- `PLAFOND_OFFRES_ACTIF` — **déjà éteint** : le retrait à 7 jours sur `vuLe`.
+- `OFFRES_SORTENT_SUR_VERDICT_ACTIF` — **allumé** : la page décide de la sortie.
+- `PROMOTION_DECIDE_LA_CARTE_ACTIF` — **allumé** : plus de promotion → la carte sort.
+- `PRIX_COMMUNAUTE_ACTIF` — **déjà éteint** : la correction des prix communautaires.
+- `VEILLE_SEPT_JOURS_ACTIVE` — **allumé**, et **il ne concerne PAS les cartes** : c'est la
+  veille de presse, jugée sur la **date de publication**. L'effacer casserait un fil qui
+  fonctionne.
+- Les délais : `PLAFOND_DONNEES_JOURS = 7`, `VERDICT_SOURCE_MAX_AGE_JOURS = 7`,
+  `LIMITE_PRESSE_JOURS = 7`, `LIMITE_SOURCE_DISPARUE_JOURS = 7`, `VERDICT_SOURCE_PAR_PASSAGE = 3`.
+
+**C. Ce qui est ÉCRIT DANS LA BASE** (les traces que les règles ont laissées) :
+
+- **7 964 fiches** portent `perimee: true` — masquées ;
+- **16 242** portent un `verdict` et une `analyse` ; **7 182** une `dateRelevee` ;
+- `donnees/verdicts-sources.json` : **133 jugements** ; `donnees/peremption-source.json` :
+  la mesure des 48 % de faux positifs ;
+- le champ `journal` du catalogue porte **34 entrées**, dont les raisons de règle elles-mêmes
+  (« dates relevées », « prix d'origine relu »…).
+
+**D. LES DEUX MOTS À DEUX SENS.**
+
+1. **« base de données vierge de toutes ces règles »** — trois portées possibles, et une
+   seule peut être vraie : **(i)** les documents seuls (gratuit, réversible) · **(ii)** les
+   interrupteurs aussi (le site cesse alors de retirer les cartes mortes, et plus aucune règle
+   de sortie ne subsiste) · **(iii)** les traces dans la base aussi (il faut **démasquer
+   7 964 fiches** et décider du sort des colonnes `perimee`, `verdict`, `analyse`).
+2. **« si la promotion est toujours active »** — jugée **comment** ? **(i)** par le **flux de
+   la source**, gratuit, et c'est ce que dit « à la mise à jour suivante toutes les quinze
+   minutes » — **aucune requête supplémentaire** ; **(ii)** par **la page de la source**
+   (2 000 pages/jour, donc jusqu'à sept jours d'attente). **C'est la question de fond**, parce
+   qu'elle décide si tout l'appareil de 1.10 et 1.27 — la politesse, les cinq conditions de
+   lecture, la table des verdicts — reste nécessaire **ou devient du poids mort**.
+
+**E. RÉALISABLE, ET MOINS CHER QUE PRÉVU.** Les trois pièces à construire sont déjà mesurées :
+le **registre des premières vues** (5,71 Mo, ~2,2 Mo en production — 1.29), le **blocage à
+cinq jours** sur `premiereVue` (le mécanisme du masquage existe, il change de seuil et
+d'horloge), la **réintroduction** avec l'âge total (mesurée : Coolblue, 8,15 jours, revenue
+six minutes plus tard), et l'**effacement définitif** (`connues.delete` + le visuel, en place).
+**Si « toujours active » se juge sur le flux, la règle ne coûte aucune requête** : elle
+s'appuie sur une lecture qu'on fait déjà toutes les quinze minutes. Tout le budget de
+vérification devient alors inutile **pour la suppression** — ce qui ne dit pas qu'il le
+devienne pour la justesse des prix (1.10), qui est une autre question.
+
+**F. ET CE QUE LA TABLE RASE EMPORTERAIT AVEC ELLE, à savoir avant de la faire :** la
+protection du 12/10 (le compte à rebours repartait pour qu'une promotion d'un mois ne soit
+jamais emportée) — que la réintroduction remplace avantageusement, mais **seulement si le
+registre existe** ; et la règle de la page muette (« le silence ne décide rien », 48 % de faux
+positifs) — qui devient **sans objet**, puisque l'effacement ne se décide plus sur une preuve
+mais sur une **échéance**. C'est le vrai changement : **on passe d'un jugement à une date.**
+
 ---
 
 ## Reprise de tous les points — 14/10/2026, après l'adaptation
