@@ -513,6 +513,58 @@ registre existe** ; et la règle de la page muette (« le silence ne décide rie
 positifs) — qui devient **sans objet**, puisque l'effacement ne se décide plus sur une preuve
 mais sur une **échéance**. C'est le vrai changement : **on passe d'un jugement à une date.**
 
+**1.31** **LA DÉCISION DE B, 14/10/2026 : AUCUNE MÉMOIRE.** Mot pour mot :
+
+> « Il faut effacer toute trace qui pèse lourd sur le système. Quand une promotion a disparu,
+> plus besoin de stocker aucune information. Si la promotion réapparaît un autre jour ou pour
+> un autre cycle, on récupère tout simplement l'information et on le traite comme si c'était
+> la première fois qu'il rentrait dans le fil. »
+
+**MON AVIS, ET IL EST FAVORABLE — mais pas pour la raison qu'on croit.** B a raison, et les
+chiffres le disent plus fort que l'intuition : **la trace qui pèse n'est pas la mémoire, c'est
+l'image.**
+
+**a. Les poids, mesurés (14/10/2026, 21:45 belge).** `docs/` **693 Mo** · `.git` **699 Mo** ·
+`docs/img` **655 Mo** (22 377 fichiers, 28,8 Ko en moyenne) · `docs/offres.json` **21 Mo**,
+réécrit et commité 96 fois par jour · `data/conditionnel` **60 Mo** (le cache HTTP poli, qui ne
+concerne pas les cartes) · `data/historique-prix.json` **3,4 Mo** · le registre de la
+simulation **8,1 Mo**.
+
+**Ce que l'effacement libère : 348,8 Mo de visuels** — les images des cartes de plus de cinq
+jours. **Ce qu'un registre des premières vues coûterait : 2,2 Mo**, soit **0,6 %** de ce que
+l'effacement libère. Donc « ne rien garder » ne fait pas gagner de poids : cela fait gagner de
+la **propreté**. C'est une raison suffisante — mais ce n'est pas celle du poids.
+
+**b. Et l'âge total n'a PAS besoin de notre mémoire : c'est la source qui se souvient.** Sur
+les **13 427** cartes qui seraient effacées : **8 806 (65,6 %)** portent une **date publiée par
+la source**, et cette date est **redonnée à chaque passage** où la source resert l'offre. Sa
+position moyenne : **moins de 24 h de notre première vue** — c'est donc bien la date de
+naissance de l'annonce. Une carte qui revient peut alors dire « 12 jours » **sans que nous
+gardions quoi que ce soit**. C'est exactement le « on récupère tout simplement l'information »
+de B : **l'information, c'est la source qui la redonne, pas nous qui la stockons.**
+
+**c. Le trou, et il est petit, nommé, et fermé par les faits : 4 025 cartes (30,0 %)** sont des
+pages qui ne publient aucune date (`dateRelevee`) — les **ventes flash Amazon des 9 pays**.
+Pour elles, un retour remettrait l'âge à zéro. Mais ce sont précisément les offres dont **la
+fenêtre se renouvelle entièrement** : mesuré plus haut, **1 605 des 2 179** cartes en repli
+sont des ventes flash, et elles **ne reviennent pas** — leur fenêtre tourne d'un bloc. **La
+perte est donc théorique : ces cartes ne repasseront pas.**
+
+**d. Un effet de bord gratuit.** Le visuel d'une carte effacée est **déjà** purgé comme
+orphelin (collecteur.mjs, l. 7166) : effacer la carte suffit à faire disparaître l'image. Rien
+de plus à coder pour libérer les 348,8 Mo.
+
+**e. Ce qui reste à trancher, et ce n'est plus le poids mais la qualité : l'historique des
+prix** (`data/historique-prix.json`, **3,4 Mo**). Il survit aujourd'hui à un effacement, et
+c'est lui qui construit l'`analyse` — prix bas, prix habituel, « est plus bas ». Si « aucune
+trace » vaut aussi pour lui, une carte qui revient **repart sans passé** : son badge « bon
+plan » serait faible pendant sept jours. C'est cohérent avec « traité comme une première
+fois » — mais c'est un **choix**, pas une conséquence.
+
+**f. Et l'instrument de mesure est l'exception, temporairement.** La simulation (1.29) a besoin
+d'un registre pour compter les retours — elle en tient un, **8,1 Mo**, dans `data/` que git
+ignore. **Il disparaît avec la décision.**
+
 ---
 
 ## Reprise de tous les points — 14/10/2026, après l'adaptation
