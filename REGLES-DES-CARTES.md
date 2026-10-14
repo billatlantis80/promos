@@ -636,6 +636,57 @@ ignore. **Il disparaît avec la décision.**
   jours pleins, âge donné par la source), mais si elle revient, son histoire de prix est là
   pour dire la vérité sur sa remise. **Neuve à l'écran, pas amnésique sur le fond.**
 
+**1.33** **MON AVIS SUR LA SOLUTION — demandé par B le 14/10/2026.** *« Est-ce que d'après toi
+cette solution est bonne ? »* Mesuré avant de répondre, parce que mon chiffre précédent
+(−33 %) reposait sur une chose que je n'avais pas vérifiée : **quand la source a-t-elle servi
+pour la dernière fois** les cartes que la règle retire.
+
+**Ce que la règle retire en plus, mesuré** : **5 428 cartes** affichées aujourd'hui avec plus de
+cinq jours d'affichage. Leur dernier service par la source :
+
+- **servies il y a 120 à 168 h (5 à 7 jours) : 4 142 — 76,3 %** ← le gros du lot ;
+- servies il y a 48 à 120 h : 735 (13,5 %) ;
+- servies dans les 24 h : 402 (7,4 %) — **seules celles-là reviendront vite**, et elles
+  reviendront **encore et encore** : leur source les sert tous les jours, donc elles seront
+  effacées puis réintroduites **toutes les cinq jours** ;
+- aucune depuis plus de sept jours (celles-là sont déjà masquées par la règle actuelle).
+
+**Donc le chiffre tient, et il est structurel : l'affichage passe de 15 484 à environ 10 600
+cartes, −31 %, définitivement.** Les retours ne peuvent pas le refermer : 76 % du lot a quitté
+la fenêtre de sa source depuis cinq à sept jours et n'y rentrera plus.
+
+**Le coût des cartes qui battent des ailes est négligeable, et je l'ai vérifié :** 402 cartes
+× 28,8 Ko = **11,7 Mo re-téléchargés tous les cinq jours**, soit **2,3 Mo par jour**, contre
+**1,46 Go** de collecte — **0,16 %**. Une « corbeille » des visuels pour l'éviter coûterait plus
+de complexité que de trafic : **je ne la recommande pas**.
+
+**⚠ LE VRAI PRIX N'EST PAS LE VOLUME, ET IL FAUT LE DIRE.** La mesure la plus proche dont on
+dispose (12/10/2026, 140 pages, population désignée par une échéance de service) : **47,7 % des
+cartes qu'une échéance de service emporte étaient ENCORE VIVANTES** à leur source
+(`isExpired: false`). Une échéance ne juge pas : elle emporte **des promotions réelles que
+plus aucune source ne met en avant**. Autrement dit, la règle troque environ 4 900 cartes
+contre la garantie de n'afficher **que ce qu'une source sert encore**.
+
+**MON VERDICT : oui, la solution est bonne — et meilleure que ce qu'on applique aujourd'hui,
+pour trois raisons mesurées.**
+
+1. **Aucun faux positif n'est possible.** L'effacement ne repose plus sur un jugement, mais sur
+   une **date**. On ne peut pas se tromper sur une date — alors que le jugement actuel se trompe
+   de **48 %** quand la page est muette.
+2. **Elle supprime la faute qui abîme une marque** : afficher un prix qui n'existe plus. Les
+   cartes qu'elle retire ne sont plus servies par personne depuis cinq à sept jours — ce sont
+   exactement celles dont le prix a pu bouger sans que personne nous le dise.
+3. **Elle est gratuite et simple** : aucune requête, aucun registre, aucun budget de politesse,
+   aucune table de verdicts. **348,8 Mo libérés.**
+
+**Et sa philosophie se dit en une phrase, qu'il faut assumer : « on n'affiche que ce qu'une
+source sert encore. »** C'est un choix de **fraîcheur contre volume** — et si l'objectif est le
+minimum d'erreurs et une marque réputée, c'est le bon côté de la ligne.
+
+**Ce que je changerais, en revanche :** rien dans la règle. **Ce que je garderais absolument :**
+les deux exceptions déjà posées — l'**historique des prix** (1.32) et la **veille de presse**
+(R.9), dont la règle fonctionne et n'a rien à voir avec un service.
+
 ---
 
 ## Reprise de tous les points — 14/10/2026, après l'adaptation
