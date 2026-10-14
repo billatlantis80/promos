@@ -489,6 +489,68 @@ survit · et le dépôt est repris chaque semaine.**
 
 ---
 
+## VÉRIFICATION DU SCÉNARIO AVANT MISE EN SERVICE — 14/10/2026, 23:05 UTC
+
+B : *« J'aimerais que tu vérifies ce scénario avant de le mettre en service. »* Six contrôles,
+faits sur le vrai catalogue. **Quatre tiennent. Deux méritent un mot, dont un qui touche
+directement la notion de qualité.**
+
+**✅ 1. L'horloge est saine.** Les cartes reçoivent bien `premiereVue` à l'entrée :
+**100 %** des cartes de 0–24 h, **100 %** de 24–48 h, **100 %** de 48–72 h. Le compteur des cinq
+jours ne repose donc pas sur un champ absent. *(Le trou de **20 %** sur la cohorte de 5–6 jours
+— 1 663 sur 2 084 — est un **héritage** : ces fiches sont entrées avant que le champ existe, et
+la cohorte se vide d'elle-même.)*
+
+**✅ 2. Le piège du tri est écarté — et c'était le plus dangereux.** Le site trie **uniquement
+sur `date`** (`parRecence = new Date(b.date) - new Date(a.date)`, l. 1545), c'est-à-dire la
+**date de la source**, jamais sur `premiereVue`. Donc une carte dont le compteur repart
+**ne saute pas** en tête des « plus récentes » : sa date de naissance ne bouge pas. Sans ce
+détail, le scénario aurait fabriqué de faux « nouveaux » toutes les cinq minutes.
+
+**✅ 3. L'effacement libère bien les visuels.** La purge des orphelins est **active** et
+**pilotée par les offres affichées** (`collecteur.mjs`, l. 7116 : `attendus`, recensé *avant*
+les téléchargements). Effacer la carte suffit donc à faire disparaître l'image — les 348,8 Mo
+sont réellement libérables, sans code supplémentaire.
+
+**✅ 4. Les cinq cas de l'épreuve existent réellement.** Trouvés et sortis du catalogue vivant :
+une carte de 5 jours **servie** (flash-it, vue il y a 0,7 h) · une de 5 jours non servie depuis
+133 h · une **reservie au-delà de 5 jours** (groupon, vue il y a 0,3 h) · une de 4 jours non
+servie · un article de veille. L'épreuve n'est donc pas théorique.
+
+**⚠ 5. LE PRIX N'EST PAS RAFRAÎCHI — et c'est la vraie limite du scénario.** Le scénario **ne
+relit aucun prix**. Le prix affiché est celui du **dernier service de la source**. Sur les
+**10 207 cartes qui seraient affichées** :
+
+- prix confirmé **il y a moins de 24 h : 2 981 — 29,2 %** ;
+- prix confirmé **il y a plus de 24 h : 7 226 — 70,8 %** ;
+- dont **2 à 5 jours : 5 161 — 50,6 %** ;
+- **plus de 5 jours : 0** *(la borne tient)*.
+
+**Autrement dit : le scénario garantit la fraîcheur de l'EXISTENCE, pas celle du PRIX.** Il fait
+passer la borne de 7 jours à 5 — une amélioration de deux jours, pas une garantie. Ce qui
+l'atténue, et c'est ce qui le rend honnête : **la carte affiche son âge**, donc le lecteur sait
+à quoi il a affaire. Toute autre solution (relire les pages marchandes) ramènerait l'appareil
+qu'on vient de retirer.
+
+**⚠ 6. Les quatre familles sans date gardent leur défaut.** 42,5 % des cartes retirées, et
+**304 des 400 retours** mesurés. Sur un retour, leur `date` est réparée à `premiereVue` → elles
+apparaîtront **en tête des « plus récentes »** alors qu'elles peuvent avoir dix jours. Pour les
+**ventes flash**, c'est **factuellement juste** (une nouvelle vente du jour *est* récente). Pour
+`amazon`, `groupon` et `socialdeal`, c'est une **petite inexactitude assumée**.
+
+**⚠ 7. Et « zéro requête ajoutée » mérite une nuance.** Le flux ne coûte rien de plus — mais
+**chaque retour re-télécharge son visuel** (il avait été supprimé). Rythme observé : 80 retours
+en 3 h 20, soit **~576 par jour**, ≈ **+7 % de requêtes** sur les hôtes d'images. Ce chiffre est
+gonflé par la vague initiale (les ~400 cartes encore servies se font toutes détecter une fois) :
+**le régime stable sera plus bas, et c'est la simulation qui le dira.**
+
+**VERDICT : le scénario est sain et utilisable. Rien n'y est bloquant.** Deux choses à accepter
+en connaissance de cause : **il ne rafraîchit pas les prix** (mais il borne leur âge à cinq
+jours, et la carte l'affiche), et **les quatre familles sans date peuvent dater à tort** — les
+ventes flash, où c'est sans conséquence.
+
+---
+
 ## Comment ce fichier se lit
 
 - Les règles s'écrivent **une par une**. Aujourd'hui, la première.
