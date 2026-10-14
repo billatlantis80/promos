@@ -169,6 +169,77 @@ pente.
 
 ---
 
+### MA RECOMMANDATION — la meilleure solution pour ton scénario, point par point
+
+Demandée par B : *« Quelle est la meilleure solution d'après toi en fonction du scénario que je
+souhaite ? »* Elle tient le scénario de B **entier**, et elle supprime la contradiction **sans
+ajouter de mémoire**. Tout est mesuré.
+
+**1. La vie d'une carte : cinq jours garantis.** Bloquée à cinq jours et une seconde. C'est la
+seule décision qui ne puisse pas se tromper : une date ne juge pas.
+
+**2. Le compteur : `premiereVue`**, avec `vuLe` en repli pour les 2 544 ventes flash entrées
+avant que ce repère existe.
+
+**3. La date d'édition : celle que LA SOURCE publie. Donc AUCUN registre.** Mesuré sur les
+**15 915** cartes dont la source publie une date : l'écart entre cette date et notre première
+vue est de **13 minutes en médiane**, **97,8 % sous l'heure**, **99,9 % sous 24 h**. C'est donc
+**le même instant** — et il est **redonné à chaque service**. La carte garde son **vrai âge**
+**sans que nous gardions rien**. La contradiction de B (« ne rien garder » *et* « garder la date
+d'édition ») **disparaît sans registre**.
+
+**4. Le trou, mesuré et assumé : quatre familles ne publient aucune date** — `flash` (Amazon),
+`socialdeal`, `amazon`, `groupon` : **2 101** cartes retirées, dont **304 des 400** qui
+reviennent. Pour elles, la date d'édition repart. Coût : **~300 cartes sur 15 000 (2 %)**, et
+pour l'essentiel des **ventes flash** — où « neuf » est **factuellement juste** : une vente du
+jour qui revient **est** une nouvelle vente. Fermer ce trou coûterait un registre limité à ces
+quatre familles : **0,08 Mo aujourd'hui, 1,9 Mo** avec un horizon de 90 jours. **Je ne le
+recommande pas** — le gain ne vaut pas la mémoire à tenir.
+
+**5. La vérification : le flux de la source, à SA prochaine lecture.** Pas « dans quinze
+minutes » : **108 sources sur 229 dorment** à chaque passage, **96** n'ont pas été lues depuis
+24 h. Donc la carte reste en pause **jusqu'à ce que sa source soit relue** — et si sa source n'a
+plus parlé depuis **7 jours**, la carte est effacée **faute de réponse**
+(`LIMITE_SOURCE_DISPARUE_JOURS` existe déjà). Sans cette borne, des cartes resteraient en pause
+**pour toujours**.
+
+**6. La pause : la carte RESTE AFFICHÉE.** Elle vient de vivre cinq jours ; la cacher quelques
+minutes pour la remontrer ensuite ne sert personne et fait clignoter le catalogue. Le seul cas
+où elle disparaît est celui où elle doit disparaître.
+
+**7. Effacé :** la fiche (stock **et** catalogue publié), le visuel, les marques (`verdict`,
+`analyse`, `perimee`, `dateRelevee`, `serviceAuTour`). **Conservé, et c'est tout : l'historique
+des prix.**
+
+**8. Et il se raccroche tout seul** — vérifié : l'identifiant est `préfixe + sha1(lien)`,
+dérivé de l'URL, donc **stable à travers l'effacement**. Une carte republiée retrouve
+**exactement** ses prix passés, et son `analyse` (prix bas, prix habituel, « est plus bas ») se
+**recalcule** depuis cet historique. **Le badge « bon plan » se rétablit dès le retour**, sans
+que nous gardions la fiche.
+
+**9. Aucune autre trace** : pas de liste d'exclusion, pas de registre, pas de compteur de
+retours en production.
+
+**10. Aucun coût de politesse — un gain, même :** la règle **n'ajoute aucune requête**, et elle
+**supprime** le besoin du budget de 2 000 pages/jour et de tout le contrôle de page, qui n'ont
+plus rien à décider.
+
+**11. Ce qui s'éteint :** `OFFRES_SORTENT_SUR_VERDICT_ACTIF` · `PROMOTION_DECIDE_LA_CARTE_ACTIF`
+· le masquage (`perimee`) · `PLAFOND_OFFRES_ACTIF` · tout le contrôle de page.
+
+**12. L'effet du premier jour, à annoncer avant :** **13 415 cartes** basculent d'un coup,
+~**10 600** restent affichées (**−31 %**), **348,8 Mo** s'en vont.
+
+**13. Ce qu'on perd, dit une fois pour toutes :** **47,7 %** des cartes qu'une échéance de
+service emporte étaient **encore vivantes** à leur source. Le principe assumé : **« on
+n'affiche que ce qu'une source sert encore. »**
+
+**14. Avant d'allumer :** l'épreuve (six cas refusés, R.12) · la mesure avant/après (R.13) ·
+le taux de retour de la simulation (R.14) · et **un commit seul**, pour pouvoir être défait
+seul (R.16).
+
+---
+
 ## Comment ce fichier se lit
 
 - Les règles s'écrivent **une par une**. Aujourd'hui, la première.
@@ -765,10 +836,13 @@ cinq jours d'affichage. Leur dernier service par la source :
 cartes, −31 %, définitivement.** Les retours ne peuvent pas le refermer : 76 % du lot a quitté
 la fenêtre de sa source depuis cinq à sept jours et n'y rentrera plus.
 
-**Le coût des cartes qui battent des ailes est négligeable, et je l'ai vérifié :** 402 cartes
-× 28,8 Ko = **11,7 Mo re-téléchargés tous les cinq jours**, soit **2,3 Mo par jour**, contre
-**1,46 Go** de collecte — **0,16 %**. Une « corbeille » des visuels pour l'éviter coûterait plus
-de complexité que de trafic : **je ne la recommande pas**.
+**⚠ CORRECTION DU 14/10/2026 (22 h) — CE COÛT N'EXISTE PAS, ET L'ERREUR ÉTAIT DE MOI.** J'avais
+écrit ici que les **402** cartes reservies chaque jour seraient « effacées puis réintroduites
+tous les cinq jours », avec **11,7 Mo** de visuels re-téléchargés. **C'est faux, avec
+l'algorithme précis** : une carte que sa source sert **à ce passage-là** est **confirmée au
+moment même** où elle franchit les cinq jours — **elle n'est jamais effacée**, son compteur
+repart, et **aucun visuel n'est retéléchargé**. Le seul cas d'effacement est celui où la source
+ne sert plus. **Le coût est donc de zéro**, et il n'y a rien à arbitrer.
 
 **⚠ LE VRAI PRIX N'EST PAS LE VOLUME, ET IL FAUT LE DIRE.** La mesure la plus proche dont on
 dispose (12/10/2026, 140 pages, population désignée par une échéance de service) : **47,7 % des
