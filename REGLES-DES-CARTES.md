@@ -17,7 +17,8 @@ le commit `c5d7847d`).
 ## Règle 1 — La vie d'une carte
 
 **État : à l'état de projet.** Rien n'est appliqué, ni la durée, ni la file, ni le budget.
-Tout ce qui suit est à corriger.
+Tout ce qui suit est à corriger — **sauf la ligne 1.13, arrêtée par B le 14/10/2026** (elle
+n'est pas appliquée pour autant : une ligne arrêtée dans une règle incomplète ne branche rien).
 
 ### L'énoncé
 
@@ -68,6 +69,10 @@ ne parle plus de promotion, la carte sort.
 
 **1.13** Le compteur des cinq jours se lit sur **`premiereVue`** — la **première fois que la
 carte est parue chez nous**. C'est l'âge d'affichage, et rien d'autre.
+
+> **VALIDÉE PAR B, 14/10/2026** : « Le compteur de 5 jours c'est bien la première parution
+> chez nous. » C'est la première ligne de la règle 1 qui passe de *projet* à *arrêtée*. Rien
+> n'est branché pour autant : la règle n'est pas complète (voir 1.20 et 1.21).
 
 **1.13.a** **Pourquoi pas `vuLe`.** `vuLe` est **remis à zéro chaque fois qu'une source
 resert l'offre**. Mesuré le 14/10/2026 : **1 197 offres** (4,9 %) venaient d'être reservies
