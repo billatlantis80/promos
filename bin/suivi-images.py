@@ -70,6 +70,32 @@ JOUR_DU_DIGEST = 0                  # le résumé d'une ligne, LE LUNDI (Python 
                                     # — réglé d'abord sur 1, ce qui le faisait parler le
                                     # mardi : une date se lit dans la table, pas de mémoire.
 
+# --- LE POINT QUE B A DIT DE SURVEILLER (14/10/2026) -------------------------
+# B, 14/10/2026 : « Pour l'instant on ne borne pas l'affichage, on surveille le
+# point pour plus tard. »
+#
+# DÉCISION, donc : l'affichage reste non borné. CONSÉQUENCE, et c'est elle qu'on
+# surveille : la file de vérification des cinq jours ne recule jamais — son
+# compteur est la PREMIÈRE PARUTION CHEZ NOUS (`premiereVue`, ligne 1.13 des
+# RÈGLES-DES-CARTES.md, arrêtée par B le 14/10). Une carte qui reste affichée
+# reste à contrôler : la file grandit donc avec le stock, et un contrôle
+# hebdomadaire finit par coûter plus que la collecte entière.
+#
+# ON NE BORNE RIEN, ON MESURE : un enregistrement par jour dans
+# `data/suivi-file-5-jours.jsonl`, et on ne parle QUE si la file a grandi au-delà
+# de SEUIL_CROISSANCE_FILE_PCT sur sept jours. Un rendez-vous qui parle pour ne
+# rien dire cesse d'être lu — la même règle que le reste de ce fichier.
+CATALOGUE = os.path.join(RACINE, "docs", "offres.json")
+SUIVI_FILE = os.path.join(DATA, "suivi-file-5-jours.jsonl")
+JOURS_FILE = 5.0                    # le seuil de B : cinq jours d'affichage
+JOURS_COMPARAISON_FILE = 7          # on compare à ce qu'elle était il y a sept jours
+SEUIL_CROISSANCE_FILE_PCT = 10.0    # % de croissance sur sept jours qui mérite un mot
+SEMAINE_ENTRE_DEUX_MOTS_FILE_S = 7 * 86400
+                                    # Sans cette borne, une croissance DURABLE de +10 %
+                                    # ferait parler le point chaque jour, puisque la
+                                    # comparaison porte toujours sur sept jours en arrière :
+                                    # le même fait serait dit 7 fois. Une fois par semaine.
+
 RE_COLLECTE = re.compile(
     r"^(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}) collecte : (\d+) ms \(code (\d+)\)\s*$")
 RE_JOURNAL = re.compile(r"^(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}) (.*)$")
@@ -969,6 +995,145 @@ def ecrire_rapport() -> None:
 # Programme
 # ---------------------------------------------------------------------------
 
+# ---------------------------------------------------------------------------
+# La file des cinq jours — le point que B a dit de surveiller
+# ---------------------------------------------------------------------------
+
+def _age_jours(valeur) -> float | None:
+    """Âge en jours d'un horodatage ISO, ou None s'il est illisible.
+
+    Un horodatage illisible rend None et JAMAIS zéro : compter une date
+    incomprise pour « aujourd'hui » ferait disparaître la carte de la file, et
+    une file qui perd ses cartes en silence ne surveille plus rien."""
+    try:
+        dt = datetime.datetime.fromisoformat(str(valeur).replace("Z", "+00:00"))
+    except (TypeError, ValueError):
+        return None
+    return (datetime.datetime.now(datetime.timezone.utc) - dt).total_seconds() / 86400.0
+
+
+def mesurer_file() -> dict | None:
+    """LA FILE DE VÉRIFICATION DES CINQ JOURS, telle que la règle 1.13 la définit.
+
+    Le compteur est `premiereVue` — la première parution chez nous. `vuLe` ne
+    sert QUE de repli pour les fiches entrées avant que ce repère n'existe
+    (2 179 cartes mesurées le 14/10/2026, dont 1 605 ventes flash Amazon, dont
+    la fenêtre se renouvelle entièrement et qui ne sont donc jamais reservies).
+    On ne retombe jamais sur `date` : c'est l'acte de naissance publié par la
+    source, il ne dit pas depuis quand la carte est chez nous."""
+    try:
+        with open(CATALOGUE, encoding="utf-8") as f:
+            catalogue = json.load(f)
+    except (OSError, ValueError):
+        return None
+    offres = [o for o in (catalogue.get("offres") or []) if o.get("type") == "offre"]
+    if not offres:
+        return None
+    file_n = 0
+    repli = 0
+    for o in offres:
+        age = _age_jours(o.get("premiereVue"))
+        if age is None:
+            age = _age_jours(o.get("vuLe"))
+            if age is not None:
+                repli += 1
+        if age is not None and age > JOURS_FILE:
+            file_n += 1
+    total = len(offres)
+    return {
+        "jour": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d"),
+        "genereLe": catalogue.get("genereLe"),
+        "total": total,
+        "file": file_n,
+        "surRepli": repli,
+        "partPct": round(100.0 * file_n / total, 1),
+    }
+
+
+def lire_hist_file() -> list[dict]:
+    out: list[dict] = []
+    try:
+        with open(SUIVI_FILE, encoding="utf-8") as f:
+            for ligne in f:
+                ligne = ligne.strip()
+                if not ligne:
+                    continue
+                try:
+                    e = json.loads(ligne)
+                except ValueError:
+                    continue
+                if isinstance(e, dict) and e.get("jour"):
+                    out.append(e)
+    except OSError:
+        pass
+    return out
+
+
+def _ecart_jours(a, b) -> float | None:
+    try:
+        da = datetime.date.fromisoformat(a)
+        db = datetime.date.fromisoformat(b)
+    except (TypeError, ValueError):
+        return None
+    return (db - da).days
+
+
+def relever_file() -> tuple[dict | None, list[str]]:
+    """Un enregistrement par JOUR (pas par passage), et l'écart sur sept jours.
+
+    Rend (l'enregistrement du jour, les anomalies). Silencieux par construction :
+    un seul message possible, et seulement si la file a grandi de plus de
+    SEUIL_CROISSANCE_FILE_PCT sur la semaine — parce que B n'a pas borné
+    l'affichage et que c'est le seul chiffre qui dira quand il faudra y revenir."""
+    maintenant = datetime.datetime.now(datetime.timezone.utc)
+    jour = maintenant.strftime("%Y-%m-%d")
+    hist = lire_hist_file()
+    rec = next((e for e in reversed(hist) if e.get("jour") == jour), None)
+    if rec is None:
+        rec = mesurer_file()
+        if rec is None:
+            return None, ["file des 5 jours NON mesurée : docs/offres.json illisible "
+                          "ou sans offre marchande"]
+        try:
+            with open(SUIVI_FILE, "a", encoding="utf-8") as f:
+                f.write(json.dumps(rec, ensure_ascii=False) + "\n")
+        except OSError:
+            pass
+        hist = hist + [rec]
+
+    ancien = None
+    for e in reversed(hist):
+        if e.get("jour") == jour:
+            continue
+        d = _ecart_jours(e.get("jour"), jour)
+        if d is not None and d >= JOURS_COMPARAISON_FILE:
+            ancien = e
+            break
+
+    anomalies: list[str] = []
+    if ancien and ancien.get("file"):
+        croissance = 100.0 * (rec["file"] - ancien["file"]) / ancien["file"]
+        if croissance >= SEUIL_CROISSANCE_FILE_PCT:
+            memoire = lire_memoire()
+            if pas_trop_recent(memoire.get("fileAlerteLe"), maintenant,
+                              SEMAINE_ENTRE_DEUX_MOTS_FILE_S):
+                memoire["fileAlerteLe"] = maintenant.strftime("%Y-%m-%dT%H:%M:%SZ")
+                sauver_memoire(memoire)
+                anomalies.append(
+                    "file des 5 jours : %d carte(s) (%.1f %% du catalogue), +%.0f %% en %d jours "
+                    "(elle était %d) — l'affichage n'est pas borné, le contrôle s'espace"
+                    % (rec["file"], rec["partPct"], croissance,
+                       _ecart_jours(ancien.get("jour"), jour) or 0, ancien["file"]))
+    return rec, anomalies
+
+
+def ligne_file(rec: dict | None) -> str:
+    if not rec:
+        return ""
+    return (" File des 5 jours : %d carte(s) à contrôler (%.1f %% du catalogue, %d sur "
+            "repli `vuLe`)." % (rec.get("file", 0), rec.get("partPct", 0), rec.get("surRepli", 0)))
+
+
 def digest(force: bool = False) -> str:
     passages = [e for e in lire_suivi() if e.get("type") == "passage"]
     if not passages:
@@ -987,7 +1152,8 @@ def digest(force: bool = False) -> str:
         ad = audits[-1].get("auDessusDuPlafond") or {}
         ligne += (" %d fichier(s) encore au-dessus de %d px (%.1f Mo)."
                   % (ad.get("nb", 0), PLAFOND_PX, ad.get("mo", 0)))
-    return ligne
+    hist = lire_hist_file()
+    return ligne + ligne_file(hist[-1] if hist else None)
 
 
 def main(argv: list[str]) -> int:
@@ -1000,13 +1166,18 @@ def main(argv: list[str]) -> int:
     ecrire_rapport()                       # le rapport se régénère même sans passage neuf
     n, anomalies = relever()
     audit, anomalies_audit = relever_audit(faire_audit)
+    # Le point que B a dit de surveiller (14/10/2026) : un enregistrement par JOUR,
+    # jamais plus, et un mot seulement si la file des cinq jours a grandi de plus
+    # de SEUIL_CROISSANCE_FILE_PCT sur la semaine.
+    rec_file, anomalies_file = relever_file()
     ecrire_rapport()
 
-    anomalies = anomalies + anomalies_audit
+    anomalies = anomalies + anomalies_audit + anomalies_file
 
     if "--json" in argv:
         print(json.dumps({"passagesEcrits": n, "anomalies": anomalies,
-                          "audit": bool(audit)}, ensure_ascii=False, indent=1))
+                          "audit": bool(audit), "file5jours": rec_file},
+                         ensure_ascii=False, indent=1))
         return 0
 
     # Le radotage tue la surveillance : un même message n'est pas répété avant 12 h,

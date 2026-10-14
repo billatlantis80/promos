@@ -130,10 +130,22 @@ enseignes) · la priorité par date.
 priorité · le budget quotidien · la lecture au rythme quotidien au lieu de trois pages par
 passage.
 
-**1.21** **À trancher avant** : la taille de ce qu'on affiche. Tant que le stock entier
-reste affiché, la file ne se videra jamais et il faudra choisir entre discrétion et qualité.
-Borner l'affichage par pays et par rubrique — comme les 160 articles que la veille applique
-déjà — est ce qui rend la vérification quotidienne possible à coût constant.
+**1.21** **TRANCHÉ PAR B, 14/10/2026** : « Pour l'instant on ne borne pas l'affichage, on
+surveille le point pour plus tard. »
+
+- **La décision** : l'affichage reste **non borné** — ni par pays, ni par rubrique.
+- **La conséquence, assumée** : la file de vérification **grandit avec le stock** (le
+  compteur ne recule jamais, voir 1.13), donc le rythme du contrôle **s'espace** : environ
+  une fois par semaine aujourd'hui à 2 000 pages/jour, moins demain si le stock monte.
+- **Ce qui est surveillé, et comment** — **branché le 14/10/2026 dans le suivi qui existait
+  déjà**, pas dans une tâche de plus : `bin/suivi-images.py` écrit **un enregistrement par
+  jour** dans `data/suivi-file-5-jours.jsonl`, ajoute **une ligne au résumé du lundi**, et ne
+  parle **que si la file a grandi de plus de 10 % en sept jours** — et jamais plus d'une fois
+  par semaine, pour qu'une croissance durable ne devienne pas un message quotidien.
+  Épreuvé sur cinq cas (baisse, +5 %, +25 %, historique trop court, premier passage) et sur
+  la répétition : seul le +25 % parle, et il ne se répète pas.
+- **Le chiffre de départ** (14/10/2026, 18:01) : **13 243 cartes** à contrôler, **56,9 %** du
+  catalogue marchand, dont **2 521** comptées sur le repli `vuLe`.
 
 ### D'où elle vient
 
