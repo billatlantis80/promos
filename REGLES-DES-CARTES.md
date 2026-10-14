@@ -16,9 +16,14 @@ le commit `c5d7847d`).
 
 ## Règle 1 — La vie d'une carte
 
-**État : à l'état de projet.** Rien n'est appliqué, ni la durée, ni la file, ni le budget.
-Tout ce qui suit est à corriger — **sauf la ligne 1.13, arrêtée par B le 14/10/2026** (elle
-n'est pas appliquée pour autant : une ligne arrêtée dans une règle incomplète ne branche rien).
+**État : arrêtée dans toutes ses lignes, et PAS ENCORE APPLIQUÉE.** Six lignes ont été
+arrêtées par B le 14/10/2026 — **1.3** (la priorité : `temperature`), **1.10** (le prix
+corrigé seulement si la lecture est certaine), **1.13** (le compteur : `premiereVue`),
+**1.17** (le démasquage : carte par carte), **1.21** (l'affichage n'est pas borné, le point
+est surveillé), **1.27** (le rythme : une fois par semaine, au nom de la politesse).
+
+**Aucun interrupteur n'est touché** : ni la durée, ni la file, ni le budget, ni le rythme.
+Ce qui reste à faire n'est plus d'**écrire** la règle, c'est de la **construire** (voir 1.20).
 
 ### L'énoncé
 
@@ -210,11 +215,13 @@ tient parfaitement).
 
 **1.19** **Déjà branché** : la lecture du verdict de la page · le retrait sur verdict
 (allumé le 13/10) · la correction du prix et de la remise par la page (allumée pour les
-enseignes) · la priorité par date.
+enseignes) · la priorité par date — *qui deviendra la priorité de 1.3 : `temperature` la plus
+haute, puis ancienneté*.
 
-**1.20** **À construire** : le seuil à cinq jours · la file de vérification avec sa
-priorité · le budget quotidien · la lecture au rythme quotidien au lieu de trois pages par
-passage.
+**1.20** **À construire** : le seuil à cinq jours · la file de vérification avec la priorité
+de 1.3 (et la répartition proportionnelle entre cartes à `temperature` et cartes sans) · le
+budget quotidien de 2 000 pages, réparti sur 24 h (1.27.c) · le démasquage carte par carte
+(1.17) · la lecture au rythme du budget, au lieu de trois pages par passage.
 
 **1.21** **TRANCHÉ PAR B, 14/10/2026** : « Pour l'instant on ne borne pas l'affichage, on
 surveille le point pour plus tard. »
