@@ -6916,7 +6916,7 @@ async function collecterRecherche([familleId, requete]) {
  * dès qu'on nettoyait son titre (« 160° - Broyeur Bosch » puis « Broyeur
  * Bosch » = deux offres au lieu d'une). L'URL, elle, ne change pas.
  */
-const cleDe = (o) => {
+export const cleDe = (o) => {
   const u = String(o.lienPage || '').replace(/^https?:\/\/(www\.)?/, '').split('?')[0].replace(/\/$/, '');
   const base = u || String(o.titre).toLowerCase().replace(/[^a-z0-9à-ÿ]+/g, ' ').trim().slice(0, 80);
   // LE PAYS FAIT PARTIE DE L'IDENTITÉ DE L'OFFRE.
