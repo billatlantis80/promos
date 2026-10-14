@@ -32,12 +32,14 @@ d'abord les cartes sur lesquelles on a **cliqué**, puis les plus **en vue**, pu
 **anciennes**.
 
 **1.4** Le **budget de vérification est fixe** : **2 000 pages par jour**, soit environ
-200 Mo, c'est-à-dire **+12 %** du trafic de la collecte (mesuré à ~10 900 requêtes et
-~1,6 Go par jour). Le budget ne dépend pas de la taille du stock — sinon la dette grossit
-sans fin.
+**120 Mo**, c'est-à-dire **+25 %** du nombre de requêtes de la collecte et **+8 %** de son
+volume — mesuré sur les dernières 24 h : **7 928 requêtes** et **1,46 Go**
+(`data/trafic.json`, 94 passages, relevé du 14/10/2026 à 17:46). Le budget ne dépend pas de
+la taille du stock — sinon la dette grossit sans fin.
 
-**1.5** À ce rythme, la file des **11 967 cartes** de plus de cinq jours se vide en
-**six jours** : chaque carte ancienne est donc revérifiée environ **une fois par semaine**,
+**1.5** *(nombre mis à jour le 14/10 — la raison de cette ligne reste à corriger, voir 1.25
+et 1.26)* À ce rythme, la file des **13 227 cartes** de plus de cinq jours se vide en
+**sept jours** : chaque carte ancienne est donc revérifiée environ **une fois par semaine**,
 et une carte morte disparaît en moins d'une semaine.
 
 **1.6** Une carte **prioritaire** — cliquée — passe **dans les vingt-quatre heures**.
@@ -143,8 +145,9 @@ déjà — est ce qui rend la vérification quotidienne possible à coût consta
 **1.23** Deux écarts entre cette demande et la règle ci-dessus, et c'est B qui tranche :
 
 - **le rythme** : B a demandé « une fois par jour ». La règle propose **une fois par
-  semaine**, parce que le quotidien coûte +110 % de trafic au lieu de +12 %, et que le
-  blocage par les sources (403, 429) est déjà une réalité mesurée ;
+  semaine**, parce que le quotidien demande **13 227 pages** — soit **+167 %** du trafic de
+  collecte, **1,67 fois la collecte entière** — au lieu de +25 %, et que le blocage par les
+  sources (403, 429) est déjà une réalité mesurée ;
 - **le prix** : B a demandé d'adapter le prix. La règle ne l'adapte **que si la lecture est
   certaine** — la lecture d'un prix marchand n'est fiable qu'une fois sur trois.
 
@@ -193,7 +196,8 @@ qu'on contrôle**.
   vide — c'est un **ensemble de surveillance qui grossit** tant que l'affichage n'est pas
   borné : tant qu'une carte reste affichée, elle reste à contrôler.
   - Demande du 14/10 (« une fois par jour ») : **13 227 pages/jour** aujourd'hui, et cela monte
-    chaque jour — soit **+110 %** du trafic de la collecte, au lieu de +12 %.
+    chaque jour — soit **+167 %** du trafic de la collecte (**1,67 fois la collecte entière**),
+    au lieu de **+25 %** pour 2 000 pages.
   - Budget fixe de 2 000/jour : chaque carte est revue **toutes les ~6,6 jours**. L'ordre de
     grandeur de 1.5 tient, mais **pour une autre raison que celle qui y est écrite**, et il
     **se dégradera** à mesure que le stock grandit.
@@ -201,6 +205,14 @@ qu'on contrôle**.
     C'est presque exactement le budget de 2 000. **Le budget n'est donc pas trop petit : c'est
     l'affichage qui n'est pas borné.** La ligne 1.21 n'est pas une précaution, c'est la
     condition de la règle.
+
+**1.25.a** **Troisième chiffre faux, corrigé dans la foulée — et il venait de moi.** Les
+lignes 1.4 et 1.23 annonçaient **+12 %** de trafic pour 2 000 pages, sur la base d'un trafic
+de collecte estimé à « ~10 900 requêtes et ~1,6 Go par jour ». Mesuré dans `data/trafic.json`
+(94 passages, 24 h) : **7 928 requêtes et 1,46 Go**. Le budget de 2 000 pages est donc
+**+25 %** des requêtes (et +8 % du volume), et le contrôle quotidien **+167 %** — pas +110 %.
+L'estimation était fausse d'un facteur 2. Le budget de 2 000 pages reste tenable ; c'est le
+quotidien qui ne l'est pas.
 
 **1.26** **1.5 reste à corriger par B**, et 1.13 lui donne sa vraie base. Proposition, à
 trancher : la file des cinq jours se vide **une fois** (13 227 cartes, ~7 jours à
