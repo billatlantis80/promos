@@ -240,6 +240,72 @@ seul (R.16).
 
 ---
 
+### EFFICACITÉ POUR TOUS LES ACTEURS — mesurée le 14/10/2026
+
+B l'a posée comme condition : *« Elle doit être la plus efficace pour tous les acteurs. »*
+Quatre acteurs, et deux endroits où la règle **seule** ne suffit pas.
+
+**ACTEUR 1 — LE VISITEUR. Le plus gros gain n'est pas dans la règle.**
+
+- **Aujourd'hui, le visiteur télécharge tout le catalogue à chaque visite** :
+  `offres.json` pèse **21 820 294 octets** servis, et le chargement se fait en
+  `cache: 'no-store'` (`public/app.js`, l. 2839) — ce qui **annule** le cache que GitHub Pages
+  envoie pourtant déjà : `cache-control: max-age=600` **et** un `ETag`.
+  *Mesuré en direct sur `kazendra.com/offres.json`, 14/10/2026.*
+- **La règle seule** fait passer ces 21,8 Mo à **~10 Mo** (−54 %) : bien, mais le visiteur
+  paie toujours tout, à chaque visite.
+- **La règle + le cache** : en laissant le navigateur utiliser son `ETag`, une visite répétée
+  coûte **0 octet** dans les 10 minutes, puis une **revalidation 304** (quelques octets) —
+  et un re-téléchargement **au plus une fois par passage de collecte**. On passe de
+  **21,8 Mo par visite** à **21,8 Mo au pire une fois par quart d'heure, pour tous les
+  visiteurs**.
+- **Ce qu'il faut vérifier avant de toucher à ce `no-store`** : la raison n'est écrite **nulle
+  part**. Elle a peut-être été une décision — je ne change pas un `no-store` sur une intuition.
+  À chercher dans l'historique avant.
+- Et deux gains que la règle apporte d'elle-même : la carte affiche **le vrai âge de l'annonce**
+  (la date de la source), et **plus aucune promo morte n'est proposée au clic**.
+
+**ACTEUR 2 — LA SOURCE (les sites de bons plans). Strictement mieux.**
+
+- La règle **n'ajoute aucune requête** : notre empreinte reste à **7 928 requêtes et 1,46 Go
+  par jour**.
+- Et elle **supprime** ce qui était prévu : le budget de **2 000 pages/jour** (+25 % de
+  requêtes) et toute la lecture de page. Le contrôle de politesse de 1.27 devient sans objet.
+- `robots.txt` par chemin, `reposMin`, requêtes conditionnelles : **inchangés**.
+
+**ACTEUR 3 — B, LE DÉPÔT, LE STOCKAGE. Gain réel, mais incomplet sans une reprise.**
+
+- `docs/img` **655 Mo → ~306 Mo** ; `docs/offres.json` **21,8 Mo → ~10 Mo** ; **348,8 Mo**
+  libérés. Le site publié passe sous la moitié du seuil de 1 Go de GitHub Pages.
+- **⚠ MAIS `.git` NE PERD RIEN** : **720 Mo** (597 Mo de pack + 117 Mo d'objets isolés),
+  **38 558 objets dans le pack**, **40 360 objets** dans l'historique. Les visuels des cartes
+  effacées **restent dans le pack pour toujours** — git ne rend jamais un blob, et la fiche a
+  été committée.
+- **Donc la règle a besoin d'une reprise périodique**, sinon l'espace gagné est repris par
+  l'historique : c'est exactement l'opération faite le 14/10 à la main (**100 secondes**,
+  **2,6 Go** récupérés sur GitHub, 3,2 Go sur le NAS). **Une fois par mois** suffit.
+- Gains annexes : collection plus rapide (moins de fiches à écrire), commits plus légers, site
+  plus rapide — et une **marque qui ne propose plus de prix périmé**.
+
+**ACTEUR 4 — LE MARCHAND (les programmes d'affiliation). Mieux, sans rien faire.**
+
+- Les clics ne partent que sur des offres **qu'une source sert encore** : moins de clics
+  perdus, **meilleur taux de conversion**, donc un meilleur rang dans les programmes. Coût
+  pour nous : **zéro**.
+
+**Le seul endroit où « efficace » veut dire « moins »** : le visiteur voit **−31 % de cartes**
+(~10 600 contre 15 484). Mais ce sont celles qui n'étaient plus servies par personne depuis
+cinq à sept jours — **moins de cartes, aucune impasse**. Le levier, si tu veux un jour
+remonter ce chiffre, est la **borne d'affichage** (1.21), que tu as décidé de ne pas prendre
+maintenant.
+
+**Conclusion pour B : la règle est la plus efficace pour la source, pour le dépôt et pour le
+marchand — du premier coup. Pour le visiteur, elle ne le devient vraiment qu'avec le cache.
+Deux ajouts, donc, et aucun ne change la règle : (1) laisser le navigateur se servir de son
+`ETag` sur le catalogue, (2) une reprise mensuelle du dépôt.**
+
+---
+
 ## Comment ce fichier se lit
 
 - Les règles s'écrivent **une par une**. Aujourd'hui, la première.
