@@ -2836,7 +2836,23 @@ async function chargerDonnees() {
   try {
     for (const route of ['api/offres', 'offres.json']) {
       try {
-        const r = await fetch(BASE + route, { cache: 'no-store', signal: stop.signal });
+        //  LE CATALOGUE SE GARDE CHEZ LE VISITEUR — décision de B, 14/10/2026 (« le
+        //  plus gros gain pour lui, et il ne coûte rien »).
+        //
+        //  `no-store` DEMANDAIT au navigateur de ne RIEN garder : chaque visite
+        //  retéléchargeait le catalogue entier. Ce n'était pas une erreur — c'était
+        //  la prudence d'un catalogue qui changeait toutes les quinze minutes sans
+        //  borne de fraîcheur. La règle de la vie d'une carte donne cette borne :
+        //  une promotion vit cinq jours, donc dix minutes de cache ne peuvent plus
+        //  montrer une carte morte.
+        //
+        //  `no-cache` N'EST PAS `no-store`, et la différence est tout l'objet :
+        //  « garde la copie, mais DEMANDE au serveur si elle a changé ». GitHub Pages
+        //  publie un ETag, la réponse est un 304 vide quand rien n'a bougé, et le
+        //  fichier n'est retéléchargé que s'il a réellement changé. Le témoin
+        //  (`etat-collecte.json`, quelques centaines d'octets) garde son `no-store` :
+        //  c'est lui qui décide s'il faut rafraîchir, il doit être autoritaire.
+        const r = await fetch(BASE + route, { cache: 'no-cache', signal: stop.signal });
         if (!r.ok) { derniere = route + ' → HTTP ' + r.status; continue; }
         const d = await r.json();
         if (d && Array.isArray(d.offres)) return { ...d, horsLigne: false };
@@ -2876,19 +2892,26 @@ async function chargerTaux() {
  *  fiche. Une seule fonction, deux appels.
  */
 async function appliquerDonnees(d) {
-  // ⚠ LES FICHES QUE PLUS AUCUNE SOURCE NE CONFIRME NE SONT PLUS AFFICHÉES
-  //  (demande de B, 13/10/2026 : « règle les problèmes des fiches qui sont encore
-  //  affichées sur le site et qui ne sont plus valables »). Le drapeau `perimee`
-  //  est posé PAR LE COLLECTEUR sur l'offre publiée, et recalculé à chaque
-  //  passage : il ne détruit rien, et il se lève tout seul dès qu'une source
-  //  reservit l'offre (qui repart alors pour sept jours pleins).
-  //  Le filtre est posé ICI, au seul endroit par où le catalogue entre dans
-  //  l'application : les puces de rubrique, le bandeau, les compteurs de pays et
-  //  les recherches suivent donc tous le même ensemble. Un compteur qui
-  //  compterait des fiches cachées serait un mensonge de plus.
-  //  Un favori mis de côté redevient alors « n'est plus dans la liste du jour »
-  //  — le badge existe déjà pour ça, et le prix de l'époque reste affiché.
-  etat.offres = (d.offres || []).filter((o) => (o.lienPage || o.lienMarchand) && !o.perimee);
+  // ⚠ IL N'Y A PLUS DE FICHES MASQUÉES — le filtre a été retiré le 14/10/2026, et
+  //  son absence est le résultat, pas un oubli.
+  //
+  //  Du 13/10 au 14/10/2026, cette ligne écartait les fiches portant `perimee`,
+  //  un drapeau posé par le collecteur (demande de B : « règle les problèmes des
+  //  fiches qui sont encore affichées sur le site et qui ne sont plus valables »).
+  //  C'était un pansement : la fiche restait dans le catalogue publié, on cessait
+  //  seulement de l'afficher — donc le catalogue portait des cartes que personne
+  //  ne voyait, et le poids publié ne voulait plus dire grand-chose.
+  //
+  //  La règle de la vie d'une carte a supprimé l'état intermédiaire : une carte
+  //  vit cinq jours, puis sa source la sert encore (elle continue) ou ne la sert
+  //  plus (elle est EFFACÉE du catalogue, visuel compris). Le catalogue publié EST
+  //  donc ce qui s'affiche, par construction — et un filtre qui écarte des fiches
+  //  serait aujourd'hui le signe que le collecteur fait mal son travail.
+  //
+  //  Ce qui reste ici est la seule condition qui a toujours été vraie : une carte
+  //  sans aucun lien à ouvrir n'a rien à faire à l'écran (elle ne mènerait nulle
+  //  part, même à sa source).
+  etat.offres = (d.offres || []).filter((o) => (o.lienPage || o.lienMarchand));
   // L'index des produits multi-places se construit ICI, une fois : les cartes
   // le consultent ensuite sans jamais reparcourir le catalogue.
   etat.indexProduits = indexerProduits(etat.offres);
