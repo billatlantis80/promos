@@ -94,8 +94,37 @@ jour**. Elle **reste dans la file** : elle y sera revue au tour suivant.
 > zéro, c'est-à-dire `vuLe` — exactement celui que 1.13 écarte. Une carte confirmée vivante
 > n'est donc pas « repartie » : elle est **confirmée jusqu'à son prochain tour**.
 
-**1.10** **La page est vivante, le prix a changé** *et* le nouveau prix est **lu avec
-certitude** → le **prix et la remise sont corrigés**.
+**1.10** **La page est vivante, le prix a changé** *et* la lecture est **certaine** → le
+**prix et la remise sont corrigés**, et la correction est **datée**.
+
+**ARRÊTÉE PAR B, 14/10/2026** : « Seulement quand la lecture est certaine. »
+
+**1.10.a — Ce que « certaine » veut dire : cinq conditions, toutes exigées.**
+
+1. **Le bon produit.** La page appelée est celle que la carte désigne (`lienMarchand`), et
+   elle **déclare** l'identité du produit (référence, ASIN, EAN) que la carte porte. Sans
+   identité déclarée, la lecture est **écartée** : c'est exactement l'erreur mesurée, une
+   page annonçant **83,99 €** pour une carte à **63,99 €** — le prix du produit voisin.
+2. **Le prix vient du JSON-LD produit de cette page** (`offers.price`) — jamais d'un
+   découpage de texte, et **jamais** un `lowPrice`/`highPrice` de fourchette
+   (`AggregateOffer`).
+3. **Aucune ambiguïté** : un prix unique. Une fourchette, un « à partir de », plusieurs
+   variantes → écartée.
+4. **Même devise et même pays** que la carte.
+5. **La promotion tient toujours** : la page publie encore un prix de référence. Sinon ce
+   n'est pas un prix à corriger, c'est une **promotion morte** — et c'est 1.12 qui s'applique.
+
+**1.10.b — Quand la lecture n'est pas certaine, il ne se passe rien.** Et « rien » veut dire
+rien : l'écart est **enregistré** (statut `prix-ecarte`, les deux prix conservés), la carte
+**garde son prix d'origine et sa date**, et personne ne corrige au jugé. Le code le fait déjà
+(`PRIX_COMMUNAUTE_ACTIF`, éteint depuis le 13/10) — la règle le **confirme** au lieu de le
+contourner.
+
+**1.10.c — La conséquence, mesurée et assumée.** Au relevé du 14/10/2026 : **0 carte** a un
+prix corrigé (`prixCorrigeLe` absent partout), et la table des verdicts porte **133
+jugements** en tout — **131 vivantes**, **2 expirées**. Cette règle ne promet donc pas des
+corrections nombreuses : elle promet qu'une correction publiée est **vraie**. Un prix juste
+et daté vaut mieux qu'un prix frais et faux.
 
 **1.11** **La page ne dit rien** (aucun verdict lisible) → **on ne touche à rien**.
 **Jamais de retrait sur silence** : le silence d'une page n'est pas une preuve — mesuré à
@@ -222,8 +251,9 @@ surveille le point pour plus tard. »
   fois par jour » ; le quotidien demande **13 243 pages**, soit **une requête toutes les
   7 secondes**, et **une toutes les 40 secondes** sur le seul *mydealz*. La décision est
   prise **au nom de la politesse envers les sources**, et elle est écrite en **1.27** ;
-- **le prix** : B a demandé d'adapter le prix. La règle ne l'adapte **que si la lecture est
-  certaine** — la lecture d'un prix marchand n'est fiable qu'une fois sur trois.
+- **le prix** : **TRANCHÉ LE 14/10/2026 — « seulement quand la lecture est certaine ».** Les
+  cinq conditions de cette certitude sont écrites en **1.10.a**, et l'écart non certain est
+  enregistré sans être appliqué (1.10.b).
 
 **1.24** **Correctif du 14/10/2026 (19 h).** B a désigné la ligne **1.13** ; elle était
 fausse **sur ses deux moitiés**, et la seconde l'était gravement. Mesure faite sur le
@@ -374,9 +404,14 @@ par carte), 1.21 (l'affichage n'est pas borné, le point est surveillé).
 **Le rythme est tranché (1.27)** : une fois par semaine, au nom de la politesse envers les
 sources — 2 000 pages par jour, une requête toutes les 43 secondes en moyenne.
 
-**Il reste un seul point ouvert dans la règle 1, et un seul** : le **prix** (1.23) — adapter
-dès qu'il a changé, ou seulement quand la lecture est certaine, la lecture d'un prix marchand
-n'étant fiable qu'**une fois sur trois**.
+**Le prix est tranché (1.10) : « seulement quand la lecture est certaine »** — cinq
+conditions, et l'écart non certain est enregistré sans être appliqué.
+
+**La règle 1 n'a plus aucun point ouvert.** Arrêté par B le 14/10/2026 : 1.3 (`temperature`),
+1.10 (prix corrigé seulement si la lecture est certaine), 1.13 (`premiereVue`), 1.17
+(démasquage carte par carte), 1.21 (affichage non borné, surveillé), 1.27 (le rythme, au nom
+de la politesse). **Elle n'est pas pour autant APPLIQUÉE** : ce qui reste, c'est la
+construction — la file, le budget, le rythme quotidien (voir 1.20).
 
 ---
 
