@@ -115,6 +115,60 @@ L'application de cette règle fera **un commit seul**, pour pouvoir être défai
 
 ---
 
+### Points à lever avant confirmation — analyse du 14/10/2026 au soir
+
+B a reformulé sa commande et demande **ce qu'il n'a pas pris en compte**. Trois choses, dont
+une qui contredit une autre de ses consignes. Tout est mesuré.
+
+**1. ⚠ « Ne plus rien garder » et « garder la date d'édition » ne peuvent pas être vrais
+ensemble.** B, mot pour mot : *« elle doit être supprimée définitivement et ne plus rien garder
+dans notre stockage »* **et** *« le seul élément visuel qui doit rester, c'est la date d'édition
+de la carte, qui correspond à la première fois où elle est apparue sur kazendra »*.
+
+Si la carte est effacée **sans aucune trace**, **rien ne peut dire** quand elle est apparue la
+première fois : l'information n'existe plus nulle part. Pour que la date d'édition survive, il
+faut donc **un registre minimal — `clé → date d'édition`** — et il faut l'assumer :
+
+- **ce qu'il pèse** : environ **40 octets par offre** (clé hachée en 12 caractères + date), soit
+  **~1 Mo aujourd'hui** pour 23 500 offres, contre 2,1 Mo si l'on garde la clé entière ;
+- **mais il croît sans fin** : **1 726 offres nouvelles par jour**, que rien ne vient effacer —
+  c'est le principe même du registre. Sans borne : **+25 Mo par an** ;
+- **donc il lui faut un horizon.** Passé **90 jours** sans revoir une offre, on oublie sa date ;
+  une offre qui reviendrait après 90 jours serait traitée comme neuve. À 90 jours :
+  **~155 000 lignes, ~6 Mo**. C'est le prix exact de la date d'édition.
+
+**À trancher :** garde-t-on la date d'édition (registre minimal, ~1 Mo aujourd'hui, ~6 Mo avec
+un horizon de 90 jours) — ou accepte-t-on que l'âge d'une carte repartie de zéro, sans aucun
+registre ?
+
+**2. « Vérifiée à la prochaine mise à jour » n'est vrai que pour une partie des sources.**
+B écrit : *« à 5 jours et une seconde, la carte est mise en pause et elle est vérifiée à la
+prochaine mise à jour »*. Mesuré au dernier passage : **108 sources sur 229 étaient au repos**
+(`reposMin`, délai de politesse non écoulé) et **96 n'avaient pas été lues depuis plus de 24 h**.
+Pour une carte dont la source dort, « la prochaine mise à jour » **n'existe pas** : la carte
+resterait **en pause** — invisible **et** non effacée — des heures, voire indéfiniment.
+
+**Donc la règle doit dire :** la carte reste en pause **jusqu'à ce que SA source soit relue**,
+et si cette source n'a pas été relue depuis N jours (les 7 jours de `LIMITE_SOURCE_DISPARUE_JOURS`
+existent déjà), la carte est effacée **faute de réponse**. Sans cette borne, les cartes en pause
+s'accumulent en silence — invisibles et impérissables.
+
+**3. « Mise en pause » et « reste affichée » ne sont pas la même chose.** La ligne 1.4 (abrogée)
+disait : la carte attend son tour **en restant affichée**. La formulation de B dit : **mise en
+pause**. Si la pause cache la carte, alors chaque carte perd un peu de vie visible à partir du
+5e jour — y compris celles qui seront confirmées. À trancher aussi.
+
+**4. ✓ Et une bonne nouvelle, vérifiée : l'historique des prix SE RACCROCHE.** L'identifiant
+d'une offre est `préfixe + sha1(lien)` (collecteur.mjs, l. 122) — **dérivé de l'URL, donc
+stable** : il survit à l'effacement, et une carte republiée retrouve **exactement** ses prix
+passés. La décision de B (1.32) est donc réalisable telle quelle, sans rien ajouter.
+
+**5. Et le premier passage sera spectaculaire** : **13 415 cartes** basculent d'un coup, dont
+~**10 600** aujourd'hui affichées. C'est un changement visible du jour au lendemain, pas une
+pente.
+
+---
+
 ## Comment ce fichier se lit
 
 - Les règles s'écrivent **une par une**. Aujourd'hui, la première.
