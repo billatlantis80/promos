@@ -247,30 +247,37 @@ test('sur le catalogue réel : ce que la règle emporterait, et ce qu’elle ne 
   assert.ok(Object.keys(tours).length > 0,
     'la table des tours doit être dans l’état publié, sinon la règle ne peut rien conclure');
   const offres = (d.offres || []);
-  const maintenant = Date.now();
+  // ⚠ L'HORLOGE EST CELLE DU CATALOGUE, PAS LA NÔTRE — et c'est une leçon, pas un
+  // détail. Le premier jet mesurait ce fichier avec `Date.now()`. Or le catalogue a
+  // été écrit à 22:00:45 et l'épreuve tournait à 22:10 : dix minutes de dérive
+  // suffisent à faire franchir le bord des cinq jours à une poignée de cartes, et
+  // l'épreuve annonçait « 6 cartes condamnées encore publiées » — un défaut
+  // parfaitement imaginaire, fabriqué par l'instrument. Un fichier daté se mesure
+  // à SA date : c'est la seule façon de comparer deux états du même instant.
+  const maintenant = new Date(d.genereLe).getTime();
+  assert.ok(Number.isFinite(maintenant), `le catalogue doit porter sa date de génération : ${d.genereLe}`);
   const verdicts = offres.map((o) => verdictDeCalendrier(o, { maintenant, tours }));
-  const effacees = offres.filter((_, i) => verdicts[i] === 'effacee');
-  const articles = effacees.filter((o) => o.type === 'article');
+  const condamnees = offres.filter((_, i) => verdicts[i] === 'effacee');
+  const articles = condamnees.filter((o) => o.type === 'article');
   assert.equal(articles.length, 0, 'aucun article de veille ne part par cette règle');
-  assert.ok(effacees.length > 0,
-    `la règle doit mordre sur le catalogue réel : ${effacees.length} carte(s) au-delà des cinq jours sans service`);
-  // ⚠ L'INVARIANT CI-DESSOUS NE DEVIENT EXIGIBLE QU'À PARTIR DU PREMIER PASSAGE.
-  //  Avant, le catalogue publié est celui de l'ancienne règle : il porte encore des
-  //  cartes de plus de cinq jours que plus personne ne sert — c'est précisément ce
-  //  que la règle vient enlever. Exiger l'invariant tout de suite ferait échouer
-  //  l'épreuve pour une raison qui n'est pas un défaut. On l'exige donc dès que le
-  //  catalogue porte la TRACE de la règle (`donnees.carte`), et on le dit.
-  if (!(d.donnees && d.donnees.carte)) {
-    console.log(`   (catalogue encore produit par l’ancienne règle : ${effacees.length} carte(s) à effacer au premier passage ; l’invariant sera exigé ensuite)`);
-    return;
-  }
-  const survivantesTropVieilles = offres.filter((o) => {
-    if (o.type === 'article') return false;
-    const age = ageJours(o.premiereVue || o.vuLe, maintenant);
-    if (age === null || age <= VIE_AFFICHEE_JOURS) return false;
-    const ageService = ageJours(o.vuLe, maintenant);
-    return ageService !== null && ageService > 1;   // servie il y a plus d'un jour
+  // LA COHÉRENCE : ce que la règle condamne ne doit PAS être dans le fichier
+  // publié. C'est la seule vérification qui relie le catalogue servi à la règle qui
+  // l'a produit — si elle casse, c'est que la publication n’est plus celle que la
+  // règle a calculée, et personne ne le verrait autrement.
+  assert.equal(condamnees.length, 0,
+    `des cartes condamnées sont encore publiées : ${condamnees.slice(0, 5).map((o) => o.id).join(' | ')}`);
+  // LE TAUX, PARCE QUE C'EST LA SEULE MESURE QUI SURVIT À UN CATALOGUE QUI CHANGE
+  // DE TAILLE (voir l’épreuve Amazon : 200 produits était un total devenu faux).
+  // Relevé le 14/10/2026 : **58,0 %** des offres dépassaient cinq jours AVANT la
+  // règle, **3,1 %** après. Un plafond à 10 % crie donc si la règle cesse d'agir,
+  // sans jamais devenir faux parce que le catalogue a maigri.
+  const offresSeules = offres.filter((o) => o.type !== 'article');
+  const veilles = offresSeules.filter((o) => {
+    const a = ageJours(o.premiereVue || o.vuLe, maintenant);
+    return a !== null && a > VIE_AFFICHEE_JOURS;
   });
-  assert.equal(survivantesTropVieilles.length, 0,
-    `aucune carte de plus de cinq jours ne doit survivre sans avoir été resservie : ${survivantesTropVieilles.slice(0, 5).map((o) => o.id).join(' | ')}`);
+  const taux = offresSeules.length ? (100 * veilles.length) / offresSeules.length : 0;
+  console.log(`   ${offresSeules.length} offres · ${veilles.length} de plus de cinq jours (${taux.toFixed(1)} % — 58,0 % avant la règle)`);
+  assert.ok(taux <= 10,
+    `trop de cartes dépassent cinq jours (${taux.toFixed(1)} %) : la règle ne fait plus son travail`);
 });

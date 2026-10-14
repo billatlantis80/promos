@@ -635,6 +635,69 @@ au lieu de se croire.
 
 ---
 
+## LES DEUX LEÇONS DE MÉTHODE — 14/10/2026
+
+Elles ne parlent pas des cartes : elles parlent de la façon de **mesurer** et de la
+façon d'**éprouver**. Toutes les deux sont nées d'un défaut trouvé en travaillant, et
+pas d'une réflexion — c'est ce qui les rend utiles. B a demandé qu'elles soient
+écrites ici.
+
+### Leçon 1 — ce qui doit tenir dans le temps se mesure en TAUX, jamais en total
+
+**Un seuil en valeur absolue, posé dans un ensemble dont la taille change, est un
+seuil qui POURRIT.** Il devient faux sans que rien ne soit cassé — et il apprend à
+ignorer le rouge, ce qui est pire que de crier.
+
+Trois fois dans le même chantier, et la troisième a coûté un test rouge :
+
+- **« le plafond de 7 jours »** — présenté comme la règle du catalogue. Il n'a pas
+  résisté à la question « la source la sert-elle encore ? », et la règle est passée
+  à **5 jours** ;
+- **« 2 000 pages par jour »** — présenté comme le budget de politesse. Il est
+  devenu **sans objet** : plus une seule page n'est ouverte chez les sources ;
+- **« 200 produits présents sur plusieurs places »** — présenté comme la preuve que
+  l'appariement Amazon fonctionne. Il en trouvait **137**, et le test était donc
+  ROUGE. Or l'appariement n'avait rien perdu : **0 lien Amazon sans ASIN, avant
+  comme après** (mesuré sur les deux catalogues). C'est le **catalogue** qui était
+  passé de **24 845 à 11 749 offres**. Le seuil mesurait la taille de la population,
+  pas la qualité du code.
+
+**LA RÈGLE QU'ON S'APPLIQUE DÉSORMAIS.** Une épreuve qui doit vivre se formule en
+**taux**, en part ou en proportion — jamais en nombre d'objets. Le nombre reste
+autorisé comme **fumigène**, et il doit alors être bas au point de ne pouvoir crier
+que sur une panne : « aucun lien Amazon sans ASIN », « moins de 20 produits »,
+« aucune carte condamnée encore publiée ». Les deux épreuves concernées annoncent
+maintenant `340/2925 offres Amazon (11,6 %)` et `319 de plus de cinq jours (3,0 %)` —
+des chiffres qui veulent encore dire quelque chose après un effacement de 13 000
+cartes.
+
+### Leçon 2 — un fichier daté se mesure à SA date, jamais à la nôtre
+
+Le catalogue publie son horodatage (`genereLe`). Une épreuve qui le compare à
+`Date.now()` ne compare pas deux états du même instant : elle compare un état passé
+à un présent, et elle **fabrique des écarts sur tout ce qui a un bord**.
+
+Relevé, horodatage en main : catalogue écrit à **22:00:45**, épreuve lancée à
+**22:10**. Dix minutes de dérive ont fait franchir le bord des cinq jours à une
+poignée de cartes, et l'épreuve a annoncé **« 6 cartes condamnées encore publiées »**
+— un défaut entièrement imaginaire, produit par l'instrument de mesure lui-même.
+
+**LA RÈGLE QU'ON S'APPLIQUE DÉSORMAIS.** Toute épreuve qui lit un fichier horodaté
+prend **son** horloge dans le fichier. Et quand un écart apparaît entre un fichier et
+son lecteur, la première hypothèse n'est pas « il y a un défaut » : c'est **« nos
+deux horloges diffèrent »**. Le défaut se cherche APRÈS avoir écarté l'instrument —
+sinon on répare un code qui allait bien.
+
+### Et une troisième, qui n'est pas de mesure mais d'ordre des gestes
+
+Elle est déjà écrite à sa place, dans **l'incident de 21 h 16** : *on coupe, on
+CONSTATE, puis on écrit.* Un fichier exécuté par un planificateur n'est pas un
+brouillon, et « j'ai coupé la collecte » n'est pas un état — l'état, c'est que **le
+passage suivant ne s'est pas produit**. On le vérifie avant d'ouvrir l'éditeur,
+jamais après.
+
+---
+
 ## Comment ce fichier se lit
 
 - Les règles s'écrivent **une par une**. Aujourd'hui, la première.

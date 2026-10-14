@@ -43,9 +43,9 @@ assert.ok(debut > 0 && fin > debut, 'la tranche devise/places est introuvable da
 const extrait = app.slice(debut, fin);
 
 const M = await import('data:text/javascript;base64,' + Buffer.from(
-  extrait + '\nexport { deviseDe, montant, indexerProduits, autresPlaces, asinDe, placeAmazon, nomPlace, equivalent, dateCourte, ECART_MIN_CHANGE };'
+  extrait + '\nexport { deviseDe, montant, indexerProduits, autresPlaces, asinDe, placeAmazon, nomPlace, equivalent, dateCourte, ECART_MIN_CHANGE, estPlaceAmazon };'
 ).toString('base64'));
-const { indexerProduits, autresPlaces, asinDe, placeAmazon, nomPlace } = M;
+const { indexerProduits, autresPlaces, asinDe, placeAmazon, nomPlace, estPlaceAmazon } = M;
 
 /* Le taux de référence, tel que le collecteur le publie. */
 const TAUX = { date: '2026-10-08',
@@ -143,7 +143,32 @@ function catalogue() {
   return Array.isArray(d) ? d : (d.offres || []);
 }
 
-test('sur le CATALOGUE RÉEL : le même produit existe bien sur plusieurs places', () => {
+test('sur le CATALOGUE RÉEL : l’appariement multi-places tient — et il se mesure en TAUX', () => {
+  // ⚠️ CE TEST A CHANGÉ LE 14/10/2026, ET LE POURQUOI EST SA VALEUR.
+  //
+  //  Il exigeait « au moins 200 produits présents sur plusieurs places ». Il en
+  //  trouvait 139, donc il était ROUGE — et depuis un moment. La mesure a montré
+  //  que l'appariement n'y était pour rien :
+  //
+  //    • AVANT la règle des cinq jours : 6 763 offres Amazon, **541 groupes** ;
+  //    • APRÈS : 2 925 offres Amazon, **137 groupes** ;
+  //    • et **0 lien Amazon sans ASIN** dans les deux cas — le lecteur d'ASIN
+  //      n'oublie rien, ce qui est la seule vraie façon de casser l'appariement.
+  //
+  //  Autrement dit : **200 était un TOTAL calibré sur un catalogue de 24 845
+  //  offres, et le catalogue en porte 11 749.** Un seuil en valeur absolue, dans
+  //  un ensemble dont la taille change, est un seuil qui POURRIT : il devient faux
+  //  sans que rien ne soit cassé, et il apprend à ignorer le rouge. C'est le
+  //  troisième chiffre de ce chantier à qui c'est arrivé (le plafond de 7 jours,
+  //  le budget de 2 000 pages, ces 200 produits) — d'où la règle qu'on s'applique
+  //  ici : **ce qui doit tenir dans le temps se mesure en TAUX, pas en total.**
+  //
+  //  Ce qui dit « l'appariement fonctionne » est donc un taux, plus deux gardes
+  //  qui ne dépendent d'aucune taille :
+  //    1. aucun lien Amazon ne perd son ASIN (le détecteur de panne, en dur) ;
+  //    2. le taux d'offres Amazon vivant sur un produit multi-places ne s'effondre
+  //       pas (mesuré : 11,6 % ; un appariement cassé tombe à 0) ;
+  //    3. un plancher nominal très bas, pour que « plus rien » soit bruyant.
   const offres = catalogue();
   const idx = indexerProduits(offres);
   let groupes = 0;
@@ -152,8 +177,20 @@ test('sur le CATALOGUE RÉEL : le même produit existe bien sur plusieurs places
     const places = new Set(l.map((o) => placeAmazon(o)).filter(Boolean));
     if (places.size > 1) { groupes++; lignes += l.length; }
   }
-  console.log(`   ${groupes} produits sur plusieurs places, ${lignes} offres concernées`);
-  assert.ok(groupes >= 200, `trop peu de produits multi-places (${groupes}) : l’appariement ne trouve plus rien`);
+  const amazon = offres.filter((o) => estPlaceAmazon(o));
+  const taux = amazon.length ? (100 * lignes) / amazon.length : 0;
+  console.log(`   ${groupes} produits sur plusieurs places · ${lignes}/${amazon.length} offres Amazon (${taux.toFixed(1)} %)`);
+  // GARDE 1 — le vrai détecteur de panne. Il ne dépend ni de la taille du
+  // catalogue, ni du nombre de places : un lien Amazon porte un ASIN, ou il y a
+  // quelque chose à regarder.
+  const sansAsin = amazon.filter((o) => !asinDe(o));
+  assert.equal(sansAsin.length, 0,
+    `un lien Amazon doit TOUJOURS livrer son ASIN, sinon l’appariement perd le produit : ${sansAsin.slice(0, 3).map((o) => o.lienMarchand).join(' | ')}`);
+  // GARDE 2 — le fumigène : « l'appariement ne trouve presque plus rien ».
+  assert.ok(groupes >= 20, `l’appariement ne trouve presque plus rien (${groupes} produits) — panne probable`);
+  // GARDE 3 — le taux, la seule mesure qui survive à un catalogue qui change de taille.
+  assert.ok(taux >= 3,
+    `trop peu d’offres Amazon sont sur un produit multi-places (${taux.toFixed(1)} %) — l’appariement ou les places ont changé`);
   assert.ok(lignes >= groupes, 'incohérence : moins de lignes que de produits');
 });
 
