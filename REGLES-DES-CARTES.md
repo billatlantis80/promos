@@ -165,6 +165,49 @@ Le compteur est donc **`premiereVue`**, avec `vuLe` en repli unique pour les 2 5
 « flash » qui n'en ont pas. `vuLe` conserve son vrai rôle — la fraîcheur du dernier contact,
 qui fonde la règle du 12/10 — et cesse d'être présenté comme une preuve de vie.
 
+**1.25** **Ce que le choix du compteur change, chiffré** (14/10/2026, 19 h — même relevé).
+Le compteur n'est pas un mot : c'est la **taille de la file**, et la **liste des cartes
+qu'on contrôle**.
+
+- **Taille de la file des cinq jours** : `premiereVue` **13 227** cartes · `vuLe` **11 967** ·
+  `date` **13 198**. L'écart n'est pas un détail : les **1 260** cartes d'écart sont celles
+  qui étaient **affichées depuis plus de cinq jours** et que l'ancien compteur **exemptait à
+  perpétuité** parce que leur source les reservait. Âge d'affichage : médiane **6,2 jours**,
+  maximum **10 jours**. Leurs sources : **Amazon ventes flash** (9 pays) et **Groupon** —
+  c'est-à-dire les offres **les plus volatiles**, celles dont le prix et la validité bougent
+  le plus vite. L'ancienne règle épargnait exactement celles qu'il fallait surveiller.
+- **Le repli n'est pas un détail** : **2 179** cartes (**16,5 %** de la file) sont comptées
+  sur `vuLe` faute de `premiereVue`, dont **1 605 ventes flash**. La cause est nommée et
+  bénigne : le collecteur écrit `premiereVue` **à l'entrée en base** (collecteur.mjs, l. 7810),
+  donc une absence signifie que la fiche est **entrée avant que ce repère n'existe** ; et la
+  fenêtre des ventes flash (ventes du jour) **se renouvelle entièrement**, donc ces fiches ne
+  sont jamais reservies et ne reçoivent pas le repère après coup. C'est un **trou de
+  l'histoire**, pas une faille qui dure : toute nouvelle entrée le reçoit.
+- **Le catalogue par âge d'affichage** (23 265 offres marchandes) : 0–1 j **2 151** · 1–2 j
+  **2 064** · 2–3 j **2 325** · 3–5 j **3 156** · 5–7 j **3 811** · **7 j et plus 7 237**.
+  Autrement dit **57 %** du catalogue a plus de cinq jours et **31 %** plus de sept.
+- **Le rythme d'entrée** dans la file : **~1 726 cartes par jour** franchissent les cinq jours
+  (mesuré sur les six derniers jours : 1 517 à 2 325).
+- **⚠ Ce point corrige la ligne 1.5.** Sous `premiereVue`, le compteur **ne recule jamais** :
+  une carte franchit les cinq jours **une seule fois**. La file n'est donc pas un cycle qui se
+  vide — c'est un **ensemble de surveillance qui grossit** tant que l'affichage n'est pas
+  borné : tant qu'une carte reste affichée, elle reste à contrôler.
+  - Demande du 14/10 (« une fois par jour ») : **13 227 pages/jour** aujourd'hui, et cela monte
+    chaque jour — soit **+110 %** du trafic de la collecte, au lieu de +12 %.
+  - Budget fixe de 2 000/jour : chaque carte est revue **toutes les ~6,6 jours**. L'ordre de
+    grandeur de 1.5 tient, mais **pour une autre raison que celle qui y est écrite**, et il
+    **se dégradera** à mesure que le stock grandit.
+  - Pour tenir un contrôle **hebdomadaire** à la taille d'aujourd'hui : **1 890 pages/jour**.
+    C'est presque exactement le budget de 2 000. **Le budget n'est donc pas trop petit : c'est
+    l'affichage qui n'est pas borné.** La ligne 1.21 n'est pas une précaution, c'est la
+    condition de la règle.
+
+**1.26** **1.5 reste à corriger par B**, et 1.13 lui donne sa vraie base. Proposition, à
+trancher : la file des cinq jours se vide **une fois** (13 227 cartes, ~7 jours à
+2 000/jour) ; ensuite, chaque carte affichée est revue **au rythme que le budget permet** —
+aujourd'hui ~une fois par semaine — et ce rythme **se dégrade avec le stock** tant que
+l'affichage n'est pas borné par pays et par rubrique.
+
 ---
 
 ## Les règles suivantes, à écrire
