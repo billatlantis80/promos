@@ -32,6 +32,17 @@ servir : c'est la période de confiance.
 d'abord les cartes sur lesquelles on a **cliqué**, puis les plus **en vue**, puis les plus
 **anciennes**.
 
+> **⚠ CORRIGÉE LE 14/10/2026 — LA PRIORITÉ PAR CLICS N'EST PAS CONSTRUCTIBLE AUJOURD'HUI.**
+> Les clics partent bien du site vers le relais (`public/relais.js` → ta feuille), mais
+> **rien dans la collecte ne peut les relire** : le relais reçoit, il ne rend pas, et la
+> lecture du rapport est fermée par une clé. Écrire « d'abord les cartes cliquées »
+> décrirait donc une file qui ne peut pas exister. **Le signal réellement disponible,
+> mesuré :** la **`temperature`** que les sources communautaires publient sur leurs propres
+> offres — **15 757 cartes (67,7 %)** du catalogue, de 100 à 9 086, portée par MyDealz,
+> HotUKDeals, Chollometro, Pepper PL/NL, Dealabs et Preisjäger. Proposition, à trancher :
+> la priorité devient **cliquée** (le jour où la lecture de la feuille sera branchée) →
+> **`temperature`** → **ancienneté**.
+
 **1.4** Le **budget de vérification est fixe** : **2 000 pages par jour**, soit environ
 **120 Mo**, c'est-à-dire **+25 %** du nombre de requêtes de la collecte et **+8 %** de son
 volume — mesuré sur les dernières 24 h : **7 928 requêtes** et **1,46 Go**
@@ -39,11 +50,15 @@ volume — mesuré sur les dernières 24 h : **7 928 requêtes** et **1,46 Go**
 la taille du stock — sinon la dette grossit sans fin.
 
 **1.5** *(nombre mis à jour le 14/10 — la raison de cette ligne reste à corriger, voir 1.25
-et 1.26)* À ce rythme, la file des **13 227 cartes** de plus de cinq jours se vide en
-**sept jours** : chaque carte ancienne est donc revérifiée environ **une fois par semaine**,
-et une carte morte disparaît en moins d'une semaine.
+et 1.26)* À ce rythme, la file des **13 243 cartes** de plus de cinq jours (relevé de 18:01 ;
+le chiffre monte chaque jour) se vide en **sept jours** : chaque carte ancienne est donc
+revérifiée environ **une fois par semaine**, et une carte morte disparaît en moins d'une
+semaine.
 
-**1.6** Une carte **prioritaire** — cliquée — passe **dans les vingt-quatre heures**.
+**1.6** Une carte **prioritaire** passe **dans les vingt-quatre heures**. *(Même réserve
+qu'en 1.3 : la priorité « cliquée » suppose une lecture de ta feuille qui n'existe pas
+encore. En attendant, la priorité est la `temperature`, et la promesse des vingt-quatre
+heures vaut pour elle.)*
 
 ### Le verdict, et il n'y a que cinq issues
 
@@ -52,7 +67,14 @@ et une carte morte disparaît en moins d'une semaine.
 **1.8** **La page se déclare expirée** (`isExpired: true`) → la **carte et son image sont
 supprimées**.
 
-**1.9** **La page est vivante, le prix est le même** → la carte **repart pour cinq jours**.
+**1.9** **La page est vivante, le prix est le même** → la carte **sort du contrôle du
+jour**. Elle **reste dans la file** : elle y sera revue au tour suivant.
+
+> **⚠ RÉÉCRITE LE 14/10/2026 — « repart pour cinq jours » est impossible depuis 1.13.** Le
+> compteur est `premiereVue`, et il **ne recule jamais** : une carte qui a franchi les cinq
+> jours ne peut pas les refranchir. L'ancienne formulation décrivait un compteur remis à
+> zéro, c'est-à-dire `vuLe` — exactement celui que 1.13 écarte. Une carte confirmée vivante
+> n'est donc pas « repartie » : elle est **confirmée jusqu'à son prochain tour**.
 
 **1.10** **La page est vivante, le prix a changé** *et* le nouveau prix est **lu avec
 certitude** → le **prix et la remise sont corrigés**.
@@ -109,12 +131,23 @@ positifs** mesurés le 12/10 sur 140 pages.
 
 ### Ce que ça change par rapport à aujourd'hui
 
-**1.16** Aujourd'hui, à sept jours, la carte est **masquée sans être vérifiée** :
-**7 547 fiches** sont dans ce cas, dont les visuels pèsent 132 Mo.
+**1.16** Aujourd'hui, à sept jours, la carte est **masquée sans être vérifiée** : au relevé
+du 14/10/2026 (18:01), **7 680 fiches** sont dans ce cas et leurs visuels pèsent
+**136,7 Mo** (19,1 % des visuels marchands). Et le masquage est **inclus dans la file** :
+**les 7 680 masquées sont toutes dans les 13 243 cartes à contrôler** — aucune n'y échappe.
+À côté, **5 563 cartes affichées depuis plus de cinq jours** n'ont jamais été contrôlées
+(208,9 Mo de visuels).
 
 **1.17** Demain, **on ne cache plus : on va voir.** Une carte ne sort que si sa page le dit.
 Donc l'affichage augmente — presque tout est montré — et **le tri se fait sur la preuve**,
 plus sur une échéance.
+
+> **⚠ L'ORDRE COMPTE, ET C'EST UNE CONSÉQUENCE DU 14/10.** Démasquer les **7 680** cartes
+> d'un seul coup remettrait en vitrine des cartes **non vérifiées**, alors que la file n'en
+> contrôle que **2 000 par jour** : on montrerait avant d'avoir vu. Le démasquage doit donc
+> **suivre** le contrôle, carte par carte — une carte confirmée vivante se réaffiche, une
+> carte morte disparaît. **« On va voir » d'abord, « on montre » ensuite.** Cette ligne
+> reste à corriger par B dans ce sens.
 
 **1.18** Ce qui n'est **pas** touché par cette règle : les **articles de veille**, qui
 gardent leur propre délai (1 215 articles, tous dans les sept jours aujourd'hui — la règle
@@ -236,6 +269,44 @@ trancher : la file des cinq jours se vide **une fois** (13 227 cartes, ~7 jours 
 2 000/jour) ; ensuite, chaque carte affichée est revue **au rythme que le budget permet** —
 aujourd'hui ~une fois par semaine — et ce rythme **se dégrade avec le stock** tant que
 l'affichage n'est pas borné par pays et par rubrique.
+
+---
+
+## Reprise de tous les points — 14/10/2026, après l'adaptation
+
+Ce que le nouveau compteur (1.13, arrêté par B) et la surveillance décidée (1.21) changent,
+ligne par ligne. **Trois lignes étaient touchées mécaniquement ; les autres tiennent.**
+
+- **1.1 et 1.2 tiennent** — mais la « période de confiance » ne vaut que pour les cartes
+  neuves. Au premier jour, **13 243 cartes (56,9 %)** entrent d'un coup dans la file : le
+  stock déjà en ligne n'a jamais eu ses cinq jours de confiance, il les a dépassés.
+- **1.3 et 1.6 corrigées** — la priorité par clics n'est pas constructible aujourd'hui
+  (les clics arrivent dans ta feuille, la collecte ne les relit pas). La `temperature` l'est :
+  **15 757 cartes, 67,7 %**.
+- **1.4 tient** — 2 000 pages/jour = **+25 %** des requêtes, +8 % du volume.
+- **1.5 tient dans son chiffre, corrigée dans sa raison** — 13 243 cartes, et le compteur ne
+  recule jamais. Plan réel de la file : 5–6 j **2 172** · 6–7 j **2 560** · 7–8 j **2 712** ·
+  8–10 j **5 733** · 10 j et plus **66**. Le plus vieux d'abord : la file se vide en sept
+  jours à 2 000 par jour.
+- **1.7 à 1.12 tiennent**, sous une réserve déjà écrite : **le verdict de la page décide, le
+  silence ne décide rien** (48 % de faux positifs mesurés).
+- **1.9 réécrite** — « repart pour cinq jours » est impossible : `premiereVue` ne recule pas.
+  Une carte confirmée vivante est confirmée **jusqu'à son prochain tour**.
+- **1.13 arrêtée par B.**
+- **1.14 et 1.15 tiennent** — le verdict écrit, et le prix seulement s'il désigne le bon
+  produit.
+- **1.16 et 1.17 à jour** — **7 680 masquées (136,7 Mo), toutes dans la file** ; **5 563
+  affichées de plus de cinq jours jamais contrôlées**. Le démasquage doit **suivre** le
+  contrôle, jamais le précéder.
+- **1.18 tient** — la veille garde sa date de publication, elle ne se juge pas au service.
+- **1.19 et 1.20 inchangées** — ce qui est branché, ce qui reste à construire.
+- **1.21 tranchée par B** — l'affichage n'est pas borné, le point est surveillé.
+- **1.22 et 1.23 inchangées** — ta demande, mot pour mot, et les deux écarts que tu tranches.
+- **1.24 à 1.26** — le correctif du compteur et ses chiffres.
+
+**Ce qui reste à trancher par B, et rien d'autre** : la **priorité** (1.3 — `temperature` en
+attendant les clics, ou brancher la lecture de ta feuille) et l'**ordre du démasquage**
+(1.17 — suivre le contrôle, ou tout réafficher d'un coup).
 
 ---
 
