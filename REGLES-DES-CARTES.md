@@ -368,6 +368,37 @@ je n'ai pas besoin d'appeler sa page » était la piste la plus élégante : zé
 ne vaut que **392 cartes sur 13 276 — 3,0 %**. Le reste a quitté la fenêtre de sa source
 depuis plus de cinq jours. Vérifié avant de s'y fier, puis abandonné comme argument.
 
+**1.28** **« Effacer à cinq jours quoi qu'il arrive » — question de B du 14/10/2026, mesurée.**
+La question posée : *la récolte suivante, quinze minutes plus tard, réintroduirait-elle
+l'annonce effacée, pour cinq jours neufs ?*
+
+- **Techniquement, oui — et rien ne l'empêche.** Le retrait est `connues.delete(cle)`, et
+  **aucune liste d'exclusion n'est écrite** : la règle du 12/10 le dit elle-même, « une offre
+  reservie plus tard rentre comme une fiche neuve ». À la rentrée, `premiereVue` **et** `vuLe`
+  sont **remis à maintenant** (collecteur.mjs, l. 7810) — donc cinq jours pleins.
+- **Pratiquement, non.** Sur les **135 cartes** qui franchissent les cinq jours aujourd'hui,
+  **1 seule (0,7 %)** est **encore** servie par sa source dans les 24 h ; **134 (99,3 %)** ne
+  sont plus servies depuis plus de 24 h. Celles qui ont franchi le cap il y a 24 h : **3,1 %**.
+  La raison est la **fenêtre** : Dealabs « Tendance » sert **30 offres par passage** pour
+  **1 407** en base ; au cinquième jour d'affichage, la source a cessé d'en parler depuis
+  trois ou quatre jours.
+- **Mais l'exception est exactement le cas que la règle du 12/10 protégeait.** Pour les 1 à
+  3 % encore servis, l'effacement est **avalé** : la carte revient **quinze minutes plus tard**,
+  avec cinq jours neufs. Rien ne disparaît à l'écran — mais à chaque aller-retour son visuel
+  est supprimé comme orphelin (l. 7166) puis **re-téléchargé**. C'est le cas de la
+  **promotion d'un mois** (soldes) : effacée et ressuscitée tous les cinq jours, indéfiniment.
+- **Donc « quoi qu'il arrive » ne donne pas « cinq jours puis disparu ».** Il donne **disparu**
+  pour les 99 % dont la source s'est tue — ce que la règle des sept jours faisait déjà, deux
+  jours plus tard — et un **battement de cinq jours** pour le reste. La clause n'ajoute rien
+  aux 99 %, et n'ajoute le battement qu'aux autres.
+- **Et l'effacement n'est jamais définitif** : une source peut **réchauffer** une offre sortie
+  de sa fenêtre et la resservir des jours plus tard. Elle rentre alors **neuve, cinq jours
+  pleins** (c'est le sujet « le retour d'une offre », encore à écrire).
+
+Rien n'est perdu du passé, en revanche : `data/historique-prix.json` **survit** à
+l'effacement — il est daté par jour, et **208 offres** qu'il suit ne sont déjà plus dans le
+catalogue. Une carte qui revient retrouve son historique, et son `analyse` se recalcule.
+
 ---
 
 ## Reprise de tous les points — 14/10/2026, après l'adaptation
