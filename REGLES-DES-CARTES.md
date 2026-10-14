@@ -391,6 +391,104 @@ plus honnête.
 
 ---
 
+## LE SCÉNARIO — la promotion de qualité, sans complication
+
+Écrit le 14/10/2026 à la demande de B : *« le scénario qui serait le plus intéressant pour
+offrir des promotions de qualité, sans que ce soit trop compliqué pour le système interne et
+externe »*. C'est le scénario **retenu**, et il se lit en cinq parties.
+
+### 1. Ce qu'on montre — la qualité
+
+**Une carte vit cinq jours**, servie ou non : c'est la garantie donnée à tout ce qui entre.
+
+**Passé cinq jours et une seconde, une seule question se pose : la source sert-elle encore
+cette offre ?** Elle se lit dans le **flux**, gratuitement — aucune page n'est ouverte.
+
+- **la source la sert encore** → la carte **continue**. Son compteur repart, et **l'âge
+  affiché est celui que la source publie** : le vrai âge de l'annonce, à **12 minutes** près de
+  notre première vue (mesuré sur 2 992 cartes). Le lecteur ne voit donc jamais une vieille
+  annonce faire semblant d'être neuve ;
+- **la source ne la sert plus** → la carte est **effacée définitivement** : fiche, visuel,
+  marques. **Une seule chose reste : l'historique des prix**, et il se raccroche tout seul
+  (l'identifiant d'une offre est dérivé de son URL) — le badge « bon plan · est plus bas » se
+  rétablit **dès le retour** ;
+- **faute de réponse** (la source se tait depuis sept jours) → effacée.
+- **La carte reste affichée pendant la pause.** Elle n'est jamais cachée puis remontrée : elle
+  disparaît le jour où elle doit disparaître.
+
+**Ce que ça garantit au visiteur** : uniquement des promotions **qu'une source met encore en
+avant**. Plus de prix périmé, plus d'impasse au clic. **On n'affiche que ce qu'une source sert
+encore** — c'est toute la qualité du scénario, et elle se paie d'un chiffre : **−31 % de
+cartes** (~10 600 contre 15 359).
+
+**La veille de presse garde sa propre règle** : elle se juge sur la date de publication, pas
+sur un service, et elle fonctionne.
+
+### 2. Ce que ça simplifie DEDANS — le vrai bénéfice
+
+Le système interne ne fait plus que **deux choses** : lire les flux, et appliquer une date.
+Tout le reste disparaît :
+
+- **plus aucune lecture de page** → le budget de vérification de **2 000 pages/jour**, **ses
+  cinq conditions de politesse**, la **table des verdicts**, la **correction des prix par page**
+  et ses cinq conditions de certitude, et la **règle du silence** (les 48 % de faux positifs qui
+  n'ont plus rien à protéger) : **tout cela n'a plus d'objet** ;
+- **plus de troisième état** : une carte est affichée ou effacée, il n'y a plus de « masquée » ;
+- **plus de registre**, plus de liste d'exclusion, plus de compteur ;
+- **plus de jugement** : la seule décision est une échéance, et une date ne peut pas se tromper.
+
+Autrement dit : on remplace **un appareil de mesure et de jugement** par **une règle de
+calendrier**. C'est la complication qui s'en va, pas celle qui arrive.
+
+### 3. Ce que ça simplifie DEHORS
+
+- **Les sources** : **zéro requête ajoutée** — l'empreinte reste à **8 064 requêtes et 1,45 Go
+  par jour** — et l'on **retire** ce qui était prévu (les 2 000 pages/jour). `robots.txt` par
+  chemin, délais de repos, requêtes conditionnelles : inchangés. **Le scénario est plus poli que
+  celui d'aujourd'hui, pas moins.**
+- **Le visiteur** : le catalogue servi passe de **21,8 Mo à ~10 Mo**, et — avec le cache déjà
+  fourni par GitHub (`ETag`) qu'un `no-store` annule aujourd'hui — il **ne le retélécharge plus
+  à chaque visite**. C'est le plus gros gain pour lui, et il ne coûte rien.
+- **Le marchand** : les clics ne partent que sur des offres vivantes → **moins de clics perdus**.
+
+### 4. Le point dur — et il est plus gros que la règle
+
+**Le dépôt grossit de ~660 MiB par jour** (mesuré : un commit de collecte ajoute 163 objets,
+23,4 Mo non compressés, ~7 MiB sur disque ; 94 commits/jour). Il est à **749 Mo** : il atteint
+1 Go **en une demi-journée**. **Les 348,8 Mo que la règle libère valent moins d'une
+demi-journée de croissance.** Ce n'est donc pas la règle qui rend le système léger — c'est ce
+qu'on décide de committer.
+
+**Trois gestes, du plus simple au plus complet :**
+
+1. **La règle elle-même** divise le catalogue par deux (21,8 → ~10 Mo) : **la moitié de la
+   croissance s'en va** (~190 MiB/jour).
+2. **Un commit toutes les trente minutes au lieu de quinze** : **la moitié encore** (le site
+   reste frais à la demi-heure, et le CDN cache déjà 600 secondes). ~660 → **~235 MiB/jour**.
+3. **Une reprise automatique du dépôt**, l'opération déjà faite à la main le 14/10 :
+   **100 secondes**, **2,6 Go récupérés**, avec le bundle de 2,97 Go comme porte de retour.
+   **Hebdomadaire** — c'est ce qui maintient le dépôt autour de 1,5 Go au lieu de 7 Go par mois.
+
+**Avec les trois, le dépôt redevient un dépôt** : il ne grandit plus indéfiniment, et le site
+publié reste sous la moitié du seuil de 1 Go de GitHub Pages.
+
+### 5. Le scénario en une phrase
+
+**Cinq jours garantis · au-delà, on regarde si une source sert encore · si oui la carte
+continue avec son vrai âge, si non elle disparaît entièrement · seul l'historique des prix
+survit · et le dépôt est repris chaque semaine.**
+
+### Ce qui reste à faire, dans l'ordre
+
+1. l'**épreuve** qui refuse les six cas (R.12) ;
+2. la **mesure avant/après** (R.13) ;
+3. le **taux de retour** de la simulation, encore montant (1 à 30 min, 80 à 3 h 20) ;
+4. **un commit seul** pour pouvoir tout défaire seul ;
+5. les **deux ajouts** : le cache du visiteur (après avoir trouvé la raison du `no-store`) et
+   la **reprise hebdomadaire** du dépôt.
+
+---
+
 ## Comment ce fichier se lit
 
 - Les règles s'écrivent **une par une**. Aujourd'hui, la première.
