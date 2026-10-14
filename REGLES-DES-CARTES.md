@@ -64,9 +64,36 @@ ne parle plus de promotion, la carte sort.
 
 ### Ce que la règle regarde
 
-**1.13** Le signal de l'ancienneté est **`vuLe`** — la dernière fois qu'une source a
-**servi** l'offre — et **jamais `date`**. La date d'une offre marchande est réécrite à
-chaque passage : elle ne dit pas depuis quand l'offre est en base.
+**1.13** Le compteur des cinq jours se lit sur **`premiereVue`** — la **première fois que la
+carte est parue chez nous**. C'est l'âge d'affichage, et rien d'autre.
+
+**1.13.a** **Pourquoi pas `vuLe`.** `vuLe` est **remis à zéro chaque fois qu'une source
+resert l'offre**. Mesuré le 14/10/2026 : **1 197 offres** (4,9 %) venaient d'être reservies
+dans l'heure — `vuLe` = 0 jour — alors que **145** d'entre elles étaient **affichées depuis
+plus de cinq jours**, jusqu'à **9 jours**. Sous `vuLe`, ces cartes n'auraient **jamais**
+atteint le contrôle des cinq jours. Le compteur aurait décrit la source, pas notre site.
+
+**1.13.b** **Pourquoi pas `date` non plus.** `date` est l'**acte de naissance publié par la
+source** : il ne bouge pas. Mesuré : **8 466** offres portent une date de **sept jours ou
+plus** alors que la collecte n'a que **dix jours** — une date plus vieille que nous ne peut
+venir que de la source ; et **0,2 %** seulement des dates tombent sur une heure de passage.
+La phrase précédente de cette règle — « la date est réécrite à chaque passage » — était
+**fausse**. Elle l'avait été : avant le 13/10/2026, les pages qui ne publient aucune date
+recevaient l'heure du passage. Ces **7 147** pages ont été réparées depuis (`dateRelevee` :
+la date est rendue à `premiereVue`).
+
+**1.13.c** **Le repli, et un seul.** **2 544 offres** n'ont pas de `premiereVue` — les
+annonces « flash », disparues du flux avant d'être revues. Pour celles-là seulement, et
+faute de mieux, on retombe sur `vuLe`, puis sur `date`.
+
+**1.13.d** **`vuLe` garde son usage, mais pas celui-ci.** Il dit la **fraîcheur du dernier
+contact** avec la source — c'est lui qui fonde ta règle du 12/10 : le compte à sept jours
+repart à chaque service, pour qu'une promotion d'un mois ne soit jamais emportée. Ce n'est
+**pas** une preuve de vie : sa fenêtre est étroite (Dealabs « Tendance » sert **30** offres
+par passage pour **1 407** en base), donc une offre bien vivante peut sortir de la fenêtre et
+laisser filer son compteur. C'est sans danger ici — la règle **envoie voir** au lieu de
+supprimer. Ça le serait devenu si on l'avait laissée **supprimer** : **47,7 % de faux
+positifs** mesurés le 12/10 sur 140 pages.
 
 **1.14** Le signal de la mort est **le verdict écrit de la page**, jamais notre déduction.
 
@@ -120,6 +147,23 @@ déjà — est ce qui rend la vérification quotidienne possible à coût consta
   blocage par les sources (403, 429) est déjà une réalité mesurée ;
 - **le prix** : B a demandé d'adapter le prix. La règle ne l'adapte **que si la lecture est
   certaine** — la lecture d'un prix marchand n'est fiable qu'une fois sur trois.
+
+**1.24** **Correctif du 14/10/2026 (19 h).** B a désigné la ligne **1.13** ; elle était
+fausse **sur ses deux moitiés**, et la seconde l'était gravement. Mesure faite sur le
+catalogue publié (24 487 fiches, relevé de 17:46) :
+
+- `vuLe` comme compteur d'ancienneté **annulait la règle des cinq jours** : une carte
+  reservie chaque passage restait à zéro jour d'âge. 1 197 offres reservies dans l'heure,
+  dont **145 affichées depuis plus de cinq jours** (jusqu'à 9) — celles-là ne seraient
+  **jamais** passées au contrôle. Le compteur décrivait la source, pas l'âge de la carte.
+- la justification écrite contre `date` (« elle est réécrite à chaque passage ») est
+  **fausse depuis le 13/10/2026** : 8 466 dates ont sept jours ou plus quand la collecte en
+  a dix, et 0,2 % seulement tombent sur une heure de passage. Les 7 147 pages sans date
+  publiée ont été réparées (`dateRelevee` → `premiereVue`).
+
+Le compteur est donc **`premiereVue`**, avec `vuLe` en repli unique pour les 2 544 annonces
+« flash » qui n'en ont pas. `vuLe` conserve son vrai rôle — la fraîcheur du dernier contact,
+qui fonde la règle du 12/10 — et cesse d'être présenté comme une preuve de vie.
 
 ---
 
