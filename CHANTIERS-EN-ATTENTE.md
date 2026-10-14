@@ -4,7 +4,7 @@ Ce qui a été constaté, chiffré, et volontairement pas traité. Chaque ligne 
 mesure et la date de la décision, pour qu'on puisse reprendre le fil sans rechercher
 dans une conversation.
 
-## 1. Les vignettes grises — reporté le 14/10/2026 (« plus tard, c'est minime »)
+## Les vignettes grises — reporté le 14/10/2026 (« plus tard, c'est minime »)
 
 **16 cartes affichées** montrent une vignette grise au lieu d'un visuel.
 
@@ -29,21 +29,3 @@ vignette grise si leur source les ressert.
 dont le contenu commence par `<svg` n'est pas une image, et traiter la carte comme une
 fiche sans visuel (repli générique) plutôt que d'enregistrer le fichier. Les 9 fichiers
 déjà en stock seraient à retirer du catalogue, et leurs cartes basculées sur le repli.
-
-## 2. La règle des sept jours — non branchée, mode « mesure »
-
-**7 486 fiches (123 Mo)** dépassent sept jours sans qu'aucune source ne les reconfirme —
-relevé du 14/10/2026 à 17 h 01. Le chiffre bouge à chaque passage : la règle le recalcule
-en permanence et le publie.
-
-Elles **ne sont déjà plus affichées** : le collecteur pose un drapeau `perimee` et recalcule
-les compteurs publiés pour que le bandeau ne mente pas. Une fiche dont la source ressert
-l'article **repart affichée toute seule**. Rien n'est cassé.
-
-Ce qui n'est pas fait : **elles ne sont pas effacées** du fichier publié. La règle tourne
-en mode « mesure » — elle compte ce qu'elle effacerait à chaque passage et n'efface rien.
-L'onglet « Exploitation » du panneau donne le compte.
-
-**À savoir avant de brancher** : effacer ces fiches allégerait le site publié (117 Mo sur un
-seuil de 1 Go), mais **ne réduirait pas l'historique git** — les visuels concernés y sont
-déjà entrés, et git ne rend jamais un blob. Les deux sujets sont indépendants.
