@@ -399,6 +399,47 @@ Rien n'est perdu du passé, en revanche : `data/historique-prix.json` **survit**
 l'effacement — il est daté par jour, et **208 offres** qu'il suit ne sont déjà plus dans le
 catalogue. Une carte qui revient retrouve son historique, et son `analyse` se recalcule.
 
+**1.29** **LA SIMULATION EN SITUATION RÉELLE — construite le 14/10/2026, sur la demande de
+B.** *« Faisons la simulation en situation réelle avant de prendre la décision. »*
+
+**Ce qu'elle est** : `bin/simuler-effacement-5-jours.mjs`, relais `~/scripts/simulation-5-jours.sh`,
+tâche planifiée **toutes les 15 minutes** (job `d000ebf69467`) — le rythme de la collecte,
+puisque la question est : *« la mise à jour suivante, quinze minutes plus tard,
+la réintroduit-elle ? »*. **Elle n'efface rien** : ni carte, ni visuel, ni catalogue. Elle
+observe et compte.
+
+**Les deux horloges, séparées comme B les a décrites** : l'**affichage** repart à chaque
+retour (cinq jours neufs) ; le **total**, jamais — c'est la première parution chez nous, et
+c'est ce que la carte afficherait. Le total exige une **mémoire qui survit à l'effacement**,
+c'est-à-dire la « liste d'exclusion » que le code n'écrit pas aujourd'hui. La simulation tient
+ce registre pour en mesurer le poids : `cleDe` est **stable** (PAYS + URL sans protocole, sans
+paramètres, sans barre finale — 74 caractères en moyenne, jusqu'à 400).
+
+**Le proxy de retour, nommé comme tel** : on ne peut pas observer un retour qu'on n'a pas
+provoqué. Une carte virtuellement effacée à T revient si sa source la resert — alors `vuLe`
+dépasse T. C'est exactement la mécanique de la fusion (collecteur.mjs, l. 7810).
+
+**Les premiers chiffres, réels (14/10/2026, 19:27 → 19:35 UTC)** :
+
+- **23 444 offres** au catalogue, **10 055 affichées** sous la règle, **13 389 effacées**
+  d'un coup (tout le stock déjà au-delà de cinq jours) ;
+- **1er retour réel attrapé** : `coolblue.be/fr/produit/821010/bosch-hlr390020.html`,
+  source `coolblue-be-7` — **effacée à 19:27:54, revenue à 19:34:15, soit six minutes plus
+  tard**, et **8,15 jours** d'âge total. C'est le cas de B mot pour mot : une carte affichée
+  huit jours, effacée, réintroduite au passage suivant ;
+- **registre : 5,71 Mo** pour 23 444 clés + 13 389 effacements en attente (une version de
+  production, qui ne garderait que `clé → date`, tiendrait en **~2,2 Mo**) ;
+- **effacements quotidiens** : ~18 par passage de 15 minutes, soit les ~1 726 par jour déjà
+  mesurés (1.4) ;
+- épreuve d'idempotence : un second passage immédiat ne recompte **rien**.
+
+**⚠ ET LA CONSÉQUENCE QUI COMPTE, MESURÉE : cette règle AFFICHE MOINS, pas plus.** Sous elle,
+le site montrerait **10 055 cartes** — contre **15 764 aujourd'hui** (23 444 moins les 7 680
+masquées), soit **36 % de contenu en moins**. C'est l'inverse de 1.17 (« on ne cache plus, on
+va voir »). Le chiffre remonte à mesure que les retours s'accumulent — c'est précisément ce
+que la simulation mesure, et sa raison d'être. **La décision ne peut pas être prise avant
+d'avoir ce taux.**
+
 ---
 
 ## Reprise de tous les points — 14/10/2026, après l'adaptation
