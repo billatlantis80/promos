@@ -29,19 +29,29 @@ servir : c'est la période de confiance.
 **reste affichée** pendant qu'elle attend son tour.
 
 **1.3** La file est traitée **par ordre de priorité**, jamais par ordre d'arrivée :
-d'abord les cartes sur lesquelles on a **cliqué**, puis les plus **en vue**, puis les plus
-**anciennes**.
+1. les cartes sur lesquelles on a **cliqué** — dès que la lecture de ta feuille sera branchée ;
+2. puis la **`temperature`** la plus haute — la chaleur que la source publie sur sa propre offre ;
+3. puis, à défaut de chaleur, les plus **anciennes**.
 
-> **⚠ CORRIGÉE LE 14/10/2026 — LA PRIORITÉ PAR CLICS N'EST PAS CONSTRUCTIBLE AUJOURD'HUI.**
-> Les clics partent bien du site vers le relais (`public/relais.js` → ta feuille), mais
-> **rien dans la collecte ne peut les relire** : le relais reçoit, il ne rend pas, et la
-> lecture du rapport est fermée par une clé. Écrire « d'abord les cartes cliquées »
-> décrirait donc une file qui ne peut pas exister. **Le signal réellement disponible,
-> mesuré :** la **`temperature`** que les sources communautaires publient sur leurs propres
-> offres — **15 757 cartes (67,7 %)** du catalogue, de 100 à 9 086, portée par MyDealz,
-> HotUKDeals, Chollometro, Pepper PL/NL, Dealabs et Preisjäger. Proposition, à trancher :
-> la priorité devient **cliquée** (le jour où la lecture de la feuille sera branchée) →
-> **`temperature`** → **ancienneté**.
+> **ARRÊTÉE PAR B, 14/10/2026** : « Oui prends la température. »
+>
+> **Ce qui a été écarté, et pourquoi.** La priorité « cliquée » seule n'était pas
+> constructible : les clics partent bien du site vers ta feuille (`public/relais.js`), mais
+> **rien dans la collecte ne peut les relire** — le relais reçoit, il ne rend pas, et la
+> lecture du rapport est fermée par une clé. Elle reste au rang 1, pour le jour où cette
+> lecture sera branchée.
+>
+> **Ce qui a été mesuré avant de s'engager.** Dans la file des **13 243** cartes, **9 069
+> (68,5 %)** portent une `temperature` — de **100** à **7 374**, médiane **179** — et
+> **4 174 (31,5 %)** n'en portent aucune : les ventes flash Amazon (9 pays),
+> Amazon Deals/Maison, et quelques autres. Le signal vient de MyDealz, HotUKDeals,
+> Chollometro, Pepper PL/NL, Dealabs et Preisjäger.
+>
+> **La conséquence, écrite pour ne pas affamer une famille.** Les deux familles avancent au
+> même rythme : le budget de 2 000 pages par jour est réparti **à proportion** — environ
+> **1 370** pages pour les cartes à `temperature`, **630** pour les autres. Sans ce partage,
+> les 4 174 cartes sans chaleur attendraient indéfiniment derrière 9 069 plus chaudes, alors
+> que ce sont justement des **ventes flash** — les offres qui bougent le plus vite.
 
 **1.4** Le **budget de vérification est fixe** : **2 000 pages par jour**, soit environ
 **120 Mo**, c'est-à-dire **+25 %** du nombre de requêtes de la collecte et **+8 %** de son
@@ -55,10 +65,9 @@ le chiffre monte chaque jour) se vide en **sept jours** : chaque carte ancienne 
 revérifiée environ **une fois par semaine**, et une carte morte disparaît en moins d'une
 semaine.
 
-**1.6** Une carte **prioritaire** passe **dans les vingt-quatre heures**. *(Même réserve
-qu'en 1.3 : la priorité « cliquée » suppose une lecture de ta feuille qui n'existe pas
-encore. En attendant, la priorité est la `temperature`, et la promesse des vingt-quatre
-heures vaut pour elle.)*
+**1.6** Une carte **prioritaire** passe **dans les vingt-quatre heures**. *(Prioritaire au
+sens de 1.3 : cliquée dès que la lecture de ta feuille sera branchée ; en attendant, les
+cartes les plus **chaudes** — la `temperature` la plus haute.)*
 
 ### Le verdict, et il n'y a que cinq issues
 
@@ -304,9 +313,11 @@ ligne par ligne. **Trois lignes étaient touchées mécaniquement ; les autres t
 - **1.22 et 1.23 inchangées** — ta demande, mot pour mot, et les deux écarts que tu tranches.
 - **1.24 à 1.26** — le correctif du compteur et ses chiffres.
 
-**Ce qui reste à trancher par B, et rien d'autre** : la **priorité** (1.3 — `temperature` en
-attendant les clics, ou brancher la lecture de ta feuille) et l'**ordre du démasquage**
-(1.17 — suivre le contrôle, ou tout réafficher d'un coup).
+**La priorité est tranchée** (1.3 : `temperature`, arrêtée par B le 14/10/2026 — les clics
+viendront au rang 1 le jour où la lecture de ta feuille sera branchée).
+
+**Il ne reste qu'un point ouvert, et un seul** : l'**ordre du démasquage** (1.17) — faire
+**suivre** le contrôle carte par carte, ou tout réafficher d'un coup.
 
 ---
 
