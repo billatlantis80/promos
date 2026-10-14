@@ -6,56 +6,112 @@ le commit `c5d7847d`).
 
 ---
 
-## LA RÈGLE — celle qui remplace toutes les précédentes
+## LA RÈGLE — version à confirmer, puis à appliquer
 
-**Dessin arrêté par B le 14/10/2026. Pas encore appliquée : la simulation mesure encore le
-taux de retour (voir 1.29 et 1.31), et B a dit lui-même qu'on ne décidait pas sans lui.**
-**Tout ce qui suit cette section (la « Règle 1 » et ses lignes 1.1 à 1.32) est ABROGÉ :
-conservé comme trace des décisions, plus appliqué.**
+**Rédigée le 14/10/2026 au soir pour confirmation par B, puis application.**
+**État : à confirmer. RIEN N'EST APPLIQUÉ.** Tout ce qui suit cette section (la « Règle 1 »,
+lignes 1.1 à 1.33) est **ABROGÉ** : conservé comme trace des décisions, plus appliqué.
 
-**R.1 — La vie d'une carte est de cinq jours.** Le compteur est la **première parution chez
-nous** (`premiereVue`). Rien d'autre ne le fait reculer.
+### Ce qui compte, et rien d'autre
 
-**R.2 — À cinq jours et une seconde, la carte est bloquée et tout ce qui la concerne est
-effacé** : la fiche, son visuel, son verdict, son analyse, ses marques. **Une seule exception,
-et c'est une décision de B du 14/10/2026 : l'historique des prix est conservé** — c'est lui qui
-construit l'`analyse` et le badge « bon plan », et il ne pèse que **3,4 Mo**.
+**R.1 — Une carte s'affiche cinq jours.** Le compteur est **`premiereVue`** : l'horodatage de sa
+**première parution chez nous**. Pour les fiches qui n'en ont pas — **2 544**, des ventes flash
+entrées avant que ce repère existe — le compteur est **`vuLe`**. Le seuil se lit à la seconde :
+**cinq jours, plus une seconde**, suffisent à franchir.
 
-**R.3 — À la mise à jour suivante (quinze minutes), la source resert-elle l'offre ?**
+**R.2 — La seule question posée à chaque passage (toutes les quinze minutes) : la source
+sert-elle encore cette offre ?** « Servir » veut dire : **l'offre est présente dans le flux de
+sa source à ce passage**. Rien d'autre n'est lu. **Aucune page n'est ouverte, aucune requête
+n'est ajoutée à la collecte.** *(C'est le mot qui avait deux sens : « promotion toujours
+active » se juge **par le flux**, pas par la page. C'est cette définition que B confirme ou
+corrige.)*
 
-- **Oui** → elle **rentre comme une carte neuve** : cinq jours pleins. Et son âge affiché est
-  **celui que la source publie** — sa date de naissance, **redonnée à chaque passage**.
-- **Non** → elle **disparaît définitivement**. Rien n'est conservé.
+### Les deux seules situations
 
-**R.4 — Aucune liste d'exclusion, aucun registre des premières vues, aucune trace des cartes
-disparues.** L'information vient de la **source**, pas de nous. Mesuré : **65,6 %** des cartes
-effacées portent une date publiée par la source, et cette date est redonnée à chaque service —
-donc l'âge total **survit sans que nous gardions rien**. Les 30 % restants sont les ventes
-flash Amazon, dont la fenêtre tourne d'un bloc : elles ne reviennent pas.
+**R.3 — La source sert encore l'offre.**
+- âge d'affichage **≤ cinq jours** → la carte continue, exactement comme aujourd'hui ;
+- âge d'affichage **> cinq jours** → **son compteur repart** : elle est traitée comme une
+  **carte neuve**, cinq jours pleins. Son âge **affiché** reste **celui que la source publie**
+  (sa date de naissance) : le lecteur voit la vraie ancienneté de l'annonce ;
+- la carte **n'est pas dans le stock** (effacée plus tôt, ou jamais vue) → elle **rentre**,
+  comme une carte neuve.
 
-**R.5 — Ce qu'on garde : l'historique des prix, et c'est tout.** Ni verdict, ni analyse, ni
-marque d'expiration sur une fiche disparue.
+**R.4 — La source ne sert plus l'offre.**
+- âge d'affichage **≤ cinq jours** → la carte **reste affichée**. C'est la protection : cinq
+  jours de vie garantis à **toute** carte, servie ou non ;
+- âge d'affichage **> cinq jours** → la carte est **effacée définitivement**, en une seule
+  opération.
 
-**R.6 — Ce que la règle ne demande plus.** Aucune lecture de page pour décider d'une sortie :
-la sortie est une **échéance**, plus un jugement. Deviennent donc **sans objet pour la
-suppression** : le budget de vérification de 2 000 pages/jour (1.4), les conditions de
-politesse de lecture (1.27), la table des verdicts, et la règle de la page muette — celle des
-48 % de faux positifs, qui n'a plus rien à protéger.
+### Ce que « effacée » veut dire, exactement
 
-**R.7 — Ce qui reste à construire :** le blocage à cinq jours sur `premiereVue` · la
-réintroduction au passage suivant · l'effacement de la fiche **et** de son visuel · et
-l'extinction de `OFFRES_SORTENT_SUR_VERDICT_ACTIF` et `PROMOTION_DECIDE_LA_CARTE_ACTIF`.
+**R.5 — Effacé :** la fiche quitte le **stock** *et* le **catalogue publié** · son **visuel est
+supprimé du dépôt** · ses marques tombent (`verdict`, `analyse`, `perimee`, `dateRelevee`,
+`serviceAuTour`).
 
-**R.8 — Ce que ça change à l'écran, mesuré le 14/10/2026 :** **10 055 cartes affichées** contre
-**15 764 aujourd'hui** — **36 % de contenu en moins** — et **348,8 Mo de visuels libérés**. Le
-nombre affiché remonte à mesure que les retours s'accumulent : **c'est ce que la simulation
-mesure**, et c'est la seule chose qui manque avant d'allumer.
+**R.6 — Conservé, et c'est la seule chose : l'historique des prix**
+(`data/historique-prix.json`, 3,4 Mo). Décision de B du 14/10/2026 : il ne pèse rien et c'est
+lui qui construit l'`analyse` et le badge « bon plan · est plus bas ». Une carte qui revient est
+**neuve à l'écran**, pas **amnésique sur le fond**.
 
-**R.9 — Ce qui n'est PAS touché : la veille de presse.** Les articles se jugent sur leur
-**date de publication**, pas sur un service, et leur règle fonctionne. Elle garde la sienne.
+**R.7 — Aucune autre trace.** Pas de liste d'exclusion, pas de registre des premières vues, pas
+de compteur de retours en production. **Une offre effacée ne laisse rien qui dise qu'elle a
+existé.** Si elle revient, on apprend son existence à ce moment-là.
 
-**R.10 — La règle n'est pas allumée.** Elle attend **le taux de retour** de la simulation en
-situation réelle (job `d000ebf69467`, une ligne le soir, `data/simulation-5-jours.jsonl`).
+### Ce qui n'est pas touché
+
+**R.8 — La veille de presse.** Les articles se jugent sur leur **date de publication**, pas sur
+un service : leur règle fonctionne, elle reste la leur.
+
+**R.9 — La collecte et les sources.** Le rythme de quinze minutes, les délais de repos par
+source (`reposMin`), la lecture de `robots.txt` **par chemin**, les requêtes conditionnelles :
+**rien ne change**. Cette règle **n'ajoute aucune requête** — c'est sa qualité principale.
+
+### Ce que la règle remplace
+
+**R.10 — Deviennent sans objet, et sont éteints à l'application :**
+
+- **`OFFRES_SORTENT_SUR_VERDICT_ACTIF`** — la page ne décide plus d'une sortie ;
+- **`PROMOTION_DECIDE_LA_CARTE_ACTIF`** — « plus de promotion » ne décide plus d'une sortie ;
+- **le masquage** (`perimee`) — on ne cache plus par défaut : **soit une carte est affichée,
+  soit elle est effacée**, il n'y a plus de troisième état ;
+- **`PLAFOND_OFFRES_ACTIF`** (déjà éteint : retrait à sept jours sur `vuLe`) — remplacé :
+  l'échéance est à **cinq jours, sur `premiereVue`** ;
+- **tout le contrôle de page** : le budget de 2 000 pages/jour, ses conditions de politesse
+  (1.27), la table des verdicts, la correction des prix par page (1.10) et la règle de la page
+  muette (48 % de faux positifs). **Ils n'ont plus rien à décider, puisque la suppression ne se
+  décide plus sur une preuve.**
+
+**R.11 — Ce qu'on ajoute, et c'est tout :** la constante **`VIE_AFFICHEE_JOURS = 5`** · le
+**seuil sur `premiereVue`** (avec `vuLe` en repli) · la **remise à zéro du compteur** d'une
+carte servie au-delà de cinq jours · l'**effacement** (fiche + visuel + marques).
+
+### Avant d'appliquer — quatre choses, dans cet ordre
+
+**R.12 — Éprouver, jamais supposer.** Une épreuve qui refuse : une carte de cinq jours **servie**
+(doit continuer) · une carte de **cinq jours + une seconde, non servie** (doit être effacée) ·
+une carte **reservie au-delà de cinq jours** (compteur remis à zéro) · une carte de **quatre
+jours non servie** (doit rester affichée) · un **article de veille** (jamais touché, quel que
+soit son âge) · l'**historique des prix** (jamais effacé).
+
+**R.13 — Mesurer avant, mesurer après.** Avant (relevé du 14/10/2026) : **13 415 cartes**
+sortiraient · **348,8 Mo** de visuels libérés · l'affichage passe de **15 484 à ~10 600 cartes
+(−31 %)**. Après : les mêmes chiffres, relevés, écrits.
+
+**R.14 — Le taux de retour de la simulation** (job `d000ebf69467`, une ligne le soir,
+`data/simulation-5-jours.jsonl`). B a dit qu'on ne décidait pas sans lui. Premier relevé à
+trente minutes : **13 415 effacements, 1 retour**, et le retour est le bon — `coolblue.be`,
+8,15 jours, revenue six minutes plus tard.
+
+**R.15 — Dire ce qu'on perd, une fois pour toutes.** Mesuré le 12/10/2026 sur 140 pages :
+**47,7 %** des cartes qu'une échéance de service emporte étaient **encore vivantes** à leur
+source. La règle assume ce prix : **« on n'affiche que ce qu'une source sert encore »** — la
+fraîcheur contre le volume, et le volume contre l'erreur.
+
+### Le retour en arrière
+
+**R.16 — Réversible, et identifiable.** Le bundle
+`promos-historique-avant-C-2026-10-14.bundle` (2,97 Go, 2 701 commits) porte l'état d'avant.
+L'application de cette règle fera **un commit seul**, pour pouvoir être défaite seule.
 
 ---
 
