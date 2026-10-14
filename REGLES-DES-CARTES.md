@@ -306,6 +306,91 @@ Deux ajouts, donc, et aucun ne change la règle : (1) laisser le navigateur se s
 
 ---
 
+### VÉRIFICATION GÉNÉRALE — 14/10/2026, 20:37 → 22:50 UTC
+
+B a demandé de **tout revérifier avec les chiffres**. Repris à un seul instant pour que les
+mesures soient comparables. **Cinq chiffres ne tenaient pas**, dont deux qui changent le
+raisonnement. Tout le reste est confirmé.
+
+**CE QUI EST CONFIRMÉ**
+
+- **Le catalogue** : 24 774 fiches · 23 560 offres marchandes · 1 213 articles · **15 359
+  affichées / 8 201 masquées** (somme exacte : 23 560).
+- **La file des cinq jours : 13 500 cartes**, dont 8 201 déjà masquées et **5 299 encore
+  affichées**.
+- **Ce que la règle retirerait en plus : 5 299 cartes.** Leur dernier service : **4 021 (75,9 %)**
+  il y a 5 à 7 jours, 721 (13,6 %) il y a 2 à 5 jours, **400 (7,5 %) dans les 24 h** — les seules
+  qui reviennent.
+- **L'écart entre la date de la source et notre première vue : 12 minutes en médiane, 97,8 %
+  sous l'heure, 100 % sous 24 h** (2 992 cartes mesurées). La date d'édition est bien **celle
+  de la source**.
+- **Les 47,7 % de faux positifs** : fichier du 12/10, échantillon 140, **53 vivantes sur 111
+  jugées** = 47,7 % (intervalle 38,7–57).
+- **Le visiteur, en direct sur `kazendra.com/offres.json`** : `content-length: 21820294`,
+  `cache-control: max-age=600`, **un `ETag`**, et le chargement en `cache: 'no-store'`
+  (`public/app.js`, l. 2839) qui l'annule.
+- **Le trafic de collecte** : **94 passages / 24 h**, **8 064 requêtes**, **1,45 Go**.
+  2 000 pages = **24,8 %** des requêtes ; 13 500 = **167 %**.
+- **Les visuels** : 22 480 fichiers, **645,7 Mo d'octets réels**.
+- **L'identifiant stable** : `préfixe + sha1(lien).slice(0,20)` (l. 122-124) — le raccrochage de
+  l'historique des prix est bien garanti.
+- **La simulation** : à 22:50, **11 passages, 13 537 effacements, 80 retours (0,6 %)**.
+
+**LES CINQ CORRECTIONS**
+
+**1. ⚠ Le taux d'entrée n'est pas 1 726 par jour : il est de ~2 500.** Mesuré : **2 091** cartes
+ont franchi les cinq jours dans les 24 h, **2 540** entre 24 et 48 h, **2 587** entre 48 et
+72 h — la cadence **monte**. Et **2 076 nouvelles cartes arrivent par jour**. Conséquence : la
+ligne 1.4 (« 2 000 pages/jour est le plancher, ~1 726 entrées/jour ») est **déjà fausse** — à
+2 500 entrées, 2 000 pages ne suffisent plus et la file grandirait de ~500/jour. *(Sans effet
+sur la nouvelle règle, qui n'a plus de budget — mais la ligne est à corriger.)*
+
+**2. ⚠ La pause ne dure pas quinze minutes.** La cadence réelle des sources, mesurée sur
+10 jours : **presse 47 min** · **communauté (Dealabs, MyDealz…) 54 min** · **gnews/bing 65 min**
+· **amazon/enseigne 2 h 52** · **groupon/socialdeal 3 h 13** · **flash 13 h 51** (1,7 tour par
+jour). Et **96 sources sur 229 n'ont JAMAIS tourné** — configurées, jamais fonctionnelles (ce
+sont les `enseigne-be-*`, dont la dernière trace date du 04/10).
+
+Donc une carte attend sa vérification **de 47 minutes à 14 heures** selon sa famille — et non
+quinze minutes. **Cela confirme la recommandation 6 : la carte doit rester affichée pendant la
+pause.** Si la pause cachait, une vente flash resterait invisible **près de quatorze heures**
+avant d'être confirmée ou effacée.
+
+**3. ⚠⚠ Le dépôt grossit de ~0,6 à 1 Go par jour — et cela domine tout le reste.** Mesuré objet
+par objet : **un commit de collecte ajoute 163 objets, 23,4 Mo non compressés**, dont
+**21,8 Mo de catalogue** et **50 images** ; soit **~7 MiB sur disque** par commit. À
+**94 commits par jour** : **~660 MiB par jour**. Confirmé en direct : **+7,4 MiB en 11 minutes**.
+
+**Conséquence, et elle renverse la conclusion d'efficacité : les 348,8 Mo que la règle libère
+valent moins d'une demi-journée de croissance du dépôt.** Le gain durable n'est donc **pas les
+images** : c'est **la moitié du catalogue** (21,8 Mo → ~10 Mo), donc **la moitié de la
+croissance quotidienne** — plus la reprise périodique. Et le `.git` ne se tasse pas tout seul :
+**1 982 objets isolés** en attente, alors que le gc automatique ne se déclenche qu'à
+**6 700**.
+
+**4. Les poids exacts** : `docs` **726,8 Mo** · `.git` **749 Mo (714 MiB)** · images **645,7 Mo**
+d'octets réels · `docs/offres.json` **21,82 Mo** · `data/historique-prix.json` **3,53 Mo** ·
+`data/simulation-5-jours.json` **8,49 Mo** · `data/conditionnel` **62,1 Mo**.
+*(Mes annonces antérieures — docs 693 Mo, .git 699 Mo, images 655 Mo — étaient un mélange de
+`du` (qui compte les blocs) et de mesures plus anciennes.)*
+
+**5. Le trou des dates est plus large que dit** : parmi les 5 299 cartes retirées,
+**2 254 (42,5 %) n'ont aucune date de source** — j'avais annoncé 30 %. Le reste, 3 045 cartes
+(57,5 %), porte bien la date de la source. **Cela ne change pas la recommandation** (les
+familles concernées sont les mêmes : flash, socialdeal, amazon, groupon), mais le chiffre est
+plus honnête.
+
+**CE QUI N'EST TOUJOURS PAS VÉRIFIÉ**
+
+- **La raison du `no-store`** : introuvable dans le code. À chercher dans l'historique avant
+  d'y toucher.
+- **Les 47,7 %** viennent d'une population désignée par une échéance de **sept** jours, pas de
+  cinq : c'est la mesure la plus proche, pas la mesure exacte.
+- **Le taux de retour** n'est pas figé : 1 retour à 30 minutes, **80 à 3 h 20**. Il monte à
+  mesure que les sources tournent — **et c'est précisément pourquoi la simulation continue.**
+
+---
+
 ## Comment ce fichier se lit
 
 - Les règles s'écrivent **une par une**. Aujourd'hui, la première.
