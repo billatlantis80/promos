@@ -1267,7 +1267,26 @@ export function etatDesCartes(offres, { maintenant = Date.now(), tours = {}, sil
       tourSource: Number.isFinite(brut) ? brut : null,
     });
   }
-  liste.sort((a, b) => (b.ageJours ?? 0) - (a.ageJours ?? 0));
+  // ⚠ L'ORDRE DE CETTE LISTE EST UNE DÉCISION, PAS UN HASARD — corrigé le
+  // 15/10/2026 après une mesure, et voilà ce qui avait été payé.
+  //  La liste publiée est BORNÉE (`SUIVI_PUBLIE_MAX`, 200 entrées), et elle était
+  //  triée par âge DÉCROISSANT : sur 229 cartes bloquées, elle était donc remplie
+  //  par les « source-sans-compteur » (les ventes flash recopiées d'un autre pays,
+  //  jusqu'à 7,4 j) et **les 28 violations n'y figuraient AUCUNE**. Or c'est
+  //  exactement ce que B ouvre pour contrôler (« l'objectif est de vérifier la
+  //  véracité des cartes effacées ») : la liste cachait ce qu'elle devait montrer.
+  //  On sert donc d'abord ce qui se VÉRIFIE, dans cet ordre :
+  //    1. `violation` — la règle devait effacer, elle ne l'a pas fait : c'est le
+  //       seul défaut que cette liste existe pour rendre visible ;
+  //    2. `source-muette` — on ne condamne pas une carte sur une source qu'on n'a
+  //       pas réussi à relire : la carte est légitime, mais elle a une raison ;
+  //    3. le reste (`source-sans-compteur`) — le trou connu et documenté, dont le
+  //       COMPTE reste publié dans `parRaison` même quand la liste le tronque.
+  //  À rang égal, l'ancien ordre est conservé (la plus ancienne en tête) : la
+  //  liste reste lisible comme avant pour qui la parcourt.
+  const RANG_DE_RAISON = { violation: 0, 'source-muette': 1 };
+  const rangDeRaison = (b) => RANG_DE_RAISON[b.raison] ?? 2;
+  liste.sort((a, b) => rangDeRaison(a) - rangDeRaison(b) || (b.ageJours ?? 0) - (a.ageJours ?? 0));
   const parRaison = {}, parPays = {};
   for (const b of liste) {
     parRaison[b.raison] = (parRaison[b.raison] || 0) + 1;
@@ -1280,7 +1299,12 @@ export function etatDesCartes(offres, { maintenant = Date.now(), tours = {}, sil
     bloquees: liste.length,
     parRaison,
     parPays,
-    plusAncienneJours: liste.length ? liste[0].ageJours : null,
+    // ⚠ CALCULÉ, JAMAIS LU DANS `liste[0]`. Depuis que la liste est ordonnée par
+    // RANG DE RAISON, sa première entrée n'est plus la plus ancienne : la lire
+    // ainsi aurait fait annoncer au panneau « la plus ancienne a 5 jours » alors
+    // que des cartes bloquées en ont 8,5. Le chiffre affiché doit rester le plus
+    // grand âge réel de la liste.
+    plusAncienneJours: liste.length ? Math.max(...liste.map((b) => b.ageJours ?? 0)) : null,
     liste,
   };
 }

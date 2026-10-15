@@ -61,6 +61,33 @@ const MUETTE = { 'dealabs-tendance': 10 };
  *  1. LA PARTITION — le critère d'acceptation du panneau.
  * ------------------------------------------------------------------ */
 
+test('la liste publiée sert d’abord ce qui se VÉRIFIE (violation, puis source muette)', () => {
+  // POURQUOI CETTE ÉPREUVE EXISTE, ET POURQUOI ELLE EST SUR FIXTURES. Vécu le
+  // 15/10/2026 : la liste publiée est bornée à 200 entrées et elle était triée par
+  // âge décroissant — donc remplie par les « source-sans-compteur » (les ventes
+  // flash recopiées), au point que **les 28 violations n'y figuraient aucune**.
+  // Or c'est ce que B ouvre pour vérifier les effacements. Une épreuve sur le
+  // catalogue réel ne peut pas le prouver : il n'y a des violations qu'un passage
+  // sur cinq environ (le transit d'un passage les emporte au suivant). Sur
+  // fixtures, la preuve est là à chaque exécution — et elle DISCRIMINE : la plus
+  // ancienne des trois cartes est justement celle qui doit passer en dernier.
+  const offres = [
+    carte({ id: 'flash', sourceId: 'flash-at', serviceAuTour: 1, premiereVue: ilYA(7) }),      // la plus vieille
+    carte({ id: 'muette', sourceId: 'pepper-pl', serviceAuTour: 10, premiereVue: ilYA(6.5) }), // source muette
+    carte({ id: 'fautive', sourceId: 'dealabs-tendance', serviceAuTour: 1, premiereVue: ilYA(5.5) }),
+  ];
+  const tours = { 'dealabs-tendance': 12, 'pepper-pl': 10 };
+  const etat = etatDesCartes(offres, { maintenant: MAINTENANT, tours });
+  assert.equal(etat.bloquees, 3, 'les trois cartes sont bloquées, chacune pour sa raison');
+  assert.deepEqual(etat.liste.map((x) => [x.raison, x.ageJours]), [
+    ['violation', 5.5], ['source-muette', 6.5], ['source-sans-compteur', 7],
+  ], 'la liste doit servir ce qui se vérifie AVANT la plus ancienne des cartes sans compteur');
+  // ET LE CHIFFRE DU PANNEAU SUIT LA PLUS ANCIENNE OÙ QU'ELLE SOIT — c'était lu
+  // dans `liste[0]`, ce qui aurait annoncé « 5,5 jours » en montrant 7 jours.
+  assert.equal(etat.plusAncienneJours, 7,
+    'la plus ancienne annoncée est le plus grand âge réel, pas la première de la liste');
+});
+
 test('la partition tient : chaque carte est dans un seau, et un seul', () => {
   const offres = [
     carte({ id: 'jeune', premiereVue: ilYA(2) }),                       // dans ses cinq jours
@@ -323,15 +350,38 @@ test('le journal publié est cohérent, et aucune carte n’est en violation', (
   const compteViolations = Number((c.parRaison || {}).violation || 0);
   assert.ok(compteViolations <= 100,
     `le passage a laissé ${compteViolations} carte(s) condamnée(s) : au-delà du transit d’un passage, l’effacement a échoué`);
-  // ⚠ DÉFAUT CONSTATÉ, NON RÉPARÉ, ET IL COMPTE POUR B : la liste qu'il ouvre pour
-  // VÉRIFIER les effacements ne contient aucune violation — le plafond de 200 est
-  // consommé par les « sans compteur », qui sont des cartes légitimes et muettes.
-  // Le tri de `extraireSuivi` devrait servir d'abord ce qui se vérifie (violation,
-  // puis source-muette). En attendant, cette épreuve le constate au lieu de le
-  // taire : elle deviendra rouge le jour où le tri sera corrigé, et c'est voulu —
-  // on saura alors qu'il faut resserrer l'assertion.
-  assert.ok(enViolation.length <= compteViolations,
-    'la liste publiée ne peut pas porter plus de violations que le compte n’en annonce');
+  // ⚠ LES VIOLATIONS DOIVENT ÊTRE DANS LA LISTE — corrigé le 15/10/2026, après
+  // avoir constaté l'inverse. La liste publiée est bornée à `SUIVI_PUBLIE_MAX` et
+  // elle était triée par âge décroissant : sur 229 cartes bloquées, elle partait
+  // avec les « source-sans-compteur » (ventes flash recopiées) et **les 28
+  // violations n'y figuraient AUCUNE** — la liste cachait exactement ce que B
+  // l'ouvre pour vérifier. `etatDesCartes` sert donc désormais d'abord ce qui se
+  // vérifie (violation, puis source-muette, puis le reste).
+  // Ce qui est exigé ici : TOUTES les violations, tant que le compte tient sous le
+  // plafond. Si un jour elles dépassent 200, la borne reprend ses droits — c'est
+  // `Math.min` qui le dit, et non un silence.
+  assert.equal(enViolation.length, Math.min(compteViolations, SUIVI_PUBLIE_MAX),
+    `les ${compteViolations} carte(s) condamnée(s) doivent figurer dans la liste publiée (plafond ${SUIVI_PUBLIE_MAX}, ${enViolation.length} présente(s))`);
+  // ET ELLES L'OUVRENT : aucune violation ne doit apparaître APRÈS une carte d'une
+  // autre raison. Une liste qui les cacherait en fin de course serait aussi
+  // inutilisable qu'une liste qui les omet.
+  const raisonsPubliees = (c.liste || []).map((x) => x.raison);
+  const premierAutre = raisonsPubliees.findIndex((r) => r !== 'violation');
+  if (premierAutre > 0) {
+    assert.ok(!raisonsPubliees.slice(premierAutre).includes('violation'),
+      'les violations ouvrent la liste : aucune ne doit venir après une autre raison');
+  }
+  // ET LA DERNIÈRE LIGNE DU PANNEAU RESTE VRAIE : « la plus ancienne a N jours ».
+  // Ce chiffre se lisait dans `liste[0]` — juste tant que la liste était triée par
+  // âge, faux dès qu'elle est triée par raison (il aurait annoncé « 5 jours » en
+  // montrant des cartes de 8,5). Il est donc calculé, et l'épreuve refuse qu'il
+  // annonce MOINS que ce que la liste publiée montre : c'est exactement le défaut
+  // qu'aurait produit l'ancienne lecture.
+  if ((c.liste || []).length) {
+    const plusGrand = Math.max(...c.liste.map((x) => Number(x.ageJours) || 0));
+    assert.ok(Number(c.plusAncienneJours) >= plusGrand - 0.01,
+      `le plus grand âge annoncé (${c.plusAncienneJours}) ne peut pas être plus jeune que ce que la liste montre (${plusGrand})`);
+  }
   assert.ok((publie.effacees || {}).liste, 'le journal doit porter la liste des effacements');
   const poids = readFileSync(new URL('docs/suivi-cartes.json', RACINE)).length;
   assert.ok(poids < 500_000, `le fichier de contrôle pèse ${poids} octets : il doit rester borné`);
