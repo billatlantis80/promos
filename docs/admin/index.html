@@ -181,6 +181,16 @@ th{
    conteneur de défilement horizontal n'a de toute façon pas besoin d'en-tête
    collant verticalement. */
 .defile th{position:static}
+/* LA SECONDE PORTE D'UNE MÊME LIGNE : l'article, puis la boutique. Le titre mène
+   à l'article (ce qui explique la promo) ; ce petit lien mène au produit chez le
+   marchand sans jamais prendre la place du premier — et il reste COLLÉ à lui,
+   dans la même colonne : ajouter une colonne aurait repoussé les chiffres de
+   l'autre bout du cadre, ce que règle déjà `th.n{width:1%}` plus bas. */
+.lien-boutique{
+  font-size:11px;color:var(--accent2);white-space:nowrap;text-decoration:none;
+  border-bottom:1px dotted currentColor;margin-left:5px
+}
+.lien-boutique:hover{color:var(--texte);border-bottom-style:solid}
 tbody tr:hover td,table tr:hover td{background:rgba(63,159,208,.07)}
 td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
 /* LES NOMBRES NE PRENNENT QUE LEUR PLACE. Défaut mesuré à l'écran : un tableau à
@@ -759,8 +769,19 @@ tr.edition .principal{width:auto;padding:9px 18px;display:inline-block;margin-ri
           <p class="aide">Les cartes dont la <b>première vue</b> tombe dans les vingt dernières minutes —
             c'est-à-dire celles que le dernier passage vient d'ajouter au catalogue. L'heure de première
             vue est écrite par le collecteur à l'entrée en base : elle ne se rafraîchit jamais, donc ce
-            tableau ne peut pas « rajeunir » une carte ancienne.</p>
+            tableau ne peut pas « rajeunir » une carte ancienne. <b>Le titre ouvre l'article</b> de la
+            source, et <b>« boutique ↗ »</b> le produit chez le marchand — les deux adresses que porte
+            une offre publiée.</p>
           <div class="grille" id="mAjoutsEntrees"></div>
+          <!-- ⚠ LE TABLEAU EST HORS DE LA GRILLE, ET C'EST TOUT LE DÉFAUT VISUEL.
+               Mesuré le 15/10/2026 : le dessin posait les tuiles ET le tableau dans
+               ce MÊME `div.grille`. Or `.grille` est une grille CSS : le tableau
+               n'y occupait qu'une CELLULE — 185 px de large au lieu de 1 110, et
+               10 685 px de haut. Sept colonnes empilées dans une bande étroite :
+               c'est ce que B voyait comme « mal dessiné ». Les deux autres
+               tableaux du même onglet, posés dans un `div` ordinaire, s'affichaient
+               correctement — c'est la comparaison qui a mis sur la piste. -->
+          <div id="mAjoutsEntreesListe"></div>
         </div>
 
         <div class="rub">
@@ -796,8 +817,11 @@ tr.edition .principal{width:auto;padding:9px 18px;display:inline-block;margin-ri
 
         <div class="rub">
           <h2>Le détail des refus, offre par offre</h2>
-          <p class="aide">Classées par motif, puis de la plus ancienne à la plus récente. Les liens
-            ouvrent l'offre : c'est la façon la plus rapide de juger si un refus était justifié.</p>
+          <p class="aide">Classées par motif, puis de la plus ancienne à la plus récente.
+            <b>Le titre ouvre l'article</b> de la source — c'est la façon la plus rapide de juger si un
+            refus était justifié — et <b>« boutique ↗ »</b> ouvre le produit chez le marchand quand
+            l'adresse est connue. Une offre dont aucune des deux adresses n'est connue s'affiche en
+            texte : jamais un lien qui ne mène nulle part.</p>
           <div id="mRefuseesListe"></div>
         </div>
       </section>
@@ -3738,7 +3762,7 @@ async function dessinerRefusees() {
       <td class="n">${o.prix == null ? '—' : nf.format(o.prix)}</td>
       <td class="n">${o.remise == null ? '—' : `${nf.format(o.remise)} %`}${o.remiseCalculee ? ' <span class="micro">calculé</span>' : ''}</td>
       <td class="fin">${esc(o.source || o.sourceId || '—')}</td>
-      <td>${esc(o.pays || '—')}</td></tr>`).join('')}
+      <td>${PAYS_CARTE(o.pays)}</td></tr>`).join('')}
   </table></div>
   ${refusees.length > montrees.length
     ? `<p class="vide">${nb(refusees.length - montrees.length)} offre(s) de plus ne sont pas montrées ici :
@@ -3788,12 +3812,16 @@ async function dessinerAjouts() {
     parSourceEntree[k] = (parSourceEntree[k] || 0) + 1;
   }
   const montrees = entrees.slice(0, AJOUTS_MAX);
+  // ⚠ LES TUILES D'UN CÔTÉ, LE TABLEAU DE L'AUTRE — DEUX CONTENEURS, PAS UN.
+  // Voir le commentaire du `div#mAjoutsEntreesListe` : tant que les deux vivaient
+  // dans la même grille CSS, le tableau n'avait droit qu'à une cellule de 185 px.
   txt('mAjoutsEntrees', tuiles([
     [nb(entrees.length), 'cartes entrées (20 min)'],
     [nb(Object.keys(parSourceEntree).length), 'sources qui ont apporté'],
     [nb(d.nouvelles), 'entrées comptées par le collecteur'],
     [nb(d.misesAJour), 'mises à jour (prix, remise ou titre)'],
-  ]) + (entrees.length ? `<div class="defile"><table>
+  ]));
+  txt('mAjoutsEntreesListe', entrees.length ? `<div class="defile"><table>
     <tr><th>Entrée</th><th>Offre</th><th>Marchand</th><th class="n">Prix</th>
       <th class="n">Remise</th><th>Source</th><th>Pays</th></tr>
     ${montrees.map((o) => `<tr>
@@ -3803,13 +3831,13 @@ async function dessinerAjouts() {
       <td class="n">${o.prix == null ? '—' : nf.format(o.prix)}</td>
       <td class="n">${o.remise == null ? '—' : `${nf.format(o.remise)} %`}</td>
       <td class="fin">${esc(o.source || o.sourceId || '—')}</td>
-      <td>${esc(o.pays || '—')}</td></tr>`).join('')}
+      <td>${PAYS_CARTE(o.pays)}</td></tr>`).join('')}
   </table></div>${entrees.length > montrees.length
-    ? `<p class="vide">… et ${nb(entrees.length - montrees.length)} autre(s), non montrées (tableau borné à ${nb(AJOUTS_MAX)} lignes).</p>` : ''}
+      ? `<p class="vide">… et ${nb(entrees.length - montrees.length)} autre(s), non montrées (tableau borné à ${nb(AJOUTS_MAX)} lignes).</p>` : ''}
     <p class="aide">Répartition : ${Object.entries(parSourceEntree).sort((a, b) => b[1] - a[1])
       .map(([s, n]) => `${esc(s)} ${nb(n)}`).join(' · ')}</p>`
     : `<p class="vide">Aucune carte entrée depuis vingt minutes. La fenêtre est plus large que la passe,
-       donc ce n’est pas un défaut d’affichage : les sources n’ont rien publié de neuf.</p>`));
+       donc ce n’est pas un défaut d’affichage : les sources n’ont rien publié de neuf.</p>`);
 
   /* --- B. LES RETRAITS DU DERNIER PASSAGE --------------------------------- */
   if (!suivi) {
@@ -3898,9 +3926,43 @@ async function relireSuiviCartes() {
   dessinerCartes();
 }
 
-const LIEN_OFFRE = (x, texte) => (x && x.lien
-  ? `<a href="${esc(x.lien)}" target="_blank" rel="noopener">${esc(texte)}</a>`
-  : esc(texte || '—'));
+/* ---------------------------------------------------------------------------
+ *  LES DEUX ADRESSES D'UNE OFFRE, ET LE DÉFAUT QU'ELLES ONT CORRIGÉ.
+ *
+ *  Mesuré le 15/10/2026, en exerçant l'onglet « Ajouts & refus » : ZÉRO lien
+ *  cliquable dans les trois tableaux. La cause n'était pas le rendu mais la
+ *  lecture du champ — le panneau cherchait `lien` partout :
+ *
+ *    · le JOURNAL DES CARTES écrit `lien`            → « Vie des cartes » avait
+ *      ses liens, et c'est pour ça que B y renvoyait ;
+ *    · le CATALOGUE PUBLIÉ écrit `lienPage` (la page qui raconte la promo) et
+ *      `lienMarchand` (le produit chez le marchand) → dans l'onglet des refus et
+ *      des entrées, où tout vient du catalogue, la fonction retombait sur du
+ *      texte mort.
+ *
+ *  Une offre porte donc DEUX adresses, et les deux servent : l'article dit
+ *  POURQUOI la promo est annoncée, la boutique dit COMBIEN elle coûte. On ouvre
+ *  le titre sur l'article — c'est la lecture demandée, « regarder l'article
+ *  directement » — et la boutique reste une seconde porte, nommée pour ce
+ *  qu'elle est. Aucune adresse connue ⇒ du texte, jamais un lien vide.
+ * ------------------------------------------------------------------------- */
+const adresseArticle = (x) => String((x && (x.lien || x.lienPage)) || '');
+const adresseBoutique = (x) => {
+  const b = String((x && x.lienMarchand) || '');
+  return b && b !== adresseArticle(x) ? b : '';
+};
+
+const LIEN_OFFRE = (x, texte) => {
+  const article = adresseArticle(x);
+  const boutique = adresseBoutique(x);
+  const principal = article || boutique;
+  if (!principal) return esc(texte || '—');
+  return `<a href="${esc(principal)}" target="_blank" rel="noopener">${esc(texte || '—')}</a>`
+    + (article && boutique
+      ? ` <a class="lien-boutique" href="${esc(boutique)}" target="_blank" rel="noopener"`
+        + ` title="Ouvrir le produit chez ${esc(x.marchand || 'le marchand')}">boutique ↗</a>`
+      : '');
+};
 
 const PAYS_CARTE = (code) => (code
   ? `<span class="pays-nom">${svgDrapeau(code)}${esc(nomDuPays(code))}</span>`
