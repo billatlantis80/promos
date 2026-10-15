@@ -834,6 +834,16 @@ tr.edition .principal{width:auto;padding:9px 18px;display:inline-block;margin-ri
             texte : jamais un lien qui ne mène nulle part.</p>
           <div id="mRefuseesListe"></div>
         </div>
+
+        <div class="rub">
+          <h2>Ce que chaque motif veut dire</h2>
+          <p class="aide">Un motif n'est pas un verdict : chacun dit <b>quelle porte n'a pas été
+            franchie</b>, et deux familles méritent d'être lues en premier — <b>« un seul prix »</b>, la
+            plus nombreuse (une remise annoncée hors des bornes crédibles y tombe), et <b>« autre »</b>,
+            où se cache le cas que la règle n'a pas prévu. Le compte entre parenthèses porte sur
+            <b>tout le catalogue publié</b>, pas sur les seules lignes montrées ci-dessus.</p>
+          <div id="mRefuseesMotifs"></div>
+        </div>
       </section>
 
       <section data-vue="cartes">
@@ -3706,11 +3716,15 @@ function motifDeRefus(o, R) {
 }
 
 async function dessinerRefusees() {
+  const vider = () => {
+    for (const id of ['mRefuseesCompteurs', 'mRefuseesListe', 'mRefuseesMotifs']) txt(id, '');
+  };
   const R = window.REGLES_AFFICHAGE;
   if (!R) {
     // Le module est chargé par un <script type="module">, donc APRÈS ce script :
     // si on arrive ici avant lui, on le dit au lieu d'afficher du vide.
     txt('avisRefusees', "Les règles d'affichage ne sont pas encore chargées : rouvrez l'onglet dans un instant.");
+    vider();
     return;
   }
   let d;
@@ -3718,6 +3732,7 @@ async function dessinerRefusees() {
     d = await (await fetch('../offres.json', { cache: 'no-store' })).json();
   } catch (e) {
     txt('avisRefusees', `Le catalogue publié n'a pas pu être lu (${esc(e.message)}).`);
+    vider();
     return;
   }
   const offres = (d.offres || []).filter((o) => (o.lienPage || o.lienMarchand));
@@ -3778,10 +3793,17 @@ async function dessinerRefusees() {
     ? `<p class="vide">${nb(refusees.length - montrees.length)} offre(s) de plus ne sont pas montrées ici :
        le tableau est borné à ${nb(REFUSEES_MAX)} lignes pour rester lisible. Les compteurs par motif, eux,
        portent sur TOUT le catalogue.</p>`
-    : ''}
-  <div class="rub"><h2>Ce que chaque motif veut dire</h2>
-    ${Object.keys(MOTIFS).filter((m) => parMotif[m]).map((m) => `<p class="aide"><b>${esc(m)}</b>
-       (${nb(parMotif[m])}) — ${esc(MOTIFS[m])}</p>`).join('')}</div>`);
+    : ''}`);
+
+  // ⚠ LES EXPLICATIONS SONT LEUR PROPRE BLOC, PAS UNE CARTE DANS LA CARTE.
+  // Mesuré le 15/10/2026 : ce texte était écrit DANS le `div` du tableau, sous la
+  // forme d'un `<div class="rub">` imbriqué — donc une bordure dans une bordure,
+  // un troisième niveau de titre, et un bloc décalé de 38 px par rapport à tous
+  // les autres cadres de l'onglet. C'est ce décalage qui se lisait comme « mal
+  // dessiné ». Ici, il n'y a plus de balisage, seulement le texte : le cadre est
+  // celui de la section, comme partout ailleurs.
+  txt('mRefuseesMotifs', Object.keys(MOTIFS).filter((m) => parMotif[m])
+    .map((m) => `<p class="aide"><b>${esc(m)}</b> (${nb(parMotif[m])}) — ${esc(MOTIFS[m])}</p>`).join(''));
 }
 
 /* ---------------------------------------------------------------------------
