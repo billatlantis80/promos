@@ -1240,6 +1240,31 @@
               "source": "REGLES-DES-CARTES.md"
             }
           ]
+        },
+        {
+          "code": "G4",
+          "titre": "Tenir le catalogue des règles",
+          "resume": "L'onglet Règles vit : il se met à jour à chaque règle nouvelle, et il ne peut pas se périmer en silence.",
+          "regles": [
+            {
+              "num": "G4.1",
+              "titre": "Toute règle nouvelle entre au catalogue le jour où elle est établie",
+              "enonce": "Demandé par B le 15/10/2026 : « cet onglet règle doit être mis à jour à chaque fois que nous établissons une nouvelle règle pour le site ». Une règle qui gère le site — un filtre, un seuil, un ordre, une condition d'affichage ou d'effacement — n'est pas établie tant qu'elle n'est pas écrite dans donnees/regles-du-site.json : son numéro, son énoncé, son état, sa source et, quand elle existe, son épreuve. Elle paraît à l'écran au passage suivant, quinze minutes au plus.",
+              "etat": "active",
+              "depuis": "15/10/2026",
+              "source": "donnees/regles-du-site.json",
+              "preuve": "tests/onglet-regles.test.mjs"
+            },
+            {
+              "num": "G4.2",
+              "titre": "Un catalogue publié ne peut pas se périmer en silence",
+              "enonce": "Le catalogue est réécrit à chaque passage de collecte, AVANT la publication : l'onglet montre les valeurs du code qui est en ligne, jamais celles d'hier. Deux gardes l'empêchent de mentir : le générateur refuse de publier si une constante citée a disparu du code, et une épreuve compare l'empreinte des fichiers lus — changer une constante sans republier fait tomber le test. L'échec du générateur n'interrompt pas la collecte, mais il est alerté.",
+              "etat": "active",
+              "depuis": "15/10/2026",
+              "source": "bin/regles-du-site.mjs",
+              "preuve": "tests/onglet-regles.test.mjs"
+            }
+          ]
         }
       ]
     }
