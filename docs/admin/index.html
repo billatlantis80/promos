@@ -305,6 +305,24 @@ input[type="number"],input[inputmode="decimal"]{text-align:right}
 .bouton:hover{border-color:var(--accent);color:var(--accent)}
 .ok{color:var(--vert)} .ko{color:var(--rouge)}
 
+/* ---------- La colonne « Décision » — les deux gestes de la main ----------
+   Deux boutons, et un menu déroulant pour la durée (demande de B, 15/10/2026 :
+   « j'ai besoin d'un menu déroulant pour le choix des jours »). Le bouton
+   « Réactiver » applique la durée choisie dans la ligne : c'est ce clic-là qui
+   confirme. */
+.decision,.sursis{display:inline-flex;gap:5px;flex-wrap:wrap;align-items:center}
+.mini{
+  background:var(--carte2);color:var(--texte);border:1px solid var(--bord);border-radius:8px;
+  padding:3px 8px;font:inherit;font-size:12px;white-space:nowrap
+}
+.mini:hover{border-color:var(--accent);color:var(--accent)}
+.mini.eff:hover{border-color:var(--rouge);color:var(--rouge)}
+.choix-jours{
+  background:var(--carte3);color:var(--texte);border:1px solid var(--bord-clair);
+  border-radius:8px;padding:3px 6px;font:inherit;font-size:12px
+}
+h3.sous{font-size:13px;margin:16px 0 6px;color:var(--doux);text-transform:uppercase;letter-spacing:.7px}
+
 /* ---------- Le choix du pays ---------- */
 #barrePays{
   display:flex;align-items:center;gap:12px;flex-wrap:wrap;
@@ -1423,6 +1441,22 @@ let exploitation = null;
 // écrit par le collecteur après chaque passage. Son absence n'est pas une panne :
 // l'onglet « Vie des cartes » écrit alors POURQUOI il n'a rien à montrer.
 let suiviCartes = null;
+
+/* LES DÉCISIONS DE LA MAIN — les deux boutons de la colonne « Décision ».
+ *
+ *  Lu depuis `verdicts-a-la-main.json`, publié avec le site. Ce fichier est écrit
+ *  par le SERVEUR du projet (POST /api/verdict-carte), pas par ce panneau : une
+ *  page publiée ne peut pas écrire sur la machine qui collecte, et un bouton qui
+ *  n'écrirait que dans le navigateur de la tablette ne déciderait rien du tout.
+ *  Ouvert depuis kazendra.com, ce panneau ne peut donc PAS décider — et il le dit
+ *  au lieu de faire semblant (voir `envoyerDecision`). */
+let verdictsMain = null;
+/** La fiche de chaque ligne actuellement affichée, par clé : c'est elle qui part
+ *  avec une décision, pour qu'une carte réactivée puisse être reconstruite même
+ *  si le registre des effacements a été élagué depuis (il ne garde que 30 jours). */
+let fichesCartes = new Map();
+/** Le retour du dernier geste, en clair, sous le tableau. */
+let avisDecision = '';
 // LES RÈGLES DU SITE — lues dans `../regles.json`, écrit par bin/regles-du-site.mjs.
 // Si le fichier manque, l'onglet l'ÉCRIT (voir dessinerRegles) au lieu d'afficher
 // une page vide : un écran vide se lit comme « aucune règle », ce qui serait faux.
@@ -4216,7 +4250,211 @@ async function dessinerAjouts() {
       ${echecs.slice(0, 8).map((j) => `<b>${esc(j.source)}</b> — ${esc(String(j.erreur || '?').slice(0, 90))}`).join(' · ')}</p>` : ''));
 }
 
+/* ---------------------------------------------------------------------------
+ *  LES DEUX GESTES DE LA MAIN — la colonne « Décision » du tableau des effacées.
+ *
+ *  Demande de B, 15/10/2026 : « Avant la colonne source, j'ai besoin d'une colonne
+ *  avec deux boutons. Le premier bouton efface la ligne du tableau de bord dans
+ *  admin. Elle confirme l'effacement et elle disparaît de la liste et définitivement
+ *  du système [...]. Le deuxième bouton me permet de réactiver une annonce pour 1,
+ *  2, 3, 4 et 5 jours, manuellement et la faire réapparaître sur le site. »
+ *
+ *  TROIS CHOSES QUE CE BLOC NE FERA JAMAIS, ET POURQUOI.
+ *
+ *  1. Il n'écrit pas la décision dans le navigateur. Une décision gardée dans le
+ *     stockage local ne décide rien : la collecte ne la voit pas, la carte ne sort
+ *     pas, et le bouton ment. C'est la « promesse fausse » déjà payée sur ce
+ *     projet. La décision part donc au serveur du projet, qui écrit le fichier
+ *     publié que la collecte relit.
+ *  2. Il n'annonce pas un effet qu'il n'a pas obtenu. Sans serveur qui répond
+ *     (panneau servi depuis kazendra.com), le message dit que la décision n'a PAS
+ *     été prise et pourquoi — jamais « c'est fait ».
+ *  3. Il ne supprime pas une ligne sans confirmation. Le premier bouton demande ;
+ *     le second, non : choisir « 3 jours » EST la confirmation, et un clic sur « 3 j »
+ *     n'a pas besoin d'un second clic pour dire la même chose.
+ * ------------------------------------------------------------------------ */
+
+/** RELIRE LES DÉCISIONS PUBLIÉES. Absent = état normal (aucune décision prise). */
+async function relireVerdictsMain() {
+  try {
+    const rep = await fetch('../verdicts-a-la-main.json', { cache: 'no-store' });
+    verdictsMain = rep.ok ? await rep.json() : null;
+  } catch { verdictsMain = null; }
+}
+
 const BLOCS_CARTES = ['mCartesCompteurs', 'mCartesRetraits', 'mCartesEffacees', 'mCartesBloquees'];
+
+/** LA MAIN A-T-ELLE DÉJÀ DÉCIDÉ POUR CETTE CARTE ? Une ligne décidée quitte la
+ *  liste : effacée, elle n'existe plus ; réactivée, elle est en ligne. */
+function decideeALaMain(cle) {
+  const v = verdictsMain || {};
+  return !!((v.supprimees || {})[cle] || (v.reactivees || {})[cle]);
+}
+
+/** LE SURSIS EN COURS POUR CETTE CARTE, ou `null`. `null` couvre les trois cas
+ *  qui n'en sont pas : aucune décision, sursis arrivé à terme, et décision
+ *  illisible (on n'agit pas sur une date qu'on ne sait pas lire). */
+function sursisEnCours(cle) {
+  const r = ((verdictsMain || {}).reactivees || {})[cle];
+  if (!r) return null;
+  const fin = Date.parse(r.jusquau || '');
+  return Number.isFinite(fin) && fin > Date.now() ? r : null;
+}
+
+/** LES DURÉES PROPOSÉES — 1 à 5 jours, dans l'ordre.
+ *  ⚠ CES CINQ VALEURS SONT LA COPIE DU PLAFOND DU CODE (`JOURS_REACTIVATION_MAX`,
+ *  `verdicts-de-la-main.mjs`) : le panneau est une page statique, il ne peut pas
+ *  importer le module. Le doublon est donc TENU PAR UNE ÉPREUVE, qui compare les
+ *  deux : si le plafond change d'un côté, l'épreuve le dit au lieu de laisser le
+ *  panneau proposer une durée que le serveur refusera. */
+const DUREES_JOURS = [1, 2, 3, 4, 5];
+
+/** LA COLONNE DES DÉCISIONS — deux boutons, et un MENU DÉROULANT pour la durée.
+ *
+ *  Demande de B, 15/10/2026 : « Pour le bouton avec la relance, j'ai besoin d'un
+ *  menu déroulant pour le choix des jours. » Les cinq tuiles dépliées derrière le
+ *  bouton sont donc remplacées par ce menu : il est toujours visible, et le bouton
+ *  « Réactiver » lit la durée choisie. C'est ce clic-là qui confirme — on ne
+ *  demande pas deux fois la même chose.
+ *
+ *  L'ordre est celui de B : le bouton qui efface d'abord, celui qui remet en ligne
+ *  ensuite. */
+function blocDecision(x) {
+  const cle = esc(x.cle || '');
+  const sursis = sursisEnCours(x.cle);
+  if (sursis) {
+    return `<span class="sursis">remise en ligne pour ${nb(sursis.jours)} j
+      <div class="micro">jusqu’au ${esc(new Date(sursis.jusquau).toLocaleString())}</div>
+      <button class="mini" data-decision="retirer" data-cle="${cle}">retirer</button></span>`;
+  }
+  return `<span class="decision">
+    <button class="mini eff" data-decision="effacer" data-cle="${cle}"
+      title="Confirmer : la ligne quitte la liste pour toujours et la carte sort du système">Effacer</button>
+    <select class="choix-jours" data-jours-pour="${cle}"
+      title="Durée pendant laquelle la carte revient sur le site">
+      ${DUREES_JOURS.map((n) => `<option value="${n}">${n} jour${n > 1 ? 's' : ''}</option>`).join('')}
+    </select>
+    <button class="mini react" data-decision="reactiver" data-cle="${cle}"
+      title="Remettre cette carte en ligne pour la durée choisie, puis la laisser ressortir">Réactiver</button>
+    ${Number.isFinite(x.prix) ? '' : '<span class="micro">sans prix : le site peut continuer à la refuser</span>'}
+  </span>`;
+}
+
+/** LE RAPPEL DE CE QUI A ÉTÉ DÉCIDÉ — sous le tableau des effacées.
+ *  Sans lui, un tableau qui maigrit aurait l'air d'avoir perdu des lignes au lieu
+ *  d'avoir appliqué une décision. */
+function blocDecisionsMain() {
+  const v = verdictsMain || {};
+  const supprimees = Object.values(v.supprimees || {});
+  const reactifs = Object.values(v.reactivees || {}).filter((r) => !!sursisEnCours(r.cle));
+  const finis = Object.values(v.reactivees || {}).filter((r) => !sursisEnCours(r.cle));
+  const retour = avisDecision ? `<p class="${avisDecision.ok ? 'aide' : 'vide'}"><b>${avisDecision.ok ? 'Décision enregistrée' : 'Décision NON prise'}</b> — ${esc(avisDecision.texte)}</p>` : '';
+  if (!supprimees.length && !reactifs.length && !finis.length) return retour;
+  return `${retour}<h3 class="sous">Ce que la main a décidé, hors règle automatique</h3>
+    <div class="defile"><table class="etroite">
+      <tr><th>Décision</th><th>Offre</th><th>Quand</th><th>Où ça en est</th></tr>
+      ${supprimees.map((d) => `<tr>
+        <td class="fin">effacée définitivement</td>
+        <td>${LIEN_OFFRE(d, String(d.titre || '—').slice(0, 64))}</td>
+        <td class="fin">${d.decisionLe ? esc(ilYA(d.decisionLe)) : '—'}</td>
+        <td class="fin">hors du système : elle ne revient pas, même si sa source la republie</td></tr>`).join('')}
+      ${reactifs.map((r) => `<tr>
+        <td class="fin">remise en ligne</td>
+        <td>${LIEN_OFFRE(r.fiche || {}, String((r.fiche || {}).titre || '—').slice(0, 64))}</td>
+        <td class="fin">${r.debut ? esc(ilYA(r.debut)) : '—'}</td>
+        <td class="fin">pour ${nb(r.jours)} j, jusqu’au ${esc(new Date(r.jusquau).toLocaleString())}
+          <button class="mini" data-decision="retirer" data-cle="${esc(r.cle)}">retirer</button></td></tr>`).join('')}
+      ${finis.map((r) => `<tr>
+        <td class="fin">sursis fini${r.annulee ? ' (retiré à la main)' : ''}</td>
+        <td>${LIEN_OFFRE(r.fiche || {}, String((r.fiche || {}).titre || '—').slice(0, 64))}</td>
+        <td class="fin">${r.debut ? esc(ilYA(r.debut)) : '—'}</td>
+        <td class="fin">la carte est ressortie : elle ne rentre que si une source la ressert</td></tr>`).join('')}
+    </table></div>
+    <p class="aide">Ces décisions sont écrites dans <code>verdicts-a-la-main.json</code> et relues par la
+      collecte <b>au passage suivant</b> (≤ 15 min) : la carte sort du catalogue, ou y revient.
+      Chaque décision emporte sa fiche : rien n’est effacé sans trace.</p>`;
+}
+
+/** ENVOYER UNE DÉCISION AU SERVEUR DU PROJET — et dire VRAI sur ce qui s'est passé.
+ *  Trois issues, trois messages distincts : enregistrée, refusée (le serveur
+ *  répond non), injoignable (il n'y a pas de serveur : le panneau est la copie
+ *  publiée). Jamais « c'est fait » quand ce ne l'est pas. */
+async function envoyerDecision(action, cle, jours) {
+  const fiche = fichesCartes.get(cle) || { cle };
+  let rep = null;
+  try {
+    rep = await fetch('../api/verdict-carte', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', 'X-Panneau': '1' },
+      body: JSON.stringify({ action, cle, jours, fiche }),
+    });
+  } catch { rep = null; }
+  if (!rep) {
+    return { ok: false, texte: 'la machine de collecte n’a pas répondu. Ce panneau-ci n’est pas servi par elle (la copie publiée sur kazendra.com ne peut pas décider) : ouvre le panneau depuis l’adresse du projet sur la machine, et la décision portera.' };
+  }
+  if (!rep.ok) {
+    const corps = await rep.json().catch(() => ({}));
+    return { ok: false, texte: `le serveur a refusé (${rep.status})${corps && corps.erreur ? ` — ${corps.erreur}` : ''}. Rien n’a été décidé.` };
+  }
+  const d = await rep.json().catch(() => ({}));
+  const quand = d.jusquau ? ` jusqu’au ${new Date(d.jusquau).toLocaleString()}` : '';
+  const duree = d.jusquau ? ` pour ${nb(jours)} jour(s)` : '';
+  return {
+    ok: true,
+    texte: (action === 'effacer'
+      ? 'effacement enregistré : la ligne quitte la liste et la carte sort du système au prochain passage (≤ 15 min).'
+      : action === 'annuler'
+        ? 'sursis retiré : la carte ressort au prochain passage (≤ 15 min).'
+        : `remise en ligne enregistrée${duree}${quand} : la carte revient sur le site au prochain passage (≤ 15 min).`)
+      + ` Fichier : ${esc(d.fichier || 'verdicts-a-la-main.json')}.`,
+  };
+}
+
+/** LE CLIC SUR UN BOUTON DE DÉCISION — un seul écouteur pour tout le panneau.
+ *  Les tableaux sont redessinés à chaque filtre : un écouteur posé sur un bouton
+ *  mourrait avec lui (règle du tuyau, apprise sur les cartes du site). On écoute
+ *  donc au niveau du document, en phase de CAPTURE. */
+async function surClicDecision(e) {
+  const bouton = e.target && e.target.closest ? e.target.closest('[data-decision]') : null;
+  if (!bouton) return;
+  const action = bouton.getAttribute('data-decision');
+  const cle = bouton.getAttribute('data-cle') || '';
+  // ⚠ DEUX MOTS POUR LE MÊME GESTE, ET IL FAUT LES TRADUIRE. Le panneau dit
+  //  « retirer » (le mot le plus court à l'écran) ; le module dit « annuler ».
+  //  Sans cette traduction, le clic partait avec une action que le serveur REFUSE
+  //  (« action inconnue ») : défaut trouvé en exerçant le bouton pour de vrai, le
+  //  15/10/2026 — pas en le relisant. Le test le verrouille.
+  const actionServeur = action === 'retirer' ? 'annuler' : action;
+  if (action === 'effacer') {
+    const fiche = fichesCartes.get(cle) || {};
+    const titre = String(fiche.titre || '').slice(0, 90);
+    const ok = window.confirm(`Effacer DÉFINITIVEMENT « ${titre} » ?\n\n`
+      + 'La ligne disparaît de cette liste, et la carte sort du système : elle ne reviendra pas, même si sa source la republie.\n\n'
+      + 'Ce qui est perdu : sa fiche de contrôle (le tour où sa source a reparlé sans elle) et le droit de compter ses « retours » — le seul chiffre qui dit si la règle des cinq jours est trop dure. La fiche reste écrite dans le fichier des décisions, donc rien n’est effacé sans trace.');
+    if (!ok) return;
+  }
+  // LA DURÉE VIENT DU MENU DÉROULANT DE LA LIGNE, jamais d'un nombre écrit ici :
+  // le bouton ne choisit pas la durée, il l'applique (demande de B, 15/10/2026 :
+  // « j'ai besoin d'un menu déroulant pour le choix des jours »). Si le menu a
+  // disparu entre l'affichage et le clic, on REFUSE au lieu d'inventer un nombre.
+  let jours;
+  if (action === 'reactiver') {
+    const bloc = bouton.closest('.decision');
+    const choix = bloc ? bloc.querySelector('.choix-jours') : null;
+    jours = choix ? Number(choix.value) : NaN;
+    if (!Number.isInteger(jours)) {
+      avisDecision = { ok: false, texte: 'aucune durée lisible dans le menu : la carte n’a pas été remise en ligne.' };
+      await relireSuiviCartes();
+      return;
+    }
+  }
+  bouton.disabled = true;
+  const resultat = await envoyerDecision(actionServeur, cle, jours);
+  avisDecision = { ok: resultat.ok, texte: resultat.texte };
+  bouton.disabled = false;
+  await relireSuiviCartes();
+}
+
 
 /** RELIRE LE JOURNAL DES CARTES. `no-store` : c'est un fichier de contrôle qui
  *  change à chaque passage (quinze minutes) ; une version en cache montrerait un
@@ -4229,6 +4467,7 @@ async function relireSuiviCartes() {
     const rep = await fetch('../suivi-cartes.json', { cache: 'no-store' });
     suiviCartes = rep.ok ? await rep.json() : null;
   } catch { suiviCartes = null; }
+  await relireVerdictsMain();
   // LA BARRE DES PAYS SE REDESSINE AVEC LE JOURNAL : ses tuiles portent le nombre
   // de cartes que le journal nomme par pays. Redessinée avant lui, la barre
   // annoncerait les pays du journal précédent.
@@ -4311,7 +4550,15 @@ function dessinerCartes() {
   const bloqueesToutes = c.liste || [];
   const effaceesToutes = e.liste || [];
   const bloquees = bloqueesToutes.filter(dansPaysChoisi);
-  const effacees = effaceesToutes.filter(dansPaysChoisi);
+  // ⚠ LES LIGNES DÉJÀ DÉCIDÉES PAR LA MAIN NE SONT PLUS LISTÉES. C'est le sens du
+  //  premier bouton : « ça sera plus clair si on s'est effacé la ligne de la
+  //  liste ». Le retrait est immédiat ici, et définitif dans le registre au passage
+  //  suivant (le collecteur purge la fiche — voir collecteur.mjs). Une carte remise
+  //  en ligne quitte la liste pour la même raison : elle est AFFICHÉE.
+  const effacees = effaceesToutes.filter(dansPaysChoisi).filter((x) => !decideeALaMain(x.cle));
+  // La fiche de chaque ligne affichée, par clé : c'est elle qui part avec une
+  // décision (voir envoyerDecision).
+  fichesCartes = new Map(effacees.map((x) => [x.cle, x]));
   const revenues = (e.revenuesListe || []).filter(dansPaysChoisi);
   const quand = s.genereLe ? ilYA(s.genereLe) : null;
 
@@ -4384,10 +4631,10 @@ function dessinerCartes() {
          choisissez « <b>Tous les pays</b> » pour les voir. Rien n’est caché — c’est ce pays qui n’en a pas.</p>`
       : `<p class="vide">Aucun effacement au registre pour l’instant. Soit la
       règle n’en a pas encore emporté depuis la mise en service du journal, soit le registre a été
-      relu et vidé — le compte « effacements au registre » plus haut dit lequel.</p>`);
+      relu et vidé — le compte « effacements au registre » plus haut dit lequel.</p>` + blocDecisionsMain());
   } else {
     txt('mCartesEffacees', `<div class="defile"><table>
-      <tr><th>Effacée</th><th class="n">Âge</th><th>Offre</th><th>Source</th><th>Pays</th>
+      <tr><th>Effacée</th><th class="n">Âge</th><th>Offre</th><th>Décision</th><th>Source</th><th>Pays</th>
         <th>La preuve : servie, puis reparlée sans elle</th></tr>
       ${effacees.map((x) => `<tr>
         <td class="fin">${x.effaceeLe ? esc(ilYA(x.effaceeLe)) : '—'}${x.revenueLe
@@ -4395,6 +4642,7 @@ function dessinerCartes() {
         <td class="n">${x.ageJours == null ? '—' : `${nf.format(x.ageJours)} j`}</td>
         <td>${LIEN_OFFRE(x, String(x.titre || '—').slice(0, 78))}
           ${x.prix == null ? '' : `<div class="micro">${nf.format(x.prix)} (monnaie du pays)</div>`}</td>
+        <td class="fin">${blocDecision(x)}</td>
         <td class="fin">${esc(x.source || x.sourceId || '—')}</td>
         <td>${PAYS_CARTE(x.pays)}</td>
         <td class="fin">servie au tour <b>${x.servieAuTour == null ? '—' : x.servieAuTour}</b>,
@@ -4414,7 +4662,7 @@ function dessinerCartes() {
       ${revenues.length ? `<br><b>${nb(revenues.length)}</b> carte(s) effacée(s)${paysChoisiCartes ? ' de ce pays' : ''} sont revenues depuis :
       leur source les a resservies, donc la carte rentre comme une neuve. C’est l’aveu d’une
       condamnation prise sur un silence qui ne voulait pas dire « morte » — et c’est le chiffre à
-      regarder quand on se demandera si la règle est trop dure.` : ''}</p>`);
+      regarder quand on se demandera si la règle est trop dure.` : ''}</p>` + blocDecisionsMain());
   }
 
   // LES CARTES BLOQUÉES — l'autre moitié de la question de B.
@@ -4801,6 +5049,12 @@ function brancher() {
     const liste = document.getElementById(id);
     if (liste) liste.addEventListener('click', surPaysCartes);
   }
+  // LES DEUX BOUTONS DE LA COLONNE « DÉCISION », ÉCOUTÉS AU NIVEAU DU DOCUMENT.
+  //  Le tableau des effacées est redessiné à chaque changement de pays et à chaque
+  //  relecture du journal : un écouteur posé sur un bouton mourrait avec lui
+  //  (défaut déjà payé sur les cartes du site). On écoute donc une seule fois, en
+  //  phase de capture, et on reconnaît le bouton par son attribut.
+  document.addEventListener('click', surClicDecision, true);
 
   const choixAff = document.getElementById('paysAffiliation');
   if (choixAff) {
