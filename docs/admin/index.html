@@ -501,6 +501,7 @@ tr.edition .principal{width:auto;padding:9px 18px;display:inline-block;margin-ri
       <button class="onglet" data-vue="trafic">Trafic</button>
       <button class="onglet" data-vue="exploitation">Exploitation</button>
       <button class="onglet" data-vue="cartes">Vie des cartes</button>
+      <button class="onglet" data-vue="refusees">Offres refusées</button>
       <button class="onglet" data-vue="sources">Sources</button>
       <button class="onglet" data-vue="origines">Origines</button>
       <button class="onglet" data-vue="marche">Marché Euro</button>
@@ -750,6 +751,29 @@ tr.edition .principal{width:auto;padding:9px 18px;display:inline-block;margin-ri
            Aucun chiffre n'est calculé ici : tout vient de `suivi-cartes.json`,
            écrit par le collecteur après avoir pris sa décision. C'est une lecture,
            pas un calcul — le panneau ne peut donc pas se tromper tout seul. -->
+      <section data-vue="refusees">
+        <div class="avis" id="avisRefusees"></div>
+
+        <div class="rub">
+          <h2>Ce que les filtres ont écarté de la vue par défaut</h2>
+          <p class="aide">Toute offre <b>publiée</b> est ici : soit elle passe l'un des <b>quatre
+            étages</b> qui ouvrent la vue par défaut, soit elle est <b>refusée</b> — et la raison est
+            écrite noir sur blanc. <b>Ces règles sont celles de l'écran</b> : le même fichier
+            (<code>regles-affichage.js</code>) est importé par l'application, par ce panneau et par les
+            épreuves. Deux copies divergeraient ; il n'y en a qu'une, et c'est mesuré.
+            Une offre refusée n'est <b>pas perdue</b> : elle reste visible en choisissant
+            «&nbsp;Toutes les promos&nbsp;» — elle n'était simplement pas dans le défaut.</p>
+          <div class="grille" id="mRefuseesCompteurs"></div>
+        </div>
+
+        <div class="rub">
+          <h2>Le détail, offre par offre</h2>
+          <p class="aide">Classées par motif, puis de la plus ancienne à la plus récente. Les liens
+            ouvrent l'offre : c'est la façon la plus rapide de juger si un refus était justifié.</p>
+          <div id="mRefuseesListe"></div>
+        </div>
+      </section>
+
       <section data-vue="cartes">
         <div class="avis" id="avisCartes"></div>
 
@@ -3561,6 +3585,134 @@ function dessinerAffiliation() {
  *      est une phrase, les deux numéros de tour sont séparés ;
  *   3. l'écran ne prétend jamais avoir vérifié à la place de B — il dit que le
  *      seul contrôle qui tranche est d'ouvrir le lien. */
+/* ---------------------------------------------------------------------------
+ *  L'ONGLET DES OFFRES REFUSÉES — vérifier les filtres, refus par refus.
+ *
+ *  Demande de B, 15/10/2026 : « un onglet avec toutes les promotions qui ont été
+ *  refusées par le système mais qui sont éventuellement valables, histoire de
+ *  pouvoir vérifier les filtres et ce qu'on n'a pas publié à cause des filtres. »
+ *
+ *  ⚠ LES RÈGLES NE SONT PAS RECOPIÉES ICI. Elles vivent dans
+ *  `public/regles-affichage.js` — le module que l'application importe pour
+ *  dessiner l'écran, et que cette page importe aussi (voir le petit pont en fin
+ *  de page). Ce panneau juge donc avec EXACTEMENT les mêmes fonctions que la
+ *  vue : une seconde copie aurait divergé en silence, et le panneau aurait dit
+ *  « refusée » là où l'écran affiche — précisément le défaut que cet onglet ne
+ *  peut pas se permettre, puisqu'il sert à contrôler les filtres.
+ *
+ *  CE QU'ON MONTRE : les offres PUBLIÉES (celles du catalogue servi) que la vue
+ *  par défaut écarte, avec le motif. Pas les 5 000 fiches que le collecteur garde
+ *  en stock hors délai — elles ne sont pas publiées, il n'y a pas de filtre à
+ *  vérifier sur elles.
+ * ------------------------------------------------------------------------- */
+const REFUSEES_MAX = 300;
+
+/** Les quatre portes qui ouvrent la vue par défaut, dans l'ordre où l'écran les
+ *  interroge. Le libellé dit la règle, pas le code : c'est ce que B vérifie. */
+const PORTES = {
+  'porte 1': 'Deux prix réels affichés, remise ≥ 15 % — la preuve la plus forte',
+  'porte 2': 'Enseigne nommée : remise annoncée crédible, ou score communautaire ≥ 100°',
+  'porte 3': 'Presse : un article qui porte un vrai prix et une remise crédible',
+  'porte 4': 'Bonne affaire sans prix : communauté ≥ 100°, boutique nommée',
+};
+
+/** Les motifs de refus, avec ce qu'ils veulent dire. L'ordre est celui de
+ *  l'affichage : d'abord ce qui pourrait être un vrai bon plan mal jugé. */
+const MOTIFS = {
+  'un seul prix': "Un seul prix connu, et aucune remise crédible annoncée : rien ne prouve la réduction. C'est la famille la plus nombreuse — et celle qui mérite le plus d'être regardée, car une remise annoncée sous 15 % ou au-dessus de 90 % tombe ici.",
+  'nom écarté (rédaction)': "Le nom du marchand accroche le filtre des rédactions : l'offre ne peut donc pas s'annoncer « enseigne ». ⚠ Le filtre contenait des suffixes de domaine nus (.be, .de, .com) jusqu'au 15/10/2026 : bol.com et d'autres y tombaient. Si une vraie boutique réapparaît ici, c'est ce filtre qu'il faut regarder.",
+  'aucun prix': "Aucun prix dans la source : l'offre ne peut pas prouver sa remise. Si la source est une communauté et que le score atteint 100°, elle entre par la porte 4 — sinon elle reste là.",
+  'le « marchand » est la source': "Le champ marchand porte le nom de la source elle-même (dealabs, pepper…), donc aucune boutique n'est identifiable.",
+  'aucun marchand': "Aucun marchand nommé : l'offre est publiée mais ne peut pas être présentée comme une enseigne.",
+  'article de veille': "Ce n'est pas une promotion mais une annonce suivie : elle a sa propre règle (sept jours sur sa date de publication).",
+  'autre': "Aucune des familles ci-dessus. À regarder en premier : c'est ici que se cache un cas non prévu.",
+};
+
+function motifDeRefus(o, R) {
+  if (R.estPromoVerifiee(o)) return 'porte 1';
+  if (R.estOffreEnseigne(o)) return 'porte 2';
+  if (R.estBonPlanPresse(o)) return 'porte 3';
+  if (R.estBonneAffaire(o)) return 'porte 4';
+  if (o.type === 'article') return 'article de veille';
+  if (o.prix == null) return 'aucun prix';
+  if (!o.marchand) return 'aucun marchand';
+  const m = String(o.marchand).trim();
+  if (R.MARCHANDS_NON_BOUTIQUE.test(m)) return 'le « marchand » est la source';
+  if (R.REDACTIONS.test(m)) return 'nom écarté (rédaction)';
+  if (!R.remiseCredible(o)) return 'un seul prix';
+  return 'autre';
+}
+
+async function dessinerRefusees() {
+  const R = window.REGLES_AFFICHAGE;
+  if (!R) {
+    // Le module est chargé par un <script type="module">, donc APRÈS ce script :
+    // si on arrive ici avant lui, on le dit au lieu d'afficher du vide.
+    txt('avisRefusees', "Les règles d'affichage ne sont pas encore chargées : rouvrez l'onglet dans un instant.");
+    return;
+  }
+  let d;
+  try {
+    d = await (await fetch('../offres.json', { cache: 'no-store' })).json();
+  } catch (e) {
+    txt('avisRefusees', `Le catalogue publié n'a pas pu être lu (${esc(e.message)}).`);
+    return;
+  }
+  const offres = (d.offres || []).filter((o) => (o.lienPage || o.lienMarchand));
+  const parMotif = {};
+  const refusees = [];
+  let dansLaVue = 0;
+  const age = (o) => {
+    const t = Date.parse(o.premiereVue || o.vuLe || '');
+    return Number.isFinite(t) ? (Date.now() - t) / 86400000 : null;
+  };
+  for (const o of offres) {
+    const motif = motifDeRefus(o, R);
+    if (PORTES[motif]) { dansLaVue += 1; continue; }
+    parMotif[motif] = (parMotif[motif] || 0) + 1;
+    refusees.push({ o, motif, age: age(o) });
+  }
+  refusees.sort((a, b) => (Object.keys(MOTIFS).indexOf(a.motif) - Object.keys(MOTIFS).indexOf(b.motif))
+    || ((b.age ?? 0) - (a.age ?? 0)));
+  const part = offres.length ? (100 * dansLaVue / offres.length) : 0;
+
+  txt('avisRefusees', `Catalogue publié : <b>${nb(offres.length)}</b> offres ·
+    <b>${nb(dansLaVue)}</b> dans la vue par défaut (${nf.format(part)} %) ·
+    <b>${nb(refusees.length)}</b> refusées, réparties en <b>${Object.keys(parMotif).length}</b> motif(s).
+    Chaque motif est expliqué sous le tableau. Une offre refusée n'est pas perdue :
+    elle s'affiche en choisissant « Toutes les promos » dans le sélecteur de portée.`);
+
+  txt('mRefuseesCompteurs', tuiles([
+    [nb(offres.length), 'offres publiées'],
+    [nb(dansLaVue), 'dans la vue par défaut'],
+    [nb(refusees.length), 'refusées par les filtres'],
+    ...Object.keys(MOTIFS).filter((m) => parMotif[m]).map((m) => [nb(parMotif[m]), m]),
+  ]));
+
+  const montrees = refusees.slice(0, REFUSEES_MAX);
+  txt('mRefuseesListe', `<div class="defile"><table>
+    <tr><th>Motif</th><th class="n">Âge</th><th>Offre</th><th>Marchand</th>
+      <th class="n">Prix</th><th class="n">Remise</th><th>Source</th><th>Pays</th></tr>
+    ${montrees.map(({ o, motif, age: a }) => `<tr>
+      <td class="fin">${esc(motif)}</td>
+      <td class="n">${a == null ? '—' : `${nf.format(a)} j`}</td>
+      <td>${LIEN_OFFRE(o, String(o.titre || '—').slice(0, 74))}</td>
+      <td>${esc(o.marchand || '—')}</td>
+      <td class="n">${o.prix == null ? '—' : nf.format(o.prix)}</td>
+      <td class="n">${o.remise == null ? '—' : `${nf.format(o.remise)} %`}${o.remiseCalculee ? ' <span class="micro">calculé</span>' : ''}</td>
+      <td class="fin">${esc(o.source || o.sourceId || '—')}</td>
+      <td>${esc(o.pays || '—')}</td></tr>`).join('')}
+  </table></div>
+  ${refusees.length > montrees.length
+    ? `<p class="vide">${nb(refusees.length - montrees.length)} offre(s) de plus ne sont pas montrées ici :
+       le tableau est borné à ${nb(REFUSEES_MAX)} lignes pour rester lisible. Les compteurs par motif, eux,
+       portent sur TOUT le catalogue.</p>`
+    : ''}
+  <div class="rub"><h2>Ce que chaque motif veut dire</h2>
+    ${Object.keys(MOTIFS).filter((m) => parMotif[m]).map((m) => `<p class="aide"><b>${esc(m)}</b>
+       (${nb(parMotif[m])}) — ${esc(MOTIFS[m])}</p>`).join('')}</div>`);
+}
+
 const BLOCS_CARTES = ['mCartesCompteurs', 'mCartesRetraits', 'mCartesEffacees', 'mCartesBloquees'];
 
 /** RELIRE LE JOURNAL DES CARTES. `no-store` : c'est un fichier de contrôle qui
@@ -3791,6 +3943,10 @@ function brancher() {
       // l'état d'il y a vingt minutes serait exactement le défaut que cet onglet
       // existe pour supprimer.
       cartes: () => { relireSuiviCartes(); },
+      // L'ONGLET DES REFUSÉES relit le catalogue en s'ouvrant : une offre entre
+      // ou sort du défaut à chaque passage, et ce que B vient vérifier ici est
+      // l'état d'AUJOURD'HUI des filtres, pas celui du chargement du panneau.
+      refusees: () => { dessinerRefusees(); },
       // Le relais peut avoir été branché (ou la clé posée) depuis la dernière
       // ouverture : on relit le rapport en ouvrant l'onglet, sans quoi on
       // regarderait un état vieux de plusieurs minutes en croyant le corriger.
@@ -4214,6 +4370,17 @@ document.getElementById('aOk').addEventListener('click', async () => {
 document.getElementById('aMdp').addEventListener('keydown', (e) => {
   if (e.key === 'Enter') document.getElementById('aOk').click();
 });
+</script>
+<!-- LE PONT VERS LES RÈGLES PARTAGÉES (15/10/2026). Un module ES se charge APRÈS
+     les scripts en clair de cette page : on l'importe donc ici, et on le pose sur
+     `window` pour que l'onglet des refusées juge avec LES MÊMES fonctions que
+     l'écran. Recopier les règles aurait été plus court — et c'est exactement ce
+     qu'un panneau de contrôle ne doit pas faire : il validerait ses propres
+     erreurs. Si le module ne charge pas, l'onglet le DIT (voir dessinerRefusees)
+     au lieu d'afficher une liste vide qui se lirait comme « aucun refus ». -->
+<script type="module">
+  import * as REGLES from '../regles-affichage.js';
+  window.REGLES_AFFICHAGE = REGLES;
 </script>
 </body>
 </html>
