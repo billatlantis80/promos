@@ -501,7 +501,7 @@ tr.edition .principal{width:auto;padding:9px 18px;display:inline-block;margin-ri
       <button class="onglet" data-vue="trafic">Trafic</button>
       <button class="onglet" data-vue="exploitation">Exploitation</button>
       <button class="onglet" data-vue="cartes">Vie des cartes</button>
-      <button class="onglet" data-vue="refusees">Offres refusées</button>
+      <button class="onglet" data-vue="refusees">Ajouts &amp; refus</button>
       <button class="onglet" data-vue="sources">Sources</button>
       <button class="onglet" data-vue="origines">Origines</button>
       <button class="onglet" data-vue="marche">Marché Euro</button>
@@ -755,7 +755,35 @@ tr.edition .principal{width:auto;padding:9px 18px;display:inline-block;margin-ri
         <div class="avis" id="avisRefusees"></div>
 
         <div class="rub">
-          <h2>Ce que les filtres ont écarté de la vue par défaut</h2>
+          <h2>Ce qui est ENTRÉ dans le site, au dernier passage</h2>
+          <p class="aide">Les cartes dont la <b>première vue</b> tombe dans les vingt dernières minutes —
+            c'est-à-dire celles que le dernier passage vient d'ajouter au catalogue. L'heure de première
+            vue est écrite par le collecteur à l'entrée en base : elle ne se rafraîchit jamais, donc ce
+            tableau ne peut pas « rajeunir » une carte ancienne.</p>
+          <div class="grille" id="mAjoutsEntrees"></div>
+        </div>
+
+        <div class="rub">
+          <h2>Ce qui a été RETIRÉ, au dernier passage</h2>
+          <p class="aide">Une carte qui disparaît du site n'est pas forcément un problème : <b>trois autres
+            mécanismes retirent aussi</b>, et les confondre fait chercher une panne là où il n'y en a pas.
+            Le détail carte par carte, avec la preuve, est dans l'onglet <b>Vie des cartes</b> — ici,
+            seulement les comptes, pour ne pas dire deux fois la même chose.</p>
+          <div id="mAjoutsRetraits"></div>
+        </div>
+
+        <div class="rub">
+          <h2>Les sources qui n'ont rien apporté, et pourquoi</h2>
+          <p class="aide">Une offre ne peut pas entrer si sa source <b>n'a pas été lue</b>. Trois raisons,
+            toutes volontaires : la source est <b>au repos</b> (délai de politesse), elle est <b>sous le
+            seuil</b> (elle rend trop peu d'annonces pour qu'un tour compte), ou elle a <b>échoué</b>.
+            C'est ici qu'on voit si une source se tait — et une source qui se tait longtemps ne fait pas
+            de bruit : elle laisse simplement son catalogue vieillir.</p>
+          <div id="mAjoutsSources"></div>
+        </div>
+
+        <div class="rub">
+          <h2>Ce qui est PUBLIÉ mais écarté de la vue par défaut</h2>
           <p class="aide">Toute offre <b>publiée</b> est ici : soit elle passe l'un des <b>quatre
             étages</b> qui ouvrent la vue par défaut, soit elle est <b>refusée</b> — et la raison est
             écrite noir sur blanc. <b>Ces règles sont celles de l'écran</b> : le même fichier
@@ -767,7 +795,7 @@ tr.edition .principal{width:auto;padding:9px 18px;display:inline-block;margin-ri
         </div>
 
         <div class="rub">
-          <h2>Le détail, offre par offre</h2>
+          <h2>Le détail des refus, offre par offre</h2>
           <p class="aide">Classées par motif, puis de la plus ancienne à la plus récente. Les liens
             ouvrent l'offre : c'est la façon la plus rapide de juger si un refus était justifié.</p>
           <div id="mRefuseesListe"></div>

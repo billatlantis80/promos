@@ -3659,32 +3659,41 @@ async function dessinerRefusees() {
     return;
   }
   const offres = (d.offres || []).filter((o) => (o.lienPage || o.lienMarchand));
+  const passantes = [];      // les offres qui passent un étage, AVANT dédoublonnage
   const parMotif = {};
   const refusees = [];
-  let dansLaVue = 0;
   const age = (o) => {
     const t = Date.parse(o.premiereVue || o.vuLe || '');
     return Number.isFinite(t) ? (Date.now() - t) / 86400000 : null;
   };
   for (const o of offres) {
     const motif = motifDeRefus(o, R);
-    if (PORTES[motif]) { dansLaVue += 1; continue; }
+    if (PORTES[motif]) { passantes.push(o); continue; }
     parMotif[motif] = (parMotif[motif] || 0) + 1;
     refusees.push({ o, motif, age: age(o) });
   }
   refusees.sort((a, b) => (Object.keys(MOTIFS).indexOf(a.motif) - Object.keys(MOTIFS).indexOf(b.motif))
     || ((b.age ?? 0) - (a.age ?? 0)));
-  const part = offres.length ? (100 * dansLaVue / offres.length) : 0;
+  // ⚠ DÉDOUBLONNÉ COMME À L'ÉCRAN, SINON DEUX CHIFFRES POUR LA MÊME GRANDEUR.
+  // Le site annonce ses « bonnes promos » APRÈS dédoublonnage (cleProduit : même
+  // titre au même prix = un seul produit) ; compter ici les offres brutes
+  // donnerait 6 422 quand l'écran annonce 6 013 — exactement le défaut que B a
+  // signalé le 08/10 (17 437 contre 19 066). On affiche donc le compte DISTINCT,
+  // et on dit combien d'offres il y avait avant, pour que rien ne soit caché.
+  const dansLaVue = passantes.length;
+  const distinctes = R.dedoublonner(passantes).length;
+  const part = offres.length ? (100 * distinctes / offres.length) : 0;
 
   txt('avisRefusees', `Catalogue publié : <b>${nb(offres.length)}</b> offres ·
-    <b>${nb(dansLaVue)}</b> dans la vue par défaut (${nf.format(part)} %) ·
+    <b>${nb(distinctes)}</b> produits distincts dans la vue par défaut (${nf.format(part)} % —
+    ${nb(dansLaVue)} offres avant dédoublonnage) ·
     <b>${nb(refusees.length)}</b> refusées, réparties en <b>${Object.keys(parMotif).length}</b> motif(s).
     Chaque motif est expliqué sous le tableau. Une offre refusée n'est pas perdue :
     elle s'affiche en choisissant « Toutes les promos » dans le sélecteur de portée.`);
 
   txt('mRefuseesCompteurs', tuiles([
     [nb(offres.length), 'offres publiées'],
-    [nb(dansLaVue), 'dans la vue par défaut'],
+    [nb(distinctes), 'produits dans la vue par défaut'],
     [nb(refusees.length), 'refusées par les filtres'],
     ...Object.keys(MOTIFS).filter((m) => parMotif[m]).map((m) => [nb(parMotif[m]), m]),
   ]));
