@@ -123,6 +123,39 @@ export function identifiant(prefixe, lien, titre) {
   return prefixe + crypto.createHash('sha1').update(String(lien || titre)).digest('hex').slice(0, 20);
 }
 
+/** LES IDENTIFIANTS DÉRIVÉS D'UNE ADRESSE, et ceux qui ne le sont pas.
+ *
+ *  `identifiant()` écrit toujours `préfixe + sha1(…)`, soit 20 caractères
+ *  HEXADÉCIMAUX. Deux familles se ressemblent donc, et il ne faut PAS les
+ *  confondre :
+ *
+ *    · `d…`, `p…`, `e…`, `g…`, `s…` : dérivés de l'ADRESSE. L'adresse change,
+ *      l'identité doit suivre — `redonnerEmpreinte()` peut donc recalculer ;
+ *    · `k…` (Krefel) et `b…` (bol.com) : MÊME FORME, mais dérivés du NUMÉRO de
+ *      produit. L'identité est portée par la donnée, pas par l'adresse.
+ *      ⚠ LA FORME NE LES DISTINGUE PAS — seuls `a…`/`fl…` (Amazon, ASIN, qui ne
+ *      sont pas hexadécimaux) se reconnaissent à leur écriture. Ce qui les
+ *      protège, c'est la RÈGLE DE RÉPARATION elle-même : on ne recalcule que
+ *      sur une EMPREINTE PARTAGÉE PAR DEUX ADRESSES, ce qui n'arrive jamais à
+ *      un numéro de produit unique. Chiffrage du 15/10/2026 : une règle plus
+ *      large — « tout identifiant doit dériver de son adresse » — aurait
+ *      détruit 64 identités légitimes (42 Krefel, 22 bol.com).
+ */
+const DERIVE = /^[a-z][0-9a-f]{20}$/;
+
+/** Redonne à une fiche l'empreinte de SON adresse, et dit si elle a changé.
+ *  ⚠ À N'APPELER QUE sur une fiche dont l'empreinte est réellement cassée
+ *  (adresse changée, ou empreinte partagée) : la forme seule ne dit pas si
+ *  l'identité vient de l'adresse ou d'un numéro de produit. */
+function redonnerEmpreinte(o) {
+  const id = String((o && o.id) || '');
+  if (!DERIVE.test(id)) return false;
+  const neuf = identifiant(id[0], o.lienPage || o.lienMarchand || '', o.titre);
+  if (neuf === id) return false;
+  o.id = neuf;
+  return true;
+}
+
 /** Les identifiants fabriqués AVANT le 08/10/2026 : 1 lettre de source + 14
  *  caractères base64url. Sert à reconnaître ce qu'il faut migrer — et, surtout,
  *  à NE PAS toucher au reste : les offres Amazon portent `a…`/`fl…` + ASIN,
@@ -142,13 +175,64 @@ const MOTIF_ANCIEN_ID = /^[dpegs][A-Za-z0-9_-]{14}$/;
  * ancien et n'est plus retouché. On peut donc l'appeler à chaque collecte.
  */
 export function migrerIdentifiants(offres) {
-  let migrees = 0;
-  for (const o of offres) {
+  // ⚠ ON MATÉRIALISE LA LISTE. L'appelant passe un ITÉRATEUR (`connues.values()`),
+  // qui s'épuise à la première boucle : la réparation des empreintes partagées,
+  // plus bas, relirait une liste vide — et annoncerait « rien à réparer ».
+  const liste = Array.isArray(offres) ? offres : [...offres];
+  let migres = 0;
+  for (const o of liste) {
     if (!o || !MOTIF_ANCIEN_ID.test(String(o.id))) continue;
     const neuf = identifiant(String(o.id)[0], o.lienMarchand || o.lienPage, o.titre);
-    if (neuf !== o.id) { o.id = neuf; migrees++; }
+    if (neuf !== o.id) { o.id = neuf; migres++; }
   }
-  return migrees;
+
+  /* DEUXIÈME FAMILLE D'IDENTIFIANTS PÉRIMÉS : L'EMPREINTE QUI NE DÉSIGNE PLUS
+   * SON OFFRE. Défaut mesuré le 15/10/2026, sur le catalogue publié : un même
+   * identifiant portait DEUX adresses différentes, donc deux fiches distinctes.
+   * Cause nommée (`dedupliquerArticles`) : une fiche qui adopte l'adresse de sa
+   * jumelle gardait l'empreinte de l'adresse qu'elle venait de quitter — et
+   * cette empreinte pouvait être celle de la jumelle. Conséquence : un favori
+   * enregistré sur l'une rouvrait l'autre.
+   *
+   * LE PROPRIÉTAIRE DE L'EMPREINTE est la fiche dont l'identifiant EST la
+   * dérivation de SA propre adresse ; les autres sont re-dérivées de la leur.
+   * Ainsi la réparation ne touche que ce qui est cassé — mesuré : 1 fiche sur
+   * 11 804, là où une règle « tout identifiant doit dériver de son adresse »
+   * aurait détruit 64 identités portées par la donnée (Krefel, bol.com).
+   *
+   * Idempotente, comme la première : une fois l'empreinte juste, elle ne bouge
+   * plus — donc aucun favori ne se met à danser d'un passage à l'autre.
+   */
+  const parId = new Map();
+  for (const o of liste) {
+    if (!o || !DERIVE.test(String(o.id || ''))) continue;
+    if (!parId.has(o.id)) parId.set(o.id, []);
+    parId.get(o.id).push(o);
+  }
+  const prises = new Set(liste.map((o) => o && o.id));
+  for (const [id, fiches] of parId) {
+    // Deux adresses différentes sous la même empreinte : les clés du stock
+    // (`cleDe`, l'adresse canonique) garantissent qu'elles sont distinctes ; on
+    // le vérifie tout de même, parce que c'est la condition de la réparation.
+    const adresses = new Set(fiches.map((o) => o.lienPage || o.lienMarchand || ''));
+    if (adresses.size < 2) continue;
+    // Le propriétaire garde l'empreinte : c'est la fiche qu'un favori doit ouvrir.
+    const proprietaire = fiches.find((o) => identifiant(id[0], o.lienPage || o.lienMarchand || '', o.titre) === id);
+    for (const o of fiches) {
+      if (o === proprietaire) continue;
+      const avant = o.id;
+      if (!redonnerEmpreinte(o)) continue;          // déjà juste, ou forme non dérivée
+      // ⚠ JAMAIS DE NOUVELLE COLLISION. L'empreinte re-dérivée ne peut
+      // mathématiquement pas être celle d'une autre adresse, mais elle peut déjà
+      // traîner ailleurs dans le stock : dans ce cas on laisse la fiche telle
+      // quelle, plutôt que d'échanger un défaut contre un autre en silence.
+      if (prises.has(o.id)) { o.id = avant; continue; }
+      prises.delete(avant);
+      prises.add(o.id);
+      migres++;
+    }
+  }
+  return migres;
 }
 
 /* ------------------------------------------------------------------ *
@@ -2766,6 +2850,38 @@ export function estampillerOffresDavant(offres, tours) {
     if (!o || o.serviceAuTour !== undefined) continue;
     if (!Number.isFinite(tours ? tours[o.sourceId] : undefined)) continue;
     o.serviceAuTour = tours[o.sourceId];
+    n++;
+  }
+  return n;
+}
+
+/** UNE ESTAMPILLE IMPOSSIBLE EST RAMENÉE AU TOUR RÉEL DE SA SOURCE.
+ *
+ *  `serviceAuTour` est le tour de SA source auquel une offre a été servie. Il ne
+ *  peut donc pas dépasser le compteur de cette source. Le 15/10/2026, le
+ *  catalogue publié en portait une qui le dépassait : servie au tour 174 sous
+ *  `bing-ie-en-1`, dont le compteur affichait 170. Cause nommée et corrigée
+ *  (`dedupliquerArticles` adoptait l'identifiant de la jumelle sans son numéro
+ *  de tour) — mais la fiche fautive, elle, était déjà dans le stock, et une
+ *  correction de code ne répare pas le passé.
+ *
+ *  ON RAMÈNE L'ESTAMPILLE AU COMPTEUR, on ne l'efface pas : effacer rendrait
+ *  l'offre « en grâce », donc INCONDAMNABLE à jamais (voir la migration des
+ *  offres d'avant) ; la ramener au compteur la remet dans le temps de sa source
+ *  — le seul tour qu'elle ait pu connaître. C'est aussi le sens PRUDENT : une
+ *  estampille plus haute fait paraître la carte plus fraîche, la ramener au
+ *  compteur ne peut jamais accélérer un effacement.
+ *
+ *  Une source disparue n'a plus de compteur : on ne touche alors à rien, faute
+ *  de quoi comparer — c'est déjà ce que dit `aManqueDesTours`.
+ */
+export function corrigerToursImpossibles(offres, tours) {
+  let n = 0;
+  for (const o of offres) {
+    if (!o || !Number.isFinite(o.serviceAuTour)) continue;
+    const tour = tours ? tours[o.sourceId] : undefined;
+    if (!Number.isFinite(tour) || tour >= o.serviceAuTour) continue;
+    o.serviceAuTour = tour;
     n++;
   }
   return n;
@@ -7881,6 +7997,8 @@ function dedupliquerArticles(liste) {
     const mieux = (!deja.image && o.image)
       || (/news\.google\.com/i.test(deja.lienPage || '') && !/news\.google\.com/i.test(o.lienPage || ''));
     if (mieux) {
+      const adresseAvant = deja.lienPage;
+      const sourceAvant = deja.sourceId;
       Object.assign(deja, {
         image: o.image || deja.image,
         lienPage: o.lienPage || deja.lienPage,
@@ -7888,6 +8006,39 @@ function dedupliquerArticles(liste) {
         source: o.source || deja.source,
         sourceId: o.sourceId || deja.sourceId,
       });
+      /* ⚠ LE NUMÉRO DE TOUR SUIT LA SOURCE ADOPTÉE — même défaut que le lien,
+       *  même journée. `serviceAuTour` veut dire « le tour de MA source auquel
+       *  j'ai été servie ». En adoptant l'identifiant de la jumelle sans son
+       *  numéro, on obtenait une offre servie au tour 174 sous une source dont
+       *  le compteur affichait 170 — mesuré le 15/10/2026 sur `bing-ie-en-1`, et
+       *  refusé par l'épreuve des tours. La conséquence n'est pas cosmétique :
+       *  c'est ce couple que lit la règle des cinq jours pour décider si une
+       *  source a cessé de servir une carte.
+       *
+       *  Si la jumelle n'a pas de numéro de tour, on EFFACE celui de la fiche :
+       *  le garder affirmerait un tour d'une source qu'on n'écoute plus. L'offre
+       *  repart alors en grâce, et la passe suivante la ré-estampille sur sa
+       *  nouvelle source (voir `estampillerOffresDavant`). */
+      if (deja.sourceId !== sourceAvant) {
+        if (Number.isFinite(o.serviceAuTour)) deja.serviceAuTour = o.serviceAuTour;
+        else delete deja.serviceAuTour;
+      }
+      /* ⚠ L'IDENTITÉ SUIT L'ADRESSE ADOPTÉE — LE DÉFAUT CORRIGÉ LE 15/10/2026.
+       *
+       *  Cette fiche vient de CHANGER D'ADRESSE : elle était sur
+       *  news.google.com, elle passe chez l'éditeur. Or l'empreinte qui
+       *  l'identifie a été calculée sur l'ancienne adresse. Elle portait donc
+       *  l'identité d'une adresse qu'elle a quittée — et quand la jumelle de
+       *  l'autre chemin (Google News) était encore dans le stock, LES DEUX
+       *  fiches finissaient sous la même empreinte : mesuré sur le catalogue
+       *  publié, une empreinte pour deux adresses, donc un favori enregistré
+       *  sur l'une qui rouvrait l'autre.
+       *
+       *  On recalcule donc l'empreinte, mais SEULEMENT quand l'adresse a
+       *  réellement changé : sans cette condition, un simple gain de visuel
+       *  ferait bouger l'identifiant d'une offre, et les favoris avec lui.
+       */
+      if (deja.lienPage !== adresseAvant) redonnerEmpreinte(deja);
     }
   }
   return gardees;
@@ -8209,6 +8360,14 @@ async function principal() {
   //  là, seules les disparitions CONSTATÉES après la mise en service comptent, et
   //  chaque offre d'avant dispose de ses deux tours de grâce.
   const estampillees = estampillerOffresDavant(connues.values(), toursParSource);
+
+  //  ⚠ LES ESTAMPILLES IMPOSSIBLES, RAMENÉES DANS LE TEMPS DE LEUR SOURCE.
+  //  Une correction de code ne répare pas le passé : la fiche fautive
+  //  (`bing-ie-en-1`, servie au tour 174 sous un compteur à 170) était déjà dans
+  //  le stock. On la répare donc à chaque passe, avant toute décision qui lit ce
+  //  couple — c'est lui qui dit si une source a cessé de servir une carte.
+  const toursCorriges = corrigerToursImpossibles(connues.values(), toursParSource);
+  if (toursCorriges) journal.push({ source: 'tours', ok: true, corriges: toursCorriges, raison: 'estampille de tour plus haute que le compteur de sa source : ramenée au tour réel (une offre ne peut pas être servie à un tour futur)' });
 
   //  LE COMPTEUR DES RETOURS, ET SON NOM. Ce compteur s'appelait `reconfirmees`.
   //  Ce nom a coûté DEUX arrêts de collecte (11 h 25 et 12 h 42) : écrit une fois
@@ -8803,7 +8962,7 @@ async function principal() {
   // migre AVANT tout le reste (visuels, tri, écriture), sinon la correction ne
   // vaudrait que pour ce que les sources ont bien voulu re-servir ce tour-ci.
   const idMigres = migrerIdentifiants(connues.values());
-  if (idMigres) journal.push({ source: 'identifiants', ok: true, migres: idMigres, raison: 'identifiants fabriqués avant le 08/10/2026 (inversion du lien) — empreinte du lien entier' });
+  if (idMigres) journal.push({ source: 'identifiants', ok: true, migres: idMigres, raison: 'empreinte qui ne désignait plus son offre : fabriquée avant le 08/10/2026 (inversion du lien), ou partagée par deux adresses (lien adopté sans son empreinte) — la fiche reprend l’empreinte de SON adresse' });
 
   const imagesGeneriques = new Set(existant.imagesGeneriques || []);
   const images = await enrichirVisuels(connues, imagesGeneriques);

@@ -25,6 +25,7 @@ import { fileURLToPath } from 'node:url';
 
 import {
   ageJours, motifDeSortie, avancerTours, aManqueDesTours, estampillerOffresDavant, typeDeSource,
+  corrigerToursImpossibles,
   LIMITE_PRESSE_JOURS, LIMITE_SOURCE_DISPARUE_JOURS, TOURS_SANS_SERVICE,
 } from '../collecteur.mjs';
 
@@ -352,6 +353,49 @@ test('les compteurs de tours sont présents et cohérents dans l’état publié
     assert.equal(mesure.ecartees, 0, 'la mesure ne retire rien');
     assert.ok(Number.isFinite(mesure.auraitEcartees), 'elle doit dire COMBIEN d’offres elle aurait écartées');
   }
+});
+
+/* ------------------------------------------------------------------ *
+ *  L'ESTAMPILLE IMPOSSIBLE — la réparation du passé, et le sens qu'elle prend.
+ * ------------------------------------------------------------------ */
+
+test('une estampille plus haute que le compteur de sa source est ramenée au tour réel', () => {
+  // MESURÉ LE 15/10/2026 dans le catalogue publié : une offre servie au tour 174
+  // sous `bing-ie-en-1`, dont le compteur affichait 170. Cause : la fiche gardait
+  // le numéro de tour de la source qu'elle venait d'abandonner.
+  const tours = { 'bing-ie-en-1': 170, 'autre-source': 174 };
+  const offre = { sourceId: 'bing-ie-en-1', serviceAuTour: 174, titre: 'servie trop loin dans le futur' };
+  assert.equal(corrigerToursImpossibles([offre], tours), 1, 'une estampille impossible est corrigée');
+  assert.equal(offre.serviceAuTour, 170, 'ramenée au tour réel de SA source');
+  assert.equal(corrigerToursImpossibles([offre], tours), 0, 'et la correction est idempotente');
+  // ⚠ LE SENS DE LA CORRECTION COMPTE : on ramène l'estampille VERS LE BAS, donc
+  // la carte paraît plus fraîche qu'annoncé — jamais l'inverse. Une réparation
+  // qui vieillirait une carte pourrait la faire effacer à tort.
+  assert.ok(offre.serviceAuTour <= 170, 'jamais au-dessus du compteur');
+});
+
+test('la réparation des tours ne touche ni le juste, ni la source disparue', () => {
+  const tours = { 'src-a': 10 };
+  const juste = { sourceId: 'src-a', serviceAuTour: 10 };
+  assert.equal(corrigerToursImpossibles([juste], tours), 0, 'une estampille égale au compteur est juste');
+  assert.equal(juste.serviceAuTour, 10);
+  const orpheline = { sourceId: 'source-qui-n-existe-plus', serviceAuTour: 999 };
+  assert.equal(corrigerToursImpossibles([orpheline], tours), 0,
+    'sans compteur, il n’y a rien à comparer : on ne touche pas — c’est déjà ce que dit aManqueDesTours');
+  assert.equal(orpheline.serviceAuTour, 999, 'sa trace reste celle d’un passé révolu');
+});
+
+test('l’estampille suit la source adoptée : le couple (source, tour) reste cohérent', () => {
+  // Le défaut qui a produit l'offre du 15/10/2026 : en adoptant la source de sa
+  // jumelle, la fiche gardait SON numéro de tour. On vérifie ici la règle qui
+  // l'empêche — un tour plus haut ne peut plus se retrouver sous une source dont
+  // le compteur est plus bas.
+  const AVANT = { sourceId: 'bing-gb-en-1', serviceAuTour: 174 };
+  const APRES = { sourceId: 'bing-ie-en-1', serviceAuTour: 170 };
+  const fiches = [AVANT, APRES];
+  const tours = { 'bing-gb-en-1': 174, 'bing-ie-en-1': 170 };
+  assert.equal(corrigerToursImpossibles(fiches, tours), 0,
+    'les deux couples sont cohérents : rien à corriger — c’est la règle d’adoption qui les a rendus tels');
 });
 
 /* ------------------------------------------------------------------ *

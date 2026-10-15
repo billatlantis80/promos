@@ -24,7 +24,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
-import { TOUTES_SOURCES, MOTS_PROMO, motsPromo, ecarterTuiles, veilleParPays, lienReel, dedupliquerArticles, BUDGET_CRON, LIMITE_CRON_MS, PAYS_PRESSE, PAYS_BING }
+import { TOUTES_SOURCES, MOTS_PROMO, motsPromo, ecarterTuiles, veilleParPays, lienReel, dedupliquerArticles, identifiant, BUDGET_CRON, LIMITE_CRON_MS, PAYS_PRESSE, PAYS_BING }
   from '../collecteur.mjs';
 
 /* ---------------------------------------------------------------------------
@@ -312,6 +312,71 @@ test('deux articles de titres différents sont tous les deux gardés', () => {
     { type: 'article', titre: 'Promo casque Sony', lienPage: 'https://b.example/2' },
   ];
   assert.equal(dedupliquerArticles(liste).length, 2);
+});
+
+test('la fiche qui adopte l’adresse de sa jumelle change d’empreinte avec elle', () => {
+  // DÉFAUT MESURÉ LE 15/10/2026, SUR LE CATALOGUE PUBLIÉ. La fiche Google News
+  // cède la place à celle de l'éditeur — mais elle gardait l'empreinte de
+  // l'adresse qu'elle venait de quitter. Or cette empreinte était celle de sa
+  // jumelle de l'autre chemin : deux fiches, deux adresses, UNE seule
+  // empreinte. Conséquence : un favori enregistré sur l'une rouvrait l'autre,
+  // exactement le défaut que la correction du 08/10 avait supprimé.
+  const GOOGLE = 'https://news.google.com/rss/articles/AAA';
+  const EDITEUR = 'https://exemple.be/bon-plan-nothing-ear';
+  const liste = [
+    { id: identifiant('p', GOOGLE), type: 'article', titre: 'Bon plan : les écouteurs Nothing Ear', lienPage: GOOGLE, image: '' },
+    { id: identifiant('p', EDITEUR), type: 'article', titre: 'Bon plan : les écouteurs Nothing Ear', lienPage: EDITEUR, image: 'https://exemple.be/a.jpg' },
+  ];
+  const gardees = dedupliquerArticles(liste);
+  assert.equal(gardees.length, 1, 'une seule fiche pour un seul article');
+  assert.equal(gardees[0].lienPage, EDITEUR, 'la fiche gardée porte bien l’adresse de l’éditeur');
+  assert.equal(gardees[0].id, identifiant('p', EDITEUR),
+    'et son empreinte est celle de CETTE adresse — pas celle de celle qu’elle a quittée');
+});
+
+test('un simple gain de visuel ne fait PAS bouger l’identifiant', () => {
+  // La contrepartie, et elle compte : l'empreinte est la clé d'un favori. Si
+  // elle était recalculée à chaque adoption de champ, un visuel trouvé un quart
+  // d'heure plus tard changerait l'identifiant d'une offre — et le favori avec.
+  const EDITEUR = 'https://exemple.be/bon-plan-2';
+  const liste = [
+    { id: identifiant('p', EDITEUR), type: 'article', titre: 'Bon plan : un casque', lienPage: EDITEUR, image: '' },
+    { id: identifiant('p', EDITEUR), type: 'article', titre: 'Bon plan : un casque', lienPage: EDITEUR, image: 'https://exemple.be/casque.jpg' },
+  ];
+  const gardees = dedupliquerArticles(liste);
+  assert.equal(gardees.length, 1);
+  assert.equal(gardees[0].image, 'https://exemple.be/casque.jpg', 'le visuel est bien adopté');
+  assert.equal(gardees[0].id, identifiant('p', EDITEUR), 'et l’identifiant n’a pas bougé');
+});
+
+test('une fiche qui adopte la source de sa jumelle adopte aussi son numéro de tour', () => {
+  // DÉFAUT MESURÉ LE 15/10/2026 DANS LE CATALOGUE PUBLIÉ : une offre servie au
+  // tour 174 sous `bing-ie-en-1`, dont le compteur affichait 170. `serviceAuTour`
+  // veut dire « le tour de MA source auquel j'ai été servie » : en changeant de
+  // source sans changer de numéro, le couple devenait impossible — et c'est
+  // précisément ce couple que lit la règle des cinq jours pour décider si une
+  // source a cessé de servir une carte.
+  const TITRE = 'Deals: HomeView pre-order discount (more colors), HomePod mini 2';
+  const LIEN = 'https://9to5mac.com/2026/10/15/deals-homeview-discount/';
+  const liste = [
+    { type: 'article', titre: TITRE, lienPage: LIEN, image: '', source: 'Bing GB (en) 1', sourceId: 'bing-gb-en-1', serviceAuTour: 174 },
+    // Sa jumelle, mieux renseignée (elle a le visuel) mais venue d'une AUTRE source.
+    { type: 'article', titre: TITRE, lienPage: LIEN, image: 'https://9to5mac.com/a.jpg', source: 'Bing IE (en) 1', sourceId: 'bing-ie-en-1', serviceAuTour: 170 },
+  ];
+  const gardees = dedupliquerArticles(liste);
+  assert.equal(gardees.length, 1, 'une seule fiche pour un seul article');
+  assert.equal(gardees[0].sourceId, 'bing-ie-en-1', 'la fiche gardée est celle de la source la mieux renseignée');
+  assert.equal(gardees[0].serviceAuTour, 170,
+    'son numéro de tour est celui de CETTE source — jamais celui de la source qu’elle a quittée');
+
+  // Et si la jumelle n'a AUCUN numéro de tour, la fiche n'en garde pas un faux :
+  // elle repart en grâce, et la passe suivante la ré-estampille sur sa source.
+  const sansTour = dedupliquerArticles([
+    { type: 'article', titre: TITRE, lienPage: LIEN, image: '', source: 'Bing GB (en) 1', sourceId: 'bing-gb-en-1', serviceAuTour: 174 },
+    { type: 'article', titre: TITRE, lienPage: LIEN, image: 'https://9to5mac.com/a.jpg', source: 'Bing IE (en) 1', sourceId: 'bing-ie-en-1' },
+  ]);
+  assert.equal(sansTour[0].serviceAuTour, undefined,
+    'aucun tour inventé : l’offre attendra que sa source parle');
 });
 
 /* ---------------------------------------------------------------------------

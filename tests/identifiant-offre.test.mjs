@@ -189,3 +189,47 @@ test('APRÈS migration, le catalogue entier n’a plus un seul identifiant parta
     `${partages.length} identifiant(s) encore partagé(s) après migration (${migrees} migrées) : `
     + 'la migration doit suffire à tout corriger, sans attendre que les sources re-servent les offres');
 });
+
+/* -------------------------------------------------------------------------- *
+ *  L'EMPREINTE QUI NE DÉSIGNE PLUS SON OFFRE — 15/10/2026.
+ *
+ *  Le premier correctif (08/10/2026) a réparé la fabrication : l'empreinte
+ *  porte le lien entier, plus son suffixe inversé. Il restait un chemin par
+ *  lequel une empreinte JUSTE devient FAUSSE : une fiche qui adopte l'adresse
+ *  de sa jumelle de l'autre chemin (Google News ↔ éditeur) gardait l'empreinte
+ *  de l'adresse qu'elle venait de quitter — et cette empreinte pouvait être
+ *  celle de la jumelle. Mesuré sur le catalogue publié : une empreinte, deux
+ *  adresses, donc un favori qui rouvrait l'autre offre.
+ * -------------------------------------------------------------------------- */
+
+test('une empreinte partagée par deux adresses est rendue à SON offre', () => {
+  const ADRESSE_A = 'https://exemple.be/article-a';
+  const ADRESSE_B = 'https://www.msn.com/fr-fr/article-b';
+  const empreinteA = identifiant('p', ADRESSE_A);
+  const fiches = [
+    { id: empreinteA, type: 'article', titre: 'Article A', lienPage: ADRESSE_A },
+    // La seconde porte l'empreinte de la PREMIÈRE : c'est le défaut mesuré.
+    { id: empreinteA, type: 'article', titre: 'Article B', lienPage: ADRESSE_B },
+  ];
+  assert.equal(migrerIdentifiants(fiches), 1, 'une seule fiche est réparée — celle qui n’a pas la sienne');
+  assert.equal(fiches[0].id, empreinteA, 'la fiche dont l’empreinte EST la sienne la garde');
+  assert.equal(fiches[1].id, identifiant('p', ADRESSE_B), 'l’autre reprend l’empreinte de SON adresse');
+  assert.equal(migrerIdentifiants(fiches), 0,
+    'et la réparation est idempotente : un favori ne se met pas à danser d’un passage à l’autre');
+});
+
+test('la réparation ne touche pas un identifiant porté par la donnée (Krefel, bol.com)', () => {
+  // Ces identifiants ont la MÊME FORME que les empreintes d'adresse — 20
+  // caractères hexadécimaux — mais ils viennent d'un NUMÉRO de produit. Ce qui
+  // les protège n'est pas leur écriture : c'est la règle elle-même, qui ne
+  // répare QUE sur une empreinte partagée par deux adresses, ce qui n'arrive
+  // jamais à un numéro unique. Chiffrage du 15/10/2026 : une règle plus large
+  // (« tout identifiant doit dériver de son adresse ») aurait détruit 42
+  // identités Krefel et 22 bol.com.
+  const krefel = { id: identifiant('k', '12007375'), type: 'offre', titre: 'Taque induction WL S3160 BF', lienPage: 'https://www.krefel.be/fr/p/12007375-taque-induction-wl-s3160-bf' };
+  const avant = krefel.id;
+  assert.equal(migrerIdentifiants([krefel]), 0, 'rien à réparer : son identifiant n’est partagé par personne');
+  assert.equal(krefel.id, avant, 'il n’a pas bougé');
+  assert.notEqual(krefel.id, identifiant('k', krefel.lienPage),
+    'et c’est normal : son identité vient du numéro de produit, pas de son adresse');
+});
