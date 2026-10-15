@@ -150,6 +150,16 @@ details.pourquoi p b{color:var(--texte)}
 .champ.etroit{max-width:440px}
 .champ.moyen{max-width:620px}
 .grille{display:grid;grid-template-columns:repeat(auto-fit,minmax(152px,1fr));gap:10px}
+/* LES COMPTEURS, PUIS LEUR TABLEAU — L'ÉCART, ÉCRIT UNE FOIS.
+   Défaut mesuré le 15/10/2026, onglet « Ajouts & refus » : la dernière tuile de
+   compteurs TOUCHAIT la première ligne du tableau (écart mesuré : 0 px), et les
+   compteurs des blocs « ce qui a été RETIRÉ » et « les sources qui n'ont rien
+   apporté » n'étaient même pas dans une grille : chacun prenait les 1 110 px du
+   cadre, comme trois barres vides empilées au-dessus du tableau, alors que les
+   mêmes tuiles s'affichent en ligne dans tout le reste du panneau. Ils rentrent
+   donc dans la même grille (classe `mesures`), et cette règle porte l'écart
+   avant le tableau — une seule fois, pour les trois blocs. */
+.grille.mesures{margin-bottom:14px}
 .mesure{
   background:var(--carte2);border:1px solid var(--bord);border-radius:var(--r-petit);padding:12px 13px
 }
@@ -772,7 +782,7 @@ tr.edition .principal{width:auto;padding:9px 18px;display:inline-block;margin-ri
             tableau ne peut pas « rajeunir » une carte ancienne. <b>Le titre ouvre l'article</b> de la
             source, et <b>« boutique ↗ »</b> le produit chez le marchand — les deux adresses que porte
             une offre publiée.</p>
-          <div class="grille" id="mAjoutsEntrees"></div>
+          <div class="grille mesures" id="mAjoutsEntrees"></div>
           <!-- ⚠ LE TABLEAU EST HORS DE LA GRILLE, ET C'EST TOUT LE DÉFAUT VISUEL.
                Mesuré le 15/10/2026 : le dessin posait les tuiles ET le tableau dans
                ce MÊME `div.grille`. Or `.grille` est une grille CSS : le tableau
@@ -3696,11 +3706,15 @@ function motifDeRefus(o, R) {
 }
 
 async function dessinerRefusees() {
+  const vider = () => {
+    for (const id of ['mRefuseesCompteurs', 'mRefuseesListe', 'mRefuseesMotifs']) txt(id, '');
+  };
   const R = window.REGLES_AFFICHAGE;
   if (!R) {
     // Le module est chargé par un <script type="module">, donc APRÈS ce script :
     // si on arrive ici avant lui, on le dit au lieu d'afficher du vide.
     txt('avisRefusees', "Les règles d'affichage ne sont pas encore chargées : rouvrez l'onglet dans un instant.");
+    vider();
     return;
   }
   let d;
@@ -3708,6 +3722,7 @@ async function dessinerRefusees() {
     d = await (await fetch('../offres.json', { cache: 'no-store' })).json();
   } catch (e) {
     txt('avisRefusees', `Le catalogue publié n'a pas pu être lu (${esc(e.message)}).`);
+    vider();
     return;
   }
   const offres = (d.offres || []).filter((o) => (o.lienPage || o.lienMarchand));
@@ -3768,10 +3783,17 @@ async function dessinerRefusees() {
     ? `<p class="vide">${nb(refusees.length - montrees.length)} offre(s) de plus ne sont pas montrées ici :
        le tableau est borné à ${nb(REFUSEES_MAX)} lignes pour rester lisible. Les compteurs par motif, eux,
        portent sur TOUT le catalogue.</p>`
-    : ''}
-  <div class="rub"><h2>Ce que chaque motif veut dire</h2>
-    ${Object.keys(MOTIFS).filter((m) => parMotif[m]).map((m) => `<p class="aide"><b>${esc(m)}</b>
-       (${nb(parMotif[m])}) — ${esc(MOTIFS[m])}</p>`).join('')}</div>`);
+    : ''}`);
+
+  // ⚠ LES EXPLICATIONS SONT LEUR PROPRE BLOC, PAS UNE CARTE DANS LA CARTE.
+  // Mesuré le 15/10/2026 : ce texte était écrit DANS le `div` du tableau, sous la
+  // forme d'un `<div class="rub">` imbriqué — donc une bordure dans une bordure,
+  // un troisième niveau de titre, et un bloc décalé de 38 px par rapport à tous
+  // les autres cadres de l'onglet. C'est ce décalage qui se lisait comme « mal
+  // dessiné ». Ici, il n'y a plus de balisage, seulement le texte : le cadre est
+  // celui de la section, comme partout ailleurs.
+  txt('mRefuseesMotifs', Object.keys(MOTIFS).filter((m) => parMotif[m])
+    .map((m) => `<p class="aide"><b>${esc(m)}</b> (${nb(parMotif[m])}) — ${esc(MOTIFS[m])}</p>`).join(''));
 }
 
 /* ---------------------------------------------------------------------------
@@ -3844,11 +3866,15 @@ async function dessinerAjouts() {
     txt('mAjoutsRetraits', '<p class="vide">Le journal des cartes (suivi-cartes.json) n’a pas été relu.</p>');
   } else {
     const p = suivi.passage || {};
-    txt('mAjoutsRetraits', tuiles([
+    // ⚠ LES TUILES DANS LA MÊME GRILLE QUE PARTOUT AILLEURS. Elles étaient posées
+    // nues dans un `div` ordinaire : chacune prenait toute la largeur du cadre
+    // (1 110 px), et trois « barres » vides précédaient le tableau. Voir la règle
+    // `.grille.mesures`, qui porte l'écart avant le tableau.
+    txt('mAjoutsRetraits', `<div class="grille mesures">${tuiles([
       [nb(p.effacees), 'cartes emportées'],
       [p.octets ? poidsCourt(p.octets) : '—', 'visuels libérés'],
       [nb(p.reprises), 'cartes resservies (compteur reparti)'],
-    ]) + `<div class="defile"><table>
+    ])}</div>` + `<div class="defile"><table>
       <tr><th>Mécanisme</th><th class="n">Ce passage</th><th>Ce qu’il fait</th></tr>
       ${(suivi.retraits || []).map((x) => `<tr><td>${esc(x.mecanisme)}</td>
         <td class="n">${nb(x.nb)}</td><td class="fin">${esc(x.quoi)}</td></tr>`).join('')}
@@ -3886,13 +3912,13 @@ async function dessinerAjouts() {
         : lues.has(id) ? 'lue' : 'non lue à ce passage');
   const aMontrer = [...auRepos, ...sousSeuil, ...echecs.map((j) => j.source), ...nonLues.map((s) => s.id)]
     .filter((v, i, a) => v && a.indexOf(v) === i);
-  txt('mAjoutsSources', tuiles([
+  txt('mAjoutsSources', `<div class="grille mesures">${tuiles([
     [nb(declarees.length), 'sources déclarées'],
     [nb(lues.size), 'sources lues'],
     [nb(auRepos.size), 'au repos'],
     [nb(sousSeuil.size), 'sous le seuil'],
     [nb(echecs.length), 'en échec'],
-  ]) + (aMontrer.length ? `<div class="defile"><table>
+  ])}</div>` + (aMontrer.length ? `<div class="defile"><table>
     <tr><th>Source</th><th>État</th><th class="n">Offres rendues</th><th>Dernière lecture</th></tr>
     ${aMontrer.map((id) => {
     const s = declarees.find((x) => x.id === id) || {};
