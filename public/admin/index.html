@@ -484,6 +484,60 @@ tr.edition .principal{width:auto;padding:9px 18px;display:inline-block;margin-ri
 .levier p.micro{margin-top:7px;font-size:11.5px;color:var(--doux);text-transform:uppercase;letter-spacing:.6px}
 .levier.a-mesurer{border-left-color:var(--doux)}
 .levier.a-mesurer .levier-gain{color:var(--doux);font-weight:600}
+
+/* ---------- L'ONGLET DES RÈGLES (15/10/2026) ----------
+   Chaque règle est une fiche : numéro, état, énoncé, valeurs LUES dans le code,
+   source, épreuve. Aucune valeur n'est écrite en dur dans cette page — c'est la
+   règle de l'onglet, et c'est ce qui le rend vérifiable. */
+.rcompte{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 16px}
+.rcompte .puce{font-size:12.5px;border:1px solid var(--bord);border-radius:16px;padding:4px 11px;color:var(--doux)}
+.rcompte .puce b{color:var(--texte);font-variant-numeric:tabular-nums}
+.rcompte .puce.active{border-color:rgba(47,191,113,.45);color:var(--vert)}
+.rcompte .puce.en-pause{border-color:rgba(63,159,208,.45);color:var(--accent2)}
+.rcompte .puce.eteinte{border-color:var(--bord-clair)}
+.rcompte .puce.en-mesure{border-color:rgba(235,145,45,.45);color:var(--accent)}
+.rfiltres{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 6px}
+.rfiltres button{
+  font:inherit;font-size:12px;color:var(--doux);background:transparent;
+  border:1px solid var(--bord);border-radius:16px;padding:4px 11px;cursor:pointer;
+}
+.rfiltres button:hover{color:var(--texte);border-color:var(--bord-clair)}
+.rfiltres button.on{color:var(--sur-accent);background:var(--accent);border-color:var(--accent);font-weight:700}
+.rcat{margin:30px 0 12px;padding-top:16px;border-top:1px solid var(--bord)}
+.rcat:first-of-type{border-top:0;margin-top:14px;padding-top:0}
+.rcat > h3{font-size:15.5px;margin:0 0 4px;letter-spacing:.3px}
+.rcat > p{color:var(--doux);font-size:12.5px;line-height:1.55;margin:0;max-width:84ch}
+.rtheme{margin:20px 0 9px;font-size:12px;text-transform:uppercase;letter-spacing:.9px;color:var(--accent)}
+.rtheme span{color:var(--doux);text-transform:none;letter-spacing:0;font-weight:400}
+.regle{
+  border:1px solid var(--bord);border-left:3px solid var(--accent);
+  border-radius:0 var(--r-petit) var(--r-petit) 0;padding:11px 13px;margin:0 0 9px;
+  background:var(--carte);
+}
+.regle.eteinte{border-left-color:var(--tres-doux);background:transparent}
+.regle.en-pause{border-left-color:var(--accent2)}
+.regle.en-mesure{border-left-color:var(--accent2);border-left-style:dashed}
+.rtete{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.rnum{font-variant-numeric:tabular-nums;font-weight:800;font-size:12.5px;color:var(--accent);letter-spacing:.4px}
+.regle.eteinte .rnum{color:var(--doux)}
+.rtitre{font-weight:700;font-size:14.5px;flex:1 1 220px;line-height:1.35}
+.retat{
+  font-size:10.5px;text-transform:uppercase;letter-spacing:.7px;padding:2px 8px;
+  border-radius:20px;border:1px solid currentColor;white-space:nowrap;color:var(--vert);
+}
+.retat.en-pause{color:var(--accent2)}
+.retat.eteinte{color:var(--tres-doux)}
+.retat.en-mesure{color:var(--accent)}
+.renonce{font-size:13px;line-height:1.6;margin:8px 0 0;color:var(--texte);max-width:92ch}
+.rvals{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.rval{
+  font-size:11.5px;background:rgba(63,159,208,.10);border:1px solid rgba(63,159,208,.28);
+  border-radius:6px;padding:3px 8px;font-variant-numeric:tabular-nums;
+}
+.rval i{font-style:normal;color:var(--doux)}
+.rval.muette{background:rgba(229,84,75,.12);border-color:rgba(229,84,75,.4);color:var(--rouge)}
+.rsrc{margin-top:10px;font-size:11.5px;color:var(--doux);line-height:1.6}
+.rsrc code{font-size:11.5px;color:var(--texte)}
 </style>
 </head>
 <body>
@@ -526,6 +580,7 @@ tr.edition .principal{width:auto;padding:9px 18px;display:inline-block;margin-ri
       <button class="onglet" data-vue="origines">Origines</button>
       <button class="onglet" data-vue="marche">Marché Euro</button>
       <button class="onglet" data-vue="affiliation">Affiliation</button>
+      <button class="onglet" data-vue="regles">Règles</button>
       <button class="onglet" data-vue="reglages">Réglages</button>
     </nav>
 
@@ -1190,6 +1245,32 @@ tr.edition .principal{width:auto;padding:9px 18px;display:inline-block;margin-ri
           </div>
           <button class="bouton" id="affCsv">Exporter en CSV (pour Excel)</button>
           <div id="mAffiliation"></div>
+        </div>
+      </section>
+
+      <!-- ============ LES RÈGLES DU SITE ============
+           Demande de B, 15/10/2026 : « peux-tu rajouter un onglet "règle". Dans cet
+           onglet va être écrit toutes les règles qui gèrent le site, tous les
+           paramètres qui définissent les filtres, toutes les règles qui font qu'une
+           carte apparaissent et disparaissent [...] classées par catégorie, par
+           thème et numérotées. »
+
+           CE QUE CET ONGLET NE FAIT PAS : il n'écrit AUCUNE valeur dans cette page.
+           Tout vient de `../regles.json`, lui-même écrit par `bin/regles-du-site.mjs`,
+           qui RELIT les constantes dans `collecteur.mjs`, `regles-affichage.js` et
+           `app.js` au moment de la publication. Un onglet qui recopierait « cinq
+           jours » mentirait le jour où le code passerait à quatre. -->
+      <section data-vue="regles">
+        <div class="rub">
+          <h2>Les règles du site</h2>
+          <p class="aide" id="reglesChapeau"></p>
+          <div id="reglesComptes"></div>
+          <div class="rfiltres" id="reglesFiltres"></div>
+          <div class="champ moyen" style="margin-top:12px">
+            <label for="rechercheRegles">Chercher une règle (numéro, mot, constante)</label>
+            <input id="rechercheRegles" type="search" placeholder="cinq jours, VIE_AFFICHEE_JOURS, presse…" spellcheck="false">
+          </div>
+          <div id="reglesListe"></div>
         </div>
       </section>
 
