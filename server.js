@@ -7,6 +7,7 @@ import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { VERDICTS_FICHIER, lireVerdicts, enregistrerDecision, ecrireVerdicts } from './verdicts-de-la-main.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PORT = parseInt(process.env.PORT || '3000', 10);
@@ -91,6 +92,98 @@ const server = http.createServer((req, res) => {
       if (err) { res.writeHead(503, { 'content-type': 'application/json' }); res.end('{"offres":[]}'); return; }
       res.writeHead(200, { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store', 'access-control-allow-origin': '*' });
       res.end(data);
+    });
+    return;
+  }
+
+  /* /api/verdict-carte : LES DEUX GESTES DE LA MAIN (demande de B, 15/10/2026).
+     « Le premier bouton efface la ligne [...] et définitivement du système [...]
+     Le deuxième bouton me permet de réactiver une annonce pour 1, 2, 3, 4 et 5
+     jours, manuellement et la faire réapparaître sur le site. »
+
+     POURQUOI UNE ROUTE ICI, ET PAS SEULEMENT DANS LE PANNEAU. Le panneau est une
+     page publiée : il peut montrer, il ne peut pas écrire sur la machine qui
+     collecte. Sans cette route, les deux boutons n'écriraient que dans le
+     navigateur de la tablette — et une décision qui ne quitte pas l'appareil ne
+     décide rien. C'est la « promesse fausse » déjà payée sur ce projet.
+
+     CE QUE ÇA ÉCRIT : `public/verdicts-a-la-main.json`, un fichier PUBLIÉ AVEC LE
+     SITE. La collecte le relit à chaque passage (≤ 15 min) et l'applique : la
+     carte sort du système, ou revient sur le site. Comme il est publié, la
+     décision survit à un dépôt recloné et au secours horaire.
+
+     LE GARDE-FOU, ET CE QU'IL VAUT VRAIMENT. L'écriture exige l'en-tête
+     `X-Panneau` : une page tierce ne peut pas le poser sans autorisation
+     d'origine croisée, et on n'en donne aucune. Ce n'est donc PAS une
+     authentification — c'est un garde-fou contre une page web quelconque, pas
+     contre quelqu'un qui aurait déjà accès au réseau de la machine. Le dire vaut
+     mieux que de laisser croire à un cadenas. */
+  if (url.pathname === '/api/verdict-carte') {
+    /* ⚠ UN REFUS SE DIT SANS CASSER LA CONNEXION, ET C'EST UNE MESURE, PAS DU ZÈLE.
+     *  Un serveur qui renvoie « non » sans avoir vidé la requête laisse Node fermer
+     *  la connexion ; si le client la réutilise (c'est ce que fait `fetch`), sa
+     *  requête SUIVANTE échoue en « fetch failed » — c'est-à-dire « la machine n'a
+     *  pas répondu », alors qu'elle a répondu et refusé. C'est exactement la
+     *  distinction que le panneau doit tenir (« refusé » ≠ « injoignable »), et
+     *  l'épreuve l'a attrapée en la mesurant : le même enchaînement passait ou
+     *  cassait selon l'instant. On vide donc l'entrant AVANT de répondre, en
+     *  répondant tout de suite si le corps est déjà entièrement lu — sinon on
+     *  attendrait un événement déjà passé, et la requête resterait sans réponse. */
+    const refuser = (code, message) => {
+      // ⚠ ON VIDE L'ENTRANT AVANT DE RÉPONDRE « NON », et sans écrire deux fois :
+      //  une réponse de refus qui laisse la requête non lue se termine par une
+      //  connexion cassée, que `fetch` traduit en « la machine n'a pas répondu » —
+      //  l'inverse d'un refus. `resume()` draine et la connexion reste utilisable.
+      req.resume();
+      res.writeHead(code, { 'content-type': 'application/json; charset=utf-8' });
+      res.end(message);
+    };
+    if (req.method !== 'POST') {
+      refuser(405, '{"ok":false,"erreur":"POST attendu"}');
+      return;
+    }
+    if (req.headers['x-panneau'] !== '1') {
+      refuser(403, '{"ok":false,"erreur":"écriture réservée au panneau du projet"}');
+      return;
+    }
+    let corps = '';
+    let trop = false;
+    // Un corps hors borne est REFUSÉ, jamais avalé : dès qu'on dépasse, on cesse
+    // d'accumuler (la mémoire reste bornée) et on laisse filer les octets restants
+    // pour pouvoir RÉPONDRE 413 — détruire la requête ferait afficher « la machine
+    // n'a pas répondu » au lieu de « refusé », la confusion qu'on vient d'écarter.
+    req.on('data', (morceau) => {
+      if (trop) return;
+      corps += morceau;
+      if (corps.length > 16384) { trop = true; corps = ''; }
+    });
+    req.on('end', () => {
+      if (trop) { res.writeHead(413, { 'content-type': 'application/json; charset=utf-8' }); res.end('{"ok":false,"erreur":"décision trop longue"}'); return; }
+      try {
+        const demande = JSON.parse(corps || '{}');
+        const fichier = path.join(RACINE, VERDICTS_FICHIER);
+        const avant = lireVerdicts(fichier);
+        const apres = enregistrerDecision(avant, demande);
+        ecrireVerdicts(fichier, apres);
+        console.log(`[promos] décision de la main : ${demande.action} ${demande.cle}${demande.jours ? ` (${demande.jours} j)` : ''}`);
+        res.writeHead(200, { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' });
+        res.end(JSON.stringify({
+          ok: true, action: demande.action, cle: demande.cle,
+          jusquau: demande.action === 'reactiver' ? apres.reactivees[demande.cle].jusquau : null,
+          // ⚠ LES DEUX COMPTES PORTENT LEURS VRAIS NOMS. `supprimees` est resté ici
+          //  après que le geste est devenu « vérifier » : `Object.keys(undefined)`
+          //  levait DANS la réponse, après l'envoi des en-têtes — le serveur
+          //  mourait en pleine réponse, et le panneau lisait « la machine n'a pas
+          //  répondu » au lieu du refus ou du succès. Trouvé par l'épreuve, qui
+          //  exige désormais la FORME du corps et pas seulement son code.
+          verifiees: Object.keys(apres.verifiees).length,
+          reactivees: Object.keys(apres.reactivees).length,
+          fichier: VERDICTS_FICHIER,
+        }));
+      } catch (e) {
+        res.writeHead(400, { 'content-type': 'application/json; charset=utf-8' });
+        res.end(JSON.stringify({ ok: false, erreur: String(e && e.message || e) }));
+      }
     });
     return;
   }

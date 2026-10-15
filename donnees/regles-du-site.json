@@ -790,6 +790,57 @@
               "preuve": "tests/suivi-des-cartes.test.mjs"
             }
           ]
+        },
+        {
+          "code": "C7",
+          "titre": "Les deux gestes de la main — effacer, réactiver",
+          "regles": [
+            {
+              "num": "C7.1",
+              "titre": "Une carte effacée peut être VÉRIFIÉE : la ligne quitte la liste, la preuve reste",
+              "enonce": "Demande de B, 15/10/2026 : « Le premier bouton efface la ligne du tableau de bord dans admin. » Puis la précision qui fixe le sens du geste : « Mon objectif de la supprimer de la liste, c'est pour confirmer qu'elle a été checker. » Le bouton demande confirmation, la ligne quitte la liste du panneau, et RIEN n'est perdu : la fiche de contrôle (le tour où la source a reparlé sans elle) reste dans le registre, marquée de la date de vérification, et le compte des retours continue de la compter. Ce n'est pas une simplification de programmation : le compte des retours est le seul chiffre qui dise si la règle des cinq jours est trop dure, et il se serait vidé au fur et à mesure des vérifications.",
+              "etat": "active",
+              "depuis": "15/10/2026",
+              "valeurs": [
+                { "nom": "VERDICTS_FICHIER", "fichier": "verdicts-de-la-main.mjs" }
+              ],
+              "source": "verdicts-de-la-main.mjs",
+              "preuve": "tests/verdicts-de-la-main.test.mjs"
+            },
+            {
+              "num": "C7.2",
+              "titre": "Une carte effacée peut être remise en ligne à la main, pour 1 à 5 jours entiers",
+              "enonce": "Demande de B, 15/10/2026 : « Le deuxième bouton me permet de réactiver une annonce pour 1, 2, 3, 4 et 5 jours, manuellement et la faire réapparaître sur le site. » La durée se choisit dans un menu déroulant, et le bouton l'applique. Une carte remise en ligne y reste même si sa source l'a abandonnée — c'est le sens du geste — et elle ressort à son terme, sauf si une source la ressert entre-temps (une republication est un fait, pas un sursis). Le plafond de cinq jours est celui de la règle de fond : on remet une carte au monde, on ne refait pas la règle.",
+              "etat": "active",
+              "depuis": "15/10/2026",
+              "valeurs": [
+                { "nom": "JOURS_REACTIVATION_MAX", "fichier": "verdicts-de-la-main.mjs", "unite": "j" }
+              ],
+              "source": "verdicts-de-la-main.mjs",
+              "preuve": "tests/verdicts-de-la-main.test.mjs"
+            },
+            {
+              "num": "C7.3",
+              "titre": "La décision est écrite dans un fichier PUBLIÉ, jamais dans le navigateur",
+              "enonce": "Une décision gardée dans le stockage local d'une tablette ne décide rien : la collecte ne la voit pas, la carte ne sort pas, et le bouton ment. Les deux gestes s'écrivent donc dans un fichier publié avec le site, relu par la collecte à chaque passage — sur le NAS comme dans le secours horaire, puisqu'il est versionné. Conséquence assumée : le panneau ouvert depuis kazendra.com ne peut PAS décider, et il le dit au lieu d'annoncer un effacement qui n'a pas eu lieu.",
+              "etat": "active",
+              "depuis": "15/10/2026",
+              "valeurs": [
+                { "nom": "VERDICTS_FICHIER", "fichier": "verdicts-de-la-main.mjs" }
+              ],
+              "source": "verdicts-de-la-main.mjs",
+              "preuve": "tests/verdicts-de-la-main.test.mjs"
+            },
+            {
+              "num": "C7.4",
+              "titre": "La main décide AVANT la règle, et la règle ne connaît pas la main",
+              "enonce": "Les décisions de la main s'appliquent après la fusion du passage et avant la règle des cinq jours : un geste manuel gagne tant qu'il court, et une carte remise en ligne n'est pas jugée par la règle pendant son sursis. Mais le corps de la règle reste ignorant de ces décisions — c'est le verrou de C6.1, qui interdit que le registre devienne une liste d'exclusion. Deux étages, deux responsabilités : la main tranche un cas, la règle juge tout le reste.",
+              "etat": "active",
+              "depuis": "15/10/2026",
+              "source": "collecteur.mjs",
+              "preuve": "tests/verdicts-de-la-main.test.mjs"
+            }
+          ]
         }
       ]
     },

@@ -137,7 +137,13 @@ test('le pays choisi entre dans la lecture des deux onglets', () => {
   // LES DEUX TABLEAUX DU JOURNAL : effacées et bloquées, filtrés depuis les
   // listes complètes — les compteurs, eux, gardent les listes entières.
   assert.match(JS, /const bloquees = bloqueesToutes\.filter\(dansPaysChoisi\);/);
-  assert.match(JS, /const effacees = effaceesToutes\.filter\(dansPaysChoisi\);/);
+  // ⚠ DEUX FILTRES SUR LES EFFACÉES DEPUIS LE 15/10/2026, ET LES DEUX COMPTENT :
+  //  le pays consulté (cette épreuve), et les décisions de la main (une ligne que B
+  //  a effacée quitte la liste ; une carte remise en ligne n'y a plus sa place,
+  //  elle est affichée). L'épreuve exige donc les deux, dans cet ordre — retirer le
+  //  filtre du pays ferait de nouveau diverger le tableau et son titre.
+  assert.match(JS, /const effacees = effaceesToutes\.filter\(dansPaysChoisi\)\.filter\(\(x\) => !decideeALaMain\(x\)\);/,
+    'les effacées suivent le pays consulté ET les décisions de la main');
   assert.match(JS, /const revenues = \(e\.revenuesListe \|\| \[\]\)\.filter\(dansPaysChoisi\);/);
 });
 

@@ -27,6 +27,14 @@ import {
 // résolubles. Importées pour ne PAS dédoubler la règle : un seul endroit dit
 // ce qu'est une adresse résoluble (voir outils/resoudre-destinations.mjs).
 import { adresseDeSortie } from './outils/resoudre-destinations.mjs';
+/* LES DEUX GESTES DE LA MAIN (B, 15/10/2026) : effacer une ligne pour toujours,
+   réactiver une carte pour 1 à 5 jours. Le module est partagé avec `server.js`
+   (qui écrit le fichier) et avec les épreuves, pour qu'une seule définition
+   existe — deux définitions d'une même règle finissent par diverger. */
+import {
+  VERDICTS_FICHIER, lireVerdicts, verdictDeLaMain, carteDepuisFiche, purgerRegistre,
+  clesRetireesDuRegistre, marquerVerifiees,
+} from './verdicts-de-la-main.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DATA = path.join(__dirname, 'data');
@@ -8416,8 +8424,14 @@ async function principal() {
   // LES REPRISES, DÉCOUPÉES PAR PAYS — incrémentées dans la MÊME ligne que le
   //  total (`retours`), jamais dans une seconde boucle qui compterait autre chose.
   const reprisesParPays = {};
+  // LES CLÉS QUE CE PASSAGE A VUES SERVIR, par n'importe quelle source. Elles
+  // servent à un seul jugement : distinguer « la source a republié cette carte »
+  // (un fait, la carte rentre) de « personne ne l'a servie » (une carte dont le
+  // sursis manuel est fini ressort, et n'entre que si une source la ressert).
+  const servisCePassage = new Set();
   for (const offre of paquets.flat()) {
     const cle = cleDe(offre);
+    servisCePassage.add(cle);
     const avant = connues.get(cle);
     // Le NUMÉRO DE TOUR de la source au moment où elle nous sert cette offre.
     // C'est le seul repère qui dira plus tard si elle a cessé de la republier.
@@ -8632,6 +8646,90 @@ async function principal() {
     });
   }
 
+  /* --------------------------------------------------------------------------
+   * LES DEUX GESTES DE LA MAIN — appliqués APRÈS la fusion, AVANT toute règle.
+   *
+   *  Demande de B, 15/10/2026 : « Le premier bouton efface la ligne [...] et
+   *  définitivement du système [...]. Le deuxième bouton me permet de réactiver une
+   *  annonce pour 1, 2, 3, 4 et 5 jours, manuellement et la faire réapparaître sur
+   *  le site. »
+   *
+   *  ⚠ CE BLOC N'EST PAS UNE RÈGLE, ET IL NE TOUCHE PAS À LA RÈGLE. Le corps de
+   *  `verdictDeCalendrier` ne connaît aucune décision manuelle — une épreuve le
+   *  refuse. La main s'ajoute APRÈS, et elle gagne : c'est ce que veut dire un
+   *  geste manuel. Ce qui reste vrai, et qu'il ne faut pas perdre de vue : une
+   *  carte décidée à la main est hors du jugement automatique tant que la décision
+   *  court, et elle y retombe dès qu'il n'y a plus de décision.
+   *
+   *  QUATRE CAS, ET RIEN D'AUTRE :
+   *   1. supprimée  → sortie du catalogue ET du système. Une source qui la
+   *      resservirait plus tard ne la fait PAS rentrer : c'est le « définitivement » ;
+   *   2. réactivée  → elle RESTE, même si sa source l'a abandonnée (c'est le sens
+   *      du geste : la main affirme que la carte vaut encore) ;
+   *   3. réactivée mais absente du stock — elle avait été effacée avant d'être
+   *      réactivée : on la RECONSTRUIT depuis sa fiche, qui voyage avec la
+   *      décision. Sans cette reconstruction, le bouton ne ferait rien pour les
+   *      cartes qui sont précisément dans la liste où il se trouve ;
+   *   4. sursis fini → elle ressort. Elle ne rentre que si une source la ressert
+   *      PENDANT ce passage : une republication est un fait, pas un sursis, et
+   *      c'est le contrat déjà en vigueur pour toute carte effacée.
+   *
+   *  L'ORDRE COMPTE : ce bloc passe avant la péremption par la date, avant la
+   *  promotion qui décide la carte, et avant les visuels — donc une carte
+   *  reconstruite reçoit son visuel comme n'importe quelle carte affichée, et une
+   *  carte supprimée ne laisse pas de visuel derrière elle (la purge des orphelins
+   *  suit les cartes AFFICHÉES).
+   * ------------------------------------------------------------------------ */
+  // ⚠ UN SEUL INSTANT POUR TOUTE LA PASSE — déclaré ICI depuis le 15/10/2026, et
+  //  c'est la main qui l'a fait remonter : la décision manuelle et le verdict de la
+  //  règle doivent juger au même instant, sinon un sursis qui expire entre les deux
+  //  ferait publier une carte que la main venait de sortir. Voir le commentaire
+  //  détaillé au bloc de la règle, qui explique le défaut d'origine (20 à 28 cartes
+  //  publiées déjà condamnées à chaque passage, toutes mesurées à 5,00 j).
+  const INSTANT_DU_PASSAGE = Date.now();
+  const verdictsMain = lireVerdicts(path.join(__dirname, VERDICTS_FICHIER));
+  let sursisFinis = 0, injecteesMain = 0;
+  const reactiveesEnCours = new Set();
+  /* LA VIGNETTE D'UNE CARTE EFFACÉE A ÉTÉ PURGÉE — c'est le contrat de l'effacement
+   *  (« la carte ET son visuel »). Constaté le 15/10/2026 sur une vraie carte remise
+   *  en ligne : le fichier n'existait plus, et la carte serait revenue avec une image
+   *  CASSÉE. On retire donc l'adresse quand le fichier manque — le site sert son
+   *  repli générique, et rien de dégradé ne s'affiche. Le poids est lu par l'outil du
+   *  projet (`poidsDuVisuel`), qui rend 0 sur un fichier absent. */
+  const retirerVisuelManquant = (carte) => {
+    if (carte && carte.image && poidsDuVisuel(carte.image) === 0) delete carte.image;
+    return carte;
+  };
+  for (const cle of [...connues.keys()]) {
+    const verdict = verdictDeLaMain(cle, verdictsMain, INSTANT_DU_PASSAGE);
+    // ⚠ « VÉRIFIÉE » NE TOUCHE PAS AU CATALOGUE, ET C'EST VOULU. Le geste de B dit
+    //  « cette carte effacée, je l'ai vérifiée » : son effet est de VÉRIFIER et de
+    //  retirer la ligne de sa liste (voir `marquerVerifiees`, sur le registre). Une
+    //  carte vérifiée qui serait AUSSI dans le catalogue (sa source l'a reservie)
+    //  reste en ligne : la vérification ne condamne pas une carte affichée.
+    if (verdict === 'reactivee') { retirerVisuelManquant(connues.get(cle)); reactiveesEnCours.add(cle); continue; }
+    // « sursis-fini » : la carte a été remise en ligne à la main pour quelques
+    // jours, ces jours sont écoulés. Elle ressort — sauf si une source vient de la
+    // resservir dans ce passage, auquel cas elle rentre par la porte de tout le
+    // monde (une carte neuve).
+    if (verdict === 'sursis-fini' && !servisCePassage.has(cle)) { connues.delete(cle); sursisFinis += 1; }
+  }
+  for (const [cle, decision] of Object.entries(verdictsMain.reactivees)) {
+    if (verdictDeLaMain(cle, verdictsMain, INSTANT_DU_PASSAGE) !== 'reactivee') continue;
+    if (connues.has(cle)) continue;
+    const carte = retirerVisuelManquant(carteDepuisFiche(decision.fiche, { maintenant: INSTANT_DU_PASSAGE }));
+    // Une fiche sans titre NI lien ne dit pas de quelle carte on parle : on refuse
+    // de publier une coquille vide, et le panneau le montrera (« fiche vide »).
+    if (!carte.titre && !carte.lienPage) continue;
+    connues.set(cle, carte);
+    injecteesMain += 1;
+    reactiveesEnCours.add(cle);
+  }
+  if (sursisFinis || injecteesMain || reactiveesEnCours.size) {
+    console.log(`  décisions de la main : ${injecteesMain} carte(s) reconstruite(s), `
+      + `${reactiveesEnCours.size} sursis en cours, ${sursisFinis} sursis arrivé(s) à terme`);
+  }
+
   // --- VERROU 1 ET VERROU 3 : LA PÉREMPTION PAR LA DATE DE LA SOURCE --------
   //  Appliqués au STOCK et pas seulement à l'entrée, comme les deux règles
   //  ci-dessus et pour la même raison : une offre engrangée avant la correction
@@ -8738,10 +8836,19 @@ async function principal() {
   // à l'état du panneau ET à l'estampille : le catalogue publié est cohérent avec
   // lui-même — ce que la règle dit à cet instant est exactement ce que le fichier
   // contient, et la re-mesure à `genereLe` doit donner ZÉRO.
-  const INSTANT_DU_PASSAGE = Date.now();
+  // ⚠ `INSTANT_DU_PASSAGE` EST DÉCLARÉ PLUS HAUT, AU BLOC DES DÉCISIONS DE LA MAIN,
+  //  et ce n'est pas un rangement : la main juge AVANT la règle, donc elle doit
+  //  juger au même instant. Le déplacer au-dessus était le seul moyen d'avoir un
+  //  instant unique pour la passe entière.
   const maintenantEffacement = INSTANT_DU_PASSAGE;
   for (const cle of [...connues.keys()]) {
     const o = connues.get(cle);
+    // ⚠ UNE CARTE QUE LA MAIN A REMISE EN LIGNE N'EST PAS JUGÉE ICI : un sursis
+    //  manuel est plus fort que la règle tant qu'il court. Sans cette ligne, le
+    //  bouton « réactiver » n'aurait rien fait pour une carte que sa source a
+    //  abandonnée — c'est-à-dire dans presque tous les cas d'usage, puisque c'est
+    //  la raison même pour laquelle la carte avait été effacée.
+    if (reactiveesEnCours.has(cle)) continue;
     if (verdictDeCalendrier(o, { maintenant: INSTANT_DU_PASSAGE, tours: toursParSource }) !== 'effacee') continue;
     const octetsVisuel = poidsDuVisuel(o.image);
     regleOctets += octetsVisuel;
@@ -9371,6 +9478,51 @@ async function principal() {
     const retoursSuivi = marquerRetours(suivi, clesRevenues, { maintenant: maintenantSuivi });
     suivi = retoursSuivi.suivi;
     suivi = elaguerSuivi(suivi, { maintenant: maintenantSuivi }).suivi;
+    /* LA MAIN EFFACE SA PROPRE TRACE, ET SEULEMENT LA SIENNE.
+     *
+     *  Les cartes sur lesquelles B a décidé quittent le registre des effacements :
+     *   • effacée   → une ligne qu'il a effacée ne doit pas rester dans la liste où
+     *                 il l'a effacée (« ça sera plus clair si on s'est effacé la ligne
+     *                 de la liste ») ;
+     *   • réactivée → elle est EN LIGNE : elle n'a plus rien à faire dans « ce que la
+     *                 règle a emporté ».
+     *  La fiche n'est pas perdue pour autant : elle voyage avec la décision, dans
+     *  `verdicts-a-la-main.json`, qui est publié et versionné. Rien n'est effacé
+     *  sans trace, donc rien n'est effacé sans recours.
+     *
+     *  ET C'EST LE SEUL MOMENT OÙ LA MAIN TOUCHE AU REGISTRE : la règle, elle,
+     *  continue d'écrire ses effacements comme avant, sans rien savoir de ces
+     *  décisions (voir le verrou des épreuves sur `verdictDeCalendrier`). */
+    const purgeMain = purgerRegistre(suivi.effacees, clesRetireesDuRegistre(verdictsMain));
+    if (purgeMain.retires) {
+      suivi = {
+        ...suivi,
+        effacees: purgeMain.effacees,
+        compte: { ...suivi.compte, reactiveesMain: (suivi.compte.reactiveesMain || 0) + purgeMain.retires },
+      };
+      console.log(`  registre : ${purgeMain.retires} fiche(s) retirée(s) — leur carte est remise en ligne`);
+    }
+    /* LES CARTES VÉRIFIÉES : LA FICHE RESTE, MARQUÉE.
+     *
+     *  Décision de B, 15/10/2026 au soir, dans ses mots : « Si pour la
+     *  programmation il est plus facile de garder des informations sur la carte même
+     *  si je la supprime de la liste, tu peux le faire. Mon objectif de la supprimer
+     *  de la liste, c'est pour confirmer qu'elle a été checker. »
+     *
+     *  Donc on MARQUE (`verifieeLe`) au lieu d'oublier : la ligne quitte la liste du
+     *  panneau, et le registre garde la fiche de contrôle et le compte des retours.
+     *  Ce n'est pas seulement plus simple — c'est plus juste : le compte des retours
+     *  est le seul chiffre qui dise si la règle des cinq jours est trop dure, et il
+     *  se serait vidé au fur et à mesure des vérifications. */
+    const marqueMain = marquerVerifiees(suivi.effacees, verdictsMain);
+    if (marqueMain.marquees) {
+      suivi = {
+        ...suivi,
+        effacees: marqueMain.effacees,
+        compte: { ...suivi.compte, verifiees: (suivi.compte.verifiees || 0) + marqueMain.marquees },
+      };
+      console.log(`  registre : ${marqueMain.marquees} fiche(s) marquée(s) vérifiée(s) — la preuve est conservée`);
+    }
     suivi.compte.passes = (suivi.compte.passes || 0) + 1;
     ecrireSuivi(path.join(DATA, 'effacements.json'), suivi);
 
