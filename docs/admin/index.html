@@ -3697,11 +3697,15 @@ function dessinerAffiliation() {
  *  pays aurait donné deux vocabulaires pour la même question.
  *
  *  TROIS CHOSES QUE CETTE BARRE NE FAIT PAS, ET QUI SE DISENT À L'ÉCRAN :
- *   1. elle ne découpe pas ce qui n'est pas découpable. Les compteurs de la règle
- *      des cinq jours et les mécanismes d'un passage décrivent TOUT le catalogue :
- *      l'extrait publié du journal ne permet pas de les séparer par pays. Filtrer
- *      les tableaux voisins sans le dire ferait croire que ces chiffres-là aussi
- *      sont ceux du pays — c'est pourquoi les blocs concernés portent `avisTousPays`;
+ *   1. elle ne découpe pas les MÉCANISMES d'un passage (le tableau « qui retire
+ *      quoi ») : l'extrait publié ne les sépare pas par pays. Filtrer les
+ *      tableaux voisins sans le dire ferait croire que ces chiffres-là aussi sont
+ *      ceux du pays — c'est pourquoi les blocs concernés portent `avisTousPays`.
+ *      ⚠ LES COMPTEURS DE LA RÈGLE, EUX, SUIVENT LE PAYS DEPUIS LE 15/10/2026 :
+ *      `suivi-cartes.json` publie chaque compte découpé par pays
+ *      (`parPaysAffichees`, `parPaysCinqJours`, `parPaysBloquees`, `parPays` du
+ *      registre…), et le panneau n'affiche QUE le chiffre du pays dès qu'un pays
+ *      est consulté — jamais le total sous un titre de pays ;
  *   2. elle ne cache rien d'un pays sans carte : un pays sans ligne au journal
  *      n'apparaît pas dans SA barre (aucun compte à y mettre), et si le pays
  *      retenu n'a rien dans un tableau, ce tableau l'écrit ;
@@ -3722,6 +3726,32 @@ const avisTousPays = () => (paysChoisiCartes
   ? '<p class="aide"><b>Tous les pays</b> — ce bloc décrit tout le catalogue, pas le pays consulté : '
     + 'l’extrait publié ne permet pas de le découper par pays.</p>'
   : '');
+
+/** LE COMPTEUR DU PAYS CONSULTÉ — et rien d'autre.
+ *
+ *  Rend le TOTAL quand aucun pays n'est consulté, le chiffre DU PAYS quand il y
+ *  en a un, et `null` quand la répartition correspondante n'est pas publiée.
+ *
+ *  ⚠ LE `null` EST LA GARANTIE, PAS UNE PRÉCAUTION DE STYLE. Jusqu'au
+ *  15/10/2026 ces compteurs annonçaient le catalogue entier sous un titre « Pays
+ *  consulté : France » : un total lu comme une mesure du pays. Le corriger en
+ *  écrivant `0` pour un pays absent aurait remplacé un chiffre faux par un autre
+ *  — un pays peut très bien n'avoir AUCUNE carte d'une population, et personne
+ *  ne l'a mesuré. Deux cas se distinguent donc :
+ *    · la répartition est publiée et le pays n'y figure pas ⇒ `0` : c'est une
+ *      mesure, et elle est juste (aucune de ses cartes n'est dans cette
+ *      population) ;
+ *    · la répartition n'est pas publiée du tout (journal d'une version
+ *      antérieure, fichier tronqué) ⇒ `null` ⇒ « — » à l'écran, et le bloc dit
+ *      pourquoi. Un chiffre absent se lit ; un chiffre inventé se croit. */
+const compteurDuPays = (repartition, pays, total) => {
+  if (!pays) return total;
+  if (!repartition || typeof repartition !== 'object') return null;
+  return Object.prototype.hasOwnProperty.call(repartition, pays) ? repartition[pays] : 0;
+};
+
+/** Le rendu d'un compteur : un nombre, ou un tiret qui ne prétend rien. */
+const chiffreOuTiret = (v) => (v == null ? '—' : nb(v));
 
 /** « Tous les pays » : la tuile qui remet l'affichage d'avant. Elle n'a pas de
  *  drapeau — elle n'est pas un pays — donc elle porte un globe DESSINÉ, comme
@@ -4207,15 +4237,48 @@ function dessinerCartes() {
        affichées, <b>aucune</b> n’a été servie puis abandonnée par une source qui a reparlé depuis :
        les cartes au-delà des cinq jours sont <b>toutes bloquées par une raison écrite</b>, plus bas.`));
 
-  txt('mCartesCompteurs', avisTousPays() + tuiles([
-    [nb(c.affichees), 'cartes affichées'],
-    [nb(c.dansLesCinqJours), 'dans leurs cinq jours'],
-    [nb(c.bloquees), 'au-delà de cinq jours'],
-    [nb(p.effacees), `effacées au dernier passage${p.octets ? ` (${poidsCourt(p.octets)} libérés)` : ''}`],
-    [nb(p.reprises), 'reprises au dernier passage'],
-    [nb(e.retenues == null ? effaceesToutes.length : e.retenues), 'effacements au registre (30 j, tous pays)'],
-    [nb(e.revenues), 'revenues après effacement'],
-  ]));
+  // ⚠ LES COMPTEURS SUIVENT LE PAYS CONSULTÉ, COMME LES TABLEAUX.
+  //  Jusqu'au 15/10/2026 ils étaient les SEULS à ne pas le faire : les tableaux
+  //  se filtraient, les chiffres du haut non, et B lisait « 10 650 cartes
+  //  affichées » sous un titre « Pays consulté : France ». Le collecteur publie
+  //  désormais chaque compte découpé par pays ; on lit donc le chiffre du pays,
+  //  et le total seulement quand aucun pays n'est choisi.
+  //  `null` (répartition absente du journal) devient « — », jamais le total.
+  const cAffichees = compteurDuPays(c.parPaysAffichees, paysChoisiCartes, c.affichees);
+  const cCinq = compteurDuPays(c.parPaysCinqJours, paysChoisiCartes, c.dansLesCinqJours);
+  const cBloquees = compteurDuPays(c.parPaysBloquees, paysChoisiCartes, c.bloquees);
+  const cEffacees = compteurDuPays(p.parPays, paysChoisiCartes, p.effacees);
+  const cOctets = compteurDuPays(p.parPaysOctets, paysChoisiCartes, p.octets);
+  const cReprises = compteurDuPays(p.parPaysReprises, paysChoisiCartes, p.reprises);
+  const cRetenues = compteurDuPays(e.parPays, paysChoisiCartes,
+    e.retenues == null ? effaceesToutes.length : e.retenues);
+  const cRevenues = compteurDuPays(e.parPaysRevenues, paysChoisiCartes, e.revenues);
+  const cPlusAncienne = compteurDuPays(c.plusAncienneParPays, paysChoisiCartes, c.plusAncienneJours);
+  // CE QUI N'A PAS PU ÊTRE DÉCOUPÉ DOIT SE DIRE : un tiret sans explication
+  // laisserait croire à un zéro mesuré. On nomme donc la cause une seule fois.
+  const nonDecoupes = [
+    ['cartes affichées', cAffichees], ['cartes dans leurs cinq jours', cCinq],
+    ['cartes au-delà de cinq jours', cBloquees], ['effacements du passage', cEffacees],
+    ['reprises du passage', cReprises], ['effacements au registre', cRetenues],
+    ['cartes revenues', cRevenues],
+  ].filter(([, v]) => v == null).map(([nom]) => nom);
+
+  txt('mCartesCompteurs', (paysChoisiCartes
+    ? `<p class="aide"><b>${esc(nomDuPays(paysChoisiCartes))}</b> — ces ${nb(7)} compteurs sont ceux de
+       ce pays, comme les tableaux ci-dessous. Choisissez « <b>Tous les pays</b> » pour les chiffres du
+       catalogue entier.${nonDecoupes.length ? ` <span class="avertir">Le journal publié ne porte pas
+       encore la répartition par pays pour : ${esc(nonDecoupes.join(', '))} — ces compteurs affichent
+       <b>—</b> plutôt qu’un total pris pour celui du pays.</span>` : ''}</p>`
+    : '')
+    + tuiles([
+      [chiffreOuTiret(cAffichees), 'cartes affichées'],
+      [chiffreOuTiret(cCinq), 'dans leurs cinq jours'],
+      [chiffreOuTiret(cBloquees), 'au-delà de cinq jours'],
+      [chiffreOuTiret(cEffacees), `effacées au dernier passage${cOctets ? ` (${poidsCourt(cOctets)} libérés)` : ''}`],
+      [chiffreOuTiret(cReprises), 'reprises au dernier passage'],
+      [chiffreOuTiret(cRetenues), `effacements au registre (30 j${paysChoisiCartes ? ', ce pays' : ', tous pays'})`],
+      [chiffreOuTiret(cRevenues), 'revenues après effacement'],
+    ]));
 
   // QUI RETIRE QUOI — les quatre mécanismes, nommés, avec leur compte du passage.
   txt('mCartesRetraits', avisTousPays() + `<div class="defile"><table class="etroite">
@@ -4251,8 +4314,9 @@ function dessinerCartes() {
     </table></div>
     <p class="fin">${paysChoisiCartes
       ? `<b>${nb(effacees.length)}</b> effacement(s) pour ${esc(nomDuPays(paysChoisiCartes))} dans
-         l’extrait publié, sur <b>${nb(effaceesToutes.length)}</b> au registre — l’extrait est borné
-         à trente jours, la liste complète reste dans le registre de la machine de collecte.`
+         l’extrait publié, sur <b>${chiffreOuTiret(cRetenues)}</b> au registre <b>pour ce pays</b> —
+         l’extrait est borné à trente jours, la liste complète reste dans le registre de la machine
+         de collecte.`
       : (e.retenues > effaceesToutes.length
         ? `Les <b>${nb(effaceesToutes.length)}</b> plus récents sur <b>${nb(e.retenues)}</b> effacements
          gardés (trente jours) — l’extrait publié est borné. La liste complète reste dans le registre
@@ -4294,7 +4358,7 @@ function dessinerCartes() {
         ? `Les <b>${nb(bloqueesToutes.length)}</b> plus anciennes sur <b>${nb(c.bloquees)}</b> cartes
          bloquées — l’extrait publié est borné.` : `Les <b>${nb(bloqueesToutes.length)}</b> cartes
          bloquées, toutes, sont ici.`)}
-      La plus ancienne a <b>${c.plusAncienneJours == null ? '—' : `${nf.format(c.plusAncienneJours)} jours`}</b>${paysChoisiCartes ? ' (tous pays)' : ''}.
+      La plus ancienne a <b>${cPlusAncienne == null ? '—' : `${nf.format(cPlusAncienne)} jours`}</b>${paysChoisiCartes ? ' (ce pays)' : ''}.
       ${parRaison.violation ? '' : `Aucune n’est en violation de la règle : chacune est retenue par une
       des deux gardes, écrites dans sa ligne.`}</p>
     <p class="fin">Le prix n’est <b>pas</b> relu par cette règle : elle garantit la fraîcheur de
