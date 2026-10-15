@@ -501,7 +501,7 @@ tr.edition .principal{width:auto;padding:9px 18px;display:inline-block;margin-ri
       <button class="onglet" data-vue="trafic">Trafic</button>
       <button class="onglet" data-vue="exploitation">Exploitation</button>
       <button class="onglet" data-vue="cartes">Vie des cartes</button>
-      <button class="onglet" data-vue="refusees">Offres refusées</button>
+      <button class="onglet" data-vue="refusees">Ajouts &amp; refus</button>
       <button class="onglet" data-vue="sources">Sources</button>
       <button class="onglet" data-vue="origines">Origines</button>
       <button class="onglet" data-vue="marche">Marché Euro</button>
@@ -755,7 +755,35 @@ tr.edition .principal{width:auto;padding:9px 18px;display:inline-block;margin-ri
         <div class="avis" id="avisRefusees"></div>
 
         <div class="rub">
-          <h2>Ce que les filtres ont écarté de la vue par défaut</h2>
+          <h2>Ce qui est ENTRÉ dans le site, au dernier passage</h2>
+          <p class="aide">Les cartes dont la <b>première vue</b> tombe dans les vingt dernières minutes —
+            c'est-à-dire celles que le dernier passage vient d'ajouter au catalogue. L'heure de première
+            vue est écrite par le collecteur à l'entrée en base : elle ne se rafraîchit jamais, donc ce
+            tableau ne peut pas « rajeunir » une carte ancienne.</p>
+          <div class="grille" id="mAjoutsEntrees"></div>
+        </div>
+
+        <div class="rub">
+          <h2>Ce qui a été RETIRÉ, au dernier passage</h2>
+          <p class="aide">Une carte qui disparaît du site n'est pas forcément un problème : <b>trois autres
+            mécanismes retirent aussi</b>, et les confondre fait chercher une panne là où il n'y en a pas.
+            Le détail carte par carte, avec la preuve, est dans l'onglet <b>Vie des cartes</b> — ici,
+            seulement les comptes, pour ne pas dire deux fois la même chose.</p>
+          <div id="mAjoutsRetraits"></div>
+        </div>
+
+        <div class="rub">
+          <h2>Les sources qui n'ont rien apporté, et pourquoi</h2>
+          <p class="aide">Une offre ne peut pas entrer si sa source <b>n'a pas été lue</b>. Trois raisons,
+            toutes volontaires : la source est <b>au repos</b> (délai de politesse), elle est <b>sous le
+            seuil</b> (elle rend trop peu d'annonces pour qu'un tour compte), ou elle a <b>échoué</b>.
+            C'est ici qu'on voit si une source se tait — et une source qui se tait longtemps ne fait pas
+            de bruit : elle laisse simplement son catalogue vieillir.</p>
+          <div id="mAjoutsSources"></div>
+        </div>
+
+        <div class="rub">
+          <h2>Ce qui est PUBLIÉ mais écarté de la vue par défaut</h2>
           <p class="aide">Toute offre <b>publiée</b> est ici : soit elle passe l'un des <b>quatre
             étages</b> qui ouvrent la vue par défaut, soit elle est <b>refusée</b> — et la raison est
             écrite noir sur blanc. <b>Ces règles sont celles de l'écran</b> : le même fichier
@@ -767,7 +795,7 @@ tr.edition .principal{width:auto;padding:9px 18px;display:inline-block;margin-ri
         </div>
 
         <div class="rub">
-          <h2>Le détail, offre par offre</h2>
+          <h2>Le détail des refus, offre par offre</h2>
           <p class="aide">Classées par motif, puis de la plus ancienne à la plus récente. Les liens
             ouvrent l'offre : c'est la façon la plus rapide de juger si un refus était justifié.</p>
           <div id="mRefuseesListe"></div>
@@ -3722,6 +3750,138 @@ async function dessinerRefusees() {
        (${nb(parMotif[m])}) — ${esc(MOTIFS[m])}</p>`).join('')}</div>`);
 }
 
+/* ---------------------------------------------------------------------------
+ *  LE TRAJET D'UNE CARTE — ce qui est ENTRÉ, ce qui a été RETIRÉ, et ce qui n'a
+ *  pas pu entrer parce que sa source n'a pas parlé. Demande de B, 15/10/2026 :
+ *  « les produits qui ont été rajoutés sur le site et les produits qui n'ont pas
+ *  été rajoutés avec la raison … et tout autre information concernant l'ajout des
+ *  cartes sur le site ».
+ *
+ *  ⚠ TOUT VIENT DU CATALOGUE PUBLIÉ ET DU JOURNAL DES CARTES. Le panneau ne
+ *  recalcule aucun chiffre de collecte : il relit ce que le passage a écrit. Un
+ *  panneau qui recalculerait ferait un second collecteur — et deux collecteurs
+ *  finissent toujours par se contredire.
+ * ------------------------------------------------------------------------- */
+const AJOUTS_MAX = 200;
+const FENETRE_ENTREES_MS = 20 * 60000;    // plus large que la passe (15 min) : on ne rate aucune entrée
+
+async function dessinerAjouts() {
+  // 1. D'ABORD LES REFUS D'AFFICHAGE — même fonction, mêmes règles partagées.
+  await dessinerRefusees();
+
+  // 2. PUIS LE TRAJET : entrées, retraits, sources muettes.
+  let d = null, suivi = null;
+  try { d = await (await fetch('../offres.json', { cache: 'no-store' })).json(); } catch { d = null; }
+  try { suivi = await (await fetch('../suivi-cartes.json', { cache: 'no-store' })).json(); } catch { suivi = null; }
+  if (!d) { txt('mAjoutsEntrees', '<p class="vide">Le catalogue publié n’a pas pu être relu.</p>'); return; }
+  const offres = (d.offres || []).filter((o) => (o.lienPage || o.lienMarchand));
+  const genreLe = Date.parse(d.genereLe) || Date.now();
+
+  /* --- A. LES ENTRÉES DU DERNIER PASSAGE ---------------------------------- */
+  const entrees = offres.filter((o) => {
+    const t = Date.parse(o.premiereVue || '');
+    return Number.isFinite(t) && genreLe - t <= FENETRE_ENTREES_MS;
+  }).sort((a, b) => Date.parse(b.premiereVue) - Date.parse(a.premiereVue));
+  const parSourceEntree = {};
+  for (const o of entrees) {
+    const k = o.source || o.sourceId || '?';
+    parSourceEntree[k] = (parSourceEntree[k] || 0) + 1;
+  }
+  const montrees = entrees.slice(0, AJOUTS_MAX);
+  txt('mAjoutsEntrees', tuiles([
+    [nb(entrees.length), 'cartes entrées (20 min)'],
+    [nb(Object.keys(parSourceEntree).length), 'sources qui ont apporté'],
+    [nb(d.nouvelles), 'entrées comptées par le collecteur'],
+    [nb(d.misesAJour), 'mises à jour (prix, remise ou titre)'],
+  ]) + (entrees.length ? `<div class="defile"><table>
+    <tr><th>Entrée</th><th>Offre</th><th>Marchand</th><th class="n">Prix</th>
+      <th class="n">Remise</th><th>Source</th><th>Pays</th></tr>
+    ${montrees.map((o) => `<tr>
+      <td class="fin">${o.premiereVue ? esc(ilYA(o.premiereVue)) : '—'}</td>
+      <td>${LIEN_OFFRE(o, String(o.titre || '—').slice(0, 74))}</td>
+      <td>${esc(o.marchand || '—')}</td>
+      <td class="n">${o.prix == null ? '—' : nf.format(o.prix)}</td>
+      <td class="n">${o.remise == null ? '—' : `${nf.format(o.remise)} %`}</td>
+      <td class="fin">${esc(o.source || o.sourceId || '—')}</td>
+      <td>${esc(o.pays || '—')}</td></tr>`).join('')}
+  </table></div>${entrees.length > montrees.length
+    ? `<p class="vide">… et ${nb(entrees.length - montrees.length)} autre(s), non montrées (tableau borné à ${nb(AJOUTS_MAX)} lignes).</p>` : ''}
+    <p class="aide">Répartition : ${Object.entries(parSourceEntree).sort((a, b) => b[1] - a[1])
+      .map(([s, n]) => `${esc(s)} ${nb(n)}`).join(' · ')}</p>`
+    : `<p class="vide">Aucune carte entrée depuis vingt minutes. La fenêtre est plus large que la passe,
+       donc ce n’est pas un défaut d’affichage : les sources n’ont rien publié de neuf.</p>`));
+
+  /* --- B. LES RETRAITS DU DERNIER PASSAGE --------------------------------- */
+  if (!suivi) {
+    txt('mAjoutsRetraits', '<p class="vide">Le journal des cartes (suivi-cartes.json) n’a pas été relu.</p>');
+  } else {
+    const p = suivi.passage || {};
+    txt('mAjoutsRetraits', tuiles([
+      [nb(p.effacees), 'cartes emportées'],
+      [p.octets ? poidsCourt(p.octets) : '—', 'visuels libérés'],
+      [nb(p.reprises), 'cartes resservies (compteur reparti)'],
+    ]) + `<div class="defile"><table>
+      <tr><th>Mécanisme</th><th class="n">Ce passage</th><th>Ce qu’il fait</th></tr>
+      ${(suivi.retraits || []).map((x) => `<tr><td>${esc(x.mecanisme)}</td>
+        <td class="n">${nb(x.nb)}</td><td class="fin">${esc(x.quoi)}</td></tr>`).join('')}
+    </table></div><p class="aide">Le détail carte par carte — et la preuve de chaque effacement — est dans
+      l’onglet <b>Vie des cartes</b>.</p>`);
+  }
+
+  /* --- C. LES SOURCES QUI N'ONT RIEN APPORTÉ ------------------------------ */
+  const journal = Array.isArray(d.journal) ? d.journal : [];
+  const vuLe = d.sourcesVuLe || {};
+  const dansLaFenetre = (iso) => {
+    const t = Date.parse(iso || '');
+    return Number.isFinite(t) && genreLe - t <= FENETRE_ENTREES_MS;
+  };
+  // ⚠ « LUE » SE LIT SUR `sourcesVuLe`, PAS SUR LE JOURNAL. Mesuré le 15/10/2026 à
+  // la première mise en route de cet onglet : le journal mélange des ÉTAPES
+  // AGRÉGÉES (« dates-relevees », 3 353 offres d'un coup) et des lectures de
+  // source ; compter les entrées à `offres` numérique annonçait « 2 sources
+  // lues » alors que des dizaines portaient une date de lecture fraîche. La date
+  // de lecture est écrite par le collecteur au moment où il interroge la source —
+  // c'est elle qui fait foi. Le journal, lui, sert à nommer les raisons.
+  const lues = new Set(Object.keys(vuLe).filter((id) => dansLaFenetre(vuLe[id])));
+  const apportees = new Map();                        // ce que le journal dit avoir été rendu
+  for (const j of journal) if (j && typeof j.offres === 'number') apportees.set(j.source, j.offres);
+  const echecs = journal.filter((j) => j && j.ok === false);
+  const groupeDe = (nom) => new Set(journal.filter((j) => j && j.source === nom).flatMap((j) => j.sources || []));
+  const auRepos = groupeDe('repos');
+  const sousSeuil = groupeDe('seuil-enseigne');
+  const declarees = d.sources || [];
+  const nonLues = declarees.filter((s) => !lues.has(s.id) && !auRepos.has(s.id)
+    && !sousSeuil.has(s.id) && !echecs.some((j) => j.source === s.id));
+  const etatDe = (id) => (auRepos.has(id) ? 'au repos (délai de politesse)'
+    : sousSeuil.has(id) ? 'sous le seuil de lecture'
+      : echecs.some((j) => j.source === id) ? 'en échec'
+        : lues.has(id) ? 'lue' : 'non lue à ce passage');
+  const aMontrer = [...auRepos, ...sousSeuil, ...echecs.map((j) => j.source), ...nonLues.map((s) => s.id)]
+    .filter((v, i, a) => v && a.indexOf(v) === i);
+  txt('mAjoutsSources', tuiles([
+    [nb(declarees.length), 'sources déclarées'],
+    [nb(lues.size), 'sources lues'],
+    [nb(auRepos.size), 'au repos'],
+    [nb(sousSeuil.size), 'sous le seuil'],
+    [nb(echecs.length), 'en échec'],
+  ]) + (aMontrer.length ? `<div class="defile"><table>
+    <tr><th>Source</th><th>État</th><th class="n">Offres rendues</th><th>Dernière lecture</th></tr>
+    ${aMontrer.map((id) => {
+    const s = declarees.find((x) => x.id === id) || {};
+    return `<tr><td>${esc(s.nom || id)}<div class="micro">${esc(id)}</div></td>
+      <td class="fin">${esc(etatDe(id))}</td>
+      <td class="n">${apportees.has(id) ? nb(apportees.get(id)) : '—'}</td>
+      <td class="fin">${vuLe[id] ? esc(ilYA(vuLe[id])) : '—'}</td></tr>`;
+  }).join('')}
+  </table></div>
+  <p class="aide">« Au repos » et « sous le seuil » sont des décisions VOLONTAIRES du collecteur :
+    la source n'a pas été lue, et on ne conclut rien d'une source qu'on n'a pas lue. Une source
+    qui reste au repos longtemps laisse simplement son catalogue vieillir.</p>`
+    : `<p class="vide">Aucune : toutes les sources déclarées ont été lues à ce passage.</p>`)
+    + (echecs.length ? `<p class="aide">Échecs, écrits par le collecteur :
+      ${echecs.slice(0, 8).map((j) => `<b>${esc(j.source)}</b> — ${esc(String(j.erreur || '?').slice(0, 90))}`).join(' · ')}</p>` : ''));
+}
+
 const BLOCS_CARTES = ['mCartesCompteurs', 'mCartesRetraits', 'mCartesEffacees', 'mCartesBloquees'];
 
 /** RELIRE LE JOURNAL DES CARTES. `no-store` : c'est un fichier de contrôle qui
@@ -3952,10 +4112,11 @@ function brancher() {
       // l'état d'il y a vingt minutes serait exactement le défaut que cet onglet
       // existe pour supprimer.
       cartes: () => { relireSuiviCartes(); },
-      // L'ONGLET DES REFUSÉES relit le catalogue en s'ouvrant : une offre entre
-      // ou sort du défaut à chaque passage, et ce que B vient vérifier ici est
-      // l'état d'AUJOURD'HUI des filtres, pas celui du chargement du panneau.
-      refusees: () => { dessinerRefusees(); },
+      // L'ONGLET DES AJOUTS relit le catalogue en s'ouvrant : une carte entre ou
+      // sort à chaque passage, et ce que B vient vérifier ici est l'état
+      // d'AUJOURD'HUI des filtres et des entrées, pas celui du chargement du
+      // panneau. `dessinerAjouts` commence par les refus, puis le trajet.
+      refusees: () => { dessinerAjouts(); },
       // Le relais peut avoir été branché (ou la clé posée) depuis la dernière
       // ouverture : on relit le rapport en ouvrant l'onglet, sans quoi on
       // regarderait un état vieux de plusieurs minutes en croyant le corriger.
