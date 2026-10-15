@@ -774,6 +774,21 @@ tr.edition .principal{width:auto;padding:9px 18px;display:inline-block;margin-ri
       <section data-vue="refusees">
         <div class="avis" id="avisRefusees"></div>
 
+        <!-- LE MÊME CHOIX DE PAYS QUE « VIE DES CARTES » (demande de B,
+             15/10/2026). Le nombre annoncé est celui des offres publiées pour ce
+             pays : les deux tableaux de cet onglet — les entrées et les refus —
+             viennent du catalogue publié, donc du même compte. -->
+        <div class="rub">
+          <h2>Pays consulté</h2>
+          <p class="aide">Tous les pays, avec leur drapeau. Le nombre annoncé est celui des
+            <b>offres publiées</b> pour ce pays. Deux blocs de cet onglet ne suivent pas ce choix,
+            parce qu'ils décrivent <b>le passage de collecte</b> et non un pays — « ce qui a été
+            RETIRÉ » et « les sources qui n'ont rien apporté » : ils le disent à l'écran plutôt que
+            de filtrer en silence.</p>
+          <div class="pays-liste pays-2col" id="paysCartesAjouts" role="radiogroup" aria-label="Pays consulté dans les ajouts et les refus"></div>
+          <p class="aide" id="resumeCartesAjouts" style="margin:11px 0 0"></p>
+        </div>
+
         <div class="rub">
           <h2>Ce qui est ENTRÉ dans le site, au dernier passage</h2>
           <p class="aide">Les cartes dont la <b>première vue</b> tombe dans les vingt dernières minutes —
@@ -848,6 +863,24 @@ tr.edition .principal{width:auto;padding:9px 18px;display:inline-block;margin-ri
 
       <section data-vue="cartes">
         <div class="avis" id="avisCartes"></div>
+
+        <!-- LE CHOIX DU PAYS. Demande de B (15/10/2026) : « j'ai besoin qu'au
+             niveau de l'affichage ce soit comme marché euro et affiliation, avec
+             le panneau qui trie par pays. Comme ça je peux regarder les cartes
+             pays par pays. » Mêmes tuiles à drapeaux que les deux autres onglets
+             à choix de pays, et le MÊME pays retenu : les deux onglets racontent
+             le même catalogue, donc changer de pays ici le change aussi dans
+             « Ajouts & refus ». -->
+        <div class="rub">
+          <h2>Pays consulté</h2>
+          <p class="aide">Tous les pays, avec leur drapeau — le même choix que les onglets
+            <b>Marché Euro</b> et <b>Affiliation</b>. Le nombre annoncé est celui des cartes que le
+            <b>journal</b> nomme pour ce pays : bloquées plus effacées. Les compteurs de la règle,
+            plus bas, portent sur <b>tout le catalogue</b> — l'extrait publié ne permet pas de les
+            découper par pays, et ils le disent à l'écran.</p>
+          <div class="pays-liste pays-2col" id="paysCartesVie" role="radiogroup" aria-label="Pays consulté dans la vie des cartes"></div>
+          <p class="aide" id="resumeCartesVie" style="margin:11px 0 0"></p>
+        </div>
 
         <div class="rub">
           <h2>La règle, et ce qu'elle a fait ce passage</h2>
@@ -3020,6 +3053,14 @@ function blocChampFiche(cle, libelle, valeur) {
 let affMesures = null;
 let paysChoisiAff = '';
 try { paysChoisiAff = localStorage.getItem('kazendra.paysAffiliation') || ''; } catch { /* privé */ }
+
+/* LE PAYS DES DEUX ONGLETS DE CARTES — « Vie des cartes » et « Ajouts & refus ».
+   UN SEUL choix pour les deux : ils racontent le même catalogue, et deux
+   réglages auraient divergé à la première consultation. Vide = tous les pays,
+   c'est-à-dire l'affichage d'avant : la lecture pays par pays s'AJOUTE, elle ne
+   remplace rien. */
+let paysChoisiCartes = '';
+try { paysChoisiCartes = localStorage.getItem('kazendra.paysCartes') || ''; } catch { /* privé */ }
 let filtreAffiliation = '';
 
 
@@ -3638,6 +3679,111 @@ function dessinerAffiliation() {
     : '<p class="vide">Aucun acteur recensé pour ce pays.</p>';
 }
 
+/* ---------------------------------------------------------------------------
+ *  LE PAYS DES DEUX ONGLETS DE CARTES — « Vie des cartes » et « Ajouts & refus ».
+ *
+ *  Demande de B, 15/10/2026 : « j'ai besoin qu'au niveau de l'affichage ce soit
+ *  comme marché euro et affiliation, avec le panneau qui trie par pays. Comme ça
+ *  je peux regarder les cartes pays par pays. »
+ *
+ *  C'EST LE MÊME CONTRÔLE QUE LES DEUX AUTRES ONGLETS, et pas un cousin : mêmes
+ *  tuiles, mêmes drapeaux (dessinés par le module partagé, jamais un emoji),
+ *  même rôle ARIA, même mémoire sur l'appareil. Une seconde façon de choisir un
+ *  pays aurait donné deux vocabulaires pour la même question.
+ *
+ *  TROIS CHOSES QUE CETTE BARRE NE FAIT PAS, ET QUI SE DISENT À L'ÉCRAN :
+ *   1. elle ne découpe pas ce qui n'est pas découpable. Les compteurs de la règle
+ *      des cinq jours et les mécanismes d'un passage décrivent TOUT le catalogue :
+ *      l'extrait publié du journal ne permet pas de les séparer par pays. Filtrer
+ *      les tableaux voisins sans le dire ferait croire que ces chiffres-là aussi
+ *      sont ceux du pays — c'est pourquoi les blocs concernés portent `avisTousPays`;
+ *   2. elle ne cache rien d'un pays sans carte : un pays sans ligne au journal
+ *      n'apparaît pas dans SA barre (aucun compte à y mettre), et si le pays
+ *      retenu n'a rien dans un tableau, ce tableau l'écrit ;
+ *   3. elle ne compte pas la même chose dans les deux barres, et chacune nomme
+ *      son compte : les offres publiées d'un côté, les cartes nommées par le
+ *      journal de l'autre.
+ * ------------------------------------------------------------------------- */
+
+/** Le filtre, en une seule définition : vide = tous les pays. */
+const dansPaysChoisi = (x) => !paysChoisiCartes || (x && x.pays === paysChoisiCartes);
+
+/** Le rappel du pays, écrit une fois : ce qui suit le choix, et ce qui ne le
+ *  suit pas. Sans lui, un compte non filtré se lirait comme un compte du pays. */
+const avisPays = () => (paysChoisiCartes
+  ? `<b>Pays consulté : ${esc(nomDuPays(paysChoisiCartes))}</b> — les tableaux suivent ce pays. `
+  : '');
+const avisTousPays = () => (paysChoisiCartes
+  ? '<p class="aide"><b>Tous les pays</b> — ce bloc décrit tout le catalogue, pas le pays consulté : '
+    + 'l’extrait publié ne permet pas de le découper par pays.</p>'
+  : '');
+
+/** « Tous les pays » : la tuile qui remet l'affichage d'avant. Elle n'a pas de
+ *  drapeau — elle n'est pas un pays — donc elle porte un globe DESSINÉ, comme
+ *  les drapeaux le sont : un emoji s'affiche « FR » dans un carré sous Windows. */
+const GLOBE = '<span class="drap" aria-hidden="true"><svg viewBox="0 0 27 18" width="27" height="18">'
+  + '<rect width="27" height="18" rx="3" fill="#1a2c3e"/>'
+  + '<circle cx="13.5" cy="9" r="6.3" fill="none" stroke="#3f9fd0" stroke-width="1.2"/>'
+  + '<ellipse cx="13.5" cy="9" rx="2.7" ry="6.3" fill="none" stroke="#3f9fd0" stroke-width="1"/>'
+  + '<path d="M7.2 9h12.6" stroke="#3f9fd0" stroke-width="1"/></svg></span>';
+
+/** Une barre de pays, dessinée comme celle du Marché Euro. `quoi` NOMME le
+ *  compte de chaque tuile : le même nombre ne veut pas dire la même chose dans
+ *  les deux onglets, et un compte sans unité se lit comme une vérité générale. */
+function barreDePays(id, pays, resumeId, resume, quoi) {
+  const liste = document.getElementById(id);
+  if (!liste) return;
+  if (!pays.length) {
+    liste.innerHTML = '<p class="vide">Aucun pays à ranger dans cet onglet.</p>';
+    if (resumeId) txt(resumeId, '');
+    return;
+  }
+  const total = pays.reduce((n, x) => n + x.n, 0);
+  liste.innerHTML = `<button type="button" class="pays-item${paysChoisiCartes ? '' : ' on'}"
+      data-pays="" role="radio" aria-checked="${!paysChoisiCartes}">
+      ${GLOBE}<b>Tous les pays</b><span class="n">${nb(total)} ${quoi}</span></button>`
+    + pays.map((x) => `<button type="button" class="pays-item${x.pays === paysChoisiCartes ? ' on' : ''}"
+      data-pays="${esc(x.pays)}" role="radio" aria-checked="${x.pays === paysChoisiCartes}">
+      ${svgDrapeau(x.pays)}<b>${esc(nomDuPays(x.pays))}</b>
+      <span class="n">${nb(x.n)} ${quoi}</span></button>`).join('');
+  if (resumeId) txt(resumeId, resume || '');
+}
+
+/** Les pays d'un ensemble de fiches, du plus fourni au moins fourni. Une fiche
+ *  sans pays ne peut pas être rangée : elle reste dans « Tous les pays », et
+ *  l'affecter à un pays serait l'inventer. */
+function paysDesFiches(fiches) {
+  const par = new Map();
+  for (const f of fiches) if (f && f.pays) par.set(f.pays, (par.get(f.pays) || 0) + 1);
+  return [...par.entries()].map(([pays, n]) => ({ pays, n }))
+    .sort((a, b) => b.n - a.n || String(a.pays).localeCompare(String(b.pays)));
+}
+
+/** LES DEUX BARRES SONT DESSINÉES ENSEMBLE : elles portent le même choix, donc
+ *  cliquer dans l'une doit rallumer la tuile de l'autre. */
+function dessinerBarreCartes() {
+  const offres = ((catalogue || {}).offres || []);
+  if (document.getElementById('paysCartesAjouts')) {
+    const dedans = offres.filter(dansPaysChoisi).length;
+    barreDePays('paysCartesAjouts', paysDesFiches(offres), 'resumeCartesAjouts',
+      `${nf.format(offres.length)} offre(s) publiée(s)`
+      + (paysChoisiCartes ? `, dont ${nf.format(dedans)} pour ${esc(nomDuPays(paysChoisiCartes))}` : ''),
+      'offre(s)');
+  }
+  if (document.getElementById('paysCartesVie')) {
+    const s = suiviCartes;
+    const nommees = s && s.cartes
+      ? [...(s.cartes.liste || []), ...((s.effacees || {}).liste || [])] : [];
+    const dedans = nommees.filter(dansPaysChoisi).length;
+    barreDePays('paysCartesVie', paysDesFiches(nommees), 'resumeCartesVie',
+      s && s.cartes
+        ? `${nf.format(nommees.length)} carte(s) nommée(s) par le journal`
+          + (paysChoisiCartes ? `, dont ${nf.format(dedans)} pour ${esc(nomDuPays(paysChoisiCartes))}` : '')
+        : 'Aucun journal de cartes publié : il n’y a rien à ranger par pays pour l’instant.',
+      'au journal');
+  }
+}
+
 /* ---------- VIE DES CARTES ----------
  *  Demande de B, 14/10/2026 : « un onglet où je vois les cartes effacées et les
  *  cartes bloquées pour une raison ou une autre. L'objectif est de vérifier la
@@ -3735,7 +3881,7 @@ async function dessinerRefusees() {
     vider();
     return;
   }
-  const offres = (d.offres || []).filter((o) => (o.lienPage || o.lienMarchand));
+  const offres = (d.offres || []).filter((o) => (o.lienPage || o.lienMarchand) && dansPaysChoisi(o));
   const passantes = [];      // les offres qui passent un étage, AVANT dédoublonnage
   const parMotif = {};
   const refusees = [];
@@ -3761,7 +3907,7 @@ async function dessinerRefusees() {
   const distinctes = R.dedoublonner(passantes).length;
   const part = offres.length ? (100 * distinctes / offres.length) : 0;
 
-  txt('avisRefusees', `Catalogue publié : <b>${nb(offres.length)}</b> offres ·
+  txt('avisRefusees', avisPays() + `Catalogue publié : <b>${nb(offres.length)}</b> offres ·
     <b>${nb(distinctes)}</b> produits distincts dans la vue par défaut (${nf.format(part)} % —
     ${nb(dansLaVue)} offres avant dédoublonnage) ·
     <b>${nb(refusees.length)}</b> refusées, réparties en <b>${Object.keys(parMotif).length}</b> motif(s).
@@ -3830,7 +3976,7 @@ async function dessinerAjouts() {
   try { d = await (await fetch('../offres.json', { cache: 'no-store' })).json(); } catch { d = null; }
   try { suivi = await (await fetch('../suivi-cartes.json', { cache: 'no-store' })).json(); } catch { suivi = null; }
   if (!d) { txt('mAjoutsEntrees', '<p class="vide">Le catalogue publié n’a pas pu être relu.</p>'); return; }
-  const offres = (d.offres || []).filter((o) => (o.lienPage || o.lienMarchand));
+  const offres = (d.offres || []).filter((o) => (o.lienPage || o.lienMarchand) && dansPaysChoisi(o));
   const genreLe = Date.parse(d.genereLe) || Date.now();
 
   /* --- A. LES ENTRÉES DU DERNIER PASSAGE ---------------------------------- */
@@ -3847,11 +3993,11 @@ async function dessinerAjouts() {
   // ⚠ LES TUILES D'UN CÔTÉ, LE TABLEAU DE L'AUTRE — DEUX CONTENEURS, PAS UN.
   // Voir le commentaire du `div#mAjoutsEntreesListe` : tant que les deux vivaient
   // dans la même grille CSS, le tableau n'avait droit qu'à une cellule de 185 px.
-  txt('mAjoutsEntrees', tuiles([
-    [nb(entrees.length), 'cartes entrées (20 min)'],
+  txt('mAjoutsEntrees', avisPays() + tuiles([
+    [nb(entrees.length), `cartes entrées (20 min)${paysChoisiCartes ? ', ce pays' : ''}`],
     [nb(Object.keys(parSourceEntree).length), 'sources qui ont apporté'],
-    [nb(d.nouvelles), 'entrées comptées par le collecteur'],
-    [nb(d.misesAJour), 'mises à jour (prix, remise ou titre)'],
+    [nb(d.nouvelles), 'entrées comptées par le collecteur (tous pays)'],
+    [nb(d.misesAJour), 'mises à jour (prix, remise ou titre, tous pays)'],
   ]));
   txt('mAjoutsEntreesListe', entrees.length ? `<div class="defile"><table>
     <tr><th>Entrée</th><th>Offre</th><th>Marchand</th><th class="n">Prix</th>
@@ -3880,7 +4026,7 @@ async function dessinerAjouts() {
     // nues dans un `div` ordinaire : chacune prenait toute la largeur du cadre
     // (1 110 px), et trois « barres » vides précédaient le tableau. Voir la règle
     // `.grille.mesures`, qui porte l'écart avant le tableau.
-    txt('mAjoutsRetraits', `<div class="grille mesures">${tuiles([
+    txt('mAjoutsRetraits', avisTousPays() + `<div class="grille mesures">${tuiles([
       [nb(p.effacees), 'cartes emportées'],
       [p.octets ? poidsCourt(p.octets) : '—', 'visuels libérés'],
       [nb(p.reprises), 'cartes resservies (compteur reparti)'],
@@ -3922,7 +4068,7 @@ async function dessinerAjouts() {
         : lues.has(id) ? 'lue' : 'non lue à ce passage');
   const aMontrer = [...auRepos, ...sousSeuil, ...echecs.map((j) => j.source), ...nonLues.map((s) => s.id)]
     .filter((v, i, a) => v && a.indexOf(v) === i);
-  txt('mAjoutsSources', `<div class="grille mesures">${tuiles([
+  txt('mAjoutsSources', avisTousPays() + `<div class="grille mesures">${tuiles([
     [nb(declarees.length), 'sources déclarées'],
     [nb(lues.size), 'sources lues'],
     [nb(auRepos.size), 'au repos'],
@@ -3959,6 +4105,10 @@ async function relireSuiviCartes() {
     const rep = await fetch('../suivi-cartes.json', { cache: 'no-store' });
     suiviCartes = rep.ok ? await rep.json() : null;
   } catch { suiviCartes = null; }
+  // LA BARRE DES PAYS SE REDESSINE AVEC LE JOURNAL : ses tuiles portent le nombre
+  // de cartes que le journal nomme par pays. Redessinée avant lui, la barre
+  // annoncerait les pays du journal précédent.
+  dessinerBarreCartes();
   dessinerCartes();
 }
 
@@ -4029,34 +4179,41 @@ function dessinerCartes() {
   const c = s.cartes, e = s.effacees || {}, p = s.passage || {};
   const parRaison = c.parRaison || {};
   const violations = parRaison.violation || 0;
-  const bloquees = c.liste || [];
-  const effacees = e.liste || [];
-  const revenues = e.revenuesListe || [];
+  // ⚠ LES TABLEAUX SUIVENT LE PAYS CONSULTÉ, LES COMPTEURS NON. Les listes
+  // publiées portent un pays par carte, donc elles se découpent ; les compteurs de
+  // la règle (cartes affichées, dans leurs cinq jours) ne sont publiés qu'en
+  // total. On garde donc les deux ensembles : `…Toutes` pour ce qui parle du
+  // catalogue entier, et les listes filtrées pour les tableaux.
+  const bloqueesToutes = c.liste || [];
+  const effaceesToutes = e.liste || [];
+  const bloquees = bloqueesToutes.filter(dansPaysChoisi);
+  const effacees = effaceesToutes.filter(dansPaysChoisi);
+  const revenues = (e.revenuesListe || []).filter(dansPaysChoisi);
   const quand = s.genereLe ? ilYA(s.genereLe) : null;
 
   // L'AVIS — l'alarme avant le calme. Une seule carte en violation est un défaut
   // de la règle, pas une mesure : elle doit se lire en premier.
-  txt('avisCartes', violations
+  txt('avisCartes', avisPays() + (violations
     ? `<span class="avertir"><b>${nb(violations)} carte(s) en violation.</b> Leur source a reparlé
        sans les resservir : la règle devait les effacer, et elles sont encore affichées. C’est un
        défaut d’effacement, pas une mesure — à regarder dans le tableau du bas.</span>`
     : `Journal lu ${quand ? `<b>${esc(quand)}</b>` : 'à l’instant'} — écrit par le collecteur
        <b>après</b> avoir décidé, et relu par aucune décision. Sur <b>${nb(c.affichees)}</b> cartes
        affichées, <b>aucune</b> n’a été servie puis abandonnée par une source qui a reparlé depuis :
-       les cartes au-delà des cinq jours sont <b>toutes bloquées par une raison écrite</b>, plus bas.`);
+       les cartes au-delà des cinq jours sont <b>toutes bloquées par une raison écrite</b>, plus bas.`));
 
-  txt('mCartesCompteurs', tuiles([
+  txt('mCartesCompteurs', avisTousPays() + tuiles([
     [nb(c.affichees), 'cartes affichées'],
     [nb(c.dansLesCinqJours), 'dans leurs cinq jours'],
     [nb(c.bloquees), 'au-delà de cinq jours'],
     [nb(p.effacees), `effacées au dernier passage${p.octets ? ` (${poidsCourt(p.octets)} libérés)` : ''}`],
     [nb(p.reprises), 'reprises au dernier passage'],
-    [nb(e.retenues == null ? effacees.length : e.retenues), 'effacements au registre (30 j)'],
+    [nb(e.retenues == null ? effaceesToutes.length : e.retenues), 'effacements au registre (30 j, tous pays)'],
     [nb(e.revenues), 'revenues après effacement'],
   ]));
 
   // QUI RETIRE QUOI — les quatre mécanismes, nommés, avec leur compte du passage.
-  txt('mCartesRetraits', `<div class="defile"><table class="etroite">
+  txt('mCartesRetraits', avisTousPays() + `<div class="defile"><table class="etroite">
     <tr><th>Mécanisme</th><th class="n">Ce passage</th><th>Ce qu’il fait</th></tr>
     ${(s.retraits || []).map((x) => `<tr><td>${esc(x.mecanisme)}</td>
       <td class="n">${nb(x.nb)}</td><td class="fin">${esc(x.quoi)}</td></tr>`).join('')}
@@ -4064,7 +4221,11 @@ function dessinerCartes() {
 
   // LES CARTES EFFACÉES — la preuve, carte par carte.
   if (!effacees.length) {
-    txt('mCartesEffacees', `<p class="vide">Aucun effacement au registre pour l’instant. Soit la
+    txt('mCartesEffacees', paysChoisiCartes
+      ? `<p class="vide">Aucune carte effacée pour <b>${esc(nomDuPays(paysChoisiCartes))}</b> dans le
+         registre publié. Il en porte <b>${nb(effaceesToutes.length)}</b> pour l’ensemble des pays :
+         choisissez « <b>Tous les pays</b> » pour les voir. Rien n’est caché — c’est ce pays qui n’en a pas.</p>`
+      : `<p class="vide">Aucun effacement au registre pour l’instant. Soit la
       règle n’en a pas encore emporté depuis la mise en service du journal, soit le registre a été
       relu et vidé — le compte « effacements au registre » plus haut dit lequel.</p>`);
   } else {
@@ -4083,12 +4244,16 @@ function dessinerCartes() {
           sa source a reparlé au tour <b>${x.tourSource == null ? '—' : x.tourSource}</b></td>
       </tr>`).join('')}
     </table></div>
-    <p class="fin">${e.retenues > effacees.length
-      ? `Les <b>${nb(effacees.length)}</b> plus récents sur <b>${nb(e.retenues)}</b> effacements
+    <p class="fin">${paysChoisiCartes
+      ? `<b>${nb(effacees.length)}</b> effacement(s) pour ${esc(nomDuPays(paysChoisiCartes))} dans
+         l’extrait publié, sur <b>${nb(effaceesToutes.length)}</b> au registre — l’extrait est borné
+         à trente jours, la liste complète reste dans le registre de la machine de collecte.`
+      : (e.retenues > effaceesToutes.length
+        ? `Les <b>${nb(effaceesToutes.length)}</b> plus récents sur <b>${nb(e.retenues)}</b> effacements
          gardés (trente jours) — l’extrait publié est borné. La liste complète reste dans le registre
          de la machine de collecte.`
-      : `Tous les effacements gardés (trente jours) sont ici : <b>${nb(effacees.length)}</b>.`}
-      ${revenues.length ? `<br><b>${nb(e.revenues)}</b> carte(s) effacée(s) sont revenues depuis :
+        : `Tous les effacements gardés (trente jours) sont ici : <b>${nb(effaceesToutes.length)}</b>.`)}
+      ${revenues.length ? `<br><b>${nb(revenues.length)}</b> carte(s) effacée(s)${paysChoisiCartes ? ' de ce pays' : ''} sont revenues depuis :
       leur source les a resservies, donc la carte rentre comme une neuve. C’est l’aveu d’une
       condamnation prise sur un silence qui ne voulait pas dire « morte » — et c’est le chiffre à
       regarder quand on se demandera si la règle est trop dure.` : ''}</p>`);
@@ -4096,7 +4261,11 @@ function dessinerCartes() {
 
   // LES CARTES BLOQUÉES — l'autre moitié de la question de B.
   if (!bloquees.length) {
-    txt('mCartesBloquees', `<p class="vide">Aucune carte au-delà de cinq jours : la règle a tout
+    txt('mCartesBloquees', paysChoisiCartes
+      ? `<p class="vide">Aucune carte de <b>${esc(nomDuPays(paysChoisiCartes))}</b> au-delà de cinq
+         jours dans l’extrait publié. Les <b>${nb(bloqueesToutes.length)}</b> cartes bloquées, tous
+         pays, se lisent en choisissant « <b>Tous les pays</b> ».</p>`
+      : `<p class="vide">Aucune carte au-delà de cinq jours : la règle a tout
       emporté, ou toutes les cartes affichées ont moins de cinq jours. Rien à expliquer, donc rien
       d’affiché — c’est une mesure, pas un défaut.</p>`);
   } else {
@@ -4113,11 +4282,14 @@ function dessinerCartes() {
           <div class="micro">${esc(x.detail || '')}</div></td>
       </tr>`).join('')}
     </table></div>
-    <p class="fin">${c.listeTronquee
-      ? `Les <b>${nb(bloquees.length)}</b> plus anciennes sur <b>${nb(c.bloquees)}</b> cartes
-         bloquées — l’extrait publié est borné.` : `Les <b>${nb(bloquees.length)}</b> cartes
-         bloquées, toutes, sont ici.`}
-      La plus ancienne a <b>${c.plusAncienneJours == null ? '—' : `${nf.format(c.plusAncienneJours)} jours`}</b>.
+    <p class="fin">${paysChoisiCartes
+      ? `<b>${nb(bloquees.length)}</b> carte(s) de ${esc(nomDuPays(paysChoisiCartes))} au-delà de cinq
+         jours dans l’extrait publié, sur <b>${nb(bloqueesToutes.length)}</b> au total.`
+      : (c.listeTronquee
+        ? `Les <b>${nb(bloqueesToutes.length)}</b> plus anciennes sur <b>${nb(c.bloquees)}</b> cartes
+         bloquées — l’extrait publié est borné.` : `Les <b>${nb(bloqueesToutes.length)}</b> cartes
+         bloquées, toutes, sont ici.`)}
+      La plus ancienne a <b>${c.plusAncienneJours == null ? '—' : `${nf.format(c.plusAncienneJours)} jours`}</b>${paysChoisiCartes ? ' (tous pays)' : ''}.
       ${parRaison.violation ? '' : `Aucune n’est en violation de la règle : chacune est retenue par une
       des deux gardes, écrites dans sa ligne.`}</p>
     <p class="fin">Le prix n’est <b>pas</b> relu par cette règle : elle garantit la fraîcheur de
@@ -4143,7 +4315,7 @@ function toutDessiner() {
   // L'ONGLET TRAFIC ÉCRIT SON PROPRE AVIS — quatre états, quatre phrases : c'est
   // `dessinerTrafic()` qui s'en charge, plus bas dans cet appel. Rien à
   // dupliquer ici, sinon deux textes à faire tomber d'accord.
-  dessinerBord(); dessinerSources(); dessinerOrigines(); dessinerBarrePays(); dessinerMarche(); dessinerBarreAffiliation(); dessinerAffiliation(); dessinerPortes(); dessinerInscrits(); dessinerTrafic(); dessinerGains(); dessinerExploitation(); dessinerCartes();
+  dessinerBord(); dessinerSources(); dessinerOrigines(); dessinerBarrePays(); dessinerMarche(); dessinerBarreAffiliation(); dessinerAffiliation(); dessinerPortes(); dessinerInscrits(); dessinerTrafic(); dessinerGains(); dessinerExploitation(); dessinerBarreCartes(); dessinerCartes();
 
   // « CETTE MACHINE » DIT AUSSI OÙ EN EST LE CATALOGUE. C'est la question qu'on
   // se pose en ouvrant le panneau — « mes données sont-elles fraîches ? » — et
@@ -4209,12 +4381,12 @@ function brancher() {
       // B ouvre cet onglet pour voir ce que la règle vient de faire. Lui montrer
       // l'état d'il y a vingt minutes serait exactement le défaut que cet onglet
       // existe pour supprimer.
-      cartes: () => { relireSuiviCartes(); },
+      cartes: () => { dessinerBarreCartes(); relireSuiviCartes(); },
       // L'ONGLET DES AJOUTS relit le catalogue en s'ouvrant : une carte entre ou
       // sort à chaque passage, et ce que B vient vérifier ici est l'état
       // d'AUJOURD'HUI des filtres et des entrées, pas celui du chargement du
       // panneau. `dessinerAjouts` commence par les refus, puis le trajet.
-      refusees: () => { dessinerAjouts(); },
+      refusees: () => { dessinerBarreCartes(); dessinerAjouts(); },
       // Le relais peut avoir été branché (ou la clé posée) depuis la dernière
       // ouverture : on relit le rapport en ouvrant l'onglet, sans quoi on
       // regarderait un état vieux de plusieurs minutes en croyant le corriger.
@@ -4275,6 +4447,24 @@ function brancher() {
   // à l'écran, la frappe ne serait enregistrée nulle part, et RIEN ne le
   // dirait : le pire genre de panne — celle qui a l'air de marcher.
   // L'ONGLET AFFILIATION : le pays, la recherche, l'export.
+  // LE PAYS DES DEUX ONGLETS DE CARTES — deux barres, un seul choix. L'écouteur
+  // est posé sur les DEUX listes : les tuiles se redessinent (elles portent leur
+  // compte), donc un écouteur par tuile disparaîtrait avec elle — le pays ne
+  // changerait plus, et rien ne le dirait.
+  const surPaysCartes = (e) => {
+    const tuile = e.target.closest('button[data-pays]');
+    if (!tuile) return;
+    paysChoisiCartes = tuile.dataset.pays || '';
+    try { localStorage.setItem('kazendra.paysCartes', paysChoisiCartes); } catch { /* privé */ }
+    dessinerBarreCartes();
+    dessinerAjouts();
+    relireSuiviCartes();
+  };
+  for (const id of ['paysCartesAjouts', 'paysCartesVie']) {
+    const liste = document.getElementById(id);
+    if (liste) liste.addEventListener('click', surPaysCartes);
+  }
+
   const choixAff = document.getElementById('paysAffiliation');
   if (choixAff) {
     choixAff.addEventListener('click', (e) => {

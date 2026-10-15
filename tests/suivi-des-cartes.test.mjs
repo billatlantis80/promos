@@ -424,7 +424,14 @@ test('l’onglet des offres refusées juge avec les règles PARTAGÉES, jamais a
   // 3. L'onglet existe vraiment : bouton, section, et un rendu branché dessus.
   assert.match(onglet, /class="onglet" data-vue="refusees"/, 'le bouton de l’onglet doit exister');
   assert.match(onglet, /<section data-vue="refusees">/, 'la section de l’onglet doit exister');
-  assert.match(onglet, /refusees: \(\) => \{ dessinerAjouts\(\); \}/, 'l’ouverture doit relire le catalogue');
+  // ⚠ RESSERRÉ, PUIS ROUVERT LE 15/10/2026. L'épreuve exigeait la ligne EXACTE
+  // d'avant (`refusees: () => { dessinerAjouts(); }`). L'onglet redessine
+  // désormais AUSSI sa barre de pays en s'ouvrant (demande de B : « trier par
+  // pays ») — la ligne a donc changé sans que l'intention change. C'est
+  // l'intention qu'on tient ici : ouvrir cet onglet RELIT le catalogue, parce
+  // qu'une carte entre ou sort à chaque passage.
+  assert.match(onglet, /refusees: \(\) => \{ dessinerBarreCartes\(\); dessinerAjouts\(\); \}/,
+    'l’ouverture doit relire le catalogue');
   // 4. LE TRAJET COMPLET (demande de B : « les produits qui ont été rajoutés … et
   //    les produits qui n'ont pas été rajoutés avec la raison »). Les trois blocs
   //    doivent exister, et chacun doit se lire là où la vérité est écrite :
