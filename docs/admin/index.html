@@ -316,7 +316,7 @@ input[type="number"],input[inputmode="decimal"]{text-align:right}
   padding:3px 8px;font:inherit;font-size:12px;white-space:nowrap
 }
 .mini:hover{border-color:var(--accent);color:var(--accent)}
-.mini.eff:hover{border-color:var(--rouge);color:var(--rouge)}
+.mini.verif:hover{border-color:var(--vert);color:var(--vert)}
 .choix-jours{
   background:var(--carte3);color:var(--texte);border:1px solid var(--bord-clair);
   border-radius:8px;padding:3px 6px;font:inherit;font-size:12px
@@ -4285,10 +4285,19 @@ async function relireVerdictsMain() {
 const BLOCS_CARTES = ['mCartesCompteurs', 'mCartesRetraits', 'mCartesEffacees', 'mCartesBloquees'];
 
 /** LA MAIN A-T-ELLE DÉJÀ DÉCIDÉ POUR CETTE CARTE ? Une ligne décidée quitte la
- *  liste : effacée, elle n'existe plus ; réactivée, elle est en ligne. */
-function decideeALaMain(cle) {
+ *  liste : vérifiée, la carte est réglée ; réactivée, elle est en ligne.
+ *
+ *  ⚠ DEUX SOURCES, ET IL FAUT LES DEUX. Le fichier des décisions dit le geste
+ *  récent ; la fiche du registre porte `verifieeLe` DÈS QUE LA COLLECTE l'a
+ *  marquée. Si on ne lisait que le fichier des décisions, perdre ce fichier ferait
+ *  revenir dans la liste des cartes déjà vérifiées — le travail de B s'afficherait
+ *  comme à refaire. Les deux ensemble : le geste se voit tout de suite, et la
+ *  marque tient dans les données. */
+function decideeALaMain(x) {
+  const cle = x && x.cle ? x.cle : x;
+  if (x && x.verifieeLe) return true;
   const v = verdictsMain || {};
-  return !!((v.supprimees || {})[cle] || (v.reactivees || {})[cle]);
+  return !!((v.verifiees || {})[cle] || (v.reactivees || {})[cle]);
 }
 
 /** LE SURSIS EN COURS POUR CETTE CARTE, ou `null`. `null` couvre les trois cas
@@ -4311,13 +4320,15 @@ const DUREES_JOURS = [1, 2, 3, 4, 5];
 
 /** LA COLONNE DES DÉCISIONS — deux boutons, et un MENU DÉROULANT pour la durée.
  *
- *  Demande de B, 15/10/2026 : « Pour le bouton avec la relance, j'ai besoin d'un
- *  menu déroulant pour le choix des jours. » Les cinq tuiles dépliées derrière le
- *  bouton sont donc remplacées par ce menu : il est toujours visible, et le bouton
- *  « Réactiver » lit la durée choisie. C'est ce clic-là qui confirme — on ne
- *  demande pas deux fois la même chose.
+ *  Demande de B, 15/10/2026 : « Avant la colonne source, j'ai besoin d'une colonne
+ *  avec deux boutons. [...] Le deuxième bouton me permet de réactiver une annonce
+ *  pour 1, 2, 3, 4 et 5 jours » puis « Pour le bouton avec la relance, j'ai besoin
+ *  d'un menu déroulant pour le choix des jours. » Et le premier bouton, précisé le
+ *  même soir : « Mon objectif de la supprimer de la liste, c'est pour confirmer
+ *  qu'elle a été checker. » Il s'appelle donc VÉRIFIER — la ligne quitte la liste,
+ *  et rien n'est perdu.
  *
- *  L'ordre est celui de B : le bouton qui efface d'abord, celui qui remet en ligne
+ *  L'ordre est celui de B : le bouton qui vérifie d'abord, celui qui remet en ligne
  *  ensuite. */
 function blocDecision(x) {
   const cle = esc(x.cle || '');
@@ -4328,8 +4339,8 @@ function blocDecision(x) {
       <button class="mini" data-decision="retirer" data-cle="${cle}">retirer</button></span>`;
   }
   return `<span class="decision">
-    <button class="mini eff" data-decision="effacer" data-cle="${cle}"
-      title="Confirmer : la ligne quitte la liste pour toujours et la carte sort du système">Effacer</button>
+    <button class="mini verif" data-decision="verifier" data-cle="${cle}"
+      title="Confirmer : cette carte est vérifiée — la ligne quitte la liste, la fiche et sa preuve sont conservées">Vérifier</button>
     <select class="choix-jours" data-jours-pour="${cle}"
       title="Durée pendant laquelle la carte revient sur le site">
       ${DUREES_JOURS.map((n) => `<option value="${n}">${n} jour${n > 1 ? 's' : ''}</option>`).join('')}
@@ -4342,22 +4353,25 @@ function blocDecision(x) {
 
 /** LE RAPPEL DE CE QUI A ÉTÉ DÉCIDÉ — sous le tableau des effacées.
  *  Sans lui, un tableau qui maigrit aurait l'air d'avoir perdu des lignes au lieu
- *  d'avoir appliqué une décision. */
+ *  d'avoir appliqué une décision — et surtout, on ne verrait pas que la
+ *  VÉRIFICATION est gardée : c'est le point que B a demandé le 15/10/2026. */
 function blocDecisionsMain() {
   const v = verdictsMain || {};
-  const supprimees = Object.values(v.supprimees || {});
+  const verifiees = Object.values(v.verifiees || {})
+    .sort((a, b) => Date.parse(b.verifieeLe || 0) - Date.parse(a.verifieeLe || 0));
+  const montrees = verifiees.slice(0, 30);
   const reactifs = Object.values(v.reactivees || {}).filter((r) => !!sursisEnCours(r.cle));
   const finis = Object.values(v.reactivees || {}).filter((r) => !sursisEnCours(r.cle));
   const retour = avisDecision ? `<p class="${avisDecision.ok ? 'aide' : 'vide'}"><b>${avisDecision.ok ? 'Décision enregistrée' : 'Décision NON prise'}</b> — ${esc(avisDecision.texte)}</p>` : '';
-  if (!supprimees.length && !reactifs.length && !finis.length) return retour;
+  if (!verifiees.length && !reactifs.length && !finis.length) return retour;
   return `${retour}<h3 class="sous">Ce que la main a décidé, hors règle automatique</h3>
     <div class="defile"><table class="etroite">
       <tr><th>Décision</th><th>Offre</th><th>Quand</th><th>Où ça en est</th></tr>
-      ${supprimees.map((d) => `<tr>
-        <td class="fin">effacée définitivement</td>
+      ${montrees.map((d) => `<tr>
+        <td class="fin">vérifiée</td>
         <td>${LIEN_OFFRE(d, String(d.titre || '—').slice(0, 64))}</td>
-        <td class="fin">${d.decisionLe ? esc(ilYA(d.decisionLe)) : '—'}</td>
-        <td class="fin">hors du système : elle ne revient pas, même si sa source la republie</td></tr>`).join('')}
+        <td class="fin">${d.verifieeLe ? esc(ilYA(d.verifieeLe)) : '—'}</td>
+        <td class="fin">réglée : la carte ne revient pas sur le site, et sa fiche de contrôle est CONSERVÉE</td></tr>`).join('')}
       ${reactifs.map((r) => `<tr>
         <td class="fin">remise en ligne</td>
         <td>${LIEN_OFFRE(r.fiche || {}, String((r.fiche || {}).titre || '—').slice(0, 64))}</td>
@@ -4370,9 +4384,11 @@ function blocDecisionsMain() {
         <td class="fin">${r.debut ? esc(ilYA(r.debut)) : '—'}</td>
         <td class="fin">la carte est ressortie : elle ne rentre que si une source la ressert</td></tr>`).join('')}
     </table></div>
-    <p class="aide">Ces décisions sont écrites dans <code>verdicts-a-la-main.json</code> et relues par la
-      collecte <b>au passage suivant</b> (≤ 15 min) : la carte sort du catalogue, ou y revient.
-      Chaque décision emporte sa fiche : rien n’est effacé sans trace.</p>`;
+    <p class="aide"><b>${nb(verifiees.length)}</b> carte(s) vérifiée(s) à la main
+      ${verifiees.length > montrees.length ? `(les ${nb(montrees.length)} plus récentes sont ici)` : ''} —
+      la ligne quitte la liste, <b>rien n’est perdu</b> : leur fiche de contrôle et le compte des retours
+      restent dans le registre. Les décisions sont écrites dans <code>verdicts-a-la-main.json</code> et
+      relues par la collecte <b>au passage suivant</b> (≤ 15 min).</p>`;
 }
 
 /** ENVOYER UNE DÉCISION AU SERVEUR DU PROJET — et dire VRAI sur ce qui s'est passé.
@@ -4401,8 +4417,8 @@ async function envoyerDecision(action, cle, jours) {
   const duree = d.jusquau ? ` pour ${nb(jours)} jour(s)` : '';
   return {
     ok: true,
-    texte: (action === 'effacer'
-      ? 'effacement enregistré : la ligne quitte la liste et la carte sort du système au prochain passage (≤ 15 min).'
+    texte: (action === 'verifier'
+      ? 'vérification enregistrée : la ligne quitte la liste tout de suite, et sa fiche reste conservée (preuve et compte des retours). Le registre portera sa marque au prochain passage (≤ 15 min).'
       : action === 'annuler'
         ? 'sursis retiré : la carte ressort au prochain passage (≤ 15 min).'
         : `remise en ligne enregistrée${duree}${quand} : la carte revient sur le site au prochain passage (≤ 15 min).`)
@@ -4425,12 +4441,15 @@ async function surClicDecision(e) {
   //  (« action inconnue ») : défaut trouvé en exerçant le bouton pour de vrai, le
   //  15/10/2026 — pas en le relisant. Le test le verrouille.
   const actionServeur = action === 'retirer' ? 'annuler' : action;
-  if (action === 'effacer') {
+  if (action === 'verifier') {
     const fiche = fichesCartes.get(cle) || {};
     const titre = String(fiche.titre || '').slice(0, 90);
-    const ok = window.confirm(`Effacer DÉFINITIVEMENT « ${titre} » ?\n\n`
-      + 'La ligne disparaît de cette liste, et la carte sort du système : elle ne reviendra pas, même si sa source la republie.\n\n'
-      + 'Ce qui est perdu : sa fiche de contrôle (le tour où sa source a reparlé sans elle) et le droit de compter ses « retours » — le seul chiffre qui dit si la règle des cinq jours est trop dure. La fiche reste écrite dans le fichier des décisions, donc rien n’est effacé sans trace.');
+    // LA CONFIRMATION DIT CE QUI SE PASSE, ET RIEN DE PLUS. Le geste de B est une
+    // vérification, pas une suppression : il n'y a donc rien à perdre, et le dire
+    // évite qu'on hésite à cliquer. La ligne quitte la liste tout de suite.
+    const ok = window.confirm(`Marquer « ${titre} » comme VÉRIFIÉE ?\n\n`
+      + 'La ligne quitte cette liste — c’est le but : elle est vérifiée, elle n’a plus à être relue.\n\n'
+      + 'Rien n’est perdu : sa fiche de contrôle (le tour où sa source a reparlé sans elle) et le compte de ses « retours » sont CONSERVÉS — c’est le seul chiffre qui dit si la règle des cinq jours est trop dure. La carte ne revient pas sur le site pour autant.');
     if (!ok) return;
   }
   // LA DURÉE VIENT DU MENU DÉROULANT DE LA LIGNE, jamais d'un nombre écrit ici :
@@ -4552,10 +4571,11 @@ function dessinerCartes() {
   const bloquees = bloqueesToutes.filter(dansPaysChoisi);
   // ⚠ LES LIGNES DÉJÀ DÉCIDÉES PAR LA MAIN NE SONT PLUS LISTÉES. C'est le sens du
   //  premier bouton : « ça sera plus clair si on s'est effacé la ligne de la
-  //  liste ». Le retrait est immédiat ici, et définitif dans le registre au passage
-  //  suivant (le collecteur purge la fiche — voir collecteur.mjs). Une carte remise
-  //  en ligne quitte la liste pour la même raison : elle est AFFICHÉE.
-  const effacees = effaceesToutes.filter(dansPaysChoisi).filter((x) => !decideeALaMain(x.cle));
+  //  liste ». Le retrait est immédiat ici ; au passage suivant, le collecteur
+  //  MARQUE la fiche (`verifieeLe`) dans le registre — il ne la jette pas, et la
+  //  ligne ne revient pas. Une carte remise en ligne quitte la liste pour la même
+  //  raison : elle est AFFICHÉE.
+  const effacees = effaceesToutes.filter(dansPaysChoisi).filter((x) => !decideeALaMain(x));
   // La fiche de chaque ligne affichée, par clé : c'est elle qui part avec une
   // décision (voir envoyerDecision).
   fichesCartes = new Map(effacees.map((x) => [x.cle, x]));
