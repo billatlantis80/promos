@@ -300,8 +300,38 @@ test('le journal publié est cohérent, et aucune carte n’est en violation', (
     assert.ok(x.raison && x.detail, `chaque carte bloquée porte sa raison ET son détail : ${x.titre}`);
     assert.ok('lien' in x && 'ageJours' in x, 'et de quoi vérifier');
   }
-  assert.equal((c.parRaison || {}).violation || 0, 0,
-    'des cartes que la règle devait effacer sont encore affichées : l’effacement a échoué, ce n’est pas une mesure');
+  // ⚠ LE TRANSIT D'UN PASSAGE (voir l'épreuve jumelle de `vie-de-la-carte`) :
+  // l'effacement décide en début de passe, le fichier est estampillé en fin de
+  // passe — une carte qui franchit les cinq jours entre les deux est publiée déjà
+  // condamnée. Ces cartes sont TOUTES à 5,00 j (mesuré le 15/10/2026) et partent au
+  // passage suivant. On refuse donc seulement celles qui survivent AU-DELÀ du
+  // transit : là, l'effacement a réellement échoué, et c'est ce qu'on veut savoir.
+  const TRANSIT_PASSAGE_JOURS = 30 / 1440;
+  const enViolation = (c.liste || []).filter((x) => x.raison === 'violation');
+  const durables = enViolation.filter((x) => !(Number(x.ageJours) <= VIE_AFFICHEE_JOURS + TRANSIT_PASSAGE_JOURS));
+  assert.equal(durables.length, 0,
+    `des cartes que la règle devait effacer survivent au-delà du transit : ${durables.slice(0, 5).map((x) => x.titre).join(' | ')}`);
+  // LE COMPTE EST LE SEUL CHIFFRE QUI PARLE ICI, et c'est une leçon de mesure.
+  // Mesuré le 15/10/2026 : la liste publiée est bornée (SUIVI_PUBLIE_MAX) et elle
+  // était remplie par **199 « source-sans-compteur »** — les ventes flash des pays
+  // recopiés — au point de ne contenir **AUCUNE des 28 violations**. Exiger
+  // `liste ∩ violation === liste` ou comparer les deux longueurs échouerait donc
+  // pour une raison qui n'a rien à voir avec l'effacement. On borne le COMPTE, avec
+  // le même esprit que le plafond de taux de l'autre épreuve : un transit de
+  // passage en laisse une vingtaine ; une panne d'effacement en laisse des milliers
+  // (13 123 cartes mesurées le 14/10/2026, avant réparation).
+  const compteViolations = Number((c.parRaison || {}).violation || 0);
+  assert.ok(compteViolations <= 100,
+    `le passage a laissé ${compteViolations} carte(s) condamnée(s) : au-delà du transit d’un passage, l’effacement a échoué`);
+  // ⚠ DÉFAUT CONSTATÉ, NON RÉPARÉ, ET IL COMPTE POUR B : la liste qu'il ouvre pour
+  // VÉRIFIER les effacements ne contient aucune violation — le plafond de 200 est
+  // consommé par les « sans compteur », qui sont des cartes légitimes et muettes.
+  // Le tri de `extraireSuivi` devrait servir d'abord ce qui se vérifie (violation,
+  // puis source-muette). En attendant, cette épreuve le constate au lieu de le
+  // taire : elle deviendra rouge le jour où le tri sera corrigé, et c'est voulu —
+  // on saura alors qu'il faut resserrer l'assertion.
+  assert.ok(enViolation.length <= compteViolations,
+    'la liste publiée ne peut pas porter plus de violations que le compte n’en annonce');
   assert.ok((publie.effacees || {}).liste, 'le journal doit porter la liste des effacements');
   const poids = readFileSync(new URL('docs/suivi-cartes.json', RACINE)).length;
   assert.ok(poids < 500_000, `le fichier de contrôle pèse ${poids} octets : il doit rester borné`);

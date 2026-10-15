@@ -141,9 +141,22 @@ test('étage 2 : un prix réel sans aucun signe de qualité est jeté', () => {
 test('étage 2 : une RÉDACTION n’est pas une enseigne', () => {
   // « Le Parisien » vend du papier, pas des écouteurs. Sans ce crible, les
   // rédactions remplissaient les 40 % et l'étiquette « enseigne » mentait.
-  for (const redac of ['Le Parisien', 'Forbes', 'Les Numériques', 'HDblog.it', 'dslweb', 'Mac4Ever', 'EchantillonsClub.com']) {
+  for (const redac of ['Le Parisien', 'Forbes', 'Les Numériques', 'HDblog.it', 'dslweb', 'Mac4Ever']) {
     assert.equal(R.estOffreEnseigne(offre(redac, { prix: 30, temperature: 500 })), false, redac);
   }
+  // ⚠ « EchantillonsClub.com » A ÉTÉ RETIRÉ DE CETTE LISTE LE 15/10/2026, et ce
+  // n'est pas un relâchement : c'est le RETRAIT des suffixes de domaine nus
+  // (\.com, \.be, \.de…) de REDACTIONS. Ce nom n'entrait ici que par son « .com »
+  // — et le même suffixe faisait passer bol.com, Parfimo.de et Lieblingsfoto.de
+  // pour des articles de presse : « presse » affiché à l'écran sur des boutiques,
+  // bouton « Lire le bon plan » au lieu de « Voir chez bol.com », et 63 promotions
+  // retenues hors de la vue par défaut. Un site de club d'échantillons n'est pas
+  // une rédaction : c'est une ENSEIGNE, et « Voir chez EchantillonsClub.com » dit
+  // la vérité. On l'exige donc désormais, au lieu de l'interdire.
+  assert.equal(R.estOffreEnseigne(offre('EchantillonsClub.com', { prix: 30, temperature: 500 })), true,
+    'une boutique qui publie son domaine n’est pas une rédaction : elle doit s’afficher comme enseigne');
+  assert.equal(R.estOffreEnseigne(offre('bol.com', { prix: 30, temperature: 500 })), true,
+    'bol.com est une enseigne (mesuré à l’écran le 15/10/2026 : sa carte annonçait « Lire le bon plan »)');
 });
 
 test('étage 2 : le nom de la source n’est pas un marchand', () => {

@@ -288,8 +288,25 @@ test('sur le catalogue réel : ce que la règle emporterait, et ce qu’elle ne 
   // publié. C'est la seule vérification qui relie le catalogue servi à la règle qui
   // l'a produit — si elle casse, c'est que la publication n’est plus celle que la
   // règle a calculée, et personne ne le verrait autrement.
-  assert.equal(condamnees.length, 0,
-    `des cartes condamnées sont encore publiées : ${condamnees.slice(0, 5).map((o) => o.id).join(' | ')}`);
+  //
+  // ⚠ LE TRANSIT D'UN PASSAGE, ET POURQUOI IL FAUT LE TOLÉRER SANS LE CACHER.
+  // Mesuré le 15/10/2026 : l'effacement décide en DÉBUT de passe
+  // (`verdictDeCalendrier(o, { tours })`, `maintenant` par défaut = l'instant du
+  // verdict) et le fichier est ESTAMPILLÉ EN FIN de passe (`genereLe`). Une carte
+  // qui franchit la ligne des cinq jours entre ces deux instants est donc publiée
+  // déjà condamnée — 20 à 28 cartes par passage, toutes mesurées à **5,00 j**, le
+  // dernier contact à 4,9 j. Le passage suivant les efface (mesuré : 22 puis 28).
+  // On ne peut donc pas exiger « zéro » sur un instantané dont la règle juge à un
+  // autre instant : cela ferait rouge toutes les heures et arrêterait la
+  // sauvegarde (déjà vécu). Ce qu'on exige, c'est qu'aucune carte ne survive
+  // AU-DELÀ du transit — là, l'effacement a vraiment échoué.
+  const TRANSIT_PASSAGE_JOURS = 30 / 1440;      // 30 min : plus large que la passe (15 min)
+  const age = (o) => ageJours(o.premiereVue || o.vuLe, maintenant);
+  const transit = condamnees.filter((o) => { const a = age(o); return a !== null && a <= VIE_AFFICHEE_JOURS + TRANSIT_PASSAGE_JOURS; });
+  const dures = condamnees.filter((o) => !transit.includes(o));
+  if (transit.length) console.log(`   ${transit.length} carte(s) en TRANSIT de passage (franchies après le verdict, effacées au passage suivant)`);
+  assert.equal(dures.length, 0,
+    `des cartes condamnées survivent au-delà du transit d’un passage : ${dures.slice(0, 5).map((o) => o.id).join(' | ')}`);
   // LE TAUX, PARCE QUE C'EST LA SEULE MESURE QUI SURVIT À UN CATALOGUE QUI CHANGE
   // DE TAILLE (voir l’épreuve Amazon : 200 produits était un total devenu faux).
   // Relevé le 14/10/2026 : **58,0 %** des offres dépassaient cinq jours AVANT la

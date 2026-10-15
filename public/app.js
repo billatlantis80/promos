@@ -1233,7 +1233,30 @@ function remiseMontrable(o) {
  *  écouteurs. Sans ce crible, les rédactions (Le Parisien, Forbes, Les
  *  Numériques, HDblog, dslweb, Mac4Ever…) remplissaient les 40 % et
  *  l'étiquette « enseigne » devenait un mensonge. */
-const REDACTIONS = /(parisien|figaro|[ée]quipe|forbes|independent|mashable|estad|express|ginjfo|phototrend|labomaison|iphoneaddict|mac4ever|watchgeneration|num[ée]rique|phonandroid|dslweb|hdblog|tuttotech|tomshw|tuttoandroid|presse|dealabs|hotukdeals|mydealz|chollometro|preisjaeger|journal|magazine|bloomberg|wired|verge|01net|frandroid|clubic|journaldugeek|numerama|presse-citron|tomshardware|\.fr\b|\.com\b|\.it\b|\.net\b|\.be\b|\.de\b|\.es\b|\.pt\b|\.pl\b|\.se\b|\.ie\b|\.uk\b|\.nl\b)/i;
+/* LES NOMS DE RÉDACTION — ET CE QU'ON EN A RETIRÉ LE 15/10/2026.
+ *
+ * Ce filtre sert à DEUX choses opposées : écarter une rédaction de la porte des
+ * enseignes (voir estOffreEnseigne), et y faire entrer un article de presse quand
+ * il porte un vrai prix (voir estBonPlanPresse).
+ *
+ * Il se terminait par des SUFFIXES DE DOMAINE NUS — \.fr \.com \.it \.net \.be
+ * \.de \.es \.pt \.pl \.se \.ie \.uk \.nl — ajoutés pour reconnaître un article
+ * cité par son domaine. Mesuré le 15/10/2026 : ils attrapaient aussi TOUTE
+ * BOUTIQUE dont le nom porte son extension. Les deux effets ont été constatés à
+ * l'écran, sur le site en ligne :
+ *   — l'étiquette : « presse » était annoncé sur des boutiques (Parfimo.de,
+ *     Lieblingsfoto.de), et le bouton d'une carte bol.com à deux prix réels
+ *     disait « Lire le bon plan » au lieu de « Voir chez bol.com » — une
+ *     promotion prouvée servie comme un article de journal ;
+ *   — des promotions RETENUES hors de la vue par défaut : 63 de plus s'affichent
+ *     sans ces 13 motifs (5 997 → 6 060, mesuré sur le catalogue du 14/10 22 h 45).
+ * Les vrais noms de presse restent dans la liste, donc la « presse » ne garde que
+ * ce qui est de la presse (mesuré : les 4 cartes TuttoAndroid).
+ *
+ * Ce qui avait été payé, et ne doit pas revenir : un `|\.xx\b` ajouté « pour
+ * reconnaître un domaine » attrape aussi les enseignes qui publient leur adresse.
+ */
+const REDACTIONS = /(parisien|figaro|[ée]quipe|forbes|independent|mashable|estad|express|ginjfo|phototrend|labomaison|iphoneaddict|mac4ever|watchgeneration|num[ée]rique|phonandroid|dslweb|hdblog|tuttotech|tomshw|tuttoandroid|presse|dealabs|hotukdeals|mydealz|chollometro|preisjaeger|journal|magazine|bloomberg|wired|verge|01net|frandroid|clubic|journaldugeek|numerama|presse-citron|tomshardware)/i;
 
 /** Noms de marchand qui ne désignent AUCUNE boutique : le nom de la source
  *  elle-même quand le flux ne dit rien, ou un domaine brut. */
