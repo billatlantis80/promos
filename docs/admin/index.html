@@ -2330,7 +2330,12 @@ function classementSites(catalogue) {
   // au collecteur demande de l'inscrire ICI aussi, sinon le panneau la présente
   // comme un site — et le test du contrat du journal (tests/origines-admin.test.mjs)
   // lit cette liste-ci, donc il échoue AVANT que le défaut n'atteigne l'écran.
-  const internes = new Set(['repos', 'visuels', 'identifiants', 'regle-deux-prix', 'regle-pourcentage', 'peremption-date', 'peremption-tours', 'dates-relevees', 'dates-futures', 'prix-avant-relu', 'vie-de-la-carte', 'peremption-apres-fusion', 'verdict-source', 'destinations-reelles']);
+  // ⚠ « tours » AJOUTÉE LE 15/10/2026 — la réparation des estampilles de tour
+  // impossibles (voir corrigerToursImpossibles, collecteur.mjs). Sans cette
+  // ligne, le panneau présenterait cette réparation comme un SITE à activer,
+  // avec un compteur d'annonces vide. C'est l'épreuve d'origines-admin qui
+  // l'exige, et c'est elle qui a attrapé l'oubli.
+  const internes = new Set(['repos', 'visuels', 'identifiants', 'tours', 'regle-deux-prix', 'regle-pourcentage', 'peremption-date', 'peremption-tours', 'dates-relevees', 'dates-futures', 'prix-avant-relu', 'vie-de-la-carte', 'peremption-apres-fusion', 'verdict-source', 'destinations-reelles']);
   const connue = (id) => Object.prototype.hasOwnProperty.call(nomDe, id);
   const journal = journalBrut.filter((x) => !x.saute && !internes.has(x.source)
     && (suivis.length === 0 || connue(x.source)));
