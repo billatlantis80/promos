@@ -500,6 +500,7 @@ tr.edition .principal{width:auto;padding:9px 18px;display:inline-block;margin-ri
       <button class="onglet" data-vue="inscrits">Inscrits</button>
       <button class="onglet" data-vue="trafic">Trafic</button>
       <button class="onglet" data-vue="exploitation">Exploitation</button>
+      <button class="onglet" data-vue="cartes">Vie des cartes</button>
       <button class="onglet" data-vue="sources">Sources</button>
       <button class="onglet" data-vue="origines">Origines</button>
       <button class="onglet" data-vue="marche">Marché Euro</button>
@@ -731,6 +732,66 @@ tr.edition .principal{width:auto;padding:9px 18px;display:inline-block;margin-ri
             de l'inventer : une proposition sans gain est un avis, et un avis en tête de liste fait
             perdre du temps.</p>
           <div id="mExplLeviers"></div>
+        </div>
+      </section>
+
+      <!-- ============ VIE DES CARTES — CE QUE LA RÈGLE EFFACE, ET CE QU'ELLE NE
+           PEUT PAS JUGER ============
+           Demande de B, 14/10/2026 : « un onglet où je vois les cartes effacées et
+           les cartes bloquées pour une raison ou une autre. L'objectif est de
+           vérifier la véracité des cartes effacées. »
+           Trois règles d'écran tenues ici :
+             1. UNE CARTE SANS EXPLICATION N'EXISTE PAS : chaque ligne porte sa
+                raison ET sa preuve — les deux numéros de tour qui ont décidé ;
+             2. CE QUI MANQUE SE DIT : registre absent, liste tronquée, passage
+                pas encore publié — l'écran écrit pourquoi au lieu d'afficher zéro ;
+             3. LE SEUL CONTRÔLE QUI TRANCHE EST HUMAIN : le lien de l'offre est
+                là pour ça, et l'écran dit qu'il faut l'ouvrir.
+           Aucun chiffre n'est calculé ici : tout vient de `suivi-cartes.json`,
+           écrit par le collecteur après avoir pris sa décision. C'est une lecture,
+           pas un calcul — le panneau ne peut donc pas se tromper tout seul. -->
+      <section data-vue="cartes">
+        <div class="avis" id="avisCartes"></div>
+
+        <div class="rub">
+          <h2>La règle, et ce qu'elle a fait ce passage</h2>
+          <p class="aide">Une carte s'affiche <b>cinq jours</b>, servie ou non. Au-delà, une seule
+            question à chaque passage : <b>sa source la sert-elle encore ?</b> Elle se lit dans le flux
+            de la source — <b>aucune page n'est ouverte</b>. Servie : le compteur repart pour cinq jours.
+            Plus servie, et la source ayant reparlé depuis : <b>la carte et son visuel sont effacés</b>.
+            Ce journal est écrit <b>après</b> la décision, et il n'est <b>relu par personne</b> dans la
+            collecte : il ne peut donc pas condamner une carte.</p>
+          <div class="grille" id="mCartesCompteurs"></div>
+        </div>
+
+        <div class="rub">
+          <h2>Qui retire quoi</h2>
+          <p class="aide">Une carte qui disparaît du site n'a pas forcément été emportée par la règle
+            des cinq jours : <b>trois autres mécanismes retirent aussi</b>. Les confondre fait chercher
+            une panne là où il n'y en a pas.</p>
+          <div id="mCartesRetraits"></div>
+        </div>
+
+        <div class="rub">
+          <h2>Cartes effacées — de quoi vérifier, carte par carte</h2>
+          <p class="aide">Les plus récentes d'abord. Pour chacune : son âge au moment de l'effacement,
+            <b>le tour où sa source l'avait servie</b> et <b>le tour où elle a reparlé sans elle</b> —
+            c'est cet écart, et lui seul, qui a décidé. <b>Le seul contrôle qui tranche vraiment est le
+            vôtre : ouvrez le lien</b> et regardez si l'annonce existe encore chez sa source. Une carte
+            effacée qui <b>revient</b> est signalée : c'est l'aveu d'une condamnation prise sur un
+            silence qui ne voulait pas dire « morte ».</p>
+          <div id="mCartesEffacees"></div>
+        </div>
+
+        <div class="rub">
+          <h2>Cartes bloquées — au-delà de cinq jours, et pourquoi</h2>
+          <p class="aide">Ces cartes <b>dépassent les cinq jours sans être effacées</b>. La raison est
+            écrite pour chacune, et les deux familles ne se confondent pas :
+            <b>« source muette »</b> — la source n'a pas reparlé depuis qu'elle a servi la carte, et
+            <b>on ne condamne pas sur une source qu'on n'a pas relue</b> ;
+            <b>« source sans compteur »</b> — la source n'a aucun numéro de tour, donc la règle
+            <b>ne peut pas la juger du tout</b> : c'est un angle mort, mesuré, pas une panne.</p>
+          <div id="mCartesBloquees"></div>
         </div>
       </section>
 
@@ -1148,6 +1209,10 @@ let catalogue = null;
  *  ce que la MACHINE fait, pas ce que le SITE contient : mélanger les deux
  *  ferait relire 18 Mo de catalogue au panneau pour afficher un coût. */
 let exploitation = null;
+// LE JOURNAL DES CARTES (effacées / bloquées). Lu depuis `suivi-cartes.json`,
+// écrit par le collecteur après chaque passage. Son absence n'est pas une panne :
+// l'onglet « Vie des cartes » écrit alors POURQUOI il n'a rien à montrer.
+let suiviCartes = null;
 const lireRegistre = () => {
   try { return JSON.parse(localStorage.getItem('kazendra.inscrits') || '[]'); } catch { return []; }
 };
@@ -3477,6 +3542,172 @@ function dessinerAffiliation() {
     : '<p class="vide">Aucun acteur recensé pour ce pays.</p>';
 }
 
+/* ---------- VIE DES CARTES ----------
+ *  Demande de B, 14/10/2026 : « un onglet où je vois les cartes effacées et les
+ *  cartes bloquées pour une raison ou une autre. L'objectif est de vérifier la
+ *  véracité des cartes effacées. »
+ *
+ *  CE QUE CET ONGLET NE FAIT PAS, ET C'EST LE POINT : il ne recalcule pas la
+ *  règle. Tout vient de `suivi-cartes.json`, écrit par le collecteur APRÈS avoir
+ *  décidé, avec la preuve de chaque effacement. Un panneau qui rejouerait la
+ *  règle pourrait se tromper tout seul et CONTREDIRE le fichier au lieu de le
+ *  montrer — le pire des deux mondes : deux vérités à l'écran, et aucune pour
+ *  dire laquelle croire. Ici, l'écran lit, compte, et explique.
+ *
+ *  TROIS RÈGLES D'ÉCRAN (héritées de l'onglet Exploitation) :
+ *   1. ce qui manque se DIT (« aucun journal publié », « liste bornée ») au lieu
+ *      d'afficher un zéro qui aurait l'air d'une mesure ;
+ *   2. chaque ligne porte sa PREUVE, structurée : le lien est un lien, la raison
+ *      est une phrase, les deux numéros de tour sont séparés ;
+ *   3. l'écran ne prétend jamais avoir vérifié à la place de B — il dit que le
+ *      seul contrôle qui tranche est d'ouvrir le lien. */
+const BLOCS_CARTES = ['mCartesCompteurs', 'mCartesRetraits', 'mCartesEffacees', 'mCartesBloquees'];
+
+/** RELIRE LE JOURNAL DES CARTES. `no-store` : c'est un fichier de contrôle qui
+ *  change à chaque passage (quinze minutes) ; une version en cache montrerait un
+ *  effacement d'hier comme s'il venait d'avoir lieu. Et l'échec n'est PAS une
+ *  panne : le premier passage après la mise en service n'a pas encore tourné, ou
+ *  le fichier manque — l'onglet l'écrit au lieu de planter (rien n'est effacé à
+ *  l'écran : `dessinerCartes()` sait dire « aucun journal »). */
+async function relireSuiviCartes() {
+  try {
+    const rep = await fetch('../suivi-cartes.json', { cache: 'no-store' });
+    suiviCartes = rep.ok ? await rep.json() : null;
+  } catch { suiviCartes = null; }
+  dessinerCartes();
+}
+
+const LIEN_OFFRE = (x, texte) => (x && x.lien
+  ? `<a href="${esc(x.lien)}" target="_blank" rel="noopener">${esc(texte)}</a>`
+  : esc(texte || '—'));
+
+const PAYS_CARTE = (code) => (code
+  ? `<span class="pays-nom">${svgDrapeau(code)}${esc(nomDuPays(code))}</span>`
+  : '—');
+
+/** Le poids libéré, DANS L'UNITÉ QUI PARLE. Défaut vu à l'écran le 14/10/2026 :
+ *  « 15 effacées (0 Mo) » — 39 904 octets arrondis à zéro se lisent comme « rien
+ *  n'a été libéré », alors que quinze visuels ont bien été purgés. Sous le
+ *  mégaoctet on écrit des Ko : un chiffre faux est pire qu'un chiffre absent, et
+ *  c'est exactement ce que cet onglet existe pour traquer. */
+const poidsCourt = (octets) => {
+  const o = Number(octets) || 0;
+  if (o < 1e6) return `${nf.format(Math.round(o / 1e3))} Ko`;
+  if (o < 1e9) return `${nf.format(+(o / 1e6).toFixed(1))} Mo`;
+  return `${nf.format(+(o / 1e9).toFixed(2))} Go`;
+};
+
+function dessinerCartes() {
+  const s = suiviCartes;
+  if (!s || !s.cartes) {
+    txt('avisCartes', '<span class="avertir"><b>Aucun journal de cartes publié.</b> '
+      + 'Le fichier <code>suivi-cartes.json</code> n’a pas été lu : soit le premier passage après '
+      + 'la mise en service du journal n’a pas encore tourné, soit il manque dans le site publié. '
+      + '<b>Aucun chiffre n’est affiché à sa place</b> — un zéro aurait l’air d’une mesure.</span>');
+    for (const id of BLOCS_CARTES) txt(id, '');
+    return;
+  }
+  const c = s.cartes, e = s.effacees || {}, p = s.passage || {};
+  const parRaison = c.parRaison || {};
+  const violations = parRaison.violation || 0;
+  const bloquees = c.liste || [];
+  const effacees = e.liste || [];
+  const revenues = e.revenuesListe || [];
+  const quand = s.genereLe ? ilYA(s.genereLe) : null;
+
+  // L'AVIS — l'alarme avant le calme. Une seule carte en violation est un défaut
+  // de la règle, pas une mesure : elle doit se lire en premier.
+  txt('avisCartes', violations
+    ? `<span class="avertir"><b>${nb(violations)} carte(s) en violation.</b> Leur source a reparlé
+       sans les resservir : la règle devait les effacer, et elles sont encore affichées. C’est un
+       défaut d’effacement, pas une mesure — à regarder dans le tableau du bas.</span>`
+    : `Journal lu ${quand ? `<b>${esc(quand)}</b>` : 'à l’instant'} — écrit par le collecteur
+       <b>après</b> avoir décidé, et relu par aucune décision. Sur <b>${nb(c.affichees)}</b> cartes
+       affichées, <b>aucune</b> n’a été servie puis abandonnée par une source qui a reparlé depuis :
+       les cartes au-delà des cinq jours sont <b>toutes bloquées par une raison écrite</b>, plus bas.`);
+
+  txt('mCartesCompteurs', tuiles([
+    [nb(c.affichees), 'cartes affichées'],
+    [nb(c.dansLesCinqJours), 'dans leurs cinq jours'],
+    [nb(c.bloquees), 'au-delà de cinq jours'],
+    [nb(p.effacees), `effacées au dernier passage${p.octets ? ` (${poidsCourt(p.octets)} libérés)` : ''}`],
+    [nb(p.reprises), 'reprises au dernier passage'],
+    [nb(e.retenues == null ? effacees.length : e.retenues), 'effacements au registre (30 j)'],
+    [nb(e.revenues), 'revenues après effacement'],
+  ]));
+
+  // QUI RETIRE QUOI — les quatre mécanismes, nommés, avec leur compte du passage.
+  txt('mCartesRetraits', `<div class="defile"><table class="etroite">
+    <tr><th>Mécanisme</th><th class="n">Ce passage</th><th>Ce qu’il fait</th></tr>
+    ${(s.retraits || []).map((x) => `<tr><td>${esc(x.mecanisme)}</td>
+      <td class="n">${nb(x.nb)}</td><td class="fin">${esc(x.quoi)}</td></tr>`).join('')}
+  </table></div>`);
+
+  // LES CARTES EFFACÉES — la preuve, carte par carte.
+  if (!effacees.length) {
+    txt('mCartesEffacees', `<p class="vide">Aucun effacement au registre pour l’instant. Soit la
+      règle n’en a pas encore emporté depuis la mise en service du journal, soit le registre a été
+      relu et vidé — le compte « effacements au registre » plus haut dit lequel.</p>`);
+  } else {
+    txt('mCartesEffacees', `<div class="defile"><table>
+      <tr><th>Effacée</th><th class="n">Âge</th><th>Offre</th><th>Source</th><th>Pays</th>
+        <th>La preuve : servie, puis reparlée sans elle</th></tr>
+      ${effacees.map((x) => `<tr>
+        <td class="fin">${x.effaceeLe ? esc(ilYA(x.effaceeLe)) : '—'}${x.revenueLe
+          ? '<div class="micro">revenue ensuite</div>' : ''}</td>
+        <td class="n">${x.ageJours == null ? '—' : `${nf.format(x.ageJours)} j`}</td>
+        <td>${LIEN_OFFRE(x, String(x.titre || '—').slice(0, 78))}
+          ${x.prix == null ? '' : `<div class="micro">${nf.format(x.prix)} (monnaie du pays)</div>`}</td>
+        <td class="fin">${esc(x.source || x.sourceId || '—')}</td>
+        <td>${PAYS_CARTE(x.pays)}</td>
+        <td class="fin">servie au tour <b>${x.servieAuTour == null ? '—' : x.servieAuTour}</b>,
+          sa source a reparlé au tour <b>${x.tourSource == null ? '—' : x.tourSource}</b></td>
+      </tr>`).join('')}
+    </table></div>
+    <p class="fin">${e.retenues > effacees.length
+      ? `Les <b>${nb(effacees.length)}</b> plus récents sur <b>${nb(e.retenues)}</b> effacements
+         gardés (trente jours) — l’extrait publié est borné. La liste complète reste dans le registre
+         de la machine de collecte.`
+      : `Tous les effacements gardés (trente jours) sont ici : <b>${nb(effacees.length)}</b>.`}
+      ${revenues.length ? `<br><b>${nb(e.revenues)}</b> carte(s) effacée(s) sont revenues depuis :
+      leur source les a resservies, donc la carte rentre comme une neuve. C’est l’aveu d’une
+      condamnation prise sur un silence qui ne voulait pas dire « morte » — et c’est le chiffre à
+      regarder quand on se demandera si la règle est trop dure.` : ''}</p>`);
+  }
+
+  // LES CARTES BLOQUÉES — l'autre moitié de la question de B.
+  if (!bloquees.length) {
+    txt('mCartesBloquees', `<p class="vide">Aucune carte au-delà de cinq jours : la règle a tout
+      emporté, ou toutes les cartes affichées ont moins de cinq jours. Rien à expliquer, donc rien
+      d’affiché — c’est une mesure, pas un défaut.</p>`);
+  } else {
+    txt('mCartesBloquees', `<div class="defile"><table>
+      <tr><th class="n">Âge</th><th>Offre</th><th>Source</th><th>Pays</th><th>Raison, et le détail</th></tr>
+      ${bloquees.map((x) => `<tr>
+        <td class="n">${x.ageJours == null ? '—' : `${nf.format(x.ageJours)} j`}</td>
+        <td>${LIEN_OFFRE(x, String(x.titre || '—').slice(0, 74))}</td>
+        <td class="fin">${esc(x.source || x.sourceId || '—')}</td>
+        <td>${PAYS_CARTE(x.pays)}</td>
+        <td class="fin">${x.raison === 'violation'
+          ? `<span class="ko"><b>violation</b></span>` : `<b>${esc(x.raison === 'source-muette'
+            ? 'source muette' : 'source sans compteur')}</b>`}
+          <div class="micro">${esc(x.detail || '')}</div></td>
+      </tr>`).join('')}
+    </table></div>
+    <p class="fin">${c.listeTronquee
+      ? `Les <b>${nb(bloquees.length)}</b> plus anciennes sur <b>${nb(c.bloquees)}</b> cartes
+         bloquées — l’extrait publié est borné.` : `Les <b>${nb(bloquees.length)}</b> cartes
+         bloquées, toutes, sont ici.`}
+      La plus ancienne a <b>${c.plusAncienneJours == null ? '—' : `${nf.format(c.plusAncienneJours)} jours`}</b>.
+      ${parRaison.violation ? '' : `Aucune n’est en violation de la règle : chacune est retenue par une
+      des deux gardes, écrites dans sa ligne.`}</p>
+    <p class="fin">Le prix n’est <b>pas</b> relu par cette règle : elle garantit la fraîcheur de
+      l’<b>existence</b> d’une offre, pas celle de son prix. Une carte peut donc disparaître alors que
+      la promotion, elle, vit encore chez sa source — c’est le prix du volume, mesuré à 47,7 % le
+      12/10/2026, et il est assumé.</p>`);
+  }
+}
+
 function toutDessiner() {
   const etat = etatRelais();
   const dire = (id, texte) => { document.getElementById(id).innerHTML = texte; };
@@ -3493,7 +3724,7 @@ function toutDessiner() {
   // L'ONGLET TRAFIC ÉCRIT SON PROPRE AVIS — quatre états, quatre phrases : c'est
   // `dessinerTrafic()` qui s'en charge, plus bas dans cet appel. Rien à
   // dupliquer ici, sinon deux textes à faire tomber d'accord.
-  dessinerBord(); dessinerSources(); dessinerOrigines(); dessinerBarrePays(); dessinerMarche(); dessinerBarreAffiliation(); dessinerAffiliation(); dessinerPortes(); dessinerInscrits(); dessinerTrafic(); dessinerGains(); dessinerExploitation();
+  dessinerBord(); dessinerSources(); dessinerOrigines(); dessinerBarrePays(); dessinerMarche(); dessinerBarreAffiliation(); dessinerAffiliation(); dessinerPortes(); dessinerInscrits(); dessinerTrafic(); dessinerGains(); dessinerExploitation(); dessinerCartes();
 
   // « CETTE MACHINE » DIT AUSSI OÙ EN EST LE CATALOGUE. C'est la question qu'on
   // se pose en ouvrant le panneau — « mes données sont-elles fraîches ? » — et
@@ -3554,6 +3785,12 @@ function brancher() {
       origines: () => { dessinerOrigines(); },
       sources: () => { dessinerSources(); },
       exploitation: () => { dessinerExploitation(); },
+      // LE JOURNAL DES CARTES EST RELU EN OUVRANT L'ONGLET, et pas seulement au
+      // chargement du panneau : un passage tourne toutes les quinze minutes, et
+      // B ouvre cet onglet pour voir ce que la règle vient de faire. Lui montrer
+      // l'état d'il y a vingt minutes serait exactement le défaut que cet onglet
+      // existe pour supprimer.
+      cartes: () => { relireSuiviCartes(); },
       // Le relais peut avoir été branché (ou la clé posée) depuis la dernière
       // ouverture : on relit le rapport en ouvrant l'onglet, sans quoi on
       // regarderait un état vieux de plusieurs minutes en croyant le corriger.
@@ -3917,6 +4154,10 @@ async function ouvrir() {
     const etat = await rep.json();
     exploitation = (etat && etat.donnees && etat.donnees.exploitation) || null;
   } catch (e) { exploitation = null; }
+  // LE JOURNAL DES CARTES — lu AVANT le premier dessin, comme le reste : sinon
+  // l'onglet s'ouvrirait sur « aucun journal publié » puis se remplirait une
+  // seconde plus tard, et on croirait à une panne qui disparaît.
+  await relireSuiviCartes();
   try {
     const rep = await fetch('../acteurs.json', { cache: 'no-store' });
     marche = await rep.json();
