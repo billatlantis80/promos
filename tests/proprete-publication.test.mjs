@@ -32,7 +32,7 @@ const SOURCE = path.join(RACINE, 'public');
 
 /** Les fichiers que le COLLECTEUR écrit lui-même à la racine du site publié,
  *  et qui n'ont donc pas de jumeau dans `public/`. */
-const PRODUITS = new Set(['offres.json', 'etat-collecte.json', 'devises.json', '.nojekyll']);
+const PRODUITS = new Set(['offres.json', 'etat-collecte.json', 'devises.json', 'suivi-cartes.json', '.nojekyll']);
 
 /** Un motif de sauvegarde d'éditeur : jamais publiable, où qu'il soit. */
 const DECHET = /(\.sauv|\.bak|\.orig|\.old|\.tmp)$|~$/;

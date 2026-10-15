@@ -202,31 +202,70 @@ test('le catalogue PUBLIÉ porte la rubrique et la voie sur chaque source', () =
 /* ---------------------------------------------------------------------------
  * LE GARDE-FOU : un test ne doit JAMAIS dépendre d'un fichier non versionné.
  *
- * CE QU'IL PROTÈGE, ET C'EST MESURÉ. `data/` est exclu du dépôt (voir
- * .gitignore) : le catalogue n'existe que là où la collecte tourne. Un test qui
- * le lisait EN DUR échouait donc sur GitHub, toutes les heures — et le workflow
- * s'arrêtait AVANT de publier, en silence : le propriétaire recevait un courriel
- * d'échec par heure (constaté le 08/10/2026, à 09:10 puis 10:10), la sauvegarde
- * ne servait plus à rien, et rien dans le site ne le laissait voir.
+ * CE QU'IL PROTÈGE, ET C'EST MESURÉ DEUX FOIS. `data/` est exclu du dépôt (voir
+ * .gitignore) : le catalogue et l'historique des prix n'existent que là où la
+ * collecte tourne. Un test qui les lisait EN DUR échouait donc sur GitHub, et le
+ * workflow s'arrêtait AVANT de publier, en silence :
+ *   — 08/10/2026 : courriel d'échec par heure (09:10 puis 10:10) — motif
+ *     `data/offres.json`, d'où la première version de ce garde-fou ;
+ *   — 13/10/2026 17:10 UTC → 15/10/2026 07:00 : **38 heures et 38 passages
+ *     perdus**, sur un motif que la première version NE COUVRAIT PAS —
+ *     `data/historique-prix.json`, lu par une épreuve ajoutée le 13/10 au soir.
+ *     Le garde-fou ne cherchait que `data/…offres.json` : le fichier a changé de
+ *     nom, et la panne est revenue par la porte laissée ouverte.
  *
- * Le motif cherché est précis, pour ne pas crier au loup : une lecture DIRECTE
- * dont le chemin `data/…/offres.json` est écrit en clair dans l'appel. Lire via
- * une variable relue par `existsSync` (le motif déjà employé par
- * `categories.test.mjs` et `nettoyage.test.mjs`) reste parfaitement sûr et n'est
- * donc pas signalé.
+ * D'OÙ LA RÈGLE DÉSORMAIS. On n'examine plus le NOM du fichier mais LA LECTURE :
+ * on extrait l'argument de chaque `readFileSync(...)` du fichier d'épreuve, et
+ * on refuse toute lecture dont l'argument désigne un chemin `data/` écrit en
+ * clair (`'data'`, `data/`, `new URL('…/data/…')`). Une lecture par VARIABLE
+ * gardée par `existsSync` (le motif employé par `categories.test.mjs`, et par
+ * `vie-de-la-carte-cinq-jours.test.mjs` depuis la réparation) reste sûre : elle
+ * n'est pas signalée.
  */
-test('aucun test ne lit data/offres.json EN DUR (fichier non versionné)', () => {
+const argumentsDeLecture = (source) => {
+  const sortie = [];
+  const marque = /readFileSync\s*\(/g;
+  for (let m; (m = marque.exec(source));) {
+    let j = m.index + m[0].length;
+    let profondeur = 1;
+    for (; j < source.length && profondeur > 0; j += 1) {
+      if (source[j] === '(') profondeur += 1;
+      else if (source[j] === ')') profondeur -= 1;
+    }
+    sortie.push(source.slice(m.index + m[0].length, j - 1));
+  }
+  return sortie;
+};
+/** L'argument désigne-t-il un fichier de `data/` ? Nom QUELCONQUE — c'est le
+ *  point : c'est le fait de changer de nom qui a rouvert la panne. */
+const litDansData = (argument) => /['"]data['"]/.test(argument) || /data[\\/]/.test(argument);
+
+test('aucune épreuve ne lit un fichier de data/ EN DUR (dossier non versionné)', () => {
   const dossier = path.join(ICI, '..', 'tests');
   const fautifs = [];
   for (const f of fs.readdirSync(dossier).filter((x) => x.endsWith('.mjs'))) {
     const t = fs.readFileSync(path.join(dossier, f), 'utf8');
-    const enDur = /readFileSync\([^)]*['"]data['"][^)]*['"]offres\.json['"]/.test(t)
-      || /readFileSync\([^)]*data[\\/]+offres\.json/.test(t);
-    if (enDur && !/existsSync/.test(t)) fautifs.push(f);
+    const enDur = argumentsDeLecture(t).some(litDansData);
+    if (enDur && !/existsSync/.test(t) && !/\.skip\(/.test(t)) fautifs.push(f);
   }
   assert.deepEqual(fautifs, [],
-    `ces tests lisent data/offres.json en dur, sans repli : ils échouent sur GitHub `
-    + `et bloquent la sauvegarde horaire → ${fautifs.join(', ')}`);
+    `ces tests lisent un fichier de data/ en dur, sans repli ni saut déclaré : ils `
+    + `échouent sur GitHub et bloquent la sauvegarde horaire → ${fautifs.join(', ')}`);
+});
+
+test('le garde-fou RECONNAÎT le cas qui a tué le secours, et ne crie pas à tort', () => {
+  // VÉRIFIER LE VÉRIFICATEUR. Un garde-fou qu'on n'éprouve pas est une intention :
+  // la version précédente avait l'air juste et laissait passer la panne de 38 h.
+  // On lui donne donc la ligne EXACTE qui a bloqué le workflow, et l'écriture sûre.
+  const laLigne = "const hist = JSON.parse(readFileSync(new URL('../data/historique-prix.json', import.meta.url), 'utf8'));";
+  assert.ok(argumentsDeLecture(laLigne).some(litDansData),
+    'le détecteur DOIT reconnaître une lecture de data/ écrite en clair (c’est ce qu’il n’a pas su faire le 13/10)');
+  const parVariable = "const chemin = new URL('../data/historique-prix.json', import.meta.url);\n"
+    + 'if (!existsSync(chemin)) return;\nconst h = JSON.parse(readFileSync(chemin, \'utf8\'));';
+  assert.ok(!argumentsDeLecture(parVariable).some(litDansData),
+    'une lecture par variable ne doit PAS être signalée : c’est `existsSync` qui la rend sûre');
+  const catalogue = 'const o = JSON.parse(fs.readFileSync(path.join(ICI, "..", "docs", "offres.json"), "utf8"));';
+  assert.ok(!argumentsDeLecture(catalogue).some(litDansData), 'lire docs/ (versionné) est légitime');
 });
 
 test('le repli vers docs/offres.json existe bien, et le fichier est exploitable', () => {

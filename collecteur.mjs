@@ -1110,6 +1110,356 @@ export function verdictDeCalendrier(offre, { maintenant = Date.now(), tours = {}
   return 'effacee';
 }
 
+/* =============================================================================
+   LE SUIVI DES CARTES — CE QUE LA RÈGLE EFFACE, ET CE QU'ELLE NE PEUT PAS JUGER
+
+   Demande de B, 14/10/2026 : « mets en place au niveau du panneau admin un onglet
+   où je vois les cartes effacées et les cartes bloquées pour une raison ou une
+   autre. L'objectif est de vérifier la véracité des cartes effacées. »
+
+   CE QUE ÇA CHANGE DANS LA RÈGLE, ET IL FAUT LE DIRE (R.7). R.7 promettait
+   « aucune autre trace : pas de liste d'exclusion, pas de registre des premières
+   vues, pas de compteur de retours en production ». Cette promesse protégeait une
+   chose précise, et ELLE EST TENUE : **rien de ce qui est écrit ici n'est lu par
+   la décision**. Un registre qui ne sert qu'à regarder ne peut pas condamner une
+   carte ; `verdictDeCalendrier` ne connaît aucune des fonctions de ce bloc, et
+   une épreuve l'exige (`tests/suivi-des-cartes.test.mjs` : le corps de la
+   fonction ne mentionne ni `suivi`, ni `effacees`, ni `revenues`).
+   Ce qui change, et qui doit être écrit dans les règles : la trace EXISTE, elle
+   est BORNÉE, et elle n'est lue que par le panneau.
+
+   DEUX POPULATIONS, DEUX RAISONS DE LES MONTRER :
+
+     • LES CARTES EFFACÉES — la règle les a emportées, et jusqu'ici il ne restait
+       rien pour le vérifier. Chaque entrée porte de quoi juger sur pièces :
+       l'offre, sa source, son âge, LE TOUR auquel sa source l'avait servie, et le
+       tour où elle a reparlé sans elle. C'est cette différence entre deux numéros
+       qui décide de tout, et l'écran les montre tous les deux. Le seul contrôle
+       qui tranche reste humain : ouvrir le lien de l'offre.
+
+     • LES CARTES BLOQUÉES — au-delà des cinq jours, non effacées, et POURQUOI.
+       Deux raisons, jamais confondues : la source n'a pas reparlé (on ne condamne
+       pas une carte sur une source qu'on n'a pas relue), ou la source n'a aucun
+       compteur de tours (la règle ne peut alors PAS la juger). La seconde est un
+       trou connu, mesuré à 220 cartes le 14/10/2026 : il se voit à l'écran au
+       lieu de se chercher dans le fichier.
+
+   UNE TROISIÈME ISSUE EXISTE, ET ELLE EST UNE ALARME : une carte au-delà de cinq
+   jours dont la source a reparlé SANS la resservir. C'est exactement ce que la
+   règle efface — si une telle carte est encore dans le catalogue publié, c'est
+   que l'effacement n'a pas eu lieu. Ce nombre doit rester à ZÉRO (mesuré : zéro
+   le 14/10/2026 sur 10 526 cartes), et l'écran le dit sans le noyer.
+
+   BORNES. Le registre local garde trente jours (même choix que la simulation),
+   l'extrait publié garde les dernières de chaque population : un fichier de
+   contrôle qui grossit sans fin finirait par coûter plus cher que la règle qu'il
+   surveille, et c'est justement ce que cette règle a cessé de faire.
+   ============================================================================= */
+
+/** Ce que l'extrait PUBLIÉ porte : les dernières cartes de chaque population.
+ *  En régime stable la règle en efface 15 à 70 par passage (96 passages/jour), donc
+ *  200 entrées couvrent environ les trois dernières heures — assez pour vérifier,
+ *  et ~120 Ko sur le site. Le reste de l'histoire vit dans le registre local. */
+export const SUIVI_PUBLIE_MAX = 200;
+
+/** Une carte effacée depuis trente jours ne reviendra pas : sa fiche n'apprend
+ *  plus rien, et la garder ferait grossir le registre sans fin. */
+export const SUIVI_JOURS_CONSERVES = 30;
+
+/** Le registre LOCAL, lui, garde tout ce qui a moins de trente jours — jusqu'à
+ *  cette borne, très au-dessus de ce que trente jours produisent (~3 000). */
+export const SUIVI_REGISTRE_MAX = 8000;
+
+/** Les champs d'une carte, communs aux deux listes du panneau. Une seule
+ *  fonction : deux constructions séparées finiraient par ne plus montrer la même
+ *  chose des deux côtés. */
+function champsDeCarte(offre, maintenant) {
+  const a = ageJours(offre.premiereVue || offre.vuLe, maintenant);
+  return {
+    cle: cleDe(offre),
+    sourceId: offre.sourceId || '',
+    source: offre.source || offre.marchand || offre.sourceId || '',
+    pays: offre.pays || '',
+    titre: offre.titre || '',
+    // Ce qui se CLIQUE, séparément de ce qui s'explique : le panneau ne doit
+    // jamais avoir à extraire une adresse d'une phrase.
+    lien: offre.lienPage || offre.lienMarchand || '',
+    // Le montant est porté TEL QUEL, sans symbole : la monnaie est celle du pays,
+    // que la carte affiche déjà. Inventer un « € » ici serait la faute déjà payée
+    // (des couronnes suédoises affichées en euros).
+    prix: Number.isFinite(offre.prix) ? offre.prix : null,
+    remise: Number.isFinite(offre.remise) ? offre.remise : null,
+    image: offre.image || '',
+    premiereVue: offre.premiereVue || offre.vuLe || null,
+    ageJours: a === null ? null : +a.toFixed(2),
+  };
+}
+
+/** POURQUOI CETTE CARTE EST ENCORE LÀ — `null` quand la question ne se pose pas.
+ *
+ *  Rend `null` pour une carte dans ses cinq jours, et pour une carte sans date
+ *  lisible (on ne juge pas sur rien) : ce sont les cartes qui n'ont rien à faire
+ *  dans une liste de blocages. Rend sinon `{ raison, detail }`, avec la raison la
+ *  plus parlante disponible — jamais un code nu.
+ */
+export function raisonDeBlocage(offre, { maintenant = Date.now(), tours = {}, silences = {} } = {}) {
+  if (!offre || offre.type === 'article') return null;
+  const age = ageJours(offre.premiereVue || offre.vuLe, maintenant);
+  if (age === null || age <= VIE_AFFICHEE_JOURS) return null;
+  const servi = Number.isFinite(offre.serviceAuTour) ? offre.serviceAuTour : null;
+  const brut = tours ? tours[offre.sourceId] : undefined;
+  const tour = Number.isFinite(brut) ? brut : null;
+  if (tour === null || servi === null) {
+    // LA SOURCE N'A PAS DE COMPTEUR. Deux causes très différentes, et le panneau
+    // doit pouvoir les distinguer : une source recopiée ou retirée du catalogue
+    // (rien ne compte ses tours, jamais), ou une source déclarée qui n'a pas
+    // encore assez rendu pour qu'un tour compte.
+    const connue = typeDeSource(offre.sourceId) !== '';
+    return {
+      raison: 'source-sans-compteur',
+      detail: connue
+        ? "sa source est déclarée mais n'a pas encore compté un seul tour (rendu sous le seuil) : la règle ne peut pas la juger"
+        : "sa source n'est déclarée nulle part (offre recopiée d'un autre pays, ou source retirée du catalogue) : aucun tour n'est compté pour elle, la règle ne peut pas la juger",
+    };
+  }
+  if (tour <= servi) {
+    // GARDE 2, ET C'EST ELLE QUI PROTÈGE : la source n'a pas reparlé depuis
+    // qu'elle a servi cette carte. On attend.
+    return {
+      raison: 'source-muette',
+      detail: silences[offre.sourceId]
+        || `sa source n'a pas reparlé depuis qu'elle a servi cette carte (dernier service au tour ${servi})`,
+    };
+  }
+  // LA SEULE ISSUE QUI SOIT UNE FAUTE : la source a reparlé, sans resservir la
+  // carte — la règle devait l'effacer. Si elle est encore là, l'effacement a
+  // échoué.
+  return {
+    raison: 'violation',
+    detail: `la source a reparlé (tour ${tour}) sans resservir cette carte (dernier service au tour ${servi}) — la règle devait l'effacer`,
+  };
+}
+
+/** L'ÉTAT DES CARTES — la partition complète, en une fonction PURE.
+ *
+ *  `affichees = dansLesCinqJours + bloquees (+ sansDate)`. La somme est le
+ *  critère d'acceptation : une carte ne peut pas être dans deux listes, et aucune
+ *  ne doit manquer à l'appel (règle n°4 du panneau). Une épreuve l'exige.
+ */
+export function etatDesCartes(offres, { maintenant = Date.now(), tours = {}, silences = {} } = {}) {
+  const liste = [];
+  let dansLesCinqJours = 0, sansDate = 0, cartes = 0;
+  for (const o of offres || []) {
+    if (!o || o.type === 'article') continue;
+    cartes += 1;
+    const blocage = raisonDeBlocage(o, { maintenant, tours, silences });
+    if (!blocage) {
+      if (ageJours(o.premiereVue || o.vuLe, maintenant) === null) sansDate += 1;
+      else dansLesCinqJours += 1;
+      continue;
+    }
+    const servi = Number.isFinite(o.serviceAuTour) ? o.serviceAuTour : null;
+    const brut = tours ? tours[o.sourceId] : undefined;
+    liste.push({
+      ...champsDeCarte(o, maintenant),
+      ...blocage,
+      servieAuTour: servi,
+      tourSource: Number.isFinite(brut) ? brut : null,
+    });
+  }
+  liste.sort((a, b) => (b.ageJours ?? 0) - (a.ageJours ?? 0));
+  const parRaison = {}, parPays = {};
+  for (const b of liste) {
+    parRaison[b.raison] = (parRaison[b.raison] || 0) + 1;
+    parPays[b.pays || '?'] = (parPays[b.pays || '?'] || 0) + 1;
+  }
+  return {
+    cartes,
+    dansLesCinqJours,
+    sansDate,
+    bloquees: liste.length,
+    parRaison,
+    parPays,
+    plusAncienneJours: liste.length ? liste[0].ageJours : null,
+    liste,
+  };
+}
+
+/** LA FICHE D'UNE CARTE EFFACÉE — ce qu'il faut pour vérifier l'effacement. */
+export function carteEffacee(offre, { maintenant = Date.now(), tours = {}, quand = null } = {}) {
+  const servi = Number.isFinite(offre.serviceAuTour) ? offre.serviceAuTour : null;
+  const brut = tours ? tours[offre.sourceId] : undefined;
+  return {
+    ...champsDeCarte(offre, maintenant),
+    effaceeLe: quand || new Date(maintenant).toISOString(),
+    servieAuTour: servi,
+    tourSource: Number.isFinite(brut) ? brut : null,
+    revenueLe: null,
+  };
+}
+
+/** L'ÉTAT NEUF DU REGISTRE. Même forme que celui de la simulation : un registre
+ *  d'effacements, un compte, et une ligne de jour — trois choses qu'on relit. */
+export const neufSuivi = () => ({
+  debut: null,
+  maj: null,
+  /** Par clé stable (l'empreinte de l'adresse) : l'offre, sa source, son âge à
+   *  l'effacement, et les deux tours qui ont décidé. */
+  effacees: {},
+  compte: { effacees: 0, revenues: 0, passes: 0 },
+  lignes: { jour: '', effacees: 0, revenues: 0 },
+});
+
+/** RELIRE UN REGISTRE ÉCRIT PAR UN AUTRE PASSAGE — tolérant, jamais fatal : un
+ *  registre illisible ne doit pas arrêter une collecte (c'est un témoin). */
+export function relireSuivi(texte) {
+  const neuf = neufSuivi();
+  let e = null;
+  try { e = JSON.parse(texte); } catch { return neuf; }
+  if (!e || typeof e !== 'object') return neuf;
+  return {
+    ...neuf,
+    ...e,
+    effacees: (e.effacees && typeof e.effacees === 'object') ? e.effacees : {},
+    compte: { ...neuf.compte, ...(e.compte || {}) },
+    lignes: { ...neuf.lignes, ...(e.lignes || {}) },
+  };
+}
+
+/** AJOUTER LES EFFACEMENTS DU PASSAGE — pure, bornée, et sans jugement.
+ *  Une carte déjà connue du registre n'est pas réécrite : sa PREMIÈRE date
+ *  d'effacement est celle qui compte, et c'est elle que le panneau montre. */
+export function ajouterEffacements(suivi, fiches, { maintenant = Date.now() } = {}) {
+  const quand = new Date(maintenant).toISOString();
+  const effacees = { ...suivi.effacees };
+  let ajouts = 0;
+  for (const f of fiches || []) {
+    if (!f || !f.cle) continue;
+    if (effacees[f.cle]) continue;              // déjà connu : on ne réécrit pas
+    effacees[f.cle] = { ...f, effaceeLe: f.effaceeLe || quand };
+    ajouts += 1;
+  }
+  const jour = quand.slice(0, 10);
+  const lignes = suivi.lignes.jour === jour
+    ? { ...suivi.lignes, effacees: suivi.lignes.effacees + ajouts }
+    : { jour, effacees: ajouts, revenues: 0 };
+  return {
+    ...suivi,
+    debut: suivi.debut || quand,
+    maj: quand,
+    effacees,
+    compte: { ...suivi.compte, effacees: suivi.compte.effacees + ajouts },
+    lignes,
+  };
+}
+
+/** LES RETOURS — la seule mesure qui dise si la règle s'est trompée.
+ *
+ *  Une carte effacée qui RENTRE plus tard (parce que sa source l'a reservie)
+ *  repart comme une carte neuve : c'est le contrat, et rien ne la « dé-condamne ».
+ *  Mais si elle rentre, c'est que la source la sert encore — donc que le silence
+ *  sur lequel on l'a condamnée ne voulait pas dire qu'elle était morte. On le
+ *  COMPTE, sans rien changer à la décision : le compteur est un aveu, pas une
+ *  commande.
+ */
+export function marquerRetours(suivi, cles, { maintenant = Date.now() } = {}) {
+  const quand = new Date(maintenant).toISOString();
+  const ensemble = cles instanceof Set ? cles : new Set(cles || []);
+  const effacees = { ...suivi.effacees };
+  const revenues = [];
+  for (const cle of ensemble) {
+    const e = effacees[cle];
+    if (!e || e.revenueLe) continue;
+    effacees[cle] = { ...e, revenueLe: quand };
+    revenues.push(cle);
+  }
+  if (!revenues.length) return { suivi, revenues };
+  const jour = quand.slice(0, 10);
+  const lignes = suivi.lignes.jour === jour
+    ? { ...suivi.lignes, revenues: suivi.lignes.revenues + revenues.length }
+    : { jour, effacees: 0, revenues: revenues.length };
+  return {
+    suivi: { ...suivi, maj: quand, effacees,
+      compte: { ...suivi.compte, revenues: suivi.compte.revenues + revenues.length },
+      lignes },
+    revenues,
+  };
+}
+
+/** LE MÉNAGE — deux raisons d'oublier, jamais parce qu'une carte a quitté le
+ *  catalogue (c'est justement la mémoire qu'on veut garder) : le délai de trente
+ *  jours, et la borne de taille (on oublie alors les plus anciennes). */
+export function elaguerSuivi(suivi, { maintenant = Date.now(), max = SUIVI_REGISTRE_MAX } = {}) {
+  const limite = maintenant - SUIVI_JOURS_CONSERVES * 86400000;
+  const gardees = {};
+  let oubliees = 0;
+  for (const [cle, e] of Object.entries(suivi.effacees)) {
+    const t = new Date(e.effaceeLe || 0).getTime();
+    if (Number.isFinite(t) && t < limite) { oubliees += 1; continue; }
+    gardees[cle] = e;
+  }
+  let cles = Object.keys(gardees);
+  if (cles.length > max) {
+    cles.sort((a, b) => new Date(gardees[b].effaceeLe || 0) - new Date(gardees[a].effaceeLe || 0));
+    const garder = new Set(cles.slice(0, max));
+    for (const cle of cles) if (!garder.has(cle)) { delete gardees[cle]; oubliees += 1; }
+  }
+  return {
+    suivi: { ...suivi, effacees: gardees,
+      compte: { ...suivi.compte, oubliees: (suivi.compte.oubliees || 0) + oubliees } },
+    oubliees,
+  };
+}
+
+/** L'EXTRAIT PUBLIÉ — les dernières cartes de chaque population, et les comptes.
+ *  Les deux populations sont bornées SÉPARÉMENT : une vague d'effacements (le
+ *  premier passage après la mise en service en a emporté 13 123) ne doit pas
+ *  chasser les blocages de la liste, qui sont l'autre moitié de la question. */
+export function extraitSuivi(suivi, { max = SUIVI_PUBLIE_MAX, maintenant = Date.now() } = {}) {
+  const quand = (e) => new Date(e.effaceeLe || 0).getTime();
+  const toutes = Object.values(suivi.effacees).sort((a, b) => quand(b) - quand(a));
+  const revenues = toutes.filter((e) => e.revenueLe);
+  return {
+    effacees: toutes.slice(0, max),
+    effaceesRetenues: toutes.length,
+    revenues: revenues.length,
+    revenuesListe: revenues.slice(0, max),
+    lignes: suivi.lignes,
+    compte: suivi.compte,
+    debut: suivi.debut,
+    maj: suivi.maj || new Date(maintenant).toISOString(),
+  };
+}
+
+/** ÉCRIRE ET RELIRE LE REGISTRE — les deux seules entrées/sorties de ce bloc.
+ *  Un échec d'écriture ne fait JAMAIS tomber une collecte : un registre est un
+ *  confort, pas une donnée. Il est écrit en JSON compact (le panneau le lit).
+ *
+ *  ⚠ PAS DE `mkdirSync` ICI, ET C'EST UNE MESURE, PAS UN OUBLI. La première
+ *  version créait le dossier au besoin : `fs.mkdirSync(dirname, { recursive:true })`.
+ *  Éprouvée sur un chemin impossible, cette ligne **fait PENDRE le processus**
+ *  (relevé du 14/10/2026 : `mkdirSync('/proc/interdit', {recursive:true})` ne
+ *  renvoie jamais — ni erreur, ni code de sortie, `timeout` seul en sort). Un
+ *  contrôle qui pend n'est pas un échec, c'est un arrêt silencieux : exactement
+ *  le défaut que ce fichier traque depuis le début. Les deux dossiers où ce
+ *  registre est écrit existent par construction (`data/` est créé au début de
+ *  `principal()`, `docs/` est le site publié) : la création était donc inutile,
+ *  et son seul effet possible était de bloquer la collecte.
+ */
+export function ecrireSuivi(fichier, suivi) {
+  try {
+    fs.writeFileSync(fichier, JSON.stringify(suivi), 'utf8');
+    return true;
+  } catch (e) {
+    console.log(`  ⚠ suivi des cartes non écrit (${e.message}) — le panneau montrera l'état précédent`);
+    return false;
+  }
+}
+
+export function lireSuivi(fichier) {
+  try { return relireSuivi(fs.readFileSync(fichier, 'utf8')); } catch { return neufSuivi(); }
+}
+
 /** L'INTERRUPTEUR DU VOLET 2 — LA VEILLE RAMENÉE DE TRENTE À SEPT JOURS.
  *  **ALLUMÉ LE 12/10/2026, SUR LE MOT DE B : « vas-y ».**
  *
@@ -7793,6 +8143,35 @@ async function principal() {
     precedents: existant.rendusParSource || {},
   });
 
+  // --- LE REGISTRE DES EFFACEMENTS, RELU AVANT LA FUSION ---------------------
+  //  Deux usages, et le second est le seul qui juge la règle :
+  //   1. il alimente la liste publiée que B regarde (cartes effacées, avec leur
+  //      preuve) ;
+  //   2. il permet de compter les RETOURS — une carte effacée qui rentre plus
+  //      tard. C'est la seule mesure qui dise si la règle s'est trompée.
+  //
+  //  ⚠ IL NE DÉCIDE RIEN. Aucune ligne de ce passage ne consulte le registre pour
+  //  choisir d'effacer ou de garder : la décision reste `verdictDeCalendrier`, et
+  //  une épreuve refuse que son corps mentionne le registre (voir R.7 et
+  //  tests/suivi-des-cartes.test.mjs).
+  //
+  //  DEUX EMPLACEMENTS, ET C'EST UNE PRÉCAUTION, PAS UN DOUBLON :
+  //   • `data/effacements.json` — la mémoire longue (trente jours), sur le NAS ;
+  //   • l'extrait publié, relu ici AUSSI. En publication, le passage de secours
+  //     tourne dans le cloud, sur un disque neuf : sans cette relecture, son
+  //     registre repartirait de zéro à chaque heure et la liste de B se viderait
+  //     toute seule — un défaut qu'on ne verrait qu'en comparant deux heures.
+  const fichierRegistre = path.join(DATA, 'effacements.json');
+  const fichierSuivi = PUBLIER ? path.join(DOSSIER_PUBLIE, 'suivi-cartes.json') : path.join(DATA, 'suivi-cartes.json');
+  let suivi = lireSuivi(fichierRegistre);
+  let extraitPrecedent = null;
+  try { extraitPrecedent = JSON.parse(fs.readFileSync(fichierSuivi, 'utf8')); } catch { extraitPrecedent = null; }
+  const precedentEffacees = (extraitPrecedent && extraitPrecedent.effacees) || {};
+  const clesDuPrecedent = [...(precedentEffacees.liste || []), ...(precedentEffacees.revenuesListe || [])];
+  const dejaEffacees = new Set([...Object.keys(suivi.effacees), ...clesDuPrecedent.map((c) => c && c.cle).filter(Boolean)]);
+  const fichesEffacees = [];
+  const clesRevenues = [];
+
   // --- LA MIGRATION DES OFFRES D'AVANT --------------------------------------
   //  Une offre engrangée avant ce mécanisme ne porte aucun numéro de tour, et elle
   //  n'en recevra pas : elle n'est dans aucun paquet, donc la boucle de fusion ne
@@ -7825,6 +8204,12 @@ async function principal() {
       offre.serviceAuTour = toursParSource[offre.sourceId];
     }
     if (!avant) {
+      // LE RETOUR D'UNE CARTE EFFACÉE — la mesure d'aveu de la règle.
+      // Cette adresse était dans le registre des effacements, et une source vient
+      // de la resservir : la carte rentre comme une carte NEUVE (R.3), et on note
+      // qu'elle est revenue. On ne change RIEN à la décision — on constate que le
+      // silence qui l'avait condamnée ne voulait pas dire qu'elle était morte.
+      if (dejaEffacees.has(cle)) clesRevenues.push(cle);
       // `premiereVue` dès l'entrée en base, et non au deuxième passage : c'est
       // LE repère qui dit depuis quand l'offre est chez nous — la réparation
       // des dates de relevé s'appuie dessus (voir TYPES_DATE_RELEVEE).
@@ -8099,15 +8484,25 @@ async function principal() {
   //  CE QUE L'EFFACEMENT EMPORTE : la fiche et ses marques — et son VISUEL, purgé
   //  à la publication par la purge des orphelins, qui est pilotée par les offres
   //  AFFICHÉES (voir `attendus`, au bloc des visuels). Retirer la fiche du stock
-  //  suffit donc : rien à écrire de plus, et surtout RIEN À RETENIR.
+  //  suffit donc : rien à y écrire de plus.
+  //
+  //  CE QU'ON EN GARDE, ET POURQUOI (demande de B, 14/10/2026 : « vérifier la
+  //  véracité des cartes effacées »). La fiche quitte le catalogue, mais sa FICHE
+  //  DE CONTRÔLE part au registre : l'offre, sa source, son âge, le tour où la
+  //  source l'avait servie et celui où elle a reparlé sans elle. Sans cela, il ne
+  //  restait rien pour vérifier un effacement — et un effacement invérifiable
+  //  n'est pas une règle, c'est une croyance. Le registre vit à part, n'est lu par
+  //  aucune décision, et son volume est borné (voir le bloc LE SUIVI DES CARTES).
   let regleEffacees = 0, regleOctets = 0;
   const regleParPays = {};
+  const maintenantEffacement = Date.now();
   for (const cle of [...connues.keys()]) {
     const o = connues.get(cle);
     if (verdictDeCalendrier(o, { tours: toursParSource }) !== 'effacee') continue;
     regleOctets += poidsDuVisuel(o.image);
     const p = o.pays || 'FR';
     regleParPays[p] = (regleParPays[p] || 0) + 1;
+    fichesEffacees.push(carteEffacee(o, { maintenant: maintenantEffacement, tours: toursParSource }));
     connues.delete(cle);
     regleEffacees++;
   }
@@ -8137,7 +8532,7 @@ async function principal() {
       effacees: regleEffacees, octets: regleOctets,
       parPays: regleParPays, jours: VIE_AFFICHEE_JOURS,
       revenus: retours, articlesHorsDelai, joursVeille: JOURS_VEILLE,
-      raison: `RÈGLE ACTIVE (décision de B, 14/10/2026) : une carte s'affiche ${VIE_AFFICHEE_JOURS} jours, servie ou non. Au-delà, une seule question — la source sert-elle encore cette offre ? Elle se lit dans le FLUX, gratuitement : aucune page n'est ouverte. Servie : le compteur repart pour ${VIE_AFFICHEE_JOURS} jours, et l'âge affiché reste celui que la source publie. Plus servie, et la source ayant reparlé depuis : la carte et son visuel sont EFFACÉS. Aucune liste d'exclusion n'est écrite : une offre reservie plus tard rentre comme une carte neuve.`,
+      raison: `RÈGLE ACTIVE (décision de B, 14/10/2026) : une carte s'affiche ${VIE_AFFICHEE_JOURS} jours, servie ou non. Au-delà, une seule question — la source sert-elle encore cette offre ? Elle se lit dans le FLUX, gratuitement : aucune page n'est ouverte. Servie : le compteur repart pour ${VIE_AFFICHEE_JOURS} jours, et l'âge affiché reste celui que la source publie. Plus servie, et la source ayant reparlé depuis : la carte et son visuel sont EFFACÉS. La règle ne lit aucune liste d'exclusion : une offre reservie plus tard rentre comme une carte neuve. Les effacements sont CONSIGNÉS à part (suivi-cartes.json) pour que B puisse les vérifier — ce registre n'est lu par AUCUNE décision.`,
       raisonVeille: VEILLE_SEPT_JOURS_ACTIVE
         ? `RÈGLE ACTIVE (VOLET VEILLE) : la veille est ramenée à ${JOURS_VEILLE} jours et ne revient pas — son verrou est la date de publication de l'article, qui ne change jamais. Rien n'est retiré du stock : on refuse de le publier. Un mot suffit pour revenir en arrière.`
         : `MESURE (VOLET VEILLE) : ${JOURS_VEILLE} jours appliqués, ${articlesHorsDelai} article(s) de plus de sept jours gardés. Ce volet est le SÛR des deux — aucun faux positif possible — et il se décide séparément du volet des offres.`,
@@ -8676,6 +9071,112 @@ async function principal() {
     console.log(`  poids publié : ${e.poids.depotMo} Mo sur ${e.poids.quotaDepotMo} Mo tolérés (${e.poids.partDuQuotaPct} %) — `
       + `catalogue servi ${e.poids.catalogueGzipMo} Mo compressés · ${e.leviers.length} levier(s) proposé(s)`);
     if (e.leviers.length) console.log(`  → ${e.leviers[0].titre} : ${e.leviers[0].gain}`);
+  }
+
+  /* --------------------------------------------------------------------------
+   * LE SUIVI DES CARTES — CONSIGNÉ, BORNÉ, PUBLIÉ
+   *
+   *  Demandé par B le 14/10/2026 : « un onglet où je vois les cartes effacées et
+   *  les cartes bloquées pour une raison ou une autre. L'objectif est de vérifier
+   *  la véracité des cartes effacées. »
+   *
+   *  ÉCRIT ICI, À LA FIN DU PASSAGE, et pas au moment de l'effacement : tout ce
+   *  qu'on consigne (les blocages, les raisons de silence, les autres mécanismes
+   *  de retrait) n'existe qu'une fois le passage terminé. Le registre des
+   *  effacements, lui, a été rempli au vol — on ne le relit pas, on l'écrit.
+   *
+   *  DEUX FICHIERS, ET C'EST VOLONTAIRE :
+   *   • `data/effacements.json` — le registre LOCAL, trente jours, lu par aucun
+   *     visiteur. C'est la mémoire longue, celle qui permet de dire « cette carte
+   *     effacée est revenue » plusieurs jours après ;
+   *   • `suivi-cartes.json` — l'EXTRAT publié, borné, que le panneau lit. Il vit
+   *     dans `docs/` en publication (pour que le passage de secours, dans le
+   *     cloud, retrouve un registre au lieu de repartir de zéro à chaque heure)
+   *     et dans `data/` en local.
+   *  Le panneau ne lit jamais `data/` : il ne voit que le site publié.
+   * ------------------------------------------------------------------------ */
+  {
+    const maintenantSuivi = Date.now();
+    // LES RAISONS DE SILENCE, dans les mots du passage qui vient de tourner. Une
+    // carte bloquée dont la source est au repos n'est PAS dans le même cas qu'une
+    // carte bloquée dont la source est sautée au seuil : le panneau les distinguait
+    // sinon par un « la source n'a pas reparlé » identique, qui n'apprend rien.
+    const silences = {};
+    for (const j of journal) {
+      if (!j || !Array.isArray(j.sources)) continue;
+      if (j.source === 'repos') {
+        for (const s of j.sources) silences[s] = "sa source était au repos à ce passage (délai de politesse non écoulé) : elle n'a pas été lue, et on ne conclut rien d'une source qu'on n'a pas lue";
+      } else if (j.source === 'seuil-enseigne') {
+        for (const s of j.sources) silences[s] = "sa source est sous le seuil de lecture : elle rend trop peu d'annonces pour qu'un tour compte, et elle est sautée en attendant";
+      }
+    }
+    const cartes = etatDesCartes(connues.values(), { maintenant: maintenantSuivi, tours: toursParSource, silences });
+
+    // Le registre : on ajoute les effacements du passage, on note les retours,
+    // on élague. Trois opérations PURES, dans cet ordre — et l'ordre compte :
+    // un ajout après coup écraserait la date du premier effacement.
+    suivi = ajouterEffacements(suivi, fichesEffacees, { maintenant: maintenantSuivi });
+    const retoursSuivi = marquerRetours(suivi, clesRevenues, { maintenant: maintenantSuivi });
+    suivi = retoursSuivi.suivi;
+    suivi = elaguerSuivi(suivi, { maintenant: maintenantSuivi }).suivi;
+    suivi.compte.passes = (suivi.compte.passes || 0) + 1;
+    ecrireSuivi(path.join(DATA, 'effacements.json'), suivi);
+
+    // QUI RETIRE QUOI — le bloc qui empêche une confusion coûteuse : une carte
+    // disparue du site ne l'a pas forcément été par la règle des cinq jours. Trois
+    // autres mécanismes retirent aussi, et le panneau doit pouvoir les nommer.
+    const jCartes = journal.find((j) => j.source === 'vie-de-la-carte') || {};
+    const jPeremption = journal.find((j) => j.source === 'peremption-date') || {};
+    const motifs = jPeremption.motifs || {};
+    const retraits = [
+      { mecanisme: 'la règle des cinq jours', nb: jCartes.effacees || 0,
+        quoi: "la source a reparlé sans resservir la carte : elle sort avec son visuel" },
+      { mecanisme: `limite de ${LIMITE_SOURCE_DISPARUE_JOURS} jours — source disparue`, nb: motifs['source-disparue'] || 0,
+        quoi: "offre dont la source n'est déclarée nulle part : laissée au jugement de la date, faute de mieux" },
+      { mecanisme: `limite de ${LIMITE_PRESSE_JOURS} jours — presse`, nb: motifs['presse-hors-delai'] || 0,
+        quoi: "un bon plan de presse est une actualité : au-delà d'une semaine, c'est une archive" },
+      { mecanisme: `veille — ${JOURS_VEILLE} jours`, nb: jCartes.articlesHorsDelai || 0,
+        quoi: "article de veille non republié : il reste en stock, on refuse de le publier" },
+    ];
+
+    const extrait = extraitSuivi(suivi, { maintenant: maintenantSuivi });
+    const suiviPublie = {
+      genereLe: sortie.genereLe,
+      // CE QUE VAUT CE FICHIER, écrit dans le fichier : un panneau qui affiche une
+      // liste vide ou partielle doit pouvoir dire pourquoi.
+      quoi: "Ce que la règle des cinq jours a EFFACÉ (avec la preuve : le tour où la source a reparlé sans resservir la carte) et ce qu'elle N'A PAS PU JUGER (cartes bloquées, avec la raison). Fichier de contrôle : aucune décision de la collecte ne le relit. Registre local sur trente jours ; l'extrait publié est borné aux plus récentes.",
+      regle: { jours: VIE_AFFICHEE_JOURS, mode: 'actif', veilleJours: JOURS_VEILLE },
+      passage: {
+        effacees: regleEffacees, octets: regleOctets, parPays: regleParPays,
+        reprises: retours || 0,
+      },
+      cartes: {
+        affichees: cartes.cartes,
+        dansLesCinqJours: cartes.dansLesCinqJours,
+        sansDate: cartes.sansDate,
+        bloquees: cartes.bloquees,
+        parRaison: cartes.parRaison,
+        parPays: cartes.parPays,
+        plusAncienneJours: cartes.plusAncienneJours,
+        liste: cartes.liste.slice(0, SUIVI_PUBLIE_MAX),
+        listeTronquee: Math.max(0, cartes.liste.length - SUIVI_PUBLIE_MAX),
+      },
+      effacees: {
+        liste: extrait.effacees,
+        retenues: extrait.effaceesRetenues,
+        revenues: extrait.revenues,
+        revenuesListe: extrait.revenuesListe,
+        registreDebut: extrait.debut,
+        registreMaj: extrait.maj,
+        compte: extrait.compte,
+        lignes: extrait.lignes,
+      },
+      retraits,
+    };
+    ecrireSuivi(fichierSuivi, suiviPublie);
+    console.log(`  suivi des cartes : ${cartes.dansLesCinqJours} carte(s) dans les cinq jours · `
+      + `${cartes.bloquees} bloquée(s) (${Object.entries(cartes.parRaison).map(([r, n]) => `${r} ${n}`).join(', ') || 'aucune'}) · `
+      + `${regleEffacees} effacée(s) ce passage · registre ${extrait.effaceesRetenues} effacement(s) sur trente jours, ${extrait.revenues} revenue(s)`);
   }
 }
 

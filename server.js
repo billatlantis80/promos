@@ -151,6 +151,13 @@ const server = http.createServer((req, res) => {
   // alors qu'il est rempli en ligne. Un serveur de test qui ne se comporte pas
   // comme la cible fait perdre plus de temps qu'il n'en fait gagner.
   else if (rel === 'etat-collecte.json') fichier = path.join(DOCS, rel);
+  // LE SUIVI DES CARTES (effacées, bloquées) est un fichier de contrôle produit
+  // à la publication, sans jumeau dans public/ — même famille que le témoin de
+  // fraîcheur juste au-dessus. Sans cette ligne, l'onglet « Vie des cartes »
+  // s'ouvrirait sur « fichier absent » en local pendant qu'il est rempli en
+  // ligne : un serveur de test qui ne se comporte pas comme la cible fait perdre
+  // plus de temps qu'il n'en fait gagner (défaut déjà payé deux fois ici).
+  else if (rel === 'suivi-cartes.json') fichier = path.join(DOCS, rel);
   else if (rel.startsWith('img/')) fichier = path.normalize(path.join(DOCS, rel));
   else fichier = path.normalize(path.join(PUBLIC, rel));
 

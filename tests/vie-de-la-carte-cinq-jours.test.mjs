@@ -26,7 +26,7 @@
    ============================================================================= */
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readFileSync, existsSync } from 'node:fs';
 import {
   VIE_AFFICHEE_JOURS, verdictDeCalendrier, ageJours,
   CONTROLES_COMMUNAUTE_PAR_PASSAGE, CONTROLES_ENSEIGNE_PAR_PASSAGE,
@@ -117,13 +117,46 @@ test('CAS 5 — un article de veille n’est JAMAIS visé, quel que soit son âg
   }
 });
 
-test('CAS 6 — l’historique des prix survit : son identifiant ne dépend pas de la carte', () => {
+test('CAS 6 — l’historique des prix survit : sa preuve de FORME, valable partout', () => {
   // R.6 : une carte effacée ne laisse AUCUNE trace — sauf l'historique des prix,
-  // qui est la seule chose conservée, et qui doit se raccrocher TOUT SEUL au
-  // retour. La preuve n'est pas une intention, c'est la forme de la clé : elle est
-  // l'identifiant de l'offre, dérivé de son ADRESSE (voir `identifiant`), donc
-  // elle survit à l'effacement de la fiche.
-  const hist = JSON.parse(readFileSync(new URL('../data/historique-prix.json', import.meta.url), 'utf8'));
+  // qui est la seule chose conservée. La preuve n'est pas une intention, c'est la
+  // forme de la clé (l'identifiant de l'offre, dérivé de son ADRESSE — voir
+  // `identifiant` — donc il survit à l'effacement de la fiche), et le fait que la
+  // règle ne TOUCHE jamais à l'historique.
+  //
+  // ⚠ POURQUOI CETTE PARTIE EST SÉPARÉE DE LA SUIVANTE. Elle ne lit que des
+  // fichiers VERSIONNÉS (le collecteur), donc elle vaut aussi dans le clone de
+  // GitHub. La preuve sur les DONNÉES réelles, elle, a besoin de
+  // `data/historique-prix.json` — un fichier que `.gitignore` exclut, et qui
+  // n'existe donc que là où la collecte tourne (voir CAS 6-bis).
+  const src = readFileSync(new URL('../collecteur.mjs', import.meta.url), 'utf8');
+  const bloc = src.slice(src.indexOf('LA RÈGLE DE LA VIE D\'UNE CARTE — CINQ JOURS, PUIS LA QUESTION DU SERVICE'),
+    src.indexOf('LES ARTICLES DE PLUS DE SEPT JOURS'));
+  assert.ok(bloc.length > 0, 'le bloc de la règle doit rester extractible');
+  assert.doesNotMatch(bloc, /historique/i,
+    'la règle n’a rien à faire dans l’historique des prix : elle efface la fiche, elle ne touche pas au souvenir');
+});
+
+test('CAS 6-bis — l’historique RÉEL retrouve une offre par son identifiant (relevé local)', (t) => {
+  // ⚠ CE QUI A ÉTÉ PAYÉ ICI, ET QU'IL NE FAUT PAS REFAIRE. Cette vérification
+  // lisait `data/historique-prix.json` EN DUR. Ce fichier n'est pas versionné
+  // (`.gitignore`), donc absent de tout clone : dans le workflow horaire, le test
+  // levait `ENOENT`, l'étape « Tests » passait au ROUGE **avant** la collecte, et
+  // le secours GitHub n'a plus rien collecté ni publié pendant 38 heures — 38
+  // passages perdus, sans un mot (constaté le 15/10/2026, dernier succès le
+  // 13/10 à 17 h 10 UTC). Le cron du NAS tournait heureusement encore.
+  //
+  // Le fichier est le SEUL endroit qui porte cette preuve : le catalogue publié
+  // ne conserve pas l'historique (aucun champ d'historique sur ses offres, et
+  // aucun jumeau dans `docs/`). On ne peut donc pas la remplacer en ligne :
+  // on la DÉCLARE absente, bruyamment, au lieu d'échouer — et la preuve de forme
+  // du CAS 6, elle, continue de tourner partout.
+  const chemin = new URL('../data/historique-prix.json', import.meta.url);
+  if (!existsSync(chemin)) {
+    t.skip('historique local absent (data/ n’est pas versionné) : rien à vérifier sur les données ici');
+    return;
+  }
+  const hist = JSON.parse(readFileSync(chemin, 'utf8'));
   const catalogue = JSON.parse(readFileSync(new URL('../docs/offres.json', import.meta.url), 'utf8'));
   const jours = Object.keys(hist.jours || {});
   assert.ok(jours.length > 0, 'l’historique doit porter au moins un jour');
@@ -135,15 +168,6 @@ test('CAS 6 — l’historique des prix survit : son identifiant ne dépend pas 
   const trouvees = avecPrix.filter((o) => Array.isArray(dernier[o.id]));
   assert.ok(trouvees.length > 0,
     `l’historique doit retrouver une offre par son identifiant stable (clés essayées : ${Object.keys(dernier).length})`);
-  // Et rien, dans la règle, ne TOUCHE à l'historique : l'effacement retire la
-  // fiche du stock, la purge des visuels fait le reste. L'historique est écrit
-  // plus loin dans le passage, par `noterPrix`, sur la clé de l'offre.
-  const src = readFileSync(new URL('../collecteur.mjs', import.meta.url), 'utf8');
-  const bloc = src.slice(src.indexOf('LA RÈGLE DE LA VIE D\'UNE CARTE — CINQ JOURS, PUIS LA QUESTION DU SERVICE'),
-    src.indexOf('LES ARTICLES DE PLUS DE SEPT JOURS'));
-  assert.ok(bloc.length > 0, 'le bloc de la règle doit rester extractible');
-  assert.doesNotMatch(bloc, /historique/i,
-    'la règle n’a rien à faire dans l’historique des prix : elle efface la fiche, elle ne touche pas au souvenir');
 });
 
 /* =============================================================================
