@@ -197,6 +197,34 @@ fi
 
 t_debut=$(date +%s)
 t_phase=$(ms)
+
+# ---- LES RÈGLES DU SITE, ÉCRITES AVANT LA PUBLICATION -------------------------
+# Demande de B, 15/10/2026 : un onglet qui porte « toutes les règles qui gèrent
+# le site [...] classées par catégorie, par thème et numérotées ».
+#
+# `donnees/regles-du-site.json` ne porte AUCUNE valeur : il porte des NOMS de
+# constantes. `bin/regles-du-site.mjs` les RELIT dans `collecteur.mjs`,
+# `public/regles-affichage.js` et `public/app.js`, et écrit `public/regles.json`
+# — que la publication copie ensuite dans `docs/`, comme le reste de `public/`.
+#
+# Il tourne donc AVANT la publication : l'onglet affiche les valeurs du code qui
+# est en ligne, jamais celles d'hier.
+#
+# S'IL REFUSE — une constante citée a disparu, un fichier cité a été renommé —
+# ON NE BLOQUE PAS LA COLLECTE : le site continue de vivre, c'est la bonne
+# priorité. Mais on le DIT, parce que le seul défaut que cet onglet ne doit pas
+# avoir, c'est de servir des chiffres périmés en silence. Le dépôt a une seconde
+# garde : l'épreuve `le catalogue des règles est à JOUR du code qu'il cite`
+# refuse une publication dont les empreintes ne correspondent plus.
+t_phase=$(ms)
+if node bin/regles-du-site.mjs >> "$JOURNAL" 2>&1; then
+  journal "règles du site : $(( $(ms) - t_phase )) ms"
+else
+  journal "règles du site : ÉCHEC — l'onglet servira le dernier catalogue écrit"
+  alerte "⚠ Promos : le catalogue des règles n'a pas pu être écrit (une constante citée a-t-elle disparu du code ?) — l'onglet Règles sert la version précédente"
+fi
+
+t_phase=$(ms)
 # La sortie du collecteur part au journal (horodatée, ligne par ligne : c'est ce
 # qui permet de dire quelle phase a pris le temps la prochaine fois) et N'EST PAS
 # renvoyée sur la sortie standard — sinon le cron enverrait un message à B toutes

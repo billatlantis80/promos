@@ -344,7 +344,16 @@ test('le passage COMPTE les reprises (le chiffre des soldes est mesuré, pas pro
   const src = readFileSync(new URL('../collecteur.mjs', import.meta.url), 'utf8');
   assert.match(src, /const reprise = ageJours\(avant\.premiereVue \|\| avant\.vuLe\) > VIE_AFFICHEE_JOURS/,
     'la reprise se compte sur le compteur d’affichage');
-  assert.match(src, /if \(reprise\) retours\+\+/, 'et elle se compte au moment de la fusion');
+  assert.match(src, /if \(reprise\) \{\s*\n\s*retours\+\+;/,
+    'et elle se compte au moment de la fusion');
+  // ⚠ LE COMPTE DU PAYS SE FAIT DANS LE MÊME BLOC QUE LE TOTAL — ajouté le
+  //  15/10/2026 avec la publication des compteurs par pays. C'est l'invariant qui
+  //  rend la tuile du panneau honnête : si le découpage vivait dans une seconde
+  //  boucle, la somme des pays pourrait ne plus valoir le total, et le panneau
+  //  afficherait sous un pays un chiffre qui ne lui appartient pas.
+  assert.match(src, /if \(reprise\) \{\s*\n\s*retours\+\+;\s*\n\s*const p = offre\.pays \|\| avant\.pays \|\| '\?';\s*\n\s*reprisesParPays\[p\] = \(reprisesParPays\[p\] \|\| 0\) \+ 1;/,
+    'la part du pays doit s’incrémenter dans le MÊME bloc que le total, jamais dans une autre boucle');
+  assert.match(src, /parPaysReprises: reprisesParPays/, 'et la répartition doit être publiée avec le total');
   assert.match(src, /revenus: retours/, 'puis elle est publiée dans le journal du passage');
   assert.match(src, /aucune liste d'exclusion/i, 'la raison écrite doit dire que le retour est possible');
 });

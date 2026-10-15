@@ -1333,17 +1333,32 @@ export function raisonDeBlocage(offre, { maintenant = Date.now(), tours = {}, si
 export function etatDesCartes(offres, { maintenant = Date.now(), tours = {}, silences = {} } = {}) {
   const liste = [];
   let dansLesCinqJours = 0, sansDate = 0, cartes = 0;
+  // ⚠ CHAQUE COMPTEUR EST DÉCOUPÉ PAR PAYS, ET DANS LA MÊME BOUCLE QUE LE TOTAL.
+  //  Mesuré le 15/10/2026 : le panneau filtrait bien ses tableaux par pays, mais
+  //  ses compteurs continuaient de décrire le catalogue entier — B lisait « 10 650
+  //  cartes affichées » sous un titre « Pays consulté : France ». Un total affiché
+  //  sous un filtre n'est pas une imprécision, c'est un chiffre faux.
+  //  Le découpage se fait ICI, au même endroit que l'incrément du total, parce que
+  //  deux boucles séparées finiraient par diverger : c'est la même offre qui
+  //  compte des deux côtés, ou elle ne compte nulle part.
+  //  Clé de pays : `o.pays || '?'` — la même que la liste publiée, pour que les
+  //  deux se recoupent à l'unité près.
+  const parPaysAffichees = {}, parPaysCinqJours = {}, parPaysSansDate = {}, parPaysBloquees = {};
+  const plus = (objet, cle) => { objet[cle] = (objet[cle] || 0) + 1; };
   for (const o of offres || []) {
     if (!o || o.type === 'article') continue;
     cartes += 1;
+    const p = o.pays || '?';
+    plus(parPaysAffichees, p);
     const blocage = raisonDeBlocage(o, { maintenant, tours, silences });
     if (!blocage) {
-      if (ageJours(o.premiereVue || o.vuLe, maintenant) === null) sansDate += 1;
-      else dansLesCinqJours += 1;
+      if (ageJours(o.premiereVue || o.vuLe, maintenant) === null) { sansDate += 1; plus(parPaysSansDate, p); }
+      else { dansLesCinqJours += 1; plus(parPaysCinqJours, p); }
       continue;
     }
     const servi = Number.isFinite(o.serviceAuTour) ? o.serviceAuTour : null;
     const brut = tours ? tours[o.sourceId] : undefined;
+    plus(parPaysBloquees, p);
     liste.push({
       ...champsDeCarte(o, maintenant),
       ...blocage,
@@ -1371,10 +1386,17 @@ export function etatDesCartes(offres, { maintenant = Date.now(), tours = {}, sil
   const RANG_DE_RAISON = { violation: 0, 'source-muette': 1 };
   const rangDeRaison = (b) => RANG_DE_RAISON[b.raison] ?? 2;
   liste.sort((a, b) => rangDeRaison(a) - rangDeRaison(b) || (b.ageJours ?? 0) - (a.ageJours ?? 0));
-  const parRaison = {}, parPays = {};
+  const parRaison = {};
+  for (const b of liste) parRaison[b.raison] = (parRaison[b.raison] || 0) + 1;
+  // LA PLUS ANCIENNE, PAR PAYS AUSSI. La liste publiée est BORNÉE (200 entrées)
+  // et finit par les « source-sans-compteur » : la plus ancienne d'un pays peut
+  // très bien avoir été tronquée. Le chiffre se calcule donc ici, sur la liste
+  // ENTIÈRE, et pas à l'écran sur ce qu'on en a publié — sinon le panneau
+  // annoncerait l'âge de la plus ancienne carte QU'IL VOIT.
+  const plusAncienneParPays = {};
   for (const b of liste) {
-    parRaison[b.raison] = (parRaison[b.raison] || 0) + 1;
-    parPays[b.pays || '?'] = (parPays[b.pays || '?'] || 0) + 1;
+    const p = b.pays || '?';
+    plusAncienneParPays[p] = Math.max(plusAncienneParPays[p] ?? 0, b.ageJours ?? 0);
   }
   return {
     cartes,
@@ -1382,13 +1404,17 @@ export function etatDesCartes(offres, { maintenant = Date.now(), tours = {}, sil
     sansDate,
     bloquees: liste.length,
     parRaison,
-    parPays,
+    parPaysBloquees,
+    parPaysAffichees,
+    parPaysCinqJours,
+    parPaysSansDate,
     // ⚠ CALCULÉ, JAMAIS LU DANS `liste[0]`. Depuis que la liste est ordonnée par
     // RANG DE RAISON, sa première entrée n'est plus la plus ancienne : la lire
     // ainsi aurait fait annoncer au panneau « la plus ancienne a 5 jours » alors
     // que des cartes bloquées en ont 8,5. Le chiffre affiché doit rester le plus
     // grand âge réel de la liste.
     plusAncienneJours: liste.length ? Math.max(...liste.map((b) => b.ageJours ?? 0)) : null,
+    plusAncienneParPays,
     liste,
   };
 }
@@ -1527,11 +1553,22 @@ export function extraitSuivi(suivi, { max = SUIVI_PUBLIE_MAX, maintenant = Date.
   const quand = (e) => new Date(e.effaceeLe || 0).getTime();
   const toutes = Object.values(suivi.effacees).sort((a, b) => quand(b) - quand(a));
   const revenues = toutes.filter((e) => e.revenueLe);
+  // LA RÉPARTITION PAR PAYS DU REGISTRE — comptée sur le registre ENTIER, jamais
+  //  sur l'extrait borné : `effaceesRetenues` compte trente jours, la liste n'en
+  //  publie que les plus récentes. Deux périmètres différents, et le panneau a
+  //  besoin du premier pour que la somme de ses tuiles par pays égale son total.
+  const repartir = (liste) => {
+    const p = {};
+    for (const e of liste) { const c = (e && e.pays) || '?'; p[c] = (p[c] || 0) + 1; }
+    return p;
+  };
   return {
     effacees: toutes.slice(0, max),
     effaceesRetenues: toutes.length,
     revenues: revenues.length,
     revenuesListe: revenues.slice(0, max),
+    parPaysEffacees: repartir(toutes),
+    parPaysRevenues: repartir(revenues),
     lignes: suivi.lignes,
     compte: suivi.compte,
     debut: suivi.debut,
@@ -8376,6 +8413,9 @@ async function principal() {
   //  conception, pas une étourderie : il s'appelle maintenant `retours`, court,
   //  sans lettre doublée, et il n'y a plus rien à confondre.
   let nouvelles = 0, misesAJour = 0, retours = 0;
+  // LES REPRISES, DÉCOUPÉES PAR PAYS — incrémentées dans la MÊME ligne que le
+  //  total (`retours`), jamais dans une seconde boucle qui compterait autre chose.
+  const reprisesParPays = {};
   for (const offre of paquets.flat()) {
     const cle = cleDe(offre);
     const avant = connues.get(cle);
@@ -8413,7 +8453,11 @@ async function principal() {
     //  ce qui serait un faux « neuf » fabriqué tous les cinq jours.
     const horodatage = new Date().toISOString();
     const reprise = ageJours(avant.premiereVue || avant.vuLe) > VIE_AFFICHEE_JOURS;
-    if (reprise) retours++;
+    if (reprise) {
+      retours++;
+      const p = offre.pays || avant.pays || '?';
+      reprisesParPays[p] = (reprisesParPays[p] || 0) + 1;
+    }
     // Mise à jour SANS écraser la date de première vue (qui sert à dater l'offre).
     const fusion = { ...avant, ...offre, vuLe: horodatage,
       premiereVue: reprise ? horodatage : (avant.premiereVue || avant.vuLe) };
@@ -8678,6 +8722,9 @@ async function principal() {
   //  aucune décision, et son volume est borné (voir le bloc LE SUIVI DES CARTES).
   let regleEffacees = 0, regleOctets = 0;
   const regleParPays = {};
+  // Le poids libéré, découpé comme le compte : le panneau peut ainsi dire « 3,4 Ko
+  // libérés en France » au lieu d'un poids global sous un filtre de pays.
+  const regleOctetsParPays = {};
   // ⚠ UN SEUL INSTANT POUR TOUTE LA PASSE — corrigé le 15/10/2026, et voilà le
   // défaut qu'on avait mesuré : l'effacement jugeait avec `Date.now()` (l'instant
   // où la boucle passe) et le fichier publié était ESTAMPILLÉ PLUS TARD (genereLe,
@@ -8696,9 +8743,11 @@ async function principal() {
   for (const cle of [...connues.keys()]) {
     const o = connues.get(cle);
     if (verdictDeCalendrier(o, { maintenant: INSTANT_DU_PASSAGE, tours: toursParSource }) !== 'effacee') continue;
-    regleOctets += poidsDuVisuel(o.image);
+    const octetsVisuel = poidsDuVisuel(o.image);
+    regleOctets += octetsVisuel;
     const p = o.pays || 'FR';
     regleParPays[p] = (regleParPays[p] || 0) + 1;
+    regleOctetsParPays[p] = (regleOctetsParPays[p] || 0) + octetsVisuel;
     fichesEffacees.push(carteEffacee(o, { maintenant: maintenantEffacement, tours: toursParSource }));
     connues.delete(cle);
     regleEffacees++;
@@ -9351,16 +9400,32 @@ async function principal() {
       regle: { jours: VIE_AFFICHEE_JOURS, mode: 'actif', veilleJours: JOURS_VEILLE },
       passage: {
         effacees: regleEffacees, octets: regleOctets, parPays: regleParPays,
+        // LE POIDS, DÉCOUPÉ COMME LE COMPTE. Sans lui, le panneau aurait dû
+        // choisir entre taire les octets sous un filtre de pays ou afficher le
+        // poids du catalogue entier sous le nom d'un pays.
+        parPaysOctets: regleOctetsParPays,
         reprises: retours || 0,
+        parPaysReprises: reprisesParPays,
       },
+      // ⚠ TOUT COMPTEUR PUBLIÉ L'EST AUSSI PAR PAYS, ET LA SOMME DOIT TOMBER
+      //  JUSTE. C'est le critère d'acceptation de ce bloc : le panneau peut
+      //  désormais afficher un chiffre sous un filtre de pays, et une tuile qui
+      //  contredirait son total serait exactement le défaut qu'on vient de
+      //  corriger. `parPays` (bloquées) portait un nom AMBIGU — il décrivait les
+      //  seules cartes bloquées, ce qu'aucun lecteur ne pouvait deviner ; il
+      //  s'appelle `parPaysBloquees`, et les trois autres populations ont le leur.
       cartes: {
         affichees: cartes.cartes,
         dansLesCinqJours: cartes.dansLesCinqJours,
         sansDate: cartes.sansDate,
         bloquees: cartes.bloquees,
         parRaison: cartes.parRaison,
-        parPays: cartes.parPays,
+        parPaysBloquees: cartes.parPaysBloquees,
+        parPaysAffichees: cartes.parPaysAffichees,
+        parPaysCinqJours: cartes.parPaysCinqJours,
+        parPaysSansDate: cartes.parPaysSansDate,
         plusAncienneJours: cartes.plusAncienneJours,
+        plusAncienneParPays: cartes.plusAncienneParPays,
         liste: cartes.liste.slice(0, SUIVI_PUBLIE_MAX),
         listeTronquee: Math.max(0, cartes.liste.length - SUIVI_PUBLIE_MAX),
       },
@@ -9369,6 +9434,10 @@ async function principal() {
         retenues: extrait.effaceesRetenues,
         revenues: extrait.revenues,
         revenuesListe: extrait.revenuesListe,
+        // Les deux compteurs du registre, découpés par pays sur le registre
+        // ENTIER (trente jours), pas sur l'extrait borné.
+        parPays: extrait.parPaysEffacees,
+        parPaysRevenues: extrait.parPaysRevenues,
         registreDebut: extrait.debut,
         registreMaj: extrait.maj,
         compte: extrait.compte,

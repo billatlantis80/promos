@@ -142,14 +142,17 @@ test('le pays choisi entre dans la lecture des deux onglets', () => {
 });
 
 test('les compteurs qui décrivent tout le catalogue le DISENT', () => {
-  // Les quatre blocs non découpables : les compteurs de la règle, les mécanismes
-  // du passage, et les deux blocs de l'onglet des ajouts qui décrivent le passage.
-  for (const appel of ["txt('mCartesCompteurs', avisTousPays() +",
-    "txt('mCartesRetraits', avisTousPays() +",
+  // Les trois blocs non découpables : les mécanismes du passage, et les deux
+  // blocs de l'onglet des ajouts qui décrivent le passage.
+  // ⚠ `mCartesCompteurs` N'EN FAIT PLUS PARTIE (15/10/2026) : il suit le pays
+  // consulté, et porte donc son propre avis — voir l'épreuve des compteurs.
+  for (const appel of ["txt('mCartesRetraits', avisTousPays() +",
     "txt('mAjoutsRetraits', avisTousPays() +",
     "txt('mAjoutsSources', avisTousPays() +"]) {
     assert.ok(JS.includes(appel), `le bloc doit dire qu’il décrit tout le catalogue : ${appel}`);
   }
+  assert.ok(!JS.includes("txt('mCartesCompteurs', avisTousPays() +"),
+    'les compteurs de la règle suivent le pays : leur coller « tous pays » serait un aveu de total faux');
   // Et les deux avis qui CHAPITENT un onglet filtré nomment le pays consulté,
   // sinon les chiffres filtrés se liraient comme des chiffres généraux.
   assert.ok(JS.includes("txt('avisCartes', avisPays() +"), 'l’avis de la vie des cartes doit nommer le pays');
@@ -219,15 +222,22 @@ test('un pays du catalogue sans carte au journal n’a pas de tuile dans SA barr
     'avec le total, pour que « rien pour ce pays » ne se confonde pas avec « rien du tout »');
 });
 
-test('les compteurs de la règle gardent les listes ENTIÈRES', () => {
-  // Ce qui empêche le chiffre d'à côté d'être faux : les compteurs lisent les
-  // listes complètes, pas les listes filtrées.
-  assert.match(JS, /\[nb\(e\.retenues == null \? effaceesToutes\.length : e\.retenues\), 'effacements au registre \(30 j, tous pays\)'\],/,
-    'le compte du registre porte sur tout le catalogue, et son libellé le dit');
+test('les compteurs de la règle suivent le pays, et comparent au registre ENTIER', () => {
+  // CE QUI EMPÊCHE LE CHIFFRE D'À CÔTÉ D'ÊTRE FAUX, en deux temps :
+  //   1. le compte du pays vient de `parPays` publié — calculé par le collecteur
+  //      sur le registre ENTIER (trente jours), pas sur l'extrait borné ;
+  //   2. la comparaison « extrait publié / registre entier » continue de se faire
+  //      sur les totaux, jamais sur le pays filtré.
+  assert.match(JS, /const cRetenues = compteurDuPays\(e\.parPays, paysChoisiCartes,/,
+    'le compte du registre passe par le compteur de pays');
+  assert.match(JS, /e\.retenues == null \? effaceesToutes\.length : e\.retenues\);/,
+    'et son repli reste la liste entière publiée, jamais la liste filtrée par pays');
+  assert.match(JS, /effacements au registre \(30 j\$\{paysChoisiCartes \? ', ce pays' : ', tous pays'\}\)/,
+    'le libellé dit lequel des deux périmètres il annonce');
   assert.match(JS, /e\.retenues > effaceesToutes\.length/,
     'l’extrait borné se compare au registre entier, jamais au pays filtré');
-  assert.match(JS, /La plus ancienne a <b>[^<]*<\/b>\$\{paysChoisiCartes \? ' \(tous pays\)' : ''\}/,
-    'et la carte la plus ancienne est celle de tout le catalogue : le dire, sinon elle a l’air d’être celle du pays');
+  assert.match(JS, /La plus ancienne a <b>[^<]*<\/b>\$\{paysChoisiCartes \? ' \(ce pays\)' : ''\}/,
+    'et la carte la plus ancienne est celle du pays consulté, pas celle du catalogue');
 });
 
 /* -------------------------------------------------------------------------- *
