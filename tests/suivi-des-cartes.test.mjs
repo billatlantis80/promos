@@ -23,7 +23,8 @@
    ============================================================================= */
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { readFileSync, mkdtempSync, rmSync, writeFileSync, unlinkSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
 import os from 'node:os';
 import path from 'node:path';
 import {
@@ -423,9 +424,91 @@ test('l’onglet des offres refusées juge avec les règles PARTAGÉES, jamais a
   // 3. L'onglet existe vraiment : bouton, section, et un rendu branché dessus.
   assert.match(onglet, /class="onglet" data-vue="refusees"/, 'le bouton de l’onglet doit exister');
   assert.match(onglet, /<section data-vue="refusees">/, 'la section de l’onglet doit exister');
-  assert.match(onglet, /refusees: \(\) => \{ dessinerRefusees\(\); \}/, 'l’ouverture doit relire le catalogue');
-  // 4. ET IL LIT LE CATALOGUE PUBLIÉ, pas un fichier local : `docs/` est ce que
+  assert.match(onglet, /refusees: \(\) => \{ dessinerAjouts\(\); \}/, 'l’ouverture doit relire le catalogue');
+  // 4. LE TRAJET COMPLET (demande de B : « les produits qui ont été rajoutés … et
+  //    les produits qui n'ont pas été rajoutés avec la raison »). Les trois blocs
+  //    doivent exister, et chacun doit se lire là où la vérité est écrite :
+  //    les ENTRÉES sur `premiereVue` (jamais rafraîchie, donc pas de carte qui
+  //    « rajeunit »), les RETRAITS dans le journal du collecteur, et les SOURCES
+  //    dans le journal du passage — pas dans un recalcul du panneau, qui ferait un
+  //    second collecteur.
+  for (const id of ['mAjoutsEntrees', 'mAjoutsRetraits', 'mAjoutsSources']) {
+    assert.ok(onglet.includes(`id="${id}"`), `le bloc ${id} doit exister dans l’onglet`);
+  }
+  assert.match(onglet, /o\.premiereVue \|\| ''/, 'les entrées se lisent sur la première vue');
+  assert.match(onglet, /suivi\.retraits/, 'les retraits viennent du journal écrit par le collecteur');
+  assert.match(onglet, /d\.sourcesVuLe/, 'la dernière lecture d’une source vient du catalogue publié');
+  // 5. ET IL LIT LE CATALOGUE PUBLIÉ, pas un fichier local : `docs/` est ce que
   //    l'hébergeur sert, et c'est là que les filtres ont agi.
   assert.match(onglet, /fetch\('\.\.\/offres\.json', \{ cache: 'no-store' \}\)/,
     'l’onglet doit lire le catalogue publié');
+});
+
+/* ------------------------------------------------------------------ *
+ *  LA SYNTAXE DU PANNEAU — l'épreuve qui manquait, et qui a coûté une panne.
+ *
+ *  Vécu le 15/10/2026 : une parenthèse fermante oubliée dans une fonction ajoutée
+ *  ce jour-là a rendu TOUT le script du panneau illisible. Conséquence exacte :
+ *  aucune fonction n'est définie, la page s'ouvre et reste muette — pas d'erreur
+ *  visible pour qui la regarde, et les épreuves déjà écrites ne voyaient rien,
+ *  parce qu'elles vérifient du TEXTE (« la chaîne est-elle présente ? ») et non
+ *  la lisibilité du fichier. Trouvé seulement en exerçant l'onglet dans un
+ *  navigateur, qui a levé une exception à la première ligne exécutée.
+ *
+ *  Un `node --check` dit exactement la chose utile : ce fichier peut-il être lu
+ *  par JavaScript ? C'est le contrôle le moins cher qui existe, et c'est celui
+ *  qui manquait.
+ * ------------------------------------------------------------------ */
+
+/** Les scripts EN LIGNE d'une page, commentaires HTML retirés d'abord.
+ *  ⚠ SANS CE RETRAIT, L'ÉPREUVE MENT : index.html CITE l'expression
+ *  `<script type="module">` dans un commentaire (pour expliquer la sentinelle de
+ *  démarrage), et un extracteur naïf prend cette citation pour une balise — il
+ *  contrôle alors du texte de commentaire avec `node --check`, qui échoue, et
+ *  l'épreuve annonce un défaut qui n'existe pas. Mesuré le 15/10/2026 : c'est
+ *  exactement ce qu'elle a fait à sa première exécution. */
+const scriptsEnLigne = (html) => [...html.replace(/<!--[\s\S]*?-->/g, '')
+  .matchAll(/<script(?![^>]*\bsrc=)(?!\s*type\s*=\s*["']application\/ld\+json["'])([^>]*)>([\s\S]*?)<\/script>/g)];
+
+test('les scripts en ligne du panneau se lisent (sinon le panneau est muet)', () => {
+  const html = lire('public/admin/index.html');
+  const blocs = scriptsEnLigne(html);
+  assert.ok(blocs.length > 0, 'le panneau doit avoir au moins un script en ligne');
+  const fautifs = [];
+  blocs.forEach(([, attrs, code], i) => {
+    if (!code.trim()) return;
+    const fichier = path.join(os.tmpdir(), `panneau-script-${i}${/type\s*=\s*["']module["']/.test(attrs) ? '.mjs' : '.js'}`);
+    writeFileSync(fichier, code);
+    try {
+      execFileSync('node', ['--check', fichier], { stdio: 'pipe' });
+    } catch (e) {
+      fautifs.push(`script n°${i} (${code.length} octets) : ${String(e.stderr || e.message).split('\n')[1] || 'illisible'}`);
+    } finally {
+      try { unlinkSync(fichier); } catch { /* le fichier temporaire n'existe pas : rien à faire */ }
+    }
+  });
+  assert.deepEqual(fautifs, [],
+    `un script illisible rend le panneau ENTIER muet (aucune fonction définie) :\n${fautifs.join('\n')}`);
+});
+
+test('les scripts en ligne du site se lisent aussi (index.html)', () => {
+  // Même contrôle sur la page publique : elle porte la marque de support et les
+  // données structurées. Un script illisible y casserait la sentinelle de
+  // démarrage, donc le diagnostic d'une panne réelle.
+  const html = lire('public/index.html');
+  const blocs = scriptsEnLigne(html);
+  const fautifs = [];
+  blocs.forEach(([, attrs, code], i) => {
+    if (!code.trim()) return;
+    const fichier = path.join(os.tmpdir(), `site-script-${i}${/type\s*=\s*["']module["']/.test(attrs) ? '.mjs' : '.js'}`);
+    writeFileSync(fichier, code);
+    try {
+      execFileSync('node', ['--check', fichier], { stdio: 'pipe' });
+    } catch (e) {
+      fautifs.push(`script n°${i} : ${String(e.stderr || e.message).split('\n')[1] || 'illisible'}`);
+    } finally {
+      try { unlinkSync(fichier); } catch { /* rien */ }
+    }
+  });
+  assert.deepEqual(fautifs, [], `scripts illisibles dans index.html :\n${fautifs.join('\n')}`);
 });
