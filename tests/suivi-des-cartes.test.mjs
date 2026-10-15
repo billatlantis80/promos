@@ -261,11 +261,20 @@ test('le corps de la règle ne mentionne ni le registre, ni les effacements, ni 
 
 test('le registre est écrit APRÈS la décision, jamais avant', () => {
   const src = readFileSync(new URL('collecteur.mjs', RACINE), 'utf8');
-  const boucleEffacement = src.indexOf("verdictDeCalendrier(o, { tours: toursParSource })");
+  // ⚠ L'APPEL PORTE EXPRÈS L'INSTANT DE LA PASSE (`INSTANT_DU_PASSAGE`) depuis le
+  // 15/10/2026 : c'est lui qui a supprimé le transit des cinq jours. Le motif de
+  // cette épreuve suit donc le code — mais il exige la forme PRÉCISE, pour qu'un
+  // retour à `Date.now()` ici fasse rougir au lieu de passer.
+  const boucleEffacement = src.indexOf("verdictDeCalendrier(o, { maintenant: INSTANT_DU_PASSAGE, tours: toursParSource })");
   const ecritureRegistre = src.indexOf("ecrireSuivi(path.join(DATA, 'effacements.json'), suivi)");
   assert.ok(boucleEffacement > 0 && ecritureRegistre > 0, 'les deux moments doivent exister');
   assert.ok(ecritureRegistre > boucleEffacement,
     'le registre doit être écrit après l’effacement — un registre écrit avant pourrait être lu par la suite du passage');
+  // ET L'ESTAMPILLE DU FICHIER EST LE MÊME INSTANT QUE LE VERDICT. C'est la
+  // fermeture du transit : deux instants différents publiaient 20 à 28 cartes
+  // DÉJÀ CONDAMNÉES à chaque passe, toutes à 5,00 j.
+  assert.match(src, /genereLe: new Date\(INSTANT_DU_PASSAGE\)\.toISOString\(\)/,
+    'l’estampille du catalogue doit être le MÊME instant que le verdict d’effacement');
 });
 
 /* ------------------------------------------------------------------ *
@@ -333,7 +342,11 @@ test('le journal publié est cohérent, et aucune carte n’est en violation', (
   // condamnée. Ces cartes sont TOUTES à 5,00 j (mesuré le 15/10/2026) et partent au
   // passage suivant. On refuse donc seulement celles qui survivent AU-DELÀ du
   // transit : là, l'effacement a réellement échoué, et c'est ce qu'on veut savoir.
-  const TRANSIT_PASSAGE_JOURS = 30 / 1440;
+  // ⚠ LE TRANSIT D'UN PASSAGE N'EXISTE PLUS (voir `INSTANT_DU_PASSAGE`, 15/10/2026) :
+  // verdict, panneau et estampille partagent le même instant, donc le catalogue
+  // publié ne doit plus porter aucune carte condamnée. L'epsilon d'une minute ne
+  // couvre qu'un décalage d'horloge.
+  const TRANSIT_PASSAGE_JOURS = 1 / 1440;
   const enViolation = (c.liste || []).filter((x) => x.raison === 'violation');
   const durables = enViolation.filter((x) => !(Number(x.ageJours) <= VIE_AFFICHEE_JOURS + TRANSIT_PASSAGE_JOURS));
   assert.equal(durables.length, 0,

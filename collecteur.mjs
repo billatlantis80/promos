@@ -8519,10 +8519,24 @@ async function principal() {
   //  aucune décision, et son volume est borné (voir le bloc LE SUIVI DES CARTES).
   let regleEffacees = 0, regleOctets = 0;
   const regleParPays = {};
-  const maintenantEffacement = Date.now();
+  // ⚠ UN SEUL INSTANT POUR TOUTE LA PASSE — corrigé le 15/10/2026, et voilà le
+  // défaut qu'on avait mesuré : l'effacement jugeait avec `Date.now()` (l'instant
+  // où la boucle passe) et le fichier publié était ESTAMPILLÉ PLUS TARD (genereLe,
+  // quarante secondes à une minute après). Une carte qui franchissait les cinq
+  // jours ENTRE les deux était donc publiée DÉJÀ CONDAMNÉE : re-mesurée à la date
+  // du fichier, elle apparaissait en violation — 20 à 28 cartes par passe, TOUTES
+  // mesurées à 5,00 j, et l'épreuve qui exige « aucune carte condamnée publiée »
+  // devenait rouge au hasard. La promesse des cinq jours était dépassée d'une
+  // passe (15 min ici, 1 h par le secours).
+  // Désormais UN instant, décidé avant les verdicts, sert au verdict d'effacement,
+  // à l'état du panneau ET à l'estampille : le catalogue publié est cohérent avec
+  // lui-même — ce que la règle dit à cet instant est exactement ce que le fichier
+  // contient, et la re-mesure à `genereLe` doit donner ZÉRO.
+  const INSTANT_DU_PASSAGE = Date.now();
+  const maintenantEffacement = INSTANT_DU_PASSAGE;
   for (const cle of [...connues.keys()]) {
     const o = connues.get(cle);
-    if (verdictDeCalendrier(o, { tours: toursParSource }) !== 'effacee') continue;
+    if (verdictDeCalendrier(o, { maintenant: INSTANT_DU_PASSAGE, tours: toursParSource }) !== 'effacee') continue;
     regleOctets += poidsDuVisuel(o.image);
     const p = o.pays || 'FR';
     regleParPays[p] = (regleParPays[p] || 0) + 1;
@@ -8894,7 +8908,7 @@ async function principal() {
   const bilanPrix = appliquerAnalyse(historique, offres);
 
   const sortie = {
-    genereLe: new Date().toISOString(),
+    genereLe: new Date(INSTANT_DU_PASSAGE).toISOString(),
     // Date du dernier appel de chaque source : c'est ce qui fait vivre le repos
     // (voir « reposMin »). Une source en repos garde ses offres déjà engrangées.
     // Une source qui n'a RIEN rendu n'est PAS marquée « vue ».
@@ -9120,7 +9134,13 @@ async function principal() {
    *  Le panneau ne lit jamais `data/` : il ne voit que le site publié.
    * ------------------------------------------------------------------------ */
   {
-    const maintenantSuivi = Date.now();
+    // ⚠ LE PANNEAU JUGE À L'INSTANT DE LA PASSE, PAS À L'INSTANT OÙ IL S'ÉCRIT.
+    // C'était la moitié du défaut de transit : l'effacement décidait à un instant,
+    // le panneau comptait à un autre (plus tard), et le panneau annonçait donc
+    // « violation » pour des cartes que l'effacement venait de juger intactes —
+    // un chiffre que B lisait et qui contredisait le catalogue. Un seul instant
+    // pour la passe entière : verdicts, panneau, registre, estampille.
+    const maintenantSuivi = INSTANT_DU_PASSAGE;
     // LES RAISONS DE SILENCE, dans les mots du passage qui vient de tourner. Une
     // carte bloquée dont la source est au repos n'est PAS dans le même cas qu'une
     // carte bloquée dont la source est sautée au seuil : le panneau les distinguait

@@ -216,8 +216,13 @@ test('LE VERDICT EST PUR — aucun état caché, et deux appels rendent le même
 
 test('l’effacement passe par la règle, et par rien d’autre', () => {
   const src = readFileSync(new URL('../collecteur.mjs', import.meta.url), 'utf8');
-  assert.match(src, /if \(verdictDeCalendrier\(o, \{ tours: toursParSource \}\) !== 'effacee'\) continue;/,
-    'le retrait doit passer par la règle, avec les tours du passage');
+  // ⚠ LE MOTIF EXIGE L'INSTANT DE LA PASSE, et ce n'est pas du zèle : sans lui,
+  // l'effacement jugeait à `Date.now()` pendant que le fichier était estampillé
+  // plus tard — 20 à 28 cartes par passe étaient publiées DÉJÀ CONDAMNÉES (toutes
+  // à 5,00 j). Le motif suit donc le code au plus près, pour qu'un retour en
+  // arrière rougisse ici.
+  assert.match(src, /if \(verdictDeCalendrier\(o, \{ maintenant: INSTANT_DU_PASSAGE, tours: toursParSource \}\) !== 'effacee'\) continue;/,
+    'le retrait doit passer par la règle, avec les tours du passage ET l’instant de la passe');
   assert.match(src, /regleParPays\[p\]/, 'et il doit compter ce qu’il emporte, par pays');
   assert.match(src, /connues\.delete\(cle\)/, 'effacer, c’est retirer du stock');
   // L'ancien interrupteur du plafond ne doit pas revenir : la règle n'a plus
@@ -300,7 +305,12 @@ test('sur le catalogue réel : ce que la règle emporterait, et ce qu’elle ne 
   // autre instant : cela ferait rouge toutes les heures et arrêterait la
   // sauvegarde (déjà vécu). Ce qu'on exige, c'est qu'aucune carte ne survive
   // AU-DELÀ du transit — là, l'effacement a vraiment échoué.
-  const TRANSIT_PASSAGE_JOURS = 30 / 1440;      // 30 min : plus large que la passe (15 min)
+  // ⚠ LE TRANSIT D'UN PASSAGE N'EXISTE PLUS — supprimé le 15/10/2026 par
+  // `INSTANT_DU_PASSAGE` (un seul instant sert au verdict d'effacement, à l'état
+  // du panneau ET à l'estampille du fichier). Re-mesuré à `genereLe`, le catalogue
+  // publié ne doit donc plus contenir AUCUNE carte condamnée. L'epsilon d'une
+  // minute ne couvre qu'un décalage d'horloge : il ne doit jamais servir.
+  const TRANSIT_PASSAGE_JOURS = 1 / 1440;
   const age = (o) => ageJours(o.premiereVue || o.vuLe, maintenant);
   const transit = condamnees.filter((o) => { const a = age(o); return a !== null && a <= VIE_AFFICHEE_JOURS + TRANSIT_PASSAGE_JOURS; });
   const dures = condamnees.filter((o) => !transit.includes(o));
