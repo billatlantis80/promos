@@ -484,6 +484,60 @@ tr.edition .principal{width:auto;padding:9px 18px;display:inline-block;margin-ri
 .levier p.micro{margin-top:7px;font-size:11.5px;color:var(--doux);text-transform:uppercase;letter-spacing:.6px}
 .levier.a-mesurer{border-left-color:var(--doux)}
 .levier.a-mesurer .levier-gain{color:var(--doux);font-weight:600}
+
+/* ---------- L'ONGLET DES RÈGLES (15/10/2026) ----------
+   Chaque règle est une fiche : numéro, état, énoncé, valeurs LUES dans le code,
+   source, épreuve. Aucune valeur n'est écrite en dur dans cette page — c'est la
+   règle de l'onglet, et c'est ce qui le rend vérifiable. */
+.rcompte{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 16px}
+.rcompte .puce{font-size:12.5px;border:1px solid var(--bord);border-radius:16px;padding:4px 11px;color:var(--doux)}
+.rcompte .puce b{color:var(--texte);font-variant-numeric:tabular-nums}
+.rcompte .puce.active{border-color:rgba(47,191,113,.45);color:var(--vert)}
+.rcompte .puce.en-pause{border-color:rgba(63,159,208,.45);color:var(--accent2)}
+.rcompte .puce.eteinte{border-color:var(--bord-clair)}
+.rcompte .puce.en-mesure{border-color:rgba(235,145,45,.45);color:var(--accent)}
+.rfiltres{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 6px}
+.rfiltres button{
+  font:inherit;font-size:12px;color:var(--doux);background:transparent;
+  border:1px solid var(--bord);border-radius:16px;padding:4px 11px;cursor:pointer;
+}
+.rfiltres button:hover{color:var(--texte);border-color:var(--bord-clair)}
+.rfiltres button.on{color:var(--sur-accent);background:var(--accent);border-color:var(--accent);font-weight:700}
+.rcat{margin:30px 0 12px;padding-top:16px;border-top:1px solid var(--bord)}
+.rcat:first-of-type{border-top:0;margin-top:14px;padding-top:0}
+.rcat > h3{font-size:15.5px;margin:0 0 4px;letter-spacing:.3px}
+.rcat > p{color:var(--doux);font-size:12.5px;line-height:1.55;margin:0;max-width:84ch}
+.rtheme{margin:20px 0 9px;font-size:12px;text-transform:uppercase;letter-spacing:.9px;color:var(--accent)}
+.rtheme span{color:var(--doux);text-transform:none;letter-spacing:0;font-weight:400}
+.regle{
+  border:1px solid var(--bord);border-left:3px solid var(--accent);
+  border-radius:0 var(--r-petit) var(--r-petit) 0;padding:11px 13px;margin:0 0 9px;
+  background:var(--carte);
+}
+.regle.eteinte{border-left-color:var(--tres-doux);background:transparent}
+.regle.en-pause{border-left-color:var(--accent2)}
+.regle.en-mesure{border-left-color:var(--accent2);border-left-style:dashed}
+.rtete{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.rnum{font-variant-numeric:tabular-nums;font-weight:800;font-size:12.5px;color:var(--accent);letter-spacing:.4px}
+.regle.eteinte .rnum{color:var(--doux)}
+.rtitre{font-weight:700;font-size:14.5px;flex:1 1 220px;line-height:1.35}
+.retat{
+  font-size:10.5px;text-transform:uppercase;letter-spacing:.7px;padding:2px 8px;
+  border-radius:20px;border:1px solid currentColor;white-space:nowrap;color:var(--vert);
+}
+.retat.en-pause{color:var(--accent2)}
+.retat.eteinte{color:var(--tres-doux)}
+.retat.en-mesure{color:var(--accent)}
+.renonce{font-size:13px;line-height:1.6;margin:8px 0 0;color:var(--texte);max-width:92ch}
+.rvals{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.rval{
+  font-size:11.5px;background:rgba(63,159,208,.10);border:1px solid rgba(63,159,208,.28);
+  border-radius:6px;padding:3px 8px;font-variant-numeric:tabular-nums;
+}
+.rval i{font-style:normal;color:var(--doux)}
+.rval.muette{background:rgba(229,84,75,.12);border-color:rgba(229,84,75,.4);color:var(--rouge)}
+.rsrc{margin-top:10px;font-size:11.5px;color:var(--doux);line-height:1.6}
+.rsrc code{font-size:11.5px;color:var(--texte)}
 </style>
 </head>
 <body>
@@ -526,6 +580,7 @@ tr.edition .principal{width:auto;padding:9px 18px;display:inline-block;margin-ri
       <button class="onglet" data-vue="origines">Origines</button>
       <button class="onglet" data-vue="marche">Marché Euro</button>
       <button class="onglet" data-vue="affiliation">Affiliation</button>
+      <button class="onglet" data-vue="regles">Règles</button>
       <button class="onglet" data-vue="reglages">Réglages</button>
     </nav>
 
@@ -1193,6 +1248,32 @@ tr.edition .principal{width:auto;padding:9px 18px;display:inline-block;margin-ri
         </div>
       </section>
 
+      <!-- ============ LES RÈGLES DU SITE ============
+           Demande de B, 15/10/2026 : « peux-tu rajouter un onglet "règle". Dans cet
+           onglet va être écrit toutes les règles qui gèrent le site, tous les
+           paramètres qui définissent les filtres, toutes les règles qui font qu'une
+           carte apparaissent et disparaissent [...] classées par catégorie, par
+           thème et numérotées. »
+
+           CE QUE CET ONGLET NE FAIT PAS : il n'écrit AUCUNE valeur dans cette page.
+           Tout vient de `../regles.json`, lui-même écrit par `bin/regles-du-site.mjs`,
+           qui RELIT les constantes dans `collecteur.mjs`, `regles-affichage.js` et
+           `app.js` au moment de la publication. Un onglet qui recopierait « cinq
+           jours » mentirait le jour où le code passerait à quatre. -->
+      <section data-vue="regles">
+        <div class="rub">
+          <h2>Les règles du site</h2>
+          <p class="aide" id="reglesChapeau"></p>
+          <div id="reglesComptes"></div>
+          <div class="rfiltres" id="reglesFiltres"></div>
+          <div class="champ moyen" style="margin-top:12px">
+            <label for="rechercheRegles">Chercher une règle (numéro, mot, constante)</label>
+            <input id="rechercheRegles" type="search" placeholder="cinq jours, VIE_AFFICHEE_JOURS, presse…" spellcheck="false">
+          </div>
+          <div id="reglesListe"></div>
+        </div>
+      </section>
+
       <section data-vue="reglages">
         <div class="rub">
           <h2>Accès</h2>
@@ -1342,6 +1423,14 @@ let exploitation = null;
 // écrit par le collecteur après chaque passage. Son absence n'est pas une panne :
 // l'onglet « Vie des cartes » écrit alors POURQUOI il n'a rien à montrer.
 let suiviCartes = null;
+// LES RÈGLES DU SITE — lues dans `../regles.json`, écrit par bin/regles-du-site.mjs.
+// Si le fichier manque, l'onglet l'ÉCRIT (voir dessinerRegles) au lieu d'afficher
+// une page vide : un écran vide se lit comme « aucune règle », ce qui serait faux.
+let regles = null;
+let erreurRegles = '';
+let filtreRegles = '';
+let etatRegles = 'tous';
+let catRegles = '';
 const lireRegistre = () => {
   try { return JSON.parse(localStorage.getItem('kazendra.inscrits') || '[]'); } catch { return []; }
 };
@@ -4384,7 +4473,7 @@ function toutDessiner() {
   // L'ONGLET TRAFIC ÉCRIT SON PROPRE AVIS — quatre états, quatre phrases : c'est
   // `dessinerTrafic()` qui s'en charge, plus bas dans cet appel. Rien à
   // dupliquer ici, sinon deux textes à faire tomber d'accord.
-  dessinerBord(); dessinerSources(); dessinerOrigines(); dessinerBarrePays(); dessinerMarche(); dessinerBarreAffiliation(); dessinerAffiliation(); dessinerPortes(); dessinerInscrits(); dessinerTrafic(); dessinerGains(); dessinerExploitation(); dessinerBarreCartes(); dessinerCartes();
+  dessinerBord(); dessinerSources(); dessinerOrigines(); dessinerBarrePays(); dessinerMarche(); dessinerBarreAffiliation(); dessinerAffiliation(); dessinerPortes(); dessinerInscrits(); dessinerTrafic(); dessinerGains(); dessinerExploitation(); dessinerBarreCartes(); dessinerCartes(); dessinerRegles();
 
   // « CETTE MACHINE » DIT AUSSI OÙ EN EST LE CATALOGUE. C'est la question qu'on
   // se pose en ouvrant le panneau — « mes données sont-elles fraîches ? » — et
@@ -4429,6 +4518,161 @@ function toutDessiner() {
     : 'Tant que rien n’est publié, c’est cette adresse-ci qui est utilisée pour essayer.';
 }
 
+/* ---------- LES RÈGLES DU SITE ----------
+   Demande de B, 15/10/2026 : « toutes les règles qui gèrent le site [...] classées
+   par catégorie, par thème et numérotées ».
+
+   TROIS DÉCISIONS D'ÉCRAN, et chacune corrige un défaut qu'un tel onglet fait
+   naître naturellement :
+
+   1. LES VALEURS VIENNENT DU FICHIER, jamais de cette page. `regles.json` est
+      écrit par bin/regles-du-site.mjs, qui relit les constantes dans le code. Si
+      une valeur manque, l'écran écrit « non lue » en rouge — il n'affiche pas
+      « 0 », parce qu'un zéro a l'air d'une mesure (règle de la maison).
+   2. LES RÈGLES ÉTEINTES RESTENT VISIBLES. Cacher ce qui ne décide plus ferait
+      perdre la trace des décisions — et c'est exactement ce qu'on vient chercher
+      ici le jour où l'écran a changé sans qu'on sache pourquoi. Elles sont donc
+      affichées, avec leur état, et un filtre permet de n'en voir qu'une sorte.
+   3. LE FILTRE PORTE SUR TOUT LE TEXTE : numéro, titre, énoncé, nom de constante
+      et fichier source. Chercher « VIE_AFFICHEE_JOURS » doit trouver la règle
+      qui la porte, pas seulement celles dont le titre la cite. */
+const ETATS_REGLES = [
+  ['tous', 'Toutes'],
+  ['active', 'En vigueur'],
+  ['en-pause', 'En pause'],
+  ['en-mesure', 'En mesure'],
+  ['eteinte', 'Éteintes'],
+];
+const LIBELLE_ETAT = {
+  active: 'en vigueur',
+  'en-pause': 'en pause',
+  'en-mesure': 'en mesure',
+  eteinte: 'éteinte',
+};
+
+/** Toutes les règles, à plat, avec leur catégorie et leur thème — un seul
+ *  parcours, une seule liste. Les compteurs, le filtre et le dessin lisent
+ *  celle-ci : trois façons de compter finiraient par ne plus dire la même chose. */
+function reglesAPlat() {
+  const sortie = [];
+  for (const cat of ((regles || {}).categories || [])) {
+    for (const th of (cat.themes || [])) {
+      for (const r of (th.regles || [])) {
+        sortie.push({ cat, theme: th, regle: r });
+      }
+    }
+  }
+  return sortie;
+}
+
+function reglesFiltrees(liste) {
+  const q = filtreRegles.trim().toLowerCase();
+  return liste.filter(({ cat, theme, regle }) => {
+    if (etatRegles !== 'tous' && regle.etat !== etatRegles) return false;
+    if (catRegles && cat.code !== catRegles) return false;
+    if (!q) return true;
+    const champs = [
+      regle.num, regle.titre, regle.enonce, regle.source, regle.preuve,
+      ...(regle.valeurs || []).map((v) => `${v.nom} ${v.texte || ''}`),
+      ...(regle.cite || []),
+      cat.titre, theme.titre, theme.code,
+    ];
+    return champs.filter(Boolean).join(' ').toLowerCase().includes(q);
+  });
+}
+
+async function lireRegles() {
+  try {
+    const rep = await fetch('../regles.json', { cache: 'no-store' });
+    if (!rep.ok) throw new Error(`HTTP ${rep.status}`);
+    regles = await rep.json();
+    erreurRegles = '';
+  } catch (e) {
+    regles = null;
+    erreurRegles = (e && e.message) || 'lecture impossible';
+  }
+}
+
+function dessinerRegles() {
+  const chapeau = document.getElementById('reglesChapeau');
+  const comptes = document.getElementById('reglesComptes');
+  const filtres = document.getElementById('reglesFiltres');
+  const liste = document.getElementById('reglesListe');
+  if (!chapeau || !comptes || !filtres || !liste) return;         // onglet absent
+
+  // LE CAS « RIEN À LIRE » SE DIT. Un onglet vide se lirait « aucune règle » — or
+  // l'absence du fichier est une panne de publication, pas une réponse.
+  if (!regles) {
+    chapeau.textContent = '';
+    comptes.innerHTML = '';
+    filtres.innerHTML = '';
+    liste.innerHTML = `<p class="vide">Les règles ne sont pas encore publiées avec le site
+      (<code>regles.json</code>${erreurRegles ? ` — ${esc(erreurRegles)}` : ''}).
+      Ce n’est pas « aucune règle » : c’est le catalogue des règles qui n’a pas été écrit.
+      Il s’écrit avec <code>node bin/regles-du-site.mjs</code>, et la publication le copie
+      comme le reste de <code>public/</code>.</p>`;
+    return;
+  }
+
+  chapeau.textContent = regles.chapeau || '';
+  const e = regles.parEtat || {};
+  comptes.innerHTML = `<div class="rcompte">
+    <span class="puce"><b>${nf.format(regles.total || 0)}</b> règle(s)</span>
+    ${ETATS_REGLES.slice(1).map(([id, lib]) => `<span class="puce ${id}"><b>${nf.format(e[id] || 0)}</b> ${lib.toLowerCase()}</span>`).join('')}
+    <span class="puce">Valeurs lues dans le code le <b>${esc(new Date(regles.genereLe).toLocaleString('fr-BE'))}</b></span>
+  </div>`;
+
+  const toutes = reglesAPlat();
+  filtres.innerHTML = ETATS_REGLES.map(([id, lib]) =>
+    `<button data-etat="${id}" class="${etatRegles === id ? 'on' : ''}">${lib}`
+    + `${id === 'tous' ? '' : ` (${nf.format(e[id] || 0)})`}</button>`).join('')
+    + ((regles.categories || []).map((c) =>
+      `<button data-cat="${c.code}" class="${catRegles === c.code ? 'on' : ''}">${esc(c.titre.split('—')[0].trim())}</button>`).join(''));
+
+  const gardees = reglesFiltrees(toutes);
+  if (!gardees.length) {
+    liste.innerHTML = `<p class="vide">Aucune règle ne correspond à cette recherche.</p>`;
+    return;
+  }
+
+  // Le dessin suit l'ordre du CATALOGUE (catégorie, puis thème, puis numéro) :
+  // c'est l'ordre dans lequel il a été écrit, et il raconte le chantier.
+  let html = '';
+  let catCourante = null;
+  let themeCourant = null;
+  for (const { cat, theme, regle } of gardees) {
+    if (!catCourante || catCourante !== cat.code) {
+      catCourante = cat.code;
+      themeCourant = null;
+      html += `<div class="rcat"><h3>${esc(cat.code)} — ${esc(cat.titre)}</h3>`
+        + (cat.resume ? `<p>${esc(cat.resume)}</p>` : '') + '</div>';
+    }
+    if (!themeCourant || themeCourant !== theme.code) {
+      themeCourant = theme.code;
+      html += `<div class="rtheme">${esc(theme.code)} · ${esc(theme.titre)}`
+        + (theme.resume ? ` <span>— ${esc(theme.resume)}</span>` : '') + '</div>';
+    }
+    const classe = regle.etat === 'active' ? '' : ` ${regle.etat}`;
+    const valeurs = (regle.valeurs || []).map((v) => (v.texte === null || v.texte === undefined
+      ? `<span class="rval muette">${esc(v.nom)} — VALEUR NON LUE dans ${esc(v.fichier)}</span>`
+      : `<span class="rval"><i>${esc(v.nom)} =</i> ${esc(v.texte)}</span>`)).join('');
+    html += `<div class="regle${classe}">
+      <div class="rtete">
+        <span class="rnum">${esc(regle.num)}</span>
+        <span class="rtitre">${esc(regle.titre)}</span>
+        <span class="retat${classe}">${esc(LIBELLE_ETAT[regle.etat] || regle.etat)}</span>
+      </div>
+      <p class="renonce">${esc(regle.enonce)}</p>
+      ${valeurs ? `<div class="rvals">${valeurs}</div>` : ''}
+      <p class="rsrc">${regle.depuis ? `Depuis le ${esc(regle.depuis)} · ` : ''}
+        Source : <code>${esc(regle.source)}</code>
+        ${regle.preuve ? ` · Épreuve : <code>${esc(regle.preuve)}</code>` : ''}
+        ${(regle.cite || []).length ? ` · Noms cités : ${esc(regle.cite.join(', '))}` : ''}</p>
+    </div>`;
+  }
+  liste.innerHTML = html;
+}
+
 /* ---------- Branchements ---------- */
 function brancher() {
   document.querySelectorAll('.onglet').forEach((b) => b.addEventListener('click', () => {
@@ -4460,10 +4704,34 @@ function brancher() {
       // ouverture : on relit le rapport en ouvrant l'onglet, sans quoi on
       // regarderait un état vieux de plusieurs minutes en croyant le corriger.
       trafic: () => { lireRapport().then(() => dessinerTrafic()).catch(() => dessinerTrafic()); },
+      // LES RÈGLES NE CHANGENT QU'À LA PUBLICATION, mais on les relit en ouvrant
+      // l'onglet : la publication tourne toutes les quinze minutes, et un chiffre
+      // relu après un changement de code est exactement ce qu'on vient vérifier ici.
+      regles: () => { lireRegles().then(() => dessinerRegles()).catch(() => dessinerRegles()); },
     };
     const f = rafraichir[b.dataset.vue];
     if (f) f();
   }));
+
+  // LE FILTRE DE L'ONGLET DES RÈGLES — délégation, comme partout ailleurs : les
+  // boutons sont REDESSINÉS à chaque rendu (ils portent leur compte), donc un
+  // écouteur posé sur chacun d'eux disparaîtrait avec lui, et le filtre cesserait
+  // de répondre sans que rien ne le dise.
+  const filtresRegles = document.getElementById('reglesFiltres');
+  if (filtresRegles) {
+    filtresRegles.addEventListener('click', (e) => {
+      const b = e.target.closest('button[data-etat],button[data-cat]');
+      if (!b) return;
+      if (b.dataset.etat !== undefined) etatRegles = b.dataset.etat;
+      else catRegles = catRegles === b.dataset.cat ? '' : b.dataset.cat;   // re-cliquer ôte le filtre
+      dessinerRegles();
+    });
+  }
+  const champRegles = document.getElementById('rechercheRegles');
+  if (champRegles) champRegles.addEventListener('input', () => {
+    filtreRegles = champRegles.value || '';
+    dessinerRegles();
+  });
 
   document.getElementById('expCsv').addEventListener('click', () =>
     telecharger(`kazendra-inscrits-${new Date().toISOString().slice(0, 10)}.csv`, csv(), 'text/csv;charset=utf-8'));
@@ -4860,6 +5128,10 @@ async function ouvrir() {
   // s'ouvrirait sur « relais muet » puis se remplirait tout seul une seconde
   // plus tard : on croirait à une panne qui disparaît.
   await lireRapport();
+  // LES RÈGLES DU SITE — lues avant le premier dessin, comme le reste : sinon
+  // l'onglet s'ouvrirait sur « pas encore publiées » puis se remplirait une
+  // seconde plus tard, et on croirait à une panne qui disparaît.
+  await lireRegles();
 
   // LES INSCRIPTIONS DES AUTRES APPAREILS NE SONT PAS RAPATRIÉES ICI, et c'est
   // une décision, pas un oubli. L'ancien code le PROMETTAIT (`d.inscrits`) mais
