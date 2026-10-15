@@ -439,9 +439,14 @@ test('la file de contrôle classe comme la vue classe — deux programmes, une r
   // La règle appartient à l'APPLICATION : on l'extrait du fichier livré et on
   // évalue ce même bloc, plutôt que d'en écrire une seconde version qui
   // finirait par diverger sans que personne ne compare jamais les deux.
-  const app = readFileSync(new URL('../public/app.js', import.meta.url), 'utf8');
-  const bloc = app.slice(app.indexOf('const REMISE_MIN'), app.indexOf('function triees'));
-  assert.ok(bloc.length > 0, 'le bloc des règles de remise doit rester extractible de app.js');
+  // ⚠ Les règles vivent dans leur MODULE depuis le 15/10/2026 (app.js les
+  // importe, le panneau d'admin aussi) : on les lit là, sans découper de tranche
+  // dans app.js — la tranche textuelle est ce qui a produit un prédicat amputé ce
+  // jour-là (deux lignes de déclaration, une seule prise, 875 cartes d'écart).
+  const app = readFileSync(new URL('../public/regles-affichage.js', import.meta.url), 'utf8')
+    .replace(/^export /gm, '');      // le module est exporté : on le relit « à plat » pour l'évaluer
+  const bloc = app.slice(app.indexOf('const REMISE_MIN'));
+  assert.ok(bloc.length > 0, 'le bloc des règles de remise doit rester lisible dans regles-affichage.js');
   const { remiseMontrable } = vm.runInContext(bloc + '\n;({ remiseMontrable })', vm.createContext({}));
   const of = JSON.parse(readFileSync(new URL('../docs/offres.json', import.meta.url), 'utf8')).offres;
   const ecarts = [];

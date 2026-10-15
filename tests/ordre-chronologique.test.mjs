@@ -32,13 +32,22 @@ import { fileURLToPath } from 'node:url';
 import { LANGUES } from '../public/langues.js';
 
 const ICI = path.dirname(fileURLToPath(import.meta.url));
+// ⚠ LES RÈGLES VIVENT DANS LEUR MODULE depuis le 15/10/2026 (app.js les importe,
+// le panneau d'admin aussi). Ce qui reste dans app.js APRÈS elles et dont ce
+// fichier a besoin — `retenue`, `parRecence`, `comparateur` — est lu ici, à sa
+// place. L'union des deux EST l'ancienne tranche, mais la partie qui décide
+// qu'une offre entre dans la vue n'est plus recopiée : elle est partagée, donc
+// deux lecteurs ne peuvent plus diverger (et une tranche textuelle ne peut plus
+// amputer un prédicat — c'est le défaut mesuré du 15/10, 875 cartes d'écart).
+const moduleRegles = fs.readFileSync(path.join(ICI, '..', 'public', 'regles-affichage.js'), 'utf8')
+  .replace(/^export /gm, '');
 const appJs = fs.readFileSync(path.join(ICI, '..', 'public', 'app.js'), 'utf8');
 const html = fs.readFileSync(path.join(ICI, '..', 'public', 'index.html'), 'utf8');
 
-const debut = appJs.indexOf('const REMISE_MIN');
+const debutApp = appJs.indexOf('/** Une offre passe-t-elle les filtres courants ? */');
 const fin = appJs.indexOf('function triees');
-assert.ok(debut > 0 && fin > debut, 'les règles de tri doivent rester extractibles du fichier');
-const REGLES = appJs.slice(debut, fin);
+assert.ok(debutApp > 0 && fin > debutApp, 'les filtres et le comparateur doivent rester extractibles de app.js');
+const REGLES = moduleRegles.slice(moduleRegles.indexOf('const REMISE_MIN')) + '\n' + appJs.slice(debutApp, fin);
 
 /** Monte un bac à sable avec l'`etat` demandé et rend le comparateur courant. */
 function monde(portee = 'promos', tri = 'remise') {

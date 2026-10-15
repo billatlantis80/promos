@@ -399,3 +399,33 @@ test('le journal publié est cohérent, et aucune carte n’est en violation', (
   const poids = readFileSync(new URL('docs/suivi-cartes.json', RACINE)).length;
   assert.ok(poids < 500_000, `le fichier de contrôle pèse ${poids} octets : il doit rester borné`);
 });
+
+/* ------------------------------------------------------------------ *
+ *  L'ONGLET DES OFFRES REFUSÉES (demande de B, 15/10/2026) — et le verrou
+ *  qui compte : il doit juger avec LES RÈGLES DE L'ÉCRAN, pas avec une copie.
+ * ------------------------------------------------------------------ */
+
+test('l’onglet des offres refusées juge avec les règles PARTAGÉES, jamais avec une copie', () => {
+  const onglet = lire('public/admin/index.html');
+  // 1. Il importe le module — le même fichier que celui importé par app.js.
+  assert.match(onglet, /import \* as REGLES from '\.\.\/regles-affichage\.js'/,
+    'le panneau doit importer les règles partagées (regles-affichage.js)');
+  assert.match(onglet, /window\.REGLES_AFFICHAGE = REGLES/,
+    'et les exposer à l’onglet, qui est écrit en script clair');
+  // 2. Et il ne REDÉFINIT ni les prédicats ni les filtres de noms. C'est le défaut
+  //    que cette épreuve interdit : un panneau qui valide ses propres copies
+  //    annonce « refusée » là où l'écran affiche, et B corrige un filtre sain.
+  for (const interdit of ['const estBonnePromo', 'function estOffreEnseigne', 'function estBonneAffaire',
+    'const REDACTIONS =', 'const REMISE_MIN =', 'const MARCHANDS_NON_BOUTIQUE =']) {
+    assert.ok(!onglet.includes(interdit),
+      `« ${interdit} » redéfini dans le panneau : les règles doivent avoir UNE seule définition`);
+  }
+  // 3. L'onglet existe vraiment : bouton, section, et un rendu branché dessus.
+  assert.match(onglet, /class="onglet" data-vue="refusees"/, 'le bouton de l’onglet doit exister');
+  assert.match(onglet, /<section data-vue="refusees">/, 'la section de l’onglet doit exister');
+  assert.match(onglet, /refusees: \(\) => \{ dessinerRefusees\(\); \}/, 'l’ouverture doit relire le catalogue');
+  // 4. ET IL LIT LE CATALOGUE PUBLIÉ, pas un fichier local : `docs/` est ce que
+  //    l'hébergeur sert, et c'est là que les filtres ont agi.
+  assert.match(onglet, /fetch\('\.\.\/offres\.json', \{ cache: 'no-store' \}\)/,
+    'l’onglet doit lire le catalogue publié');
+});

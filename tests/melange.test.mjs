@@ -24,16 +24,23 @@ import { fileURLToPath } from 'node:url';
 import { TOUTES_SOURCES } from '../collecteur.mjs';
 
 const ICI = path.dirname(fileURLToPath(import.meta.url));
-const js = fs.readFileSync(path.join(ICI, '..', 'public', 'app.js'), 'utf8');
+// ⚠ LES RÈGLES SE LISENT DANS LEUR MODULE, PLUS DANS UNE TRANCHE D'app.js.
+// Depuis le 15/10/2026 elles vivent dans `public/regles-affichage.js` — le même
+// fichier que celui importé par app.js ET par le panneau d'admin, donc deux
+// lecteurs ne peuvent plus diverger. On retire les `export` pour pouvoir les
+// évaluer ici.
+//
+// CE QUE ÇA RÉPARE, ET C'EST MESURÉ : découper une tranche dans du texte est ce
+// qui a produit l'erreur du 15/10 — `estPromoVerifiee` tient sur DEUX lignes,
+// la tranche d'une épreuve voisine s'arrêtait à la première, et la condition de
+// remise (≥ 15 %) disparaissait SANS ERREUR : 875 cartes d'écart entre le compte
+// du site et le mien. Ici, plus de tranche : le bloc EST le fichier.
+const js = fs.readFileSync(path.join(ICI, '..', 'public', 'regles-affichage.js'), 'utf8')
+  .replace(/^export /gm, '');
 
 const debut = js.indexOf('const REMISE_MIN');
-// La tranche testée va jusqu'à `retenue` : elle doit contenir les règles de
-// sélection ET le rattachement au pays de la boutique (paysDe), qui vit après
-// le compte par pays. S'arrêter au commentaire de promosParPays laissait paysDe
-// hors tranche, et le fichier de tests entier échouait.
-const fin = js.indexOf('/** Une offre passe-t-elle les filtres courants ? */');
-assert.ok(debut > 0 && fin > debut, 'les règles de sélection doivent rester extractibles du fichier');
-const code = js.slice(debut, fin);
+assert.ok(debut > 0, 'les règles de sélection doivent rester lisibles dans leur module');
+const code = js.slice(debut);
 
 const ctx = vm.createContext({});
 

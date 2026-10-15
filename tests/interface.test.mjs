@@ -38,7 +38,14 @@ const DRAP = fs.readFileSync(path.join(ICI, '..', 'public', 'drapeaux.js'), 'utf
 const lire = (f) => fs.readFileSync(path.join(ICI, '..', 'public', f), 'utf8');
 
 const css = lire('app.css');
-const js = lire('app.js');
+// ⚠ LES RÈGLES D'AFFICHAGE VIVENT DANS LEUR MODULE depuis le 15/10/2026 (app.js
+// les importe, et le panneau d'admin aussi). Ce fichier lit donc L'UNION — le
+// module, `export` retirés, puis app.js — pour que les recherches de déclarations
+// (`PAYS_BOUTIQUE`, `remiseCredible`, …) continuent de les trouver, et pour que
+// les tranches propres à app.js (`choisirPays`, `lancer`, …) restent intactes.
+// L'union EST le texte que cette épreuve lisait avant le déplacement : ce qui a
+// changé, c'est qu'il n'existe plus deux copies des règles, capables de diverger.
+const js = lire('regles-affichage.js').replace(/^export /gm, '') + '\n' + lire('app.js');
 // La feuille de style est posée EN LIGNE dans index.html (voir bin/inliner-css.mjs,
 // conséquence du défaut du 08/10/2026 : les .css externes étaient coupés sur le
 // PC de B). On la retire AVANT de lire la structure : ses sélecteurs

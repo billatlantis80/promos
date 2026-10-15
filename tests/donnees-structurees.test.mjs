@@ -113,9 +113,14 @@ test('la table des monnaies du module est IDENTIQUE à celle du site', () => {
 test('la règle des 90 % du site est reprise à l’identique, et appliquée', () => {
   // Deux tables qui divergent, c'est une page qui annonce « −99 % » pour un
   // écran « 99 % sRGB » — une remise que l'application refuse d'afficher.
-  const app = readFileSync(join(RACINE, 'public', 'app.js'), 'utf8');
+  // ⚠ LES RÈGLES D'AFFICHAGE VIVENT DANS public/regles-affichage.js depuis le
+  // 15/10/2026 — app.js les importe, et le panneau d'admin aussi (il juge donc
+  // avec les mêmes). On lit le module ET app.js : la table du site est dans le
+  // module, et l'union laisse intactes les vérifications qui portent sur le reste.
+  const app = readFileSync(join(RACINE, 'public', 'regles-affichage.js'), 'utf8')
+    + '\n' + readFileSync(join(RACINE, 'public', 'app.js'), 'utf8');
   const m = app.match(/const REMISE_ANNONCEE_MAX = (\d+);/);
-  assert.ok(m, 'REMISE_ANNONCEE_MAX doit exister dans public/app.js');
+  assert.ok(m, 'REMISE_ANNONCEE_MAX doit exister dans public/regles-affichage.js');
   assert.equal(REMISE_ANNONCEE_MAX, Number(m[1]),
     'la borne du module et celle du site ont divergé');
   assert.match(app, /function remiseMontrable\(o\)\s*\{[\s\S]*?remiseCalculee \|\| o\.remise <= REMISE_ANNONCEE_MAX/,
