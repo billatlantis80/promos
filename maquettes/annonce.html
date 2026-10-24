@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Kazendra — maquette /annonce</title>
+<style>
+  :root{--navy:#0D3B5B;--deep:#0A2F49;--lite:#13496D;--orange:#EB912D;
+        --ink:#13222E;--ink2:#4A5C6B;--muted:#8496A3;--line:#E3E8ED;--bg2:#F5F7F9}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Liberation Sans','DejaVu Sans',Arial,sans-serif;color:var(--ink);background:#fff;
+       width:1440px;-webkit-font-smoothing:antialiased}
+  .wrap{width:1200px;margin:0 auto}
+  a{color:inherit;text-decoration:none}
+  .ico{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+  .cap{background:#E7EBEF;font-size:11.5px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;
+       color:#5E7180;padding:9px 0 9px 120px}
+
+  /* header */
+  header{background:var(--deep);color:#fff}
+  .bar{display:flex;align-items:center;gap:24px;height:70px}
+  .brand{display:flex;align-items:center;gap:10px}
+  .brand img{width:36px;height:38px;border-radius:9px}
+  .brand .nm{font-size:20px;font-weight:700;letter-spacing:-.3px}
+  nav{display:flex;gap:18px;font-size:13.5px;color:#CFE0EB;margin-left:8px}
+  nav a.on{color:#fff;font-weight:700}
+  .right{margin-left:auto;display:flex;align-items:center;gap:12px}
+  .av{width:32px;height:32px;border-radius:50%;background:var(--orange);color:#2A1602;font-size:12.5px;
+      font-weight:700;display:flex;align-items:center;justify-content:center}
+
+  /* bandeau de porte */
+  .doorhead{border-bottom:1px solid var(--line);padding:22px 0 18px}
+  .doorhead .top{display:flex;align-items:flex-end;gap:16px}
+  h1{font-size:30px;letter-spacing:-.8px}
+  .count{font-size:13.5px;color:var(--ink2);margin-top:5px}
+  .count b{color:var(--ink)}
+  .tools{margin-left:auto;display:flex;align-items:center;gap:10px}
+  .sel{border:1px solid var(--line);border-radius:9px;padding:9px 13px;font-size:13px;color:var(--ink2);
+       display:flex;align-items:center;gap:8px;background:#fff}
+  .btn-o{background:var(--orange);color:#2A1602;font-weight:700;font-size:13.5px;padding:11px 17px;
+         border-radius:9px;display:inline-flex;align-items:center;gap:8px}
+
+  /* liste */
+  .layout{display:grid;grid-template-columns:258px 1fr;gap:28px;padding:22px 0 40px;align-items:start}
+  .panel{border:1px solid var(--line);border-radius:13px;padding:16px}
+  .panel+.panel{margin-top:12px}
+  .panel h3{font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:#5E7180;margin-bottom:11px}
+  .cats{display:flex;flex-direction:column;gap:2px}
+  .cat{display:flex;justify-content:space-between;font-size:13.5px;padding:7px 9px;border-radius:8px;color:var(--ink2)}
+  .cat.on{background:#EAF1F5;color:var(--navy);font-weight:700}
+  .cat span{color:#9AAAB6;font-size:12px}
+  .chips{display:flex;gap:7px;flex-wrap:wrap}
+  .chip{font-size:12.5px;padding:6px 11px;border-radius:999px;border:1px solid var(--line);color:var(--ink2);white-space:nowrap}
+  .chip.on{background:var(--navy);border-color:var(--navy);color:#fff;font-weight:700}
+  .row{display:flex;gap:8px;margin-top:9px}
+  .field{flex:1;border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:13px;color:#7E93A2}
+  .given{display:flex;align-items:center;gap:9px;margin-top:12px;padding:9px 10px;border-radius:9px;
+         background:#EFF6F4;border:1px solid #CFE6E0;font-size:12.5px;color:#0E6B5B;font-weight:700}
+  .given .bx{width:15px;height:15px;border-radius:4px;background:#0E7A66;color:#fff;display:flex;
+             align-items:center;justify-content:center;font-size:10px}
+  .clear{font-size:12.5px;color:var(--ink2);margin-top:13px;text-align:center}
+
+  .reshead{display:flex;align-items:center;margin-bottom:13px}
+  .reshead .n{font-size:13px;color:var(--ink2)}
+  .reshead .n b{color:var(--ink)}
+  .reshead .sort{margin-left:auto;font-size:12.5px;color:var(--ink2);border:1px solid var(--line);
+                 border-radius:8px;padding:7px 11px}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .card{border:1px solid var(--line);border-radius:13px;overflow:hidden;background:#fff}
+  .ph{height:150px;position:relative;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.42)}
+  .ph .ico{width:44px;height:44px;stroke-width:1.1}
+  .ph .tag{position:absolute;left:9px;top:9px;background:#fff;color:#0E6B5B;font-size:10.5px;font-weight:700;
+           padding:4px 8px;border-radius:6px}
+  .ph .heart{position:absolute;right:9px;top:9px;width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.92);
+             color:var(--navy);display:flex;align-items:center;justify-content:center}
+  .ph .heart .ico{width:14px;height:14px;stroke-width:2}
+  .p1{background:linear-gradient(135deg,#123F5F,#2E8399)}
+  .p2{background:linear-gradient(135deg,#264653,#3E8E7E)}
+  .p3{background:linear-gradient(135deg,#5B3A1E,#EB912D)}
+  .p4{background:linear-gradient(135deg,#2C3E50,#5D7A8C)}
+  .p5{background:linear-gradient(135deg,#4A3B6B,#8E7CC3)}
+  .p6{background:linear-gradient(135deg,#1F4E4A,#57A39B)}
+  .cb{padding:12px 13px 13px}
+  .price{font-size:17px;font-weight:700;color:var(--navy);letter-spacing:-.3px}
+  .price small{font-size:11.5px;font-weight:400;color:var(--muted);letter-spacing:0}
+  .tt{font-size:13.5px;font-weight:700;line-height:1.3;margin-top:5px;height:35px;overflow:hidden}
+  .meta{display:flex;align-items:center;gap:5px;font-size:11.5px;color:var(--muted);margin-top:7px}
+  .meta .dot{width:3px;height:3px;border-radius:50%;background:#C3D0DA}
+  .pager{display:flex;gap:7px;align-items:center;margin-top:24px;justify-content:center;font-size:13px}
+  .pg{width:34px;height:34px;border:1px solid var(--line);border-radius:8px;display:flex;align-items:center;
+      justify-content:center;color:var(--ink2)}
+  .pg.on{background:var(--navy);border-color:var(--navy);color:#fff;font-weight:700}
+  .pg.nx{width:auto;padding:0 14px}
+
+  /* détail */
+  .crumb{font-size:12.5px;color:var(--muted);padding:18px 0 0}
+  .crumb b{color:var(--ink2);font-weight:400}
+  .detail{display:grid;grid-template-columns:1fr 372px;gap:32px;padding:16px 0 44px;align-items:start}
+  .gal{display:grid;grid-template-columns:1fr;gap:9px}
+  .main{height:330px;border-radius:14px;background:linear-gradient(135deg,#123F5F,#2E8399);
+        display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.4);position:relative}
+  .main .ico{width:82px;height:82px;stroke-width:.9}
+  .main .n{position:absolute;right:12px;bottom:12px;background:rgba(9,29,43,.72);color:#fff;font-size:11.5px;
+           padding:4px 9px;border-radius:6px}
+  .thumbs{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+  .th{height:66px;border-radius:9px;background:#DCE6EC;display:flex;align-items:center;justify-content:center;color:#9FB3C0}
+  .th.on{outline:2px solid var(--orange);outline-offset:-2px}
+  .h2{font-size:23px;letter-spacing:-.5px;margin-top:20px;line-height:1.2}
+  .badges{display:flex;gap:8px;margin-top:11px}
+  .bd{font-size:11.5px;font-weight:700;padding:5px 10px;border-radius:7px;background:#EAF1F5;color:var(--navy)}
+  .bd.g{background:#E4F3EF;color:#0E7A66}
+  .desc{font-size:14px;line-height:1.65;color:var(--ink2);margin-top:16px;max-width:700px}
+  .specs{margin-top:20px;border-top:1px solid var(--line);padding-top:14px;display:grid;
+         grid-template-columns:1fr 1fr;gap:11px 24px;font-size:13.5px;max-width:700px}
+  .specs div span{color:var(--muted);display:block;font-size:11.5px;margin-bottom:2px}
+  .report{margin-top:18px;font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:7px}
+
+  .side{display:flex;flex-direction:column;gap:14px}
+  .box{border:1px solid var(--line);border-radius:14px;padding:18px}
+  .box .big{font-size:28px;font-weight:700;letter-spacing:-.8px;color:var(--navy)}
+  .box .big small{font-size:13px;font-weight:400;color:var(--muted);letter-spacing:0}
+  .cta{margin-top:14px;background:var(--orange);color:#2A1602;font-weight:700;font-size:14.5px;
+       text-align:center;padding:13px;border-radius:10px;display:flex;align-items:center;justify-content:center;gap:9px}
+  .cta2{margin-top:9px;border:1px solid var(--line);color:var(--navy);font-weight:700;font-size:13.5px;
+        text-align:center;padding:11px;border-radius:10px;display:block}
+  .searchbar{margin-top:16px;display:flex;align-items:center;gap:11px;border:1px solid var(--line);
+             border-radius:11px;padding:11px 14px;color:#7E93A2;font-size:14px}
+  .searchbar .go{margin-left:auto;background:var(--navy);color:#fff;font-size:13px;font-weight:700;
+                 padding:8px 15px;border-radius:8px}
+  .note{margin-top:13px;background:var(--bg2);border-radius:10px;padding:11px 12px;font-size:11.5px;
+        line-height:1.5;color:var(--ink2)}
+  .note b{color:var(--ink)}
+  .seller{display:flex;gap:12px;align-items:center}
+  .seller .pc{width:42px;height:42px;border-radius:50%;background:#EAF1F5;color:var(--navy);font-weight:700;
+              display:flex;align-items:center;justify-content:center;font-size:14px}
+  .seller .nm{font-size:14px;font-weight:700}
+  .seller .sub{font-size:11.5px;color:var(--muted);margin-top:2px}
+  .verified{margin-top:12px;font-size:11.5px;color:#0E7A66;font-weight:700;display:flex;align-items:center;gap:6px}
+  .safe{border:1px solid #F3D6AE;background:#FDF7EE;border-radius:12px;padding:14px 16px}
+  .safe h4{font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:#8A5510;margin-bottom:8px}
+  .safe ul{list-style:none;font-size:12px;color:#7A5B2E;line-height:1.55}
+  .safe li{padding-left:14px;position:relative;margin-bottom:5px}
+  .safe li:before{content:"";position:absolute;left:0;top:7px;width:5px;height:5px;border-radius:50%;background:var(--orange)}
+</style>
+</head>
+<body>
+
+<div class="cap">Écran 1 — liste des annonces</div>
+<header>
+  <div class="wrap bar">
+    <div class="brand"><img src="kazendra-icone-256.png" alt=""><span class="nm">Kazendra</span></div>
+    <nav><a href="#">Accueil</a><a class="on" href="#">Annonces</a><a href="#">Immobilier</a><a href="#">Événements</a><a href="#">Emploi</a><a href="#">Artisans</a></nav>
+    <div class="right"><div class="av">B</div></div>
+  </div>
+</header>
+
+<div class="wrap doorhead">
+  <div class="top">
+    <div>
+      <h1>Annonces</h1>
+      <div class="count"><b>1 842</b> annonces en Belgique · mises à jour il y a 3 minutes</div>
+    </div>
+    <div class="tools">
+      <span class="sel">🇧🇪 Belgique</span>
+      <span class="btn-o">Déposer une annonce</span>
+    </div>
+  </div>
+  <div class="searchbar">
+    <svg class="ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>
+    Rechercher un objet, une marque, un modèle…
+    <span class="go">Rechercher</span>
+  </div>
+</div>
+
+<div class="wrap layout">
+  <aside>
+    <div class="panel">
+      <h3>Catégories</h3>
+      <div class="cats">
+        <a class="cat on">Tout <span>1 842</span></a>
+        <a class="cat">Maison <span>412</span></a>
+        <a class="cat">Électronique <span>336</span></a>
+        <a class="cat">Sport et loisirs <span>288</span></a>
+        <a class="cat">Mobilier <span>241</span></a>
+        <a class="cat">Enfants <span>197</span></a>
+        <a class="cat">Vêtements <span>128</span></a>
+        <a class="cat">Animaux <span>64</span></a>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>Type d'offre</h3>
+      <div class="chips">
+        <span class="chip on">Vente</span><span class="chip">Don</span><span class="chip">Location</span>
+      </div>
+      <div class="given"><span class="bx">✓</span> À donner uniquement</div>
+    </div>
+
+    <div class="panel">
+      <h3>Prix</h3>
+      <div class="row"><span class="field">min.</span><span class="field">max.</span></div>
+      <h3 style="margin-top:14px">État</h3>
+      <div class="chips">
+        <span class="chip">Neuf</span><span class="chip on">Bon état</span><span class="chip">Usagé</span>
+      </div>
+      <h3 style="margin-top:14px">Distance</h3>
+      <div class="chips"><span class="chip">5 km</span><span class="chip on">10 km</span><span class="chip">25 km</span><span class="chip">50 km</span></div>
+      <div class="clear">Effacer les filtres</div>
+    </div>
+  </aside>
+
+  <main>
+    <div class="reshead">
+      <div class="n"><b>1 842</b> résultats · rayon de 10 km autour de 5000</div>
+      <span class="sort">Les plus récentes ⌄</span>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <div class="ph p1"><svg class="ico" viewBox="0 0 24 24"><circle cx="8" cy="17" r="3.2"/><circle cx="18" cy="17" r="3.2"/><path d="M8 17 11 8h4l3 9"/></svg>
+          <span class="heart"><svg class="ico" viewBox="0 0 24 24"><path d="M12 20s-8-4.6-8-10a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 5.4-8 10-8 10z"/></svg></span></div>
+        <div class="cb"><div class="price">45 €</div>
+          <div class="tt">Vélo enfant 20 pouces, très bon état</div>
+          <div class="meta">5000 · à 2 km <i class="dot"></i> il y a 2 h</div></div>
+      </div>
+
+      <div class="card">
+        <div class="ph p2"><svg class="ico" viewBox="0 0 24 24"><path d="M4 12V9a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3"/><path d="M4 12h16v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/></svg></div>
+        <div class="cb"><div class="price">120 €</div>
+          <div class="tt">Canapé 3 places, tissu beige</div>
+          <div class="meta">5030 · à 5 km <i class="dot"></i> il y a 5 h</div></div>
+      </div>
+
+      <div class="card">
+        <div class="ph p3"><span class="tag">À donner</span><svg class="ico" viewBox="0 0 24 24"><path d="M3.5 7.5 12 3.5l8.5 4-8.5 4z"/><path d="M3.5 7.5v9l8.5 4 8.5-4v-9"/><path d="M12 11.5v9"/></svg></div>
+        <div class="cb"><div class="price" style="color:#0E7A66">Gratuit</div>
+          <div class="tt">Cartons de déménagement, une vingtaine</div>
+          <div class="meta">5000 · à 1 km <i class="dot"></i> hier</div></div>
+      </div>
+
+      <div class="card">
+        <div class="ph p4"><span class="tag">Location</span><svg class="ico" viewBox="0 0 24 24"><path d="M14.5 6.5a3.5 3.5 0 0 0 4.7 4.7l-8 8a2.6 2.6 0 0 1-3.7-3.7z"/><path d="M14.5 6.5 17 4l3 3-2.5 2.5"/></svg></div>
+        <div class="cb"><div class="price">8 € <small>/ jour</small></div>
+          <div class="tt">Perceuse à percussion, louée à la journée</div>
+          <div class="meta">5020 · à 4 km <i class="dot"></i> hier</div></div>
+      </div>
+
+      <div class="card">
+        <div class="ph p5"><svg class="ico" viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="13" rx="2"/><path d="M8 21h8"/></svg></div>
+        <div class="cb"><div class="price">75 €</div>
+          <div class="tt">Écran 24 pouces, Full HD, câble inclus</div>
+          <div class="meta">5000 · à 3 km <i class="dot"></i> hier</div></div>
+      </div>
+
+      <div class="card">
+        <div class="ph p6"><svg class="ico" viewBox="0 0 24 24"><path d="M4 19h16"/><path d="M6 19V9l6-4 6 4v10"/><path d="M10 19v-5h4v5"/></svg></div>
+        <div class="cb"><div class="price">60 €</div>
+          <div class="tt">Étagère en chêne massif, 4 niveaux</div>
+          <div class="meta">5030 · à 6 km <i class="dot"></i> il y a 2 j</div></div>
+      </div>
+    </div>
+
+    <div class="pager">
+      <span class="pg on">1</span><span class="pg">2</span><span class="pg">3</span><span class="pg">…</span>
+      <span class="pg">61</span><span class="pg nx">Suivante →</span>
+    </div>
+  </main>
+</div>
+
+<div class="cap">Écran 2 — page d'une annonce</div>
+<div class="wrap">
+  <div class="crumb">Annonces › <b>Sport et loisirs</b> › Vélo enfant</div>
+  <div class="detail">
+    <div>
+      <div class="gal">
+        <div class="main"><svg class="ico" viewBox="0 0 24 24"><circle cx="8" cy="17" r="3.2"/><circle cx="18" cy="17" r="3.2"/><path d="M8 17 11 8h4l3 9"/></svg><span class="n">1 / 4</span></div>
+        <div class="thumbs">
+          <div class="th on"><svg class="ico" viewBox="0 0 24 24" style="width:22px;height:22px"><circle cx="8" cy="17" r="3.2"/><circle cx="18" cy="17" r="3.2"/><path d="M8 17 11 8h4l3 9"/></svg></div>
+          <div class="th"><svg class="ico" viewBox="0 0 24 24" style="width:22px;height:22px"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="1.6"/></svg></div>
+          <div class="th"><svg class="ico" viewBox="0 0 24 24" style="width:22px;height:22px"><path d="M4 7h16M4 12h16M4 17h10"/></svg></div>
+          <div class="th"><svg class="ico" viewBox="0 0 24 24" style="width:22px;height:22px"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg></div>
+        </div>
+      </div>
+
+      <h2 class="h2">Vélo enfant 20 pouces, très bon état</h2>
+      <div class="badges"><span class="bd">Sport et loisirs</span><span class="bd g">Vente</span><span class="bd">Bon état</span><span class="bd">Remise en main propre</span></div>
+
+      <p class="desc">Vélo pour enfant de 6 à 9 ans, 20 pouces, acheté il y a deux ans. Freins révisés en septembre,
+        pneus en bon état, quelques rayures sur le cadre (visibles sur la troisième photo). Vendu parce que
+        l'enfant a grandi. Casque offert avec.</p>
+
+      <div class="specs">
+        <div><span>Type d'offre</span>Vente</div>
+        <div><span>État</span>Bon état</div>
+        <div><span>Commune</span>5000 · à 2 km de vous</div>
+        <div><span>Remise</span>En main propre, sur rendez-vous</div>
+        <div><span>Publiée</span>il y a 2 heures</div>
+        <div><span>Vue</span>1 240 fois</div>
+      </div>
+
+      <div class="report"><svg class="ico" viewBox="0 0 24 24" style="width:15px;height:15px"><path d="M12 9v5M12 17h.01"/><path d="M10.3 4.2 2.6 18a2 2 0 0 0 1.7 3h15.4a2 2 0 0 0 1.7-3L13.7 4.2a2 2 0 0 0-3.4 0z"/></svg> Signaler cette annonce</div>
+    </div>
+
+    <aside class="side">
+      <div class="box">
+        <div class="big">45 €</div>
+        <a class="cta"><svg class="ico" viewBox="0 0 24 24" style="width:18px;height:18px"><path d="M4 5.5h16v11H8.5L4 20.5z"/></svg>Contacter par message</a>
+        <a class="cta2">Mettre en favori</a>
+        <div class="note"><b>Aucun numéro de téléphone n'est affiché.</b> Les échanges passent par la
+          messagerie Kazendra et sont conservés 12 mois. Vous restez libre de partager vos coordonnées
+          dans un message, mais ce n'est jamais publié.</div>
+      </div>
+
+      <div class="box">
+        <div class="seller">
+          <span class="pc">m</span>
+          <div><div class="nm">marc_88</div><div class="sub">Membre depuis mars 2026 · 6 annonces</div></div>
+        </div>
+        <div class="verified"><svg class="ico" viewBox="0 0 24 24" style="width:15px;height:15px"><path d="M12 3.5 5 6.5v5c0 4.6 3 8 7 9.5 4-1.5 7-4.9 7-9.5v-5z"/><path d="M9 12l2.2 2.2L15.5 10"/></svg> E-mail et téléphone vérifiés</div>
+      </div>
+
+      <div class="safe">
+        <h4>Avant d'acheter</h4>
+        <ul>
+          <li>Ne payez jamais avant d'avoir vu l'objet.</li>
+          <li>Aucun acompte par virement ou par lien de paiement.</li>
+          <li>Rencontrez-vous dans un lieu public, en journée.</li>
+        </ul>
+      </div>
+    </aside>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,88 @@
+name: Collecte des promos
+
+# Toutes les heures, en SECOURS. La collecte principale tourne sur le NAS du
+# propriétaire (fiable, toutes les 5 minutes) et pousse le site ici ; ce
+# workflow ne sert que si le NAS dort. Volontairement espacé : deux collecteurs
+# à la même minute se marcheraient dessus pour rien.
+#
+# Note honnête : GitHub ne garantit pas la minute exacte (les crons planifiés
+# peuvent être différés de plusieurs minutes sous charge, et une planification
+# sur un dépôt neuf peut mettre un moment avant d'être honorée).
+on:
+  schedule:
+    - cron: '0 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: collecte-promos
+  cancel-in-progress: false
+
+jobs:
+  collecte:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Tests
+        run: node --test
+
+      - name: Collecter et publier
+        run: node collecteur.mjs --publier
+
+      # LA MÊME PASSE QUE SUR LE NAS, ET AU MÊME ENDROIT : après la collecte,
+      # AVANT le commit. Sans elle, le secours horaire recopiait dans le dépôt des
+      # visuels en TAILLE MARCHAND (1 200 à 2 500 px, 200 Ko à 2,5 Mo) que git
+      # garde ensuite pour toujours. Défaut mesuré le 13/10/2026 : `.git` pesait
+      # 2 827 Mo pour un site de 677 Mo.
+      # Le runner n'a ni /opt/data ni Pillow : les deux se donnent ici (venv
+      # jetable, archive dans /tmp — le dépôt du runner disparaît après le job).
+      - name: Entretien des visuels (plafond 1 000 px)
+        run: |
+          python3 -m venv /tmp/visuels
+          /tmp/visuels/bin/pip install --quiet --disable-pip-version-check pillow
+          VISUELS_PYTHON=/tmp/visuels/bin/python VISUELS_ARCHIVES=/tmp/archives-visuels \
+            bash bin/entretenir-visuels.sh
+
+      - name: Commiter le site publié
+        run: |
+          git config user.name  "collecteur-promos"
+          git config user.email "collecteur-promos@users.noreply.github.com"
+          git add -A docs public
+          if git diff --cached --quiet; then
+            echo "Rien de neuf depuis le dernier passage."
+            exit 0
+          fi
+          # MÊME MÉTHODE QUE LA COLLECTE DU NAS, et pour la même raison MESURÉE.
+          #
+          # La version précédente faisait `git commit` puis
+          # `git pull --rebase --autostash` : dès que la collecte du NAS (toutes
+          # les 5 minutes) avait poussé entre-temps, le rebasage tombait en
+          # CONFLIT sur `docs/offres.json` — un fichier GÉNÉRÉ, recalculé à
+          # chaque passage, qu'il n'y a donc rien à arbitrer. Vécu le 08/10/2026 :
+          # le workflow horaire échouait à chaque passage, et le propriétaire
+          # recevait un courriel « All jobs have failed » par heure.
+          #
+          # On se replace sur la pointe de l'origine, on pose UN SEUL commit
+          # par-dessus, on pousse : un commit posé sur la pointe part toujours en
+          # avance rapide, il ne peut pas entrer en conflit. Si la pointe a encore
+          # bougé, on recommence — c'est une course, elle se règle en réessayant.
+          for essai in 1 2 3; do
+            git fetch -q origin main || { sleep 3; continue; }
+            git reset --soft FETCH_HEAD
+            git add -A docs public
+            git commit -q -m "Collecte $(date -u +'%Y-%m-%d %H:%M UTC')" || true
+            if git push -q origin main; then
+              echo "Publié (essai $essai)."
+              exit 0
+            fi
+            sleep 4
+          done
+          echo "::error::envoi vers GitHub impossible après trois essais — le site publié n'a pas été mis à jour"
+          exit 1

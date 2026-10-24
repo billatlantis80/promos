@@ -1,0 +1,4590 @@
+{
+ "genereLe": "2026-10-09",
+ "note": "Résultat de la vérification des adresses de promotions, un acteur par entrée. niveau 2 = page de liste qui rend des offres à deux prix ; niveau 1 = page de promotions reconnue mais illisible ; niveau 0 = rien trouvé.",
+ "acteurs": {
+  "01net": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "1&1": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "4gnews": {
+   "pays": "PT",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 13
+  },
+  "60 Millions de Consommateurs (INC)": {
+   "pays": "FR",
+   "adresse": "https://www.60millions-mag.com/promo",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 10
+  },
+  "A.S.Adventure": {
+   "pays": "BE",
+   "adresse": "https://www.asadventure.com/promotions",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 14
+  },
+  "A.T.U": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "AIDA Cruises": {
+   "pays": "DE",
+   "adresse": "https://www.aida.de/buchung/aktionen/gewinnspiele?onsite=startseitenslider_hi3000",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 14
+  },
+  "ALDI": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "ALDI France": {
+   "pays": "FR",
+   "adresse": "https://www.aldi.fr/bons-plans",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 10
+  },
+  "About You": {
+   "pays": "DE",
+   "adresse": "https://www.aboutyou.de/c/frauen/sale/jeans-32623",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 14
+  },
+  "Action": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "Action France": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "Acuitis": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Afflelou": {
+   "pays": "FR",
+   "adresse": "https://www.afflelou.com/audition/offres",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 18
+  },
+  "Air Caraïbes": {
+   "pays": "FR",
+   "adresse": "https://www.aircaraibes.com/promotions/offres-train-plus-air",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 21
+  },
+  "Air Corsica": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Air France": {
+   "pays": "FR",
+   "adresse": "https://www.airfrance.fr/deals",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 12
+  },
+  "Air France & KLM": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 11
+  },
+  "Air France-KLM": {
+   "pays": "DE",
+   "adresse": "https://www.airfrance.de/deals",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 10
+  },
+  "Airbnb France": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Albert Heijn": {
+   "pays": "BE",
+   "adresse": "https://www.ah.be/acties",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 14
+  },
+  "Aldi Nord": {
+   "pays": "DE",
+   "adresse": "https://www.aldi-nord.de/angebote",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 10
+  },
+  "Aldi Süd": {
+   "pays": "DE",
+   "adresse": "https://www.aldi-sued.de/angebote/2026-10-08?theme=Aktionen+%26+Angebote",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 16
+  },
+  "Aldi Talk": {
+   "pays": "DE",
+   "adresse": "https://www.alditalk.de/angebote",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 10
+  },
+  "AliExpress": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Alinea": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Alliance Automotive Group France": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Alltours": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Alternate": {
+   "pays": "DE",
+   "adresse": "https://www.alternate.de/Angebote",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 12
+  },
+  "Alternate.be": {
+   "pays": "BE",
+   "adresse": "https://www.alternate.be/Acties",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 12
+  },
+  "Amazon (livres)": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "Amazon Belgique (.com.be)": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Amazon France": {
+   "pays": "FR",
+   "adresse": "https://www.amazon.fr/promotions",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 10
+  },
+  "Amazon.de": {
+   "pays": "DE",
+   "adresse": "https://www.amazon.de/angebote",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 10
+  },
+  "Amelia (Regourd Aviation)": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Amplifon": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "Amplifon Deutschland": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "Amplifon France": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "Androidworld": {
+   "pays": "NL",
+   "adresse": "https://www.androidworld.nl/aanbiedingen",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 10
+  },
+  "André": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 11
+  },
+  "Animalis": {
+   "pays": "FR",
+   "adresse": "https://www.animalis.com/promotions",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 13
+  },
+  "Apollo-Optik": {
+   "pays": "DE",
+   "adresse": "https://www.apollo.de/angebote/sale/brillen",
+   "niveau": 2,
+   "offres": 21,
+   "methode": "accueil",
+   "essais": 1
+  },
+  "Ardennes-Etape": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Asia (Voyages)": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 16
+  },
+  "Atol": {
+   "pays": "FR",
+   "adresse": "https://www.atol.fr/soldes",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "sitemap",
+   "essais": 13
+  },
+  "Atout France": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 13
+  },
+  "Auchan Retail France": {
+   "pays": "FR",
+   "adresse": "https://www.auchan.fr/soldes/ca-8621163",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 14
+  },
+  "Audika": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Aurum Tours": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Auto5": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "AutoDoc": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Autodistribution": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Autodoc": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Aveve": {
+   "pays": "BE",
+   "adresse": "https://www.aveve.be/fr/promotions",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 13
+  },
+  "B&You": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "BASE": {
+   "pays": "BE",
+   "adresse": "https://www.base.be/nl/promo/handset/october-deals.html?intcmp=home-prio_card-october-deals",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 16
+  },
+  "BUT": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Babelio / SensCritique": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Bauhaus": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Beauty Success": {
+   "pays": "FR",
+   "adresse": "https://www.beautysuccess.fr/soldes",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 13
+  },
+  "Belambra": {
+   "pays": "FR",
+   "adresse": "https://www.belambra.fr/bons-plans/offres-speciales/ski-easy-neige",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 12
+  },
+  "Besson Chaussures": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Bio-Planet": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 14
+  },
+  "Biocoop": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 14
+  },
+  "BlaBlaCar": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "BlaBlaCar Bus": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "Bol.com": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "Bongo & Wonderbox": {
+   "pays": "BE",
+   "adresse": "https://www.bongo.be/nl/acties",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 11
+  },
+  "Bonobo": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Booking.com & Expedia": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Booking.com France": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Botanic": {
+   "pays": "FR",
+   "adresse": "https://www.botanic.com/offres/nos-offres-du-moment.html",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 14
+  },
+  "Boulanger": {
+   "pays": "FR",
+   "adresse": "https://www.boulanger.com/soldes",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 10
+  },
+  "Bouygues Telecom": {
+   "pays": "FR",
+   "adresse": "https://www.bouyguestelecom.fr/bons-plans/offres-de-remboursement/filtre/offres-box",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 17
+  },
+  "Brico": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 18
+  },
+  "Brico Dépôt": {
+   "pays": "FR",
+   "adresse": "https://www.bricodepot.fr/promotions",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 15
+  },
+  "BricoPlanit": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "Bricoman": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Bricomarché": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Bricorama": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "British Airways": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "British Airways / IAG": {
+   "pays": "DE",
+   "adresse": "https://www.britishairways.com/sale",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 10
+  },
+  "Brittany Ferries": {
+   "pays": "FR",
+   "adresse": "https://www.brittany-ferries.fr/offres",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 13
+  },
+  "Brussels Airlines": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Budnikowsky (Budni)": {
+   "pays": "DE",
+   "adresse": "https://www.budni.de/aktionen/hamburg",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 13
+  },
+  "Bureau Vallée": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "C&A": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "C&A France": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "Cache Cache": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Cameleon": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "Canal+": {
+   "pays": "FR",
+   "adresse": "https://www.canalplus.com/offres",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 10
+  },
+  "Capfun": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Carrefour": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Carrefour Belgique": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Carter-Cash": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Casa": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Casino / Géant": {
+   "pays": "FR",
+   "adresse": "https://www.groupe-casino.fr/promo",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 13
+  },
+  "Castorama": {
+   "pays": "FR",
+   "adresse": "https://www.castorama.fr/soldes",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 14
+  },
+  "Cavavin": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Cdiscount": {
+   "pays": "FR",
+   "adresse": "https://www.cdiscount.com/promotions/",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 10
+  },
+  "Celio": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Center Parcs Deutschland": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 11
+  },
+  "Centres auto E.Leclerc": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 15
+  },
+  "Chaussea": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Check24": {
+   "pays": "DE",
+   "adresse": "https://www.check24.de/strom-gas/schnaeppchen",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "sitemap",
+   "essais": 13
+  },
+  "Chip": {
+   "pays": "DE",
+   "adresse": "https://www.chip.de/deals/schnaeppchen",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 13
+  },
+  "Chollometro": {
+   "pays": "ES",
+   "adresse": "https://www.chollometro.com/ofertas/all-stars-bundle-steam-2029578",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 14
+  },
+  "Club": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "Club Med": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 11
+  },
+  "Clubic": {
+   "pays": "BE",
+   "adresse": "https://www.clubic.com/bons-plans",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 10
+  },
+  "Clévacances": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 12
+  },
+  "Colruyt Group": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Computer Bild": {
+   "pays": "DE",
+   "adresse": "https://www.computerbild.de/deals",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 12
+  },
+  "Condor": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 14
+  },
+  "Conforama": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Connections": {
+   "pays": "BE",
+   "adresse": "https://www.connections.be/en/promotions",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "sitemap",
+   "essais": 13
+  },
+  "Conrad Electronic": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Coolblue": {
+   "pays": "BE",
+   "adresse": "https://www.coolblue.be/soldes",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 10
+  },
+  "Coopérative U (Système U)": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Cora France": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Corendon Belgique": {
+   "pays": "BE",
+   "adresse": "https://www.corendon.be/acties",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 11
+  },
+  "Corsair": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Corsica Ferries": {
+   "pays": "FR",
+   "adresse": "https://www.corsica-ferries.fr/promo/offres-wifi.html",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 17
+  },
+  "Corsica Linea": {
+   "pays": "FR",
+   "adresse": "https://www.corsicalinea.com/corse/offres",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 16
+  },
+  "Costa Croisières": {
+   "pays": "FR",
+   "adresse": "https://www.costacroisieres.fr/offres",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 14
+  },
+  "Courir": {
+   "pays": "FR",
+   "adresse": "https://www.courir.com/fr/c/promotions",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 13
+  },
+  "CroisiEurope": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 17
+  },
+  "Cuisinella": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Cultura": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 18
+  },
+  "Cultura (culture)": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 18
+  },
+  "Cyberport": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "DERTOUR Group": {
+   "pays": "DE",
+   "adresse": "https://www.dertour.de/deals",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 13
+  },
+  "DFDS France": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "DHnet": {
+   "pays": "BE",
+   "adresse": "https://www.dhnet.be/promo",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 10
+  },
+  "DIGI Belgique": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "DZT (Germany Tourism)": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 16
+  },
+  "Darty": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Das Futterhaus": {
+   "pays": "DE",
+   "adresse": "https://www.futterhaus.de/shop/sale",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 12
+  },
+  "Dealabs": {
+   "pays": "BE",
+   "adresse": "https://www.dealabs.com/bons-plans",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 10
+  },
+  "Decathlon": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Decathlon Allemagne": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Decitre": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Dehner": {
+   "pays": "DE",
+   "adresse": "https://www.dehner.de/angebote",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 10
+  },
+  "Deichmann": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 12
+  },
+  "Delhaize": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 13
+  },
+  "Deliveroo": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Deliveroo France": {
+   "pays": "FR",
+   "adresse": "https://deliveroo.fr/fr/deals",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 11
+  },
+  "Deutsche Bahn": {
+   "pays": "DE",
+   "adresse": "https://www.bahn.de/angebote",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 11
+  },
+  "Deutsche Telekom": {
+   "pays": "DE",
+   "adresse": "https://www.telekom.de/shop/aktionen",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 16
+  },
+  "Di": {
+   "pays": "BE",
+   "adresse": "https://www.di.be/promotions/",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 11
+  },
+  "Direct Optic": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 11
+  },
+  "DocMorris": {
+   "pays": "DE",
+   "adresse": "https://www.docmorris.de/angebote/stark-reduziert",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 15
+  },
+  "Douglas": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "DreamLand": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Dursty": {
+   "pays": "DE",
+   "adresse": "https://www.dursty.de/angebote",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 12
+  },
+  "Dussmann das KulturKaufhaus": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "E.Leclerc": {
+   "pays": "FR",
+   "adresse": "https://www.e.leclerc/promotions",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 19
+  },
+  "EMP": {
+   "pays": "DE",
+   "adresse": "https://www.emp.de/sale",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 13
+  },
+  "EasyJet": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Edeka": {
+   "pays": "DE",
+   "adresse": "https://www.edeka.de/angebote",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 14
+  },
+  "Elbenwald": {
+   "pays": "DE",
+   "adresse": "https://www.elbenwald.de/collections/angebote",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 14
+  },
+  "Electro Dépôt": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "Emirates": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Eram": {
+   "pays": "FR",
+   "adresse": "https://www.eram.fr/soldes",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 10
+  },
+  "Erlebnisparks régionaux (Phantasialand, Heide Park, Legoland DE)": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "Espace Culturel E.Leclerc": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Euromaster": {
+   "pays": "FR",
+   "adresse": "https://www.euromaster.fr/bons-plans",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 18
+  },
+  "Euromaster Deutschland": {
+   "pays": "DE",
+   "adresse": "https://www.euromaster.de/aktionen",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 10
+  },
+  "Euronics Deutschland": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Europa-Park": {
+   "pays": "DE",
+   "adresse": "https://www.europapark.de/angebote",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 18
+  },
+  "Euroshop": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "Eurostar": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 11
+  },
+  "Eurowings": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Eventim": {
+   "pays": "DE",
+   "adresse": "https://www.eventim.de/campaign/angebote/?affiliate=EVE",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 12
+  },
+  "Expert": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 12
+  },
+  "FRAM": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 15
+  },
+  "FTI Group": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "Farmaline": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 12
+  },
+  "Feu Vert": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Fielmann": {
+   "pays": "DE",
+   "adresse": "https://www.fielmann.de/brillen/sale",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 12
+  },
+  "First Stop": {
+   "pays": "FR",
+   "adresse": "https://www.firststop.fr/promotions/garantie-constructeur.html",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 17
+  },
+  "Flaconi": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Flink": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "FlixBus": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "FlixBus & BlaBlaCar": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "FlixBus / FlixTrain": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Floralux": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "Flying Tiger Copenhagen": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Fnac": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Fnac (culture)": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Foodette": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Foot Locker France": {
+   "pays": "FR",
+   "adresse": "https://www.footlocker.fr/promotions",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 18
+  },
+  "Fox & Compagnie": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "Frandroid": {
+   "pays": "FR",
+   "adresse": "https://www.frandroid.com/bons-plans",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 13
+  },
+  "Frandroid / 01net": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 13
+  },
+  "Franprix": {
+   "pays": "FR",
+   "adresse": "https://www.franprix.fr/promotions/slider/tout-ce-qui-fait-envie",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 14
+  },
+  "Fransat": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 14
+  },
+  "Free (Iliad)": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 12
+  },
+  "French bee": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 18
+  },
+  "Fressnapf": {
+   "pays": "DE",
+   "adresse": "https://www.fressnapf.de/angebote",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 14
+  },
+  "Fun": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Furet du Nord": {
+   "pays": "FR",
+   "adresse": "https://www.furet.com/soldes",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 11
+  },
+  "GameStop Allemagne": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "Gamecash": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Games Only": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "Games Workshop France": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Gamm Vert": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Gamma": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Gautier": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Gazet van Antwerpen": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Gedimat": {
+   "pays": "FR",
+   "adresse": "https://www.gedimat.fr/offres",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 13
+  },
+  "Geers Hörgeräte": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 16
+  },
+  "Geizhals": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "GetYourGuide": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Getränke Hoffmann": {
+   "pays": "DE",
+   "adresse": "https://www.getraenke-hoffmann.de/angebote",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 11
+  },
+  "Getränke-Quelle": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "Gibert": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Gifi": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 13
+  },
+  "Giphar": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Globus Baumarkt": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 11
+  },
+  "Globus SB-Warenhaus": {
+   "pays": "DE",
+   "adresse": "https://www.globus.de/angebote",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 13
+  },
+  "Go Sport": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Grand Audition": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 11
+  },
+  "Grand Frais": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 11
+  },
+  "GrandOptical": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "GrosBill": {
+   "pays": "FR",
+   "adresse": "https://www.grosbill.com/promotions",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 12
+  },
+  "Groupe Samse": {
+   "pays": "FR",
+   "adresse": "https://www.samse.fr/promotions",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 10
+  },
+  "Groupon": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 16
+  },
+  "Générale d'Optique": {
+   "pays": "FR",
+   "adresse": "https://www.generaleoptique.com/promotions",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 10
+  },
+  "Gîtes de France": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "H&M": {
+   "pays": "BE",
+   "adresse": "https://www.hm.com/promotions",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 10
+  },
+  "H&M Allemagne": {
+   "pays": "DE",
+   "adresse": "https://www.hm.com/angebote",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 10
+  },
+  "H&M France": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "HDblog": {
+   "pays": "IT",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 13
+  },
+  "HEMA": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Habitat": {
+   "pays": "FR",
+   "adresse": "https://www.habitat.fr/c/promotions",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 15
+  },
+  "Hans Anders": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "Hapag-Lloyd Cruises": {
+   "pays": "DE",
+   "adresse": "https://www.hl-cruises.de/reisen/angebote",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 14
+  },
+  "Havas Voyages": {
+   "pays": "FR",
+   "adresse": "https://www.havas-voyages.fr/promo",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 11
+  },
+  "HelloFresh": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "HelloFresh France": {
+   "pays": "FR",
+   "adresse": "https://www.hellofresh.fr/promo",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 10
+  },
+  "Hellweg": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 13
+  },
+  "Het Nieuwsblad": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Hey!": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "HolidayCheck": {
+   "pays": "DE",
+   "adresse": "https://www.holidaycheck.de/deals",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 13
+  },
+  "Homair Vacances": {
+   "pays": "FR",
+   "adresse": "https://www.homair.com/promotions",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 15
+  },
+  "Home24": {
+   "pays": "DE",
+   "adresse": "https://www.home24.de/aktionen",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 17
+  },
+  "Hornbach": {
+   "pays": "DE",
+   "adresse": "https://www.hornbach.de/angebote/",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 10
+  },
+  "HotUKDeals": {
+   "pays": "GB",
+   "adresse": "https://www.hotukdeals.com/deals/skechers-up-to-30-off-outlet-5001066",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 14
+  },
+  "Hubo": {
+   "pays": "BE",
+   "adresse": "https://www.hubo.be/fr/promotions/offres-imbattables/action-imbattable-karcher-cleaning",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 14
+  },
+  "Hugendubel": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "ICI PARIS XL": {
+   "pays": "BE",
+   "adresse": "https://www.iciparisxl.be/nl/promotions",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 14
+  },
+  "IKEA": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "IKEA Allemagne": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "IKEA France": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "Iberia": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 11
+  },
+  "Idee+Spiel": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Inditex / Zara": {
+   "pays": "DE",
+   "adresse": "https://www.zara.com/sale",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 10
+  },
+  "Inter Caves": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 11
+  },
+  "Intermarché": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 15
+  },
+  "Intersport Deutschland": {
+   "pays": "DE",
+   "adresse": "https://www.intersport.de/d/sale",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 13
+  },
+  "Intersport France": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Ixina": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "JBC": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 12
+  },
+  "JD Sports France": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 13
+  },
+  "JYSK": {
+   "pays": "BE",
+   "adresse": "https://jysk.be/soldes/",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 11
+  },
+  "JYSK (ex-Dänisches Bettenlager)": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "JYSK France": {
+   "pays": "FR",
+   "adresse": "https://www.jysk.fr/offres",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 10
+  },
+  "Jardiland": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Jardiland (animalerie)": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Jet tours": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 18
+  },
+  "Jimmy Fairly": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Jochen Schweizer mydays": {
+   "pays": "DE",
+   "adresse": "https://www.mydays.de/angebote/l/2phfz",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 15
+  },
+  "Journal du Geek": {
+   "pays": "FR",
+   "adresse": "https://www.journaldugeek.com/promotions",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 11
+  },
+  "JouéClub": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "KIND Hörgeräte": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Kaufland": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Kaufland.de": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Kelkoo": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "KiK": {
+   "pays": "DE",
+   "adresse": "https://www.kik.de/c/s/sale",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 11
+  },
+  "Kiabi": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Kiko Milano France": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "King Jouet": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 12
+  },
+  "King Jouet (ex-Maxi Toys)": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "Knuspr": {
+   "pays": "DE",
+   "adresse": "https://www.knuspr.de/aktionen",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 13
+  },
+  "Kruidvat": {
+   "pays": "BE",
+   "adresse": "https://www.kruidvat.be/nl/promo",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 14
+  },
+  "Krys": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Krëfel": {
+   "pays": "BE",
+   "adresse": "https://www.krefel.be/fr/offres",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 14
+  },
+  "Kölle Zoo": {
+   "pays": "DE",
+   "adresse": "https://www.koelle-zoo.de/sale",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 13
+  },
+  "L'Occitane en Provence": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "LDLC": {
+   "pays": "BE",
+   "adresse": "https://www.ldlc.com/promotions",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 11
+  },
+  "La Belle Vie": {
+   "pays": "FR",
+   "adresse": "https://www.labellevie.com/promotions",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 12
+  },
+  "La Compagnie": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 18
+  },
+  "La Foir'Fouille": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 11
+  },
+  "La Grande Récré": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 11
+  },
+  "La Halle": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "La Poste Mobile": {
+   "pays": "FR",
+   "adresse": "https://www.lapostemobile.fr/offres/prepaye",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 19
+  },
+  "La Redoute": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "La Vie Claire": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "La Vie Claire (bio)": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Lapperre": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 15
+  },
+  "Lavinia": {
+   "pays": "FR",
+   "adresse": "https://www.lavinia.com/promotions",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 10
+  },
+  "Le Roi du Matelas": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "LeDénicheur": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 11
+  },
+  "Leroy Merlin France": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Les Numériques": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 11
+  },
+  "Lidl": {
+   "pays": "BE",
+   "adresse": "https://www.lidl.be/q/fr-BE/query/promo",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 14
+  },
+  "Lidl Connect": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Lidl France": {
+   "pays": "FR",
+   "adresse": "https://www.lidl.fr/q/query/promotions",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 14
+  },
+  "Lieferando": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 14
+  },
+  "Lufthansa": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Lyreco": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "M3": {
+   "pays": "SE",
+   "adresse": "https://www.m3.se/erbjudanden",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 10
+  },
+  "MSC Croisières": {
+   "pays": "FR",
+   "adresse": "https://www.msccroisieres.fr/promo",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 13
+  },
+  "MSC Croisières & Costa Croisières": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "MSC Croisières Allemagne": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 13
+  },
+  "Macitynet": {
+   "pays": "IT",
+   "adresse": "https://www.macitynet.it/saldi",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 16
+  },
+  "Maisons du Monde": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Maniet! Luxus": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "ManoMano": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Marionnaud": {
+   "pays": "FR",
+   "adresse": "https://www.marionnaud.fr/promotions",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 13
+  },
+  "Marley Spoon": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "Match France": {
+   "pays": "FR",
+   "adresse": "https://www.supermarchesmatch.fr/promotions",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 10
+  },
+  "Materiel.net": {
+   "pays": "FR",
+   "adresse": "https://www.materiel.net/soldes/",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 12
+  },
+  "Maxi Zoo": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "Maxi Zoo France": {
+   "pays": "FR",
+   "adresse": "https://www.maxizoo.fr/promotions/offres-catalogue",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 13
+  },
+  "McPaper": {
+   "pays": "DE",
+   "adresse": "https://www.mcpaper.de/sale",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 10
+  },
+  "Medi-Market": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "MediaMarkt": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 14
+  },
+  "Micromania-Zing": {
+   "pays": "FR",
+   "adresse": "https://www.micromania.fr/promotions",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 10
+  },
+  "Midas France": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 13
+  },
+  "Mindfactory": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Mister Auto": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Mister Spex": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Mister-Auto": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Mobalpa": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Mobil.se": {
+   "pays": "SE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Mobile Vikings": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Mollat": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 11
+  },
+  "Monoprix": {
+   "pays": "FR",
+   "adresse": "https://www.monoprix.fr/c/selection/promotions/le-cachemire",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 14
+  },
+  "Mr.Bricolage": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "Möbel Höffner": {
+   "pays": "DE",
+   "adresse": "https://www.hoeffner.de/angebote",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 13
+  },
+  "Müller": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Müller (Drogerie)": {
+   "pays": "DE",
+   "adresse": "https://www.mueller.de/c/sale",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 14
+  },
+  "NRJ Mobile": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 11
+  },
+  "Naturalia": {
+   "pays": "FR",
+   "adresse": "https://www.naturalia.fr/promotions",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 14
+  },
+  "Nestor": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "Netto": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Netto Marken-Discount": {
+   "pays": "DE",
+   "adresse": "https://www.netto-online.de/sale/c-S00",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 14
+  },
+  "Newpharma": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 15
+  },
+  "Nicolas": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 11
+  },
+  "Nocibé": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Norauto": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Nordnet": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Norma": {
+   "pays": "DE",
+   "adresse": "https://www.norma-online.de/at/angebote",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 14
+  },
+  "Normal": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "Notebooksbilliger.de": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Noz": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "O2 Telefónica": {
+   "pays": "DE",
+   "adresse": "https://www.o2online.de/deals",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 16
+  },
+  "OBI": {
+   "pays": "DE",
+   "adresse": "https://www.obi.de/angebote",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 13
+  },
+  "OKay": {
+   "pays": "BE",
+   "adresse": "https://www.okay.be/fr/promos/promotions",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 14
+  },
+  "Obletter": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "Odalys Vacances": {
+   "pays": "FR",
+   "adresse": "https://www.odalys-vacances.com/promotions",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 15
+  },
+  "Oh'Green": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "Optic 2000": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 14
+  },
+  "Orange": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Orange Belgique": {
+   "pays": "BE",
+   "adresse": "https://www.orange.be/promo",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 16
+  },
+  "Oscaro": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 12
+  },
+  "Osiander": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Otto (otto.de)": {
+   "pays": "DE",
+   "adresse": "https://www.otto.de/sale/deals-der-woche",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 12
+  },
+  "Otto Group (mode)": {
+   "pays": "DE",
+   "adresse": "https://www.otto.de/sale/deals-der-woche",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 12
+  },
+  "Oxybul": {
+   "pays": "FR",
+   "adresse": "https://www.oxybul.com/soldes",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 11
+  },
+  "Paris je t'aime (OTCP)": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Passion Beauté": {
+   "pays": "FR",
+   "adresse": "https://www.passionbeaute.fr/promotions",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 14
+  },
+  "Pearle Opticiens": {
+   "pays": "BE",
+   "adresse": "https://www.pearle.be/nl_BE/acties",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 14
+  },
+  "Pegasus": {
+   "pays": "DE",
+   "adresse": "https://www.flypgs.com/angebote",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 10
+  },
+  "Pegasus Airlines": {
+   "pays": "BE",
+   "adresse": "https://www.flypgs.com/promotions",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 10
+  },
+  "Penny": {
+   "pays": "DE",
+   "adresse": "https://www.penny.de/angebote",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 16
+  },
+  "Pepper NL": {
+   "pays": "NL",
+   "adresse": "https://nl.pepper.com/aanbiedingen/gratis-intertoys-speelboek-421762",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 12
+  },
+  "Pepper PL": {
+   "pays": "PL",
+   "adresse": "https://www.pepper.pl/promocje/lidl-nektar-tymbark-1-l-1364649",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 12
+  },
+  "Pflanzen Kölle": {
+   "pays": "DE",
+   "adresse": "https://www.pflanzen-koelle.de/angebote/pflanzen-sale",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 14
+  },
+  "Pharmabest": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Philibert": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 12
+  },
+  "PicWicToys": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Picard": {
+   "pays": "FR",
+   "adresse": "https://www.picard.fr/rayons/promotions",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 14
+  },
+  "Picnic": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Pierre & Vacances-Center Parcs": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 12
+  },
+  "Pkwteile (Dida)": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Player / PlayerOne": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "Poco Einrichtungsmärkte": {
+   "pays": "DE",
+   "adresse": "https://www.poco.de/k/sale",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 14
+  },
+  "Poils et Plumes": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "Point S France": {
+   "pays": "FR",
+   "adresse": "https://www.points.fr/promotions",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 12
+  },
+  "Point.P": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Ponant": {
+   "pays": "FR",
+   "adresse": "https://www.ponant.com/offres",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 10
+  },
+  "Porta Möbel": {
+   "pays": "DE",
+   "adresse": "https://www.porta.de/sale",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 14
+  },
+  "Preisjäger": {
+   "pays": "AT",
+   "adresse": "https://www.preisjaeger.at/deals/iphone-16e-512gb-370464",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 14
+  },
+  "Presse-citron": {
+   "pays": "FR",
+   "adresse": "https://www.presse-citron.net/promotions",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 11
+  },
+  "Prik&Tik": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "Primark": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Primark France": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "Prixtel": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Pro Optik": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Promod": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 23
+  },
+  "Promovacances / Karavel": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 24
+  },
+  "Proximus": {
+   "pays": "BE",
+   "adresse": "https://www.proximus.be/promotions",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 12
+  },
+  "Quitoque": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "RED by SFR": {
+   "pays": "FR",
+   "adresse": "https://www.red-by-sfr.fr/bons-plans",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "sitemap",
+   "essais": 14
+  },
+  "RTL info & Sudinfo": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Rakuten France": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Recyclivre": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Renfe France": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "Repaire de Bacchus": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "Rewe Group": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Rituals France": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "Rivages du Monde": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 12
+  },
+  "Roady": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 14
+  },
+  "Roche Bobois": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Roller (Tessner)": {
+   "pays": "DE",
+   "adresse": "https://www.roller.de/sale",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 10
+  },
+  "Rossmann": {
+   "pays": "DE",
+   "adresse": "https://www.rossmann.de/angebote",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 10
+  },
+  "Ryanair": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "SFR": {
+   "pays": "FR",
+   "adresse": "https://www.sfr.fr/offre-mobile/bons-plans",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "sitemap",
+   "essais": 13
+  },
+  "SNCB / SNCB International": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "SNCF Voyageurs": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Salaün Holidays": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 14
+  },
+  "Sandaya": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 18
+  },
+  "Saturn": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Scarlet": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Schauinsland-Reisen": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 11
+  },
+  "Schmidt": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 14
+  },
+  "Schoenen Torfs": {
+   "pays": "BE",
+   "adresse": "https://www.torfs.be/nl/acties/1.html",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 11
+  },
+  "Segmüller": {
+   "pays": "DE",
+   "adresse": "https://www.segmueller.de/angebote",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 10
+  },
+  "Selectour": {
+   "pays": "FR",
+   "adresse": "https://www.selectour.com/promo",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 10
+  },
+  "Sensee": {
+   "pays": "FR",
+   "adresse": "https://www.sensee.com/promotions",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 10
+  },
+  "Sephora France": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Shein": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Shein (mode)": {
+   "pays": "DE",
+   "adresse": "https://www.shein.com/sale",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 10
+  },
+  "Shop Apotheke (Redcare Pharmacy)": {
+   "pays": "DE",
+   "adresse": "https://www.shop-apotheke.com/angebote",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 11
+  },
+  "Showroomprive": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Siblu": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Sky Deutschland": {
+   "pays": "DE",
+   "adresse": "https://www.sky.de/angebote",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 12
+  },
+  "SkyDSL": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "Sleepworld": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "Smartoys": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "Smyths Toys": {
+   "pays": "DE",
+   "adresse": "https://www.smythstoys.com/angebote",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 10
+  },
+  "Smyths Toys France": {
+   "pays": "FR",
+   "adresse": "https://www.smythstoys.com/promotions",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 10
+  },
+  "Snipes": {
+   "pays": "DE",
+   "adresse": "https://www.snipes.com/sale",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 13
+  },
+  "SoCoo'c": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 11
+  },
+  "Social Deal & Outspot": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Son-Vidéo.com": {
+   "pays": "FR",
+   "adresse": "https://www.son-video.com/soldes",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 14
+  },
+  "Sosh": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 14
+  },
+  "Space Games": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "Spar": {
+   "pays": "BE",
+   "adresse": "https://www.spar.be/acties",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 16
+  },
+  "Speedy France": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 14
+  },
+  "Sport 2000 France": {
+   "pays": "FR",
+   "adresse": "https://www.sport2000.fr/offres",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 14
+  },
+  "SportScheck": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Sports Direct": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 12
+  },
+  "Standaard Boekhandel": {
+   "pays": "BE",
+   "adresse": "https://www.standaardboekhandel.be/acties",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 16
+  },
+  "Starlink": {
+   "pays": "BE",
+   "adresse": "https://www.starlink.com/promotions",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 10
+  },
+  "Starlink Allemagne": {
+   "pays": "DE",
+   "adresse": "https://www.starlink.com/angebote",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 10
+  },
+  "Stiftung Warentest": {
+   "pays": "DE",
+   "adresse": "https://www.test.de/angebote",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 10
+  },
+  "Stokomani": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 12
+  },
+  "Stuart": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 11
+  },
+  "Sunweb Belgique": {
+   "pays": "BE",
+   "adresse": "https://www.sunweb.be/nl/skivakantie/aanbiedingen",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 14
+  },
+  "Swiss Sense": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "TAP Air Portugal": {
+   "pays": "BE",
+   "adresse": "https://www.flytap.com/en-be/miles-and-go/promotions",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 11
+  },
+  "TEDi": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "TUI Belgique (TUI.be)": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "TUI Cruises (Mein Schiff)": {
+   "pays": "DE",
+   "adresse": "https://www.meinschiff.com/angebote",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 16
+  },
+  "TUI Deutschland": {
+   "pays": "DE",
+   "adresse": "https://www.tui.com/sale",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 18
+  },
+  "TUI France": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 13
+  },
+  "TUI fly Belgium": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "TUIfly Deutschland": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Takeaway.com (Takeaway.be)": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Tedi France": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "Teknikveckan": {
+   "pays": "SE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 14
+  },
+  "Telenet": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 11
+  },
+  "Temu": {
+   "pays": "FR",
+   "adresse": "https://www.temu.com/promotions",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 10
+  },
+  "Test-Achats": {
+   "pays": "BE",
+   "adresse": "https://www.test-achats.be/famille-prive/soldes",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 19
+  },
+  "Thalia (incl. Mayersche)": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Thiriet": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 12
+  },
+  "Thomas Philipps": {
+   "pays": "DE",
+   "adresse": "https://www.thomas-philipps.de/sale",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 10
+  },
+  "Ticketmaster Belgique & Eventim": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Tom&Co": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 14
+  },
+  "Tom&Co France": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Toolstation": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "ToyChamp": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "Trafic": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Transavia": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Transavia France": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "Trekpleister": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "Trenitalia France": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "Trinkgut": {
+   "pays": "DE",
+   "adresse": "https://www.trinkgut.de/angebote",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 13
+  },
+  "Tropical Islands": {
+   "pays": "DE",
+   "adresse": "https://www.tropical-islands.de/preise-oeffnungszeiten/angebote",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 18
+  },
+  "Truffaut": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 14
+  },
+  "Truffaut (animalerie)": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 14
+  },
+  "Trustpilot": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Turkish Airlines": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "TuttoAndroid": {
+   "pays": "IT",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 14
+  },
+  "Twin Jet": {
+   "pays": "FR",
+   "adresse": "https://www.twinjet.fr/promotions",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 12
+  },
+  "TÉLÉSAT": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "UFC-Que Choisir": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Ubaldi": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Uber Eats": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "Uber Eats Allemagne": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "Uber Eats France": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "Ultra Jeux": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 14
+  },
+  "Ultra Premium Direct": {
+   "pays": "FR",
+   "adresse": "https://www.ultrapremiumdirect.com/promotions",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 12
+  },
+  "V and B": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 12
+  },
+  "VISITWALLONIA / Visit Brussels / Visit Flanders": {
+   "pays": "BE",
+   "adresse": "https://visitwallonia.be/promotions",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 10
+  },
+  "VOO": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 15
+  },
+  "Vacancéole": {
+   "pays": "FR",
+   "adresse": "https://www.vacanceole.com/promotions",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 12
+  },
+  "Vanden Borre": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Vedes": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Veepee": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 11
+  },
+  "Veepee / Zalando Lounge": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Vergölst": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Vinexus / Jacques' Wein-Depot": {
+   "pays": "DE",
+   "adresse": "https://www.jacques.de/angebote",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 10
+  },
+  "Vinted": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Vodafone Deutschland": {
+   "pays": "DE",
+   "adresse": "https://www.vodafone.de/de/angebote/kunden-werben?icmp=home:listcard:bnt:gen:gen__mgm",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 14
+  },
+  "Volotea": {
+   "pays": "BE",
+   "adresse": "https://www.volotea.com/promotions",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 10
+  },
+  "Voyage Privé": {
+   "pays": "BE",
+   "adresse": "https://www.voyage-prive.be/offres",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 10
+  },
+  "Vueling": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Wanimo": {
+   "pays": "FR",
+   "adresse": "https://www.wanimo.com/collections/promo",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 14
+  },
+  "Weldom": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Weltbild": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Wibra": {
+   "pays": "BE",
+   "adresse": "https://www.wibra.be/fr/assortiment/c/promotions/?perpage=24",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 12
+  },
+  "Wizz Air": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Wolt Allemagne": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "Woolworth": {
+   "pays": "DE",
+   "adresse": "https://www.woolworth.de/aktionen",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 13
+  },
+  "XXXLutz": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "X²O Badkamers": {
+   "pays": "BE",
+   "adresse": "https://www.x2o.be/promotions",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 14
+  },
+  "Yelloh! Village": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 12
+  },
+  "Yves Rocher": {
+   "pays": "BE",
+   "adresse": "https://www.yves-rocher.be/fr/promotions/c/promo",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 12
+  },
+  "Zalando": {
+   "pays": "BE",
+   "adresse": "https://www.zalando.be/promo/?sale=true",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 11
+  },
+  "Zalando (mode)": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 11
+  },
+  "Zara": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Zara France": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "Zeeman": {
+   "pays": "BE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "Zeeman France": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "Zoo & Co. / Sagaflor": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "ZooRoyal": {
+   "pays": "DE",
+   "adresse": "https://www.zooroyal.de/angebote/sale",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 13
+  },
+  "Zoomalia": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "Zooplus": {
+   "pays": "DE",
+   "adresse": "https://www.zooplus.de/shop/hunde/sonderangebote_hund",
+   "niveau": 2,
+   "offres": 22,
+   "methode": "accueil",
+   "essais": 3
+  },
+  "Zooplus / Bitiba": {
+   "pays": "FR",
+   "adresse": "https://www.zooplus.fr/shop/offres_promotionnelles/trialweeks",
+   "niveau": 2,
+   "offres": 3,
+   "methode": "accueil",
+   "essais": 4
+  },
+  "Zooplus.be": {
+   "pays": "BE",
+   "adresse": "https://www.zooplus.be/shop/offres_promotionnelles/trialweeks",
+   "niveau": 2,
+   "offres": 6,
+   "methode": "accueil",
+   "essais": 2
+  },
+  "bett1.de": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "billiger.de": {
+   "pays": "DE",
+   "adresse": "https://www.billiger.de/deals",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 10
+  },
+  "congstar": {
+   "pays": "DE",
+   "adresse": "https://www.congstar.de/handytarife/angebote",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 14
+  },
+  "dm-drogerie markt": {
+   "pays": "DE",
+   "adresse": "https://www.dm.de/neu/aktionen/lego-duplo-3547552",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "sitemap",
+   "essais": 12
+  },
+  "eBay France": {
+   "pays": "FR",
+   "adresse": "https://www.ebay.fr/promo",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 10
+  },
+  "eBay.de": {
+   "pays": "DE",
+   "adresse": "https://www.ebay.de/deals",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 10
+  },
+  "eDreams ODIGEO (Opodo, GO Voyages)": {
+   "pays": "FR",
+   "adresse": "https://www.govoyages.com/promo/destinations",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 12
+  },
+  "easyJet": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "eyes + more": {
+   "pays": "DE",
+   "adresse": "https://www.eyesandmore.de/sale",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 12
+  },
+  "flaschenpost": {
+   "pays": "DE",
+   "adresse": "https://www.flaschenpost.de/aktionen/wochenangebote",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 21
+  },
+  "fraenk": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "freenet": {
+   "pays": "DE",
+   "adresse": "https://www.freenet.de/angebote",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 14
+  },
+  "hagebau": {
+   "pays": "DE",
+   "adresse": "https://www.hagebau.de/sale",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 11
+  },
+  "iPhoneItalia": {
+   "pays": "IT",
+   "adresse": "https://www.iphoneitalia.com/saldi",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 13
+  },
+  "idealo": {
+   "pays": "DE",
+   "adresse": "https://www.idealo.de/preisvergleich/deals",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 11
+  },
+  "idealo France": {
+   "pays": "FR",
+   "adresse": "https://www.idealo.fr/bons-plans",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 11
+  },
+  "kfzteile24": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "lastminute.com": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 10
+  },
+  "leboncoin": {
+   "pays": "FR",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 11
+  },
+  "myToys": {
+   "pays": "DE",
+   "adresse": "https://www.mytoys.de/sale",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 12
+  },
+  "mydealz": {
+   "pays": "DE",
+   "adresse": "https://www.mydealz.de/deals",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 12
+  },
+  "reifen.com / reifendirekt": {
+   "pays": "DE",
+   "adresse": "https://www.reifen.com/aktionen",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 10
+  },
+  "rue du commerce": {
+   "pays": "FR",
+   "adresse": "https://www.rueducommerce.fr/promotions/",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 11
+  },
+  "toom Baumarkt": {
+   "pays": "DE",
+   "adresse": "https://www.toom.de/aktionen/gutscheinkarte",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 14
+  },
+  "waipu.tv": {
+   "pays": "DE",
+   "adresse": "https://www.waipu.tv/angebote",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "accueil",
+   "essais": 11
+  },
+  "weiter Reisen : Anex / Coral Travel": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 0
+  },
+  "Èggo": {
+   "pays": "BE",
+   "adresse": "https://www.eggo.be/promotions",
+   "niveau": 1,
+   "offres": 0,
+   "methode": "devine",
+   "essais": 12
+  },
+  "Öko-Test": {
+   "pays": "DE",
+   "adresse": "",
+   "niveau": 0,
+   "offres": 0,
+   "methode": "",
+   "essais": 11
+  }
+ }
+}

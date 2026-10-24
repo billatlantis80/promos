@@ -1,0 +1,1840 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Aperçu — les règles du site</title>
+<style>
+/* Application privée d'administration. Elle vit à part du site public : ses
+   styles sont écrits ici et n'empruntent rien à l'application, pour qu'une
+   modification de la vitrine ne puisse pas casser le panneau. */
+/* ---------------------------------------------------------------------------
+   MISE EN FORME DU PANNEAU.
+   Reprise du 08/10/2026, à la demande de B : « j'aimerais que tu l'améliores
+   dans sa généralité. »
+
+   LE PRINCIPE, ET CE QU'IL CORRIGE. Le panneau s'était construit onglet par
+   onglet : trois sortes de tableaux, deux tailles de titres, des bandeaux d'aide
+   partout, et des chiffres tantôt alignés à gauche tantôt à droite selon la
+   ligne qui les avait écrits. Rien de cassé, mais un ensemble qu'on ne lit pas
+   d'un coup d'œil. Ici, une seule grammaire : UN titre de section, UNE aide
+   courte sous le titre, UN tableau dont les nombres sont alignés à droite et
+   dont l'en-tête reste visible quand on descend.
+
+   Les classes existantes sont conservées : les tests relisent ce fichier.
+   --------------------------------------------------------------------------- */
+:root{
+  --fond:#0c1723; --carte:#142434; --carte2:#1a2c3e; --carte3:#22394e;
+  --bord:#274660; --bord-clair:#3a6087;
+  --texte:#eaf2f8; --doux:#93aec4; --tres-doux:#728fa6;
+  --accent:#eb912d; --accent2:#3f9fd0;
+  --vert:#2fbf71; --rouge:#e5544b; --sur-accent:#0d2536;
+  --r:14px; --r-petit:9px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+/* [hidden] DOIT gagner. Sans cette ligne, la règle #verrou { display:flex } plus
+   bas ÉCRASE l'attribut hidden : l'écran de connexion restait affiché AU-DESSUS
+   du panneau ouvert, et on pouvait lire les deux à la fois. Le défaut est
+   invisible en lecture de code — il ne se voit qu'à l'écran. */
+[hidden]{display:none !important}
+body{
+  background:var(--fond); color:var(--texte); font-size:15px; line-height:1.5;
+  font-family:"Open Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  padding-bottom:64px;
+}
+h1,h2,h3,.gros{font-family:"Montserrat",system-ui,sans-serif}
+a{color:var(--accent2)}
+.boite{max-width:1180px;margin:0 auto;padding:0 16px}
+
+/* ---------- Verrou ---------- */
+#verrou{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+#verrou .carte{
+  width:100%;max-width:400px;background:var(--carte);border:1px solid var(--bord);
+  border-radius:18px;padding:24px;box-shadow:0 18px 48px rgba(0,0,0,.45)
+}
+#verrou h1{font-size:20px;margin:0 0 4px}
+#verrou p{color:var(--doux);font-size:13px;margin:0 0 16px}
+.champ{margin:0 0 12px}
+.champ label{display:block;font-size:12.5px;color:var(--doux);margin-bottom:5px}
+.champ input{
+  width:100%;background:var(--carte2);color:var(--texte);border:1px solid var(--bord);
+  border-radius:10px;padding:11px 12px;font:inherit;font-size:15px
+}
+.champ input:focus{outline:2px solid var(--accent);outline-offset:-1px}
+button{font:inherit;cursor:pointer}
+.principal{
+  width:100%;background:var(--accent);color:var(--sur-accent);border:0;border-radius:11px;
+  padding:12px;font-weight:700;font-size:15px
+}
+.principal:hover{filter:brightness(1.06)}
+.annonce{margin:12px 0 0;font-size:13px;min-height:19px}
+.annonce.err{color:var(--rouge)} .annonce.ok{color:var(--vert)}
+
+/* ---------- Coquille ---------- */
+#tete{
+  background:rgba(9,19,29,.92);backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--bord);padding:12px 0;position:sticky;top:0;z-index:6
+}
+#tete .boite{display:flex;align-items:center;gap:12px}
+#tete img{width:30px;height:36px}
+#tete b{font-family:"Montserrat",sans-serif;font-size:17px;letter-spacing:.4px}
+#tete .priv{
+  margin-left:auto;font-size:11.5px;color:var(--doux);border:1px solid var(--bord);
+  border-radius:20px;padding:4px 10px;text-transform:uppercase;letter-spacing:.6px
+}
+/* Les onglets : une barre qui défile plutôt qu'une barre qui se casse. Le
+   soulignement remplace la pastille pleine — neuf pastilles orange saturaient
+   l'écran et faisaient perdre de vue ce qui est un onglet et ce qui est un
+   bouton d'action. */
+#onglets{
+  display:flex;gap:4px;overflow-x:auto;padding:8px 0 0;margin-top:4px;
+  scrollbar-width:thin
+}
+.onglet{
+  background:transparent;color:var(--doux);border:0;border-bottom:2px solid transparent;
+  border-radius:6px 6px 0 0;padding:9px 14px 7px;font-size:14px;white-space:nowrap;
+  transition:color .12s ease,background .12s ease
+}
+.onglet:hover{color:var(--texte);background:rgba(63,159,208,.07)}
+.onglet.on{color:var(--accent);border-bottom-color:var(--accent);font-weight:700}
+.onglet.on:hover{background:transparent}
+/* Le clavier doit voir où il est, comme la souris. */
+.onglet:focus-visible,.bouton:focus-visible,.pays-item:focus-visible,.principal:focus-visible,
+details > summary:focus-visible,details.pourquoi > summary:focus-visible{
+  outline:2px solid var(--accent2);outline-offset:2px
+}
+main{padding-top:18px}
+section[data-vue]{display:none}
+section[data-vue].on{display:block}
+.rub{
+  background:var(--carte);border:1px solid var(--bord);border-radius:var(--r);
+  padding:18px;margin:0 0 16px
+}
+.rub > h2:first-child{font-size:13.5px;margin:0 0 4px;text-transform:uppercase;
+  letter-spacing:.9px;color:var(--accent);display:flex;align-items:center;gap:9px}
+.rub > h2:first-child::before{content:'';width:3px;height:15px;background:var(--accent);
+  border-radius:2px;flex:0 0 auto}
+/* UN SEUL TITRE DE CARTE, UN SEUL SOUS-TITRE, ET ILS NE SE RESSEMBLENT PAS.
+   Le sous-titre reprenait la couleur du titre de carte : dans une même carte,
+   deux titres orange se disputaient le regard et la hiérarchie disparaissait —
+   on ne voyait plus ce qui était le cadre et ce qui le découpait. Le sous-titre
+   passe donc en blanc, plus petit, sans barre. Et il n'est plus jamais écrit
+   avec un style en ligne : une taille ici, une autre là, c'était le défaut. */
+.rub h2{font-size:13px;margin:26px 0 4px;text-transform:uppercase;letter-spacing:.9px;color:var(--texte)}
+.rub h3{font-size:12px;margin:14px 0 4px;text-transform:uppercase;letter-spacing:.8px;color:var(--doux)}
+.rub h2:first-child{margin-top:0}
+.rub p.aide{color:var(--doux);font-size:12.5px;margin:0 0 14px;max-width:82ch}
+/* UNE PHRASE VISIBLE, LE RESTE REPLIABLE. Les explications longues servent une
+   fois, pas à chaque ouverture : empilées sous chaque titre, elles faisaient un
+   mur de petits caractères qu'on ne lisait plus. Elles restent là — derrière
+   « En savoir plus ». Rien n'est perdu, tout redevient lisible. */
+details.pourquoi{background:transparent;border:0;margin:0 0 14px;border-radius:0}
+details.pourquoi > summary{
+  display:inline-flex;align-items:center;justify-content:flex-start;gap:7px;
+  padding:2px 0;font-size:12px;color:var(--doux);width:auto
+}
+details.pourquoi > summary:hover{color:var(--texte)}
+details.pourquoi > summary::before{
+  content:'?';display:inline-flex;align-items:center;justify-content:center;
+  width:15px;height:15px;border-radius:50%;border:1px solid var(--bord-clair);
+  font-size:10px;font-weight:700;color:var(--accent2);flex:0 0 auto
+}
+details.pourquoi p{color:var(--doux);font-size:12.5px;line-height:1.55;margin:6px 0;max-width:88ch}
+details.pourquoi p b{color:var(--texte)}
+/* Un champ de recherche se place sous une grille de compteurs : il lui faut de
+   l'air, et il ne prend pas toute la largeur du cadre. */
+.grille + .champ{margin-top:14px}
+.champ.etroit{max-width:440px}
+.champ.moyen{max-width:620px}
+.grille{display:grid;grid-template-columns:repeat(auto-fit,minmax(152px,1fr));gap:10px}
+/* LES COMPTEURS, PUIS LEUR TABLEAU — L'ÉCART, ÉCRIT UNE FOIS.
+   Défaut mesuré le 15/10/2026, onglet « Ajouts & refus » : la dernière tuile de
+   compteurs TOUCHAIT la première ligne du tableau (écart mesuré : 0 px), et les
+   compteurs des blocs « ce qui a été RETIRÉ » et « les sources qui n'ont rien
+   apporté » n'étaient même pas dans une grille : chacun prenait les 1 110 px du
+   cadre, comme trois barres vides empilées au-dessus du tableau, alors que les
+   mêmes tuiles s'affichent en ligne dans tout le reste du panneau. Ils rentrent
+   donc dans la même grille (classe `mesures`), et cette règle porte l'écart
+   avant le tableau — une seule fois, pour les trois blocs. */
+.grille.mesures{margin-bottom:14px}
+.mesure{
+  background:var(--carte2);border:1px solid var(--bord);border-radius:var(--r-petit);padding:12px 13px
+}
+.mesure .gros{font-size:25px;font-weight:800;line-height:1.1;font-variant-numeric:tabular-nums}
+.mesure .lib{font-size:12px;color:var(--doux);margin-top:3px}
+
+/* ---------- Les tableaux, une seule grammaire ---------- */
+.defile{overflow-x:auto;margin:0 -4px}
+/* LE TABLEAU GARDE SA LARGEUR NATURELLE, et c'est le conteneur qui défile.
+   Défaut mesuré : `table{width:100%}` écrasait dix-sept colonnes dans la largeur
+   du cadre — la colonne du nom tombait à quatre-vingt-dix pixels et « Amazon
+   Belgique (.com.be) » s'étalait sur trois lignes. On obtenait exactement le
+   contraire de ce qui était demandé : une ligne par acteur. */
+.defile table{width:auto;min-width:100%}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--bord)}
+/* L'EN-TÊTE COLLANT PASSE SOUS LA BARRE DU SITE, IL NE SE CACHE PAS DERRIÈRE.
+   Défaut mesuré en défilant : la barre « Kazendra » reste collée en haut avec un
+   z-index plus élevé, donc l'en-tête du tableau allait s'y cacher — on faisait
+   défiler un tableau sans jamais revoir le nom de ses colonnes. La hauteur de la
+   barre est mesurée au chargement et posée dans `--haut-tete`. */
+th{
+  color:var(--doux);font-weight:600;font-size:11.5px;text-transform:uppercase;letter-spacing:.6px;
+  position:sticky;top:var(--haut-tete,61px);background:var(--carte);z-index:2
+}
+/* SAUF DANS UN CONTENEUR QUI DÉFILE. Là, le décalage prévu pour la barre du site
+   s'appliquerait à un défilement qui n'existe pas : l'en-tête descendrait de
+   soixante pixels au-dessus des premières lignes, et masquerait la donnée. Un
+   conteneur de défilement horizontal n'a de toute façon pas besoin d'en-tête
+   collant verticalement. */
+.defile th{position:static}
+/* LA SECONDE PORTE D'UNE MÊME LIGNE : l'article, puis la boutique. Le titre mène
+   à l'article (ce qui explique la promo) ; ce petit lien mène au produit chez le
+   marchand sans jamais prendre la place du premier — et il reste COLLÉ à lui,
+   dans la même colonne : ajouter une colonne aurait repoussé les chiffres de
+   l'autre bout du cadre, ce que règle déjà `th.n{width:1%}` plus bas. */
+.lien-boutique{
+  font-size:11px;color:var(--accent2);white-space:nowrap;text-decoration:none;
+  border-bottom:1px dotted currentColor;margin-left:5px
+}
+.lien-boutique:hover{color:var(--texte);border-bottom-style:solid}
+tbody tr:hover td,table tr:hover td{background:rgba(63,159,208,.07)}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+/* LES NOMBRES NE PRENNENT QUE LEUR PLACE. Défaut mesuré à l'écran : un tableau à
+   deux ou trois colonnes, étiré sur les 1 180 px du cadre, posait le libellé à
+   l'extrême gauche et son compte sept cents pixels plus loin. On ne lisait plus
+   la ligne, on la cherchait. La colonne numérique se réduit donc à son chiffre,
+   et la colonne de texte prend le reste. */
+th.n{width:1%}
+/* Et un tableau qui n'a QUE deux ou trois colonnes n'a pas besoin de toute la
+   largeur : passé 620 px, le libellé et sa valeur se perdent de vue. */
+/* LA LARGEUR MAXIMALE D'UN TABLEAU SE MESURE À L'ÉCRAN, PAS EN PIXELS ABSOLUS.
+   Un plafond de 430 px sur un téléphone de 390 px dépassait de 58 px — et rien
+   ne l'absorbait : c'est TOUTE la page qui se décalait, emportant les tuiles et
+   les textes hors de vue. Mesuré au navigateur, à 390 px de large. `min()` garde
+   l'aspect voulu sur grand écran et cède la place quand l'écran est plus étroit. */
+table.etroite{max-width:min(620px,100%)}
+table.etroite2{max-width:min(430px,100%)}
+.barre{height:7px;background:var(--carte3);border-radius:4px;overflow:hidden;min-width:60px;display:block}
+.barre i{display:block;height:100%;background:var(--accent2)}
+/* Le drapeau et le nom d'un pays, côte à côte, partout où un pays s'écrit —
+   dans le tableau de bord comme dans les onglets à choix de pays. Un code nu
+   (« DE ») ne se lit pas ; « Allemagne » avec son drapeau, si. */
+.pays-nom{display:inline-flex;align-items:center;gap:8px}
+
+/* ---------- Pastilles d'état ---------- */
+.pastille{
+  display:inline-flex;align-items:center;gap:6px;border-radius:20px;padding:3px 10px 3px 8px;
+  font-size:11.5px;font-weight:600;white-space:nowrap;border:1px solid transparent
+}
+.pastille::before{content:'';width:7px;height:7px;border-radius:50%;background:currentColor;flex:0 0 auto}
+.pastille.flux{color:var(--vert);background:rgba(47,191,113,.12);border-color:rgba(47,191,113,.3)}
+.pastille.veille{color:var(--accent);background:rgba(235,145,45,.12);border-color:rgba(235,145,45,.3)}
+.pastille.aucun{color:var(--tres-doux);background:rgba(114,143,166,.12);border-color:rgba(114,143,166,.3)}
+
+/* Un pays dépliable : replié, la liste des douze pays tient dans l'écran ;
+   déplié, on voit ses sources. Sans ça, douze tableaux ouverts d'un coup
+   faisaient une page de trois mètres qu'on ne lisait plus. */
+details{background:var(--carte2);border:1px solid var(--bord);border-radius:var(--r-petit);margin:0 0 8px}
+details[open]{border-color:var(--bord-clair)}
+details summary{
+  cursor:pointer;padding:12px 14px;display:flex;align-items:baseline;gap:10px;
+  justify-content:space-between;list-style:none
+}
+details summary::-webkit-details-marker{display:none}
+details summary::after{content:'▾';color:var(--doux);flex:0 0 auto}
+details[open] summary::after{content:'▴'}
+details summary span{font-size:12px;color:var(--doux);text-align:right}
+details > table,details > .defile{margin:0;padding:0 14px 10px}
+details > table tr:first-child th{padding-top:2px}
+/* Un sous-titre DANS un pays déplié s'aligne sur le texte du tableau : sans ça
+   il collait au bord et on ne voyait plus qu'il commandait les lignes du dessous. */
+details h3{padding:0 14px}
+details h3 span{font-weight:400;color:var(--doux);font-size:12px;text-transform:none;letter-spacing:0}
+.vide{color:var(--doux);font-size:13.5px;font-style:italic}
+/* Quelques classes partagées, pour ne plus écrire de style EN LIGNE dans les
+   gabarits. C'est là le vrai défaut d'un panneau bâti onglet par onglet : une
+   taille ici, une autre là, et deux tableaux voisins qui ne se ressemblent plus.
+   Une classe porte la décision une fois ; l'onglet ne fait que l'appeler. */
+.fin{font-size:12px;color:var(--doux)}
+.tres-fin{font-size:11.5px;color:var(--doux)}
+.micro{font-size:11px;color:var(--tres-doux);margin-top:3px}
+.suite{margin-top:12px}
+.haut{margin-top:0}
+.gras{font-weight:700}
+.site{font-size:12.5px}
+
+/* L'étiquette « ajouté » : un acteur que l'appli lit et qui ne venait pas du
+   tableur de B. Elle doit se voir, pour qu'il garde la maîtrise de sa base. */
+.ajout{background:var(--accent);color:#12222e;border-radius:4px;padding:1px 5px;
+  font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;vertical-align:1px}
+/* L'étiquette « faite » : l'affiliation est OUVERTE, l'identifiant est là. Elle
+   doit se voir sans être confondue avec « ajouté » — celle-là dit un acquis, pas
+   une provenance. Ajoutée le 12/10/2026 (demande de B : « combien d'affiliation
+   j'ai déjà fait »). */
+.faite{background:var(--vert);color:#062f21;border-radius:4px;padding:1px 5px;
+  font-size:10px;font-weight:700;letter-spacing:.4px;vertical-align:1px}
+.avis{
+  border-left:3px solid var(--accent);background:var(--carte2);border-radius:0 10px 10px 0;
+  padding:11px 14px;font-size:13px;color:var(--texte);margin:0 0 16px
+}
+.avis b{color:var(--accent)}
+/* L'AVIS QUI SIGNALE UNE PANNE OUVRANTE — relais absent, clé refusée, aucun
+   relevé depuis trois jours. Le même bandeau, mais qui se voit : un état à
+   réparer ne doit pas ressembler à une information de routine. */
+.avis .avertir{display:block;border-left:3px solid var(--rouge);padding-left:11px;margin-left:-11px}
+.avis .avertir b{color:var(--texte)}
+/* UN JOUR CREUX N'EST PAS UNE LIGNE COMME LES AUTRES : il ne doit pas se lire
+   comme un jour à zéro visite « normal », mais comme un jour SANS visite. */
+table tr.jour-vide td{color:var(--doux);opacity:.72}
+/* Les deux champs saisis du bloc de gains : étroits, alignés à droite dans
+   leur colonne, et discrets — ce sont des réglages, pas des données. */
+.champ-taux,.champ-reel{
+  width:62px;background:var(--carte2);color:var(--texte);border:1px solid var(--bord);
+  border-radius:7px;padding:4px 6px;font:inherit;font-size:12.5px;text-align:right
+}
+.champ-taux:focus,.champ-reel:focus{outline:2px solid var(--accent);outline-offset:-1px}
+input[type="number"],input[inputmode="decimal"]{text-align:right}
+.bouton{
+  background:var(--carte2);color:var(--texte);border:1px solid var(--bord);border-radius:10px;
+  padding:9px 13px;font-size:13.5px;margin:0 6px 6px 0
+}
+.bouton:hover{border-color:var(--accent);color:var(--accent)}
+.ok{color:var(--vert)} .ko{color:var(--rouge)}
+
+/* ---------- Le choix du pays ---------- */
+#barrePays{
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  background:var(--carte2);border:1px solid var(--bord);border-radius:var(--r);
+  padding:12px 14px;margin:0 0 14px
+}
+#barrePays label{font-size:12px;color:var(--doux);text-transform:uppercase;letter-spacing:.7px}
+#paysMarche{
+  background:var(--carte3);color:var(--texte);border:1px solid var(--bord-clair);
+  border-radius:10px;padding:9px 12px;font:inherit;font-size:15px;font-weight:600;min-width:250px
+}
+#paysMarche:focus{outline:2px solid var(--accent);outline-offset:-1px}
+#barrePays .resume{font-size:12.5px;color:var(--doux);margin-left:auto;text-align:right}
+
+/* ---------- L'adresse des promotions : modifiable, et ça se voit ----------
+   Une colonne qu'on peut réécrire doit DIRE qu'elle se réécrit. Un champ
+   bordé et cliquable ne se confond pas avec du texte ; c'est la différence
+   entre « on peut » et « on voit qu'on peut ». */
+.adr{display:flex;flex-direction:column;gap:4px;min-width:230px}
+.adr input{
+  width:100%;background:var(--carte2);color:var(--texte);border:1px solid var(--bord);
+  border-radius:8px;padding:7px 9px;font:inherit;font-size:12.5px;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace
+}
+.adr input::placeholder{color:var(--tres-doux);font-style:italic}
+.adr input:focus{outline:2px solid var(--accent);outline-offset:-1px;background:var(--carte3)}
+.adr input.rempli{border-color:rgba(47,191,113,.55)}
+.adr .liens{font-size:11px;color:var(--doux);display:flex;gap:10px;flex-wrap:wrap}
+.adr .liens a{text-decoration:none}
+.adr .liens a:hover{text-decoration:underline}
+.etat-adr{font-size:10.5px;color:var(--tres-doux);font-style:italic}
+
+/* ---------- L'encadré de note ----------
+   Libre, mais bordé : un champ qui accepte du texte doit se voir comme tel. La
+   bordure change quand il porte quelque chose, pour qu'on repère d'un coup d'œil
+   les lignes déjà annotées dans une liste de cent cinquante. */
+.note{display:flex;flex-direction:column;gap:3px;min-width:170px}
+.note textarea{
+  width:100%;background:var(--carte2);color:var(--texte);border:1px solid var(--bord);
+  border-radius:8px;padding:6px 8px;font:inherit;font-size:12px;resize:vertical;min-height:44px;
+  line-height:1.4
+}
+.note textarea::placeholder{color:var(--tres-doux);font-style:italic}
+.note textarea:focus{outline:2px solid var(--accent);outline-offset:-1px;background:var(--carte3)}
+.note textarea.rempli{border-color:rgba(235,145,45,.55)}
+.etat-note{font-size:10.5px;color:var(--tres-doux);font-style:italic}
+
+/* ---------- LE BOUTON « MODIFIER » ET SA FICHE ----------
+   B (08/10/2026) : « rajouter un petit bouton de modification du champ pour que je
+   puisse l'adapter, compléter moi-même si nécessaire. »
+
+   UN CRAYON, À CÔTÉ DU NOM. C'est le plus court à intégrer, et il ne coûte pas une
+   colonne de plus dans une ligne déjà large — le placer en fin de ligne aurait
+   repoussé la note, qui doit rester la dernière. Il ouvre la fiche de l'acteur
+   SOUS sa ligne : on garde le contexte sous les yeux, on ne quitte pas la liste,
+   et on n'a pas à retenir ce qu'on était en train de corriger. */
+.editer{
+  display:inline-flex;align-items:center;gap:4px;
+  background:transparent;border:1px solid var(--bord);color:var(--doux);border-radius:7px;
+  padding:1px 6px;line-height:1.6;margin-left:6px;vertical-align:1px
+}
+.editer svg{display:block;flex:0 0 auto}
+.editer b{font-size:10.5px;font-weight:700}
+.editer:hover{border-color:var(--accent);color:var(--accent)}
+.editer[aria-expanded="true"]{border-color:var(--accent);color:var(--accent);background:rgba(235,145,45,.12)}
+tr.edition > td{background:var(--carte2);border-bottom:2px solid var(--bord-clair);padding:0}
+/* Le nom d'un acteur est son IDENTITÉ : il ne se coupe pas. Sans ça, dix-sept
+   colonnes dans la largeur du cadre réduisaient la colonne du nom à quatre-vingt
+   dix pixels, et « Amazon Belgique (.com.be) » s'étalait sur trois lignes — le
+   contraire exact de la ligne unique demandée. */
+td.nom-acteur{white-space:nowrap}
+/* « LU PAR » A ÉTÉ RETIRÉ (12/10/2026) : sa largeur planchée part avec la
+   colonne. Elle existait parce que « Amazon · Amazon (BE) » s'y étalait sur
+   quatre lignes — un problème qui n'existe plus, la colonne n'étant plus là. */
+/* ---------- LE TEXTE S'ADAPTE À LA PLACE, PAS L'INVERSE ----------
+   B (08/10/2026) : « Si le texte est trop long, exemple dans la description, on
+   doit garder la même distance dans l'encadrement, c'est le texte qui doit
+   s'adapter. Le texte doit apparaître dans la place apparente prévue pour [lui]
+   et s'il a besoin de plus de place, le reste du texte apparaîtra quand la souris
+   est dessus. »
+
+   La cellule garde donc UNE hauteur, toujours la même : c'est le texte qui se
+   coupe proprement sur des points de suspension. Le texte ENTIER reste
+   accessible — il est porté par l'attribut `title`, que le navigateur affiche au
+   survol, au-dessus de la cellule. Rien n'est perdu, et le tableau cesse de
+   faire des lignes de trois étages. */
+.tronque{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+td.site,td.raison{white-space:nowrap}
+td.site{max-width:250px}
+td.pays-fournis{max-width:330px}
+td.cat-acteur{max-width:210px}
+td.reseaux{max-width:220px;white-space:nowrap}
+/* `td.preuve` A ÉTÉ RETIRÉE le 12/10/2026 : sa largeur maximale part avec la
+   colonne. Un style sans sélecteur est un piège à relecture — il laisse croire
+   que la colonne existe encore. */
+/* ET LA FICHE RESTE VISIBLE. Mesuré : sur dix-sept colonnes, le tableau devient
+   plus large que l'écran et défile horizontalement. La fiche, qui s'étale sur
+   toute la ligne, partait donc hors de l'écran par la droite — on ouvrait un
+   formulaire dont on ne voyait que la moitié. Elle se colle au bord GAUCHE du
+   défilement : elle reste entière sous les yeux, quelle que soit la position. */
+.fiche-form{padding:14px 16px;position:sticky;left:0;width:min(100%,1100px)}
+.fiche-grille{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px;margin:10px 0 14px
+}
+.champ-fiche{display:flex;flex-direction:column;gap:4px;font-size:11.5px;color:var(--doux)}
+.champ-fiche input{
+  width:100%;background:var(--carte);color:var(--texte);border:1px solid var(--bord);
+  border-radius:8px;padding:7px 9px;font:inherit;font-size:12.5px
+}
+.champ-fiche input:focus{outline:2px solid var(--accent);outline-offset:-1px;background:var(--carte3)}
+.champ-fiche input.rempli{border-color:rgba(47,191,113,.55)}
+/* Le site accepte PLUSIEURS adresses : il lui faut un champ à plusieurs lignes.
+   Un `input` d'une seule ligne supprime les retours à la ligne, en silence — le
+   libellé promettait « une adresse par ligne » et le champ ne pouvait pas les
+   porter. */
+.champ-fiche textarea{
+  width:100%;background:var(--carte);color:var(--texte);border:1px solid var(--bord);
+  border-radius:8px;padding:7px 9px;font:inherit;font-size:12.5px;resize:vertical;min-height:46px;
+  line-height:1.35
+}
+.champ-fiche textarea:focus{outline:2px solid var(--accent);outline-offset:-1px;background:var(--carte3)}
+.champ-fiche textarea.rempli{border-color:rgba(47,191,113,.55)}
+/* Dans la fiche, le bouton d'enregistrement ne prend que SA largeur : le
+   `.principal` de l'écran de connexion, lui, occupe toute la ligne. */
+tr.edition .principal{width:auto;padding:9px 18px;display:inline-block;margin-right:8px}
+
+/* ---------- LE TABLEAU DE PAYS, AVEC DRAPEAUX ----------
+   B (08/10/2026) : « Pour les pays je ne souhaite pas un menu déroulant, je
+   souhaite un tableau comme il y a dans les paramètres de l'appli, avec les
+   drapeaux. Pour l'onglet marché et affiliation. »
+
+   Un menu déroulant cachait onze pays sur douze derrière un clic, et ne disait
+   rien de ce qu'ils contenaient. Ici, tous sont visibles d'un coup, chacun avec
+   son drapeau et son compte. Le DESSIN des drapeaux vient du module partagé
+   `drapeaux.js` — le même que l'application, jamais des emoji (sous Windows, un
+   emoji drapeau s'affiche « FR » dans un carré). */
+.pays-liste{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+@media (min-width:780px){.pays-liste.pays-2col{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.pays-item{
+  display:flex;align-items:center;gap:9px;padding:10px 11px;cursor:pointer;text-align:left;
+  background:var(--carte2);color:var(--texte);border:1px solid var(--bord);
+  border-radius:11px;font:inherit;font-size:13.5px
+}
+.pays-item:hover{border-color:var(--bord-clair)}
+.pays-item.on{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset;font-weight:600}
+.pays-item b{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pays-item .n{flex:0 0 auto;font-size:11.5px;color:var(--doux)}
+.drap{flex:0 0 auto;display:block;line-height:0}
+.drap svg{display:block;width:27px;height:18px;border-radius:3px;box-shadow:0 0 0 1px rgba(0,0,0,.35)}
+
+/* ---------- Les colonnes INFORMATIVES : RETIRÉES (11/10/2026) ----------
+   Elles venaient après l'adresse des promotions, chacune dans sa colonne, avec un
+   liseré à gauche pour séparer visiblement le travail de la documentation
+   (demande de B du 08/10/2026). B les a fait retirer : « elles ne servent à rien
+   à cet endroit-là ». Les largeurs planchées, le liseré et les règles devenues
+   sans sélecteur partent avec elles — un style orphelin est un piège à relecture.
+   Les informations, elles, restent dans la base et dans l'export CSV, et la
+   fiche modifiable de chaque ligne continue de les porter. */
+/* ---------- Les LEVIERS du panneau d'exploitation ----------
+   Chaque proposition se lit comme une fiche : le titre, le gain en pastille (ce
+   qu'on vient chercher), le constat mesuré, l'action, et le couple effort /
+   risque. Le filet à gauche sépare les propositions entre elles ; il reprend la
+   couleur de l'accent pour que l'œil suive la liste sans lire. */
+.levier{background:var(--carte2);border:1px solid var(--bord);border-left:3px solid var(--accent);
+  border-radius:var(--r-petit);padding:12px 14px;margin:0 0 10px}
+.levier-tete{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.levier-tete b{font-size:14px}
+/* L'ÉTIQUETTE DE GAIN SE REPLIE QUAND L'ÉCRAN EST ÉTROIT. `nowrap` la forçait sur
+   une seule ligne : 424 px de large sur un téléphone de 390 px — et comme rien ne
+   l'absorbait, c'est TOUTE la page qui se décalait. Mesuré au navigateur, à
+   390 px puis à 360 px. Sur grand écran, l'aspect d'origine est conservé. */
+.levier-gain{font-size:13px;font-weight:700;color:var(--accent);white-space:nowrap}
+@media (max-width:560px){.levier-gain{white-space:normal}}
+.levier p{margin:7px 0 0;font-size:13px;color:var(--texte)}
+.levier p.constat{color:var(--doux)}
+.levier p.action{margin-top:6px}
+.levier p.micro{margin-top:7px;font-size:11.5px;color:var(--doux);text-transform:uppercase;letter-spacing:.6px}
+.levier.a-mesurer{border-left-color:var(--doux)}
+.levier.a-mesurer .levier-gain{color:var(--doux);font-weight:600}
+
+/* ---------- L'ONGLET DES RÈGLES (15/10/2026) ----------
+   Chaque règle est une fiche : numéro, état, énoncé, valeurs LUES dans le code,
+   source, épreuve. Aucune valeur n'est écrite en dur dans cette page — c'est la
+   règle de l'onglet, et c'est ce qui le rend vérifiable. */
+.rcompte{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 16px}
+.rcompte .puce{font-size:12.5px;border:1px solid var(--bord);border-radius:16px;padding:4px 11px;color:var(--doux)}
+.rcompte .puce b{color:var(--texte);font-variant-numeric:tabular-nums}
+.rcompte .puce.active{border-color:rgba(47,191,113,.45);color:var(--vert)}
+.rcompte .puce.en-pause{border-color:rgba(63,159,208,.45);color:var(--accent2)}
+.rcompte .puce.eteinte{border-color:var(--bord-clair)}
+.rcompte .puce.en-mesure{border-color:rgba(235,145,45,.45);color:var(--accent)}
+.rfiltres{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 6px}
+.rfiltres button{
+  font:inherit;font-size:12px;color:var(--doux);background:transparent;
+  border:1px solid var(--bord);border-radius:16px;padding:4px 11px;cursor:pointer;
+}
+.rfiltres button:hover{color:var(--texte);border-color:var(--bord-clair)}
+.rfiltres button.on{color:var(--sur-accent);background:var(--accent);border-color:var(--accent);font-weight:700}
+.rcat{margin:30px 0 12px;padding-top:16px;border-top:1px solid var(--bord)}
+.rcat:first-of-type{border-top:0;margin-top:14px;padding-top:0}
+.rcat > h3{font-size:15.5px;margin:0 0 4px;letter-spacing:.3px}
+.rcat > p{color:var(--doux);font-size:12.5px;line-height:1.55;margin:0;max-width:84ch}
+.rtheme{margin:20px 0 9px;font-size:12px;text-transform:uppercase;letter-spacing:.9px;color:var(--accent)}
+.rtheme span{color:var(--doux);text-transform:none;letter-spacing:0;font-weight:400}
+.regle{
+  border:1px solid var(--bord);border-left:3px solid var(--accent);
+  border-radius:0 var(--r-petit) var(--r-petit) 0;padding:11px 13px;margin:0 0 9px;
+  background:var(--carte);
+}
+.regle.eteinte{border-left-color:var(--tres-doux);background:transparent}
+.regle.en-pause{border-left-color:var(--accent2)}
+.regle.en-mesure{border-left-color:var(--accent2);border-left-style:dashed}
+.rtete{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.rnum{font-variant-numeric:tabular-nums;font-weight:800;font-size:12.5px;color:var(--accent);letter-spacing:.4px}
+.regle.eteinte .rnum{color:var(--doux)}
+.rtitre{font-weight:700;font-size:14.5px;flex:1 1 220px;line-height:1.35}
+.retat{
+  font-size:10.5px;text-transform:uppercase;letter-spacing:.7px;padding:2px 8px;
+  border-radius:20px;border:1px solid currentColor;white-space:nowrap;color:var(--vert);
+}
+.retat.en-pause{color:var(--accent2)}
+.retat.eteinte{color:var(--tres-doux)}
+.retat.en-mesure{color:var(--accent)}
+.renonce{font-size:13px;line-height:1.6;margin:8px 0 0;color:var(--texte);max-width:92ch}
+.rvals{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.rval{
+  font-size:11.5px;background:rgba(63,159,208,.10);border:1px solid rgba(63,159,208,.28);
+  border-radius:6px;padding:3px 8px;font-variant-numeric:tabular-nums;
+}
+.rval i{font-style:normal;color:var(--doux)}
+.rval.muette{background:rgba(229,84,75,.12);border-color:rgba(229,84,75,.4);color:var(--rouge)}
+.rsrc{margin-top:10px;font-size:11.5px;color:var(--doux);line-height:1.6}
+.rsrc code{font-size:11.5px;color:var(--texte)}
+</style>
+</head><body>
+<div class="boite" style="padding-top:22px">
+  <p class="tres-fin">Aperçu de l’onglet « Règles » du panneau — rendu par
+    <code>bin/apercu-regles.mjs</code> sur <code>public/regles.json</code>
+    du 15/10/2026 19:24:44. Ce n’est pas une maquette :
+    c’est la vraie fonction d’affichage du panneau, sur le catalogue réellement publié.</p>
+  <div class="rub">
+    <h2>Les règles du site</h2>
+    <p class="aide">Toutes les règles qui gèrent Kazendra, écrites une par une, classées par catégorie et par thème. Les valeurs entre guillemets ne sont pas recopiées ici : elles sont LUES dans le code à chaque publication (collecteur.mjs, regles-affichage.js, app.js). Si une valeur manque, l'écran le dit — il n'affiche jamais un zéro à sa place.</p>
+    <div class="rcompte">
+    <span class="puce"><b>107</b> règle(s)</span>
+    <span class="puce active"><b>96</b> en vigueur</span><span class="puce en-pause"><b>3</b> en pause</span><span class="puce en-mesure"><b>2</b> en mesure</span><span class="puce eteinte"><b>6</b> éteintes</span>
+    <span class="puce">Valeurs lues dans le code le <b>15/10/2026 19:24:44</b></span>
+  </div>
+    <button data-etat="tous" class="on">Toutes</button><button data-etat="active" class="">En vigueur (96)</button><button data-etat="en-pause" class="">En pause (3)</button><button data-etat="en-mesure" class="">En mesure (2)</button><button data-etat="eteinte" class="">Éteintes (6)</button><button data-cat="A" class="">La collecte</button><button data-cat="B" class="">Les quatre étages</button><button data-cat="C" class="">La vie d&#39;une carte</button><button data-cat="D" class="">L&#39;ordre et l&#39;écran</button><button data-cat="E" class="">La veille</button><button data-cat="F" class="">La discrétion, la sécurité, les droits</button><button data-cat="G" class="">La méthode du chantier</button>
+    <div class="rcat"><h3>A — La collecte — ce qui entre dans le catalogue</h3><p>Ce qu&#39;on va lire, à quel rythme, comment le prix est prouvé, et ce qu&#39;on refuse de publier.</p></div><div class="rtheme">A1 · Les sources et la politesse</div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">A1.1</span>
+        <span class="rtitre">Une seule liste de sources décide de tout ce qui est lu</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Le catalogue n&#39;a qu&#39;une porte d&#39;entrée : la liste TOUTES_SOURCES, construite par réunion des flux, des enseignes, des adresses, des activités, des ventes flash et de la veille. Aucun contenu n&#39;entre par une autre voie, donc aucune source ne peut être servie sans y figurer.</p>
+      
+      <p class="rsrc">Depuis le 04/10/2026 · 
+        Source : <code>collecteur.mjs</code>
+         · Épreuve : <code>tests/sources.test.mjs</code>
+         · Noms cités : TOUTES_SOURCES, SOURCES, SOURCES_ENSEIGNES, SOURCES_AMAZON, SOURCES_BOL, SOURCES_KREFEL, SOURCES_VENTES_FLASH, SOURCES_ACTIVITES</p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">A1.2</span>
+        <span class="rtitre">Chaque source porte SON délai de repos, jamais un délai global</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Le délai vit dans la source (reposMin), parce que la même règle ne vaut pas pour tous : quinze minutes pour les communautés de bons plans, trente pour les enseignes et la presse, soixante à cent vingt pour les grosses enseignes balayées page après page, cent quatre-vingts pour la lecture d&#39;adresses. On est invité chez des gens.</p>
+      <div class="rvals"><span class="rval"><i>REPOS_ADRESSE_MIN =</i> 180 min</span></div>
+      <p class="rsrc">Depuis le 04/10/2026 · 
+        Source : <code>collecteur.mjs</code>
+         · Épreuve : <code>tests/sources.test.mjs</code>
+         · Noms cités : TEMPERATURE_MIN, SOURCES</p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">A1.3</span>
+        <span class="rtitre">On ne redemande jamais ce qu&#39;on a déjà</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Chaque requête repart avec l&#39;ETag et le Last-Modified reçus la fois d&#39;avant. Le serveur répond alors « rien de neuf » (304) sans renvoyer le corps : c&#39;est la requête conditionnelle, et c&#39;est la moitié de la discrétion. Le cache conditionnel vit dans data/conditionnel/.</p>
+      
+      <p class="rsrc">Depuis le 12/10/2026 · 
+        Source : <code>collecteur.mjs</code>
+         · Épreuve : <code>tests/discretion.test.mjs</code>
+        </p>
+    </div><div class="regle en-mesure">
+      <div class="rtete">
+        <span class="rnum">A1.4</span>
+        <span class="rtitre">robots.txt est lu PAR CHEMIN — et pas encore appliqué</span>
+        <span class="retat en-mesure">en mesure</span>
+      </div>
+      <p class="renonce">Le fichier robots.txt de chaque hôte est lu et publié, chemin par chemin (un hôte peut interdire /recherche et autoriser le reste). Il n&#39;ÉCARTE encore aucune source : la raison est écrite noir sur blanc dans l&#39;état publié, parce qu&#39;écarter une source retire du contenu du site — c&#39;est une décision qui revient au propriétaire, et il lui faut la liste avant de la prendre.</p>
+      <div class="rvals"><span class="rval"><i>ROBOTS_RAISON =</i> lu et publié, PAS ENCORE APPLIQUÉ : écarter une source retire du contenu du site — c’est une décision de B, et il lui faut la liste avant de la prendre</span></div>
+      <p class="rsrc">Depuis le 11/10/2026 · 
+        Source : <code>collecteur.mjs</code>
+         · Épreuve : <code>tests/droits.test.mjs</code>
+         · Noms cités : FICHIER_ROBOTS, ROBOTS</p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">A1.5</span>
+        <span class="rtitre">Le site ne va pas chercher ses images ailleurs</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Chaque visuel est rapatrié chez nous (docs/img), recompressé, et publié avec la page. Le site reste donc autonome : il ne dépend d&#39;aucun serveur tiers pour s&#39;afficher, et il ne fait porter aucune requête supplémentaire aux boutiques.</p>
+      
+      <p class="rsrc">Depuis le 13/10/2026 · 
+        Source : <code>collecteur.mjs</code>
+         · Épreuve : <code>tests/visuels.test.mjs</code>
+         · Noms cités : SOURCES_ENSEIGNES</p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">A1.6</span>
+        <span class="rtitre">On se présente comme un navigateur courant</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Le collecteur s&#39;annonce avec un en-tête de navigateur standard plutôt qu&#39;avec un nom de robot. Ce n&#39;est pas de la dissimulation : c&#39;est le seul moyen de recevoir les flux dans la forme où un visiteur les reçoit, et le rythme (A2) est la vraie contrepartie.</p>
+      
+      <p class="rsrc">Depuis le 04/10/2026 · 
+        Source : <code>collecteur.mjs</code>
+        
+         · Noms cités : UA</p>
+    </div><div class="rtheme">A2 · Le rythme, le budget, la panne</div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">A2.1</span>
+        <span class="rtitre">Un passage toutes les quinze minutes</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">La cadence prévue est de quinze minutes. C&#39;est elle qui définit ce que « la source sert encore l&#39;offre » veut dire : une offre absente du flux d&#39;un passage est réputée non servie à cet instant.</p>
+      <div class="rvals"><span class="rval"><i>CADENCE_PREVUE_MIN =</i> 15 min</span></div>
+      <p class="rsrc">Depuis le 04/10/2026 · 
+        Source : <code>collecteur.mjs</code>
+        
+        </p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">A2.2</span>
+        <span class="rtitre">Le passage tient dans trois cents secondes, et la dépense reste sous la moitié</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Chaque étape reçoit un temps maximal (flux, visuels, téléchargements, verdict), et la somme ne doit pas dépasser la moitié de la fenêtre du planificateur. La limite est passée de 120 à 300 secondes le 11/10/2026 après onze passages tués en pleine écriture — un passage tué ne laisse ni commit ni publication.</p>
+      <div class="rvals"><span class="rval"><i>LIMITE_CRON_MS =</i> 300000 ms</span></div>
+      <p class="rsrc">Depuis le 11/10/2026 · 
+        Source : <code>collecteur.mjs</code>
+         · Épreuve : <code>tests/collection-des-epreuves.test.mjs</code>
+         · Noms cités : BUDGET_CRON</p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">A2.3</span>
+        <span class="rtitre">Chaque étape est bornée par un NOMBRE avant d&#39;être bornée par un temps</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Le temps donné à une étape n&#39;est pas du travail : il n&#39;est là que pour le cas où la machine tombe mal. Le travail réel est borné en amont (un nombre d&#39;articles, un lot de visuels), ce qui explique qu&#39;un passage normal dure treize à vingt secondes là où le budget en autorise trois cents.</p>
+      
+      <p class="rsrc">Depuis le 12/10/2026 · 
+        Source : <code>collecteur.mjs</code>
+        
+         · Noms cités : BUDGET_CRON</p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">A2.4</span>
+        <span class="rtitre">Le cron se tait quand tout va bien</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Le silence est la règle : un cron qui parle toutes les cinq minutes devient du bruit, on coupe la sonnerie — et on coupe donc la surveillance avec. Le collecteur n&#39;écrit que dans quatre cas : code de sortie non nul, plus de la moitié des sources en échec, publication vers GitHub en échec, passage resté bloqué.</p>
+      
+      <p class="rsrc">Depuis le 04/10/2026 · 
+        Source : <code>bin/collecter.sh</code>
+         · Épreuve : <code>tests/depot-auto-reparation.test.mjs</code>
+        </p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">A2.5</span>
+        <span class="rtitre">La mémoire des passages se garde sept jours</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">L&#39;historique des passages (data/passages.json) ne conserve que sept jours de relevés. Ce qui doit tenir dans le temps se mesure en TAUX, jamais en total : un total qui grossit dit seulement que le fichier grossit.</p>
+      <div class="rvals"><span class="rval"><i>JOURS_MEMOIRE_PASSAGES =</i> 7 j</span></div>
+      <p class="rsrc">Depuis le 04/10/2026 · 
+        Source : <code>collecteur.mjs</code>
+        
+        </p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">A2.6</span>
+        <span class="rtitre">Un seul message en cas de panne, et il dit laquelle</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Un passage bloqué est détecté par le verrou de départ (date + numéro de processus) et signalé une fois. Le seuil d&#39;alerte est de deux passages d&#39;affilée sans renouvellement : la panne silencieuse — une app en apparence saine qui sert des données figées — est celle qu&#39;on cherche à attraper.</p>
+      
+      <p class="rsrc">Depuis le 11/10/2026 · 
+        Source : <code>bin/collecter.sh</code>
+        
+        </p>
+    </div><div class="rtheme">A3 · Le prix : ce qui est prouvé, ce qui est refusé</div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">A3.1</span>
+        <span class="rtitre">Un prix barré se LIT dans le texte, il ne se déduit jamais</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Pour reconnaître un prix de référence, il faut un mot qui le désigne (« au lieu de », « statt », « instead of », « in plaats van »…). Sans ce mot, les deux nombres d&#39;un titre ne sont pas une promotion : ce sont deux nombres.</p>
+      
+      <p class="rsrc">
+        Source : <code>collecteur.mjs</code>
+         · Épreuve : <code>tests/prix-avant-et-communautes.test.mjs</code>
+         · Noms cités : MOTS_PRIX_AVANT</p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">A3.2</span>
+        <span class="rtitre">Au-delà de 90 %, ce n&#39;est plus une remise</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Une paire de deux prix réels ne produit une remise que si elle reste dans la fourchette crédible : de 15 % à 90 %. Mesuré : « 99 % sRGB » dans le titre d&#39;un écran a déjà produit une fausse remise de 99 % — un faux pourcentage est pire que pas d&#39;offre.</p>
+      <div class="rvals"><span class="rval"><i>REMISE_MAX_PAIRE =</i> 90 %</span><span class="rval"><i>REMISE_SOURCE_MIN =</i> 15 %</span><span class="rval"><i>REMISE_SOURCE_MAX =</i> 90 %</span></div>
+      <p class="rsrc">
+        Source : <code>collecteur.mjs</code>
+         · Épreuve : <code>tests/remises.test.mjs</code>
+        </p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">A3.3</span>
+        <span class="rtitre">Un prix de référence ne doit pas être le prix d&#39;un lot ou d&#39;une autre taille</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Quand le prix barré vaut plus de cinq fois le prix affiché, ce n&#39;est pas une remise : c&#39;est un lot, un abonnement, une autre contenance. La comparaison est alors refusée.</p>
+      <div class="rvals"><span class="rval"><i>RATIO_REFERENCE_MAX =</i> 5 ×</span></div>
+      <p class="rsrc">
+        Source : <code>collecteur.mjs</code>
+         · Épreuve : <code>tests/prix-reference.test.mjs</code>
+        </p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">A3.4</span>
+        <span class="rtitre">Un pourcentage ANNONCÉ ne vaut que s&#39;il désigne une remise</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Le pourcentage du titre n&#39;est retenu que si un mot de promotion l&#39;accompagne, et il est refusé s&#39;il s&#39;agit d&#39;une proportion (« 100 % coton », « 30 % de matière grasse ») ou d&#39;une accroche de proportion (« jusqu&#39;à », « à partir de »). Défaut mesuré et corrigé : ces taux entraient comme remises, et 95 % de remise fait acheter.</p>
+      
+      <p class="rsrc">
+        Source : <code>collecteur.mjs</code>
+         · Épreuve : <code>tests/remises.test.mjs</code>
+         · Noms cités : MOTS_QUALIFIANT_POURCENT, POURCENT_PROPORTION, ACCROCHE_POURCENT</p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">A3.5</span>
+        <span class="rtitre">Le taux de change vient de la BCE, relevé par le collecteur</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Un seul taux sert au site : le taux de référence quotidien de la Banque centrale européenne, relevé par le collecteur et écrit dans data/devises.json, avec SA date. La BCE publie une fois par jour ouvré : un taux « du jour » peut dater de vendredi, et le visiteur a le droit de le savoir.</p>
+      <div class="rvals"><span class="rval"><i>TAUX_URL =</i> https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml</span></div>
+      <p class="rsrc">Depuis le 08/10/2026 · 
+        Source : <code>collecteur.mjs</code>
+         · Épreuve : <code>tests/devise-affichage.test.mjs</code>
+        </p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">A3.6</span>
+        <span class="rtitre">Aucun tiers n&#39;est appelé depuis le navigateur du visiteur</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Le taux est lu sur le NAS et publié avec le site. Jamais d&#39;appel à la BCE depuis la page : elle n&#39;envoie pas d&#39;en-tête CORS, la requête serait refusée — et surtout, le projet n&#39;appelle aucun tiers depuis chez le visiteur. Si le fichier manque, on retombe exactement sur le comportement d&#39;avant : nommer l&#39;autre place, sans classer.</p>
+      
+      <p class="rsrc">Depuis le 08/10/2026 · 
+        Source : <code>public/app.js</code>
+         · Épreuve : <code>tests/devise-affichage.test.mjs</code>
+        </p>
+    </div><div class="rtheme">A4 · Ce qu&#39;on refuse de publier</div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">A4.1</span>
+        <span class="rtitre">Un mot trompeur écarte l&#39;offre entière</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Une liste de mots pièges (marques homonymes, « configuration », « färgat »…) empêche une offre d&#39;entrer par la mauvaise porte. Chaque entrée de cette liste est ajoutée sur PREUVE : un cas réel cité, et son épreuve.</p>
+      
+      <p class="rsrc">
+        Source : <code>collecteur.mjs</code>
+         · Épreuve : <code>tests/categories.test.mjs</code>
+         · Noms cités : MOTS_TROMPEURS</p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">A4.2</span>
+        <span class="rtitre">Un logiciel n&#39;est pas un objet</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Un titre qui décrit un jeu dématérialisé (application, téléchargement, console nommée) est reconnu comme tel et rangé hors des objets. Trois motifs travaillent ensemble : le support logiciel nommé, le nom de console clair, et — pour les noms ambigus (« nintendo », « steam », « switch ») — la présence d&#39;un mot du jeu en neuf langues.</p>
+      
+      <p class="rsrc">
+        Source : <code>collecteur.mjs</code>
+         · Épreuve : <code>tests/enfant-jouets.test.mjs</code>
+         · Noms cités : SUPPORT_NUMERIQUE, CONSOLE_CLAIRE, CONSOLE_AMBIGU, MOT_JEU</p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">A4.3</span>
+        <span class="rtitre">Un âge seul ne prouve pas un jouet ; une PLAGE d&#39;âge, oui</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">« 12 ans » ou « 6 mois » est trop bruité pour ranger une offre en Jeux &amp; jouets (cinquante et une offres hors vocabulaire enfant le portent : « Alienware 15 », « 6 Monate Tagesgeld »…). Seule une plage de deux nombres bornée à quatorze ans résiste. Le plafond de quatorze est une mesure, pas une intuition.</p>
+      
+      <p class="rsrc">Depuis le 07/10/2026 · 
+        Source : <code>collecteur.mjs</code>
+         · Épreuve : <code>tests/enfant-jouets.test.mjs</code>
+         · Noms cités : RE_PLAGE_AGE, POIDS_AGE_ENFANT, MARQUEUR_ENFANT, ENFANT_HOMONYMES</p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">A4.4</span>
+        <span class="rtitre">Le mot d&#39;appareil l&#39;emporte sur le marqueur d&#39;enfant</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">« tondeuse à cheveux enfant » et « brosse à dents kids » vont en électroménager, pas en jouets : quand un appareil est nommé, c&#39;est lui qui décide. Le marqueur d&#39;enfant ne déplace une offre que si le classement l&#39;avait mise en « tech ».</p>
+      
+      <p class="rsrc">Depuis le 07/10/2026 · 
+        Source : <code>collecteur.mjs</code>
+         · Épreuve : <code>tests/enfant-jouets.test.mjs</code>
+        </p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">A4.5</span>
+        <span class="rtitre">Les homonymes mesurés sont retirés avant lecture</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">« Kinder » (chocolat), « Good Girl » (parfum), « Orient Bambino » (montre) sont écartés AVANT de chercher un marqueur d&#39;enfant. Et « kind » (allemand : enfant) est volontairement absent de la liste : « every KIND of listener » dans un article de presse faisait basculer l&#39;article en Jeux &amp; jouets.</p>
+      
+      <p class="rsrc">Depuis le 07/10/2026 · 
+        Source : <code>collecteur.mjs</code>
+         · Épreuve : <code>tests/enfant-jouets.test.mjs</code>
+         · Noms cités : ENFANT_HOMONYMES, MARQUEUR_ENFANT</p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">A4.6</span>
+        <span class="rtitre">Une négation retire ce que le mot positif aurait ajouté</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">« sans peluches », « enlevez les peluches » : la négation est lue avant le mot, et elle annule son effet. Sans cette ligne, un titre qui dit l&#39;inverse de ce qu&#39;il semble dire rangeait l&#39;offre au mauvais endroit.</p>
+      
+      <p class="rsrc">
+        Source : <code>collecteur.mjs</code>
+         · Épreuve : <code>tests/categories.test.mjs</code>
+         · Noms cités : NEGATIONS</p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">A4.7</span>
+        <span class="rtitre">Un mot à la frontière ne tranche pas seul</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">« auto », « moto », « tire », « wagen »… servent dans plusieurs rubriques selon la langue. Ces mots ne classent jamais à eux seuls : il faut qu&#39;un second mot confirme. Chaque mot payé une fois reste dans la liste, avec son épreuve.</p>
+      
+      <p class="rsrc">
+        Source : <code>collecteur.mjs</code>
+         · Épreuve : <code>tests/categories.test.mjs</code>
+         · Noms cités : MOTS_A_FRONTIERE</p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">A4.8</span>
+        <span class="rtitre">L&#39;écriture est normalisée avant toute lecture de motif</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Les accents sont retirés, les lettres spéciales translittérées (ł→l, ß→ss, ø→o…) et les mots-clés sont comparés à une forme sans accent. Une entrée écrite « dématérialisé » ne rencontrerait jamais « dematerialise » : le motif aurait l&#39;air juste et ne servirait à rien.</p>
+      
+      <p class="rsrc">
+        Source : <code>collecteur.mjs</code>
+         · Épreuve : <code>tests/categories.test.mjs</code>
+         · Noms cités : LETTRES_SPECIALES, CATEGORIES_SOURCES_NORM, MOTS_FORTS_NORM</p>
+    </div><div class="rcat"><h3>B — Les quatre étages — ce qui fait qu&#39;une carte s&#39;affiche</h3><p>Une carte entre par une porte et une seule. Quatre portes existent, et chacune exige une preuve différente.</p></div><div class="rtheme">B1 · Étage 1 — la promotion vérifiée</div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">B1.1</span>
+        <span class="rtitre">Deux prix réels affichés, et quinze pour cent minimum</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">La preuve la plus forte : le prix affiché, le prix barré, et un prix barré strictement supérieur au prix affiché, avec une remise d&#39;au moins quinze pour cent. C&#39;est la seule porte qui ne demande aucune confiance : les deux nombres sont sur la page de la boutique.</p>
+      <div class="rvals"><span class="rval"><i>REMISE_MIN =</i> 15 %</span></div>
+      <p class="rsrc">
+        Source : <code>public/regles-affichage.js</code>
+         · Épreuve : <code>tests/remises.test.mjs</code>
+         · Noms cités : estPromoVerifiee</p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">B1.2</span>
+        <span class="rtitre">Le seuil de quinze pour cent est le même partout</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Le collecteur garde les paires de prix au-dessus de quinze pour cent, et l&#39;écran retient les cartes au-dessus de quinze pour cent. Deux constantes distinctes pour un même seuil : c&#39;est voulu, et une épreuve vérifie qu&#39;elles ne divergent pas.</p>
+      <div class="rvals"><span class="rval"><i>REMISE_MIN_APP =</i> 15 %</span></div>
+      <p class="rsrc">
+        Source : <code>collecteur.mjs</code>
+         · Épreuve : <code>tests/seuil-enseigne.test.mjs</code>
+        </p>
+    </div><div class="rtheme">B2 · Étage 2 — l&#39;offre d&#39;enseigne</div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">B2.1</span>
+        <span class="rtitre">Une vraie boutique, un prix réel, et un signe de qualité qui ne vient pas de nous</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Pourquoi un second étage, et pourquoi ce n&#39;est pas un relâchement : mesuré sur les données réelles, les 317 promos à deux prix réels étaient 311 fois chez Amazon. Or les grandes enseignes européennes ne publient pas de prix barré lisible — MediaMarkt, bol.com, Coolblue, Darty, Fnac, Currys, Argos, Elgiganten, Worten : 403, 429, ou page vide. Exiger deux prix partout, c&#39;était afficher 98 % d&#39;Amazon : l&#39;inverse du catalogue demandé.</p>
+      
+      <p class="rsrc">
+        Source : <code>public/regles-affichage.js</code>
+         · Épreuve : <code>tests/seuil-enseigne.test.mjs</code>
+         · Noms cités : estOffreEnseigne</p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">B2.2</span>
+        <span class="rtitre">Le signe de qualité : une remise annoncée crédible, ou le score de la communauté</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Deux signes, et deux seulement : une remise annoncée par la source, crédible (au moins quinze pour cent, au plus quatre-vingt-dix), ou le score que la communauté donne au bon plan (au moins cent degrés). Rien d&#39;autre n&#39;est lu : ni la page d&#39;offres, ni le nombre de vues.</p>
+      <div class="rvals"><span class="rval"><i>CHALEUR_MIN =</i> 100 °</span><span class="rval"><i>REMISE_ANNONCEE_MAX =</i> 90 %</span></div>
+      <p class="rsrc">
+        Source : <code>public/regles-affichage.js</code>
+         · Épreuve : <code>tests/seuil-enseigne.test.mjs</code>
+        </p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">B2.3</span>
+        <span class="rtitre">Une page « offres » sans réduction n&#39;entre pas</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Défaut corrigé : l&#39;étage acceptait aussi toute offre publiée sur la page d&#39;offres d&#39;une enseigne. Mesure faite sur cette page — 22 produits, 5 seulement portent un prix de référence, UN SEUL atteint quinze pour cent. Ce n&#39;est pas une page de promotions, c&#39;est un catalogue à prix nu.</p>
+      
+      <p class="rsrc">
+        Source : <code>public/regles-affichage.js</code>
+         · Épreuve : <code>tests/seuil-enseigne.test.mjs</code>
+        </p>
+    </div><div class="rtheme">B3 · Étage 3 — le bon plan de presse</div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">B3.1</span>
+        <span class="rtitre">Un article de presse portant un prix réel et une remise crédible est admis, et étiqueté « presse »</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Un journal n&#39;est pas une enseigne : on ne l&#39;étiquette jamais comme telle, sinon l&#39;étiquette ment. Mais quand l&#39;article porte un prix réel ET une remise annoncée crédible, c&#39;est un vrai bon plan — « les écouteurs Nothing Ear (3) chutent à 96 € au lieu de 179 € ». Le lien s&#39;appelle alors « Lire le bon plan », jamais « Voir chez ».</p>
+      
+      <p class="rsrc">
+        Source : <code>public/regles-affichage.js</code>
+         · Épreuve : <code>tests/prix-avant-et-communautes.test.mjs</code>
+         · Noms cités : estBonPlanPresse</p>
+    </div><div class="rtheme">B4 · Étage 4 — la bonne affaire sans prix</div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">B4.1</span>
+        <span class="rtitre">Une enseigne qu&#39;on ne peut pas chiffrer reste visible, et sans aucun prix</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Media Markt, Bol, Argos, Tesco, Costco, Media Expert, Allegro, Biedronka refusent qu&#39;on lise leurs prix. Leurs promotions n&#39;existent chez nous que relayées par les communautés : nom de la boutique, photo, lien, score d&#39;intérêt — et aucun prix. Les jeter, c&#39;était perdre l&#39;enseigne entière.</p>
+      
+      <p class="rsrc">
+        Source : <code>public/regles-affichage.js</code>
+         · Épreuve : <code>tests/prix-avant-et-communautes.test.mjs</code>
+         · Noms cités : estBonneAffaire</p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">B4.2</span>
+        <span class="rtitre">Trois garde-fous à l&#39;étage 4</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Un prix, même approximatif, chasse l&#39;offre vers les étages 1 ou 2 (jamais de pourcentage inventé, jamais de prix déduit du titre) ; la source doit être une COMMUNAUTÉ, parce que c&#39;est elle qui nomme la boutique — un journal n&#39;est pas un marchand ; et le bon plan doit être réellement populaire, au moins cent degrés.</p>
+      <div class="rvals"><span class="rval"><i>CHALEUR_AFFAIRE =</i> 100 °</span></div>
+      <p class="rsrc">
+        Source : <code>public/regles-affichage.js</code>
+         · Épreuve : <code>tests/prix-avant-et-communautes.test.mjs</code>
+         · Noms cités : SOURCE_COMMUNAUTE</p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">B4.3</span>
+        <span class="rtitre">Les quatre portes sont réunies en une seule décision</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Une carte entre dans la vue par défaut si et seulement si l&#39;une des quatre portes s&#39;ouvre. Une seule fonction porte cette union, donc aucun écran ne peut afficher une carte que le filtre n&#39;a pas acceptée.</p>
+      
+      <p class="rsrc">
+        Source : <code>public/regles-affichage.js</code>
+         · Épreuve : <code>tests/portes-entree.test.mjs</code>
+         · Noms cités : estBonnePromo</p>
+    </div><div class="rtheme">B5 · Ce qui est écarté des portes</div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">B5.1</span>
+        <span class="rtitre">Un nom de rédaction n&#39;est jamais une enseigne</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">« Le Parisien » vend du papier, pas des écouteurs. Sans ce crible, les rédactions remplissaient les quarante pour cent et l&#39;étiquette « enseigne » devenait un mensonge. Le filtre sert à deux choses opposées : écarter une rédaction de la porte des enseignes, et y faire entrer un article quand il porte un vrai prix.</p>
+      
+      <p class="rsrc">
+        Source : <code>public/regles-affichage.js</code>
+         · Épreuve : <code>tests/portes-entree.test.mjs</code>
+         · Noms cités : REDACTIONS</p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">B5.2</span>
+        <span class="rtitre">Le défaut payé : un suffixe de domaine nu attrape les boutiques</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Le filtre des rédactions s&#39;était terminé par des suffixes nus (\.fr \.com \.it…), « pour reconnaître un domaine ». Mesuré le 15/10/2026 : ils attrapaient aussi toute BOUTIQUE dont le nom porte son extension. « presse » était annoncé sur Parfimo.de et Lieblingsfoto.de, et le bouton d&#39;une carte bol.com à deux prix réels disait « Lire le bon plan » au lieu de « Voir chez bol.com ». Les treize motifs ont été retirés : soixante-trois promotions de plus s&#39;affichent.</p>
+      
+      <p class="rsrc">Depuis le 15/10/2026 · 
+        Source : <code>public/regles-affichage.js</code>
+         · Épreuve : <code>tests/portes-entree.test.mjs</code>
+        </p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">B5.3</span>
+        <span class="rtitre">Un nom qui ne désigne aucune boutique</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Quand le flux ne dit rien, le nom du marchand devient celui de la source elle-même (« dealabs », « presse ») ou un domaine brut. Ces noms n&#39;entrent ni par l&#39;étage 2 ni par l&#39;étage 3 : ils ne désignent aucune boutique où aller.</p>
+      
+      <p class="rsrc">
+        Source : <code>public/regles-affichage.js</code>
+         · Épreuve : <code>tests/portes-entree.test.mjs</code>
+         · Noms cités : MARCHANDS_NON_BOUTIQUE</p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">B5.4</span>
+        <span class="rtitre">Amazon se prouve par ses deux prix</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Amazon est écarté des étages 2, 3 et 4. Ce n&#39;est pas une défaveur : ses offres se prouvent par leurs deux prix, à l&#39;étage 1 — donc par la meilleure preuve qui existe. Le jour où une promo Amazon n&#39;a qu&#39;un prix, elle ne s&#39;affiche pas.</p>
+      
+      <p class="rsrc">
+        Source : <code>public/regles-affichage.js</code>
+         · Épreuve : <code>tests/amazon.test.mjs</code>
+         · Noms cités : estAmazon</p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">B5.5</span>
+        <span class="rtitre">Le pourcentage faux se retire, l&#39;offre reste</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Distinction nécessaire : une offre peut être légitime (score communautaire de 478°, prix réel de 63,99 € chez un vrai marchand) et porter malgré tout un faux pourcentage dans son titre. Le Dell P2422H « 99 % sRGB » passait ainsi avec « -99 % » écrit sur la carte. L&#39;offre reste, le pourcentage faux part.</p>
+      
+      <p class="rsrc">
+        Source : <code>public/regles-affichage.js</code>
+         · Épreuve : <code>tests/remises.test.mjs</code>
+         · Noms cités : remiseMontrable</p>
+    </div><div class="rtheme">B6 · Le dédoublonnage</div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">B6.1</span>
+        <span class="rtitre">Le même produit au même prix n&#39;apparaît qu&#39;une fois</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">La clé de dédoublonnage est le titre normalisé (sans ponctuation, borné à quatre-vingt-dix caractères) suivi du prix. Cas réel : l&#39;Allemagne et l&#39;Autriche partagent amazon.de — le même Fire TV Stick apparaissait deux fois de suite dans la même liste.</p>
+      
+      <p class="rsrc">
+        Source : <code>public/regles-affichage.js</code>
+         · Épreuve : <code>tests/prix-reference.test.mjs</code>
+         · Noms cités : cleProduit, dedoublonner</p>
+    </div><div class="rcat"><h3>C — La vie d&#39;une carte — ce qui la fait disparaître</h3><p>Une carte s&#39;affiche cinq jours. Ensuite, une seule question est posée : la source la sert-elle encore ? Et ce qui ne décide plus est écrit ici aussi.</p></div><div class="rtheme">C1 · Les cinq jours</div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">C1.1</span>
+        <span class="rtitre">Une carte s&#39;affiche cinq jours, servie ou non</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">C&#39;est la garantie donnée à TOUT ce qui entre : cinq jours d&#39;affichage, quelle que soit la suite. La règle est entrée en production le 14/10/2026 sur un acte explicite du propriétaire, et elle a remplacé tout ce qui jugeait avant elle.</p>
+      <div class="rvals"><span class="rval"><i>VIE_AFFICHEE_JOURS =</i> 5 j</span></div>
+      <p class="rsrc">Depuis le 14/10/2026 · 
+        Source : <code>collecteur.mjs</code>
+         · Épreuve : <code>tests/vie-de-la-carte-cinq-jours.test.mjs</code>
+        </p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">C1.2</span>
+        <span class="rtitre">Le compteur est premiereVue — ni vuLe, ni date</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">premiereVue est l&#39;horodatage de la première parution chez nous. Mesuré le 14/10/2026 : compter sur vuLe annulait la règle — 1 197 offres reservies dans l&#39;heure, dont 145 affichées depuis plus de cinq jours, restaient à zéro jour d&#39;âge et n&#39;auraient JAMAIS passé le contrôle. Le compteur décrivait la source, pas l&#39;âge de la carte.</p>
+      
+      <p class="rsrc">Depuis le 14/10/2026 · 
+        Source : <code>collecteur.mjs</code>
+         · Épreuve : <code>tests/vie-de-la-carte-cinq-jours.test.mjs</code>
+        </p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">C1.3</span>
+        <span class="rtitre">Le repli, et un seul, pour les fiches entrées avant le repère</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Les fiches sans premiereVue — deux mille cinq cents ventes flash entrées avant que ce repère existe — sont comptées sur vuLe. La cause est un trou de l&#39;histoire, pas une faille qui dure : toute nouvelle entrée reçoit le repère.</p>
+      
+      <p class="rsrc">Depuis le 14/10/2026 · 
+        Source : <code>collecteur.mjs</code>
+         · Épreuve : <code>tests/vie-de-la-carte-cinq-jours.test.mjs</code>
+        </p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">C1.4</span>
+        <span class="rtitre">Le seuil se lit à la seconde</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Cinq jours PILE, la carte reste. Cinq jours et une seconde, elle franchit le seuil : ce n&#39;est pas « environ cinq jours », c&#39;est cinq jours plus une seconde, et l&#39;épreuve le refuse autrement.</p>
+      
+      <p class="rsrc">Depuis le 14/10/2026 · 
+        Source : <code>collecteur.mjs</code>
+         · Épreuve : <code>tests/vie-de-la-carte-cinq-jours.test.mjs</code>
+        </p>
+    </div><div class="rtheme">C2 · La question du service</div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">C2.1</span>
+        <span class="rtitre">Passé cinq jours, une seule question : la source sert-elle encore cette offre ?</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">« Servir » veut dire : l&#39;offre est présente dans le FLUX de sa source à ce passage. Rien d&#39;autre n&#39;est lu. C&#39;est le mot qui avait deux sens — « promotion toujours active » se juge par le flux, pas par la page — et c&#39;est cette définition que porte la règle appliquée.</p>
+      
+      <p class="rsrc">Depuis le 14/10/2026 · 
+        Source : <code>collecteur.mjs</code>
+         · Épreuve : <code>tests/vie-de-la-carte-cinq-jours.test.mjs</code>
+        </p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">C2.2</span>
+        <span class="rtitre">Servie : le compteur repart, l&#39;âge affiché ne triche pas</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Une carte reservie au-delà de cinq jours repart pour cinq jours pleins. Son âge AFFICHÉ reste celui que la source publie — sa date de naissance — pour que le lecteur voie la vraie ancienneté de l&#39;annonce. Une carte effacée plus tôt, ou jamais vue, rentre comme une carte neuve.</p>
+      
+      <p class="rsrc">Depuis le 14/10/2026 · 
+        Source : <code>collecteur.mjs</code>
+         · Épreuve : <code>tests/vie-de-la-carte-cinq-jours.test.mjs</code>
+        </p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">C2.3</span>
+        <span class="rtitre">Plus servie : la carte est effacée, en une seule opération</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Au-delà de cinq jours et une seconde, une offre absente du flux de sa source est effacée définitivement. Pas de troisième état, pas de carte grisée : soit elle est affichée, soit elle est effacée.</p>
+      
+      <p class="rsrc">Depuis le 14/10/2026 · 
+        Source : <code>collecteur.mjs</code>
+         · Épreuve : <code>tests/vie-de-la-carte-cinq-jours.test.mjs</code>
+        </p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">C2.4</span>
+        <span class="rtitre">Cette règle n&#39;ajoute aucune requête</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Aucune page n&#39;est ouverte, aucun appel n&#39;est ajouté à la collecte : le service se lit dans le flux, qui est déjà téléchargé. C&#39;est la qualité principale de la règle — elle décide plus, et coûte moins.</p>
+      
+      <p class="rsrc">Depuis le 14/10/2026 · 
+        Source : <code>collecteur.mjs</code>
+        
+        </p>
+    </div><div class="rtheme">C3 · Ce qu&#39;« effacée » veut dire, exactement</div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">C3.1</span>
+        <span class="rtitre">Effacé : la fiche, le visuel, les marques</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">La fiche quitte le stock ET le catalogue publié · son visuel est supprimé du dépôt · ses marques tombent (verdict, analyse, perimee, dateRelevee, serviceAuTour). « Effacée » n&#39;est pas « cachée ».</p>
+      
+      <p class="rsrc">Depuis le 14/10/2026 · 
+        Source : <code>collecteur.mjs</code>
+         · Épreuve : <code>tests/vie-de-la-carte-cinq-jours.test.mjs</code>
+        </p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">C3.2</span>
+        <span class="rtitre">L&#39;historique des prix est la seule chose qui survit</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">data/historique-prix.json (3,4 Mo) n&#39;est jamais effacé : il ne pèse rien et c&#39;est lui qui construit l&#39;analyse et le badge « bon plan · est plus bas ». Une carte qui revient est neuve à l&#39;écran, pas amnésique sur le fond.</p>
+      
+      <p class="rsrc">Depuis le 14/10/2026 · 
+        Source : <code>collecteur.mjs</code>
+         · Épreuve : <code>tests/prix-historique.test.mjs</code>
+        </p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">C3.3</span>
+        <span class="rtitre">Aucune autre trace : pas de liste d&#39;exclusion</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Pas de registre des premières vues, pas de compteur de retours lu par une décision, pas de liste d&#39;exclusion. Une offre effacée ne laisse rien qui dise qu&#39;elle a existé — et si elle revient, on apprend son existence à ce moment-là. C&#39;est ce qui rend la règle réversible sans mémoire.</p>
+      
+      <p class="rsrc">Depuis le 14/10/2026 · 
+        Source : <code>collecteur.mjs</code>
+         · Épreuve : <code>tests/vie-de-la-carte-cinq-jours.test.mjs</code>
+        </p>
+    </div><div class="rtheme">C4 · Les délais qui subsistent à côté</div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">C4.1</span>
+        <span class="rtitre">Un article de veille se juge sur sa date de publication, pas sur un service</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Les articles ne sont jamais jugés sur leur dernier service : leur verrou est leur date de publication. Leur règle fonctionne depuis le début, et la règle des cinq jours n&#39;y touche pas — défaut attrapé avant livraison, qui aurait raboté en douce cent quarante-deux articles à une semaine.</p>
+      <div class="rvals"><span class="rval"><i>VEILLE_SEPT_JOURS_ACTIVE =</i> allumé</span></div>
+      <p class="rsrc">Depuis le 13/10/2026 · 
+        Source : <code>collecteur.mjs</code>
+         · Épreuve : <code>tests/veille-noms.test.mjs</code>
+        </p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">C4.2</span>
+        <span class="rtitre">Une offre de presse : sept jours sur sa date</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Un article de presse entré par l&#39;étage 3 sort au-delà de sept jours mesurés sur sa date. Il est traité à part, et pas raboté au même délai qu&#39;une offre marchande.</p>
+      <div class="rvals"><span class="rval"><i>LIMITE_PRESSE_JOURS =</i> 7 j</span></div>
+      <p class="rsrc">
+        Source : <code>collecteur.mjs</code>
+         · Épreuve : <code>tests/peremption.test.mjs</code>
+        </p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">C4.3</span>
+        <span class="rtitre">Une source disparue du catalogue : sept jours</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Quand l&#39;identifiant de la source n&#39;existe plus dans le catalogue, l&#39;offre est orpheline : ce vide même la distingue d&#39;une offre surveillée, et elle sort au-delà de sept jours.</p>
+      <div class="rvals"><span class="rval"><i>LIMITE_SOURCE_DISPARUE_JOURS =</i> 7 j</span></div>
+      <p class="rsrc">
+        Source : <code>collecteur.mjs</code>
+         · Épreuve : <code>tests/peremption.test.mjs</code>
+        </p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">C4.4</span>
+        <span class="rtitre">Une date dans le futur ne sert jamais de preuve</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Défaut mesuré le 13/10/2026 : un article des Numériques daté du 05/10/2026 était arrivé chez nous daté du 05/10/2027 — la même heure, un an plus tard. Trois effets, tous visibles : la carte annonçait « il y a 1 min » à perpétuité, elle passait en tête du tri, et elle ne périmait jamais. Au-delà d&#39;une marge de vingt-quatre heures, c&#39;est une horloge fausse : elle ne garde pas, ne classe pas, ne date pas.</p>
+      <div class="rvals"><span class="rval"><i>MARGE_HORLOGE_MS =</i> 86400000 ms</span></div>
+      <p class="rsrc">Depuis le 13/10/2026 · 
+        Source : <code>collecteur.mjs</code>
+         · Épreuve : <code>tests/dates-futures.test.mjs</code>
+        </p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">C4.5</span>
+        <span class="rtitre">Une date illisible ne juge rien</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Un âge qui ne se calcule pas rend « rien » plutôt qu&#39;un nombre : une date qu&#39;on ne sait pas lire ne doit jamais servir de preuve, ni pour garder ni pour écarter.</p>
+      
+      <p class="rsrc">
+        Source : <code>collecteur.mjs</code>
+         · Épreuve : <code>tests/peremption.test.mjs</code>
+        </p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">C4.6</span>
+        <span class="rtitre">Un marchand n&#39;est jamais jugé sur l&#39;âge de sa date</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Chez un marchand, la date est une date de publication que la source rafraîchit — un marchand qui republie une offre de dix jours la garde vivante. C&#39;est la règle du service (C2) qui les surveille, et elle s&#39;appuie sur une preuve.</p>
+      
+      <p class="rsrc">
+        Source : <code>collecteur.mjs</code>
+         · Épreuve : <code>tests/peremption.test.mjs</code>
+        </p>
+    </div><div class="rtheme">C5 · Ce qui ne décide plus — les règles éteintes <span>— Ces règles ont existé, elles sont écrites, et elles ne décident plus rien. Elles restent ici parce qu&#39;une règle qui a été appliquée doit pouvoir être retrouvée le jour où l&#39;on se demande pourquoi l&#39;écran a changé.</span></div><div class="regle eteinte">
+      <div class="rtete">
+        <span class="rnum">C5.1</span>
+        <span class="rtitre">Le verdict écrit par la page ne décide plus d&#39;une sortie</span>
+        <span class="retat eteinte">éteinte</span>
+      </div>
+      <p class="renonce">La lecture du verdict de la page a existé, elle a même été allumée le 13/10/2026, puis éteinte à l&#39;application de la règle des cinq jours : la suppression ne se décide plus sur une preuve. La mesure a montré pourquoi — quarante-huit pour cent de faux positifs sur cent quarante pages réelles : la moitié de ce que la règle emporterait était encore valable chez sa source.</p>
+      <div class="rvals"><span class="rval"><i>OFFRES_SORTENT_SUR_VERDICT_ACTIF =</i> éteint</span></div>
+      <p class="rsrc">Depuis le 14/10/2026 · 
+        Source : <code>collecteur.mjs</code>
+         · Épreuve : <code>tests/vie-de-la-carte-cinq-jours.test.mjs</code>
+        </p>
+    </div><div class="regle eteinte">
+      <div class="rtete">
+        <span class="rnum">C5.2</span>
+        <span class="rtitre">« Plus de promotion » ne décide plus d&#39;une sortie</span>
+        <span class="retat eteinte">éteinte</span>
+      </div>
+      <p class="renonce">Une offre dont le prix et le prix barré se rejoignent n&#39;est plus retirée pour ce motif : la question posée est celle du service de la source, pas celle de la disparition d&#39;une remise.</p>
+      <div class="rvals"><span class="rval"><i>PROMOTION_DECIDE_LA_CARTE_ACTIF =</i> éteint</span></div>
+      <p class="rsrc">Depuis le 14/10/2026 · 
+        Source : <code>collecteur.mjs</code>
+         · Épreuve : <code>tests/promotion-page.test.mjs</code>
+        </p>
+    </div><div class="regle eteinte">
+      <div class="rtete">
+        <span class="rnum">C5.3</span>
+        <span class="rtitre">Le contrôle de prix par page est éteint</span>
+        <span class="retat eteinte">éteinte</span>
+      </div>
+      <p class="renonce">Le budget de vérification était de deux mille pages par jour, avec ses conditions de politesse, sa table de verdicts et sa correction des prix. Il ne reste rien à décider à un contrôle de page, puisque la suppression ne se décide plus sur une preuve : les deux compteurs de contrôle sont à zéro.</p>
+      <div class="rvals"><span class="rval"><i>CONTROLES_COMMUNAUTE_PAR_PASSAGE =</i> 0 /passage</span><span class="rval"><i>CONTROLES_ENSEIGNE_PAR_PASSAGE =</i> 0 /passage</span></div>
+      <p class="rsrc">Depuis le 14/10/2026 · 
+        Source : <code>collecteur.mjs</code>
+         · Épreuve : <code>tests/donnees-et-controle-source.test.mjs</code>
+        </p>
+    </div><div class="regle eteinte">
+      <div class="rtete">
+        <span class="rnum">C5.4</span>
+        <span class="rtitre">Le masquage n&#39;existe plus : il n&#39;y a plus de troisième état</span>
+        <span class="retat eteinte">éteinte</span>
+      </div>
+      <p class="renonce">On ne cache plus par défaut. Avant, une carte pouvait être affichée, masquée ou effacée ; il n&#39;en reste que deux issues. C&#39;est ce qui a supprimé la lecture de page du budget, et donc son coût.</p>
+      
+      <p class="rsrc">Depuis le 14/10/2026 · 
+        Source : <code>collecteur.mjs</code>
+         · Épreuve : <code>tests/vie-de-la-carte-cinq-jours.test.mjs</code>
+        </p>
+    </div><div class="regle en-mesure">
+      <div class="rtete">
+        <span class="rnum">C5.5</span>
+        <span class="rtitre">Le plafond de sept jours ne décide plus — il reste une mesure</span>
+        <span class="retat en-mesure">en mesure</span>
+      </div>
+      <p class="renonce">Le plafond de données (sept jours mesurés sur vuLe) a été la règle du catalogue avant le 14/10/2026. Il ne décide plus d&#39;un retrait ; il reste l&#39;outil d&#39;observation des tranches d&#39;âge, des visuels et du poids. Un chiffre faux ne s&#39;efface pas d&#39;un fichier en le supprimant : il s&#39;efface en disant lequel a remplacé l&#39;autre.</p>
+      <div class="rvals"><span class="rval"><i>PLAFOND_DONNEES_JOURS =</i> 7 j</span></div>
+      <p class="rsrc">Depuis le 12/10/2026 · 
+        Source : <code>collecteur.mjs</code>
+         · Épreuve : <code>tests/peremption.test.mjs</code>
+        </p>
+    </div><div class="regle eteinte">
+      <div class="rtete">
+        <span class="rnum">C5.6</span>
+        <span class="rtitre">Le nombre de tours sans service n&#39;a jamais retiré personne</span>
+        <span class="retat eteinte">éteinte</span>
+      </div>
+      <p class="renonce">Le compteur de tours sans republication tourne et le journal le compte, mais rien ne sort par cette porte — le commentaire du code le dit lui-même. Écrit ici pour qu&#39;on ne le croie pas actif.</p>
+      <div class="rvals"><span class="rval"><i>TOURS_SANS_SERVICE =</i> 2 tours</span><span class="rval"><i>PART_RENDU_MINIMUM =</i> 0.5</span></div>
+      <p class="rsrc">
+        Source : <code>collecteur.mjs</code>
+         · Épreuve : <code>tests/peremption.test.mjs</code>
+        </p>
+    </div><div class="regle eteinte">
+      <div class="rtete">
+        <span class="rnum">C5.7</span>
+        <span class="rtitre">Le prix lu dans la communauté ne s&#39;affiche pas</span>
+        <span class="retat eteinte">éteinte</span>
+      </div>
+      <p class="renonce">Un prix relevé dans un flux communautaire n&#39;est pas le prix de la boutique : il n&#39;est pas montré. La preuve exigée reste les deux prix de la page du marchand, ou le score de la communauté.</p>
+      <div class="rvals"><span class="rval"><i>PRIX_COMMUNAUTE_ACTIF =</i> éteint</span></div>
+      <p class="rsrc">
+        Source : <code>collecteur.mjs</code>
+        
+        </p>
+    </div><div class="rtheme">C6 · Le registre des effacements</div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">C6.1</span>
+        <span class="rtitre">Les effacements sont consignés à part, et ne servent à AUCUNE décision</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Le suivi des cartes (suivi-cartes.json) publie ce qui est entré, ce qui est sorti et pourquoi, pour que le propriétaire puisse vérifier la règle. Ce registre n&#39;est lu par aucune décision — sinon il deviendrait la liste d&#39;exclusion que C3.3 interdit.</p>
+      <div class="rvals"><span class="rval"><i>SUIVI_PUBLIE_MAX =</i> 200 lignes</span><span class="rval"><i>SUIVI_JOURS_CONSERVES =</i> 30 j</span><span class="rval"><i>SUIVI_REGISTRE_MAX =</i> 8000 lignes</span></div>
+      <p class="rsrc">Depuis le 14/10/2026 · 
+        Source : <code>collecteur.mjs</code>
+         · Épreuve : <code>tests/suivi-des-cartes.test.mjs</code>
+        </p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">C6.2</span>
+        <span class="rtitre">Le registre est borné, et dit qu&#39;il est borné</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Le registre des effacements se garde trente jours et se publie borné (deux cents lignes) ; quand il est tronqué, l&#39;écran le DIT au lieu de laisser croire à une liste complète.</p>
+      
+      <p class="rsrc">Depuis le 14/10/2026 · 
+        Source : <code>collecteur.mjs</code>
+         · Épreuve : <code>tests/suivi-des-cartes.test.mjs</code>
+        </p>
+    </div><div class="rcat"><h3>D — L&#39;ordre et l&#39;écran</h3><p>Comment les cartes sont rangées, à quel pays elles appartiennent, dans quelle monnaie leur prix s&#39;écrit.</p></div><div class="rtheme">D1 · L&#39;ordre de la liste</div><div class="regle en-pause">
+      <div class="rtete">
+        <span class="rnum">D1.1</span>
+        <span class="rtitre">Le mélange 60/40 est en pause : l&#39;ordre suit ce que chaque acteur apporte</span>
+        <span class="retat en-pause">en pause</span>
+      </div>
+      <p class="renonce">Décision du 08/10/2026 : « mettre en pause le 60/40 en faveur d&#39;Amazon, tous les acteurs affichent en fonction de ce qu&#39;il publie, sans préférence. » Plus de plafond, plus de quotas de camps, plus d&#39;alternance : la liste est classée par ce que les offres valent. Aucune offre n&#39;est écartée au nom d&#39;une proportion — c&#39;était le vrai enjeu, puisqu&#39;un plafond SACRIFIE des offres réelles pour tenir un pourcentage.</p>
+      <div class="rvals"><span class="rval"><i>MELANGE_ACTIF =</i> éteint</span></div>
+      <p class="rsrc">Depuis le 08/10/2026 · 
+        Source : <code>public/regles-affichage.js</code>
+         · Épreuve : <code>tests/melange.test.mjs</code>
+        </p>
+    </div><div class="regle en-pause">
+      <div class="rtete">
+        <span class="rnum">D1.2</span>
+        <span class="rtitre">La règle en pause est conservée COMPLÈTE, et éprouvée</span>
+        <span class="retat en-pause">en pause</span>
+      </div>
+      <p class="renonce">Mise en pause, pas suppression : la règle reste écrite et reste éprouvée (l&#39;épreuve la rejoue avec l&#39;interrupteur sur « actif »). Le jour où on la rallume, elle sera exactement celle qu&#39;on connaissait — on ne réécrira pas une règle de mémoire. Ses paramètres : soixante pour cent Amazon, un plancher de vingt-quatre lignes, dix pour cent de presse, vingt-cinq pour cent de bonnes affaires.</p>
+      <div class="rvals"><span class="rval"><i>PART_AMAZON =</i> 0.6</span><span class="rval"><i>MELANGE_MIN =</i> 24 lignes</span><span class="rval"><i>QUOTA_PRESSE =</i> 0.1</span><span class="rval"><i>QUOTA_AFFAIRE =</i> 0.25</span></div>
+      <p class="rsrc">Depuis le 08/10/2026 · 
+        Source : <code>public/regles-affichage.js</code>
+         · Épreuve : <code>tests/melange.test.mjs</code>
+        </p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">D1.3</span>
+        <span class="rtitre">Sous vingt-quatre lignes, une liste ne se juge plus</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Plutôt que de sacrifier des offres réelles à une proportion, on montre tout. Plancher mesuré sur le cas polonais : seize promos Amazon vérifiées pour une offre d&#39;enseigne — tenir la proportion n&#39;y laissait que deux lignes à l&#39;écran.</p>
+      <div class="rvals"><span class="rval"><i>MELANGE_MIN =</i> 24 lignes</span></div>
+      <p class="rsrc">Depuis le 08/10/2026 · 
+        Source : <code>public/regles-affichage.js</code>
+         · Épreuve : <code>tests/melange.test.mjs</code>
+        </p>
+    </div><div class="regle en-pause">
+      <div class="rtete">
+        <span class="rnum">D1.4</span>
+        <span class="rtitre">Chaque camp est trié AVANT d&#39;être alterné</span>
+        <span class="retat en-pause">en pause</span>
+      </div>
+      <p class="renonce">Défaut mesuré : un tri appliqué après coup (par remise décroissante) remettait tous les Amazon en tête — le mélange existait dans les données et disparaissait à l&#39;écran. Vingt cartes Amazon d&#39;affilée sous un en-tête annonçant 60/40.</p>
+      
+      <p class="rsrc">Depuis le 08/10/2026 · 
+        Source : <code>public/regles-affichage.js</code>
+         · Épreuve : <code>tests/melange.test.mjs</code>
+         · Noms cités : melanger, entrelacer</p>
+    </div><div class="rtheme">D2 · Le pays d&#39;une offre</div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">D2.1</span>
+        <span class="rtitre">Une offre porte le pays de sa BOUTIQUE quand il ne fait aucun doute</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Une offre porte le pays de sa SOURCE. C&#39;est juste pour un flux national (Dealabs est français), mais faux dès qu&#39;une source étrangère relaie une boutique d&#39;un autre pays : un bon plan Bol relayé par une communauté néerlandaise s&#39;affichait sous « Pays-Bas ». Mesuré AVANT d&#39;écrire une ligne : cette table ne change aujourd&#39;hui aucune attribution — elle porte sur l&#39;avenir.</p>
+      
+      <p class="rsrc">Depuis le 11/10/2026 · 
+        Source : <code>public/regles-affichage.js</code>
+         · Épreuve : <code>tests/pays-origine.test.mjs</code>
+         · Noms cités : PAYS_BOUTIQUE, paysDe</p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">D2.2</span>
+        <span class="rtitre">Les enseignes présentes dans plusieurs pays restent sur le pays de leur source</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Amazon, Media Markt, Coolblue, Lidl, Carrefour, Fnac, Decathlon, Zalando, Ikea, Action, Hema, Kaufland, eBay, Steam : leur attribuer un pays serait une devinette. Seules les boutiques sans ambiguïté figurent dans la table.</p>
+      
+      <p class="rsrc">Depuis le 11/10/2026 · 
+        Source : <code>public/regles-affichage.js</code>
+         · Épreuve : <code>tests/pays-origine.test.mjs</code>
+         · Noms cités : PAYS_BOUTIQUE</p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">D2.3</span>
+        <span class="rtitre">Un seul point de décision pour le pays</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Le pays retenu se calcule dans une seule fonction, pour qu&#39;un filtre et un compteur ne puissent jamais ne plus être d&#39;accord.</p>
+      
+      <p class="rsrc">
+        Source : <code>public/regles-affichage.js</code>
+         · Épreuve : <code>tests/pays-origine.test.mjs</code>
+         · Noms cités : paysDe</p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">D2.4</span>
+        <span class="rtitre">Le sélecteur de pays compte TOUTES les offres, pas les seules promotions</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Décision du propriétaire du produit : un pays doit annoncer son contenu RÉEL. Un chiffre qui ne comptait que les promotions faisait paraître la Belgique presque vide alors qu&#39;elle contient des milliers d&#39;offres — l&#39;utilisateur n&#39;avait aucun moyen de savoir où chercher. L&#39;en-tête de liste, lui, reste lié à la portée (« N bonnes promos » ou « N offres »).</p>
+      
+      <p class="rsrc">Depuis le 11/10/2026 · 
+        Source : <code>public/regles-affichage.js</code>
+         · Épreuve : <code>tests/pays.test.mjs</code>
+        </p>
+    </div><div class="rtheme">D3 · Ce que le visiteur voit</div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">D3.1</span>
+        <span class="rtitre">Vingt-quatre cartes par page</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">La liste se pagine par vingt-quatre. Le nombre est fixe et ne dépend ni du pays ni de la rubrique — un écran qui change de taille selon le contenu se lit mal.</p>
+      <div class="rvals"><span class="rval"><i>PAR_PAGE =</i> 24 cartes</span></div>
+      <p class="rsrc">
+        Source : <code>public/app.js</code>
+         · Épreuve : <code>tests/interface.test.mjs</code>
+        </p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">D3.2</span>
+        <span class="rtitre">Le choix du pays est un tableau de tuiles à drapeaux, jamais un menu déroulant</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Règle de forme tenue partout : les pays se choisissent sur des tuiles portant leur drapeau, avec leur compte, en une seule ligne qui défile sur téléphone plutôt que de se casser. Aucun réglage ne se cache derrière un menu déroulant.</p>
+      
+      <p class="rsrc">
+        Source : <code>public/app.js</code>
+         · Épreuve : <code>tests/pays.test.mjs</code>
+         · Noms cités : PAYS_PAR_FUSEAU, NOMS_PAYS</p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">D3.3</span>
+        <span class="rtitre">Le prix s&#39;affiche dans SA devise, et rien n&#39;est converti en silence</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">On ne convertit jamais le prix affiché : c&#39;est celui qu&#39;on retrouve sur la boutique, et qu&#39;on peut vérifier. La comparaison entre deux places de monnaies différentes est autorisée, à condition de montrer les trois choses — le prix d&#39;origine, son équivalent, et le taux qui l&#39;a produit avec sa date.</p>
+      
+      <p class="rsrc">Depuis le 08/10/2026 · 
+        Source : <code>public/app.js</code>
+         · Épreuve : <code>tests/devise-affichage.test.mjs</code>
+         · Noms cités : DEVISE_PAR_PAYS, DEVISE_EURO</p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">D3.4</span>
+        <span class="rtitre">En dessous de deux pour cent d&#39;écart, on ne compare pas</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Entre deux monnaies, l&#39;écart se noie dans l&#39;arrondi du taux et dans les frais de change : l&#39;annoncer serait une affirmation que le chiffre ne porte pas. Le seuil ne s&#39;applique JAMAIS dans la même monnaie — là, six euros d&#39;écart sont six euros, et la comparaison est exacte.</p>
+      <div class="rvals"><span class="rval"><i>ECART_MIN_CHANGE =</i> 2 %</span></div>
+      <p class="rsrc">Depuis le 08/10/2026 · 
+        Source : <code>public/app.js</code>
+         · Épreuve : <code>tests/devise-affichage.test.mjs</code>
+        </p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">D3.5</span>
+        <span class="rtitre">Le catalogue se garde chez le visiteur</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Le catalogue publié est mis en cache dans le navigateur du visiteur, pour qu&#39;un retour sur le site ne redemande rien et s&#39;affiche instantanément. Décision du 14/10/2026 : « le catalogue se garde chez le visiteur. »</p>
+      
+      <p class="rsrc">Depuis le 14/10/2026 · 
+        Source : <code>public/app.js</code>
+         · Épreuve : <code>tests/proprete-publication.test.mjs</code>
+        </p>
+    </div><div class="rcat"><h3>E — La veille — les articles ne sont pas des offres</h3><p>Un article de journal a sa propre règle, ses propres sources et son propre plafond. Il ne se juge jamais comme une promotion.</p></div><div class="rtheme">E1 · La règle des articles</div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">E1.1</span>
+        <span class="rtitre">Un article est jugé sur sa date de publication</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Jamais sur un service : un journal ne « sert » pas une offre. C&#39;est la seule règle de contenu qui n&#39;a pas changé avec la règle des cinq jours, et la règle des cinq jours ne doit pas la toucher.</p>
+      
+      <p class="rsrc">
+        Source : <code>collecteur.mjs</code>
+         · Épreuve : <code>tests/veille-noms.test.mjs</code>
+        </p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">E1.2</span>
+        <span class="rtitre">Sept jours, et l&#39;interrupteur est explicite</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">La veille est allumée en acte visible (l&#39;interrupteur VEILLE_SEPT_JOURS_ACTIVE est passé à vrai dans un commit qui ne fait que cela), avec un repli à trente jours si on l&#39;éteint. Allumer a changé l&#39;écran de deux cent quarante-trois fiches — et le chiffre du stock, lui, restait à cinq cent cinquante-cinq : l&#39;écart est le quota d&#39;articles par pays, et il est donné exprès.</p>
+      <div class="rvals"><span class="rval"><i>VEILLE_SEPT_JOURS_ACTIVE =</i> allumé</span></div>
+      <p class="rsrc">Depuis le 13/10/2026 · 
+        Source : <code>collecteur.mjs</code>
+         · Épreuve : <code>tests/veille-noms.test.mjs</code>
+        </p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">E1.3</span>
+        <span class="rtitre">Un plafond PAR PAYS, pas un plafond global</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Le plafond était global — deux cents articles tous pays confondus : les pays servis les derniers étaient sacrifiés. Un plafond par pays garantit à chacun le même droit de cité, quel que soit le volume des autres. Décision du propriétaire : chaque pays a ses articles.</p>
+      
+      <p class="rsrc">
+        Source : <code>collecteur.mjs</code>
+         · Épreuve : <code>tests/veille-noms.test.mjs</code>
+        </p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">E1.4</span>
+        <span class="rtitre">Une enseigne n&#39;a d&#39;articles que si elle en publie assez</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Une rubrique d&#39;enseigne ne reçoit d&#39;articles que si la source en publie au moins dix : sinon la rubrique existe à l&#39;écran pour ne rien montrer.</p>
+      <div class="rvals"><span class="rval"><i>SEUIL_ARTICLES_ENSEIGNE =</i> 10 articles</span></div>
+      <p class="rsrc">
+        Source : <code>collecteur.mjs</code>
+         · Épreuve : <code>tests/veille-noms.test.mjs</code>
+        </p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">E1.5</span>
+        <span class="rtitre">L&#39;image d&#39;aperçu d&#39;un article est cherchée une fois, avec une pause</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Pour chaque article, on cherche son image d&#39;aperçu sur sa page, une fois, avec une pause entre deux lectures. On est invité chez des gens : la politesse n&#39;est pas une option de confort.</p>
+      
+      <p class="rsrc">
+        Source : <code>collecteur.mjs</code>
+        
+        </p>
+    </div><div class="rcat"><h3>F — La discrétion, la sécurité, les droits</h3><p>Ce qui protège le visiteur, les sources et le panneau.</p></div><div class="rtheme">F1 · Aucun tiers, aucun compte</div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">F1.1</span>
+        <span class="rtitre">Aucune donnée du visiteur ne part chez un tiers</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Pas de mesure d&#39;audience tierce, pas de police distante, pas de script d&#39;un autre domaine : les polices sont servies par le site, et les compteurs de visite sont tenus chez nous, en agrégé, sans adresse IP conservée. Le site n&#39;appelle AUCUN tiers depuis le navigateur du visiteur.</p>
+      
+      <p class="rsrc">Depuis le 08/10/2026 · 
+        Source : <code>public/confidentialite.html</code>
+         · Épreuve : <code>tests/legal.test.mjs</code>
+        </p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">F1.2</span>
+        <span class="rtitre">Pas de compte, pas de profil</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Décision du 12/10/2026 : « tu peux supprimer… » — il n&#39;y a plus de compte local, donc plus de « profil » à décrire. Favoris, thème, vue et langue vivent dans le navigateur du visiteur, et ne remontent nulle part.</p>
+      
+      <p class="rsrc">Depuis le 12/10/2026 · 
+        Source : <code>public/app.js</code>
+         · Épreuve : <code>tests/interface.test.mjs</code>
+         · Noms cités : CLE_FAV, CLE_THEME, CLE_VUE, CLE_PAYS</p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">F1.3</span>
+        <span class="rtitre">Le relais lit le tableur du propriétaire, et transmet des comptes</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Les inscriptions et le trafic remontent par un script hébergé chez le propriétaire (Google Apps Script), qui lit SON tableur. Le relais transmet des COMPTES, jamais les adresses e-mail : celles-ci restent chez lui, et c&#39;est là qu&#39;on écrit à ses inscrits. Aucune donnée ne transite par un service tiers du projet.</p>
+      
+      <p class="rsrc">Depuis le 12/10/2026 · 
+        Source : <code>public/relais.js</code>
+         · Épreuve : <code>tests/relais-tuyaux.test.mjs</code>
+        </p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">F1.4</span>
+        <span class="rtitre">Ce qui manque se dit, il ne devient jamais un zéro</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Quand un chiffre n&#39;est pas disponible — relais muet, fichier absent — l&#39;écran ÉCRIT pourquoi au lieu d&#39;afficher zéro : un zéro a l&#39;air d&#39;une mesure. Règle du tuyau : un champ lu absent de l&#39;un des producteurs s&#39;affiche comme une donnée absente.</p>
+      
+      <p class="rsrc">
+        Source : <code>public/admin/index.html</code>
+         · Épreuve : <code>tests/admin-liens-des-articles.test.mjs</code>
+        </p>
+    </div><div class="rtheme">F2 · Le panneau et les secrets</div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">F2.1</span>
+        <span class="rtitre">Le panneau est derrière un identifiant et un mot de passe</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Le panneau d&#39;administration n&#39;est pas une page publique : il s&#39;ouvre sur un verrou (identifiant + mot de passe), et rien n&#39;est dessiné avant. La page est en plus exclue des moteurs de recherche.</p>
+      
+      <p class="rsrc">
+        Source : <code>public/admin/index.html</code>
+         · Épreuve : <code>tests/verrou-branchement.test.mjs</code>
+        </p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">F2.2</span>
+        <span class="rtitre">La discrétion envers les sources se MESURE et se publie</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Toute requête sortante est comptée avec les octets reçus, par famille et par hôte, et le total des dernières vingt-quatre heures est publié. On ne peut pas alléger ce qu&#39;on ne mesure pas. Objectif écrit par le propriétaire : ne pas peser sur le système afin d&#39;être discret.</p>
+      
+      <p class="rsrc">Depuis le 12/10/2026 · 
+        Source : <code>collecteur.mjs</code>
+         · Épreuve : <code>tests/discretion.test.mjs</code>
+        </p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">F2.3</span>
+        <span class="rtitre">Un secret n&#39;est jamais écrit en clair, ni conservé</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Un secret reçu dans une conversation n&#39;est ni utilisé ni conservé, et il est signalé. Le portail écrit chaque message entrant en clair dans ses journaux : la fuite se traite alors dans la base, le raisonnement ET les journaux.</p>
+      
+      <p class="rsrc">
+        Source : <code>public/admin/index.html</code>
+        
+        </p>
+    </div><div class="rtheme">F3 · L&#39;affiliation</div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">F3.1</span>
+        <span class="rtitre">Un programme par pays — jamais l&#39;identifiant d&#39;un autre</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Une mention d&#39;affiliation vaut pour un pays : l&#39;identifiant du programme belge posé sur un lien français ne rapporte rien et induit en erreur. L&#39;identifiant n&#39;est donc posé que sur les liens du pays dont le programme est ouvert (Amazon : un identifiant par pays, bol.com : un seul programme).</p>
+      
+      <p class="rsrc">Depuis le 11/10/2026 · 
+        Source : <code>public/affiliation.js</code>
+         · Épreuve : <code>tests/affiliation-pays.test.mjs</code>
+        </p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">F3.2</span>
+        <span class="rtitre">Pas de programme ouvert = aucun lien monétisé, et jamais un paramètre inventé</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Quand un programme n&#39;est pas ouvert, le lien reste le lien simple. On n&#39;invente aucun paramètre de suivi, et on ne pose jamais l&#39;identifiant d&#39;un autre programme : un lien qui rapporte faux est pire qu&#39;un lien qui ne rapporte rien.</p>
+      
+      <p class="rsrc">Depuis le 11/10/2026 · 
+        Source : <code>public/affiliation.js</code>
+         · Épreuve : <code>tests/affiliation.test.mjs</code>
+        </p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">F3.3</span>
+        <span class="rtitre">La sortie est étiquetée</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Un lien qui peut rapporter est signalé au visiteur, et le nombre d&#39;affiliations déjà faites se lit dans le panneau. La transparence n&#39;est pas une option : c&#39;est une obligation légale, et c&#39;est aussi ce qui rend le lien crédible.</p>
+      
+      <p class="rsrc">
+        Source : <code>public/mentions-legales.html</code>
+         · Épreuve : <code>tests/legal.test.mjs</code>
+        </p>
+    </div><div class="rcat"><h3>G — La méthode du chantier — les règles de travail tenues depuis le 04/10</h3><p>Ces règles-là ne s&#39;exécutent pas dans le code : elles gouvernent la façon dont tout le reste est écrit. Elles sont ici parce qu&#39;elles ont été appliquées à chaque fois, et que plusieurs ont coûté cher à apprendre.</p></div><div class="rtheme">G1 · Éprouver et mesurer</div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">G1.1</span>
+        <span class="rtitre">Éprouver, jamais supposer</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Aucune règle n&#39;est livrée sans une épreuve qui peut la REFUSER — et une épreuve qui n&#39;échoue jamais ne prouve rien. Quatre-vingts épreuves vivent dans le dépôt, une par règle importante, et le dépôt refuse de publier si l&#39;une tombe.</p>
+      
+      <p class="rsrc">Depuis le 04/10/2026 · 
+        Source : <code>tests/</code>
+         · Épreuve : <code>tests/collection-des-epreuves.test.mjs</code>
+        </p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">G1.2</span>
+        <span class="rtitre">Mesurer avant, mesurer après</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Un changement se chiffre des deux côtés. Avant l&#39;application de la règle des cinq jours : 13 415 cartes sortiraient, 348,8 Mo de visuels libérés, l&#39;affichage passant de 15 484 à 10 600 cartes. Après : les mêmes chiffres, relevés, écrits.</p>
+      
+      <p class="rsrc">Depuis le 14/10/2026 · 
+        Source : <code>REGLES-DES-CARTES.md</code>
+        
+        </p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">G1.3</span>
+        <span class="rtitre">Ce qui doit tenir dans le temps se mesure en TAUX, jamais en total</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Leçon payée : un total qui grossit dit seulement que le fichier grossit. C&#39;est un taux (« sur ce qu&#39;on contrôle, quelle part est morte ? ») qui répond à la question qu&#39;on se pose.</p>
+      
+      <p class="rsrc">
+        Source : <code>REGLES-DES-CARTES.md</code>
+        
+        </p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">G1.4</span>
+        <span class="rtitre">Un fichier daté se mesure à SA date, jamais à la nôtre</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Comparer un relevé d&#39;hier à des données d&#39;aujourd&#39;hui fabrique un écart qui n&#39;existe pas. Le relevé porte sa date, et la comparaison la respecte.</p>
+      
+      <p class="rsrc">
+        Source : <code>REGLES-DES-CARTES.md</code>
+        
+        </p>
+    </div><div class="rtheme">G2 · Écrire et remplacer</div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">G2.1</span>
+        <span class="rtitre">Une règle vit à UN SEUL endroit</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Le compte et le retrait lisent la même fonction ; les règles d&#39;affichage sont partagées entre le site, le panneau et les épreuves au lieu d&#39;être recopiées. Deux copies divergent toujours, et on ne le voit qu&#39;après avoir effacé ce qu&#39;il ne fallait pas.</p>
+      
+      <p class="rsrc">Depuis le 15/10/2026 · 
+        Source : <code>public/regles-affichage.js</code>
+        
+        </p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">G2.2</span>
+        <span class="rtitre">Un chiffre faux s&#39;efface en disant lequel le remplace</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">On ne supprime pas un commentaire devenu faux : on écrit ce qui remplace quoi. Un fichier qui décrit l&#39;inverse du code est pire qu&#39;une absence de commentaire, parce qu&#39;on le croit. C&#39;est aussi pourquoi cet onglet affiche les règles ÉTEINTES.</p>
+      
+      <p class="rsrc">
+        Source : <code>REGLES-DES-CARTES.md</code>
+        
+        </p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">G2.3</span>
+        <span class="rtitre">En cas de doute, on RETIRE</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Les deux erreurs ne sont pas symétriques : montrer une offre morte fait cliquer pour rien et coûte la confiance, alors qu&#39;enlever une offre encore vivante ne coûte rien — son marchand la republiera au passage suivant, et elle reviendra. C&#39;est la raison d&#39;être du choix « le plus tôt » partout dans les délais.</p>
+      
+      <p class="rsrc">
+        Source : <code>collecteur.mjs</code>
+         · Épreuve : <code>tests/peremption.test.mjs</code>
+        </p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">G2.4</span>
+        <span class="rtitre">Le prix d&#39;une règle se dit avant de l&#39;appliquer</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Mesuré le 12/10/2026 sur cent quarante pages : quarante-sept pour cent des cartes qu&#39;une échéance de service emporte étaient encore vivantes à leur source. La règle assume ce prix, écrit noir sur blanc — la fraîcheur contre le volume, et le volume contre l&#39;erreur.</p>
+      
+      <p class="rsrc">Depuis le 12/10/2026 · 
+        Source : <code>REGLES-DES-CARTES.md</code>
+        
+        </p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">G2.5</span>
+        <span class="rtitre">Un geste irréversible a un retour en arrière, écrit</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Avant tout geste qui ne se défait pas, la théorie chiffrée et l&#39;inventaire de ce qui est perdu sont écrits, et un état d&#39;avant est conservé (le bundle de 2,97 Go et 2 701 commits porte l&#39;état d&#39;avant la règle des cinq jours). L&#39;application d&#39;une règle majeure fait un commit SEUL, pour pouvoir être défaite seule.</p>
+      
+      <p class="rsrc">Depuis le 14/10/2026 · 
+        Source : <code>REGLES-DES-CARTES.md</code>
+        
+        </p>
+    </div><div class="rtheme">G3 · L&#39;écran et les mots</div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">G3.1</span>
+        <span class="rtitre">Rien de dégradé à l&#39;affichage</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Une page qui s&#39;affiche mal est un défaut, pas un détail : le texte s&#39;adapte à la place, les tableaux ne débordent pas, et un débordement se MESURE (scripts de mesure du débordement et des dépassements). Une capture d&#39;écran n&#39;est pas une preuve ; un chiffre l&#39;est.</p>
+      
+      <p class="rsrc">
+        Source : <code>bin/mesurer-depassements.py</code>
+        
+        </p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">G3.2</span>
+        <span class="rtitre">Pas de menu déroulant pour un choix de pays ou de réglage</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Règle de forme demandée et tenue : les choix se font sur des tuiles à drapeaux ou des boutons visibles. Tout réglage se lit comme un bouton — donc tout réglage qui n&#39;en est pas un se retire.</p>
+      
+      <p class="rsrc">
+        Source : <code>public/app.js</code>
+         · Épreuve : <code>tests/interface.test.mjs</code>
+        </p>
+    </div><div class="regle">
+      <div class="rtete">
+        <span class="rnum">G3.3</span>
+        <span class="rtitre">Le doute sur une règle se lève en écrivant la ligne exacte</span>
+        <span class="retat">en vigueur</span>
+      </div>
+      <p class="renonce">Quand deux lectures d&#39;une même règle s&#39;opposent, la sortie n&#39;est pas un avis : c&#39;est la ligne du dépôt, citée, avec sa date. C&#39;est ce qui a permis de corriger trois chiffres faux en une soirée, dont deux qui venaient de moi.</p>
+      
+      <p class="rsrc">
+        Source : <code>REGLES-DES-CARTES.md</code>
+        
+        </p>
+    </div>
+  </div>
+</div>
+</body></html>

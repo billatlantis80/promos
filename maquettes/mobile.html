@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Kazendra — maquette mobile</title>
+<style>
+  :root{
+    --navy:#0D3B5B; --deep:#0A2F49; --lite:#13496D; --orange:#EB912D;
+    --ink:#13222E; --ink2:#4A5C6B; --muted:#8496A3; --line:#E3E8ED; --bg2:#F5F7F9;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Liberation Sans','DejaVu Sans',Arial,sans-serif;background:#E7EBEF;color:var(--ink);
+       padding:30px 36px 36px;-webkit-font-smoothing:antialiased}
+  .board{display:flex;gap:28px;align-items:flex-start}
+  .col{width:390px}
+  .cap{font-size:12px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:#6B7E8C;
+       margin:0 0 9px 6px}
+  .cap span{color:#9AAAB6;font-weight:400;text-transform:none;letter-spacing:0;margin-left:6px}
+  .phone{width:390px;height:844px;background:#fff;border-radius:26px;overflow:hidden;position:relative;
+         box-shadow:0 14px 34px rgba(11,40,62,.16);display:flex;flex-direction:column}
+  .ico{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+  /* barre haute */
+  .top{background:var(--deep);color:#fff;padding:14px 16px;display:flex;align-items:center;gap:10px}
+  .top img{width:30px;height:32px;border-radius:8px}
+  .top .nm{font-size:17px;font-weight:700;letter-spacing:-.2px}
+  .top .r{margin-left:auto;display:flex;gap:12px;align-items:center;color:#DCE9F2}
+  .top .av{width:28px;height:28px;border-radius:50%;background:var(--orange);color:#2A1602;
+           font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
+
+  /* nav basse */
+  .tabbar{position:absolute;bottom:0;left:0;right:0;height:62px;border-top:1px solid var(--line);
+          background:#fff;display:flex;align-items:center;justify-content:space-around;padding:0 8px}
+  .tb{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:9.5px;color:#8CA0AE}
+  .tb.on{color:var(--navy);font-weight:700}
+  .tb .ico{width:19px;height:19px}
+  .plus{width:44px;height:44px;border-radius:50%;background:var(--orange);color:#2A1602;
+        display:flex;align-items:center;justify-content:center;margin-top:-16px;
+        box-shadow:0 6px 14px rgba(235,145,45,.45)}
+
+  /* ---- écran 1 : accueil ---- */
+  .hero{background:linear-gradient(180deg,#0A2F49,#13496D);color:#fff;padding:16px 16px 18px}
+  .hero h1{font-size:23px;line-height:1.15;letter-spacing:-.6px}
+  .hero h1 em{font-style:normal;color:var(--orange)}
+  .hero p{font-size:11.5px;color:#BBD3E2;margin-top:7px;line-height:1.45}
+  .sbox{margin-top:13px;background:#fff;border-radius:12px;padding:9px 10px;display:flex;align-items:center;gap:9px}
+  .sbox .ico{color:#8AA0B0;width:18px;height:18px}
+  .sbox .t{font-size:12.5px;color:#7E93A2}
+  .sbox .b{margin-left:auto;background:var(--orange);color:#2A1602;font-size:11.5px;font-weight:700;
+           padding:8px 12px;border-radius:9px}
+  .scroll{flex:1;overflow:hidden;padding:14px 16px 74px}
+  .h2{font-size:13px;font-weight:700;letter-spacing:-.1px;display:flex;align-items:center;justify-content:space-between}
+  .h2 a{font-size:10.5px;color:var(--lite);font-weight:700}
+  .doors{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:9px}
+  .d{border:1px solid var(--line);border-radius:11px;padding:9px 10px;display:flex;gap:8px;align-items:center}
+  .d .ci{width:26px;height:26px;border-radius:8px;background:#EAF1F5;color:var(--navy);flex:none;
+         display:flex;align-items:center;justify-content:center}
+  .d .ci .ico{width:15px;height:15px}
+  .d.live .ci{background:var(--navy);color:#fff}
+  .d b{font-size:11.5px;display:block;line-height:1.2}
+  .d span{font-size:9.5px;color:#8CA0AE;display:block;margin-top:2px}
+  .d.live{border-color:#F2CFA4;background:#FFFBF6}
+  .cards{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:9px}
+  .cd{border:1px solid var(--line);border-radius:11px;overflow:hidden}
+  .cd .th{height:66px;background:linear-gradient(135deg,#123F5F,#2E8399);position:relative}
+  .cd .th.t2{background:linear-gradient(135deg,#264653,#3E8E7E)}
+  .cd .off{position:absolute;left:7px;bottom:6px;background:#fff;color:#B45309;font-size:10px;
+           font-weight:700;padding:2px 6px;border-radius:5px}
+  .cd .in{padding:7px 8px 8px}
+  .cd .tt{font-size:10.5px;line-height:1.25;font-weight:700;height:26px;overflow:hidden}
+  .cd .pz{display:flex;align-items:baseline;gap:5px;margin-top:5px}
+  .cd .pz b{font-size:12.5px;color:var(--navy)}
+  .cd .pz s{font-size:9.5px;color:#93A3AF}
+
+  /* ---- écran 2 : tableau de bord ---- */
+  .greet{padding:14px 16px 12px;background:linear-gradient(180deg,#0A2F49,#0E3E5F);color:#fff}
+  .greet .hi{font-size:10.5px;color:#BBD3E2}
+  .greet h1{font-size:18px;letter-spacing:-.4px;margin-top:3px}
+  .stats{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:11px}
+  .st{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:10px;padding:8px 10px}
+  .st .n{font-size:17px;font-weight:700;letter-spacing:-.5px}
+  .st .l{font-size:9.5px;color:#BBD3E2;margin-top:1px}
+  .st.al{background:rgba(235,145,45,.15);border-color:rgba(235,145,45,.4)}
+  .chips{display:flex;gap:6px;overflow:hidden;margin:11px 0 9px}
+  .ch{font-size:10px;padding:5px 9px;border-radius:999px;border:1px solid var(--line);color:var(--ink2);white-space:nowrap}
+  .ch.on{background:var(--navy);border-color:var(--navy);color:#fff;font-weight:700}
+  .rw{display:flex;gap:9px;border:1px solid var(--line);border-radius:11px;padding:9px;margin-bottom:7px;align-items:center}
+  .rw .ph{width:38px;height:38px;border-radius:8px;background:#EAF1F5;color:#8AA0B0;flex:none;
+          display:flex;align-items:center;justify-content:center}
+  .rw .ph .ico{width:17px;height:17px}
+  .rw .tx{flex:1;min-width:0}
+  .rw .sv{font-size:8.5px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:#8CA0AE}
+  .rw .tt{font-size:11.5px;font-weight:700;line-height:1.2;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .rw .mt{font-size:9.5px;color:#8CA0AE;margin-top:2px}
+  .rw .rt{text-align:right;flex:none}
+  .rw .rt b{font-size:12px;color:var(--navy);display:block}
+  .chip{display:inline-block;font-size:8.5px;font-weight:700;padding:3px 6px;border-radius:5px;margin-top:4px}
+  .live{background:#E4F3EF;color:#0E7A66}
+  .act{background:#FDEBD5;color:#9A5B10}
+  .wait{background:#E8F0F6;color:#1C5B84}
+  .priv{background:#EDEAF6;color:#5A4B96}
+  .todo{border:1px solid var(--line);border-radius:11px;padding:9px 10px;margin-top:4px}
+  .todo h3{font-size:11px;display:flex;align-items:center;gap:6px}
+  .todo h3 .n{background:var(--orange);color:#2A1602;font-size:9px;padding:1px 5px;border-radius:999px}
+  .todo .it{display:flex;gap:7px;font-size:10px;color:var(--ink2);margin-top:8px;line-height:1.3}
+  .todo .bx{width:13px;height:13px;border-radius:4px;border:1.5px solid #C3D0DA;flex:none;margin-top:1px}
+  .todo .it b{color:var(--ink)}
+
+  /* ---- écran 3 : dépôt ---- */
+  .fhead{background:var(--deep);color:#fff;padding:14px 16px;display:flex;align-items:center;gap:12px}
+  .fhead .x{font-size:18px;color:#CFE0EB}
+  .fhead .tt{font-size:14.5px;font-weight:700}
+  .steps{display:flex;gap:5px;padding:11px 16px 0}
+  .step{height:3px;border-radius:2px;background:var(--line);flex:1}
+  .step.on{background:var(--orange)}
+  .step.done{background:var(--navy)}
+  .form{padding:13px 16px 74px;flex:1;overflow:hidden}
+  .lab{font-size:10px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:#8CA0AE;margin:12px 0 5px}
+  .inp{border:1px solid var(--line);border-radius:9px;padding:9px 11px;font-size:12px;color:var(--ink)}
+  .inp.ph{color:#9AAAB6}
+  .photo{border:1.5px dashed #C9D6DE;border-radius:11px;padding:14px;text-align:center;color:#7E93A2;font-size:11px}
+  .photo .ico{width:22px;height:22px;color:#9FB3C0;display:block;margin:0 auto 5px}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .free{background:#EFF6F4;border:1px solid #CFE6E0;border-radius:9px;padding:8px 10px;font-size:10.5px;
+        color:#0E6B5B;margin-top:12px;line-height:1.35}
+  .pro{background:#FDF3E6;border:1px solid #F3D6AE;border-radius:9px;padding:8px 10px;font-size:10.5px;
+       color:#8A5510;margin-top:7px;line-height:1.35}
+  .pro b{display:block;margin-bottom:1px}
+  .publish{margin-top:13px;background:var(--orange);color:#2A1602;font-weight:700;font-size:13px;
+           text-align:center;padding:12px;border-radius:11px}
+  .tiny{font-size:9px;color:#9AAAB6;text-align:center;margin-top:7px;line-height:1.4}
+</style>
+</head>
+<body>
+<div class="board">
+
+  <!-- ÉCRAN 1 : ACCUEIL -->
+  <div class="col">
+    <div class="cap">Accueil <span>non connecté</span></div>
+    <div class="phone">
+      <div class="top">
+        <img src="kazendra-icone-256.png" alt="">
+        <span class="nm">Kazendra</span>
+        <div class="r">
+          <svg class="ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>
+          <svg class="ico" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </div>
+      </div>
+
+      <div class="hero">
+        <h1>Tout votre quotidien,<br><em>au même endroit.</em></h1>
+        <p>Un seul compte pour acheter, louer, travailler, sortir et rencontrer — près de chez vous.</p>
+        <div class="sbox">
+          <svg class="ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>
+          <span class="t">Que cherchez-vous ?</span>
+          <span class="b">Chercher</span>
+        </div>
+      </div>
+
+      <div class="scroll">
+        <div class="h2">Les sept portes <a href="#">Tout voir</a></div>
+        <div class="doors">
+          <div class="d live"><span class="ci"><svg class="ico" viewBox="0 0 24 24"><path d="M20.5 13.5 13 21a2 2 0 0 1-2.8 0l-7-7V4h9.5l7.8 7.8a2 2 0 0 1 0 1.7z"/><circle cx="8" cy="8" r="1.4"/></svg></span><div><b>Promos</b><span>en ligne</span></div></div>
+          <div class="d"><span class="ci"><svg class="ico" viewBox="0 0 24 24"><path d="M3.5 7.5 12 3.5l8.5 4-8.5 4z"/><path d="M3.5 7.5v9l8.5 4 8.5-4v-9"/><path d="M12 11.5v9"/></svg></span><div><b>Annonces</b><span>bientôt</span></div></div>
+          <div class="d"><span class="ci"><svg class="ico" viewBox="0 0 24 24"><path d="M4 11.2 12 4l8 7.2"/><path d="M6.5 10v9.5h11V10"/><path d="M10 19.5v-5h4v5"/></svg></span><div><b>Immobilier</b><span>bientôt</span></div></div>
+          <div class="d"><span class="ci"><svg class="ico" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M8 3v4M16 3v4M3.5 10h17"/></svg></span><div><b>Événements</b><span>bientôt</span></div></div>
+          <div class="d"><span class="ci"><svg class="ico" viewBox="0 0 24 24"><path d="M12 20s-8-4.6-8-10a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 5.4-8 10-8 10z"/></svg></span><div><b>Rencontres</b><span>18+</span></div></div>
+          <div class="d"><span class="ci"><svg class="ico" viewBox="0 0 24 24"><path d="M12 4 2.8 9 12 14l9.2-5z"/><path d="M6.5 11v5.2c0 1.6 2.5 2.8 5.5 2.8s5.5-1.2 5.5-2.8V11"/></svg></span><div><b>Job étudiant</b><span>bientôt</span></div></div>
+          <div class="d"><span class="ci"><svg class="ico" viewBox="0 0 24 24"><rect x="3" y="7.5" width="18" height="12" rx="2.5"/><path d="M9 7.5V6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v1.5"/><path d="M3 12.5h18"/></svg></span><div><b>Emploi</b><span>bientôt</span></div></div>
+          <div class="d" style="justify-content:center;color:#8CA0AE"><b style="font-size:10.5px">+ Mon compte</b></div>
+        </div>
+
+        <div class="h2" style="margin-top:14px">Les bons plans <a href="#">607 promos</a></div>
+        <div class="cards">
+          <div class="cd">
+            <div class="th"><span class="off">−33 %</span></div>
+            <div class="in"><div class="tt">Aspirateur balai sans fil</div>
+              <div class="pz"><b>199,99 €</b><s>299,99 €</s></div></div>
+          </div>
+          <div class="cd">
+            <div class="th t2"><span class="off">−25 %</span></div>
+            <div class="in"><div class="tt">Machine à café à grains</div>
+              <div class="pz"><b>279,00 €</b><s>369,00 €</s></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tabbar">
+        <div class="tb on"><svg class="ico" viewBox="0 0 24 24"><path d="M4 11.2 12 4l8 7.2"/><path d="M6.5 10v9.5h11V10"/></svg>Accueil</div>
+        <div class="tb"><svg class="ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>Recherche</div>
+        <div class="plus"><svg class="ico" viewBox="0 0 24 24" style="width:22px;height:22px"><path d="M12 5v14M5 12h14"/></svg></div>
+        <div class="tb"><svg class="ico" viewBox="0 0 24 24"><path d="M4 5.5h16v11H8.5L4 20.5z"/></svg>Messages</div>
+        <div class="tb"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="3.4"/><path d="M5 20c.9-3.4 3.7-5.2 7-5.2s6.1 1.8 7 5.2"/></svg>Compte</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ÉCRAN 2 : TABLEAU DE BORD -->
+  <div class="col">
+    <div class="cap">Tableau de bord <span>connecté</span></div>
+    <div class="phone">
+      <div class="top">
+        <img src="kazendra-icone-256.png" alt="">
+        <span class="nm">Kazendra</span>
+        <div class="r">
+          <svg class="ico" viewBox="0 0 24 24"><path d="M6.5 9.5a5.5 5.5 0 0 1 11 0c0 4 1.5 5.5 1.5 5.5H5s1.5-1.5 1.5-5.5z"/><path d="M10 18.5a2 2 0 0 0 4 0"/></svg>
+          <span class="av">B</span>
+        </div>
+      </div>
+
+      <div class="greet">
+        <div class="hi">Vendredi 23 octobre</div>
+        <h1>Bonjour</h1>
+        <div class="stats">
+          <div class="st"><div class="n">3</div><div class="l">annonces en ligne</div></div>
+          <div class="st"><div class="n">7</div><div class="l">favoris suivis</div></div>
+          <div class="st al"><div class="n">1</div><div class="l">à relancer</div></div>
+          <div class="st"><div class="n">2</div><div class="l">messages</div></div>
+        </div>
+      </div>
+
+      <div class="scroll" style="padding-top:11px">
+        <div class="chips">
+          <span class="ch on">Tout 12</span><span class="ch">Promos 2</span><span class="ch">Annonces 4</span><span class="ch">Immo 2</span><span class="ch">Emploi 1</span>
+        </div>
+
+        <div class="rw">
+          <span class="ph"><svg class="ico" viewBox="0 0 24 24"><path d="M20.5 13.5 13 21a2 2 0 0 1-2.8 0l-7-7V4h9.5l7.8 7.8a2 2 0 0 1 0 1.7z"/><circle cx="8" cy="8" r="1.4"/></svg></span>
+          <div class="tx"><div class="sv">Promos · favori</div><div class="tt">Aspirateur balai sans fil</div><div class="mt">−20 € depuis votre ajout</div></div>
+          <div class="rt"><b>179,99 €</b><span class="chip live">en baisse</span></div>
+        </div>
+
+        <div class="rw">
+          <span class="ph"><svg class="ico" viewBox="0 0 24 24"><path d="M3.5 7.5 12 3.5l8.5 4-8.5 4z"/><path d="M3.5 7.5v9l8.5 4 8.5-4v-9"/><path d="M12 11.5v9"/></svg></span>
+          <div class="tx"><div class="sv">Annonces · mon dépôt</div><div class="tt">Vélo enfant 20 pouces</div><div class="mt">en ligne · 1 240 vues</div></div>
+          <div class="rt"><b>45 €</b><span class="chip live">en ligne</span></div>
+        </div>
+
+        <div class="rw">
+          <span class="ph"><svg class="ico" viewBox="0 0 24 24"><path d="M4 11.2 12 4l8 7.2"/><path d="M6.5 10v9.5h11V10"/><path d="M10 19.5v-5h4v5"/></svg></span>
+          <div class="tx"><div class="sv">Immobilier · contact</div><div class="tt">Appartement 2 ch., 78 m²</div><div class="mt">visite proposée le 21/10</div></div>
+          <div class="rt"><b>850 €</b><span class="chip wait">réponse</span></div>
+        </div>
+
+        <div class="rw">
+          <span class="ph"><svg class="ico" viewBox="0 0 24 24"><rect x="3" y="7.5" width="18" height="12" rx="2.5"/><path d="M9 7.5V6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v1.5"/><path d="M3 12.5h18"/></svg></span>
+          <div class="tx"><div class="sv">Emploi · suivi perso</div><div class="tt">Job d'été — commandes</div><div class="mt">noté « postulé » le 15/10</div></div>
+          <div class="rt"><b>—</b><span class="chip act">relance 3 j</span></div>
+        </div>
+
+        <div class="rw" style="background:#FBFAFE;border-color:#E1DCF0">
+          <span class="ph" style="background:#EDEAF6;color:#7E6FB5"><svg class="ico" viewBox="0 0 24 24"><path d="M12 20s-8-4.6-8-10a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 5.4-8 10-8 10z"/></svg></span>
+          <div class="tx"><div class="sv" style="color:#7E6FB5">Rencontres</div><div class="tt">3 activités masquées</div><div class="mt">masqué par défaut</div></div>
+          <div class="rt"><b>—</b><span class="chip priv">privé</span></div>
+        </div>
+
+        <div class="todo">
+          <h3>À faire <span class="n">3</span></h3>
+          <div class="it"><span class="bx"></span><div><b>Renouveler « Vélo enfant »</b> · expire dans 3 j</div></div>
+          <div class="it"><span class="bx"></span><div><b>Répondre au loueur</b> · visite à confirmer</div></div>
+          <div class="it"><span class="bx"></span><div><b>Relancer « Job d'été »</b> · noté par vous</div></div>
+        </div>
+      </div>
+
+      <div class="tabbar">
+        <div class="tb on"><svg class="ico" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/></svg>Tableau</div>
+        <div class="tb"><svg class="ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>Recherche</div>
+        <div class="plus"><svg class="ico" viewBox="0 0 24 24" style="width:22px;height:22px"><path d="M12 5v14M5 12h14"/></svg></div>
+        <div class="tb"><svg class="ico" viewBox="0 0 24 24"><path d="M4 5.5h16v11H8.5L4 20.5z"/></svg>Messages</div>
+        <div class="tb"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="3.4"/><path d="M5 20c.9-3.4 3.7-5.2 7-5.2s6.1 1.8 7 5.2"/></svg>Compte</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ÉCRAN 3 : DÉPÔT -->
+  <div class="col">
+    <div class="cap">Déposer une annonce <span>particulier</span></div>
+    <div class="phone">
+      <div class="fhead">
+        <span class="x">✕</span>
+        <span class="tt">Déposer une annonce</span>
+      </div>
+      <div class="steps">
+        <span class="step done"></span><span class="step on"></span><span class="step"></span><span class="step"></span>
+      </div>
+
+      <div class="form">
+        <div class="lab">Photos</div>
+        <div class="photo">
+          <svg class="ico" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><circle cx="9" cy="10" r="1.8"/><path d="M4 17l5-4 4 3 3-2.5 4 3.5"/></svg>
+          Ajouter jusqu'à 6 photos<br><span style="font-size:9.5px">La première sert de vignette</span>
+        </div>
+
+        <div class="lab">Titre</div>
+        <div class="inp">Vélo enfant 20 pouces, très bon état</div>
+
+        <div class="lab">Catégorie</div>
+        <div class="inp">Annonces · Sport et loisirs</div>
+
+        <div class="two">
+          <div><div class="lab">Prix</div><div class="inp">45 €</div></div>
+          <div><div class="lab">Code postal</div><div class="inp">5000</div></div>
+        </div>
+
+        <div class="lab">Description</div>
+        <div class="inp ph" style="height:52px">Décrivez l'objet, son état, la raison de la vente…</div>
+
+        <div class="free">Gratuit · vous êtes un particulier. 5 annonces actives maximum, renouvelables.</div>
+        <div class="pro"><b>Vous êtes une entreprise ?</b>Cette annonce coûterait 5 € HTVA pour 30 jours.</div>
+
+        <div class="publish">Publier gratuitement</div>
+        <div class="tiny">Publication immédiate · contrôle sous 24 h · retrait sur signalement</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

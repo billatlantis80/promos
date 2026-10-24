@@ -1,0 +1,245 @@
+/**
+ * L'AFFILIATION, PAYS PAR PAYS — « une vue claire de quelle affiliation j'ai
+ * ou pas ».
+ *
+ * B (08/10/2026) : « J'ai besoin aussi d'un onglet affiliation, avec tous les
+ * pays comme dans ce que tu viens de faire. Pour chaque pays tu dois m'afficher
+ * les affiliations qui sont possibles, existantes. […] Tu dois vérifier qui fait
+ * des affiliations ou pas, s'il y a des affiliations, ils apparaissent en haut,
+ * s'il n'y en a pas ils apparaissent plus bas. Peut-être que nous pourrons
+ * négocier par la suite des liens d'affiliation en privé avec le commerçant. »
+ *
+ * TROIS ÉTATS, PAS DEUX — ET LE TROISIÈME EST LE PLUS IMPORTANT.
+ *
+ *   1. « programme trouvé »   — on a VU le programme (page dédiée, ou signature
+ *                               d'un réseau dans le HTML du site). C'est un fait
+ *                               mesuré, avec l'adresse qui le prouve.
+ *   2. « non mesuré »         — le site a refusé la mesure (403), ou n'a rendu
+ *                               qu'une page vide. On ne sait PAS. Groupon, Bol
+ *                               et Amazon sont dans ce cas.
+ *   3. « aucun signe trouvé » — le site a répondu, on a regardé, on n'a rien vu.
+ *
+ * POURQUOI LE TROISIÈME ÉTAT EXISTE, ET POURQUOI IL NE DIT PAS « PAS
+ * D'AFFILIATION ». Un marchand peut avoir un programme privé, réservé à ses
+ * partenaires, sans aucune trace publique. Ranger ces acteurs avec « pas
+ * d'affiliation » ferait écrire B à des enseignes qui en ont déjà une — et il
+ * perdrait sa crédibilité au premier contact. La base dit donc ce qu'elle a
+ * VU, et se tait sur ce qu'elle n'a pas vu.
+ *
+ * Module partagé : le panneau l'affiche, les tests l'exécutent tel quel.
+ */
+
+import { affiliationFaite, affiliationsFaites } from './affiliation.js';
+
+/** L'ordre d'affichage demandé : les affiliations en haut, celles qu'on n'a pas
+ *  trouvées plus bas. « Non mesuré » est au milieu — ce n'est ni l'un ni
+ *  l'autre, et il faut que ça se voie : c'est la liste des vérifications à
+ *  faire à la main. */
+export const ORDRE_AFFILIATION = ['programme trouvé', 'non mesuré', 'aucun signe trouvé'];
+
+/** L'ORDRE DE LA VUE, AVEC UN QUATRIÈME GROUPE EN TÊTE : « affiliation faite ».
+ *
+ *  B (12/10/2026) : « je ne vois pas une catégorie qui indique combien
+ *  d'affiliation j'ai déjà fait. Actuellement j'en ai fait deux. » Les deux
+ *  partenariats réellement ouverts (amazon.fr, amazon.com.be, le 09/10/2026)
+ *  étaient écrits dans `affiliation.js` — mais le panneau n'affichait que ce
+ *  qu'il avait MESURÉ, jamais ce qui était OBTENU.
+ *
+ *  POURQUOI UN ÉTAT À PART, ET PAS UNE PASTILLE DE PLUS. Un acteur dont
+ *  l'affiliation est faite SORT de son groupe de mesure : les quatre groupes
+ *  restent une partition (faite + trouvé + non mesuré + aucun signe = acteurs du
+ *  pays), donc aucun acteur n'est compté deux fois, et le nombre annoncé en tête
+ *  est celui qu'on peut vérifier en comptant les lignes.
+ *
+ *  `ORDRE_AFFILIATION` N'EST PAS TOUCHÉ, et c'est important : il dit ce qu'un
+ *  BALAYAGE peut rendre, et il sert aussi à valider une mesure (`etatAffiliation`).
+ *  « Faite » n'est pas une mesure, c'est une décision : d'où cette liste à part. */
+export const ORDRE_VUE = ['affiliation faite', ...ORDRE_AFFILIATION];
+
+/** Les mesures, indexées par nom d'acteur. Le rapprochement se fait sur le NOM
+ *  (comme la liaison acteurs↔sources) : c'est la seule clé que les deux bases
+ *  partagent, et elle est stable.
+ *
+ *  LE MÊME NOM PEUT EXISTER DANS DEUX PAYS — et c'est un ajout mesuré du
+ *  09/10/2026, pas une hypothèse. Les tableurs belge et allemand nomment tous
+ *  les deux « Lidl », « Zalando », « MediaMarkt », « C&A », « Ryanair »… Or ce
+ *  ne sont pas les mêmes sites : lidl.be et lidl.de, mediamarkt.be et
+ *  mediamarkt.de. Mesurer l'un et l'afficher pour l'autre serait une liaison
+ *  fausse — le genre d'erreur qui fait croire qu'un marché est couvert.
+ *
+ *  On indexe donc DEUX clés : le nom seul (l'ancien contrat, la clé que les
+ *  deux bases partagent) et le nom accompagné de son pays. La seconde a la
+ *  priorité quand elle existe ; sinon on retombe sur la première, ce qui laisse
+ *  fonctionner les mesures d'avant, qui n'étaient que par nom. */
+export function indexAffiliation(mesures) {
+  const m = {};
+  for (const a of ((mesures && mesures.acteurs) || [])) {
+    if (!a || !a.nom) continue;
+    if (!(a.nom in m)) m[a.nom] = a;
+    if (a.pays) {
+      const cle = `${a.nom}|${a.pays}`;
+      if (!(cle in m)) m[cle] = a;
+    }
+  }
+  return m;
+}
+
+/** L'état d'affiliation d'un acteur, ramené à trois valeurs. Un acteur absent
+ *  des mesures est « non mesuré », jamais « aucun signe » : l'absence de
+ *  mesure n'est pas une mesure.
+ *
+ *  Le pays est FACULTATIF : sans lui, on rend la mesure du nom — c'est ainsi
+ *  que sont lues les mesures d'avant le 09/10/2026. */
+export function etatAffiliation(mesures, nom, pays) {
+  const idx = indexAffiliation(mesures);
+  const m = (pays && idx[`${nom}|${pays}`]) || idx[nom];
+  if (!m) return { etat: 'non mesuré', reseaux: [], indices: [], raison: 'acteur absent du balayage' };
+  const etat = ORDRE_AFFILIATION.includes(m.etat) ? m.etat : 'non mesuré';
+  return {
+    etat,
+    reseaux: m.reseaux || [],
+    indices: m.indices || [],
+    raison: m.raison || '',
+    domaine: m.domaine || '',
+    http: m.http,
+  };
+}
+
+/**
+ * LES PAYS DE L'AFFILIATION — tous les pays où il y a des acteurs recensés, avec
+ * ce que chacun porte : combien de programmes trouvés, combien de vérifications
+ * à faire, et quels réseaux dominent.
+ *
+ * Les réseaux par pays sont l'information la plus actionnable : un pays où tout
+ * passe par Awin et un pays où tout passe par Adtraction ne se démarchent
+ * pas au même guichet. C'est ce qui évite de s'inscrire à cinq réseaux pour rien.
+ */
+export function paysAffiliation(base, mesures, catalogue) {
+  const parPays = {};
+  // LES MÊMES PAYS QUE LE MARCHÉ EURO, et pas seulement ceux qui ont des acteurs.
+  // B a demandé « tous les pays comme dans ce que tu viens de faire » : les deux
+  // tableaux doivent se ressembler. Un pays servi par l'application mais sans
+  // acteur recensé (l'Irlande) disparaissait ici, et les deux onglets
+  // n'annonçaient pas le même nombre de pays — un écart qu'on ne remarque qu'en
+  // les comparant, c'est-à-dire jamais.
+  const noms = new Set(((base && base.acteurs) || []).map((a) => a.pays || '—'));
+  for (const p of Object.keys((catalogue && catalogue.parPays) || {})) noms.add(p);
+  for (const pays of [...noms].sort()) {
+    parPays[pays] = parPays[pays] || { pays, acteurs: 0, programme: 0, aucunSigne: 0, nonMesure: 0, faites: 0, reseaux: {} };
+  }
+  for (const a of ((base && base.acteurs) || [])) {
+    const pays = a.pays || '—';
+    const P = parPays[pays] = parPays[pays] || {
+      pays, acteurs: 0, programme: 0, aucunSigne: 0, nonMesure: 0, faites: 0, reseaux: {},
+    };
+    const e = etatAffiliation(mesures, a.nom, pays);
+    P.acteurs += 1;
+    // « FAITES » S'AJOUTE AU RÉSUMÉ DU PAYS, elle ne le remplace pas : ici les
+    // colonnes COEXISTENT (un pays peut avoir un programme trouvé ET une
+    // affiliation ouverte). C'est la vue d'un pays qui fait la partition, pas ce
+    // résumé — on l'a donc laissé tel quel, et on ajoute seulement le compte.
+    if (affiliationFaite([...(a.domaines || []), ...(a.domaine ? [a.domaine] : [])])) P.faites += 1;
+    if (e.etat === 'programme trouvé') {
+      P.programme += 1;
+      for (const r of e.reseaux) P.reseaux[r] = (P.reseaux[r] || 0) + 1;
+    } else if (e.etat === 'non mesuré') P.nonMesure += 1;
+    else P.aucunSigne += 1;
+  }
+  return Object.values(parPays).map((P) => ({
+    ...P,
+    aVerifier: P.nonMesure,
+    reseaux: Object.entries(P.reseaux)
+      .sort((x, y) => y[1] - x[1] || x[0].localeCompare(y[0]))
+      .map(([nom, n]) => ({ nom, n })),
+  })).sort((x, y) => y.programme - x.programme || y.acteurs - x.acteurs || x.pays.localeCompare(y.pays));
+}
+
+/**
+ * LA VUE D'UN PAYS — les acteurs rangés en trois groupes, dans l'ordre demandé.
+ *
+ * On range DANS les groupes par nombre d'articles décroissant : un marchand qui
+ * apporte déjà beaucoup d'articles et qui a un programme est le premier à
+ * démarcher ; un marchand qui apporte beaucoup et qui n'a rien de trouvé est le
+ * premier à qui demander une négociation privée.
+ */
+export function affiliationsDuPays(catalogue, base, mesures, pays) {
+  const idx = indexAffiliation(mesures);
+  const annoncesDe = {};
+  for (const o of ((catalogue && catalogue.offres) || [])) {
+    const s = o.marchand || o.source || '—';
+    annoncesDe[s] = (annoncesDe[s] || 0) + 1;
+  }
+
+  const siens = ((base && base.acteurs) || []).filter((a) => (a.pays || '—') === pays);
+  const enrichis = siens.map((a) => {
+    const e = etatAffiliation(mesures, a.nom, pays);
+    // CE QUI EST DÉJÀ FAIT SE LIT SUR LES DOMAINES, jamais sur le nom : c'est la
+    // clé que la base et la table des identifiants partagent (« amazon.fr » est
+    // un domaine d'« Amazon France », ce n'est pas son nom).
+    const domaines = [...(a.domaines || []), ...(a.domaine ? [a.domaine] : [])];
+    const faite = affiliationFaite(domaines);
+    return {
+      ...a,
+      affiliation: e,
+      // L'ÉTAT MONTRÉ : « faite » prime, sans effacer la mesure — celle-ci reste
+      // dans `affiliation` et s'affiche encore dans la ligne de l'acteur.
+      etatVue: faite ? 'affiliation faite' : e.etat,
+      faite,
+      // Les articles qui CITENT ce marchand : la mesure de son poids réel.
+      citations: annoncesDe[a.nom] || 0,
+    };
+  });
+
+  const groupes = ORDRE_VUE.map((etat) => {
+    const liste = enrichis.filter((a) => a.etatVue === etat)
+      .sort((x, y) => y.citations - x.citations || x.nom.localeCompare(y.nom));
+    return { etat, liste, n: liste.length };
+  });
+
+  // LES COMPTEURS SE LISENT PAR NOM, JAMAIS PAR RANG. Ils étaient écrits
+  // `groupes[0]`, `groupes[1]`, `groupes[2]` : ajouter un groupe en TÊTE les
+  // décale tous d'un cran, et le panneau annoncerait des « programmes trouvés »
+  // à la place des « non mesurés » — un décalage qui ne se voit pas, puisque
+  // tous les nombres restent plausibles.
+  const par = Object.fromEntries(groupes.map((g) => [g.etat, g.n]));
+  const compteurs = {
+    acteurs: enrichis.length,
+    faites: par['affiliation faite'],
+    programme: par['programme trouvé'],
+    nonMesure: par['non mesuré'],
+    aucunSigne: par['aucun signe trouvé'],
+  };
+
+  // Les réseaux du pays, comptés sur les SEULS programmes trouvés.
+  const parReseau = {};
+  for (const a of enrichis) {
+    if (a.affiliation.etat !== 'programme trouvé') continue;
+    for (const r of a.affiliation.reseaux) parReseau[r] = (parReseau[r] || 0) + 1;
+  }
+  const reseaux = Object.entries(parReseau)
+    .sort((x, y) => y[1] - x[1] || x[0].localeCompare(y[0]))
+    .map(([nom, n]) => ({ nom, n }));
+
+  return { pays, compteurs, reseaux, groupes };
+}
+
+/** Les adresses de programme VUES, pour un acteur — ce qui se clique.
+ *
+ *  RENDU STRUCTURÉ, ET C'EST UN DÉFAUT CORRIGÉ. La première version rendait les
+ *  phrases entières (« page programme : https://x.be/affiliation ») et le panneau
+ *  tentait d'en extraire l'adresse par une expression régulière qui supposait des
+ *  parenthèses. Elles n'y étaient pas : le lien affiché aurait été la PHRASE, et
+ *  cliquer dessus n'aurait rien ouvert. On sépare donc ici ce qui se CLIQUE de ce
+ *  qui s'EXPLIQUE — le panneau n'a plus à deviner.
+ *
+ *  On ne fabrique rien : une preuve sans adresse n'est pas rendue. */
+export function preuvesAffiliation(e) {
+  const sortie = [];
+  for (const indice of ((e && e.indices) || [])) {
+    const m = String(indice).match(/https?:\/\/[^\s)]+/);
+    if (!m) continue;
+    const quoi = String(indice).slice(0, m.index).replace(/[\s:«»—–-]+$/, '').trim() || 'vu';
+    sortie.push({ url: m[0], quoi });
+  }
+  return sortie;
+}
