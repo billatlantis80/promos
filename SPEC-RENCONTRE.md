@@ -673,23 +673,45 @@ sans contrôle revient : reprise qui ne lève pas une relecture, reprise refusé
 consentement, décision sur un brouillon refusée, motif en tableau, distance zéro à 2 km, date de
 consentement effacée.
 
-### Reste ouvert, nommé, non corrigé — décisions à prendre
+### Corrigé le lendemain — les trois points de confidentialité, et le masquage
 
-- **Le quota ne coûte rien hors de la pile.** `profilPublicParId` et `marquerInteret` ne comptent
-  aucune vue : ouvrir des fiches par leur identifiant ou marquer des intérêts en série n'est pas
-  limité par les 30/jour, qui ne bornent que la découverte. À trancher : compter une vue à l'ouverture
-  d'une fiche, ou assumer que le quota ne porte que la pile.
-- **« Je cherche » est déductible en deux requêtes** en changeant son propre genre : la suggestion
-  croise réciproquement les orientations, et le genre est librement modifiable. C'est le prix du
-  matching réciproque ; le réduire demande du bruit volontaire, donc une décision de produit.
-- **`reste_autres` est un oracle de dénombrement** : il rend le nombre exact de profils correspondant
-  à des filtres arbitraires, ce qui permet de compter une population et, par bissection sur la
-  distance, de situer quelqu'un. Un booléen « d'autres existent » suffirait à l'écran.
-- **Un compte sans profil peut masquer n'importe quel profil** d'un signalement « mineur », sans
-  preuve ni limitation de débit sur les signalements.
-- **Défauts mineurs connus** : index manquant sur `messages(auteur_id, cree_le)` (envoi de message),
-  corps JSON `null` → 500 au lieu de 400, `enregistrerProfil` écrit avant de valider (pas de
-  transaction), `rencontre_vues`/`rencontre_passages` jamais purgés, un seul « passer » écarte un
-  profil 30 jours alors que la règle annonce trois passages consécutifs, date de naissance complète
-  dans la file de modération (l'âge suffirait), et plusieurs routes d'écriture sans limitation de
-  débit.
+11. **Le quota ne bornait que la pile (sérieux).** `profilPublicParId` et `marquerInteret` ne
+    consommaient aucune vue : on ouvrait cinq cents fiches par leur identifiant sans jamais atteindre
+    les 30/jour, et marquer des intérêts en série ne coûtait rien. Une fiche **nouvelle** compte
+    désormais (une seule fois par jour), et **jamais** quand les deux personnes sont déjà liées par un
+    intérêt : le quota borne la découverte, il ne doit pas fermer l'accès au profil de quelqu'un à qui
+    l'on parle déjà. Corollaire assumé : ouvrir un profil consomme un des trente.
+12. **« Je cherche » n'est plus déductible (sérieux).** La suggestion croisait réciproquement les
+    orientations : en changeant son propre genre, deux requêtes suffisaient à lire une donnée de
+    l'article 9 sur quelqu'un qui ne l'a jamais dite. Le filtre ne porte plus que sur **ce que je
+    cherche** — le genre de la personne — et plus du tout sur ce qu'elle cherche. Prix assumé : on
+    peut voir des profils qui ne vous cherchent pas ; l'intérêt mutuel reste la seule porte vers une
+    conversation, donc rien ne s'ouvre sans accord des deux.
+13. **`reste_autres` ne compte plus (sérieux).** Le nombre exact de profils correspondant à des
+    filtres arbitraires permettait de compter une population et, en bissectant sur la distance depuis
+    une commune publique, de situer quelqu'un au kilomètre. Remplacé par `autres_existent`, un
+    booléen — l'écran n'a jamais eu besoin du chiffre.
+14. **Le masquage immédiat n'est plus une arme (sérieux).** Un compte sans profil, créé pour
+    l'occasion, masquait n'importe qui d'un signalement « mineur », autant de fois qu'il voulait — et
+    un profil masqué ne se republie pas, donc la victime n'avait aucun recours avant qu'un humain la
+    rétablisse. Deux garde-fous : le compte qui signale doit avoir un **profil publié** (il est
+    identifiable et il perd quelque chose en cas d'abus), et **un seul masquage automatique par trente
+    jours**. Au-delà, le dossier part immédiatement en contrôle humain, avec le motif du refus écrit
+    dedans. Le premier signalement d'un compte réel masque toujours tout de suite : la protection des
+    mineurs n'attend pas la prudence anti-abus.
+
+Sept épreuves de plus (`tests/rencontre.test.mjs` passe à **44**) : la fiche ouverte qui compte, la
+même fiche qui reste gratuite, la conversation lisible même quota épuisé, l'orientation qui n'est plus
+déductible, aucun décompte rendu, le masquage refusé sans profil, le masquage unique par mois.
+
+### Ce qui reste ouvert, et pourquoi
+
+- **Défauts mineurs connus, non corrigés** : index manquant sur `messages(auteur_id, cree_le)` sur le
+  chemin d'envoi ; corps JSON `null` → 500 au lieu de 400 ; `enregistrerProfil` écrit avant de valider
+  (pas de transaction) ; `rencontre_vues` et `rencontre_passages` jamais purgés ; **un seul « passer »
+  écarte un profil trente jours** alors que la règle annonce trois passages consécutifs — l'écran le
+  dit faux ; date de naissance complète dans la file de modération alors que l'âge suffirait ;
+  plusieurs routes d'écriture sans limitation de débit ; et une décision de modération qui exige la
+  capacité `administrer` alors que la file s'ouvre avec `moderer` (un modérateur voit la file et
+  prend un 403 sur chaque décision).
+- **L'empreinte des photos reste exacte**, pas perceptuelle — l'écart est assumé depuis le § 21.
