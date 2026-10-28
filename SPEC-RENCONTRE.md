@@ -623,3 +623,73 @@ seulement par la maquette.
 **Ce qui reste à faire, et qui n'est pas un oubli** : brancher le canal courriel (l'avertissement
 d'inactivité et les notifications), et — si l'utilisateur le demande — l'empreinte perceptuelle avec
 un décodeur embarqué.
+
+---
+
+## 22. Revue de code indépendante — 28/10/2026
+
+La porte a été relue par trois regards neufs (module métier, routes HTTP et schéma, écrans), sans
+contexte de sa construction et avec exécution de preuves sur base SQLite. Les épreuves étaient vertes :
+ce que cette revue a trouvé ne pouvait pas l'être par elles, parce que **les épreuves décrivaient le
+comportement attendu, et le comportement était faux**.
+
+### Corrigé le jour même
+
+1. **`reprendre` republiait sans revérifier (bloquant).** `reprendreProfil` écrivait `etat='publie'`
+   sans repasser par les règles. « pause » puis « reprendre » publiait donc un profil de 16 ans, ou un
+   profil dont le consentement venait d'être retiré — **la pré-modération de la porte était
+   contournable en deux requêtes**, par n'importe quel compte. `reprendre` ne fait plus que lever la
+   pause : il appelle `publierProfil`, qui revérifie l'âge, le consentement, les photos et le compte
+   récent, et remet en relecture si nécessaire.
+2. **`deciderProfil` publiait n'importe quel profil (sérieux).** La décision de publication ne
+   vérifiait pas que le profil était `en_attente` : un `brouillon` jamais soumis sortait publié, en
+   sautant âge, consentement et commune. La décision exige désormais l'attente et les invariants ;
+   seul le caractère « compte récent » est levé par l'humain qui a lu le texte.
+3. **Un `motif` envoyé en tableau contournait le masquage « mineur » (sérieux).** La validation
+   normalisait (`net`), les comparaisons testaient la valeur brute : `motif: ["mineur"]` passait la
+   liste sans masquer le profil. Le motif est normalisé une fois, en entrée.
+4. **« Ma commune » ne filtrait rien (sérieux).** `Number(distance) || DISTANCE_MAX` faisait de `0`
+   — la valeur du curseur pour « ma commune (0–2 km) » — la distance maximale : **50 km**. Le filtre
+   le plus utilisé de la porte affichait toute la Belgique. Zéro vaut maintenant 2 km, nommément.
+5. **Le consentement survivait à la suppression.** `supprimerProfil` mettait `cherche` à NULL en
+   laissant la DATE : une recréation sans case cochée était acceptée, et l'écran réaffichait
+   l'ancienne date comme preuve. La date part avec la donnée.
+6. **L'expiration pour inactivité bannissait le numéro.** Supprimer un profil après treize mois
+   consommait l'empreinte du téléphone 30 jours : revenir affichait « ce numéro a servi à un profil
+   supprimé récemment ». L'expiration n'est pas une sanction, elle ne consomme plus rien.
+7. **Trois valeurs insérées sans échappement** dans des `innerHTML` (compteur de quota, non-lus d'une
+   conversation, valeur d'une pastille d'intérêt) — numériques, mais rien ne le garantissait côté
+   client. Échappées.
+8. **Quatre `.catch(() => {})`** dans la découverte : un 429 (quota) ou un 500 laissait la carte
+   précédente à l'écran, sans un mot. L'écran dit désormais l'échec.
+9. **Les écrans étaient indexables par leur nom de fichier.** Servis par leur route, ils portent
+   `X-Robots-Tag` ; servis par le statique (`/rencontre.html`), ils n'en avaient aucun.
+10. **La page Sécurité se contredisait sur les conversations** : « La modération ne voit que ce que
+    vous signalez », alors qu'un message bloqué par le filtre part en contrôle avec son extrait.
+    La phrase dit maintenant les deux cas — c'est la page dont l'argument est de ne pas mentir.
+
+Six épreuves ont été ajoutées sur ces points (`tests/rencontre.test.mjs`), parce qu'un défaut trouvé
+sans contrôle revient : reprise qui ne lève pas une relecture, reprise refusée après retrait du
+consentement, décision sur un brouillon refusée, motif en tableau, distance zéro à 2 km, date de
+consentement effacée.
+
+### Reste ouvert, nommé, non corrigé — décisions à prendre
+
+- **Le quota ne coûte rien hors de la pile.** `profilPublicParId` et `marquerInteret` ne comptent
+  aucune vue : ouvrir des fiches par leur identifiant ou marquer des intérêts en série n'est pas
+  limité par les 30/jour, qui ne bornent que la découverte. À trancher : compter une vue à l'ouverture
+  d'une fiche, ou assumer que le quota ne porte que la pile.
+- **« Je cherche » est déductible en deux requêtes** en changeant son propre genre : la suggestion
+  croise réciproquement les orientations, et le genre est librement modifiable. C'est le prix du
+  matching réciproque ; le réduire demande du bruit volontaire, donc une décision de produit.
+- **`reste_autres` est un oracle de dénombrement** : il rend le nombre exact de profils correspondant
+  à des filtres arbitraires, ce qui permet de compter une population et, par bissection sur la
+  distance, de situer quelqu'un. Un booléen « d'autres existent » suffirait à l'écran.
+- **Un compte sans profil peut masquer n'importe quel profil** d'un signalement « mineur », sans
+  preuve ni limitation de débit sur les signalements.
+- **Défauts mineurs connus** : index manquant sur `messages(auteur_id, cree_le)` (envoi de message),
+  corps JSON `null` → 500 au lieu de 400, `enregistrerProfil` écrit avant de valider (pas de
+  transaction), `rencontre_vues`/`rencontre_passages` jamais purgés, un seul « passer » écarte un
+  profil 30 jours alors que la règle annonce trois passages consécutifs, date de naissance complète
+  dans la file de modération (l'âge suffirait), et plusieurs routes d'écriture sans limitation de
+  débit.
