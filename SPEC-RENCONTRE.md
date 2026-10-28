@@ -726,12 +726,31 @@ code**, vérifié en remettant la condition d'origine : « un seul refus ne cond
 troisième est définitif un an plus tard ». Le geste est en plus éprouvé par HTTP
 (`epreuve-rencontre.mjs` passe à **48**) : `n:1` / `definitif:false`, puis `n:3` / `definitif:true`.
 
+### La file de relecture se décide avec le droit qui l'ouvre
+
+Le défaut était nommé au § 22 depuis la revue : la file s'ouvrait avec `moderer`, et
+`deciderProfil` exigeait `administrer`. Un modérateur voyait donc chaque profil en attente pour
+prendre un **403 sur chaque décision** — la file était une vitrine, pas un outil. Et le pire est
+que l'épreuve **exigeait** ce refus : elle s'appelait « la décision de publier exige d'administrer »
+et verrouillait le défaut au lieu de le signaler. Une épreuve écrite d'après le code ne prouve rien.
+
+- `deciderProfil` demande désormais `moderer` : publier ou masquer un profil, c'est la relecture.
+- `administrer` reste ce qu'il annonce — les rôles, les comptes, les déblocages — et la garde qui
+  compte subsiste : **un compte connecté sans rôle prend toujours 403**.
+- Le texte de l'écran disait la mauvaise règle (« appartient au propriétaire, capacité
+  *administrer* ») : il dit maintenant que la file se décide avec le droit qui l'ouvre.
+- `epreuve-rencontre.mjs` tourne entier avec un compte **modérateur** au lieu d'un administrateur :
+  c'est le droit le plus faible qui doit suffire, sinon l'épreuve ne prouve rien. Plus un contrôle
+  explicite du 403 sans rôle.
+
+Une épreuve de plus dans chaque fichier (`rencontre.test.mjs` **47**, `epreuve-rencontre.mjs` **49**),
+et celle de `rencontre.test.mjs` **échoue** quand on resserre le droit à `administrer` — vérifié.
+
 ### Ce qui reste ouvert, et pourquoi
 
 - **Défauts mineurs connus, non corrigés** : index manquant sur `messages(auteur_id, cree_le)` sur le
   chemin d'envoi ; corps JSON `null` → 500 au lieu de 400 ; `enregistrerProfil` écrit avant de valider
   (pas de transaction) ; `rencontre_vues` et `rencontre_passages` jamais purgés ; date de naissance
-  complète dans la file de modération alors que l'âge suffirait ; plusieurs routes d'écriture sans
-  limitation de débit ; et une décision de modération qui exige la capacité `administrer` alors que la
-  file s'ouvre avec `moderer` (un modérateur voit la file et prend un 403 sur chaque décision).
+  complète dans la file de modération alors que l'âge suffirait ; et plusieurs routes d'écriture
+  sans limitation de débit.
 - **L'empreinte des photos reste exacte**, pas perceptuelle — l'écart est assumé depuis le § 21.
