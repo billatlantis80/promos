@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Kazendra — maquette /rencontre</title>
+<style>
+  :root{--navy:#0D3B5B;--deep:#0A2F49;--orange:#EB912D;--ink:#13222E;--ink2:#4A5C6B;
+        --muted:#5E7180;--line:#E3E8ED;--bg2:#F5F7F9}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Liberation Sans','DejaVu Sans',Arial,sans-serif;color:var(--ink);background:#fff;
+       width:1440px;-webkit-font-smoothing:antialiased}
+  .wrap{width:1200px;margin:0 auto}
+  a{color:inherit;text-decoration:none}
+  .ico{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;
+       stroke-linejoin:round}
+  .cap{background:#E7EBEF;font-size:11.5px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;
+       color:#5E7180;padding:9px 0 9px 120px}
+
+  header{background:var(--deep);color:#fff}
+  .bar{display:flex;align-items:center;gap:24px;height:70px}
+  .brand{display:flex;align-items:center;gap:10px}
+  .brand img{width:36px;height:38px;border-radius:9px}
+  .brand .nm{font-size:20px;font-weight:700;letter-spacing:-.3px}
+  nav{display:flex;gap:18px;font-size:13.5px;color:#CFE0EB;margin-left:8px}
+  nav a.on{color:#fff;font-weight:700}
+  .right{margin-left:auto;display:flex;align-items:center;gap:12px}
+  .av{width:32px;height:32px;border-radius:50%;background:var(--orange);color:#2A1602;font-size:12.5px;
+      font-weight:700;display:flex;align-items:center;justify-content:center}
+
+  .doorhead{border-bottom:1px solid var(--line);padding:22px 0 18px}
+  .doorhead .top{display:flex;align-items:flex-end;gap:16px}
+  h1{font-size:29px;letter-spacing:-.8px}
+  .count{font-size:13.5px;color:var(--ink2);margin-top:5px}
+  .count b{color:var(--ink)}
+  .tools{margin-left:auto;display:flex;align-items:center;gap:10px}
+  .btn-o{background:var(--orange);color:#2A1602;font-weight:700;font-size:13.5px;padding:11px 17px;
+         border-radius:9px;display:inline-flex;align-items:center;gap:8px}
+  .privacy{margin-top:12px;display:flex;align-items:center;gap:8px;font-size:12px;color:#123F5F;
+           background:#EAF1F5;border-radius:9px;padding:9px 12px;width:fit-content}
+  .privacy b{font-weight:700}
+
+  .layout{display:grid;grid-template-columns:258px 1fr 300px;gap:26px;padding:22px 0 40px;align-items:start}
+  .panel{border:1px solid var(--line);border-radius:13px;padding:16px}
+  .panel+.panel{margin-top:12px}
+  .panel h3{font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:#5E7180;margin-bottom:11px}
+  .agelab{display:flex;align-items:baseline;gap:6px;font-size:13px;color:var(--navy);font-weight:700}
+  .agelab span{font-size:11.5px;color:var(--muted);font-weight:400}
+  .track{position:relative;height:6px;border-radius:99px;background:#E6EBEF;margin-top:13px}
+  .track .fill{position:absolute;left:18%;top:0;bottom:0;width:56%;border-radius:99px;background:var(--navy)}
+  .track .knob{position:absolute;left:18%;top:50%;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;
+               background:#fff;border:2.5px solid var(--navy);box-shadow:0 1px 3px rgba(13,59,91,.25)}
+  .track .knob.b{left:74%}
+  .ticks{display:flex;justify-content:space-between;font-size:10.5px;color:var(--muted);margin-top:7px}
+  .chips{display:flex;gap:6px;flex-wrap:wrap}
+  .chip{font-size:11.5px;padding:5px 10px;border-radius:999px;border:1px solid var(--line);color:var(--ink2);
+        white-space:nowrap}
+  .chip.on{background:var(--navy);border-color:var(--navy);color:#fff;font-weight:700}
+  .lab{font-size:11px;font-weight:800;color:#5E7180;text-transform:uppercase;letter-spacing:.5px;
+       margin:14px 0 8px}
+  .lab:first-child{margin-top:0}
+
+  /* la carte de découverte */
+  .deck{display:flex;flex-direction:column;align-items:center;justify-content:flex-start}
+  .card{width:430px;border:1px solid var(--line);border-radius:18px;overflow:hidden;background:#fff;
+        box-shadow:0 14px 34px rgba(11,40,62,.10)}
+  .photo{height:430px;background:linear-gradient(150deg,#2E6B8A,#0D3B5B 55%,#0A2F49);position:relative;
+         display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.38)}
+  .photo .ico{width:64px;height:64px;stroke-width:1}
+  .photo .agebadge{position:absolute;left:14px;bottom:14px;background:rgba(10,47,73,.82);color:#fff;
+                   font-size:12.5px;font-weight:700;padding:5px 10px;border-radius:7px;display:flex;
+                   align-items:center;gap:6px}
+  .photo .noindex{position:absolute;right:12px;top:12px;background:rgba(255,255,255,.92);color:#123F5F;
+                  font-size:10px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;
+                  padding:4px 8px;border-radius:6px}
+  .cinfo{padding:15px 16px 16px}
+  .cname{font-size:19px;font-weight:800;letter-spacing:-.4px}
+  .cmeta{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--ink2);margin-top:6px}
+  .cmeta .ico{width:13px;height:13px;color:var(--muted)}
+  .cmeta .sep{color:#C3D0DA}
+  .ctags{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+  .ctags span{font-size:11px;font-weight:700;padding:4px 8px;border-radius:6px;background:#EAF1F5;color:var(--navy)}
+  .cactions{display:flex;align-items:center;gap:10px;margin-top:14px}
+  .passer{flex:1;text-align:center;border:1px solid var(--line);border-radius:10px;padding:12px;
+          font-size:13.5px;font-weight:700;color:var(--ink2)}
+  .interesse{flex:1.4;text-align:center;background:var(--orange);color:#2A1602;border-radius:10px;padding:12px;
+             font-size:13.5px;font-weight:800}
+  .dots{width:38px;height:38px;border:1px solid var(--line);border-radius:50%;display:flex;
+        align-items:center;justify-content:center;color:var(--ink2);flex:none}
+
+  /* colonne de droite : ce que la porte ne fait pas */
+  .note{border:1px solid var(--line);border-radius:12px;padding:14px;background:#fff}
+  .note h4{font-size:11.5px;text-transform:uppercase;letter-spacing:.5px;color:#5E7180;margin-bottom:9px}
+  .note ul{padding-left:15px}
+  .note li{font-size:11.5px;line-height:1.6;color:var(--ink2);margin-bottom:6px}
+  .note li b{color:var(--ink)}
+  .warn{margin-top:12px;border-radius:11px;padding:12px 13px;font-size:11.5px;line-height:1.55;
+        background:#FDF7EE;border:1px solid #F3D6AE;color:#6B4A16}
+  .warn b{display:block;margin-bottom:3px}
+
+  /* fiche profil */
+  .crumb{font-size:12.5px;color:var(--muted);padding:18px 0 0}
+  .profil{display:grid;grid-template-columns:1fr 340px;gap:30px;padding:16px 0 44px;align-items:start}
+  .gal{display:grid;grid-template-columns:2fr 1fr;gap:9px;height:330px}
+  .gal div{border-radius:12px;background:linear-gradient(150deg,#2E6B8A,#0D3B5B);
+           display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.35)}
+  .gal .col2{display:grid;grid-template-rows:1fr 1fr;gap:9px}
+  .gal .col2 div{background:linear-gradient(150deg,#264653,#3E8E7E)}
+  .gal .ico{width:48px;height:48px;stroke-width:1}
+  .phead{margin-top:18px;display:flex;align-items:flex-start;gap:14px}
+  .phead h2{font-size:27px;letter-spacing:-.7px}
+  .pmeta{font-size:13px;color:var(--ink2);margin-top:7px;display:flex;align-items:center;gap:7px}
+  .pmeta .sep{color:#C3D0DA}
+  .privnote{margin-left:auto;font-size:11px;font-weight:700;color:#123F5F;background:#EAF1F5;
+            border-radius:7px;padding:6px 9px;white-space:nowrap}
+  .sec{margin-top:18px;border:1px solid var(--line);border-radius:12px;padding:16px 18px;max-width:700px}
+  .sec h4{font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:#5E7180;margin-bottom:10px;
+          display:flex;align-items:baseline;gap:10px}
+  .sec h4 span{margin-left:auto;text-transform:none;letter-spacing:0;font-weight:400;font-size:11px;
+               color:var(--muted)}
+  .txt{font-size:13.5px;line-height:1.72;color:var(--ink2)}
+  .specs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px 22px;font-size:13.5px}
+  .specs div span{display:block;font-size:11.5px;color:var(--muted);margin-bottom:2px}
+  .variant{margin-top:12px;border:1px dashed #C9D6DF;border-radius:11px;padding:12px 14px;background:#FAFCFD;
+           max-width:700px}
+  .variant .vt{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:#5E7180}
+  .variant .vg{margin-top:8px;font-size:12.5px;color:var(--ink2);line-height:1.6}
+  .variant .vg b{color:var(--ink)}
+  .side{border:1px solid var(--line);border-radius:14px;padding:16px}
+  .side .btns{display:flex;gap:9px;margin-top:2px}
+  .side .btns .interesse{flex:1}
+  .side .btns .passer{flex:0 0 110px}
+
+  /* fil de messages */
+  .chat{margin-top:16px;border:1px solid var(--line);border-radius:14px;overflow:hidden;max-width:620px}
+  .chband{background:#FDF7EE;border-bottom:1px solid #F3D6AE;color:#6B4A16;font-size:11.5px;line-height:1.5;
+          padding:10px 13px}
+  .chband b{color:#5A3D0F}
+  .msg{padding:11px 13px;display:flex;gap:9px;align-items:flex-start}
+  .msg+.msg{border-top:1px solid #F2F5F7}
+  .msg .who{width:26px;height:26px;border-radius:50%;background:#EAF1F5;color:var(--navy);font-size:11px;
+            font-weight:800;display:flex;align-items:center;justify-content:center;flex:none}
+  .msg.me .who{background:var(--navy);color:#fff}
+  .msg .body{font-size:12.5px;line-height:1.55;color:var(--ink)}
+  .msg .t{font-size:10.5px;color:var(--muted);margin-top:3px}
+  .compose{display:flex;align-items:center;gap:9px;padding:11px 13px;border-top:1px solid var(--line);
+           background:#FAFCFD}
+  .compose .f{flex:1;border:1px solid var(--line);border-radius:9px;padding:9px 11px;font-size:12.5px;
+              color:#7E93A2;background:#fff}
+  .compose .send{background:var(--orange);color:#2A1602;font-weight:800;font-size:12.5px;padding:9px 14px;
+                 border-radius:9px}
+  .nojoin{font-size:10.5px;color:var(--muted);padding:0 13px 10px;background:#FAFCFD}
+  /* carte sans photo : sobre, jamais une silhouette barrée */
+  .nophoto{width:310px;border-radius:12px;padding:16px;background:linear-gradient(150deg,#13496D,#0A2F49);
+           color:#fff}
+  .nophoto b{display:block;font-size:19px;letter-spacing:-.3px}
+  .nophoto span{display:block;font-size:11.5px;color:#B9D2E2;margin-top:4px}
+  .nophoto .ctags{margin-top:10px}
+  .nophoto .ctags span{background:rgba(255,255,255,.14);color:#fff;margin-top:0;display:inline-block}
+
+  /* écran 3 — messagerie : liste des conversations + fil ouvert */
+  .msgwrap{display:grid;grid-template-columns:326px 1fr 296px;gap:24px;padding:20px 0 44px;align-items:start}
+  .convbox{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff}
+  .convbox .hd{padding:12px 14px;border-bottom:1px solid var(--line);display:flex;align-items:center;
+               gap:8px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;
+               color:#5E7180}
+  .convbox .hd .n{margin-left:auto;background:#EAF1F5;color:var(--navy);border-radius:6px;padding:2px 7px;
+                  font-size:10.5px;letter-spacing:0}
+  .conv{display:flex;gap:10px;padding:11px 14px;border-bottom:1px solid #F2F5F7}
+  .conv.on{background:#F1F7FA;box-shadow:inset 3px 0 0 var(--navy)}
+  .conv .ava{width:34px;height:34px;border-radius:50%;background:#EAF1F5;color:var(--navy);font-size:13px;
+             font-weight:800;display:flex;align-items:center;justify-content:center;flex:none}
+  .conv .ava.b{background:var(--navy);color:#fff}
+  .conv .txt{min-width:0;flex:1}
+  .conv .nm{font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px}
+  .conv .nm .fresh{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;
+                   background:#FDF0DC;color:#7A5217;border-radius:4px;padding:2px 5px}
+  .conv .pv{font-size:11.5px;color:var(--ink2);margin-top:3px;white-space:nowrap;overflow:hidden;
+            text-overflow:ellipsis}
+  .conv .meta{flex:none;text-align:right}
+  .conv .meta .tm{font-size:10px;color:var(--muted);white-space:nowrap}
+  .conv .meta .dot{width:7px;height:7px;border-radius:50%;background:var(--orange);margin:6px 0 0 auto}
+  .conv.off{background:#FAFBFC}
+  .conv.off .nm,.conv.off .pv{color:#93A5B2}
+  .thread{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff}
+  .thread .th{display:flex;align-items:center;gap:10px;padding:12px 15px;border-bottom:1px solid var(--line)}
+  .thread .th .ava{width:32px;height:32px;border-radius:50%;background:var(--navy);color:#fff;font-size:12.5px;
+                   font-weight:800;display:flex;align-items:center;justify-content:center}
+  .thread .th b{font-size:14.5px;letter-spacing:-.2px}
+  .thread .th .sub{font-size:11px;color:var(--muted);margin-top:2px}
+  .thread .th .acts{margin-left:auto;display:flex;gap:7px}
+  .thread .th .mb{font-size:11.5px;font-weight:700;color:var(--ink2);border:1px solid var(--line);
+                  border-radius:8px;padding:6px 10px;white-space:nowrap}
+  .msgs{padding:14px 15px 4px;background:#FBFCFD}
+  .msgs .day{text-align:center;font-size:10.5px;color:var(--muted);margin:2px 0 12px}
+  .bub{max-width:76%;padding:9px 12px;border-radius:11px;background:#fff;border:1px solid var(--line);
+       font-size:12.5px;line-height:1.55;margin-bottom:10px}
+  .bub .tm{font-size:10px;color:var(--muted);margin-top:4px}
+  .bub.me{margin-left:auto;background:var(--navy);border-color:var(--navy);color:#fff}
+  .bub.me .tm{color:#A9C6D8}
+  .blocked{border:1px solid #EFCFCF;background:#FDF6F6;border-radius:9px;padding:9px 11px;font-size:11.5px;
+           line-height:1.5;color:#6E2A2A;margin:0 0 12px}
+  .blocked b{display:block;margin-bottom:2px;color:#5B1F1F}
+  .c2{padding:11px 14px;border-top:1px solid var(--line);display:flex;gap:9px;align-items:center;background:#fff}
+  .c2 .f{flex:1;border:1px solid var(--line);border-radius:9px;padding:10px 12px;font-size:12.5px;color:#7E93A2}
+  .c2 .s{background:var(--orange);color:#2A1602;font-weight:800;font-size:12.5px;padding:10px 15px;border-radius:9px}
+  .nofile{display:flex;align-items:center;gap:7px;font-size:10.5px;color:var(--muted);padding:8px 14px 11px;
+          background:#fff;border-top:1px solid #F2F5F7}
+
+  /* écran 5 — page Sécurité */
+  .sechero{background:var(--deep);color:#fff;padding:32px 0 30px}
+  .sechero .kick{font-size:11px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:#9CC0D6}
+  .sechero h1{font-size:31px;letter-spacing:-.9px;margin-top:8px}
+  .sechero p{font-size:13.5px;line-height:1.65;color:#CFE0EB;margin-top:10px;max-width:660px}
+  .secgrid{display:grid;grid-template-columns:1fr 1fr;gap:20px;padding:26px 0 6px;align-items:start}
+  .card2{border:1px solid var(--line);border-radius:13px;padding:16px 18px;background:#fff}
+  .card2.can{border-color:#C4DED0;background:#F6FBF8}
+  .card2.cant{border-color:#F0D6BB;background:#FEFAF4}
+  .card2 h3{font-size:13.5px;letter-spacing:-.2px;display:flex;align-items:center;gap:8px}
+  .card2 h3 .d{width:8px;height:8px;border-radius:50%;background:#2E7D4F;flex:none}
+  .card2.cant h3 .d{background:#C2761B}
+  .card2 ul{margin-top:11px;padding-left:16px}
+  .card2 li{font-size:12.5px;line-height:1.65;color:var(--ink2);margin-bottom:8px}
+  .card2 li:last-child{margin-bottom:0}
+  .card2 li b{color:var(--ink)}
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;padding:20px 0 8px}
+  .step{border:1px solid var(--line);border-radius:12px;padding:14px 15px}
+  .step .n{width:22px;height:22px;border-radius:50%;background:var(--navy);color:#fff;font-size:11.5px;
+           font-weight:800;display:flex;align-items:center;justify-content:center}
+  .step b{display:block;font-size:12.5px;margin-top:9px;letter-spacing:-.1px}
+  .step span{display:block;font-size:11.5px;color:var(--ink2);line-height:1.55;margin-top:5px}
+  .never{border:1px solid #EFCFCF;background:#FDF6F6;border-radius:12px;padding:15px 18px;margin:22px 0 0}
+  .never h4{font-size:11.5px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:#8C2F2F;
+            margin-bottom:10px}
+  .never ul{padding-left:16px;columns:2;column-gap:30px}
+  .never li{font-size:12.5px;line-height:1.6;color:#5E2C2C;margin-bottom:5px;break-inside:avoid}
+  .helpbox{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:22px 0 40px}
+  .helpbox .card2 h3{font-size:13.5px}
+  .helpbox .card2 p{font-size:12.5px;line-height:1.65;color:var(--ink2);margin-top:9px}
+  .helpbox .card2 p b{color:var(--ink)}
+  .foot{font-size:11px;color:var(--muted);padding-bottom:36px;max-width:820px;line-height:1.6}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap bar">
+    <div class="brand"><img src="kazendra-icone-256.png" alt="Kazendra"><div class="nm">Kazendra</div></div>
+    <nav><a href="#">Accueil</a><a href="#">Promos</a><a href="#">Annonces</a><a href="#">Immo</a>
+      <a href="#">Événements</a><a href="#" class="on">Rencontres</a></nav>
+    <div class="right"><span style="font-size:13px;color:#CFE0EB">Se connecter</span><div class="av">B</div></div>
+  </div>
+</header>
+
+<div class="cap">Écran 1 — Découverte : un profil à la fois, deux gestes, aucune pression</div>
+
+<section class="doorhead">
+  <div class="wrap">
+    <div class="top">
+      <div>
+        <h1>Rencontres</h1>
+        <div class="count"><b>148</b> profils à moins de 20 km · données de démonstration fictives</div>
+        <div class="privacy">
+          <svg class="ico" viewBox="0 0 24 24" style="width:14px;height:14px"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+          <span>Votre profil n'est <b>jamais public</b> : aucun moteur de recherche, aucun partage.</span>
+        </div>
+      </div>
+      <div class="tools">
+        <div class="btn-o">
+          <svg class="ico" viewBox="0 0 24 24"><path d="M4 5h16v12H8l-4 3z"/></svg>
+          Mes messages · 3
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="wrap layout">
+  <aside>
+    <div class="panel">
+      <h3>Âge</h3>
+      <div class="agelab">28 – 45 ans <span>sur 18–99</span></div>
+      <div class="track"><div class="fill"></div><div class="knob"></div><div class="knob b"></div></div>
+      <div class="ticks"><span>18</span><span>40</span><span>60</span><span>99</span></div>
+
+      <div class="lab">Distance</div>
+      <div class="agelab">20 km maximum</div>
+      <div class="track"><div class="fill" style="width:40%"></div><div class="knob" style="left:40%"></div></div>
+      <div class="ticks"><span>Ma commune</span><span>25</span><span>50</span></div>
+    </div>
+
+    <div class="panel">
+      <h3>Centres d'intérêt</h3>
+      <div class="chips">
+        <span class="chip on">Lecture</span><span class="chip on">Cuisine</span>
+        <span class="chip">Sport</span><span class="chip">Musique</span><span class="chip">Nature</span>
+        <span class="chip">Voyage</span><span class="chip">Jeux</span><span class="chip">Culture</span>
+        <span class="chip">Bénévolat</span><span class="chip">Animaux</span>
+      </div>
+      <div class="lab">Ce que je ne veux pas</div>
+      <div class="chips">
+        <span class="chip">Tabac</span><span class="chip">Animaux à la maison</span>
+      </div>
+      <div class="lab">Affichage</div>
+      <div class="chips">
+        <span class="chip">Avec photo uniquement</span>
+      </div>
+    </div>
+  </aside>
+
+  <div class="deck">
+    <div class="card">
+      <div class="photo">
+        <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="9" r="3.6"/><path d="M4.5 20c1.4-3.6 4-5.4 7.5-5.4s6.1 1.8 7.5 5.4"/></svg>
+        <div class="noindex">Profil non indexé</div>
+        <div class="agebadge">34 ans · femme</div>
+      </div>
+      <div class="cinfo">
+        <div class="cname">camille_84</div>
+        <div class="cmeta">
+          <svg class="ico" viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
+          5000 Namur <span class="sep">·</span> 4 km
+        </div>
+        <div class="ctags"><span>Lecture</span><span>Cuisine</span><span>Nature</span></div>
+        <div class="cactions">
+          <div class="passer">Passer</div>
+          <div class="interesse">Intéressé</div>
+          <div class="dots"><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="1.8"/><circle cx="5" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="variant" style="margin-top:16px">
+      <div class="vt">Variante — profil sans aucune photo (une photo n'est jamais exigée)</div>
+      <div class="vg">
+        La carte reste complète : pseudo en grand, âge, commune, distance, étiquettes. <b>Pas de
+        silhouette barrée, pas de mention « pas de photo »</b> — l'absence n'est pas une faute à
+        signaler. C'est celui qui cherche qui décide, avec le filtre « avec photo uniquement ».
+      </div>
+      <div style="margin-top:11px">
+        <div class="nophoto">
+          <b>alex_5000</b>
+          <span>41 ans · homme · 5000 Namur · 7 km</span>
+          <div class="ctags"><span>Sport</span><span>Musique</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="note">
+      <h4>Ce que cette porte ne fait pas</h4>
+      <ul>
+        <li>Aucun <b>compteur de visites</b>, aucune notification « 12 personnes ont vu votre profil ».</li>
+        <li>Aucun <b>abonnement</b>, aucune option « voir qui m'a liké ». Tout est gratuit.</li>
+        <li>Aucune <b>image dans la messagerie</b> : on ne peut ni envoyer, ni réclamer une photo intime.</li>
+        <li>Aucun message possible <b>sans intérêt mutuel</b>.</li>
+      </ul>
+    </div>
+    <div class="warn">
+      <b>Aucun versement, jamais</b>
+      Un profil qui demande de l'argent, une carte cadeau, des cryptomonnaies ou un « investissement »
+      est une arnaque. Le message ne part même pas : Kazendra le bloque.
+    </div>
+    <div class="note" style="margin-top:12px">
+      <h4>Le champ « je cherche »</h4>
+      <ul>
+        <li>Il reste <b>privé</b> : il sert à proposer des profils, il n'est jamais affiché.</li>
+        <li>Raison : l'orientation sexuelle est une <b>donnée sensible</b> (art. 9 RGPD).</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="cap">Écran 2 — Un profil : photos, présentation, et aucun bouton de partage (c'est volontaire)</div>
+
+<div class="wrap crumb">Rencontres <b>›</b> Profil</div>
+
+<div class="wrap profil">
+  <div>
+    <div class="gal">
+      <div><svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="9" r="3.6"/><path d="M4.5 20c1.4-3.6 4-5.4 7.5-5.4s6.1 1.8 7.5 5.4"/></svg></div>
+      <div class="col2">
+        <div><svg class="ico" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 15l4-4 5 5 3-3 6 6"/></svg></div>
+        <div><svg class="ico" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 15l4-4 5 5 3-3 6 6"/></svg></div>
+      </div>
+    </div>
+
+    <div class="phead">
+      <div>
+        <h2>camille_84</h2>
+        <div class="pmeta">34 ans <span class="sep">·</span> femme <span class="sep">·</span> 5000 Namur
+          <span class="sep">·</span> 4 km</div>
+      </div>
+      <div class="privnote">Identité déclarée, non vérifiée</div>
+    </div>
+
+    <div class="sec">
+      <h4>Présentation <span>Décrite par la personne</span></h4>
+      <div class="txt">
+        Je travaille dans une bibliothèque, ce qui explique la pile de livres sur ma table de nuit.
+        J'aime cuisiner pour du monde, marcher le dimanche et les marchés du samedi matin. Je cherche
+        quelqu'un avec qui rire de choses bêtes et parler longtemps. Pas de plan sur la comète : d'abord
+        un café, on verra ensuite.
+      </div>
+    </div>
+
+    <div class="sec">
+      <h4>En quelques lignes</h4>
+      <div class="specs">
+        <div><span>Situation</span>Célibataire</div>
+        <div><span>Enfants</span>Pas d'enfant</div>
+        <div><span>Secteur</span>Culture</div>
+        <div><span>Langues</span>Français, anglais</div>
+        <div><span>Ce qu'elle ne veut pas</span>Tabac</div>
+        <div><span>Intérêts</span>Lecture, cuisine, nature</div>
+      </div>
+    </div>
+
+    <div class="variant">
+      <div class="vt">Variante — ce que voit la personne sur SON propre profil</div>
+      <div class="vg">
+        Son champ « je cherche » apparaît, avec la mention <b>« privé : jamais affiché »</b>, et un
+        bouton <b>Pause</b> / <b>Supprimer mon profil</b>. Personne d'autre ne voit cette ligne.
+      </div>
+    </div>
+
+    <div class="sec">
+      <h4>Ce profil n'est pas partageable</h4>
+      <div class="txt">
+        Il n'y a <b>aucun bouton de partage</b> sur cette page, et ce n'est pas un oubli : partager un
+        profil publierait la vie privée de quelqu'un sans son accord. C'est la seule porte du hub où la
+        règle du partage s'arrête.
+      </div>
+    </div>
+
+    <div class="lab" style="margin-top:22px">Variante — dès que l'intérêt est mutuel, la conversation s'ouvre</div>
+    <div class="chat">
+      <div class="chband">
+        <b>Ne donnez jamais votre adresse, votre numéro ni de l'argent.</b> Personne de sérieux ne vous
+        le demandera. Aucune image ne peut être envoyée ici.
+      </div>
+      <div class="msg">
+        <div class="who">C</div>
+        <div class="body">Bonjour ! Votre profil m'a fait sourire — la pile de livres, c'est chez moi aussi.
+          Vous avez lu quoi en dernier ?<div class="t">hier · 20:14</div></div>
+      </div>
+      <div class="msg me">
+        <div class="who">M</div>
+        <div class="body">Un roman qui se passe en Islande, très lent et très beau. Je vous le prête si
+          vous voulez ?<div class="t">hier · 20:31</div></div>
+      </div>
+      <div class="compose">
+        <div class="f">Écrire un message…</div>
+        <div class="send">Envoyer</div>
+      </div>
+      <div class="nojoin">Pas de pièce jointe, pas de lien cliquable — c'est volontaire.</div>
+    </div>
+  </div>
+
+  <aside>
+    <div class="side">
+      <div class="btns">
+        <div class="passer">Passer</div>
+        <div class="interesse">Intéressé</div>
+      </div>
+      <div class="warn" style="margin-top:12px">
+        <b>Ne payez jamais, même « pour un billet »</b>
+        Un premier rendez-vous se fait dans un lieu public, en journée, et ne coûte rien à personne.
+      </div>
+      <div class="note" style="margin-top:12px">
+        <h4>Signaler</h4>
+        <ul>
+          <li>Photo qui n'est pas la sienne</li>
+          <li>Argent, investissement, urgence</li>
+          <li>Personne mineure</li>
+          <li>Insultes, harcèlement, chantage</li>
+          <li>Autre</li>
+        </ul>
+      </div>
+      <div class="note" style="margin-top:12px">
+        <h4>Bloquer</h4>
+        <ul>
+          <li>La conversation se ferme des deux côtés.</li>
+          <li>La personne bloquée <b>n'est pas prévenue</b>.</li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<div class="cap">Écran 3 — Messages : la liste des conversations, et un fil qui ne peut rien transporter</div>
+
+<header>
+  <div class="wrap bar">
+    <div class="brand"><img src="kazendra-icone-256.png" alt="Kazendra"><div class="nm">Kazendra</div></div>
+    <nav><a href="#">Accueil</a><a href="#">Promos</a><a href="#">Annonces</a><a href="#">Immo</a>
+      <a href="#">Événements</a><a href="#" class="on">Rencontres</a></nav>
+    <div class="right"><span style="font-size:13px;color:#CFE0EB">Se connecter</span><div class="av">B</div></div>
+  </div>
+</header>
+
+<div class="wrap msgwrap">
+
+  <div class="convbox">
+    <div class="hd">
+      <svg class="ico" viewBox="0 0 24 24" style="width:14px;height:14px"><path d="M4 5h16v12H8l-4 3z"/></svg>
+      Conversations <span class="n">4</span>
+    </div>
+
+    <div class="conv on">
+      <div class="ava b">C</div>
+      <div class="txt">
+        <div class="nm">camille_84</div>
+        <div class="pv">Avec plaisir. Vous connaissez le marché du samedi ?</div>
+      </div>
+      <div class="meta"><div class="tm">20:52</div><div class="dot"></div></div>
+    </div>
+
+    <div class="conv">
+      <div class="ava">A</div>
+      <div class="txt">
+        <div class="nm">alex_5000 <span class="fresh">compte récent</span></div>
+        <div class="pv">Merci pour votre message, oui le samedi matin me va</div>
+      </div>
+      <div class="meta"><div class="tm">ven.</div><div class="dot"></div></div>
+    </div>
+
+    <div class="conv">
+      <div class="ava">S</div>
+      <div class="txt">
+        <div class="nm">sonia_bxl</div>
+        <div class="pv">Bonne semaine à vous aussi !</div>
+      </div>
+      <div class="meta"><div class="tm">jeu.</div></div>
+    </div>
+
+    <div class="conv off">
+      <div class="ava">M</div>
+      <div class="txt">
+        <div class="nm">marc_4000</div>
+        <div class="pv">Conversation fermée — vous avez bloqué ce profil</div>
+      </div>
+      <div class="meta"><div class="tm">12 oct.</div></div>
+    </div>
+  </div>
+
+  <div class="thread">
+    <div class="th">
+      <div class="ava">C</div>
+      <div>
+        <b>camille_84</b>
+        <div class="sub">34 ans · 5000 Namur · intérêt mutuel le 22/10</div>
+      </div>
+      <div class="acts"><div class="mb">Signaler</div><div class="mb">Bloquer</div></div>
+    </div>
+
+    <div class="chband" style="border-bottom:1px solid #F3D6AE">
+      <b>Ne donnez jamais votre adresse, votre numéro ni de l'argent.</b> Personne de sérieux ne vous
+      le demandera — et aucune image ne peut être envoyée ici.
+    </div>
+
+    <div class="msgs">
+      <div class="day">Hier</div>
+      <div class="bub">Bonjour ! Votre profil m'a fait sourire — la pile de livres, c'est chez moi aussi.
+        Vous avez lu quoi en dernier ?<div class="tm">20:14</div></div>
+      <div class="bub me">Un roman qui se passe en Islande, très lent et très beau. Je vous le prête si
+        vous voulez ?<div class="tm">20:31</div></div>
+      <div class="bub">Avec plaisir. Vous connaissez le marché du samedi, à Namur ? On pourrait y aller à
+        deux, en plein jour.<div class="tm">20:52</div></div>
+    </div>
+
+    <div class="c2">
+      <div class="f">Écrire un message…</div>
+      <div class="s">Envoyer</div>
+    </div>
+    <div class="nofile">
+      <svg class="ico" viewBox="0 0 24 24" style="width:13px;height:13px"><path d="M20 11l-8.5 8.5a4.5 4.5 0 0 1-6.4-6.4L13 5a3 3 0 0 1 4.2 4.2L9 17.4a1.5 1.5 0 0 1-2.1-2.1L14.5 8"/><path d="M3 3l18 18"/></svg>
+      Ni pièce jointe, ni image, ni lien cliquable. Ni accusé de lecture, ni « en train d'écrire ».
+    </div>
+  </div>
+
+  <div>
+    <div class="note">
+      <h4>Ce que la messagerie ne fait pas</h4>
+      <ul>
+        <li>Aucune <b>image, aucun fichier, aucun lien</b> : c'est la mesure anti-chantage, et elle est
+          structurelle.</li>
+        <li>Aucun message possible <b>sans intérêt mutuel</b>.</li>
+        <li>Aucun <b>accusé de lecture</b>, aucun « en train d'écrire » : ces signaux créent de
+          l'attente et de la pression.</li>
+        <li>Aucune conversation <b>transmise, revendue ou lue</b> par Kazendra, sauf ce que vous
+          signalez.</li>
+      </ul>
+    </div>
+
+    <div class="note" style="margin-top:12px">
+      <h4>Exemple — un message qui n'est jamais envoyé</h4>
+      <div class="blocked" style="margin:0">
+        <b>Message bloqué à l'envoi</b>
+        « Je suis bloqué à l'étranger, tu peux me faire un virement de 200 € ? »
+        <div style="margin-top:5px">Détection : coordonnées bancaires + récit d'urgence. Le message
+          reste dans la case, la personne est prévenue, la conversation passe en contrôle humain.</div>
+      </div>
+    </div>
+
+    <div class="note" style="margin-top:12px">
+      <h4>Bloquer</h4>
+      <ul>
+        <li>La conversation se ferme <b>des deux côtés</b>.</li>
+        <li>La personne bloquée <b>n'est pas prévenue</b>.</li>
+        <li>Le pseudo ne peut plus être changé avant 30 jours : contourner un blocage prend du temps.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="cap">Écran 5 — Sécurité : ce que Kazendra fait, et surtout ce qu'elle ne peut pas faire</div>
+
+<div class="sechero">
+  <div class="wrap">
+    <div class="kick">Aide · Rencontres</div>
+    <h1>Sécurité et bon sens</h1>
+    <p>
+      Une page qui ne promet rien qu'elle ne puisse tenir. Voici ce que Kazendra fait réellement,
+      ce qu'elle ne peut pas faire, et les quatre gestes qui protègent mieux que n'importe quel
+      réglage.
+    </p>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="secgrid">
+    <div class="card2 can">
+      <h3><span class="d"></span> Ce que Kazendra fait</h3>
+      <ul>
+        <li><b>Aucune image ne peut être envoyée</b> dans la messagerie — ni par vous, ni par l'autre.
+          On ne peut donc pas vous en réclamer une, et une photo intime ne peut pas sortir d'ici.</li>
+        <li><b>Aucun message sans intérêt mutuel</b> : personne ne peut vous écrire sans que vous
+          ayez dit oui.</li>
+        <li><b>Les demandes d'argent sont bloquées à l'envoi</b> : IBAN, lien de paiement, carte
+          cadeau, cryptomonnaie, récit d'urgence. La conversation passe en contrôle humain.</li>
+        <li><b>Un signalement est traité sous 24 h.</b> Un signalement de chantage coupe la
+          conversation des deux côtés immédiatement.</li>
+        <li><b>Bloquer est silencieux</b> : la personne n'est pas prévenue et ne peut plus écrire.</li>
+        <li><b>Votre profil n'est jamais public</b> : ni indexé, ni partageable, et le champ
+          « je cherche » reste privé.</li>
+        <li><b>Supprimer votre profil</b> efface immédiatement vos photos et vos conversations.</li>
+      </ul>
+    </div>
+
+    <div class="card2 cant">
+      <h3><span class="d"></span> Ce que Kazendra ne fait pas — et ne peut pas faire</h3>
+      <ul>
+        <li><b>Nous ne vérifions pas l'identité.</b> « Identité déclarée, non vérifiée » est écrit sur
+          chaque profil : une photo peut être celle de quelqu'un d'autre.</li>
+        <li><b>Nous ne prouvons pas l'âge.</b> Nous demandons une date de naissance et nous retirons
+          sur signalement. Nous ne détenons pas de cartes d'identité — c'est un choix assumé.</li>
+        <li><b>Nous ne lisons pas vos conversations.</b> La modération ne voit que ce que vous
+          signalez.</li>
+        <li><b>Nous ne voyons rien de ce qui se passe ailleurs.</b> Dès que la conversation continue
+          sur WhatsApp, Snapchat ou par SMS, Kazendra n'a plus aucune prise et ne peut plus rien
+          bloquer.</li>
+        <li><b>Nous ne pouvons pas effacer ce que l'autre a déjà copié ou photographié.</b> Une image
+          envoyée est dehors pour toujours.</li>
+        <li><b>Nous n'enregistrons aucun appel vidéo</b> (il n'y en a pas en V1). Mais l'autre peut
+          filmer avec un second appareil : ça, nous ne pouvons pas l'empêcher, et nous préférons vous
+          le dire.</li>
+        <li><b>Nous ne sommes pas la police.</b> Nous pouvons retirer un profil ; nous ne poursuivons
+          personne.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="lab" style="margin-top:26px">Avant un premier rendez-vous — quatre gestes</div>
+  <div class="steps">
+    <div class="step">
+      <div class="n">1</div>
+      <b>En journée, dans un lieu public</b>
+      <span>Un café, une place, un marché. Ni chez l'un, ni chez l'autre.</span>
+    </div>
+    <div class="step">
+      <div class="n">2</div>
+      <b>Prévenez quelqu'un</b>
+      <span>Donnez le lieu et l'heure à une personne de confiance, avant d'y aller.</span>
+    </div>
+    <div class="step">
+      <div class="n">3</div>
+      <b>Vos propres moyens</b>
+      <span>Vous arrivez et vous repartez par vos propres moyens, avec votre téléphone chargé.</span>
+    </div>
+    <div class="step">
+      <div class="n">4</div>
+      <b>Aucun argent, jamais</b>
+      <span>Ni pour un billet, ni pour un train, ni « parce que l'essence ». Un premier rendez-vous ne
+        coûte rien à personne.</span>
+    </div>
+  </div>
+
+  <div class="never">
+    <h4>Kazendra ne vous demandera jamais</h4>
+    <ul>
+      <li>votre mot de passe, ni le code SMS reçu ;</li>
+      <li>une photo de votre carte d'identité ;</li>
+      <li>de l'argent, une carte cadeau ou des cryptomonnaies ;</li>
+      <li>d'installer un logiciel ou d'ouvrir un lien de connexion ;</li>
+      <li>de déplacer la conversation vers une autre application ;</li>
+      <li>de garder la conversation secrète, même « pour vous protéger ».</li>
+    </ul>
+  </div>
+
+  <div class="helpbox">
+    <div class="card2">
+      <h3>Si vous êtes victime de chantage</h3>
+      <p>
+        <b>Ne payez pas.</b> Payer ne fait jamais cesser un chantage : cela prouve seulement que vous
+        payez. Gardez les preuves — captures, messages, profil — puis signalez le profil dans
+        l'application, et portez plainte auprès de la police locale : c'est la seule voie qui puisse
+        mener à une identification. Enfin, parlez-en à quelqu'un. La honte est l'arme de l'agresseur,
+        pas la vôtre.
+      </p>
+    </div>
+    <div class="card2">
+      <h3>Signaler, concrètement</h3>
+      <p>
+        Le bouton <b>Signaler</b> se trouve sur chaque profil et en haut de chaque conversation. Vous
+        choisissez un motif — argent, personne mineure, photo qui n'est pas la sienne, insultes et
+        harcèlement, autre — et vous pouvez ajouter une phrase. <b>La personne signalée ne sait jamais
+        qui a signalé.</b> Traitement sous 24 h. Si quelqu'un est en danger immédiat, appelez les
+        secours (112 en Belgique) : Kazendra n'est pas un service d'urgence.
+      </p>
+    </div>
+  </div>
+
+  <div class="foot">
+    Cette page ne remplace ni la loi ni un conseil juridique. Kazendra affiche des profils et permet
+    une conversation : elle n'organise pas les rencontres et ne garantit pas les intentions de qui
+    que ce soit. Dernière mise à jour : 25 octobre 2026.
+  </div>
+</div>
+
+</body>
+</html>
