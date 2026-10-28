@@ -700,18 +700,38 @@ consentement effacée.
     dedans. Le premier signalement d'un compte réel masque toujours tout de suite : la protection des
     mineurs n'attend pas la prudence anti-abus.
 
-Sept épreuves de plus (`tests/rencontre.test.mjs` passe à **44**) : la fiche ouverte qui compte, la
-même fiche qui reste gratuite, la conversation lisible même quota épuisé, l'orientation qui n'est plus
-déductible, aucun décompte rendu, le masquage refusé sans profil, le masquage unique par mois.
+Sept épreuves de plus (`tests/rencontre.test.mjs` passe à **44**, puis à **47** — voir la section
+suivante) : la fiche ouverte qui compte, la même fiche qui reste gratuite, la conversation lisible
+même quota épuisé, l'orientation qui n'est plus déductible, aucun décompte rendu, le masquage refusé
+sans profil, le masquage unique par mois.
+
+### Le « passer » qui n'excommuniait pas, mais presque
+
+La règle affichée est celle des **trois refus consécutifs** : les deux premiers disent « pas
+maintenant ». Le code testait `n >= 3 || dernier_le < 30 jours` — et comme `n = 1` est toujours
+« récent », le `||` rendait le **premier** refus aussi définitif que le troisième. La deuxième chance
+n'arrivait donc qu'au bout de deux mois, et la troisième jamais dans les faits. L'écran promettait
+trois chances ; le code n'en donnait qu'une.
+
+- **Un refus vaut pour la journée.** Le lendemain, le profil est de nouveau proposé — c'est la
+  deuxième chance, et elle est utilisable.
+- **Le troisième refus est définitif**, et l'écran le dit : « Ce profil ne sera plus proposé. »
+- **Un intérêt efface les refus** : la règle parle de refus *consécutifs* ; un « oui » au milieu rompt
+  la série, sinon deux refus oubliés comptaient contre un profil qu'on avait fini par vouloir.
+- Le nom `JOURS_PASSAGE` servait **aussi** à la consommation du numéro après suppression ; il devient
+  `JOURS_TEL_CONSOMME`, et les deux durées ne se confondent plus.
+
+Trois épreuves de plus dans `rencontre.test.mjs` (**47**) — dont deux qui **échouent sur l'ancien
+code**, vérifié en remettant la condition d'origine : « un seul refus ne condamne pas » et « le
+troisième est définitif un an plus tard ». Le geste est en plus éprouvé par HTTP
+(`epreuve-rencontre.mjs` passe à **48**) : `n:1` / `definitif:false`, puis `n:3` / `definitif:true`.
 
 ### Ce qui reste ouvert, et pourquoi
 
 - **Défauts mineurs connus, non corrigés** : index manquant sur `messages(auteur_id, cree_le)` sur le
   chemin d'envoi ; corps JSON `null` → 500 au lieu de 400 ; `enregistrerProfil` écrit avant de valider
-  (pas de transaction) ; `rencontre_vues` et `rencontre_passages` jamais purgés ; **un seul « passer »
-  écarte un profil trente jours** alors que la règle annonce trois passages consécutifs — l'écran le
-  dit faux ; date de naissance complète dans la file de modération alors que l'âge suffirait ;
-  plusieurs routes d'écriture sans limitation de débit ; et une décision de modération qui exige la
-  capacité `administrer` alors que la file s'ouvre avec `moderer` (un modérateur voit la file et
-  prend un 403 sur chaque décision).
+  (pas de transaction) ; `rencontre_vues` et `rencontre_passages` jamais purgés ; date de naissance
+  complète dans la file de modération alors que l'âge suffirait ; plusieurs routes d'écriture sans
+  limitation de débit ; et une décision de modération qui exige la capacité `administrer` alors que la
+  file s'ouvre avec `moderer` (un modérateur voit la file et prend un 403 sur chaque décision).
 - **L'empreinte des photos reste exacte**, pas perceptuelle — l'écart est assumé depuis le § 21.
