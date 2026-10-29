@@ -748,22 +748,45 @@ et celle de `rencontre.test.mjs` **échoue** quand on resserre le droit à `admi
 
 ### Le dernier défaut du § 22 : le débit sur toutes les écritures
 
-Le site comptait **56 routes d'écriture** et cinq seulement passaient par un compteur. On pouvait
-donc marteler `/api/connexion` (mot de passe), `/api/verification` (un code à six chiffres — un
-million de possibilités, qu'une boucle épuise), `/api/tel` (un SMS **payé à l'unité**), les messages
-et les signalements. Les plafonds métier ne protègent pas de ça : un quota se lit **après**, en base,
-à chaque essai.
+Le site comptait **56 routes d'écriture** et cinq seulement passaient par un compteur. Ce qui
+manquait vraiment a été **vérifié route par route sur `HEAD`**, et non supposé — la première version
+de ce paragraphe affirmait plus qu'elle ne savait, et deux de ses phrases étaient fausses :
 
-La correction ne pouvait pas être cinquante rustines — la cinquante-sixième route aurait été oubliée.
+- `POST /api/verification/valider` n'avait **rien**. Un code à six chiffres, un million de
+  possibilités, aucune limite : une boucle l'épuise. C'était le trou le plus cher du lot.
+- `POST /api/inscription`, `POST /api/tel` et `POST /api/signalements` n'avaient **rien** non plus,
+  et les ~51 autres écritures du site pas davantage.
+- `POST /api/connexion` **avait déjà** le verrou de `socle/tentatives.mjs` — 15 minutes, 5 essais par
+  compte et 20 par adresse. Ce paragraphe a d'abord écrit le contraire : c'était faux.
+- `POST /api/verification` (la **création** d'un code) avait le plafond de 5 codes par heure, qui
+  protège l'argent du SMS. C'est `valider` qui était nu, pas la création.
+
+La correction ne pouvait être cinquante rustines — la cinquante-septième route aurait été oubliée.
 Trois seaux, posés **à un seul endroit**, à l'entrée du routeur : `auth` 20/min (ce qui garde un
 secret ou coûte de l'argent), `admin` 120/min, `ecriture` 60/min, tous réglables par
-l'environnement. Une route ajoutée demain hérite du sien sans que personne y pense.
+l'environnement. Une route ajoutée demain hérite du sien sans que personne y pense. Sur
+`/api/connexion` les deux protections s'appliquent : le seau coupe la rafale, le verrou tranche le
+fond, et c'est le plus long des deux qui gagne.
+
+**Le défaut que cette porte a révélé était plus grave que celui qu'elle corrigeait.** Le hub ouvre
+chaque projet sous `/p/<slug>` en parlant à `127.0.0.1` : tous les visiteurs arrivaient avec la
+**même** adresse. Un limiteur qui compte par elle ne compte pas « un visiteur » mais « le site » —
+le 61ᵉ message d'**une** personne fermait les écritures de **tout le monde**, et 20 essais de
+connexion d'un attaquant fermaient les connexions pour tous. Le commentaire de `ipDuClient` le disait
+déjà ; l'implémentation prenait quand même la branche dangereuse. Trois corrections : `cleDeDebit`
+refuse une adresse de bouclage comme clé (la session prend le relais, à défaut la signature du
+navigateur — le pire devient « une limite plus faible », jamais « un seau commun ») ; le proxy du hub
+**écrase** `x-forwarded-for` au lieu de recopier celle du client, sinon il suffit d'inventer l'en-tête
+pour changer de seau à chaque requête ; et `KAZENDRA_PROXY_DE_CONFIANCE=1` est déclaré au registre,
+pour que le serveur lise cette adresse.
 
 Éprouvé là où le casser ne coûte rien : un serveur jetable à seuil de 3. La 4ᵉ connexion tombe en
 429 avec `Retry-After` et un JSON lisible, les seaux ne se ferment pas entre eux, et
-**`/api/signalements` — qui n'avait aucun compteur — est désormais borné**. Sur `HEAD`, aucune de ces
-routes ne portait le moindre `franchir` : la couverture est nouvelle, pas déplacée.
-`epreuve-http.sh` passe de 485 à **489** contrôles.
+`/api/signalements` — qui n'avait aucun compteur — est désormais borné. `tests/epreuve-debit-proxy.sh`
+tient la règle du seau **dans les deux sens** : deux adresses réelles donnent deux seaux, et sans
+proxy déclaré deux navigateurs distincts derrière le bouclage ne se bloquent pas l'un l'autre. La
+mesure d'avant est gardée : les deux visiteurs distincts tombaient tous deux en `429` — le seau
+commun, donc le site entier fermé par un seul. `epreuve-http.sh` passe de 485 à **489** contrôles.
 
 ### Ce qui reste ouvert, et pourquoi
 
