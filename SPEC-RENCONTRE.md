@@ -746,11 +746,29 @@ et verrouillait le défaut au lieu de le signaler. Une épreuve écrite d'après
 Une épreuve de plus dans chaque fichier (`rencontre.test.mjs` **47**, `epreuve-rencontre.mjs` **49**),
 et celle de `rencontre.test.mjs` **échoue** quand on resserre le droit à `administrer` — vérifié.
 
+### Le dernier défaut du § 22 : le débit sur toutes les écritures
+
+Le site comptait **56 routes d'écriture** et cinq seulement passaient par un compteur. On pouvait
+donc marteler `/api/connexion` (mot de passe), `/api/verification` (un code à six chiffres — un
+million de possibilités, qu'une boucle épuise), `/api/tel` (un SMS **payé à l'unité**), les messages
+et les signalements. Les plafonds métier ne protègent pas de ça : un quota se lit **après**, en base,
+à chaque essai.
+
+La correction ne pouvait pas être cinquante rustines — la cinquante-sixième route aurait été oubliée.
+Trois seaux, posés **à un seul endroit**, à l'entrée du routeur : `auth` 20/min (ce qui garde un
+secret ou coûte de l'argent), `admin` 120/min, `ecriture` 60/min, tous réglables par
+l'environnement. Une route ajoutée demain hérite du sien sans que personne y pense.
+
+Éprouvé là où le casser ne coûte rien : un serveur jetable à seuil de 3. La 4ᵉ connexion tombe en
+429 avec `Retry-After` et un JSON lisible, les seaux ne se ferment pas entre eux, et
+**`/api/signalements` — qui n'avait aucun compteur — est désormais borné**. Sur `HEAD`, aucune de ces
+routes ne portait le moindre `franchir` : la couverture est nouvelle, pas déplacée.
+`epreuve-http.sh` passe de 485 à **489** contrôles.
+
 ### Ce qui reste ouvert, et pourquoi
 
 - **Défauts mineurs connus, non corrigés** : index manquant sur `messages(auteur_id, cree_le)` sur le
   chemin d'envoi ; corps JSON `null` → 500 au lieu de 400 ; `enregistrerProfil` écrit avant de valider
-  (pas de transaction) ; `rencontre_vues` et `rencontre_passages` jamais purgés ; date de naissance
-  complète dans la file de modération alors que l'âge suffirait ; et plusieurs routes d'écriture
-  sans limitation de débit.
+  (pas de transaction) ; `rencontre_vues` et `rencontre_passages` jamais purgés ; et la date de
+  naissance complète dans la file de modération alors que l'âge suffirait.
 - **L'empreinte des photos reste exacte**, pas perceptuelle — l'écart est assumé depuis le § 21.
