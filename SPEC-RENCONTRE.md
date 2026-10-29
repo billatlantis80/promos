@@ -790,8 +790,24 @@ commun, donc le site entier fermé par un seul. `epreuve-http.sh` passe de 485 �
 
 ### Ce qui reste ouvert, et pourquoi
 
-- **Défauts mineurs connus, non corrigés** : index manquant sur `messages(auteur_id, cree_le)` sur le
-  chemin d'envoi ; corps JSON `null` → 500 au lieu de 400 ; `enregistrerProfil` écrit avant de valider
-  (pas de transaction) ; `rencontre_vues` et `rencontre_passages` jamais purgés ; et la date de
-  naissance complète dans la file de modération alors que l'âge suffirait.
+- **Les cinq défauts mineurs du § 22 sont corrigés** — chacun avec son épreuve, et chacune ÉCHOUE sur
+  le code d'avant :
+  - **index manquant sur `messages(auteur_id, cree_le)`** — le quota de trente messages par jour
+    balayait la table `messages` ENTIÈRE à chaque envoi, c'est-à-dire les messages des huit portes.
+    `ix_messages_auteur` est posé ; l'épreuve lit le plan de la requête et refuse un `SCAN messages`.
+  - **corps JSON `null` → 500** — `null` est un JSON valide, donc le lecteur l'acceptait comme corps,
+    puis `corps.email` levait un TypeError qui sortait en 500 : une panne annoncée pour une requête
+    mal formée. Un corps qui n'est pas un objet est refusé en 400. La section ㉔ de `epreuve-http.sh`
+    vérifie quatre formes (`null`, `42`, `"texte"`, `true`) plus le corps vide.
+  - **`enregistrerProfil` écrivait avant de valider** — la date de naissance et le code postal
+    partaient en base AVANT la vérification du pseudo : un pseudo déjà pris renvoyait un refus et la
+    date restait enregistrée. Plus aucune écriture avant la fin : tout est validé, puis écrit dans
+    une seule transaction (`BEGIN` / `COMMIT` / `ROLLBACK`), journal compris.
+  - **`rencontre_vues` et `rencontre_passages` jamais purgés** — les vues ne sont lues que le jour
+    même, les passages non définitifs que le jour du refus. `purgerVuesEtPassages` les oublie (vues :
+    sept jours ; passages non définitifs : trente jours) au démarrage puis toutes les six heures. Le
+    TROISIÈME refus reste : c'est une décision, pas un compteur.
+  - **date de naissance complète dans la file de modération** — `profilsEnAttente` la retirait de la
+    ligne rendue : l'âge suffit à relire un profil, et une date de naissance n'a rien à faire dans le
+    navigateur d'un modérateur. L'écran, lui, n'affichait déjà que l'âge : rien ne change à l'écran.
 - **L'empreinte des photos reste exacte**, pas perceptuelle — l'écart est assumé depuis le § 21.
