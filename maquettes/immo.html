@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Kazendra — maquette /immo</title>
+<style>
+  :root{--navy:#0D3B5B;--deep:#0A2F49;--lite:#13496D;--orange:#EB912D;
+        --ink:#13222E;--ink2:#4A5C6B;--muted:#5E7180;--line:#E3E8ED;--bg2:#F5F7F9}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Liberation Sans','DejaVu Sans',Arial,sans-serif;color:var(--ink);background:#fff;
+       width:1440px;-webkit-font-smoothing:antialiased}
+  .wrap{width:1200px;margin:0 auto}
+  a{color:inherit;text-decoration:none}
+  .ico{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+  .cap{background:#E7EBEF;font-size:11.5px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;
+       color:#5E7180;padding:9px 0 9px 120px}
+
+  header{background:var(--deep);color:#fff}
+  .bar{display:flex;align-items:center;gap:24px;height:70px}
+  .brand{display:flex;align-items:center;gap:10px}
+  .brand img{width:36px;height:38px;border-radius:9px}
+  .brand .nm{font-size:20px;font-weight:700;letter-spacing:-.3px}
+  nav{display:flex;gap:18px;font-size:13.5px;color:#CFE0EB;margin-left:8px}
+  nav a.on{color:#fff;font-weight:700}
+  .right{margin-left:auto;display:flex;align-items:center;gap:12px}
+  .av{width:32px;height:32px;border-radius:50%;background:var(--orange);color:#2A1602;font-size:12.5px;
+      font-weight:700;display:flex;align-items:center;justify-content:center}
+
+  .doorhead{border-bottom:1px solid var(--line);padding:22px 0 18px}
+  .doorhead .top{display:flex;align-items:flex-end;gap:16px}
+  h1{font-size:30px;letter-spacing:-.8px}
+  .count{font-size:13.5px;color:var(--ink2);margin-top:5px}
+  .count b{color:var(--ink)}
+  .tools{margin-left:auto;display:flex;align-items:center;gap:10px}
+  .sel{border:1px solid var(--line);border-radius:9px;padding:9px 13px;font-size:13px;color:var(--ink2);
+       display:flex;align-items:center;gap:8px;background:#fff}
+  .btn-o{background:var(--orange);color:#2A1602;font-weight:700;font-size:13.5px;padding:11px 17px;
+         border-radius:9px;display:inline-flex;align-items:center;gap:8px}
+  /* deux marchés, séparés dès le premier écran */
+  .switch{display:flex;gap:0;margin-top:16px;border:1px solid var(--line);border-radius:11px;
+          overflow:hidden;width:fit-content}
+  .switch div{padding:11px 26px;font-size:14px;font-weight:700;color:var(--ink2);background:#fff}
+  .switch div.on{background:var(--navy);color:#fff}
+  .switch div+div{border-left:1px solid var(--line)}
+  .switch div span{font-weight:400;color:var(--muted);font-size:12.5px;margin-left:6px}
+  .switch div.on span{color:#B9D2E2}
+
+  .layout{display:grid;grid-template-columns:258px 1fr;gap:28px;padding:22px 0 40px;align-items:start}
+  .panel{border:1px solid var(--line);border-radius:13px;padding:16px}
+  .panel+.panel{margin-top:12px}
+  .panel h3{font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:#5E7180;margin-bottom:11px}
+  .cats{display:flex;flex-direction:column;gap:2px}
+  .cat{display:flex;justify-content:space-between;font-size:13.5px;padding:7px 9px;border-radius:8px;color:var(--ink2)}
+  .cat.on{background:#EAF1F5;color:var(--navy);font-weight:700}
+  .cat span{color:#9AAAB6;font-size:12px}
+  .chips{display:flex;gap:7px;flex-wrap:wrap}
+  .chip{font-size:12.5px;padding:6px 11px;border-radius:999px;border:1px solid var(--line);color:var(--ink2);white-space:nowrap}
+  .chip.on{background:var(--navy);border-color:var(--navy);color:#fff;font-weight:700}
+  .row{display:flex;gap:8px;margin-top:9px}
+  .field{flex:1;border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:13px;color:#7E93A2}
+  .clear{font-size:12.5px;color:var(--ink2);margin-top:13px;text-align:center}
+
+  .reshead{display:flex;align-items:center;margin-bottom:13px}
+  .reshead .n{font-size:13px;color:var(--ink2)}
+  .reshead .n b{color:var(--ink)}
+  .reshead .sort{margin-left:auto;font-size:12.5px;color:var(--ink2);border:1px solid var(--line);
+                 border-radius:8px;padding:7px 11px}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .card{border:1px solid var(--line);border-radius:13px;overflow:hidden;background:#fff}
+  .ph{height:158px;position:relative;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.42)}
+  .ph .ico{width:44px;height:44px;stroke-width:1.1}
+  .ph .tag{position:absolute;left:9px;top:9px;background:#fff;color:var(--navy);font-size:10.5px;font-weight:700;
+           padding:4px 8px;border-radius:6px}
+  .ph .heart{position:absolute;right:9px;top:9px;width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.92);
+             color:var(--navy);display:flex;align-items:center;justify-content:center}
+  .ph .heart .ico{width:14px;height:14px;stroke-width:2}
+  .p1{background:linear-gradient(135deg,#123F5F,#2E8399)}
+  .p2{background:linear-gradient(135deg,#264653,#3E8E7E)}
+  .p3{background:linear-gradient(135deg,#5B3A1E,#EB912D)}
+  .p4{background:linear-gradient(135deg,#2C3E50,#5D7A8C)}
+  .p5{background:linear-gradient(135deg,#4A3B6B,#8E7CC3)}
+  .p6{background:linear-gradient(135deg,#1F4E4A,#57A39B)}
+  .cb{padding:12px 13px 13px}
+  .price{font-size:19px;font-weight:700;color:var(--navy);letter-spacing:-.4px}
+  .price small{font-size:11.5px;font-weight:400;color:var(--muted);letter-spacing:0}
+  .tt{font-size:13.5px;font-weight:700;line-height:1.3;margin-top:5px;height:35px;overflow:hidden}
+  .facts{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--ink2);margin-top:8px}
+  .facts .sep{color:#C3D0DA}
+  .meta{display:flex;align-items:center;gap:5px;font-size:11.5px;color:var(--muted);margin-top:6px}
+
+  /* latte de distance */
+  .km{margin-top:11px}
+  .kmhead{display:flex;align-items:center;gap:7px}
+  .kmin{width:52px;border:1px solid var(--line);border-radius:7px;padding:6px 8px;font-size:13px;
+        font-weight:700;color:var(--navy);text-align:center;font-family:inherit}
+  .kmhead span{font-size:12px;color:var(--ink2)}
+  .track{position:relative;height:6px;border-radius:99px;background:#E6EBEF;margin-top:13px}
+  .track .fill{position:absolute;left:0;top:0;bottom:0;width:20%;border-radius:99px;background:var(--navy)}
+  .track .knob{position:absolute;left:20%;top:50%;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;
+               background:#fff;border:2.5px solid var(--navy);box-shadow:0 1px 3px rgba(13,59,91,.25)}
+  .ticks{display:flex;justify-content:space-between;font-size:10.5px;color:var(--muted);margin-top:7px}
+  .lab{font-size:11.5px;color:#5E7180;margin:12px 0 7px;font-weight:700}
+  .lab:first-child{margin-top:0}
+
+  /* pastilles PEB (cartes) */
+  .peb{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;padding:3px 7px;
+       border-radius:6px;color:#fff}
+  .peb.a{background:#21A038}.peb.b{background:#8CBF35;color:#243300}.peb.c{background:#E4C528;color:#3A3200}
+  .peb.d{background:#F0A02A;color:#3A2600}.peb.e{background:#E4632A}.peb.f{background:#D2342B}
+  .peb.g{background:#A81B22}
+  .peb.n{background:#EEF2F5;color:#5E7180}
+
+  /* filtre PEB : neuf classes, multi-choix */
+  .p0{--c:#007A3D}.p1{--c:#00933F}.p2{--c:#21A038}.p3{--c:#8CBF35}.p4{--c:#D8B71F}
+  .p5{--c:#F0A02A}.p6{--c:#E4632A}.p7{--c:#D2342B}.p8{--c:#A81B22}
+  .pebgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+  .pfl{height:32px;border-radius:7px;display:flex;align-items:center;justify-content:center;
+       font-size:11.5px;font-weight:800;background:#fff;color:#3B4C59;border:1px solid var(--line);
+       border-bottom:3px solid var(--c)}
+  .pfl.on{background:var(--c);color:#fff;border-color:var(--c)}
+  .pfl.on.p3,.pfl.on.p4,.pfl.on.p5{color:#33290A}
+
+  .crumb{font-size:12.5px;color:var(--muted);padding:18px 0 0}
+  .crumb b{color:var(--ink2);font-weight:400}
+  .detail{display:grid;grid-template-columns:1fr 372px;gap:32px;padding:16px 0 44px;align-items:start}
+  .main{height:340px;border-radius:14px;background:linear-gradient(135deg,#123F5F,#2E8399);
+        display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.4);position:relative}
+  .main .ico{width:82px;height:82px;stroke-width:.9}
+  .main .n{position:absolute;right:12px;bottom:12px;background:rgba(9,29,43,.72);color:#fff;font-size:11.5px;
+           padding:4px 9px;border-radius:6px}
+  .thumbs{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:9px}
+  .th{height:66px;border-radius:9px;background:#DCE6EC;display:flex;align-items:center;justify-content:center;color:#9FB3C0}
+  .th.on{outline:2px solid var(--orange);outline-offset:-2px}
+  .h2{font-size:23px;letter-spacing:-.5px;margin-top:20px;line-height:1.2}
+  .badges{display:flex;gap:8px;margin-top:11px;align-items:center}
+  .bd{font-size:11.5px;font-weight:700;padding:5px 10px;border-radius:7px;background:#EAF1F5;color:var(--navy)}
+  .bd.g{background:#E4F3EF;color:#0E7A66}
+  .descbox{margin-top:18px;border:1px solid var(--line);border-radius:12px;padding:16px 18px;
+           max-width:700px;background:#fff}
+  .dbh{display:flex;align-items:baseline;gap:10px;font-size:12px;text-transform:uppercase;
+       letter-spacing:.6px;color:#5E7180;font-weight:800;margin-bottom:10px}
+  .dbh span{margin-left:auto;text-transform:none;letter-spacing:0;font-weight:400;font-size:11px;
+            color:var(--muted)}
+  .desctxt{font-size:13.5px;line-height:1.7;color:var(--ink2)}
+
+  .variant{margin-top:14px;border:1px dashed #C9D6DF;border-radius:11px;padding:12px 14px;max-width:700px;
+           background:#FAFCFD}
+  .variant .vt{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:#5E7180}
+  .variant .vg{display:flex;gap:30px;margin-top:9px}
+  .variant .vg span{display:block;font-size:10.5px;color:var(--muted);margin-bottom:2px}
+  .variant .vg div{font-size:12.5px;font-weight:700;color:var(--ink)}
+
+  /* L'image de marque remplace l'initiale : un logo, ou une photo de l'agence (décision 37).
+     Plus de monogramme fabriqué par nous — une initiale dans un carré passerait pour la marque
+     de l'agence alors qu'elle est de nous. */
+  .logo{width:46px;height:46px;border-radius:11px;background:var(--navy);flex:none;overflow:hidden}
+  .logo svg,.logo img{width:100%;height:100%;display:block}
+  .legal{margin-top:11px;font-size:11px;color:var(--ink2);line-height:1.55;
+         background:#F5F7F9;border-radius:9px;padding:9px 11px}
+  .legal b{color:var(--ink)}
+  .legal u{text-decoration-color:#C3D0DA}
+  .specs{margin-top:20px;border-top:1px solid var(--line);padding-top:14px;display:grid;
+         grid-template-columns:1fr 1fr 1fr;gap:11px 24px;font-size:13.5px;max-width:700px}
+  .specs div span{color:var(--muted);display:block;font-size:11.5px;margin-bottom:2px}
+
+  /* bloc PEB du détail — tuile + règle graduée */
+  .pebblk{margin-top:18px;border:1px solid var(--line);border-radius:12px;padding:18px;max-width:700px}
+  .pbh{display:flex;align-items:center;gap:8px;font-size:12px;text-transform:uppercase;letter-spacing:.6px;
+       color:#5E7180;margin-bottom:14px}
+  .pbrow{display:flex;align-items:center;gap:18px}
+  .pbtile{width:74px;height:74px;border-radius:13px;background:#E4C528;color:#3A3200;flex:none;
+          display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .pbtile .lb{font-size:8px;text-transform:uppercase;letter-spacing:.7px;font-weight:800;opacity:.75}
+  .pbtile .lt{font-size:33px;font-weight:800;line-height:1;letter-spacing:-1px;margin-top:1px}
+  .pbfacts{display:flex;gap:30px}
+  .pbfacts div span{display:block;font-size:11.5px;color:var(--muted);margin-bottom:3px}
+  .pbfacts div b{font-size:15px;color:var(--navy)}
+  .ruler{position:relative;margin-top:24px}
+  .gauge{height:11px;border-radius:99px;
+         background:linear-gradient(90deg,
+           #007A3D 5.56%,#00933F 16.67%,#21A038 27.78%,#8CBF35 38.89%,#E4C528 50%,
+           #F0A02A 61.11%,#E4632A 72.22%,#D2342B 83.33%,#A81B22 94.44%)}
+  .ruler .cursor{position:absolute;top:-10px;left:50%;margin-left:-7px;width:0;height:0;
+                 border-left:7px solid transparent;border-right:7px solid transparent;
+                 border-top:9px solid var(--navy)}
+  .rlab{display:grid;grid-template-columns:repeat(9,1fr);font-size:10.5px;color:var(--muted);
+        margin-top:7px;text-align:center}
+  .rlab b{color:var(--navy);font-size:12.5px}
+  .pebblk .fin{margin-top:13px;font-size:11.5px;color:var(--muted);line-height:1.5}
+  .renov{margin-top:10px;font-size:11.5px;font-weight:700;color:#8A5510;background:#FDF7EE;
+         border:1px solid #F3D6AE;border-radius:8px;padding:8px 10px}
+
+  .loc{margin-top:16px;display:flex;align-items:center;gap:13px;border:1px solid var(--line);
+       border-radius:11px;padding:12px 14px;max-width:700px;background:#fff}
+  .loc-ico{width:36px;height:36px;flex:none;border-radius:9px;background:#EEF3F7;display:flex;
+           align-items:center;justify-content:center;color:var(--navy)}
+  .loc-txt{flex:1;min-width:0}
+  .loc-ville{font-size:14px;font-weight:800;color:var(--navy);line-height:1.2}
+  .loc-cp{font-size:12px;color:var(--muted);margin-top:2px}
+  .loc-btn{flex:none;display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:800;
+           color:#fff;background:var(--navy);padding:9px 14px;border-radius:8px;text-decoration:none}
+  .loc-note{margin-top:8px;font-size:11.5px;color:var(--muted);max-width:700px}
+
+  .side{display:flex;flex-direction:column;gap:14px}
+  .box{border:1px solid var(--line);border-radius:14px;padding:18px}
+  .box .big{font-size:28px;font-weight:700;letter-spacing:-.8px;color:var(--navy)}
+  .box .big small{font-size:13px;font-weight:400;color:var(--muted);letter-spacing:0}
+  .box .charges{font-size:12.5px;color:var(--ink2);margin-top:6px}
+  .cta{margin-top:14px;background:var(--orange);color:#2A1602;font-weight:700;font-size:14.5px;
+       text-align:center;padding:13px;border-radius:10px;display:flex;align-items:center;justify-content:center;gap:9px}
+  .cta2{margin-top:9px;border:1px solid var(--line);color:var(--navy);font-weight:700;font-size:13.5px;
+        text-align:center;padding:11px;border-radius:10px;display:block}
+  /* partage : le MÊME bouton rond que /promo — flèche de partage, thème Kazendra */
+  .share{display:flex;align-items:center;gap:10px;margin-top:11px;padding-top:11px;border-top:1px solid var(--line)}
+  .part{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;padding:0;
+        background:transparent;border:1px solid var(--line);border-radius:50%;color:var(--ink2);flex:none}
+  .part svg{width:19px;height:19px;fill:currentColor;display:block}
+  .plabel{font-size:12px;color:var(--ink2)}
+  .warn{margin-top:12px;background:#FDECEC;border:1px solid #F3C4C4;border-radius:10px;padding:11px 12px;
+        font-size:11.5px;line-height:1.5;color:#8C2B2B}
+  .warn b{color:#6E1F1F}
+  .seller{display:flex;gap:12px;align-items:center}
+  .seller .pc{width:42px;height:42px;border-radius:50%;background:#EAF1F5;color:var(--navy);font-weight:700;
+              display:flex;align-items:center;justify-content:center;font-size:14px}
+  .seller .nm{font-size:14px;font-weight:700}
+  .seller .sub{font-size:11.5px;color:var(--muted);margin-top:2px}
+  .verified{margin-top:12px;font-size:11.5px;color:#0E7A66;font-weight:700;display:flex;align-items:center;gap:6px}
+  .note{margin-top:13px;background:var(--bg2);border-radius:10px;padding:11px 12px;font-size:11.5px;
+        line-height:1.5;color:var(--ink2)}
+  .note b{color:var(--ink)}
+  .report{margin-top:18px;font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:7px}
+</style>
+</head>
+<body>
+
+<!-- ══════════════ ÉCRAN 1 — LISTE ══════════════ -->
+<div class="cap">Écran 1 — liste immobilier, vente et location séparées</div>
+<header>
+  <div class="wrap bar">
+    <div class="brand"><img src="kazendra-icone-256.png" alt=""><span class="nm">Kazendra</span></div>
+    <nav><a href="#">Accueil</a><a href="#">Annonces</a><a class="on" href="#">Immobilier</a><a href="#">Événements</a><a href="#">Emploi</a><a href="#">Artisans</a></nav>
+    <div class="right"><div class="av">B</div></div>
+  </div>
+</header>
+
+<div class="wrap doorhead">
+  <div class="top">
+    <div>
+      <h1>Immobilier</h1>
+      <div class="count"><b>2 431</b> biens en Belgique · dont <b>1 508</b> à la location</div>
+    </div>
+    <div class="tools">
+      <span class="sel">🇧🇪 Belgique</span>
+      <span class="btn-o">Publier un bien</span>
+    </div>
+  </div>
+  <div class="switch">
+    <div class="on">Vente <span>923</span></div>
+    <div>Location <span>1 508</span></div>
+  </div>
+</div>
+
+<div class="wrap layout">
+  <aside>
+    <div class="panel">
+      <h3>Type de bien</h3>
+      <div class="cats">
+        <a class="cat on">Tout <span>923</span></a>
+        <a class="cat">Maison <span>402</span></a>
+        <a class="cat">Appartement <span>268</span></a>
+        <a class="cat">Studio <span>93</span></a>
+        <a class="cat">Chambre, kot <span>31</span></a>
+        <a class="cat">Terrain <span>41</span></a>
+        <a class="cat">Garage, parking <span>27</span></a>
+        <a class="cat">Immeuble de rapport <span>19</span></a>
+        <a class="cat">Bureau <span>14</span></a>
+        <a class="cat">Commerce, horeca <span>18</span></a>
+        <a class="cat">Industriel, entrepôt <span>10</span></a>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>Localisation</h3>
+      <div class="row"><div class="field">5000 · Namur</div></div>
+      <div class="km">
+        <div class="kmhead"><input class="kmin" value="10"><span>km maximum</span></div>
+        <div class="track"><div class="fill"></div><div class="knob"></div></div>
+        <div class="ticks"><span>0</span><span>10</span><span>20</span><span>30</span><span>40</span><span>50</span></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>Budget</h3>
+      <div class="row"><div class="field">de 150 000 €</div><div class="field">à 400 000 €</div></div>
+    </div>
+
+    <div class="panel">
+      <h3>Le bien</h3>
+      <div class="lab">Chambres, à partir de</div>
+      <div class="chips">
+        <span class="chip">1+</span><span class="chip">2+</span><span class="chip on">3+</span><span class="chip">4+</span><span class="chip">5+</span>
+      </div>
+      <div class="lab">Surface habitable minimum</div>
+      <div class="row"><div class="field">120 m²</div></div>
+      <div class="lab">À l'intérieur</div>
+      <div class="chips">
+        <span class="chip on">Jardin</span><span class="chip on">Terrasse, balcon</span><span class="chip">Garage</span>
+        <span class="chip">Ascenseur</span><span class="chip">Meublé</span><span class="chip">À rénover</span>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>Location</h3>
+      <div class="lab" style="margin-top:0">Disponible à partir du</div>
+      <div class="row"><div class="field">01/12/2026</div></div>
+      <div class="chips" style="margin-top:8px"><span class="chip">Immédiatement</span></div>
+      <div class="lab">Animaux acceptés</div>
+      <div class="chips"><span class="chip on">Oui</span><span class="chip">Peu importe</span></div>
+      <div class="clear" style="text-align:left;margin-top:9px;font-size:11px;line-height:1.45">Ces deux critères n'apparaissent qu'en location.</div>
+    </div>
+
+    <div class="panel">
+      <h3>Performance énergétique</h3>
+      <div class="pebgrid">
+        <span class="pfl p0">A++</span><span class="pfl p1">A+</span><span class="pfl p2">A</span>
+        <span class="pfl on p3">B</span><span class="pfl on p4">C</span>
+        <span class="pfl p5">D</span><span class="pfl p6">E</span><span class="pfl p7">F</span><span class="pfl p8">G</span>
+      </div>
+      <div class="clear" style="text-align:left;margin-top:9px;font-size:11.5px">Plusieurs classes à la fois. Une case sans fond = classe écartée.</div>
+      <div class="clear" style="text-align:left;margin-top:6px;font-size:11.5px;color:var(--navy);font-weight:700">C et mieux →</div>
+    </div>
+    <div class="clear">Effacer tous les filtres</div>
+  </aside>
+
+  <section>
+    <div class="reshead">
+      <div class="n"><b>318</b> biens à vendre dans un rayon de 10 km autour de 5000</div>
+      <div class="sort">Tri : plus récents ▾</div>
+    </div>
+
+    <div class="grid">
+      <article class="card">
+        <div class="ph p1"><span class="tag">Vente</span><span class="heart"><svg class="ico" viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-9.2A3.9 3.9 0 0 1 12 8a3.9 3.9 0 0 1 7 2.8c0 4.8-7 9.2-7 9.2z"/></svg></span>
+          <svg class="ico" viewBox="0 0 24 24"><path d="M3 11 12 4l9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg></div>
+        <div class="cb">
+          <div class="price">329 000 € <small>· frais du notaire non compris</small></div>
+          <div class="tt">Maison 3 façades, 4 chambres, jardin 4 ares</div>
+          <div class="facts"><span>142 m²</span><span class="sep">·</span><span>4 ch.</span><span class="sep">·</span><span>2 sdb</span></div>
+          <div class="meta" style="justify-content:space-between">
+            <span class="meta" style="margin:0"><svg class="ico" viewBox="0 0 24 24" style="width:12px;height:12px"><path d="M12 21s7-6.3 7-11a7 7 0 1 0-14 0c0 4.7 7 11 7 11z"/></svg> Namur · à 3 km</span>
+            <span class="peb c">PEB C · 214</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="ph p2"><span class="tag">Vente</span><span class="heart"><svg class="ico" viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-9.2A3.9 3.9 0 0 1 12 8a3.9 3.9 0 0 1 7 2.8c0 4.8-7 9.2-7 9.2z"/></svg></span>
+          <svg class="ico" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="1"/><path d="M9 7h1M14 7h1M9 12h1M14 12h1M9 17h1M14 17h1"/></svg></div>
+        <div class="cb">
+          <div class="price">189 000 € <small>· frais du notaire non compris</small></div>
+          <div class="tt">Appartement 2 chambres, 3ᵉ étage avec ascenseur</div>
+          <div class="facts"><span>86 m²</span><span class="sep">·</span><span>2 ch.</span><span class="sep">·</span><span>1 sdb</span></div>
+          <div class="meta" style="justify-content:space-between">
+            <span class="meta" style="margin:0"><svg class="ico" viewBox="0 0 24 24" style="width:12px;height:12px"><path d="M12 21s7-6.3 7-11a7 7 0 1 0-14 0c0 4.7 7 11 7 11z"/></svg> Namur · à 1 km</span>
+            <span class="peb b">PEB B · 152</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="ph p3"><span class="tag">Vente</span><span class="heart"><svg class="ico" viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-9.2A3.9 3.9 0 0 1 12 8a3.9 3.9 0 0 1 7 2.8c0 4.8-7 9.2-7 9.2z"/></svg></span>
+          <svg class="ico" viewBox="0 0 24 24"><path d="M3 11 12 4l9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg></div>
+        <div class="cb">
+          <div class="price">245 000 € <small>· frais du notaire non compris</small></div>
+          <div class="tt">Maison mitoyenne à rénover, 3 chambres, cave</div>
+          <div class="facts"><span>118 m²</span><span class="sep">·</span><span>3 ch.</span><span class="sep">·</span><span>1 sdb</span></div>
+          <div class="meta" style="justify-content:space-between">
+            <span class="meta" style="margin:0"><svg class="ico" viewBox="0 0 24 24" style="width:12px;height:12px"><path d="M12 21s7-6.3 7-11a7 7 0 1 0-14 0c0 4.7 7 11 7 11z"/></svg> Jambes · à 5 km</span>
+            <span class="peb e">PEB E · 389</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="ph p4"><span class="tag">Vente</span><span class="heart"><svg class="ico" viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-9.2A3.9 3.9 0 0 1 12 8a3.9 3.9 0 0 1 7 2.8c0 4.8-7 9.2-7 9.2z"/></svg></span>
+          <svg class="ico" viewBox="0 0 24 24"><path d="M12 21s7-6.3 7-11a7 7 0 1 0-14 0c0 4.7 7 11 7 11z"/></svg></div>
+        <div class="cb">
+          <div class="price">95 000 €</div>
+          <div class="tt">Terrain à bâtir, 6 ares, viabilisé</div>
+          <div class="facts"><span>600 m²</span><span class="sep">·</span><span>à bâtir</span></div>
+          <div class="meta" style="justify-content:space-between">
+            <span class="meta" style="margin:0"><svg class="ico" viewBox="0 0 24 24" style="width:12px;height:12px"><path d="M12 21s7-6.3 7-11a7 7 0 1 0-14 0c0 4.7 7 11 7 11z"/></svg> Profondeville · à 12 km</span>
+            <span class="peb n">Pas de PEB</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="ph p5"><span class="tag">Vente</span><span class="heart"><svg class="ico" viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-9.2A3.9 3.9 0 0 1 12 8a3.9 3.9 0 0 1 7 2.8c0 4.8-7 9.2-7 9.2z"/></svg></span>
+          <svg class="ico" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="1"/><path d="M9 7h1M14 7h1M9 12h1M14 12h1M9 17h1M14 17h1"/></svg></div>
+        <div class="cb">
+          <div class="price">412 000 € <small>· frais du notaire non compris</small></div>
+          <div class="tt">Duplex de standing, 2 terrasses, garage double</div>
+          <div class="facts"><span>168 m²</span><span class="sep">·</span><span>3 ch.</span><span class="sep">·</span><span>2 sdb</span></div>
+          <div class="meta" style="justify-content:space-between">
+            <span class="meta" style="margin:0"><svg class="ico" viewBox="0 0 24 24" style="width:12px;height:12px"><path d="M12 21s7-6.3 7-11a7 7 0 1 0-14 0c0 4.7 7 11 7 11z"/></svg> Namur · à 2 km</span>
+            <span class="peb a">PEB A · 89</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="ph p6"><span class="tag">Vente</span><span class="heart"><svg class="ico" viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-9.2A3.9 3.9 0 0 1 12 8a3.9 3.9 0 0 1 7 2.8c0 4.8-7 9.2-7 9.2z"/></svg></span>
+          <svg class="ico" viewBox="0 0 24 24"><path d="M3 11 12 4l9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg></div>
+        <div class="cb">
+          <div class="price">298 000 € <small>· frais du notaire non compris</small></div>
+          <div class="tt">Fermette rénovée, 4 chambres, grange, 12 ares</div>
+          <div class="facts"><span>196 m²</span><span class="sep">·</span><span>4 ch.</span><span class="sep">·</span><span>2 sdb</span></div>
+          <div class="meta" style="justify-content:space-between">
+            <span class="meta" style="margin:0"><svg class="ico" viewBox="0 0 24 24" style="width:12px;height:12px"><path d="M12 21s7-6.3 7-11a7 7 0 1 0-14 0c0 4.7 7 11 7 11z"/></svg> Gesves · à 14 km</span>
+            <span class="peb d">PEB D · 267</span>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+</div>
+
+<!-- ══════════════ ÉCRAN 2 — PAGE DU BIEN ══════════════ -->
+<div class="cap">Écran 2 — page du bien, avec le bloc PEB exigé par la Région</div>
+<header>
+  <div class="wrap bar">
+    <div class="brand"><img src="kazendra-icone-256.png" alt=""><span class="nm">Kazendra</span></div>
+    <nav><a href="#">Accueil</a><a href="#">Annonces</a><a class="on" href="#">Immobilier</a><a href="#">Événements</a><a href="#">Emploi</a><a href="#">Artisans</a></nav>
+    <div class="right"><div class="av">B</div></div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="crumb">Immobilier <b>›</b> Vente <b>›</b> Maison <b>›</b> Namur</div>
+
+  <div class="detail">
+    <div>
+      <div class="main">
+        <svg class="ico" viewBox="0 0 24 24"><path d="M3 11 12 4l9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>
+        <span class="n">1 / 6</span>
+      </div>
+      <div class="thumbs">
+        <div class="th on"><svg class="ico" viewBox="0 0 24 24" style="width:22px;height:22px"><path d="M3 11 12 4l9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg></div>
+        <div class="th"><svg class="ico" viewBox="0 0 24 24" style="width:22px;height:22px"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 15l5-4 4 3 3-2 6 4"/></svg></div>
+        <div class="th"><svg class="ico" viewBox="0 0 24 24" style="width:22px;height:22px"><path d="M4 20V9h16v11"/><path d="M7 9V5h10v4"/></svg></div>
+        <div class="th"><svg class="ico" viewBox="0 0 24 24" style="width:22px;height:22px"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 12h18M12 3v18"/></svg></div>
+      </div>
+
+      <h2 class="h2">Maison 3 façades, 4 chambres, jardin de 4 ares</h2>
+      <div class="badges">
+        <span class="bd">Vente</span><span class="bd">Maison 3 façades</span><span class="bd">Existant</span>
+        <span class="bd g">Libre à la vente</span>
+        <span class="peb c">PEB C · 214 kWh/m²/an</span>
+      </div>
+
+      <div class="descbox">
+        <div class="dbh">Description du bien <span>Décrite par le vendeur</span></div>
+        <p class="desctxt">Maison de 1998, quatre chambres dont une avec salle d'eau, séjour traversant de
+          34 m² exposé sud-ouest, cuisine équipée de 2021. Chauffage au gaz à condensation, double
+          vitrage partout, toiture révisée en 2019, boiler de 2022. Jardin clos de 4 ares avec terrasse
+          plein sud, garage attenant, cave de 20 m². À cinq minutes à pied des écoles et du centre de
+          Namur. Vendue libre d'occupation. Travaux à prévoir : rafraîchissement de deux chambres et
+          remplacement des volets roulants du salon (devis de 3 800 € disponible sur demande). Vente
+          motivée par un déménagement professionnel.</p>
+      </div>
+
+      <div class="specs">
+        <div><span>Surface habitable</span>142 m²</div>
+        <div><span>Chambres</span>4</div>
+        <div><span>Salles de bain</span>2</div>
+        <div><span>Surface du terrain</span>4 ares</div>
+        <div><span>Année de construction</span>1998</div>
+        <div><span>Chauffage</span>Gaz, individuel</div>
+        <div><span>État</span>Bon état</div>
+        <div><span>Jardin / terrasse</span>Oui, oui</div>
+        <div><span>Garage</span>1 voiture</div>
+      </div>
+
+      <div class="variant">
+        <div class="vt">Variante — si le bien était un appartement, trois champs de plus</div>
+        <div class="vg">
+          <div><span>Étage</span>3ᵉ, avec ascenseur</div>
+          <div><span>Charges de copropriété</span>145 € / mois</div>
+          <div><span>Syndic</span>Non publié</div>
+        </div>
+      </div>
+
+      <div class="pebblk">
+        <div class="pbh">
+          <svg class="ico" viewBox="0 0 24 24" style="width:16px;height:16px;color:#0D3B5B"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>
+          Performance énergétique
+        </div>
+        <div class="pbrow">
+          <div class="pbtile"><span class="lb">Classe</span><span class="lt">C</span></div>
+          <div class="pbfacts">
+            <div><span>Consommation</span><b>214 kWh/m²/an</b></div>
+            <div><span>Certificat n°</span><b>20190315012345</b></div>
+            <div><span>Établi le</span><b>15/03/2019</b></div>
+          </div>
+        </div>
+        <div class="ruler">
+          <div class="gauge"></div>
+          <div class="cursor"></div>
+          <div class="rlab">
+            <span>A++</span><span>A+</span><span>A</span><span>B</span><b>C</b>
+            <span>D</span><span>E</span><span>F</span><span>G</span>
+          </div>
+        </div>
+        <div class="fin">Région wallonne · le numéro de certificat est affiché comme la Région l'exige : il permet
+          de consulter le certificat au registre officiel. Kazendra n'a pas vérifié ce certificat — demandez-le au vendeur.</div>
+      </div>
+
+      <div class="loc">
+        <div class="loc-ico"><svg class="ico" viewBox="0 0 24 24" style="width:19px;height:19px"><path d="M12 21s7-6.3 7-11a7 7 0 1 0-14 0c0 4.7 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg></div>
+        <div class="loc-txt">
+          <div class="loc-ville">Namur</div>
+          <div class="loc-cp">5000 · Belgique</div>
+        </div>
+        <a class="loc-btn" href="https://www.google.com/maps/dir/?api=1&destination=5000%2C+Belgique" target="_blank" rel="noopener">Calculer la distance <span class="ext">↗</span></a>
+      </div>
+      <div class="loc-note">Le lien ne contient que le code postal : la distance part du centre de la commune, pas de l'adresse du bien. Google Maps s'ouvre chez vous, avec votre position.</div>
+
+      <div class="report"><svg class="ico" viewBox="0 0 24 24" style="width:15px;height:15px"><path d="M12 9v5M12 17h.01"/><path d="M10.3 4.2 2.6 18a2 2 0 0 0 1.7 3h15.4a2 2 0 0 0 1.7-3L13.7 4.2a2 2 0 0 0-3.4 0z"/></svg> Signaler ce bien</div>
+    </div>
+
+    <aside class="side">
+      <div class="box">
+        <div class="big">329 000 €</div>
+        <div class="charges">Frais du notaire et droits d'enregistrement non compris, à charge de l'acheteur.</div>
+        <div class="cta"><svg class="ico" viewBox="0 0 24 24" style="width:17px;height:17px"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg> Contacter par message</div>
+        <div class="cta2">Demander une visite</div>
+        <div class="share">
+          <button class="part" aria-label="Partager ce bien" title="Partager ce bien"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M14 9V5l7 7-7 7v-4.1c-5 0-8.5 1.6-11 5.1 1-5 4-10 11-11z"/></svg></button>
+          <span class="plabel">Partager</span>
+        </div>
+        <div class="warn"><b>Aucun versement avant une visite.</b> Ne payez jamais une garantie locative, des frais
+          de dossier ou une réservation avant d'avoir vu le bien et signé un bail ou un compromis chez le notaire.</div>
+      </div>
+
+      <div class="box">
+        <div class="seller">
+          <div class="logo"><svg viewBox="0 0 64 64" role="img" aria-label="Logo de Dupont Immobilier">
+            <rect width="64" height="64" fill="#0D3B5B"/>
+            <path d="M18 31 32 20l14 11" stroke="#FFFFFF" stroke-width="4" fill="none" stroke-linejoin="round"/>
+            <rect x="27" y="33" width="10" height="17" fill="#EB912D"/></svg></div>
+          <div>
+            <div class="nm">Dupont Immobilier</div>
+            <div class="sub">Agence · Namur · membre depuis mars 2026</div>
+          </div>
+        </div>
+        <div class="verified"><svg class="ico" viewBox="0 0 24 24" style="width:14px;height:14px"><path d="M20 6 9 17l-5-5"/></svg> n° BCE 0123.456.789</div>
+        <div class="verified" style="margin-top:5px"><svg class="ico" viewBox="0 0 24 24" style="width:14px;height:14px"><path d="M20 6 9 17l-5-5"/></svg> n° IPI 512.345 — vérifié le 24/10/2026</div>
+        <div class="legal"><b>Kazendra vérifie l'inscription BCE et le numéro IPI, rien de plus</b> : ni la
+          compétence, ni la probité, ni la solvabilité de l'agence. Un doute ? <u>Signaler un exercice
+          illégal de la profession</u>. Un vendeur particulier, lui, n'a pas de logo : son bloc affiche un
+          pseudo et « téléphone vérifié ».</div>
+        <div class="note" style="margin-top:10px"><b>Kazendra affiche, n'intermédie pas.</b> Nous ne sommes
+          pas agent immobilier : ni visite, ni négociation, ni bail, ni garantie.</div>
+      </div>
+
+      <div class="box">
+        <div class="seller" style="gap:10px">
+          <svg class="ico" viewBox="0 0 24 24" style="width:20px;height:20px;color:#0D3B5B"><path d="M3 11 12 4l9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>
+          <div>
+            <div class="nm" style="font-size:13px">Vous vendez ou louez aussi ?</div>
+            <div class="sub">Particulier : gratuit · professionnel : dès 49 € HTVA</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+</body>
+</html>

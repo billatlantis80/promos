@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Kazendra — maquette /artisan</title>
+<style>
+  :root{--navy:#0D3B5B;--deep:#0A2F49;--orange:#EB912D;--ink:#13222E;--ink2:#4A5C6B;
+        --muted:#5E7180;--line:#E3E8ED;--bg2:#F5F7F9;--warm:#FFFBF5;--warmline:#F0DCC0}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Liberation Sans','DejaVu Sans',Arial,sans-serif;color:var(--ink);background:#fff;
+       width:1440px;-webkit-font-smoothing:antialiased}
+  .wrap{width:1200px;margin:0 auto}
+  a{color:inherit;text-decoration:none}
+  .ico{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;
+       stroke-linejoin:round}
+  .cap{background:#E7EBEF;font-size:11.5px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;
+       color:#5E7180;padding:9px 0 9px 120px}
+  header{background:var(--deep);color:#fff}
+  .bar{display:flex;align-items:center;gap:22px;height:70px}
+  .brand{display:flex;align-items:center;gap:10px}
+  .kmark{width:36px;height:38px;border-radius:9px;background:var(--orange);color:#2A1602;font-size:20px;
+         font-weight:800;display:flex;align-items:center;justify-content:center;letter-spacing:-1px}
+  .brand .nm{font-size:20px;font-weight:700;letter-spacing:-.3px}
+  nav{display:flex;gap:12px;font-size:12.5px;color:#CFE0EB;margin-left:4px;white-space:nowrap}
+  nav a.on{color:#fff;font-weight:700}
+  .right{margin-left:auto;display:flex;align-items:center;gap:12px}
+  .right .lnk{font-size:13px;color:#CFE0EB}
+  .av{width:32px;height:32px;border-radius:50%;background:var(--orange);color:#2A1602;font-size:12.5px;
+      font-weight:700;display:flex;align-items:center;justify-content:center}
+
+  .pageh{padding:28px 0 14px;display:flex;align-items:flex-end;gap:16px}
+  .pageh h1{font-size:33px;letter-spacing:-1.1px}
+  .pageh .sub{font-size:13px;color:var(--ink2);line-height:1.6;margin-top:8px;max-width:660px}
+  .pageh .sub b{color:var(--ink)}
+  .pageh .rt{margin-left:auto;text-align:right;font-size:11.5px;color:var(--muted);line-height:1.6}
+  .pageh .rt b{color:var(--ink);font-size:13px}
+
+  .split{display:grid;grid-template-columns:296px 1fr;gap:30px;padding-bottom:40px;align-items:start}
+  .fcard{border:1px solid var(--line);border-radius:14px;padding:15px 16px 16px;margin-bottom:12px}
+  .fcard h4{font-size:11px;letter-spacing:.7px;text-transform:uppercase;color:#5E7180}
+  .fcard .hint{font-size:10.5px;line-height:1.5;color:var(--muted);margin-top:7px}
+  .fcard .hint b{color:var(--ink2)}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+  .chip{font-size:10.5px;font-weight:700;border:1px solid var(--line);border-radius:999px;
+        padding:6px 10px;background:#fff;color:var(--ink2)}
+  .chip.on{border-color:var(--navy);background:#F4F9FC;color:var(--navy);box-shadow:0 0 0 2px #EAF1F5}
+  .fake{display:flex;align-items:center;justify-content:space-between;border:1px solid #C9D6DF;
+        border-radius:9px;padding:9px 11px;font-size:12px;color:var(--ink2);margin-top:9px;background:#fff}
+
+  /* ---- lignes de fiches ---- */
+  .alist{border-top:1px solid var(--line)}
+  /* La première colonne réserve la place de l'image de marque (logo, ou photo d'entreprise).
+     Elle est RÉSERVÉE, jamais remplie d'un cadre : une fiche sans image laisse un blanc, et c'est
+     ce blanc qui tient les noms alignés. Un cadre vide serait un mensonge visuel. */
+  .arow{display:grid;grid-template-columns:36px 1fr 214px 148px;gap:14px;align-items:center;
+        padding:14px 0;border-bottom:1px solid #EDF2F6}
+  /* ---- l'image de marque : un logo, ou une photo d'entreprise à défaut ---- */
+  .mk{width:36px;height:36px;border-radius:9px;overflow:hidden;display:block;flex:none;
+      background:#F1F5F8}
+  .mk.vide{background:none;border:0}
+  .mk svg,.mk img{width:100%;height:100%;display:block}
+  .fmark{width:72px;height:72px;border-radius:16px;overflow:hidden;flex:none;background:#F1F5F8}
+  .fmark svg,.fmark img{width:100%;height:100%;display:block}
+  .mk.sm{width:26px;height:26px;border-radius:7px}
+  .ptl{display:flex;align-items:center;gap:8px}
+  .arow .t b{font-size:14px;display:block;letter-spacing:-.2px}
+  .arow .t .l2{font-size:11.5px;color:var(--ink2);display:block;margin-top:4px}
+  .arow .t .tags{display:flex;gap:6px;margin-top:7px;flex-wrap:wrap}
+  .tg{font-size:9px;font-weight:800;letter-spacing:.4px;background:#EAF1F5;color:var(--navy);
+      border-radius:4px;padding:2px 6px;display:inline-block;white-space:nowrap}
+  .tg.ok{background:#E7F3EC;color:#25634A}
+  .tg.none{background:#F4F1EC;color:#7A5217}
+  .arow .mid{font-size:11px;color:var(--ink2);line-height:1.6}
+  .arow .mid b{color:var(--ink)}
+  .arow .ac{text-align:right;display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+  .btn-appel{background:var(--navy);color:#fff;font-size:11.5px;font-weight:800;border-radius:8px;
+        padding:10px 13px;min-height:40px;display:inline-flex;align-items:center;gap:6px}
+  .btn-devis{background:var(--orange);color:#2A1602;font-size:11.5px;font-weight:800;border-radius:8px;
+        padding:10px 13px;min-height:40px;display:inline-flex;align-items:center}
+
+  /* ---- fiche ---- */
+  .fiche{display:grid;grid-template-columns:1fr 366px;gap:30px;padding:20px 0 40px;align-items:start}
+  .wcard{border:1px solid var(--line);border-radius:16px;padding:18px 20px 20px}
+  .whead{display:flex;align-items:baseline;gap:10px;margin-bottom:12px}
+  .whead h2{font-size:16px;letter-spacing:-.3px}
+  .whead span{font-size:10.5px;color:var(--muted);margin-left:auto;text-align:right}
+  .txt{font-size:12.5px;line-height:1.72;color:var(--ink2)}
+  .txt b{color:var(--ink)}
+  .scard{border:1px solid var(--line);border-radius:14px;padding:15px 16px 16px;margin-bottom:12px}
+  .scard h4{font-size:12.5px}
+  .scard .txt{margin-top:7px}
+  .swnote{font-size:10.5px;line-height:1.6;color:var(--muted);margin-top:8px}
+  .swnote b{color:var(--ink2)}
+  .alert{background:#FDF3F1;border:1px solid #F0C9C0;border-radius:11px;padding:11px 13px;font-size:11px;
+        line-height:1.6;color:#7B2E1E;margin-bottom:12px}
+  .alert b{display:block;margin-bottom:3px;color:#6E2517}
+  .honest{background:#FDF7EE;border:1px solid var(--warmline);border-radius:11px;padding:12px 14px;
+        font-size:11.5px;line-height:1.65;color:#6B4A16}
+  .honest b{color:#5A3D0F}
+  .share{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:#fff;
+        color:var(--navy);display:flex;align-items:center;justify-content:center;margin-left:auto}
+  .share:hover{background:var(--orange);border-color:var(--orange);color:#2A1602}
+  .share .ico{width:15px;height:15px}
+
+  /* photos */
+  .shots{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:4px}
+  .shot{border-radius:10px;overflow:hidden;background:#EEF2F5;aspect-ratio:4/3;position:relative;
+        display:flex;align-items:flex-end;justify-content:flex-start;border:1px solid #DFE6EC}
+  .shot .lb2{font-size:9px;font-weight:700;color:#42596B;background:rgba(255,255,255,.92);
+        border-radius:5px;padding:3px 6px;margin:7px;position:relative;z-index:1}
+  /* z-index indispensable : .ph est positionné en absolu, et un élément positionné se peint
+     AU-DESSUS du contenu statique du même contexte. Sans ça, les légendes existent dans le DOM,
+     sont lisibles par un lecteur d'écran, et sont invisibles à l'œil. Trouvé en regardant la capture. */
+  .shot.more{align-items:center;justify-content:center;font-size:11px;font-weight:800;color:var(--navy)}
+  .shot .ph{position:absolute;inset:0;background:
+        repeating-linear-gradient(135deg,#E6EDF2 0 12px,#EDF2F6 12px 24px)}
+
+  /* le numéro et le devis */
+  .addrbox{margin-top:10px;border:1px dashed #C9D6DF;border-radius:10px;padding:10px 12px;background:#FBFDFE}
+  .addrbox .lb{font-size:9.5px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:#5E7180}
+  .addrbox .ad{font-size:14px;font-weight:800;color:var(--navy);margin-top:4px;letter-spacing:.4px}
+  .addrbox .cp{font-size:10px;color:var(--muted);margin-top:5px;line-height:1.5}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:11px}
+  .big{display:flex;align-items:center;justify-content:center;gap:8px;border-radius:10px;min-height:48px;
+        font-size:12.5px;font-weight:800;cursor:pointer}
+  .big.appel{background:var(--navy);color:#fff}
+  .big.devis{background:var(--orange);color:#2A1602}
+  .devisbox{margin-top:11px;border:1px solid var(--line);border-radius:12px;padding:12px 13px;background:#fff}
+  .dfield{margin-top:9px}
+  .dfield label{font-size:9.5px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;color:#5E7180;
+        display:block;margin-bottom:4px}
+  .dfield .in{border:1px solid #C9D6DF;border-radius:8px;padding:9px 10px;font-size:11.5px;color:var(--ink2);
+        min-height:38px;display:flex;align-items:center;justify-content:space-between;background:#fff}
+  .dpreview{margin-top:10px;border:1px solid var(--line);border-radius:10px;padding:10px 11px;background:#FBFDFE}
+  .dpreview .lb{font-size:9.5px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:#5E7180}
+  .dpreview .dtxt{font-size:10.5px;line-height:1.6;color:var(--ink2);margin-top:6px;white-space:pre-line}
+
+  /* ---- formules de dépôt ---- */
+  .formbox{border:1px solid var(--line);border-radius:16px;padding:20px 22px 22px}
+  .fsec{border-top:1px solid var(--line);padding-top:16px;margin-top:17px}
+  .fsec.first{border-top:0;padding-top:0;margin-top:0}
+  .fsec .fh{display:flex;align-items:baseline;gap:9px}
+  .fsec h3{font-size:11px;letter-spacing:.7px;text-transform:uppercase;color:#5E7180}
+  .fsec .fh span{font-size:10.5px;color:var(--muted);margin-left:auto}
+  .f label{font-size:10px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;color:#5E7180;
+        display:block;margin-bottom:5px}
+  .f .in{border:1px solid #C9D6DF;border-radius:9px;padding:10px 11px;font-size:12px;color:var(--ink2);
+        background:#fff;min-height:40px;display:flex;align-items:center;justify-content:space-between}
+  /* `.f .hint2` laissait sans style tout hint posé DIRECTEMENT dans une section, hors d'un `.f` :
+     il s'affichait à la taille du texte courant, deux fois plus gros que ses voisins. Deux
+     occurrences — les formats d'image (nouveau) et la ligne de l'assurance (déjà fausse avant, et
+     personne ne l'avait vue). La règle ne dépend plus du parent. */
+  .hint2{font-size:10px;line-height:1.5;color:var(--muted);margin-top:5px}
+  .hint2 b{color:var(--ink2)}
+  .locked{display:grid;grid-template-columns:20px 1fr;gap:9px;border:1px solid #E3E8ED;border-radius:10px;
+        padding:10px 12px;background:#F7F9FB;font-size:11.5px;line-height:1.55;color:var(--ink2)}
+  .locked .lk{width:18px;height:18px;border-radius:50%;background:#E7EDF2;color:var(--navy);font-size:9px;
+        font-weight:800;display:flex;align-items:center;justify-content:center;margin-top:1px}
+  .locked b{color:var(--ink)}
+
+  /* ---- mes fiches ---- */
+  .mrow{display:grid;grid-template-columns:1fr 190px 120px;gap:12px;align-items:center;padding:14px 0;
+        border-top:1px solid #EDF2F6}
+  .mrow.first{border-top:0}
+  .mrow .t b{font-size:13px;display:block}
+  .mrow .t .l2{font-size:10.5px;color:var(--ink2);display:block;margin-top:3px}
+  .mrow .motif{font-size:10px;color:#7B2E1E;background:#FDF3F1;border-radius:6px;padding:5px 8px;
+        margin-top:6px;display:inline-block;line-height:1.45}
+  .mrow .st{font-size:10.5px;color:var(--muted);line-height:1.5}
+  .mrow .ac{text-align:right;font-size:11px;font-weight:800;color:var(--navy)}
+  .tagx{font-size:9.5px;font-weight:800;border-radius:5px;padding:3px 7px;display:inline-block;
+        background:#EAF1F5;color:var(--navy)}
+  .tagx.ok{background:#E7F3EC;color:#25634A}
+  .tagx.bad{background:#FBE9E5;color:#8A2F1F}
+  .tagx.draft{background:#EEF2F5;color:#5E7180}
+  .cnt{font-size:11.5px;color:var(--ink2);margin-bottom:12px}
+  .cnt b{color:var(--ink)}
+
+  /* ---- mobile ---- */
+  .mob{display:flex;gap:26px;padding:22px 0 40px;justify-content:center;background:#EEF2F5}
+  .phone{width:390px;background:#fff;border-radius:22px;overflow:hidden;box-shadow:0 14px 40px rgba(11,40,62,.16);
+        display:flex;flex-direction:column;position:relative}
+  .phead{background:var(--deep);color:#fff;padding:14px 16px 13px;display:flex;align-items:center;gap:10px}
+  .phead .pt2{font-size:13px;font-weight:700}
+  .phead .ps{font-size:10px;color:#B9CFDD;margin-top:2px}
+  .phead .badge{margin-left:auto;font-size:9.5px;font-weight:800;background:rgba(255,255,255,.14);
+        border-radius:5px;padding:3px 7px}
+  .pbody{padding:12px 14px 14px;flex:1}
+  .pcard{border:1px solid var(--line);border-radius:12px;padding:12px 13px;margin-bottom:9px}
+  .pcard .pt{font-size:13.5px;font-weight:700;letter-spacing:-.2px}
+  .pcard .pm{font-size:10.5px;color:var(--ink2);margin-top:4px;line-height:1.5}
+  .pcard .pfoot{display:flex;align-items:center;gap:7px;margin-top:9px;font-size:10px;color:var(--muted)}
+  .pcard .pgo{margin-left:auto;background:var(--orange);color:#2A1602;font-size:10.5px;font-weight:800;
+        border-radius:7px;padding:9px 11px;min-height:44px;display:flex;align-items:center}
+  .sticky{position:sticky;bottom:0;background:#fff;border-top:1px solid var(--line);padding:11px 14px;
+        display:flex;gap:9px;align-items:center}
+  .sticky .gh{flex:1;justify-content:center;font-size:12px;font-weight:800;color:#fff;background:var(--navy);
+        border-radius:9px;padding:12px 10px;min-height:44px;display:flex;align-items:center}
+  .sticky .go{flex:1.2;background:var(--orange);color:#2A1602;font-size:12px;font-weight:800;
+        border-radius:9px;padding:12px 10px;min-height:44px;display:flex;align-items:center;
+        justify-content:center}
+  .foot{font-size:10.5px;line-height:1.65;color:var(--muted);border-top:1px solid var(--line);
+        margin-top:6px;padding:14px 0 30px;max-width:1000px}
+  .foot code{font-family:'DejaVu Sans Mono',monospace;font-size:10px;color:var(--ink2)}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════ ÉCRAN 1 ═══════════════════ -->
+<div class="cap">Écran 1 — L'annuaire&nbsp;: par métier et par commune, et deux gestes qui sortent de la plateforme</div>
+<header><div class="wrap bar">
+  <div class="brand"><div class="kmark">K</div><div class="nm">Kazendra</div></div>
+  <nav><a href="#">Accueil</a><a href="#">Promos</a><a href="#">Annonces</a><a href="#">Immo</a>
+    <a href="#">Événements</a><a href="#">Rencontres</a><a href="#">Jobs étudiants</a>
+    <a href="#">Emploi</a><a class="on" href="#">Artisans</a></nav>
+  <div class="right"><a class="lnk" href="#">Se connecter</a></div>
+</div></header>
+
+<div class="wrap">
+  <div class="pageh">
+    <div><h1>Artisans et services à domicile</h1>
+      <div class="sub">Plombier, électricien, jardinier, peintre, coiffeur à domicile, déménageur.
+        Chaque fiche dit <b>qui l'a vérifiée et quand</b>, et ce que le professionnel déclare.
+        <b>Nous ne garantissons pas sa compétence</b> — et c'est écrit sur la fiche.</div></div>
+    <div class="rt"><b>74 fiches</b><br>12 dans ta commune<br>annuaire mis à jour hier</div>
+  </div>
+
+  <div class="split">
+    <div>
+      <div class="fcard">
+        <h4>Métier</h4>
+        <div class="chips">
+          <span class="chip on">Plomberie</span><span class="chip">Électricité</span>
+          <span class="chip">Peinture</span><span class="chip">Jardin</span>
+          <span class="chip">Déménagement</span><span class="chip">Coiffure à domicile</span>
+        </div>
+        <div class="hint">Dix-huit métiers en quatre familles. Une liste fermée&nbsp;: un annuaire qui
+          accepte tout ne se trie plus.</div>
+      </div>
+
+      <div class="fcard">
+        <h4>Commune</h4>
+        <div class="fake"><span>1170 · Watermael-Boitsfort</span>
+          <svg class="ico" viewBox="0 0 24 24" style="width:14px;height:14px"><path d="M6 9l6 6 6-6"/></svg></div>
+        <div class="hint" style="margin-top:9px">La zone d'intervention est une <b>liste de communes</b>,
+          jamais une adresse ni un rayon en km.</div>
+      </div>
+
+      <div class="fcard">
+        <h4>Ce que dit une fiche</h4>
+        <div class="hint" style="margin-top:7px">Numéro d'entreprise <b>vérifié à la main</b>, avec sa date ·
+          assurance <b>déclarée</b>, jamais vérifiée · zone · horaires · <b>logo ou photo de
+          l'entreprise</b> · photos de réalisations.</div>
+        <div class="hint" style="margin-top:7px"><b>Aucun avis, aucune note.</b> Un avis se modère, s'attaque
+          et se truque&nbsp;: la porte n'en a pas.</div>
+      </div>
+    </div>
+
+    <div>
+      <div class="cnt"><b>12 fiches</b> dans ta commune · ordre alphabétique</div>
+      <div class="alist">
+
+        <div class="arow">
+          <div class="mk"><svg viewBox="0 0 64 64" role="img" aria-label="Logo de Bruyère &amp; Fils">
+            <rect width="64" height="64" fill="#0D3B5B"/>
+            <path d="M32 11c7.5 9.5 11.5 14.6 11.5 19.6A11.5 11.5 0 0 1 20.5 30.6C20.5 25.6 24.5 20.5 32 11z" fill="#EB912D"/>
+            <circle cx="32" cy="31" r="3.6" fill="#0D3B5B"/></svg></div>
+          <div class="t"><b>Bruyère &amp; Fils</b>
+            <span class="l2">Plomberie, chauffage · Watermael-Boitsfort</span>
+            <div class="tags"><span class="tg ok">BCE vérifié le 12/10/2026</span>
+              <span class="tg ok">Assurance déclarée</span><span class="tg">Depuis 2009</span></div></div>
+          <div class="mid">Lun–ven 8 h–18 h<br>Urgences le week-end</div>
+          <div class="ac"><span class="btn-appel">Appeler</span><span class="btn-devis">Devis</span></div>
+        </div>
+
+        <div class="arow">
+          <div class="mk vide" aria-hidden="true"></div>
+          <div class="t"><b>Elec Midi</b>
+            <span class="l2">Électricité, domotique · Ixelles</span>
+            <div class="tags"><span class="tg ok">BCE vérifié le 13/10/2026</span>
+              <span class="tg ok">Assurance déclarée</span></div></div>
+          <div class="mid">Lun–sam 7 h–19 h<br>Sur rendez-vous</div>
+          <div class="ac"><span class="btn-appel">Appeler</span><span class="btn-devis">Devis</span></div>
+        </div>
+
+        <div class="arow">
+          <div class="mk"><svg viewBox="0 0 64 64" role="img" aria-label="Photo de l'entreprise Les Jardins de Zoé">
+            <rect width="64" height="64" fill="#8FB8CE"/>
+            <rect y="36" width="64" height="28" fill="#5E7F59"/>
+            <rect x="7" y="25" width="26" height="17" rx="2" fill="#E9EFF3"/>
+            <rect x="33" y="30" width="12" height="12" rx="2" fill="#CFDCE5"/>
+            <circle cx="15" cy="44" r="4.2" fill="#2C3E48"/><circle cx="38" cy="44" r="4.2" fill="#2C3E48"/>
+            <path d="M52 24c3-6.5 9.5-6.5 9.5 0 0 4-4.5 8.5-4.5 8.5s-5-4.5-5-8.5z" fill="#3E6B3B"/></svg></div>
+          <div class="t"><b>Les Jardins de Zoé</b>
+            <span class="l2">Jardin, taille, entretien · Forest</span>
+            <div class="tags"><span class="tg ok">BCE vérifié le 11/10/2026</span>
+              <span class="tg none">Assurance non déclarée</span></div></div>
+          <div class="mid">Mar–sam 8 h–17 h<br>Devis sous 3 jours</div>
+          <div class="ac"><span class="btn-appel">Appeler</span><span class="btn-devis">Devis</span></div>
+        </div>
+
+        <div class="arow">
+          <div class="mk"><svg viewBox="0 0 64 64" role="img" aria-label="Logo de Peinture Delvaux">
+            <rect width="64" height="64" fill="#F4F9FC"/>
+            <rect x="11" y="13" width="30" height="12" rx="3" fill="#0D3B5B"/>
+            <path d="M41 19h7v11H30v7" stroke="#EB912D" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+            <rect x="26" y="37" width="8" height="14" rx="2.5" fill="#0D3B5B"/></svg></div>
+          <div class="t"><b>Peinture Delvaux</b>
+            <span class="l2">Peinture, papier peint · Watermael-Boitsfort</span>
+            <div class="tags"><span class="tg ok">BCE vérifié le 14/10/2026</span>
+              <span class="tg ok">Assurance déclarée</span><span class="tg">4 photos</span></div></div>
+          <div class="mid">Lun–ven 8 h–17 h<br>Chantiers de 2 à 10 jours</div>
+          <div class="ac"><span class="btn-appel">Appeler</span><span class="btn-devis">Devis</span></div>
+        </div>
+
+      </div>
+      <div class="foot">Cette porte est un <b>annuaire</b>&nbsp;: Kazendra publie une fiche, vérifie le
+        numéro d'entreprise à la main, et n'intervient pas dans le chantier. Il ne reçoit aucun paiement,
+        ne garantit aucun prix, et ne conserve aucune demande de devis.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ ÉCRAN 2 ═══════════════════ -->
+<div class="cap">Écran 2 — La fiche&nbsp;: ce qu'elle déclare, ce qu'elle ne garantit pas, et les deux seuls gestes</div>
+<header><div class="wrap bar">
+  <div class="brand"><div class="kmark">K</div><div class="nm">Kazendra</div></div>
+  <nav><a href="#">Accueil</a><a href="#">Promos</a><a href="#">Annonces</a><a href="#">Immo</a>
+    <a href="#">Événements</a><a href="#">Rencontres</a><a href="#">Jobs étudiants</a>
+    <a href="#">Emploi</a><a class="on" href="#">Artisans</a></nav>
+  <div class="right"><a class="lnk" href="#">Se connecter</a></div>
+</div></header>
+
+<div class="wrap">
+  <div class="fiche">
+    <div>
+      <div style="display:flex;align-items:center;gap:9px;margin-bottom:8px">
+        <span class="chip on">Plomberie</span><span class="chip">Chauffage</span>
+        <span class="chip">Watermael-Boitsfort · Ixelles · Forest</span>
+        <span style="margin-left:auto;font-size:10.5px;color:var(--muted)">fiche en ligne jusqu'au
+          25 octobre 2027</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:14px">
+        <div class="fmark"><svg viewBox="0 0 64 64" role="img" aria-label="Logo de Bruyère &amp; Fils">
+          <rect width="64" height="64" fill="#0D3B5B"/>
+          <path d="M32 11c7.5 9.5 11.5 14.6 11.5 19.6A11.5 11.5 0 0 1 20.5 30.6C20.5 25.6 24.5 20.5 32 11z" fill="#EB912D"/>
+          <circle cx="32" cy="31" r="3.6" fill="#0D3B5B"/></svg></div>
+        <div>
+          <h1 style="font-size:29px;letter-spacing:-1px">Bruyère &amp; Fils</h1>
+          <div class="swnote" style="margin-top:3px">Plomberie et chauffage · Watermael-Boitsfort,
+            Ixelles, Forest</div>
+        </div>
+      </div>
+
+      <div class="wcard" style="margin-top:14px">
+        <div class="whead"><h2>Ce que cette fiche déclare</h2>
+          <span>déclaré par le professionnel, vérifié quand c'est vérifiable</span></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px 26px;margin-top:4px">
+          <div class="txt" style="font-size:11.5px">Numéro d'entreprise — <b>0748.512.396</b>,
+            <b style="color:#25634A">vérifié à la main le 12/10/2026</b></div>
+          <div class="txt" style="font-size:11.5px">Assurance — <b>déclarée</b> le 12/10/2026
+            (RC professionnelle)</div>
+          <div class="txt" style="font-size:11.5px">Accès à la profession — <b>attestation déclarée</b>,
+            non vérifiée</div>
+          <div class="txt" style="font-size:11.5px">Zone — Watermael-Boitsfort, Ixelles, Forest</div>
+          <div class="txt" style="font-size:11.5px">Horaires — lun–ven 8 h–18 h, urgences le week-end</div>
+          <div class="txt" style="font-size:11.5px">Ancienneté — <b>depuis 2009</b>, déclarée</div>
+        </div>
+        <div class="swnote">Vérifié à la main, jamais «&nbsp;certifié&nbsp;»&nbsp;: nous contrôlons le
+          numéro d'entreprise, pas la santé de la société.</div>
+      </div>
+
+      <div class="wcard" style="margin-top:12px">
+        <div class="whead"><h2>Réalisations</h2><span>4 photos · 0 à 12, jamais obligatoires</span></div>
+        <div class="shots">
+          <div class="shot"><span class="ph"></span><span class="lb2">Salle de bain, Ixelles</span></div>
+          <div class="shot"><span class="ph"></span><span class="lb2">Chauffe-eau, Forest</span></div>
+          <div class="shot"><span class="ph"></span><span class="lb2">Cuisine, Watermael</span></div>
+          <div class="shot more">+1</div>
+        </div>
+        <div class="swnote">Les personnes dont le logement est photographié ont donné leur accord, et le
+          professionnel le <b>déclare</b>. Aucune photo ne montre de personne identifiable&nbsp;: c'est
+          refusé en relecture, avec un motif.</div>
+      </div>
+
+      <div class="wcard" style="margin-top:12px">
+        <div class="whead"><h2>L'entreprise</h2><span>en ses mots</span></div>
+        <div class="txt">Plomberie et chauffage depuis trois générations. Dépannage, remplacement de
+          chauffe-eau, mise en conformité. Deux personnes, un atelier à Watermael-Boitsfort.
+          <br><br>
+          Nous nous déplaçons d'abord pour voir, et le déplacement est facturé au tarif annoncé avant
+          l'intervention. Aucun devis n'est signé sur place.</div>
+      </div>
+
+      <div class="wcard" style="margin-top:12px">
+        <div class="whead"><h2>Horaires, zone et réalisations</h2><span>déclaré</span></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px 26px;margin-top:4px">
+          <div class="txt" style="font-size:11.5px">Lun–ven 8 h–18 h<br>Urgences le week-end</div>
+          <div class="txt" style="font-size:11.5px">1170 Watermael-Boitsfort<br>1050 Ixelles · 1190 Forest</div>
+        </div>
+        <div class="swnote">Une zone est une <b>liste de communes</b>. Kazendra ne demande ni adresse ni
+          position, et la distance affichée est estimée entre communes.</div>
+      </div>
+
+      <div class="honest" style="margin-top:12px">
+        <b>Ce que Kazendra ne garantit pas</b>
+        Le numéro d'entreprise est vérifié à la main, et la date est affichée. Nous ne garantissons ni la
+        compétence, ni la qualité du travail, ni le prix. Nous ne sommes pas partie au chantier et nous
+        n'encaissons rien.
+      </div>
+
+      <div class="alert" style="margin-top:12px">
+        <b>Ne payez jamais avant un devis écrit</b>
+        Un acompte se verse sur un devis signé, jamais sur un appel. Et ne réglez rien en espèces sans
+        facture&nbsp;: une facture, c'est ce qui vous protège si le chantier tourne mal.
+      </div>
+    </div>
+
+    <div>
+      <div class="scard">
+        <h4>Deux façons de les joindre</h4>
+        <div class="addrbox">
+          <div class="lb">Téléphone professionnel</div>
+          <div class="ad">02 648 12 34</div>
+          <div class="cp">Affiché lisible, jamais présent dans la page telle quelle&nbsp;: le lien est
+            assemblé au clic. C'est un numéro professionnel, déclaré au dépôt — jamais le mobile
+            personnel d'un salarié.</div>
+        </div>
+        <div class="two">
+          <div class="big appel" data-tel-a="02 648" data-tel-b="12 34">Appeler</div>
+          <div class="big devis" data-ancre="devis">Demander un devis</div>
+        </div>
+        <div class="swnote">Les deux gestes sortent de Kazendra&nbsp;: votre appel et votre courriel ne
+          passent pas par ici, et personne ne les relit.</div>
+      </div>
+
+      <div class="scard" id="devis">
+        <h4>Demander un devis</h4>
+        <div class="txt" style="margin-top:6px">Quatre champs, puis un courriel pré-rempli dans
+          <b>votre</b> messagerie. Rien n'est enregistré ici.</div>
+        <div class="devisbox">
+          <div class="dfield"><label>Type de travaux</label>
+            <div class="in">Remplacement d'un chauffe-eau
+              <svg class="ico" viewBox="0 0 24 24" style="width:13px;height:13px"><path d="M6 9l6 6 6-6"/></svg></div></div>
+          <div class="dfield"><label>Commune</label><div class="in">1170 · Watermael-Boitsfort</div></div>
+          <div class="dfield"><label>Délai souhaité</label>
+            <div class="in">Dans le mois
+              <svg class="ico" viewBox="0 0 24 24" style="width:13px;height:13px"><path d="M6 9l6 6 6-6"/></svg></div></div>
+          <div class="dfield"><label>Décrivez en quelques lignes</label>
+            <div class="in" style="min-height:52px;align-items:flex-start">Chauffe-eau de 15 ans, fuite au
+              niveau du raccord…</div></div>
+          <div class="dpreview">
+            <div class="lb">Le message qui sera proposé</div>
+            <div class="dtxt">Bonjour,
+
+Je souhaite obtenir un devis pour : remplacement d'un chauffe-eau.
+Commune : 1170 Watermael-Boitsfort.
+Délai souhaité : dans le mois.
+
+Chauffe-eau de 15 ans, fuite au niveau du raccord.
+
+Je peux vous envoyer des photos sur demande.
+Vous pouvez me joindre au …</div>
+          </div>
+          <div class="big devis" style="margin-top:10px" data-devis="1"
+               data-a="contact" data-b="bruyere-et-fils.be"
+               data-sujet="Demande de devis — Remplacement d'un chauffe-eau — 1170"
+               data-corps="Bonjour,\n\nJe souhaite obtenir un devis pour : remplacement d'un chauffe-eau.\nCommune : 1170 Watermael-Boitsfort.\nDélai souhaité : dans le mois.\n\nChauffe-eau de 15 ans, fuite au niveau du raccord.\n\nJe peux vous envoyer des photos sur demande.\nVous pouvez me joindre au …">
+            Envoyer la demande
+          </div>
+          <div class="swnote">Ouvre votre gestionnaire de courrier avec ce texte, que vous pouvez
+            modifier ou effacer. <b>Joignez vos photos dans le courriel</b> — aucun fichier ne se dépose
+            ici.</div>
+        </div>
+      </div>
+
+      <div class="scard" style="display:flex;align-items:center;gap:10px">
+        <h4 style="margin:0">Partager</h4>
+        <a href="#" class="share" aria-label="Partager cette fiche">
+          <svg class="ico" viewBox="0 0 24 24"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7"/>
+            <path d="M12 16V4"/><path d="M8 8l4-4 4 4"/></svg>
+        </a>
+        <a href="#" class="swnote" style="margin:0 0 0 auto;color:var(--muted)">Signaler cette fiche</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ ÉCRAN 3 ═══════════════════ -->
+<div class="cap">Écran 3 — Le dépôt&nbsp;: ce que le professionnel déclare, et ce qu'il ne peut pas écrire</div>
+<header><div class="wrap bar">
+  <div class="brand"><div class="kmark">K</div><div class="nm">Kazendra</div></div>
+  <nav><a href="#">Accueil</a><a href="#">Promos</a><a href="#">Annonces</a><a href="#">Immo</a>
+    <a href="#">Événements</a><a href="#">Rencontres</a><a href="#">Jobs étudiants</a>
+    <a href="#">Emploi</a><a class="on" href="#">Artisans</a></nav>
+  <div class="right"><span class="lnk">Bruyère &amp; Fils</span><div class="av">B</div></div>
+</div></header>
+
+<div class="wrap">
+  <div class="pageh"><div><h1 style="font-size:29px;letter-spacing:-1px">Publier ma fiche</h1>
+    <div class="sub">Une fiche dure <b>365 jours</b>. Elle est relue par une personne avant publication —
+      c'est une publication publique, et un faux plombier entre chez les gens.</div></div>
+    <div class="rt"><b>79 € HTVA / 365 jours</b><br>une facture, aucun abonnement<br>
+      <span style="color:#7A5217">offert jusqu'à l'ouverture des paiements</span></div></div>
+
+  <div class="fiche" style="padding-top:6px">
+    <div class="formbox">
+      <div class="fsec first">
+        <div class="fh"><h3>1 · L'entreprise</h3><span>vérifiée à la main</span></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:13px 16px;margin-top:11px">
+          <div class="f"><label>Dénomination</label><div class="in">Bruyère &amp; Fils</div></div>
+          <div class="f"><label>Numéro d'entreprise</label>
+            <div class="in">0748.512.396 <span style="color:#25634A;font-weight:800;font-size:10px">vérifié</span></div></div>
+        </div>
+      </div>
+
+      <div class="fsec">
+        <div class="fh"><h3>2 · Les métiers et la zone</h3><span>listes fermées</span></div>
+        <div class="f" style="margin-top:10px"><label>Métiers (deux maximum)</label>
+          <div class="chips" style="margin-top:2px">
+            <span class="chip on">Plomberie</span><span class="chip on">Chauffage</span>
+            <span class="chip">Électricité</span><span class="chip">Peinture</span>
+            <span class="chip">Jardin</span><span class="chip">Déménagement</span>
+          </div></div>
+        <div class="f" style="margin-top:12px"><label>Zone d'intervention — jusqu'à 10 communes</label>
+          <div class="chips" style="margin-top:2px">
+            <span class="chip on">1170 Watermael-Boitsfort</span><span class="chip on">1050 Ixelles</span>
+            <span class="chip on">1190 Forest</span><span class="chip">+ ajouter une commune</span>
+          </div>
+          <div class="hint2">Jamais une adresse, jamais un rayon en km&nbsp;: une liste de communes, et
+            c'est tout.</div></div>
+      </div>
+
+      <div class="fsec">
+        <div class="fh"><h3>3 · L'image de marque et les photos</h3><span>jamais obligatoires</span></div>
+
+        <div class="f" style="margin-top:10px"><label>Logo, ou photo de votre entreprise</label>
+          <div class="in" style="min-height:56px">
+            <span style="display:flex;align-items:center;gap:10px">
+              <span class="mk" style="width:40px;height:40px">
+                <svg viewBox="0 0 64 64" role="img" aria-label="Logo actuel">
+                  <rect width="64" height="64" fill="#0D3B5B"/>
+                  <path d="M32 11c7.5 9.5 11.5 14.6 11.5 19.6A11.5 11.5 0 0 1 20.5 30.6C20.5 25.6 24.5 20.5 32 11z" fill="#EB912D"/>
+                  <circle cx="32" cy="31" r="3.6" fill="#0D3B5B"/></svg>
+              </span>
+              <span>Logo carré · glisser ici, ou choisir</span>
+            </span>
+            <span style="font-size:10px;font-weight:800;color:var(--navy)">Remplacer</span>
+          </div>
+          <div class="hint2">Votre logo, <b>ou à défaut une photo de votre entreprise</b> — façade,
+            atelier, camionnette, vitrine. Une seule image, et elle sert sur les autres portes du hub
+            sans être redéposée. <b>Sans logo ni photo, la fiche s'affiche entière</b> : pas de cadre
+            vide, pas de mention «&nbsp;sans photo&nbsp;».</div></div>
+
+        <div class="locked" style="margin-top:11px">
+          <span class="lk">✓</span>
+          <div><b>Je déclare que cette image est celle de mon entreprise et que j'en ai les droits.</b>
+            Aucune personne identifiable sans son accord, et <b>aucun numéro de rue d'un logement
+            privé</b> — un indépendant qui travaille chez lui publierait son adresse sans le vouloir.
+            <span style="color:var(--muted)">Les métadonnées sont effacées à l'envoi&nbsp;: une photo de
+            téléphone porte les coordonnées GPS, donc l'adresse exacte, et la zone d'une fiche est une
+            liste de communes.</span></div>
+        </div>
+        <div class="hint2" style="margin-top:7px">Carré, 200 px minimum, 5 Mo au plus. JPEG, PNG ou
+          WebP — <b>jamais de SVG</b>&nbsp;: un fichier SVG peut porter du script. Vous recadrez avec
+          un aperçu avant de valider. L'image est relue avec la fiche, et l'ancienne reste affichée
+          jusqu'à ce que la nouvelle soit acceptée.</div>
+
+        <div class="f" style="margin-top:14px"><label>Réalisations — 0 à 12</label>
+          <div class="in">4 photos · glisser ici, ou choisir</div>
+          <div class="hint2">Une fiche <b>sans photo s'affiche entière</b>&nbsp;: pas de cadre vide, pas de
+            mention «&nbsp;sans photo&nbsp;».</div></div>
+        <div class="locked" style="margin-top:11px">
+          <span class="lk">✓</span>
+          <div><b>Je déclare que les personnes dont le logement est photographié ont donné leur accord</b>,
+            et qu'aucune photo ne montre de personne identifiable. La déclaration est horodatée.
+            <span style="color:var(--muted)">— publier l'intérieur de quelqu'un sans son accord est une
+            atteinte à sa vie privée, et personne ici ne peut le vérifier à votre place.</span></div>
+        </div>
+      </div>
+
+      <div class="fsec">
+        <div class="fh"><h3>4 · L'assurance</h3><span>obligatoire pour la construction</span></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:13px 16px;margin-top:11px">
+          <div class="f"><label>Assureur</label><div class="in">AXA Belgium</div></div>
+          <div class="f"><label>N° de police</label><div class="in">RC-884 120</div></div>
+          <div class="f"><label>Type</label><div class="in">RC professionnelle</div></div>
+        </div>
+        <div class="hint2" style="margin-top:7px">Affichée «&nbsp;<b>déclarée le …</b>, non vérifiée&nbsp;»&nbsp;:
+          nous n'avons aucun moyen d'interroger un assureur.</div>
+      </div>
+
+      <div class="fsec">
+        <div class="fh"><h3>5 · Le téléphone</h3><span>il sera public</span></div>
+        <div class="f" style="margin-top:10px"><label>Numéro professionnel</label>
+          <div class="in">02 648 12 34</div></div>
+        <div class="locked" style="margin-top:11px">
+          <span class="lk">✓</span>
+          <div><b>Je déclare que c'est un numéro professionnel</b> et que je suis autorisé·e à le publier.
+            <span style="color:var(--muted)">— un mobile personnel de salarié est refusé en relecture.</span></div>
+        </div>
+      </div>
+
+      <div class="fsec">
+        <div class="fh"><h3>6 · La relecture</h3></div>
+        <div class="locked">
+          <span class="lk">👁</span>
+          <div><b>Une personne relit la fiche sous 24 h</b>, et vérifie huit points&nbsp;: le numéro BCE,
+            le téléphone, l'assurance, l'image de marque, les photos, la description, les métiers, la
+            zone. Un refus porte un motif écrit, et une seule action&nbsp;: corriger.</div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="scard">
+        <h4>Ce que vous ne pouvez pas écrire</h4>
+        <div class="txt" style="margin-top:6px;font-size:11.5px">«&nbsp;Meilleur plombier de Bruxelles&nbsp;»,
+          «&nbsp;garanti à vie&nbsp;», «&nbsp;certifié&nbsp;», «&nbsp;pas cher&nbsp;», «&nbsp;le moins
+          cher&nbsp;»&nbsp;: aucune promesse que personne ne peut tenir ni mesurer.<br><br>
+          Aucun avis, aucune note, aucun âge, aucune préférence de sexe ou d'origine.</div>
+        <div class="swnote">Ces formulations sont <b>bloquées à la saisie</b>, pas seulement déconseillées.</div>
+      </div>
+
+      <div class="scard">
+        <h4>Où votre logo apparaît</h4>
+        <div class="txt" style="margin-top:6px;font-size:11.5px">Dans l'annuaire à 36 px, sur votre fiche
+          à 72 px — et dans le bloc professionnel de vos annonces immobilières, de vos offres d'emploi,
+          de vos événements et de vos annonces étudiantes. <b>Déposé une fois, il sert partout</b>&nbsp;:
+          c'est le compte qui porte l'image, pas la fiche.</div>
+        <div class="swnote">Un particulier, lui, n'a pas de logo&nbsp;: son bloc affiche un pseudo et
+          «&nbsp;téléphone vérifié&nbsp;». La différence est visible, et elle est volontaire.</div>
+      </div>
+
+      <div class="scard">
+        <h4>Ce qu'une relecture refuse dans une image</h4>
+        <div class="txt" style="margin-top:6px;font-size:11.5px">Une photo de banque d'images, le chantier
+          d'un confrère, une personne identifiable sans son accord, un numéro de rue d'un logement privé,
+          et un fichier SVG. Chaque refus porte un <b>motif écrit</b>.</div>
+        <div class="swnote">Une image ne se signale pas comme fausse&nbsp;: elle se refuse. Et elle ne
+          prouve rien&nbsp;: elle montre.</div>
+      </div>
+
+      <div class="scard">
+        <h4>Ce que Kazendra ne fait pas</h4>
+        <div class="txt" style="margin-top:6px;font-size:11.5px">Il ne garantit ni la compétence, ni la
+          qualité, ni le prix. Il ne reçoit aucun paiement, n'encadre aucun chantier, et ne conserve
+          <b>aucune demande de devis</b>&nbsp;: elle part en courriel depuis la boîte du visiteur.</div>
+      </div>
+
+      <div class="scard">
+        <h4>Ce que ça coûte</h4>
+        <div class="txt" style="margin-top:6px;font-size:11.5px"><b>79 € HTVA pour 365 jours</b>, une seule
+          facture, aucun abonnement, aucun renouvellement automatique. Rappel à J−15, et le renouvellement
+          est un geste.</div>
+        <div class="swnote">Le prix est un <b>réglage</b>. Tant que l'encaissement n'existe pas, la
+          publication est offerte&nbsp;— annoncer un prix qu'on ne peut pas facturer serait pire que de
+          ne rien annoncer.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ ÉCRAN 4 ═══════════════════ -->
+<div class="cap">Écran 4 — Mes fiches&nbsp;: 365 jours, un rappel à J−15, et un motif quand c'est refusé</div>
+<header><div class="wrap bar">
+  <div class="brand"><div class="kmark">K</div><div class="nm">Kazendra</div></div>
+  <nav><a href="#">Accueil</a><a href="#">Promos</a><a href="#">Annonces</a><a href="#">Immo</a>
+    <a href="#">Événements</a><a href="#">Rencontres</a><a href="#">Jobs étudiants</a>
+    <a href="#">Emploi</a><a class="on" href="#">Artisans</a></nav>
+  <div class="right"><span class="lnk">Bruyère &amp; Fils</span><div class="av">B</div></div>
+</div></header>
+
+<div class="wrap">
+  <div class="pageh"><div><h1 style="font-size:29px;letter-spacing:-1px">Mes fiches</h1>
+    <div class="sub">Une fiche dure un an. Elle ne se republie donc pas chaque mois&nbsp;: elle
+      <b>s'éteint</b>, et se renouvelle d'un geste.</div></div>
+    <div class="rt"><b>2 fiches</b><br>une en ligne, une refusée</div></div>
+
+  <div class="fiche" style="padding-top:6px">
+    <div>
+      <div class="mrow first">
+        <div class="t"><b>Bruyère &amp; Fils — Plomberie, chauffage</b>
+          <span class="l2">1170, 1050, 1190 · 4 photos · en ligne depuis le 25/10/2026</span></div>
+        <div class="st">échéance le 25 octobre 2027<br><span class="tagx ok">publiée</span></div>
+        <div class="ac">Voir la fiche</div>
+      </div>
+
+      <div class="mrow">
+        <div class="t"><b>Bruyère &amp; Fils — Dépannage urgence</b>
+          <span class="l2">1170 · 0 photo · déposée le 24/10/2026</span>
+          <div class="motif">Refusée&nbsp;: «&nbsp;intervention en moins d'une heure, garantie&nbsp;» — un
+            délai et une garantie que personne ne peut tenir. Retirez la mention, la fiche passe.</div></div>
+        <div class="st"><span class="tagx bad">refusée</span><br>motif conservé</div>
+        <div class="ac">Corriger</div>
+      </div>
+
+      <div class="mrow">
+        <div class="t"><b>Bruyère &amp; Fils — Chauffage (brouillon)</b>
+          <span class="l2">commencée le 23/10/2026 · jamais soumise</span></div>
+        <div class="st"><span class="tagx draft">brouillon</span><br>rien n'est publié</div>
+        <div class="ac">Continuer</div>
+      </div>
+    </div>
+
+    <div>
+      <div class="scard">
+        <h4>Le rappel à J−15</h4>
+        <div class="txt" style="margin-top:6px;font-size:11.5px">Quinze jours avant l'échéance, un courriel
+          dit la date et propose le renouvellement. <b>Rien ne se renouvelle tout seul</b>&nbsp;: une fiche
+          qui se repaie sans qu'on l'ait demandé est un prélèvement, pas un service.</div>
+      </div>
+
+      <div class="scard">
+        <h4>Ce qui s'efface, et quand</h4>
+        <div class="txt" style="margin-top:6px;font-size:11.5px">À l'échéance&nbsp;: la fiche, les photos,
+          le numéro de téléphone et l'assurance. <b>Tout part</b>, sauf le motif de refus pendant la vie de
+          la fiche.</div>
+        <div class="txt" style="margin-top:6px;font-size:11.5px">L'image de marque reste au compte&nbsp;:
+          elle sert sur toutes vos fiches et sur les autres portes du hub.</div>
+        <div class="swnote">Une fiche refusée est effacée <b>30 jours</b> après le refus&nbsp;: un refus
+          n'est pas une archive.</div>
+      </div>
+
+      <div class="scard">
+        <h4>Pas de classement payant déguisé</h4>
+        <div class="txt" style="margin-top:6px;font-size:11.5px">L'ordre de l'annuaire est alphabétique ou
+          par date de publication. Le jour où une fiche sera mise en avant, elle portera la mention
+          <b>« fiche sponsorisée »</b>.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ ÉCRAN 5 ═══════════════════ -->
+<div class="cap">Écran 5 — Mobile 390 px&nbsp;: l'annuaire et la fiche, deux gestes au pouce</div>
+<div class="mob">
+  <div class="phone">
+    <div class="phead"><div><div class="pt2">Artisans</div>
+      <div class="ps">12 fiches · Watermael-Boitsfort</div></div><span class="badge">390 px</span></div>
+    <div class="pbody">
+      <div class="pcard">
+        <div class="ptl"><span class="mk sm"><svg viewBox="0 0 64 64" role="img" aria-label="Logo de Bruyère &amp; Fils">
+          <rect width="64" height="64" fill="#0D3B5B"/>
+          <path d="M32 11c7.5 9.5 11.5 14.6 11.5 19.6A11.5 11.5 0 0 1 20.5 30.6C20.5 25.6 24.5 20.5 32 11z" fill="#EB912D"/>
+          <circle cx="32" cy="31" r="3.6" fill="#0D3B5B"/></svg></span>
+          <span class="pt" style="font-size:13.5px">Bruyère &amp; Fils</span></div>
+        <div class="pm">Plomberie, chauffage · Watermael-Boitsfort<br>
+          <b style="color:#25634A">BCE vérifié le 12/10</b> · assurance déclarée</div>
+        <div class="pfoot"><span>Lun–ven 8 h–18 h</span><span class="pgo">Devis</span></div>
+      </div>
+      <div class="pcard">
+        <div class="ptl"><span class="mk sm vide" aria-hidden="true"></span>
+          <span class="pt" style="font-size:13.5px">Elec Midi</span></div>
+        <div class="pm">Électricité, domotique · Ixelles<br>
+          <b style="color:#25634A">BCE vérifié le 13/10</b> · assurance déclarée</div>
+        <div class="pfoot"><span>Lun–sam 7 h–19 h</span><span class="pgo">Devis</span></div>
+      </div>
+      <div class="pcard">
+        <div class="ptl"><span class="mk sm"><svg viewBox="0 0 64 64" role="img" aria-label="Photo de l'entreprise Les Jardins de Zoé">
+          <rect width="64" height="64" fill="#8FB8CE"/>
+          <rect y="36" width="64" height="28" fill="#5E7F59"/>
+          <rect x="7" y="25" width="26" height="17" rx="2" fill="#E9EFF3"/>
+          <rect x="33" y="30" width="12" height="12" rx="2" fill="#CFDCE5"/>
+          <circle cx="15" cy="44" r="4.2" fill="#2C3E48"/><circle cx="38" cy="44" r="4.2" fill="#2C3E48"/>
+          <path d="M52 24c3-6.5 9.5-6.5 9.5 0 0 4-4.5 8.5-4.5 8.5s-5-4.5-5-8.5z" fill="#3E6B3B"/></svg></span>
+          <span class="pt" style="font-size:13.5px">Les Jardins de Zoé</span></div>
+        <div class="pm">Jardin, taille, entretien · Forest<br>
+          <b style="color:#25634A">BCE vérifié le 11/10</b> ·
+          <b style="color:#7A5217">assurance non déclarée</b></div>
+        <div class="pfoot"><span>Mar–sam 8 h–17 h</span><span class="pgo">Devis</span></div>
+      </div>
+      <div class="pcard">
+        <div class="ptl"><span class="mk sm"><svg viewBox="0 0 64 64" role="img" aria-label="Logo de Peinture Delvaux">
+          <rect width="64" height="64" fill="#F4F9FC"/>
+          <rect x="11" y="13" width="30" height="12" rx="3" fill="#0D3B5B"/>
+          <path d="M41 19h7v11H30v7" stroke="#EB912D" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+          <rect x="26" y="37" width="8" height="14" rx="2.5" fill="#0D3B5B"/></svg></span>
+          <span class="pt" style="font-size:13.5px">Peinture Delvaux</span></div>
+        <div class="pm">Peinture, papier peint · Watermael-Boitsfort<br>
+          <b style="color:#25634A">BCE vérifié le 14/10</b> · assurance déclarée</div>
+        <div class="pfoot"><span>Lun–ven 8 h–17 h</span><span class="pgo">Devis</span></div>
+      </div>
+      <div class="swnote" style="text-align:center">Aucun compte pour consulter.<br>Aucun avis, aucune note.</div>
+    </div>
+  </div>
+
+  <div class="phone">
+    <div class="phead">
+      <span class="mk sm" style="box-shadow:0 0 0 1px rgba(255,255,255,.35)"><svg viewBox="0 0 64 64" role="img" aria-label="Logo de Bruyère &amp; Fils">
+        <rect width="64" height="64" fill="#0D3B5B"/>
+        <path d="M32 11c7.5 9.5 11.5 14.6 11.5 19.6A11.5 11.5 0 0 1 20.5 30.6C20.5 25.6 24.5 20.5 32 11z" fill="#EB912D"/>
+        <circle cx="32" cy="31" r="3.6" fill="#0D3B5B"/></svg></span>
+      <div><div class="pt2">Bruyère &amp; Fils</div>
+      <div class="ps">Plomberie, chauffage · 1170</div></div><span class="badge">Vérifié</span></div>
+    <div class="pbody" style="padding-bottom:0">
+      <div class="pcard">
+        <div class="pm" style="margin:0"><b style="color:#25634A">BCE vérifié à la main le 12/10/2026</b><br>
+          Assurance déclarée · attestation professionnelle déclarée<br>
+          Zone : 1170, 1050, 1190</div>
+      </div>
+      <div class="pcard">
+        <div class="pt" style="font-size:12.5px">Téléphone professionnel</div>
+        <div class="ad" style="font-size:15px;font-weight:800;color:var(--navy);margin-top:5px;
+             letter-spacing:.4px">02 648 12 34</div>
+        <div class="swnote" style="margin-top:5px">Déclaré au dépôt, jamais le mobile personnel d'un
+          salarié.</div>
+      </div>
+      <div class="pcard">
+        <div class="pt" style="font-size:12.5px">Horaires et zone</div>
+        <div class="pm">Lun–ven 8 h–18 h · urgences le week-end<br>1170, 1050, 1190</div>
+      </div>
+      <div class="pcard">
+        <div class="pt" style="font-size:12.5px">Réalisations</div>
+        <div class="pm">4 photos · les personnes dont le logement est photographié ont donné leur
+          accord, déclaré par le professionnel.</div>
+      </div>
+      <div class="honest" style="font-size:10.5px">
+        <b>Nous ne garantissons ni la compétence, ni la qualité, ni le prix.</b>
+        Le numéro d'entreprise est vérifié à la main. Le reste est déclaré par le professionnel.
+      </div>
+      <div class="alert" style="font-size:10.5px;margin-top:9px">
+        <b>Jamais d'acompte sans devis signé</b>
+        Et jamais d'espèces sans facture : c'est la facture qui vous protège.
+      </div>
+    </div>
+    <div class="sticky">
+      <div class="gh" data-tel-a="02 648" data-tel-b="12 34">Appeler</div>
+      <div class="go" data-a="contact" data-b="bruyere-et-fils.be"
+           data-sujet="Demande de devis — Plomberie — 1170"
+           data-corps="Bonjour,\n\nJe souhaite obtenir un devis pour des travaux de plomberie.\nCommune : 1170 Watermael-Boitsfort.\n\nJe peux vous envoyer des photos sur demande.\nVous pouvez me joindre au …">
+        Demander un devis</div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap"><div class="foot">
+  <b>Ce que la planche vérifie, et qui ne se voit pas à l'œil</b> — ni le numéro de téléphone ni l'adresse
+  du professionnel ne sont écrits comme liens dans la page&nbsp;: les premiers sont portés par deux
+  attributs (<code>data-tel-a</code>, <code>data-tel-b</code>) et assemblés au clic en <code>tel:</code>,
+  l'adresse de la demande de devis par <code>data-a</code> et <code>data-b</code> en <code>mailto:</code>.
+  C'est un ralentisseur pour les robots, pas une protection. Aucun champ de fichier n'existe&nbsp;: les
+  photos se joignent dans le courriel du visiteur, jamais ici.
+  <br><br>
+  <b>L'image de marque</b> — un logo, ou à défaut une photo de l'entreprise&nbsp;: elle occupe la
+  première colonne de l'annuaire, et cette colonne est <b>réservée</b>. Une fiche qui n'a ni logo ni
+  photo laisse un blanc, jamais un cadre&nbsp;: c'est le blanc qui tient les noms alignés, et un cadre
+  dirait «&nbsp;il manque quelque chose&nbsp;» à quelqu'un qui n'a rien à y mettre.
+</div></div>
+
+<script>
+  // Le numéro : assemblé au clic, jamais présent comme lien dans le document.
+  document.querySelectorAll('[data-tel-a][data-tel-b]').forEach(function (b) {
+    b.addEventListener('click', function (e) {
+      e.preventDefault();
+      var num = (b.dataset.telA + b.dataset.telB).replace(/[^0-9+]/g, '');
+      document.documentElement.dataset.dernierAppel = 'tel:' + num;
+      window.location.href = 'tel:' + num;
+    });
+  });
+  // La demande de devis : un courriel, avec un corps proposé et modifiable.
+  // Le bouton de la première carte ne peut pas envoyer : il n'a pas de destinataire. Il descend
+  // jusqu'au formulaire — un bouton qui ne fait rien est un défaut, même dans une maquette.
+  document.querySelectorAll('[data-ancre]').forEach(function (b) {
+    b.addEventListener('click', function (e) {
+      e.preventDefault();
+      var cible = document.getElementById(b.dataset.ancre);
+      if (cible) cible.scrollIntoView({behavior: 'smooth', block: 'center'});
+    });
+  });
+  document.querySelectorAll('[data-a][data-b]').forEach(function (b) {
+    b.addEventListener('click', function (e) {
+      e.preventDefault();
+      if (b.tagName === 'A' && !b.dataset.corps) return;   // le lien « partager » n'est pas un envoi
+      var lien = 'mailto:' + b.dataset.a + '\u0040' + b.dataset.b +
+                 '?subject=' + encodeURIComponent(b.dataset.sujet || '');
+      if (b.dataset.corps) {
+        lien += '&body=' + encodeURIComponent(b.dataset.corps.replace(/\\n/g, '\n'));
+      }
+      document.documentElement.dataset.dernierCourriel = lien;
+      window.location.href = lien;
+    });
+  });
+</script>
+</body>
+</html>

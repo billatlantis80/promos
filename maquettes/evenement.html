@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Kazendra — maquette /evenement</title>
+<style>
+  :root{--navy:#0D3B5B;--deep:#0A2F49;--lite:#13496D;--orange:#EB912D;
+        --ink:#13222E;--ink2:#4A5C6B;--muted:#5E7180;--line:#E3E8ED;--bg2:#F5F7F9}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Liberation Sans','DejaVu Sans',Arial,sans-serif;color:var(--ink);background:#fff;
+       width:1440px;-webkit-font-smoothing:antialiased}
+  .wrap{width:1200px;margin:0 auto}
+  a{color:inherit;text-decoration:none}
+  .ico{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.7;
+       stroke-linecap:round;stroke-linejoin:round}
+  .cap{background:#E7EBEF;font-size:11.5px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;
+       color:#5E7180;padding:9px 0 9px 120px}
+
+  header{background:var(--deep);color:#fff}
+  .bar{display:flex;align-items:center;gap:24px;height:70px}
+  .brand{display:flex;align-items:center;gap:10px}
+  .brand img{width:36px;height:38px;border-radius:9px}
+  .brand .nm{font-size:20px;font-weight:700;letter-spacing:-.3px}
+  nav{display:flex;gap:18px;font-size:13.5px;color:#CFE0EB;margin-left:8px}
+  nav a.on{color:#fff;font-weight:700}
+  .right{margin-left:auto;display:flex;align-items:center;gap:12px}
+  .av{width:32px;height:32px;border-radius:50%;background:var(--orange);color:#2A1602;font-size:12.5px;
+      font-weight:700;display:flex;align-items:center;justify-content:center}
+
+  .doorhead{border-bottom:1px solid var(--line);padding:22px 0 18px}
+  .doorhead .top{display:flex;align-items:flex-end;gap:16px}
+  h1{font-size:30px;letter-spacing:-.8px}
+  .count{font-size:13.5px;color:var(--ink2);margin-top:5px}
+  .count b{color:var(--ink)}
+  .tools{margin-left:auto;display:flex;align-items:center;gap:10px}
+  .btn-o{background:var(--orange);color:#2A1602;font-weight:700;font-size:13.5px;padding:11px 17px;
+         border-radius:9px;display:inline-flex;align-items:center;gap:8px}
+  /* bandeau de dates — le premier filtre de la porte */
+  .switch{display:flex;gap:0;margin-top:16px;border:1px solid var(--line);border-radius:11px;
+          overflow:hidden;width:fit-content}
+  .switch div{padding:11px 24px;font-size:14px;font-weight:700;color:var(--ink2);background:#fff}
+  .switch div.on{background:var(--navy);color:#fff}
+  .switch div+div{border-left:1px solid var(--line)}
+  .switch div span{font-weight:400;color:var(--muted);font-size:12.5px;margin-left:6px}
+  .switch div.on span{color:#B9D2E2}
+
+  .layout{display:grid;grid-template-columns:258px 1fr;gap:28px;padding:22px 0 40px;align-items:start}
+  .panel{border:1px solid var(--line);border-radius:13px;padding:16px}
+  .panel+.panel{margin-top:12px}
+  .panel h3{font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:#5E7180;margin-bottom:11px}
+  .cats{display:flex;flex-direction:column;gap:2px}
+  .cat{display:flex;justify-content:space-between;font-size:13.5px;padding:7px 9px;border-radius:8px;color:var(--ink2)}
+  .cat.on{background:#EAF1F5;color:var(--navy);font-weight:700}
+  .cat span{color:#9AAAB6;font-size:12px}
+  .chips{display:flex;gap:7px;flex-wrap:wrap}
+  .chip{font-size:12.5px;padding:6px 11px;border-radius:999px;border:1px solid var(--line);color:var(--ink2);
+        white-space:nowrap}
+  .chip.on{background:var(--navy);border-color:var(--navy);color:#fff;font-weight:700}
+  .field{flex:1;border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:13px;color:#7E93A2}
+  .row{display:flex;gap:8px;margin-top:9px}
+  .km{margin-top:4px}
+  .kmhead{display:flex;align-items:center;gap:7px}
+  .kmin{width:52px;border:1px solid var(--line);border-radius:7px;padding:6px 8px;font-size:13px;
+        font-weight:700;color:var(--navy);text-align:center;font-family:inherit}
+  .kmhead span{font-size:12px;color:var(--ink2)}
+  .track{position:relative;height:6px;border-radius:99px;background:#E6EBEF;margin-top:13px}
+  .track .fill{position:absolute;left:0;top:0;bottom:0;width:20%;border-radius:99px;background:var(--navy)}
+  .track .knob{position:absolute;left:20%;top:50%;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;
+               background:#fff;border:2.5px solid var(--navy);box-shadow:0 1px 3px rgba(13,59,91,.25)}
+  .ticks{display:flex;justify-content:space-between;font-size:10.5px;color:var(--muted);margin-top:7px}
+  .lab{font-size:11.5px;color:#5E7180;margin:12px 0 7px;font-weight:700}
+  .clear{font-size:12.5px;color:var(--ink2);margin-top:13px;text-align:center}
+
+  .reshead{display:flex;align-items:center;margin-bottom:6px}
+  .reshead .n{font-size:13px;color:var(--ink2)}
+  .reshead .n b{color:var(--ink)}
+  .reshead .sort{margin-left:auto;font-size:12.5px;color:var(--ink2);border:1px solid var(--line);
+                 border-radius:8px;padding:7px 11px}
+  /* agenda groupé par jour */
+  .day{display:flex;align-items:center;gap:12px;margin:20px 0 10px}
+  .day .d{font-size:13px;font-weight:800;letter-spacing:.4px;color:var(--navy);text-transform:uppercase}
+  .day .n{font-size:12px;color:var(--muted)}
+  .day .ln{flex:1;height:1px;background:var(--line)}
+  .ev{display:grid;grid-template-columns:76px 1fr;gap:14px;border:1px solid var(--line);border-radius:13px;
+      padding:13px;margin-bottom:11px;background:#fff}
+  .ev .when{background:#F3F6F8;border-radius:10px;padding:9px 4px;text-align:center;align-self:start}
+  .ev .when .dw{font-size:9.5px;font-weight:800;letter-spacing:.6px;color:#5E7180;text-transform:uppercase}
+  .ev .when .dd{font-size:23px;font-weight:800;color:var(--navy);line-height:1.1;letter-spacing:-.6px}
+  .ev .when .hr{font-size:11px;color:var(--ink2);margin-top:3px;font-weight:700}
+  .ev .body{display:flex;gap:14px}
+  .poster{width:96px;height:96px;border-radius:10px;flex:none;position:relative;display:flex;
+          align-items:center;justify-content:center;color:rgba(255,255,255,.55)}
+  .poster .ico{width:30px;height:30px;stroke-width:1.2}
+  .g1{background:linear-gradient(135deg,#8A4B12,#EB912D)}
+  .g2{background:linear-gradient(135deg,#123F5F,#2E8399)}
+  .g3{background:linear-gradient(135deg,#264653,#3E8E7E)}
+  .g4{background:linear-gradient(135deg,#4A3B6B,#8E7CC3)}
+  .g5{background:linear-gradient(135deg,#7A2230,#C0563F)}
+  .evtxt{flex:1;min-width:0}
+  .evt{font-size:15.5px;font-weight:700;line-height:1.3;letter-spacing:-.2px}
+  .evmeta{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink2);margin-top:6px}
+  .evmeta .ico{width:13px;height:13px;stroke-width:1.9;color:var(--muted)}
+  .evmeta .sep{color:#C3D0DA}
+  .evtags{display:flex;gap:6px;margin-top:9px;align-items:center;flex-wrap:wrap}
+  .tag{font-size:10.5px;font-weight:700;padding:4px 8px;border-radius:6px;background:#EAF1F5;color:var(--navy)}
+  .tag.free{background:#E4F3EF;color:#0E7A66}
+  .tag.paid{background:#FDF1E3;color:#8A5510}
+  .tag.pmr{background:#EDEBFA;color:#4A3B6B}
+  .tag.age{background:#FCE9E7;color:#9B2C22}
+  .evorg{margin-left:6px;font-size:11.5px;color:var(--muted);display:inline-flex;align-items:center;gap:5px}
+  .evorg::before{content:"·";color:#C3D0DA;margin-right:3px}
+  .evorg b{color:var(--ink2);font-weight:400}
+  /* aussi ce week-end */
+  .mini{margin-top:12px;border:1px solid var(--line);border-radius:12px;padding:14px}
+  .mini h5{font-size:11.5px;text-transform:uppercase;letter-spacing:.6px;color:#5E7180;margin-bottom:10px}
+  .mi{display:flex;gap:9px;padding:8px 0;border-top:1px solid var(--line);align-items:center}
+  .mi:first-of-type{border-top:0;padding-top:0}
+  .mi .d{width:36px;flex:none;text-align:center;background:#F3F6F8;border-radius:7px;padding:5px 2px}
+  .mi .d b{display:block;font-size:15px;color:var(--navy);line-height:1.1}
+  .mi .d span{font-size:9px;font-weight:700;letter-spacing:.4px;color:#5E7180;text-transform:uppercase}
+  .mi .t{font-size:12.5px;line-height:1.35;color:var(--ink)}
+  .mi .t span{display:block;font-size:11px;color:var(--muted);margin-top:2px}
+  .vbadge{width:13px;height:13px;border-radius:50%;background:#0E7A66;color:#fff;display:inline-flex;
+          align-items:center;justify-content:center}
+
+  /* ---------- page d'un événement ---------- */
+  .crumb{font-size:12.5px;color:var(--muted);padding:18px 0 0}
+  .crumb b{color:var(--ink2);font-weight:400}
+  .evhead{margin-top:14px;display:flex;gap:18px;align-items:flex-start}
+  .evhead .when{width:104px;background:var(--navy);border-radius:13px;padding:12px 6px;text-align:center;
+                color:#fff;flex:none}
+  .evhead .when .dw{font-size:10px;font-weight:800;letter-spacing:.8px;color:#B9D2E2;text-transform:uppercase}
+  .evhead .when .dd{font-size:31px;font-weight:800;line-height:1.05;letter-spacing:-1px}
+  .evhead .when .mo{font-size:11px;font-weight:700;letter-spacing:.6px;color:#B9D2E2;text-transform:uppercase}
+  .evhead .when .hr{font-size:11.5px;margin-top:6px;font-weight:700;color:#fff}
+  .evhead .ht{flex:1;padding-top:2px}
+  h2.title{font-size:29px;letter-spacing:-.8px;line-height:1.18}
+  .subline{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink2);margin-top:10px}
+  .subline .ico{width:15px;height:15px;color:var(--muted)}
+  .subline .sep{color:#C3D0DA}
+  .detail{display:grid;grid-template-columns:1fr 372px;gap:32px;padding:18px 0 44px;align-items:start}
+  .main{height:330px;border-radius:14px;background:linear-gradient(135deg,#8A4B12,#EB912D);position:relative;
+        display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.42)}
+  .main .ico{width:78px;height:78px;stroke-width:.9}
+  .main .n{position:absolute;right:12px;bottom:12px;background:rgba(9,29,43,.72);color:#fff;font-size:11.5px;
+           padding:4px 9px;border-radius:6px}
+  .thumbs{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:9px}
+  .th{height:58px;border-radius:9px;background:#DCE6EC;display:flex;align-items:center;justify-content:center;color:#9FB3C0}
+  .th.on{outline:2px solid var(--orange);outline-offset:-2px}
+  .sec{margin-top:20px;border:1px solid var(--line);border-radius:12px;padding:16px 18px;max-width:700px;background:#fff}
+  .sec h4{font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:#5E7180;margin-bottom:11px;
+          display:flex;align-items:baseline;gap:10px}
+  .sec h4 span{margin-left:auto;text-transform:none;letter-spacing:0;font-weight:400;font-size:11px;color:var(--muted)}
+  .desctxt{font-size:13.5px;line-height:1.72;color:var(--ink2)}
+  .specs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:13px 24px;font-size:13.5px}
+  .specs div span{color:var(--muted);display:block;font-size:11.5px;margin-bottom:2px}
+  .loc{display:flex;align-items:center;gap:13px;border:1px solid var(--line);border-radius:11px;
+       padding:12px 14px;background:#fff}
+  .loc-ico{width:36px;height:36px;flex:none;border-radius:9px;background:#EEF3F7;display:flex;
+           align-items:center;justify-content:center;color:var(--navy)}
+  .loc-txt{flex:1;min-width:0}
+  .loc-ville{font-size:14px;font-weight:800;color:var(--navy);line-height:1.2}
+  .loc-cp{font-size:12px;color:var(--muted);margin-top:2px}
+  .loc-btn{flex:none;display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:800;
+           color:#fff;background:var(--navy);padding:9px 14px;border-radius:8px;text-decoration:none}
+  .note{margin-top:9px;font-size:11.5px;color:var(--muted);line-height:1.5}
+  .variant{margin-top:12px;border:1px dashed #C9D6DF;border-radius:11px;padding:12px 14px;background:#FAFCFD}
+  .variant .vt{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:#5E7180}
+  .variant .vg{margin-top:9px;font-size:12.5px;color:var(--ink2);line-height:1.6}
+  .variant .vg b{color:var(--ink)}
+
+  /* colonne de droite */
+  .side{border:1px solid var(--line);border-radius:14px;padding:16px;background:#fff}
+  .price{font-size:27px;font-weight:800;color:var(--navy);letter-spacing:-.8px;line-height:1.1}
+  .price small{display:block;font-size:11.5px;font-weight:400;color:var(--muted);letter-spacing:0;margin-top:4px}
+  .cta{display:block;margin-top:14px;background:var(--orange);color:#2A1602;font-weight:800;font-size:14px;
+       text-align:center;padding:14px;border-radius:10px}
+  .cta2{display:block;margin-top:9px;border:1px solid var(--line);color:var(--navy);font-weight:700;font-size:13px;
+        text-align:center;padding:12px;border-radius:10px;background:#fff}
+  .cta3{display:block;margin-top:9px;color:var(--ink2);font-size:12.5px;text-align:center;padding:9px}
+  /* partage : le MÊME bouton rond que /promo — flèche de partage, thème Kazendra */
+  .share{display:flex;align-items:center;gap:10px;margin-top:11px;padding-top:11px;border-top:1px solid var(--line)}
+  .part{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;padding:0;
+        background:transparent;border:1px solid var(--line);border-radius:50%;color:var(--ink2);flex:none}
+  .part svg{width:19px;height:19px;fill:currentColor;display:block}
+  .plabel{font-size:12px;color:var(--ink2)}
+  .sign{margin-left:auto;font-size:12px;color:var(--muted);text-decoration:underline;
+        text-decoration-color:#C3D0DA}
+  .sharenote{font-size:10.5px;color:var(--muted);line-height:1.45;margin-top:7px;text-align:center}
+  .int{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--ink2);margin-top:12px;justify-content:center}
+  .int b{color:var(--ink)}
+  .warn{margin-top:12px;border-radius:11px;padding:12px 13px;font-size:12px;line-height:1.55}
+  .warn.navy{background:#EAF1F5;color:#123F5F}
+  .warn.navy b{display:block;font-size:12px;margin-bottom:4px}
+  .warn.amber{background:#FDF7EE;border:1px solid #F3D6AE;color:#6B4A16}
+  .warn.amber b{display:block;margin-bottom:4px}
+  .orgcard{margin-top:12px;border:1px solid var(--line);border-radius:12px;padding:14px}
+  .orgtop{display:flex;align-items:center;gap:11px}
+  /* Image de marque de l'organisateur (décision 37) : un logo, ou une photo. Plus d'initiale
+     fabriquée par nous — une ASBL a ses propres couleurs, elle n'a pas besoin des nôtres. */
+  .orglogo{width:44px;height:44px;border-radius:11px;background:var(--navy);flex:none;overflow:hidden}
+  .orglogo svg,.orglogo img{width:100%;height:100%;display:block}
+  .orgname{font-size:14px;font-weight:800;color:var(--navy);line-height:1.2}
+  .orgtype{font-size:11.5px;color:var(--muted);margin-top:2px}
+  .legal{margin-top:11px;font-size:11px;color:var(--ink2);line-height:1.55;background:#F5F7F9;
+         border-radius:9px;padding:9px 11px}
+  .legal b{color:var(--ink)}
+  /* variante annulée */
+  .cancelled{border:1px solid var(--line);border-radius:13px;overflow:hidden;max-width:700px;margin-top:16px;
+             background:#fff}
+  .cband{background:#B3261E;color:#fff;padding:12px 16px;font-size:13px;font-weight:800;display:flex;
+         align-items:center;gap:9px}
+  .cband .ico{width:17px;height:17px;stroke-width:2}
+  .cin{padding:14px 16px;font-size:12.5px;color:var(--ink2);line-height:1.6}
+  .cin b{color:var(--ink)}
+
+  /* écran 3 — « On y va ensemble ? » (sortie à plusieurs greffée sur un événement) */
+  .yywrap{display:grid;grid-template-columns:1fr 376px;gap:28px;padding:16px 0 46px;align-items:start}
+  .yycard{border:1px solid var(--line);border-radius:14px;background:#fff;overflow:hidden}
+  .yycard+.yycard{margin-top:14px}
+  .yyhead{display:flex;align-items:center;gap:9px;padding:12px 15px;border-bottom:1px solid var(--line);
+          background:#F7FAFB;font-size:11.5px;font-weight:800;color:#5E7180;text-transform:uppercase;
+          letter-spacing:.5px}
+  .yyhead .pill{margin-left:auto;text-transform:none;letter-spacing:0;font-size:10.5px;font-weight:800;
+                color:#123F5F;background:#E4EDF3;border-radius:6px;padding:3px 7px}
+  .yybody{padding:14px 16px 16px}
+  .yyentry{display:flex;align-items:center;gap:10px;border:1px solid #CFE0EA;background:#F2F8FB;
+           border-radius:11px;padding:11px 13px}
+  .yyentry .who{display:flex}
+  .yyentry .who .av{width:26px;height:26px;border-radius:50%;background:var(--navy);color:#fff;
+                    font-size:10.5px;font-weight:800;display:flex;align-items:center;justify-content:center;
+                    border:2px solid #F2F8FB;margin-left:-7px}
+  .yyentry .who .av:first-child{margin-left:0}
+  .yyentry .lb{font-size:12.5px;color:var(--ink)}
+  .yyentry .lb b{font-weight:800}
+  .yyentry .go{margin-left:auto;font-size:12px;font-weight:800;color:var(--navy);border:1px solid #BBD4E2;
+               background:#fff;border-radius:8px;padding:7px 11px;white-space:nowrap}
+  .yyentry .new{margin-left:auto;font-size:11.5px;font-weight:700;color:var(--ink2);padding:7px 4px;white-space:nowrap}
+  .yymot{font-size:13.5px;line-height:1.68;color:var(--ink)}
+  .yymeta{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:13px}
+  .yymeta div span{display:block;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;
+                   color:var(--muted);margin-bottom:2px}
+  .yymeta div b{font-size:12.5px;font-weight:700;color:var(--ink)}
+  .yypp{display:flex;align-items:center;gap:9px;margin-top:14px;padding-top:13px;border-top:1px solid #F2F5F7}
+  .yypp .av{width:30px;height:30px;border-radius:50%;background:#EAF1F5;color:var(--navy);font-size:11.5px;
+            font-weight:800;display:flex;align-items:center;justify-content:center;flex:none}
+  .yypp .av.me{background:var(--navy);color:#fff}
+  .yypp .av.ghost{background:#fff;border:1px dashed #C9D6DF;color:#5E7180}
+  .yypp .tx{font-size:11.5px;color:var(--ink2);line-height:1.5}
+  .yypp .tx b{color:var(--ink)}
+  .yypp .rst{margin-left:auto;font-size:11px;font-weight:800;color:#7A5217;background:#FDF0DC;
+             border-radius:6px;padding:5px 8px;white-space:nowrap}
+  .yyacts{display:flex;gap:9px;margin-top:14px}
+  .yyacts .join{flex:1;text-align:center;background:var(--orange);color:#2A1602;font-weight:800;font-size:13px;
+                border-radius:9px;padding:11px}
+  .yyacts .ghost{border:1px solid var(--line);border-radius:9px;padding:11px 14px;font-size:12.5px;
+                 font-weight:700;color:var(--ink2);white-space:nowrap}
+  .yyrules{margin-top:12px;border-radius:9px;padding:10px 12px;background:#F7FAFB;font-size:11px;
+           line-height:1.65;color:#6B7E8C}
+  .yyrules b{color:#4A5C6B}
+  .yyband{background:#FDF7EE;border-bottom:1px solid #F3D6AE;color:#6B4A16;font-size:11px;line-height:1.55;
+          padding:9px 13px}
+  .yyband b{color:#5A3D0F}
+  .yymsgs{padding:12px 14px 3px;background:#FBFCFD}
+  .ymb{max-width:78%;padding:8px 11px;border-radius:10px;background:#fff;border:1px solid var(--line);
+       font-size:12px;line-height:1.55;margin-bottom:9px}
+  .ymb .t{font-size:9.5px;color:var(--muted);margin-top:3px}
+  .ymb.me{margin-left:auto;background:var(--navy);border-color:var(--navy);color:#fff}
+  .ymb.me .t{color:#A9C6D8}
+  .yycomp{display:flex;gap:8px;align-items:center;padding:10px 13px;border-top:1px solid var(--line)}
+  .yycomp .f{flex:1;border:1px solid var(--line);border-radius:8px;padding:9px 11px;font-size:12px;color:#7E93A2}
+  .yycomp .s{background:var(--orange);color:#2A1602;font-weight:800;font-size:12px;padding:9px 13px;border-radius:8px}
+  .yynofile{display:flex;align-items:center;gap:6px;font-size:10px;color:var(--muted);padding:0 13px 10px}
+  .yyform .frow{margin-top:12px}
+  .yyform .frow:first-child{margin-top:0}
+  .yyform .flab{display:block;font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;
+                color:#5E7180;margin-bottom:5px}
+  .yyform .fld{border:1px solid var(--line);border-radius:9px;padding:10px 12px;font-size:12.5px;color:var(--ink);
+               line-height:1.55}
+  .yyform .ychips{display:flex;gap:6px;flex-wrap:wrap}
+  .yyform .ych{font-size:11px;border:1px solid var(--line);border-radius:999px;padding:6px 10px;color:var(--ink2)}
+  .yyform .ych.on{background:var(--navy);border-color:var(--navy);color:#fff;font-weight:700}
+  .yyform .ychk{display:flex;gap:8px;align-items:flex-start;font-size:11px;line-height:1.55;color:var(--ink2);
+                margin-top:14px}
+  .yyform .ychk .bx{width:14px;height:14px;border:1.5px solid var(--navy);border-radius:3px;flex:none;margin-top:1px;
+                    position:relative}
+  .yyform .ychk .bx:after{content:"";position:absolute;left:2.5px;top:2.5px;width:7px;height:7px;background:var(--navy);
+                          border-radius:1px}
+  .yyform .send{display:block;text-align:center;background:var(--orange);color:#2A1602;font-weight:800;
+                font-size:13px;border-radius:9px;padding:11px;margin-top:13px}
+  .yyform .warn2{font-size:11px;line-height:1.6;color:#6B4A16;background:#FDF7EE;border:1px solid #F3D6AE;
+                 border-radius:9px;padding:10px 12px;margin-top:12px}
+  .yyform .warn2 b{display:block;margin-bottom:3px;color:#5A3D0F}
+
+  /* écran 4 — signaler (modale) */
+  .sgband{background:#E9EDF0;padding:30px 0 40px;border-top:1px solid var(--line)}
+  .sgwrap{width:1200px;margin:0 auto;display:grid;grid-template-columns:600px 1fr;gap:26px;align-items:start}
+  .sgmodal{background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 18px 44px rgba(11,40,62,.20)}
+  .sghd{padding:17px 20px 14px;border-bottom:1px solid var(--line);display:flex;align-items:flex-start;gap:10px}
+  .sghd h3{font-size:19px;letter-spacing:-.4px}
+  .sghd .sub{font-size:11.5px;color:var(--ink2);margin-top:4px}
+  .sghd .x{margin-left:auto;width:28px;height:28px;border:1px solid var(--line);border-radius:50%;
+           display:flex;align-items:center;justify-content:center;color:var(--ink2);font-size:14px;flex:none}
+  .sgbody{padding:15px 20px 18px}
+  .sgopt{display:flex;gap:11px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;margin-bottom:8px}
+  .sgopt.on{border-color:var(--navy);background:#F2F8FB}
+  .sgopt .rd{width:16px;height:16px;border-radius:50%;border:2px solid #C3D0DA;flex:none;margin-top:1px;
+             background:#fff}
+  .sgopt.on .rd{border-color:var(--navy);background:var(--navy);box-shadow:inset 0 0 0 3px #fff}
+  .sgopt .tt{font-size:12.5px;font-weight:800}
+  .sgopt .ds{font-size:11px;color:var(--ink2);margin-top:2px;line-height:1.5}
+  .sgtxt{margin-top:12px;border:1px solid var(--line);border-radius:9px;padding:10px 12px;font-size:12px;
+         color:#5E7180;min-height:54px;line-height:1.5}
+  .sghint{font-size:10px;color:var(--muted);margin-top:5px;text-align:right}
+  .sgfoot{display:flex;align-items:center;gap:10px;margin-top:13px}
+  .sgfoot .send{background:var(--orange);color:#2A1602;font-weight:800;font-size:13px;border-radius:9px;
+                padding:11px 16px}
+  .sgfoot .cancel{font-size:12.5px;font-weight:700;color:var(--ink2);padding:11px 6px}
+  .sgfoot .left{font-size:10px;color:var(--muted);margin-left:auto;text-align:right;line-height:1.4}
+
+  /* écran 5 — mes événements */
+  .mevwrap{width:1200px;margin:0 auto;padding:22px 0 46px}
+  .mevtabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:6px}
+  .mevtab{font-size:12.5px;font-weight:700;color:var(--ink2);padding:10px 13px;border-bottom:2px solid transparent;
+          display:flex;align-items:center;gap:6px}
+  .mevtab.on{color:var(--navy);border-bottom-color:var(--navy)}
+  .mevtab .n{font-size:10px;font-weight:800;background:#EAF1F5;color:var(--navy);border-radius:5px;padding:1px 6px}
+  .mevtab.on .n{background:var(--navy);color:#fff}
+  .mevrow{display:grid;grid-template-columns:58px 1fr 150px 150px 170px;gap:14px;align-items:center;
+          padding:13px 6px;border-bottom:1px solid #F2F5F7}
+  .mevdate{text-align:center;border:1px solid var(--line);border-radius:9px;padding:5px 0 6px}
+  .mevdate .dw{font-size:8.5px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;color:#5E7180}
+  .mevdate .dd{font-size:17px;font-weight:800;line-height:1.1;color:var(--navy)}
+  .mevdate .mo{font-size:9px;color:#5E7180;text-transform:uppercase;letter-spacing:.4px}
+  .mevtit{font-size:13px;font-weight:700}
+  .mevsub{font-size:11px;color:var(--muted);margin-top:3px}
+  .mevsub b{color:var(--ink2);font-weight:700}
+  .badge{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:800;text-transform:uppercase;
+         letter-spacing:.4px;border-radius:5px;padding:3px 7px;white-space:nowrap}
+  .badge.pub{background:#E7F4EC;color:#1F6B41}
+  .badge.wait{background:#FDF0DC;color:#7A5217}
+  .badge.draft{background:#EEF1F4;color:#5E7180}
+  .badge.past{background:#F2F5F7;color:#7E93A2}
+  .badge.canc{background:#FBEAEA;color:#8C2F2F}
+  .mevcnt{font-size:11px;color:var(--ink2);line-height:1.5}
+  .mevcnt b{color:var(--ink);font-weight:800}
+  .mevact{text-align:right;font-size:12px;font-weight:800;color:var(--navy)}
+  .mevact.gray{color:var(--ink2)}
+  .mevact .sub{display:block;font-size:10px;font-weight:400;color:var(--muted);margin-top:2px}
+  .mevnote{margin-top:14px;font-size:11px;line-height:1.6;color:#6B7E8C;background:#F7FAFB;border-radius:9px;
+           padding:10px 12px}
+  .mevnote b{color:#4A5C6B}
+  .sortcard{margin-top:18px;border:1px solid var(--line);border-radius:13px;overflow:hidden;background:#fff}
+  .sortcard .hd{display:flex;align-items:center;gap:8px;padding:12px 15px;border-bottom:1px solid var(--line);
+                background:#F7FAFB;font-size:11.5px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;
+                color:#5E7180}
+  .sortcard .hd .pill{margin-left:auto;text-transform:none;letter-spacing:0;font-size:10.5px;background:#E4EDF3;
+                      color:#123F5F;border-radius:6px;padding:3px 7px}
+  .sortrow{display:flex;align-items:center;gap:11px;padding:12px 15px;border-bottom:1px solid #F2F5F7;font-size:12px}
+  .sortrow:last-child{border-bottom:0}
+  .sortrow .tt{font-weight:700}
+  .sortrow .ds{font-size:11px;color:var(--muted);margin-top:2px}
+  .sortrow .rt{margin-left:auto;font-size:11.5px;font-weight:800;color:var(--navy)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap bar">
+    <div class="brand">
+      <img src="kazendra-icone-256.png" alt="Kazendra">
+      <div class="nm">Kazendra</div>
+    </div>
+    <nav>
+      <a href="#">Accueil</a><a href="#">Promos</a><a href="#">Annonces</a><a href="#">Immo</a>
+      <a href="#" class="on">Événements</a>
+    </nav>
+    <div class="right">
+      <span style="font-size:13px;color:#CFE0EB">Se connecter</span>
+      <div class="av">B</div>
+    </div>
+  </div>
+</header>
+
+<div class="cap">Écran 1 — Agenda local : liste groupée par jour, filtres par date et par distance</div>
+
+<section class="doorhead">
+  <div class="wrap">
+    <div class="top">
+      <div>
+        <h1>Que se passe-t-il près de chez vous ?</h1>
+        <div class="count"><b>128</b> événements à venir · 41 dans les 7 jours · données de démonstration fictives</div>
+      </div>
+      <div class="tools">
+        <div class="btn-o">
+          <svg class="ico" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+          Publier un événement
+        </div>
+      </div>
+    </div>
+    <div class="switch">
+      <div>Aujourd'hui <span>6</span></div>
+      <div>Ce week-end <span>18</span></div>
+      <div class="on">7 jours <span>41</span></div>
+      <div>Choisir une période</div>
+    </div>
+  </div>
+</section>
+
+<div class="wrap layout">
+  <aside>
+    <div class="panel">
+      <h3>Quand</h3>
+      <div class="chips">
+        <div class="chip on">Dim. 25</div>
+        <div class="chip on">Lun. 26</div>
+        <div class="chip">Lun. 27</div>
+      </div>
+      <div class="clear">Réinitialiser les filtres</div>
+    </div>
+
+    <div class="panel">
+      <h3>Catégories</h3>
+      <div class="cats">
+        <div class="cat on">Fête, kermesse &amp; brocante <span>62</span></div>
+        <div class="cat">Musique &amp; concert <span>18</span></div>
+        <div class="cat">Spectacle, théâtre &amp; humour <span>9</span></div>
+        <div class="cat">Exposition &amp; culture <span>11</span></div>
+        <div class="cat">Marché &amp; terroir <span>7</span></div>
+        <div class="cat">Enfants &amp; famille <span>14</span></div>
+        <div class="cat">Atelier &amp; formation <span>5</span></div>
+        <div class="cat">Sport &amp; mouvement <span>6</span></div>
+        <div class="cat">Nature &amp; balade <span>4</span></div>
+        <div class="cat">Vie locale &amp; citoyen <span>3</span></div>
+        <div class="cat">Gastronomie &amp; dégustation <span>2</span></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>Distance</h3>
+      <div class="km">
+        <div class="kmhead"><input class="kmin" value="10"><span>km maximum</span></div>
+        <div class="track"><div class="fill"></div><div class="knob"></div></div>
+        <div class="ticks"><span>0</span><span>10</span><span>20</span><span>30</span><span>40</span><span>50</span></div>
+      </div>
+      <div class="lab" style="margin-top:14px">Entrée</div>
+      <div class="chips">
+        <div class="chip on">Gratuit</div>
+        <div class="chip">Payant</div>
+        <div class="chip">Chapeau</div>
+      </div>
+      <div class="lab">Âge</div>
+      <div class="chips">
+        <div class="chip on">Tout public</div>
+        <div class="chip">18+</div>
+      </div>
+      <div class="lab">Autres</div>
+      <div class="chips">
+        <div class="chip">Accessible PMR</div>
+        <div class="chip">En plein air</div>
+      </div>
+    </div>
+  </aside>
+
+  <div>
+    <div class="reshead">
+      <div class="n"><b>41 événements</b> dans les 7 jours, à 10 km</div>
+      <div class="sort">Trier : par date</div>
+    </div>
+
+    <div class="day"><div class="d">Dimanche 25 octobre</div><div class="n">3 événements</div><div class="ln"></div></div>
+
+    <article class="ev">
+      <div class="when"><div class="dw">Dim</div><div class="dd">25</div><div class="hr">08:00</div></div>
+      <div class="body">
+        <div class="poster g1"><svg class="ico" viewBox="0 0 24 24"><path d="M3 9h18M6 9V6h12v3M4 9v11h16V9M9 20v-5h6v5"/></svg></div>
+        <div class="evtxt">
+          <div class="evt">Brocante d'automne du quartier Saint-Servais</div>
+          <div class="evmeta">
+            <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            08:00 – 17:00
+            <span class="sep">·</span>
+            <svg class="ico" viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
+            Place Saint-Servais, 5000 Namur
+            <span class="sep">·</span> 2,4 km
+          </div>
+          <div class="evtags">
+            <span class="tag free">Gratuit</span>
+            <span class="tag">Brocante</span>
+            <span class="tag pmr">Accès PMR partiel</span>
+            <span class="tag">En plein air</span>
+            <span class="evorg"><span class="vbadge">✓</span> <b>Comité de quartier Saint-Servais</b> · ASBL</span>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="ev">
+      <div class="when"><div class="dw">Dim</div><div class="dd">25</div><div class="hr">14:00</div></div>
+      <div class="body">
+        <div class="poster g3"><svg class="ico" viewBox="0 0 24 24"><path d="M4 17h3l2-4h6l2 4h3"/><circle cx="8" cy="19" r="2"/><circle cx="17" cy="19" r="2"/><path d="M9 13l1.6-5h2.8L15 13"/></svg></div>
+        <div class="evtxt">
+          <div class="evt">Atelier de réparation de vélos — venez avec le vôtre</div>
+          <div class="evmeta">
+            <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            14:00 – 18:00
+            <span class="sep">·</span>
+            <svg class="ico" viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
+            Maison de quartier, 5000 Namur
+            <span class="sep">·</span> 3,1 km
+          </div>
+          <div class="evtags">
+            <span class="tag free">Gratuit</span>
+            <span class="tag">Atelier</span>
+            <span class="tag pmr">Accès PMR</span>
+            <span class="evorg">Proposé par <b>un particulier</b></span>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="ev">
+      <div class="when"><div class="dw">Dim</div><div class="dd">25</div><div class="hr">20:00</div></div>
+      <div class="body">
+        <div class="poster g2"><svg class="ico" viewBox="0 0 24 24"><path d="M9 18V6l10-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="16.5" cy="16" r="2.5"/></svg></div>
+        <div class="evtxt">
+          <div class="evt">Concert de la chorale Les Voix du Namurois</div>
+          <div class="evmeta">
+            <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            20:00 – 22:00
+            <span class="sep">·</span>
+            <svg class="ico" viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
+            Église Saint-Loup, 5000 Namur
+            <span class="sep">·</span> 1,8 km
+          </div>
+          <div class="evtags">
+            <span class="tag paid">10 € · TVA comprise</span>
+            <span class="tag">Musique</span>
+            <span class="tag">Billetterie sur place</span>
+            <span class="evorg"><span class="vbadge">✓</span> <b>Les Voix du Namurois</b> · ASBL</span>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <div class="day"><div class="d">Lundi 26 octobre</div><div class="n">3 événements</div><div class="ln"></div></div>
+
+    <article class="ev">
+      <div class="when"><div class="dw">Lun</div><div class="dd">26</div><div class="hr">09:00</div></div>
+      <div class="body">
+        <div class="poster g4"><svg class="ico" viewBox="0 0 24 24"><path d="M4 10h16l-1.5-5h-13z"/><path d="M5 10v9h14v-9"/><path d="M9 19v-5h6v5"/></svg></div>
+        <div class="evtxt">
+          <div class="evt">Marché des producteurs de la Place du Marché</div>
+          <div class="evmeta">
+            <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            09:00 – 13:00
+            <span class="sep">·</span>
+            <svg class="ico" viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
+            Place du Marché, 5000 Namur
+            <span class="sep">·</span> 0,9 km
+          </div>
+          <div class="evtags">
+            <span class="tag free">Gratuit</span>
+            <span class="tag">Marché</span>
+            <span class="tag">En plein air</span>
+            <span class="evorg"><span class="vbadge">✓</span> <b>Ville de Namur</b> · commune</span>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="ev">
+      <div class="when"><div class="dw">Lun</div><div class="dd">26</div><div class="hr">15:00</div></div>
+      <div class="body">
+        <div class="poster g5"><svg class="ico" viewBox="0 0 24 24"><path d="M12 3l2.4 5.2 5.6.7-4.1 3.9 1.1 5.6L12 15.7 6.9 18.4 8 12.8 3.9 8.9l5.6-.7z"/></svg></div>
+        <div class="evtxt">
+          <div class="evt">Halloween des enfants — maquillage, jeux et goûter</div>
+          <div class="evmeta">
+            <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            15:00 – 18:00
+            <span class="sep">·</span>
+            <svg class="ico" viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
+            Salle communale de Belgrade, 5001 Belgrade
+            <span class="sep">·</span> 5,2 km
+          </div>
+          <div class="evtags">
+            <span class="tag paid">3 € · TVA comprise</span>
+            <span class="tag">Enfants</span>
+            <span class="tag age">Tout public</span>
+            <span class="tag">Billetterie sur place</span>
+            <span class="evorg">Proposé par <b>un particulier</b></span>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <div class="note" style="margin-top:16px">
+      Les événements sont classés par date. Un événement terminé quitte l'agenda le lendemain et
+      reste consultable 7 jours avec la mention « terminé ».
+    </div>
+  </div>
+</div>
+
+<div class="cap">Écran 2 — Page d'un événement : date, prix annoncé, un seul bouton d'action, et ce que Kazendra ne fait pas</div>
+
+<div class="wrap crumb">Événements <b>›</b> Fête, kermesse &amp; brocante <b>›</b> Brocante d'automne du quartier Saint-Servais</div>
+
+<div class="wrap">
+  <div class="evhead">
+    <div class="when">
+      <div class="dw">Dimanche</div>
+      <div class="dd">25</div>
+      <div class="mo">Octobre</div>
+      <div class="hr">08:00</div>
+    </div>
+    <div class="ht">
+      <h2 class="title">Brocante d'automne du quartier Saint-Servais</h2>
+      <div class="subline">
+        <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        08:00 – 17:00
+        <span class="sep">·</span>
+        <svg class="ico" viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
+        Place Saint-Servais, 5000 Namur
+        <span class="sep">·</span> 2,4 km de chez vous
+        <span class="sep">·</span> 47 personnes intéressées
+      </div>
+    </div>
+  </div>
+
+  <div class="detail">
+    <div>
+      <div class="main">
+        <svg class="ico" viewBox="0 0 24 24"><path d="M3 9h18M6 9V6h12v3M4 9v11h16V9M9 20v-5h6v5"/></svg>
+        <div class="n">Affiche fournie par l'organisateur</div>
+      </div>
+      <div class="thumbs">
+        <div class="th on"><svg class="ico" viewBox="0 0 24 24" style="width:22px;height:22px"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 15l4-4 5 5 3-3 6 6"/></svg></div>
+        <div class="th"><svg class="ico" viewBox="0 0 24 24" style="width:22px;height:22px"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 15l4-4 5 5 3-3 6 6"/></svg></div>
+        <div class="th"><svg class="ico" viewBox="0 0 24 24" style="width:22px;height:22px"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 15l4-4 5 5 3-3 6 6"/></svg></div>
+      </div>
+
+      <div class="sec">
+        <h4>À propos de cet événement <span>Décrit par l'organisateur</span></h4>
+        <div class="desctxt">
+          La brocante du quartier revient pour sa treizième édition. Une soixantaine d'emplacements
+          sur la place, un coin réservé aux enfants, et la petite restauration tenue par le comité.
+          Les exposants s'installent dès 06:30 ; les visiteurs sont attendus à partir de 08:00.
+          En cas de pluie, la brocante est reportée au lundi 2 novembre — l'information sera
+          publiée sur cette page et envoyée à toutes les personnes intéressées.
+        </div>
+      </div>
+
+      <div class="sec">
+        <h4>Infos pratiques</h4>
+        <div class="specs">
+          <div><span>Entrée</span>Gratuite</div>
+          <div><span>Billetterie</span>Aucune — on entre librement</div>
+          <div><span>Public</span>Tout public</div>
+          <div><span>Accès PMR</span>Partiel (place en gravier)</div>
+          <div><span>Lieu</span>En plein air, place publique</div>
+          <div><span>Langue</span>Français</div>
+        </div>
+      </div>
+
+      <div class="sec">
+        <h4>Où ça se passe</h4>
+        <div class="loc">
+          <div class="loc-ico"><svg class="ico" viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg></div>
+          <div class="loc-txt">
+            <div class="loc-ville">Place Saint-Servais</div>
+            <div class="loc-cp">5000 Namur · Belgique · lieu public</div>
+          </div>
+          <a class="loc-btn" href="#">
+            <svg class="ico" viewBox="0 0 24 24" style="width:15px;height:15px"><path d="M21 3L3 10.5l7.5 3L14 21z"/></svg>
+            Calculer la distance
+          </a>
+        </div>
+        <div class="note">
+          Le lien d'itinéraire s'ouvre dans Google Maps et part de votre position. Kazendra
+          n'affiche ni carte ni épingle : seules les informations de lieu ci-dessus sont publiées.
+        </div>
+        <div class="variant">
+          <div class="vt">Variante — si le lieu était une adresse privée</div>
+          <div class="vg">
+            La page n'afficherait que <b>5000 Namur</b> (code postal et commune). L'adresse exacte
+            serait donnée par l'organisateur <b>dans la messagerie</b>, après votre message — et
+            l'export agenda ne contiendrait pas davantage.
+          </div>
+        </div>
+      </div>
+
+      <div class="sec">
+        <h4>Organisateur <span>Déclaré, non vérifié par Kazendra</span></h4>
+        <div class="orgtop">
+          <div class="orglogo"><svg viewBox="0 0 64 64" role="img" aria-label="Logo du Comité de quartier Saint-Servais">
+            <rect width="64" height="64" fill="#0D3B5B"/>
+            <circle cx="23" cy="25" r="7" fill="#EB912D"/>
+            <circle cx="41" cy="25" r="7" fill="#FFFFFF" opacity=".88"/>
+            <path d="M11 49c0-7.5 5-11 12-11s12 3.5 12 11z" fill="#EB912D"/>
+            <path d="M29 49c0-7.5 5-11 12-11s12 3.5 12 11z" fill="#FFFFFF" opacity=".88"/></svg></div>
+          <div>
+            <div class="orgname">Comité de quartier Saint-Servais</div>
+            <div class="orgtype">ASBL · numéro d'entreprise vérifié · membre depuis mars 2024</div>
+          </div>
+        </div>
+        <div class="legal">
+          <b>Ce que « vérifié » veut dire ici :</b> nous avons contrôlé le numéro d'entreprise et
+          l'inscription comme ASBL, le 24/10/2026. Cela ne dit rien du sérieux de l'organisateur,
+          de la tenue de l'événement, ni de ses autorisations communales.
+        </div>
+      </div>
+
+      <div class="cancelled">
+        <div class="cband">
+          <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.5"/></svg>
+          Variante — fiche « annulée par l'organisateur »
+        </div>
+        <div class="cin">
+          La fiche reste en ligne <b>7 jours</b> avec ce bandeau, elle quitte l'agenda, et
+          <b>les 47 personnes intéressées reçoivent une notification</b>. Effacer l'annulation
+          laisserait des gens se déplacer pour rien.
+        </div>
+      </div>
+    </div>
+
+    <aside>
+      <div class="side">
+        <div class="price">Entrée gratuite<small>Prix annoncé par l'organisateur · aucune vente de place</small></div>
+        <a class="cta" href="#">Je suis intéressé · 47</a>
+        <a class="cta2" href="#">Ajouter à mon agenda (.ics)</a>
+        <a class="cta2" href="#">Envoyer un message à l'organisateur</a>
+        <div class="share">
+          <button class="part" aria-label="Partager cet événement" title="Partager cet événement">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M14 9V5l7 7-7 7v-4.1c-5 0-8.5 1.6-11 5.1 1-5 4-10 11-11z"/></svg>
+          </button>
+          <span class="plabel">Partager</span>
+          <a class="sign" href="#">Signaler</a>
+        </div>
+        <div class="sharenote">Le lien partagé ne contient jamais une adresse privée.</div>
+        <div class="int">Vous serez prévenu si la date change ou si l'événement est annulé.</div>
+
+        <div class="warn navy">
+          <b>Kazendra n'encaisse rien</b>
+          Pas de billetterie, pas de prévente, pas de réservation payante. On n'affiche que
+          l'événement.
+        </div>
+        <div class="warn amber">
+          <b>Aucun versement à l'avance</b>
+          Si quelqu'un vous demande un acompte avant l'événement, ne payez pas et signalez la fiche.
+        </div>
+        <div class="warn navy">
+          <b>Informations déclarées</b>
+          Date, lieu, prix et programme sont fournis par l'organisateur. Vérifiez auprès de lui
+          avant de vous déplacer.
+        </div>
+      </div>
+
+      <div class="mini">
+        <h5>Aussi près d'ici, ces jours-ci</h5>
+        <div class="mi">
+          <div class="d"><b>25</b><span>oct</span></div>
+          <div class="t">Atelier de réparation de vélos<span>Dim. 14:00 · 3,1 km · gratuit</span></div>
+        </div>
+        <div class="mi">
+          <div class="d"><b>25</b><span>oct</span></div>
+          <div class="t">Concert de la chorale Les Voix du Namurois<span>Dim. 20:00 · 1,8 km · 10 €</span></div>
+        </div>
+        <div class="mi">
+          <div class="d"><b>26</b><span>oct</span></div>
+          <div class="t">Marché des producteurs<span>Lun. 09:00 · 0,9 km · gratuit</span></div>
+        </div>
+        <div class="legal">
+          Les messages passent par la messagerie Kazendra : aucun numéro de téléphone n'est publié.
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<div class="cap">Écran 3 — « On y va ensemble ? » : la sortie se greffe sur un événement déjà modéré, jamais sur un tableau d'intentions</div>
+
+<div class="wrap crumb">Événements <b>›</b> Brocante d'automne du quartier Saint-Servais <b>›</b> Y aller à plusieurs</div>
+
+<div class="wrap yywrap">
+  <div>
+    <div class="yycard">
+      <div class="yyhead">Sur la fiche de l'événement — le seul point d'entrée
+        <span class="pill">pas de page « sorties du jour »</span>
+      </div>
+      <div class="yybody">
+        <div class="yyentry">
+          <div class="who"><div class="av">C</div><div class="av">A</div><div class="av">J</div></div>
+          <div class="lb"><b>3 personnes y vont ensemble</b> · dimanche 08:00</div>
+          <div class="go">Voir la sortie</div>
+        </div>
+        <div class="yyentry" style="margin-top:9px;background:#fff;border-style:dashed">
+          <div class="lb" style="color:#6B7E8C">Personne n'a encore proposé d'y aller à plusieurs</div>
+          <div class="new">Proposer une sortie</div>
+        </div>
+        <div class="yyrules" style="margin-top:12px">
+          Ce bloc n'apparaît <b>que sur la fiche d'un événement existant</b>, et <b>que pour les
+          personnes intéressées de la même commune</b>. Il n'existe aucun écran qui liste « qui veut
+          sortir ce soir » : c'est la seule différence avec la porte séparée, et c'est celle qui
+          compte.
+        </div>
+      </div>
+    </div>
+
+    <div class="yycard">
+      <div class="yyhead">
+        <svg class="ico" viewBox="0 0 24 24" style="width:15px;height:15px"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c1-3.4 3.2-5 6-5s5 1.6 6 5"/><path d="M16 5.5a3 3 0 0 1 0 5.6M18 20c-.3-2.2-1.2-3.8-2.6-4.8"/></svg>
+        La sortie, telle que la voient les intéressés
+        <span class="pill">3 places libres sur 6</span>
+      </div>
+      <div class="yybody">
+        <div class="yymot">
+          Ouverture à 08:00 : on fait le tour ensemble, et café au coin enfants vers 10:00. Je viens
+          avec mon chien, il est très sage. Deux heures suffisent, après chacun repart comme il veut.
+        </div>
+        <div class="yymeta">
+          <div><span>Rendez-vous</span><b>Devant l'entrée, 07:55</b></div>
+          <div><span>Durée prévue</span><b>2 h environ</b></div>
+          <div><span>Places</span><b>3 libres sur 6</b></div>
+        </div>
+        <div class="yypp">
+          <div class="av me">C</div>
+          <div class="av">A</div>
+          <div class="av">J</div>
+          <div class="av ghost">+2</div>
+          <div class="tx"><b>camille_84</b> propose · <b>alex_5000</b> et <b>julie_lg</b> ont rejoint<br>
+            membre depuis mars 2026 · téléphone vérifié</div>
+          <div class="rst">Rejoindre</div>
+        </div>
+        <div class="yyrules">
+          <b>Ce que cette sortie n'est pas :</b> un rendez-vous privé, une réservation, un paiement.
+          Aucune adresse n'est ajoutée — le point de rendez-vous est <b>le lieu public de
+          l'événement</b>, jamais chez quelqu'un. Le nombre de places est une limite de confort, pas
+          un billet.
+        </div>
+      </div>
+    </div>
+
+    <div class="yycard">
+      <div class="yyhead">Le fil de la sortie
+        <span class="pill">4 personnes · tout le groupe lit</span>
+      </div>
+      <div class="yyband">
+        <b>Rien à payer, aucune adresse.</b> On se retrouve devant l'entrée, en plein jour. Aucune
+        image ne peut être envoyée ici.
+      </div>
+      <div class="yymsgs">
+        <div class="ymb">Je serai devant l'entrée à 07:55, veste bleue et chien noir. Si quelqu'un est
+          en retard, écrivez ici, on attend.<div class="t">hier · 18:20</div></div>
+        <div class="ymb me">Parfait. Je viens en bus, je serai là vers 07:50.<div class="t">hier · 18:34</div></div>
+        <div class="ymb">Est-ce que quelqu'un sait s'il y a un parking ? J'ai une heure de route.
+          <div class="t">hier · 19:02</div></div>
+      </div>
+      <div class="yycomp">
+        <div class="f">Écrire au groupe…</div>
+        <div class="s">Envoyer</div>
+      </div>
+      <div class="yynofile">
+        <svg class="ico" viewBox="0 0 24 24" style="width:12px;height:12px"><path d="M20 11l-8.5 8.5a4.5 4.5 0 0 1-6.4-6.4L13 5a3 3 0 0 1 4.2 4.2L9 17.4a1.5 1.5 0 0 1-2.1-2.1L14.5 8"/><path d="M3 3l18 18"/></svg>
+        Ni pièce jointe, ni image, ni lien. Aucun message privé entre participants : le duo reste
+        dans /rencontre, après intérêt mutuel.
+      </div>
+    </div>
+
+    <div class="variant">
+      <div class="vt">Variante — la sortie ne compte qu'une personne</div>
+      <div class="vg">
+        Elle reste visible, avec le pseudo de la personne qui propose et la mention
+        <b>« propose une sortie »</b> : sans cela, personne ne pourrait jamais rejoindre. Avant de
+        publier, l'écran prévient que ce pseudo et l'heure de rendez-vous seront vus par les
+        intéressés de la commune — et qu'on peut annuler d'un geste. Personne n'est obligé de proposer.
+      </div>
+    </div>
+  </div>
+
+  <aside>
+    <div class="yycard">
+      <div class="yyhead">Créer une sortie</div>
+      <div class="yybody yyform">
+        <div class="frow">
+          <label class="flab">Événement</label>
+          <div class="fld">Brocante d'automne du quartier Saint-Servais<br>
+            <span style="font-size:11px;color:#5E7180">Dim. 25 octobre · 08:00 · Place Saint-Servais, 5000 Namur</span>
+          </div>
+        </div>
+        <div class="frow">
+          <label class="flab">Rendez-vous</label>
+          <div class="ychips">
+            <div class="ych on">15 min avant</div>
+            <div class="ych">à l'ouverture</div>
+            <div class="ych">à l'heure de début</div>
+          </div>
+        </div>
+        <div class="frow">
+          <label class="flab">Durée prévue</label>
+          <div class="ychips">
+            <div class="ych">1 h</div>
+            <div class="ych on">2 h</div>
+            <div class="ych">la journée</div>
+          </div>
+        </div>
+        <div class="frow">
+          <label class="flab">Nombre de places</label>
+          <div class="ychips">
+            <div class="ych">2 (en duo)</div>
+            <div class="ych on">4</div>
+            <div class="ych">6</div>
+          </div>
+        </div>
+        <div class="frow">
+          <label class="flab">Un mot pour donner envie</label>
+          <div class="fld">Ouverture à 08:00 : on fait le tour ensemble, et café au
+            coin enfants vers 10:00. Je viens avec mon chien, il est très sage.</div>
+          <div style="font-size:10px;color:#5E7180;margin-top:4px;text-align:right">128 / 140</div>
+        </div>
+        <div class="ychk">
+          <div class="bx"></div>
+          <div>Je n'ai <b>rien à avancer</b> et je n'attends aucun paiement : la sortie est gratuite
+            à organiser.</div>
+        </div>
+        <div class="ychk">
+          <div class="bx"></div>
+          <div>Je ne donnerai <b>ni mon adresse, ni mon numéro</b> dans le fil — le rendez-vous est
+            devant l'entrée.</div>
+        </div>
+        <div class="send">Publier la sortie</div>
+        <div class="warn2">
+          <b>Ce que vous acceptez en publiant</b>
+          Votre pseudo, l'heure de rendez-vous et le lieu public de l'événement seront visibles par
+          les personnes intéressées de votre commune. Vous pouvez annuler à tout moment : tout le
+          groupe est prévenu, sans justification à donner.
+        </div>
+      </div>
+    </div>
+
+    <div class="yycard">
+      <div class="yyhead">Ce que la sortie ne fait pas</div>
+      <div class="yybody">
+        <div class="yyrules" style="margin-top:0">
+          Aucun <b>message privé</b> entre participants — le fil est commun.<br>
+          Aucune <b>image, aucun fichier, aucun lien</b>.<br>
+          Aucun <b>argent</b>, aucune réservation, aucun acompte.<br>
+          Aucune <b>adresse ajoutée</b> : le point de rendez-vous est celui de l'événement.<br>
+          Aucun <b>rendez-vous après le début</b> de l'événement.<br>
+          Aucune <b>note</b>, aucun compteur de sorties.<br>
+          Aucune sortie sur un événement à <b>adresse privée</b>.
+        </div>
+      </div>
+    </div>
+
+    <div class="yycard">
+      <div class="yyhead">Qui peut proposer, qui peut rejoindre</div>
+      <div class="yybody" style="font-size:12px;line-height:1.65;color:var(--ink2)">
+        <b style="color:var(--ink)">Proposer</b> : compte de <b>30 jours</b> minimum, téléphone
+        vérifié, <b>une seule sortie active</b> à la fois.<br>
+        <b style="color:var(--ink)">Rejoindre</b> : compte de <b>7 jours</b>, téléphone vérifié, et
+        avoir marqué l'événement « intéressé ».<br>
+        <b style="color:var(--ink)">Annuler</b> : libre ; trois annulations en 30 jours suspendent la
+        possibilité de proposer pendant 30 jours.<br>
+        <span style="display:block;margin-top:8px;font-size:11px;color:#5E7180">
+          Ces seuils existent pour une seule raison : une sortie se prépare en quelques heures, donc
+          la modération humaine ne peut pas être un filtre. Un compte créé le matin ne doit pas
+          pouvoir donner rendez-vous le soir.</span>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<div class="cap">Écran 4 — Signaler : cinq motifs fermés, un signalement anonyme, et rien qui parte chez l'organisateur</div>
+
+<div class="sgband">
+  <div class="sgwrap">
+    <div class="sgmodal">
+      <div class="sghd">
+        <div>
+          <h3>Signaler cet événement</h3>
+          <div class="sub">Brocante d'automne du quartier Saint-Servais · dimanche 25 octobre</div>
+        </div>
+        <div class="x">✕</div>
+      </div>
+      <div class="sgbody">
+
+        <div class="sgopt">
+          <div class="rd"></div>
+          <div>
+            <div class="tt">L'événement est annulé</div>
+            <div class="ds">Il n'a pas lieu, ou l'organisateur l'a annulé sans mettre la fiche à jour.</div>
+          </div>
+        </div>
+
+        <div class="sgopt">
+          <div class="rd"></div>
+          <div>
+            <div class="tt">Les informations sont fausses</div>
+            <div class="ds">La date, le lieu, le prix ou le programme ne correspondent pas à la réalité.</div>
+          </div>
+        </div>
+
+        <div class="sgopt on">
+          <div class="rd"></div>
+          <div>
+            <div class="tt">Arnaque, ou on me demande de payer</div>
+            <div class="ds">Un acompte, un « lien de paiement », une réservation à régler d'avance, ou
+              quelqu'un qui revend des billets.</div>
+          </div>
+        </div>
+
+        <div class="sgopt">
+          <div class="rd"></div>
+          <div>
+            <div class="tt">Contenu illégal</div>
+            <div class="ds">Appel à la violence ou à la haine, contenu interdit, événement réservé à un
+              public sur un critère protégé sans base légale.</div>
+          </div>
+        </div>
+
+        <div class="sgopt">
+          <div class="rd"></div>
+          <div>
+            <div class="tt">Une adresse privée est publiée</div>
+            <div class="ds">Le domicile d'un particulier apparaît dans la description, le lieu ou l'affiche.</div>
+          </div>
+        </div>
+
+        <div class="sgtxt">Le formulaire de contact m'a demandé 15 € par virement pour « réserver ma place »,
+          avant l'événement.</div>
+        <div class="sghint">Facultatif · 300 caractères · ne mettez pas vos coordonnées</div>
+
+        <div class="sgfoot">
+          <div class="send">Envoyer le signalement</div>
+          <div class="cancel">Annuler</div>
+        </div>
+        <div style="font-size:10.5px;color:var(--muted);margin-top:9px">
+          Anonyme : l'organisateur ne saura jamais qui a signalé, ni quand. Aucun message ne lui est
+          envoyé.
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="yycard">
+        <div class="yyhead">Ce que devient votre signalement</div>
+        <div class="yybody">
+          <div class="yyrules" style="margin-top:0">
+            <b>Il est anonyme.</b> L'organisateur ne reçoit ni votre nom, ni votre e-mail, ni l'heure de
+            votre signalement.<br>
+            <b>Trois signalements distincts</b> sur la même fiche la masquent provisoirement et
+            automatiquement. Un seul signalement ne masque rien : sinon, trois comptes suffiraient à
+            faire taire un événement gênant.<br>
+            <b>Décision humaine sous 24 h</b>, journalisée (qui, quand, quel motif, quelle pièce).<br>
+            <b>L'organisateur n'est pas prévenu</b> tant que la décision n'est pas prise — sauf si la
+            fiche est retirée, il reçoit alors le motif.
+          </div>
+        </div>
+      </div>
+
+      <div class="yycard">
+        <div class="yyhead">Ce que le signalement ne fait pas</div>
+        <div class="yybody">
+          <div class="yyrules" style="margin-top:0">
+            Il ne retire pas la fiche tout seul.<br>
+            Il n'envoie aucun message à l'organisateur.<br>
+            Il ne sert pas à contester une annulation ni un prix.<br>
+            Il ne remplace pas une plainte : si de l'argent a été versé sur un site extérieur,
+            Kazendra ne peut pas le récupérer — c'est la banque et la police qu'il faut prévenir.
+          </div>
+        </div>
+      </div>
+
+      <div class="warn" style="margin-top:14px;border-radius:11px;padding:12px 13px;font-size:11.5px;
+                                 line-height:1.55;background:#FBEAEA;color:#6E2A2A">
+        <b style="display:block;margin-bottom:4px">Danger immédiat</b>
+        Si quelqu'un est en danger maintenant, appelez les secours — <b>112</b> en Belgique. Kazendra
+        n'est pas un service d'urgence et ne peut pas envoyer quelqu'un sur place.
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="cap">Écran 5 — Mes événements : quatre onglets, une seule action par ligne, un nombre et jamais des noms</div>
+
+<div class="mevwrap">
+  <div class="mevtabs">
+    <div class="mevtab on">À venir <span class="n">3</span></div>
+    <div class="mevtab">Intéressés <span class="n">4</span></div>
+    <div class="mevtab">Passés <span class="n">8</span></div>
+    <div class="mevtab">Annulés <span class="n">1</span></div>
+  </div>
+
+  <div class="mevrow">
+    <div class="mevdate"><div class="dw">Dim</div><div class="dd">25</div><div class="mo">oct</div></div>
+    <div>
+      <div class="mevtit">Brocante d'automne du quartier Saint-Servais</div>
+      <div class="mevsub">08:00 – 17:00 · Place Saint-Servais <b>· lieu public</b> · gratuit</div>
+    </div>
+    <div><span class="badge pub">Publié</span></div>
+    <div class="mevcnt"><b>412</b> vues · <b>47</b> intéressés</div>
+    <div class="mevact">Voir les intéressés<span class="sub">un nombre, jamais la liste</span></div>
+  </div>
+
+  <div class="mevrow">
+    <div class="mevdate"><div class="dw">Dim</div><div class="dd">8</div><div class="mo">nov</div></div>
+    <div>
+      <div class="mevtit">Concert de la chorale Les Voix du Namurois</div>
+      <div class="mevsub">20:00 · Église Saint-Loup · 10 € TVA comprise · 2 dates</div>
+    </div>
+    <div><span class="badge pub">Publié</span></div>
+    <div class="mevcnt"><b>96</b> vues · <b>12</b> intéressés</div>
+    <div class="mevact">Modifier<span class="sub">date, affiche, description</span></div>
+  </div>
+
+  <div class="mevrow">
+    <div class="mevdate"><div class="dw">Lun</div><div class="dd">16</div><div class="mo">nov</div></div>
+    <div>
+      <div class="mevtit">Atelier de réparation de vélos</div>
+      <div class="mevsub">14:00 · Maison de quartier · gratuit · en attente depuis 2 h</div>
+    </div>
+    <div><span class="badge wait">Attente de paiement</span></div>
+    <div class="mevcnt">Rien n'est publié tant que le paiement n'est pas reçu</div>
+    <div class="mevact">Terminer la publication<span class="sub">paiement non reçu</span></div>
+  </div>
+
+  <div class="mevrow">
+    <div class="mevdate"><div class="dw">Dim</div><div class="dd">22</div><div class="mo">nov</div></div>
+    <div>
+      <div class="mevtit">Marché de Noël du comité</div>
+      <div class="mevsub">Brouillon · l'affiche manque, la description fait 140 caractères sur 200</div>
+    </div>
+    <div><span class="badge draft">Brouillon</span></div>
+    <div class="mevcnt">Visible par vous seul</div>
+    <div class="mevact">Terminer la publication<span class="sub">2 champs à compléter</span></div>
+  </div>
+
+  <div class="mevrow">
+    <div class="mevdate"><div class="dw">Lun</div><div class="dd">12</div><div class="mo">oct</div></div>
+    <div>
+      <div class="mevtit">Fête de la rentrée du quartier</div>
+      <div class="mevsub">Terminé · la fiche est sortie de l'agenda le lendemain</div>
+    </div>
+    <div><span class="badge past">Terminé</span></div>
+    <div class="mevcnt"><b>380</b> vues · <b>63</b> intéressés</div>
+    <div class="mevact gray">Republier<span class="sub">même contenu, nouvelle date</span></div>
+  </div>
+
+  <div class="mevrow">
+    <div class="mevdate"><div class="dw">Lun</div><div class="dd">2</div><div class="mo">nov</div></div>
+    <div>
+      <div class="mevtit">Brocante reportée — pluie</div>
+      <div class="mevsub">Annulée par vous le 24 oct. à 18:12</div>
+    </div>
+    <div><span class="badge canc">Annulé</span></div>
+    <div class="mevcnt"><b>47</b> personnes intéressées ont été prévenues</div>
+    <div class="mevact gray">Voir la fiche<span class="sub">reste en ligne 7 jours</span></div>
+  </div>
+
+  <div class="mevnote">
+    <b>Pourquoi un nombre et pas des noms.</b> « Intéressé » n'est pas une inscription : l'organisateur
+    n'a aucune raison de recevoir une liste de personnes, et une liste de noms est une donnée à
+    protéger — et un fichier à revendre. Le compteur suffit à savoir si l'événement prend.
+  </div>
+
+  <div class="sortcard">
+    <div class="hd">
+      <svg class="ico" viewBox="0 0 24 24" style="width:15px;height:15px"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c1-3.4 3.2-5 6-5s5 1.6 6 5"/><path d="M16 5.5a3 3 0 0 1 0 5.6"/></svg>
+      Vos sorties à plusieurs
+      <span class="pill">annulation en un geste</span>
+    </div>
+    <div class="sortrow">
+      <div>
+        <div class="tt">Brocante d'automne · dimanche 25 octobre</div>
+        <div class="ds">Rendez-vous devant l'entrée, 07:55 · durée 2 h · 3 places prises sur 6</div>
+      </div>
+      <div class="rt">Annuler la sortie</div>
+    </div>
+    <div class="sortrow">
+      <div>
+        <div class="tt">Concert de la chorale · dimanche 8 novembre</div>
+        <div class="ds">Rendez-vous 15 min avant · 1 place prise sur 2 · personne n'a encore rejoint</div>
+      </div>
+      <div class="rt">Annuler la sortie</div>
+    </div>
+    <div class="sortrow" style="background:#FAFBFC">
+      <div style="font-size:11px;color:#6B7E8C;line-height:1.6">
+        Annuler prévient tout le groupe, sans justification à donner. L'écran n'affiche jamais qui a
+        quitté une sortie, ni combien de sorties quelqu'un a faites : ces informations n'existent pas.
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

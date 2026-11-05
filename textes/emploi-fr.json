@@ -1,0 +1,50 @@
+{
+  "langue": "fr",
+  "acteur": "chercheur d'emploi et entreprise (porte /emploi du hub Kazendra)",
+  "version": "1.1 — 2026-10-25 (les phrases sont EXTRAITES des écrans de `maquettes/emploi.html`, pas inventées à côté : la version 1.0 avait été écrite après la maquette, dans un registre différent — tu/vous mélangés — et 0 phrase sur 19 se retrouvait à l'écran. Un fichier de textes qui ne correspond à aucun écran est une deuxième vérité.)",
+  "reference": "Ce fichier est LA référence : ses clés doivent toutes exister dans emploi-nl.json et emploi-de.json le jour de la traduction. Aucun texte en dur dans un écran.",
+  "regle_de_lecture": "Registre : « tu » pour la personne qui cherche un emploi, « vous » pour l'entreprise qui publie. Une phrase qui change de registre au milieu d'un écran est une faute, pas un détail. Chaque phrase ci-dessous est figée : elle a été écrite contre la décision qu'elle applique.",
+  "textes": {
+    "emploi.affichage_pur": "Cette porte est en affichage pur : Kazendra ne reçoit aucune candidature, ne transmet rien, et ne conserve aucune donnée de candidat.",
+    "emploi.entete": "Les offres des employeurs de ta région, avec l'adresse à laquelle écrire. Pas de compte, pas de formulaire, pas de CV déposé ici : tu écris directement à l'employeur, depuis ta propre boîte mail.",
+    "emploi.sortie_plateforme": "Un courriel s'ouvre dans ton application de messagerie, déjà adressé. Rien ne passe par Kazendra : ni ta candidature, ni ton CV, ni ton nom.",
+    "emploi.postuler": "Ouvre ton gestionnaire de courrier par défaut, avec le texte ci-dessus que tu peux modifier ou effacer. S'il ne s'ouvre pas — ou s'il n'y en a pas — copie l'adresse : elle est là pour ça.",
+    "emploi.adresse_obfusquee": "Affichée ainsi pour qu'un robot ne la récolte pas telle quelle. Un humain la lit et la copie sans effort — ce n'est pas une protection, c'est un ralentisseur.",
+    "emploi.adresse_publique": "Cette adresse sera publique et récupérable par des robots. Si vous ne voulez pas de publicité indésirable, utilisez une adresse dédiée au recrutement. Elle est effacée avec l'annonce.",
+    "emploi.declaration_adresse": "Je déclare être autorisé·e à publier cette adresse et j'accepte qu'elle soit publique pendant la durée de l'annonce. La déclaration est horodatée et conservée avec l'offre.",
+    "emploi.sans_bareme": "Kazendra n'affiche aucun barème : nous ne le connaissons pas, et un chiffre inventé serait pire qu'aucun.",
+    "emploi.employeur_verifie": "Vérifié à la main, jamais « certifié » : nous contrôlons le numéro d'entreprise, pas la santé de la société.",
+    "emploi.alerte_arnaque": "Votre IBAN ou numéro de compte, une copie de votre carte d'identité, ou un mot de passe. Aucun employeur sérieux ne les demande avant un contrat signé. Et cette conversation ne passe plus par Kazendra : personne ne relira le message à votre place.",
+    "emploi.dix_huit": "Cette porte est réservée aux 18 ans et plus — ce n'est pas un filtre d'âge caché, c'est la nature du contrat. Les jobs étudiants ont leur propre porte, avec leurs propres règles.",
+    "emploi.moderation": "Une personne relit l'offre sous 24 h. Pas d'automatisme : le contact sort de Kazendra, donc c'est le seul contrôle qui reste.",
+    "emploi.plafond": "Trois annonces actives par entreprise. Une offre qui a un mois est périmée : au-delà de trois en même temps, la page devient un mur et plus personne ne lit.",
+    "emploi.plafond_exceptions": "Les brouillons, les refusées et les expirées ne comptent pas dans le plafond : on ne punit pas quelqu'un pour un brouillon.",
+    "emploi.prix": "0 € au lancement. Le prix de 39 € est un réglage, pas une constante : il s'activera dans le panneau, et l'annonce portera alors la mention « annonce sponsorisée ». Jamais facturé à celui qui cherche un emploi.",
+    "emploi.pas_de_compte": "Aucun compte pour consulter. Rien à télécharger pour postuler."
+  },
+  "emplacements": {
+    "emploi.affichage_pur": "liste, pied de page",
+    "emploi.entete": "liste, sous le titre",
+    "emploi.sortie_plateforme": "fiche, carte « écrire à l'employeur »",
+    "emploi.postuler": "fiche, sous les deux gestes",
+    "emploi.adresse_obfusquee": "fiche, bloc « adresse de contact »",
+    "emploi.adresse_publique": "dépôt, bloc 3, sous le champ adresse",
+    "emploi.declaration_adresse": "dépôt, bloc 3, ligne verrouillée",
+    "emploi.sans_bareme": "fiche, mention rémunération ; dépôt, bloc 2",
+    "emploi.employeur_verifie": "fiche, carte « l'employeur »",
+    "emploi.alerte_arnaque": "fiche, encadré rouge ; mobile, sous le brouillon",
+    "emploi.dix_huit": "fiche, carte « ouverte aux adultes »",
+    "emploi.moderation": "dépôt, bloc 5 « avant publication »",
+    "emploi.plafond": "mes offres, carte « le plafond »",
+    "emploi.plafond_exceptions": "mes offres, sous le plafond",
+    "emploi.prix": "dépôt, carte « ce que ça coûte »",
+    "emploi.pas_de_compte": "planche mobile, vue liste"
+  },
+  "sources_verifiees": [
+    { "quoi": "les cinq mentions obligatoires d'une annonce d'emploi", "ou": "app3/note-legale-belgique.md § 7 quater", "le": "2026-10-10" },
+    { "quoi": "l'âge est un critère protégé, y compris au recrutement (Unia)", "ou": "app3/note-legale-belgique.md § 7 quater, obligation 1", "le": "2026-10-10" },
+    { "quoi": "modération humaine avant publication (DSA)", "ou": "app3/note-legale-belgique.md § 7 quater, obligation 2", "le": "2026-10-10" },
+    { "quoi": "le contrat est entre l'étudiant et l'entreprise ; la plateforme n'est ni employeur ni placeur", "ou": "app3/note-legale-belgique.md § 7 bis", "le": "2026-10-10" },
+    { "quoi": "mention « annonce sponsorisée » due le jour où la publication est payante", "ou": "app3/note-legale-belgique.md § 7 quinquies", "le": "2026-10-10" }
+  ]
+}

@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wettelijke vermeldingen — Kazendra</title>
+<meta name="description" content="Wie kazendra.com uitgeeft, wie het host, en onder welke voorwaarden de site ter beschikking wordt gesteld.">
+<meta name="robots" content="index, follow">
+<!-- De drie taalversies van DEZE pagina. hreflang vertelt zoekmachines dat
+     het om DEZELFDE pagina in drie talen gaat — anders zouden ze als drie
+     concurrerende pagina's worden behandeld die elkaar verzwakken. x-default
+     duidt de standaard geleverde versie aan. -->
+<link rel="alternate" hreflang="fr" href="https://kazendra.com/mentions-legales.html">
+<link rel="alternate" hreflang="nl" href="https://kazendra.com/mentions-legales.nl.html">
+<link rel="alternate" hreflang="en" href="https://kazendra.com/mentions-legales.en.html">
+<link rel="alternate" hreflang="x-default" href="https://kazendra.com/mentions-legales.html">
+<!-- DEBUT-FEUILLE-EN-LIGNE -->
+<!--
+     FEUILLE DE STYLE EN LIGNE — écrite par bin/inliner-legal.mjs.
+
+     Elle n’est PAS appelée en fichier externe, volontairement : sur le PC de
+     B, les .css externes étaient coupés en chemin (antivirus, bloqueur, proxy).
+     Une page d’information dont l’habillage dépendrait d’un fichier bloqué ne
+     remplirait pas sa fonction.
+
+     Ne pas modifier à la main : éditer public/legal.css, puis relancer
+     « node bin/inliner-legal.mjs ». Le test tests/legal.test.mjs échoue si ce
+     bloc et le fichier divergent.
+-->
+<style>
+/* =============================================================================
+   HABILLAGE DES PAGES ADMINISTRATIVES — Kazendra.
+
+   Ces pages (mentions légales, confidentialité, cookies, conditions
+   d'utilisation) ont leur propre feuille, plus sobre que celle du site : ce sont
+   des documents à lire, pas un catalogue.
+
+   ELLE AUSSI EST POSÉE EN LIGNE DANS CHAQUE PAGE. Raison identique à celle du
+   site (voir bin/inliner-css.mjs) : le 08/10/2026, sur le PC de B, les fichiers
+   .css externes n'arrivaient pas au navigateur. Une page légale dont
+   l'habillage — ou pire, le TEXTE — dépendrait d'un fichier coupé en chemin ne
+   serait pas une page légale. On écrit donc la feuille dans la page.
+
+   NE PAS ÉDITER LE BLOC EN LIGNE À LA MAIN : éditer public/legal.css, puis
+   relancer « node bin/inliner-legal.mjs ». Le test tests/legal.test.mjs échoue
+   si le bloc et ce fichier divergent.
+   ============================================================================= */
+
+:root {
+  --bleu: #0d3b5b;
+  --orange: #eb912d;
+  --texte: #16324a;
+  --doux: #5a6b7b;
+  --bord: #dde1e6;
+  --fond: #ffffff;
+  --fond-doux: #f5f7f9;
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --texte: #e8edf2;
+    --doux: #a4b1be;
+    --bord: #2b3846;
+    --fond: #101a24;
+    --fond-doux: #17242f;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--fond);
+  color: var(--texte);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.doc { max-width: 820px; margin: 0 auto; padding: 0 18px 64px; }
+
+/* En-tête : le K de l'identité + un retour au site. Le lien de retour est
+   TOUJOURS visible : une page légale atteinte par obligation doit offrir la
+   sortie la plus évidente possible. */
+.tete {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  padding: 18px 0 14px; margin-bottom: 26px; border-bottom: 1px solid var(--bord);
+}
+.tete .k { width: 28px; height: 28px; flex: none; }
+.tete .nom { font-weight: 700; letter-spacing: .02em; color: var(--bleu); }
+@media (prefers-color-scheme: dark) { .tete .nom { color: #7fb8dd; } }
+.tete .retour {
+  margin-left: auto; color: var(--orange); text-decoration: none;
+  font-weight: 600; border-bottom: 1px solid transparent;
+}
+.tete .retour:hover, .tete .retour:focus { border-bottom-color: var(--orange); }
+
+/* SÉLECTEUR DE LANGUE des pages administratives. Trois langues : français,
+   néerlandais, anglais. La page courante est marquée par aria-current="page",
+   ce qui la rend lisible par un lecteur d'écran ET stylable ici — un état qui
+   n'existerait qu'en couleur serait invisible pour qui ne distingue pas les
+   couleurs.
+   Les autres langues du site (de, es, it, pt, pl, sv) mènent à l'ANGLAIS :
+   c'est la règle de repli déjà appliquée aux liens sortants, et une page légale
+   en anglais vaut mieux qu'une page légale dans une langue qu'on n'a pas. */
+.langues-doc {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 16px;
+  margin: 0 0 24px; font-size: 14px;
+}
+.langues-doc a { color: var(--doux); text-decoration: none; border-bottom: 1px solid transparent; }
+.langues-doc a:hover, .langues-doc a:focus { color: var(--orange); border-bottom-color: var(--orange); }
+.langues-doc a[aria-current="page"] {
+  color: var(--texte); font-weight: 700; border-bottom-color: var(--bord);
+}
+
+h1 { font-size: 26px; line-height: 1.25; margin: 0 0 6px; }
+h2 { font-size: 18px; margin: 32px 0 8px; color: var(--bleu); }
+@media (prefers-color-scheme: dark) { h2 { color: #7fb8dd; } }
+h3 { font-size: 15px; margin: 20px 0 6px; }
+p, ul, ol { margin: 0 0 12px; }
+ul, ol { padding-left: 22px; }
+li { margin-bottom: 5px; }
+a { color: var(--bleu); }
+@media (prefers-color-scheme: dark) { a { color: #8cc4e6; } }
+code { background: var(--fond-doux); padding: 1px 5px; border-radius: 4px; font-size: 14px; }
+
+.maj { color: var(--doux); font-size: 14px; margin: 0 0 26px; }
+
+/* CE QUI RESTE À FOURNIR. Le surlignage est volontairement visible : une page
+   légale qui aurait l'air complète alors qu'il manque l'identité de l'éditeur
+   tromperait tout le monde, à commencer par son auteur. Le test
+   tests/legal.test.mjs compte ces marques et refuse qu'elles disparaissent
+   sans que la donnée soit réellement renseignée. */
+.a-completer {
+  background: #fff3cd; color: #6b4b00; border: 1px dashed #d9a400;
+  border-radius: 4px; padding: 0 5px; font-weight: 600;
+}
+@media (prefers-color-scheme: dark) {
+  .a-completer { background: #3a2e07; color: #ffd77a; border-color: #8a6d12; }
+}
+
+/* L'avis de chantier. Il n'est là que TANT QUE la page n'est pas finalisée. */
+.charte {
+  border: 1px solid var(--bord); border-left: 4px solid var(--orange);
+  background: var(--fond-doux); border-radius: 8px;
+  padding: 12px 14px; margin: 0 0 26px; font-size: 15px;
+}
+.charte b { color: var(--bleu); }
+@media (prefers-color-scheme: dark) { .charte b { color: #7fb8dd; } }
+
+table { border-collapse: collapse; width: 100%; margin: 0 0 16px; font-size: 15px; }
+th, td { border: 1px solid var(--bord); padding: 7px 9px; text-align: left; vertical-align: top; }
+th { background: var(--fond-doux); }
+
+.pied-doc {
+  margin-top: 44px; padding-top: 16px; border-top: 1px solid var(--bord);
+  color: var(--doux); font-size: 14px;
+}
+.pied-doc a { margin-right: 14px; }
+
+@media print {
+  .tete .retour, .charte { display: none; }
+  body { background: #fff; color: #000; }
+}
+
+/* =============================================================================
+   AFFICHAGE PC — pages administratives, à partir de 1024 px
+
+   Ces pages étaient DÉJÀ centrées (`.doc`, 820 px) : c'est le seul endroit du
+   site qui avait un cadre. Le travail ici est donc plus fin — rendre au grand
+   écran ce qu'il permet : un titre qui a de l'autorité, des titres de section
+   qui se détachent vraiment, et un peu plus d'air entre les paragraphes. Rien
+   qui change la lecture : les mêmes mots, aux mêmes places, un peu mieux
+   posés. Le palier laisse le téléphone intact au caractère près.
+   ============================================================================= */
+/* DEBUT-COUCHE-PC — repère lu par tests/affichage-pc.test.mjs ; ne pas retirer. */
+@media (min-width: 1024px) {
+  body { font-size: 16.5px; }
+  .doc { max-width: 860px; padding: 0 28px 88px; }
+  h1 { font-size: 33px; letter-spacing: -.2px; }
+  h2 { font-size: 20px; margin: 40px 0 10px; }
+  h3 { font-size: 16px; margin: 24px 0 8px; }
+  .tete { padding: 26px 0 18px; margin-bottom: 34px; }
+  .tete .k { width: 32px; height: 32px; }
+  .langues-doc { margin-bottom: 28px; }
+  .maj { font-size: 14.5px; margin-bottom: 30px; }
+  .charte { padding: 14px 16px; font-size: 15.5px; }
+  table { font-size: 15.5px; }
+  th, td { padding: 9px 11px; }
+  .pied-doc { margin-top: 52px; }
+}
+</style>
+<!-- FIN-FEUILLE-EN-LIGNE -->
+</head>
+<body>
+<div class="doc">
+
+  <header class="tete">
+    <img class="k" src="favicon.svg" width="28" height="28" alt="">
+    <span class="nom">KAZENDRA</span>
+    <a class="retour" href="index.html">← Terug naar de site</a>
+  </header>
+
+  <nav class="langues-doc" aria-label="Taal van de pagina">
+    <a href="mentions-legales.html" hreflang="fr" lang="fr">Français</a>
+    <a href="mentions-legales.nl.html" hreflang="nl" lang="nl" aria-current="page">Nederlands</a>
+    <a href="mentions-legales.en.html" hreflang="en" lang="en">English</a>
+  </nav>
+
+  <h1>Wettelijke vermeldingen</h1>
+  <p class="maj">Laatst bijgewerkt: 11 oktober 2026.</p>
+
+  <p class="charte">
+    <b>Deze pagina is nog niet definitief.</b> De identiteit van de uitgever is ingevuld :
+    Billal Hamecha, Bief des Péniches 6, 7090 Ronquières, Belgique, bereikbaar op <a href="mailto:info@kazendra.com">info@kazendra.com</a>.
+    Er ontbreekt nog <span class="a-completer">het ondernemingsnummer (KBO)</span>, dat bij de
+    inschrijving wordt toegekend. Zolang het ontbreekt, blijft deze pagina een <b>model</b>.
+  </p>
+
+  <h2>1. Uitgever van de site</h2>
+  <p>De site <b>kazendra.com</b> wordt uitgegeven door&nbsp;:</p>
+  <ul>
+    <li>Naam en voornaam&nbsp;: <b>Billal Hamecha</b></li>
+    <li>Rechtsvorm&nbsp;: <b>natuurlijke persoon</b> die een zelfstandige activiteit uitoefent</li>
+    <li>Geografisch adres&nbsp;: <b>Bief des Péniches 6, 7090 Ronquières, Belgique</b></li>
+    <li>Ondernemingsnummer (KBO)&nbsp;: <span class="a-completer">in aanvraag</span></li>
+    <li>Btw-nummer&nbsp;: <b>niet btw-plichtig</b> — vrijstelling van btw voor kleine ondernemingen</li>
+    <li>E-mailadres voor contact&nbsp;: <a href="mailto:info@kazendra.com">info@kazendra.com</a></li>
+  </ul>
+  <p>
+    <b>Btw-regeling.</b> De uitgever valt onder de <b>vrijstelling van btw voor kleine ondernemingen</b>&nbsp;:
+    hij is niet btw-plichtig en factureert geen btw. De site is gratis voor zijn bezoekers&nbsp;: er wordt
+    daartegenover geen enkele handeling verricht die aan btw is onderworpen.
+  </p>
+  <p>
+    <b>Verantwoordelijke voor de publicatie&nbsp;:</b>
+    <b>Billal Hamecha</b>.
+  </p>
+  <p>
+    <b>Waarom deze informatie verplicht is.</b> Een site die in België een dienst aanbiedt, moet het
+    mogelijk maken zijn uitgever te identificeren en te bereiken (wet van 11 maart 2003 betreffende
+    bepaalde juridische aspecten van de diensten van de informatiemaatschappij, en artikel VI.5 van het
+    Wetboek van economisch recht). Een professioneel e-mailadres voor contact en een geografisch adres
+    zijn vereist — een contactformulier volstaat niet.
+  </p>
+
+  <h2>2. Hosting</h2>
+  <ul>
+    <li>
+      <b>Host van de site&nbsp;:</b> GitHub, Inc. (dienst GitHub Pages),
+      88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, Verenigde Staten —
+      <a href="https://github.com" rel="noopener noreferrer">github.com</a>.
+    </li>
+    <li>
+      <b>Domeinnaam&nbsp;:</b> geregistreerd bij OVH SAS, 2 rue Kellermann, 59100 Roubaix, Frankrijk —
+      <a href="https://www.ovhcloud.com" rel="noopener noreferrer">ovhcloud.com</a>.
+    </li>
+  </ul>
+  <p>
+    De hosting in de Verenigde Staten brengt een doorgifte van gegevens buiten de Europese Unie met zich
+    mee; die wordt beschreven in het <a href="confidentialite.nl.html">privacybeleid</a>.
+  </p>
+
+  <h2>3. Voorwerp van de site</h2>
+  <p>
+    Kazendra is een <b>gratis</b> informatiedienst. De site verzamelt promoties die publiekelijk door
+    Europese handelaars worden gepubliceerd en <b>verwijst</b> naar hun sites.
+  </p>
+  <p>
+    <b>Kazendra verkoopt niets.</b> De site neemt geen bestellingen aan, int geen betalingen en is geen
+    partij bij de contracten die met de handelaars worden gesloten. De transacties vinden uitsluitend
+    plaats tussen de koper en de handelaar, op de site van laatstgenoemde.
+  </p>
+
+  <h2>4. Intellectuele eigendom</h2>
+  <p>
+    De code, de structuur, de teksten, de visuele identiteit en het logo van de site zijn auteursrechtelijk
+    beschermd. De site is bovendien beschermd als databank, aangezien de samenstelling van zijn catalogus
+    een aanzienlijke investering heeft gevergd.
+  </p>
+  <p>
+    <b>Merk « Kazendra »&nbsp;:</b> <b>nog niet gedeponeerd</b>.
+  </p>
+  <p>
+    Hyperlinks naar kazendra.com zijn vrij. Elke overname van de inhoud, geheel of gedeeltelijk, is
+    verboden zonder voorafgaande schriftelijke toestemming.
+  </p>
+
+  <h2>5. Links naar de handelaars en transparantie over affiliatie</h2>
+  <p>
+    De uitgaande links naar de handelaars <b>kunnen affiliatielinks zijn</b>&nbsp;: wanneer een aankoop
+    na een klik plaatsvindt, kan de handelaar een commissie aan Kazendra betalen.
+  </p>
+  <p>
+    <b>Deze commissie verandert niets aan de prijs die de koper betaalt</b> en beïnvloedt de selectie van
+    de gepubliceerde aanbiedingen niet.
+  </p>
+  <p>
+    <b>Situatie op 8 oktober 2026&nbsp;:</b> er is geen enkele affiliatie-identificatie geplaatst. De
+    uitgaande links zijn dus <b>direct</b> en er wordt geen commissie ontvangen. Deze vermelding wordt
+    bijgewerkt op de dag dat er identificaties worden geplaatst — niet eerder.
+  </p>
+
+  <h2>6. Prijzen en informatie verstrekt door de handelaars</h2>
+  <p>
+    De prijzen, kortingen en beschikbaarheden zijn afkomstig van de sites van de handelaars. Ze kunnen op
+    elk moment veranderen, en sommige handelaars publiceren ze helemaal niet&nbsp;: de site vermeldt dat
+    dan in plaats van een verzonnen cijfer weer te geven.
+  </p>
+  <p>
+    <b>Alleen de prijs die bij de handelaar op het moment van de aankoop wordt weergegeven, geldt.</b>
+    Wanneer een valuta niet de euro is, wordt ze <b>in haar oorspronkelijke valuta</b> weergegeven, zonder
+    omrekening&nbsp;: de site onderhoudt geen enkele wisselkoers.
+  </p>
+  <p>De datum van de prijsopname wordt op elke pagina van de site weergegeven.</p>
+
+  <h2>7. Aansprakelijkheid</h2>
+  <p>
+    De site wordt ter beschikking gesteld « in de staat waarin hij verkeert ». Kazendra doet redelijke
+    inspanningen opdat de informatie juist en gedateerd zou zijn, maar kan niet garanderen dat ze dat
+    permanent blijft, noch dat de site zonder onderbreking beschikbaar zal zijn.
+  </p>
+  <p>
+    Kazendra kan niet aansprakelijk worden gesteld voor schade die voortvloeit uit het gebruik van de
+    gepubliceerde informatie, noch voor de inhoud van de handelaarssites waarnaar hij verwijst.
+  </p>
+
+  <h2>8. Persoonsgegevens en cookies</h2>
+  <p>
+    Zie het <a href="confidentialite.nl.html">privacybeleid</a> en het
+    <a href="cookies.nl.html">cookiebeleid</a>.
+  </p>
+
+  <h2>9. Toepasselijk recht en geschillenbeslechting</h2>
+  <p>Deze vermeldingen zijn onderworpen aan het <b>Belgische recht</b>.</p>
+  <p>
+    Consument in België&nbsp;: <b>Dienst Consumentenbemiddeling</b>, Koning Albert II-laan 8, 1000 Brussel —
+    <a href="https://www.mediationconsommateur.be" rel="noopener noreferrer">mediationconsommateur.be</a>.
+  </p>
+  <p>
+    Consument in een ander land van de Unie&nbsp;: het <b>Europese consumentencentrum</b> van uw
+    land.
+  </p>
+  <p>
+    <b>Correctheidsnoot&nbsp;:</b> het Europese platform voor onlinegeschillenbeslechting (ODR) heeft
+    zijn activiteit stopgezet; het wordt hier dus niet vermeld, in tegenstelling tot wat veel nog
+    circulerende modellen overnemen.
+  </p>
+
+  <footer class="pied-doc">
+    <a href="index.html">Terug naar de site</a>
+    <a href="confidentialite.nl.html">Privacy</a>
+    <a href="cookies.nl.html">Cookies</a>
+    <a href="cgu.nl.html">Gebruiksvoorwaarden</a>
+  </footer>
+
+</div>
+</body>
+</html>

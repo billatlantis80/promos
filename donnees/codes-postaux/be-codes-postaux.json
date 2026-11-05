@@ -1,0 +1,14248 @@
+{
+"pays": "BE",
+"source": "GeoNames (CC BY 4.0)",
+"telecharge_le": "2026-10-24",
+"codes": [
+{
+"cp": "1000",
+"commune": "Bruxelles",
+"region": "Bruxelles-Capitale",
+"lat": 50.8504,
+"lon": 4.3488,
+"lieux": [
+"Bruxelles"
+],
+"population": 0
+},
+{
+"cp": "1020",
+"commune": "Laeken",
+"region": "Bruxelles-Capitale",
+"lat": 50.8759,
+"lon": 4.3484,
+"lieux": [
+"Laeken"
+],
+"population": 0
+},
+{
+"cp": "1030",
+"commune": "Schaerbeek",
+"region": "Bruxelles-Capitale",
+"lat": 50.8694,
+"lon": 4.3774,
+"lieux": [
+"Schaerbeek"
+],
+"population": 132761
+},
+{
+"cp": "1040",
+"commune": "Etterbeek",
+"region": "Bruxelles-Capitale",
+"lat": 50.8327,
+"lon": 4.3884,
+"lieux": [
+"Etterbeek"
+],
+"population": 48367
+},
+{
+"cp": "1050",
+"commune": "Ixelles",
+"region": "Bruxelles-Capitale",
+"lat": 50.8333,
+"lon": 4.3667,
+"lieux": [
+"Ixelles"
+],
+"population": 86876
+},
+{
+"cp": "1060",
+"commune": "Saint-Gilles",
+"region": "Bruxelles-Capitale",
+"lat": 50.8276,
+"lon": 4.3439,
+"lieux": [
+"Saint-Gilles"
+],
+"population": 50221
+},
+{
+"cp": "1070",
+"commune": "Anderlecht",
+"region": "Bruxelles-Capitale",
+"lat": 50.8362,
+"lon": 4.3145,
+"lieux": [
+"Anderlecht"
+],
+"population": 160553
+},
+{
+"cp": "1080",
+"commune": "Molenbeek-Saint-Jean",
+"region": "Bruxelles-Capitale",
+"lat": 50.8499,
+"lon": 4.3125,
+"lieux": [
+"Molenbeek-Saint-Jean"
+],
+"population": 97037
+},
+{
+"cp": "1081",
+"commune": "Koekelberg",
+"region": "Bruxelles-Capitale",
+"lat": 50.8612,
+"lon": 4.3314,
+"lieux": [
+"Koekelberg"
+],
+"population": 21990
+},
+{
+"cp": "1082",
+"commune": "Berchem-Sainte-Agathe",
+"region": "Bruxelles-Capitale",
+"lat": 50.8657,
+"lon": 4.2956,
+"lieux": [
+"Berchem-Sainte-Agathe"
+],
+"population": 25162
+},
+{
+"cp": "1083",
+"commune": "Ganshoren",
+"region": "Bruxelles-Capitale",
+"lat": 50.8707,
+"lon": 4.3153,
+"lieux": [
+"Ganshoren"
+],
+"population": 24902
+},
+{
+"cp": "1090",
+"commune": "Jette",
+"region": "Bruxelles-Capitale",
+"lat": 50.8731,
+"lon": 4.3342,
+"lieux": [
+"Jette"
+],
+"population": 52536
+},
+{
+"cp": "1120",
+"commune": "Neder-Over-Heembeek",
+"region": "Bruxelles-Capitale",
+"lat": 50.9057,
+"lon": 4.3922,
+"lieux": [
+"Neder-Over-Heembeek"
+],
+"population": 0
+},
+{
+"cp": "1130",
+"commune": "Haren",
+"region": "Bruxelles-Capitale",
+"lat": 50.8956,
+"lon": 4.417,
+"lieux": [
+"Haren"
+],
+"population": 0
+},
+{
+"cp": "1140",
+"commune": "Evere",
+"region": "Bruxelles-Capitale",
+"lat": 50.8744,
+"lon": 4.399,
+"lieux": [
+"Evere"
+],
+"population": 41763
+},
+{
+"cp": "1150",
+"commune": "Woluwe-Saint-Pierre",
+"region": "Bruxelles-Capitale",
+"lat": 50.8551,
+"lon": 4.3707,
+"lieux": [
+"Woluwe-Saint-Pierre"
+],
+"population": 0
+},
+{
+"cp": "1160",
+"commune": "Auderghem",
+"region": "Bruxelles-Capitale",
+"lat": 50.8167,
+"lon": 4.4333,
+"lieux": [
+"Auderghem"
+],
+"population": 33984
+},
+{
+"cp": "1170",
+"commune": "Watermael-Boitsfort",
+"region": "Bruxelles-Capitale",
+"lat": 50.8015,
+"lon": 4.4144,
+"lieux": [
+"Watermael-Boitsfort"
+],
+"population": 25184
+},
+{
+"cp": "1180",
+"commune": "Uccle",
+"region": "Bruxelles-Capitale",
+"lat": 50.8022,
+"lon": 4.3394,
+"lieux": [
+"Uccle"
+],
+"population": 82929
+},
+{
+"cp": "1190",
+"commune": "Forest",
+"region": "Bruxelles-Capitale",
+"lat": 50.8168,
+"lon": 4.3278,
+"lieux": [
+"Forest"
+],
+"population": 56254
+},
+{
+"cp": "1200",
+"commune": "Woluwe-Saint-Lambert",
+"region": "Bruxelles-Capitale",
+"lat": 50.8439,
+"lon": 4.4291,
+"lieux": [
+"Woluwe-Saint-Lambert"
+],
+"population": 56584
+},
+{
+"cp": "1210",
+"commune": "Saint-Josse-Ten-Noode",
+"region": "Bruxelles-Capitale",
+"lat": 50.8538,
+"lon": 4.3728,
+"lieux": [
+"Saint-Josse-Ten-Noode"
+],
+"population": 0
+},
+{
+"cp": "1300",
+"commune": "Wavre",
+"region": "Wallonie",
+"lat": 50.7172,
+"lon": 4.6014,
+"lieux": [
+"Limal",
+"Wavre"
+],
+"population": 34396
+},
+{
+"cp": "1301",
+"commune": "Bierges",
+"region": "Wallonie",
+"lat": 50.7114,
+"lon": 4.5866,
+"lieux": [
+"Bierges"
+],
+"population": 4941
+},
+{
+"cp": "1310",
+"commune": "La Hulpe",
+"region": "Wallonie",
+"lat": 50.7309,
+"lon": 4.4858,
+"lieux": [
+"La Hulpe"
+],
+"population": 7415
+},
+{
+"cp": "1315",
+"commune": "Incourt",
+"region": "Wallonie",
+"lat": 50.6915,
+"lon": 4.7982,
+"lieux": [
+"Incourt",
+"Roux-Miroir",
+"Piétrebais",
+"Glimes",
+"Opprebais"
+],
+"population": 5487
+},
+{
+"cp": "1320",
+"commune": "Beauvechain",
+"region": "Wallonie",
+"lat": 50.782,
+"lon": 4.7718,
+"lieux": [
+"Tourinnes-La-Grosse",
+"Hamme-Mille",
+"L'Ecluse",
+"Beauvechain",
+"Nodebais"
+],
+"population": 7243
+},
+{
+"cp": "1325",
+"commune": "Chaumont-Gistoux",
+"region": "Wallonie",
+"lat": 50.6775,
+"lon": 4.7212,
+"lieux": [
+"Dion-Valmont",
+"Bonlez",
+"Longueville",
+"Chaumont-Gistoux",
+"Corroy-Le-Grand"
+],
+"population": 11798
+},
+{
+"cp": "1330",
+"commune": "Rixensart",
+"region": "Wallonie",
+"lat": 50.7123,
+"lon": 4.5253,
+"lieux": [
+"Rixensart"
+],
+"population": 22558
+},
+{
+"cp": "1331",
+"commune": "Rosières",
+"region": "Wallonie",
+"lat": 50.731,
+"lon": 4.5447,
+"lieux": [
+"Rosières"
+],
+"population": 2184
+},
+{
+"cp": "1332",
+"commune": "Genval",
+"region": "Wallonie",
+"lat": 50.7216,
+"lon": 4.4938,
+"lieux": [
+"Genval"
+],
+"population": 8253
+},
+{
+"cp": "1340",
+"commune": "Ottignies",
+"region": "Wallonie",
+"lat": 50.6653,
+"lon": 4.5668,
+"lieux": [
+"Ottignies",
+"Ottignies-Louvain-La-Neuve"
+],
+"population": 9557
+},
+{
+"cp": "1341",
+"commune": "Céroux-Mousty",
+"region": "Wallonie",
+"lat": 50.6609,
+"lon": 4.5207,
+"lieux": [
+"Céroux-Mousty"
+],
+"population": 5397
+},
+{
+"cp": "1342",
+"commune": "Limelette",
+"region": "Wallonie",
+"lat": 50.6843,
+"lon": 4.5719,
+"lieux": [
+"Limelette"
+],
+"population": 5416
+},
+{
+"cp": "1348",
+"commune": "Louvain-La-Neuve",
+"region": "Wallonie",
+"lat": 50.6683,
+"lon": 4.6144,
+"lieux": [
+"Louvain-La-Neuve"
+],
+"population": 0
+},
+{
+"cp": "1350",
+"commune": "Orp-Jauche",
+"region": "Wallonie",
+"lat": 50.6839,
+"lon": 4.9493,
+"lieux": [
+"Folx-Les-Caves",
+"Jauche",
+"Enines",
+"Marilles",
+"Orp-Jauche",
+"Noduwez",
+"Orp-Le-Grand",
+"Jandrain-Jandrenouille"
+],
+"population": 8924
+},
+{
+"cp": "1357",
+"commune": "Hélécine",
+"region": "Wallonie",
+"lat": 50.739,
+"lon": 4.6983,
+"lieux": [
+"Neerheylissem",
+"Linsmeau",
+"Opheylissem",
+"Hélécine"
+],
+"population": 3553
+},
+{
+"cp": "1360",
+"commune": "Perwez",
+"region": "Wallonie",
+"lat": 50.6243,
+"lon": 4.8135,
+"lieux": [
+"Thorembais-Saint-Trond",
+"Perwez",
+"Orbais",
+"Thorembais-Les-Béguines",
+"Malèves-Sainte-Marie-Wastinnes"
+],
+"population": 9303
+},
+{
+"cp": "1367",
+"commune": "Ramillies",
+"region": "Wallonie",
+"lat": 50.6339,
+"lon": 4.9012,
+"lieux": [
+"Mont-Saint-André",
+"Autre-Eglise",
+"Gérompont",
+"Bomal",
+"Geest-Gérompont-Petit-Rosière",
+"Huppaye",
+"Ramillies",
+"Grand-Rosière-Hottomont"
+],
+"population": 6522
+},
+{
+"cp": "1370",
+"commune": "Jodoigne",
+"region": "Wallonie",
+"lat": 50.7236,
+"lon": 4.8691,
+"lieux": [
+"Piétrain",
+"Jodoigne",
+"Saint-Jean-Geest",
+"Jauchelette",
+"Saint-Remy-Geest",
+"Mélin",
+"Zétrud-Lumay",
+"Lathuy",
+"Jodoigne-Souveraine",
+"Dongelberg"
+],
+"population": 14123
+},
+{
+"cp": "1380",
+"commune": "Lasne",
+"region": "Wallonie",
+"lat": 50.6875,
+"lon": 4.4816,
+"lieux": [
+"Couture-Saint-Germain",
+"Lasne-Chapelle-Saint-Lambert",
+"Ohain",
+"Plancenoit",
+"Maransart",
+"Lasne"
+],
+"population": 14244
+},
+{
+"cp": "1390",
+"commune": "Grez-Doiceau",
+"region": "Wallonie",
+"lat": 50.739,
+"lon": 4.6983,
+"lieux": [
+"Archennes",
+"Bossut-Gottechain",
+"Biez",
+"Grez-Doiceau",
+"Nethen"
+],
+"population": 13668
+},
+{
+"cp": "1400",
+"commune": "Nivelles",
+"region": "Wallonie",
+"lat": 50.5983,
+"lon": 4.3285,
+"lieux": [
+"Nivelles",
+"Monstreux"
+],
+"population": 28734
+},
+{
+"cp": "1401",
+"commune": "Baulers",
+"region": "Wallonie",
+"lat": 50.6133,
+"lon": 4.3528,
+"lieux": [
+"Baulers"
+],
+"population": 342
+},
+{
+"cp": "1402",
+"commune": "Thines",
+"region": "Wallonie",
+"lat": 50.5968,
+"lon": 4.369,
+"lieux": [
+"Thines"
+],
+"population": 592
+},
+{
+"cp": "1404",
+"commune": "Bornival",
+"region": "Wallonie",
+"lat": 50.6019,
+"lon": 4.2765,
+"lieux": [
+"Bornival"
+],
+"population": 340
+},
+{
+"cp": "1410",
+"commune": "Waterloo",
+"region": "Wallonie",
+"lat": 50.7147,
+"lon": 4.3991,
+"lieux": [
+"Waterloo"
+],
+"population": 30328
+},
+{
+"cp": "1420",
+"commune": "Braine-L'Alleud",
+"region": "Wallonie",
+"lat": 50.6836,
+"lon": 4.3678,
+"lieux": [
+"Braine-L'Alleud"
+],
+"population": 0
+},
+{
+"cp": "1421",
+"commune": "Ophain-Bois-Seigneur-Isaac",
+"region": "Wallonie",
+"lat": 50.6665,
+"lon": 4.3487,
+"lieux": [
+"Ophain-Bois-Seigneur-Isaac"
+],
+"population": 4255
+},
+{
+"cp": "1428",
+"commune": "Lillois-Witterzée",
+"region": "Wallonie",
+"lat": 50.6455,
+"lon": 4.3668,
+"lieux": [
+"Lillois-Witterzée"
+],
+"population": 4350
+},
+{
+"cp": "1430",
+"commune": "Rebecq",
+"region": "Wallonie",
+"lat": 50.666,
+"lon": 4.132,
+"lieux": [
+"Quenast",
+"Bierghes",
+"Rebecq",
+"Rebecq-Rognon"
+],
+"population": 10979
+},
+{
+"cp": "1435",
+"commune": "Mont-Saint-Guibert",
+"region": "Wallonie",
+"lat": 50.6343,
+"lon": 4.6106,
+"lieux": [
+"Corbais",
+"Mont-Saint-Guibert",
+"Hévillers"
+],
+"population": 7771
+},
+{
+"cp": "1440",
+"commune": "Wauthier-Braine",
+"region": "Wallonie",
+"lat": 50.6818,
+"lon": 4.2985,
+"lieux": [
+"Braine-Le-Château",
+"Wauthier-Braine"
+],
+"population": 3651
+},
+{
+"cp": "1450",
+"commune": "Chastre",
+"region": "Wallonie",
+"lat": 50.6007,
+"lon": 4.634,
+"lieux": [
+"Chastre-Villeroux-Blanmont",
+"Cortil-Noirmont",
+"Gentinnes",
+"Saint-Géry",
+"Chastre"
+],
+"population": 7647
+},
+{
+"cp": "1457",
+"commune": "Walhain",
+"region": "Wallonie",
+"lat": 50.6168,
+"lon": 4.6948,
+"lieux": [
+"Tourinnes-Saint-Lambert",
+"Walhain",
+"Walhain-Saint-Paul",
+"Nil-Saint-Vincent-Saint-Martin"
+],
+"population": 7187
+},
+{
+"cp": "1460",
+"commune": "Ittre",
+"region": "Wallonie",
+"lat": 50.644,
+"lon": 4.2648,
+"lieux": [
+"Ittre",
+"Virginal-Samme"
+],
+"population": 6889
+},
+{
+"cp": "1461",
+"commune": "Haut-Ittre",
+"region": "Wallonie",
+"lat": 50.6531,
+"lon": 4.2978,
+"lieux": [
+"Haut-Ittre"
+],
+"population": 878
+},
+{
+"cp": "1470",
+"commune": "Genappe",
+"region": "Wallonie",
+"lat": 50.6117,
+"lon": 4.4515,
+"lieux": [
+"Genappe",
+"Baisy-Thy",
+"Bousval"
+],
+"population": 15427
+},
+{
+"cp": "1471",
+"commune": "Loupoigne",
+"region": "Wallonie",
+"lat": 50.5981,
+"lon": 4.4445,
+"lieux": [
+"Loupoigne"
+],
+"population": 1703
+},
+{
+"cp": "1472",
+"commune": "Vieux-Genappe",
+"region": "Wallonie",
+"lat": 50.6085,
+"lon": 4.441,
+"lieux": [
+"Vieux-Genappe"
+],
+"population": 2048
+},
+{
+"cp": "1473",
+"commune": "Glabais",
+"region": "Wallonie",
+"lat": 50.6307,
+"lon": 4.4533,
+"lieux": [
+"Glabais"
+],
+"population": 747
+},
+{
+"cp": "1474",
+"commune": "Ways",
+"region": "Wallonie",
+"lat": 50.6111,
+"lon": 4.4645,
+"lieux": [
+"Ways"
+],
+"population": 1200
+},
+{
+"cp": "1476",
+"commune": "Houtain-Le-Val",
+"region": "Wallonie",
+"lat": 50.5824,
+"lon": 4.4126,
+"lieux": [
+"Houtain-Le-Val"
+],
+"population": 0
+},
+{
+"cp": "1480",
+"commune": "Tubize",
+"region": "Wallonie",
+"lat": 50.6906,
+"lon": 4.2009,
+"lieux": [
+"Saintes",
+"Oisquercq",
+"Tubize",
+"Clabecq"
+],
+"population": 26233
+},
+{
+"cp": "1490",
+"commune": "Court-Saint-Etienne",
+"region": "Wallonie",
+"lat": 50.6338,
+"lon": 4.5685,
+"lieux": [
+"Court-Saint-Etienne"
+],
+"population": 0
+},
+{
+"cp": "1495",
+"commune": "Marbais",
+"region": "Wallonie",
+"lat": 50.5465,
+"lon": 4.535,
+"lieux": [
+"Tilly",
+"Marbais",
+"Mellery",
+"Sart-Dames-Avelines",
+"Villers-La-Ville"
+],
+"population": 3130
+},
+{
+"cp": "1500",
+"commune": "Halle",
+"region": "Vlaanderen",
+"lat": 50.7338,
+"lon": 4.2345,
+"lieux": [
+"Halle"
+],
+"population": 39540
+},
+{
+"cp": "1501",
+"commune": "Buizingen",
+"region": "Vlaanderen",
+"lat": 50.7354,
+"lon": 4.2477,
+"lieux": [
+"Buizingen"
+],
+"population": 6369
+},
+{
+"cp": "1502",
+"commune": "Lembeek",
+"region": "Vlaanderen",
+"lat": 50.7157,
+"lon": 4.2183,
+"lieux": [
+"Lembeek"
+],
+"population": 7689
+},
+{
+"cp": "1540",
+"commune": "Herne",
+"region": "Vlaanderen",
+"lat": 50.7242,
+"lon": 4.0348,
+"lieux": [
+"Herne",
+"Herfelingen"
+],
+"population": 6665
+},
+{
+"cp": "1541",
+"commune": "Sint-Pieters-Kapelle",
+"region": "Vlaanderen",
+"lat": 50.7076,
+"lon": 3.99,
+"lieux": [
+"Sint-Pieters-Kapelle"
+],
+"population": 1421
+},
+{
+"cp": "1547",
+"commune": "Biévène",
+"region": "Vlaanderen",
+"lat": 50.7164,
+"lon": 3.9412,
+"lieux": [
+"Biévène"
+],
+"population": 0
+},
+{
+"cp": "1560",
+"commune": "Hoeilaart",
+"region": "Vlaanderen",
+"lat": 50.7673,
+"lon": 4.4683,
+"lieux": [
+"Hoeilaart"
+],
+"population": 11321
+},
+{
+"cp": "1570",
+"commune": "Galmaarden",
+"region": "Vlaanderen",
+"lat": 50.7539,
+"lon": 3.9712,
+"lieux": [
+"Tollembeek",
+"Vollezele",
+"Galmaarden"
+],
+"population": 8746
+},
+{
+"cp": "1600",
+"commune": "Sint-Pieters-Leeuw",
+"region": "Vlaanderen",
+"lat": 50.7793,
+"lon": 4.2435,
+"lieux": [
+"Sint-Pieters-Leeuw",
+"Sint-Laureins-Berchem",
+"Oudenaken"
+],
+"population": 34228
+},
+{
+"cp": "1601",
+"commune": "Ruisbroek",
+"region": "Vlaanderen",
+"lat": 50.7901,
+"lon": 4.2977,
+"lieux": [
+"Ruisbroek"
+],
+"population": 7041
+},
+{
+"cp": "1602",
+"commune": "Vlezenbeek",
+"region": "Vlaanderen",
+"lat": 50.8078,
+"lon": 4.232,
+"lieux": [
+"Vlezenbeek"
+],
+"population": 3377
+},
+{
+"cp": "1620",
+"commune": "Drogenbos",
+"region": "Vlaanderen",
+"lat": 50.7873,
+"lon": 4.3147,
+"lieux": [
+"Drogenbos"
+],
+"population": 5689
+},
+{
+"cp": "1630",
+"commune": "Linkebeek",
+"region": "Vlaanderen",
+"lat": 50.7678,
+"lon": 4.3369,
+"lieux": [
+"Linkebeek"
+],
+"population": 4823
+},
+{
+"cp": "1640",
+"commune": "Rhode-Saint-Genèse",
+"region": "Vlaanderen",
+"lat": 50.7464,
+"lon": 4.3575,
+"lieux": [
+"Rhode-Saint-Genèse"
+],
+"population": 0
+},
+{
+"cp": "1650",
+"commune": "Beersel",
+"region": "Vlaanderen",
+"lat": 50.7659,
+"lon": 4.3002,
+"lieux": [
+"Beersel"
+],
+"population": 25251
+},
+{
+"cp": "1651",
+"commune": "Lot",
+"region": "Vlaanderen",
+"lat": 50.7679,
+"lon": 4.2771,
+"lieux": [
+"Lot"
+],
+"population": 4698
+},
+{
+"cp": "1652",
+"commune": "Alsemberg",
+"region": "Vlaanderen",
+"lat": 50.7413,
+"lon": 4.3375,
+"lieux": [
+"Alsemberg"
+],
+"population": 5943
+},
+{
+"cp": "1653",
+"commune": "Dworp",
+"region": "Vlaanderen",
+"lat": 50.7298,
+"lon": 4.3011,
+"lieux": [
+"Dworp"
+],
+"population": 5470
+},
+{
+"cp": "1654",
+"commune": "Huizingen",
+"region": "Vlaanderen",
+"lat": 50.7465,
+"lon": 4.2738,
+"lieux": [
+"Huizingen"
+],
+"population": 3172
+},
+{
+"cp": "1670",
+"commune": "Pepingen",
+"region": "Vlaanderen",
+"lat": 50.7592,
+"lon": 4.1598,
+"lieux": [
+"Bogaarden",
+"Pepingen",
+"Heikruis"
+],
+"population": 4479
+},
+{
+"cp": "1671",
+"commune": "Elingen",
+"region": "Vlaanderen",
+"lat": 50.7789,
+"lon": 4.1709,
+"lieux": [
+"Elingen"
+],
+"population": 428
+},
+{
+"cp": "1673",
+"commune": "Beert",
+"region": "Vlaanderen",
+"lat": 50.741,
+"lon": 4.181,
+"lieux": [
+"Beert"
+],
+"population": 492
+},
+{
+"cp": "1674",
+"commune": "Bellingen",
+"region": "Vlaanderen",
+"lat": 50.7409,
+"lon": 4.1537,
+"lieux": [
+"Bellingen"
+],
+"population": 715
+},
+{
+"cp": "1700",
+"commune": "Dilbeek",
+"region": "Vlaanderen",
+"lat": 50.848,
+"lon": 4.2597,
+"lieux": [
+"Sint-Martens-Bodegem",
+"Sint-Ulriks-Kapelle",
+"Dilbeek"
+],
+"population": 42847
+},
+{
+"cp": "1701",
+"commune": "Itterbeek",
+"region": "Vlaanderen",
+"lat": 50.838,
+"lon": 4.2495,
+"lieux": [
+"Itterbeek"
+],
+"population": 4808
+},
+{
+"cp": "1702",
+"commune": "Groot-Bijgaarden",
+"region": "Vlaanderen",
+"lat": 50.8717,
+"lon": 4.2497,
+"lieux": [
+"Groot-Bijgaarden"
+],
+"population": 8145
+},
+{
+"cp": "1703",
+"commune": "Schepdaal",
+"region": "Vlaanderen",
+"lat": 50.8384,
+"lon": 4.1961,
+"lieux": [
+"Schepdaal"
+],
+"population": 6004
+},
+{
+"cp": "1730",
+"commune": "Asse",
+"region": "Vlaanderen",
+"lat": 50.9101,
+"lon": 4.1984,
+"lieux": [
+"Mollem",
+"Asse",
+"Bekkerzeel",
+"Kobbegem"
+],
+"population": 33158
+},
+{
+"cp": "1731",
+"commune": "Zellik",
+"region": "Vlaanderen",
+"lat": 50.8841,
+"lon": 4.2733,
+"lieux": [
+"Relegem",
+"Zellik"
+],
+"population": 10874
+},
+{
+"cp": "1740",
+"commune": "Ternat",
+"region": "Vlaanderen",
+"lat": 50.8665,
+"lon": 4.1668,
+"lieux": [
+"Ternat"
+],
+"population": 15746
+},
+{
+"cp": "1741",
+"commune": "Wambeek",
+"region": "Vlaanderen",
+"lat": 50.8528,
+"lon": 4.1617,
+"lieux": [
+"Wambeek"
+],
+"population": 2664
+},
+{
+"cp": "1742",
+"commune": "Sint-Katherina-Lombeek",
+"region": "Vlaanderen",
+"lat": 50.8731,
+"lon": 4.1536,
+"lieux": [
+"Sint-Katherina-Lombeek"
+],
+"population": 6607
+},
+{
+"cp": "1745",
+"commune": "Opwijk",
+"region": "Vlaanderen",
+"lat": 50.9672,
+"lon": 4.1844,
+"lieux": [
+"Opwijk",
+"Mazenzele"
+],
+"population": 14547
+},
+{
+"cp": "1750",
+"commune": "Lennik",
+"region": "Vlaanderen",
+"lat": 50.809,
+"lon": 4.1622,
+"lieux": [
+"Sint-Kwintens-Lennik",
+"Sint-Martens-Lennik",
+"Lennik",
+"Gaasbeek"
+],
+"population": 9074
+},
+{
+"cp": "1755",
+"commune": "Gooik",
+"region": "Vlaanderen",
+"lat": 50.7944,
+"lon": 4.1138,
+"lieux": [
+"Kester",
+"Gooik",
+"Oetingen",
+"Leerbeek"
+],
+"population": 9170
+},
+{
+"cp": "1760",
+"commune": "Roosdaal",
+"region": "Vlaanderen",
+"lat": 50.8333,
+"lon": 4.0833,
+"lieux": [
+"Onze-Lieve-Vrouw-Lombeek",
+"Roosdaal",
+"Pamel",
+"Strijtem"
+],
+"population": 11631
+},
+{
+"cp": "1761",
+"commune": "Borchtlombeek",
+"region": "Vlaanderen",
+"lat": 50.8479,
+"lon": 4.1388,
+"lieux": [
+"Borchtlombeek"
+],
+"population": 2380
+},
+{
+"cp": "1770",
+"commune": "Liedekerke",
+"region": "Vlaanderen",
+"lat": 50.8689,
+"lon": 4.0874,
+"lieux": [
+"Liedekerke"
+],
+"population": 13295
+},
+{
+"cp": "1780",
+"commune": "Wemmel",
+"region": "Vlaanderen",
+"lat": 50.9081,
+"lon": 4.3061,
+"lieux": [
+"Wemmel"
+],
+"population": 16491
+},
+{
+"cp": "1785",
+"commune": "Hamme",
+"region": "Vlaanderen",
+"lat": 50.9209,
+"lon": 4.283,
+"lieux": [
+"Hamme",
+"Merchtem",
+"Brussegem"
+],
+"population": 24865
+},
+{
+"cp": "1790",
+"commune": "Affligem",
+"region": "Vlaanderen",
+"lat": 50.9094,
+"lon": 4.1116,
+"lieux": [
+"Affligem",
+"Essene",
+"Hekelgem",
+"Teralfene"
+],
+"population": 13228
+},
+{
+"cp": "1800",
+"commune": "Vilvoorde",
+"region": "Vlaanderen",
+"lat": 50.9281,
+"lon": 4.4294,
+"lieux": [
+"Peutie",
+"Vilvoorde"
+],
+"population": 44727
+},
+{
+"cp": "1820",
+"commune": "Steenokkerzeel",
+"region": "Vlaanderen",
+"lat": 50.9185,
+"lon": 4.5099,
+"lieux": [
+"Perk",
+"Melsbroek",
+"Steenokkerzeel"
+],
+"population": 12135
+},
+{
+"cp": "1830",
+"commune": "Machelen",
+"region": "Vlaanderen",
+"lat": 50.9106,
+"lon": 4.4417,
+"lieux": [
+"Machelen"
+],
+"population": 15469
+},
+{
+"cp": "1831",
+"commune": "Diegem",
+"region": "Vlaanderen",
+"lat": 50.8973,
+"lon": 4.4335,
+"lieux": [
+"Diegem"
+],
+"population": 5001
+},
+{
+"cp": "1840",
+"commune": "Londerzeel",
+"region": "Vlaanderen",
+"lat": 51.0047,
+"lon": 4.303,
+"lieux": [
+"Steenhuffel",
+"Malderen",
+"Londerzeel"
+],
+"population": 18749
+},
+{
+"cp": "1850",
+"commune": "Grimbergen",
+"region": "Vlaanderen",
+"lat": 50.9341,
+"lon": 4.3721,
+"lieux": [
+"Grimbergen"
+],
+"population": 37542
+},
+{
+"cp": "1851",
+"commune": "Humbeek",
+"region": "Vlaanderen",
+"lat": 50.968,
+"lon": 4.3796,
+"lieux": [
+"Humbeek"
+],
+"population": 4464
+},
+{
+"cp": "1852",
+"commune": "Beigem",
+"region": "Vlaanderen",
+"lat": 50.9491,
+"lon": 4.3691,
+"lieux": [
+"Beigem"
+],
+"population": 2019
+},
+{
+"cp": "1853",
+"commune": "Strombeek-Bever",
+"region": "Vlaanderen",
+"lat": 50.9104,
+"lon": 4.3558,
+"lieux": [
+"Strombeek-Bever"
+],
+"population": 13727
+},
+{
+"cp": "1860",
+"commune": "Meise",
+"region": "Vlaanderen",
+"lat": 50.9393,
+"lon": 4.3266,
+"lieux": [
+"Meise"
+],
+"population": 19411
+},
+{
+"cp": "1861",
+"commune": "Wolvertem",
+"region": "Vlaanderen",
+"lat": 50.9517,
+"lon": 4.3096,
+"lieux": [
+"Wolvertem"
+],
+"population": 8045
+},
+{
+"cp": "1880",
+"commune": "Nieuwenrode",
+"region": "Vlaanderen",
+"lat": 50.9796,
+"lon": 4.3528,
+"lieux": [
+"Ramsdonk",
+"Kapelle-Op-Den-Bos",
+"Nieuwenrode"
+],
+"population": 1810
+},
+{
+"cp": "1910",
+"commune": "Kampenhout",
+"region": "Vlaanderen",
+"lat": 50.9421,
+"lon": 4.551,
+"lieux": [
+"Buken",
+"Kampenhout",
+"Berg",
+"Nederokkerzeel"
+],
+"population": 11972
+},
+{
+"cp": "1930",
+"commune": "Zaventem",
+"region": "Vlaanderen",
+"lat": 50.8837,
+"lon": 4.473,
+"lieux": [
+"Zaventem",
+"Nossegem"
+],
+"population": 34368
+},
+{
+"cp": "1932",
+"commune": "Sint-Stevens-Woluwe",
+"region": "Vlaanderen",
+"lat": 50.8684,
+"lon": 4.452,
+"lieux": [
+"Sint-Stevens-Woluwe"
+],
+"population": 9038
+},
+{
+"cp": "1933",
+"commune": "Sterrebeek",
+"region": "Vlaanderen",
+"lat": 50.8617,
+"lon": 4.4938,
+"lieux": [
+"Sterrebeek"
+],
+"population": 8357
+},
+{
+"cp": "1950",
+"commune": "Kraainem",
+"region": "Vlaanderen",
+"lat": 50.8616,
+"lon": 4.4695,
+"lieux": [
+"Kraainem"
+],
+"population": 13730
+},
+{
+"cp": "1970",
+"commune": "Wezembeek-Oppem",
+"region": "Vlaanderen",
+"lat": 50.8395,
+"lon": 4.4943,
+"lieux": [
+"Wezembeek-Oppem"
+],
+"population": 14258
+},
+{
+"cp": "1980",
+"commune": "Zemst",
+"region": "Vlaanderen",
+"lat": 50.9832,
+"lon": 4.4608,
+"lieux": [
+"Eppegem",
+"Zemst"
+],
+"population": 23358
+},
+{
+"cp": "1981",
+"commune": "Hofstade",
+"region": "Vlaanderen",
+"lat": 50.9913,
+"lon": 4.4923,
+"lieux": [
+"Hofstade"
+],
+"population": 5927
+},
+{
+"cp": "1982",
+"commune": "Elewijt",
+"region": "Vlaanderen",
+"lat": 50.9604,
+"lon": 4.4968,
+"lieux": [
+"Weerde",
+"Elewijt"
+],
+"population": 5172
+},
+{
+"cp": "2000",
+"commune": "Antwerpen",
+"region": "Vlaanderen",
+"lat": 51.2199,
+"lon": 4.4035,
+"lieux": [
+"Antwerpen"
+],
+"population": 525935
+},
+{
+"cp": "2018",
+"commune": "Antwerpen",
+"region": "Vlaanderen",
+"lat": 51.2199,
+"lon": 4.4035,
+"lieux": [
+"Antwerpen"
+],
+"population": 525935
+},
+{
+"cp": "2020",
+"commune": "Antwerpen",
+"region": "Vlaanderen",
+"lat": 51.2199,
+"lon": 4.4035,
+"lieux": [
+"Antwerpen"
+],
+"population": 525935
+},
+{
+"cp": "2030",
+"commune": "Antwerpen",
+"region": "Vlaanderen",
+"lat": 51.2199,
+"lon": 4.4035,
+"lieux": [
+"Antwerpen"
+],
+"population": 525935
+},
+{
+"cp": "2040",
+"commune": "Antwerpen",
+"region": "Vlaanderen",
+"lat": 51.2199,
+"lon": 4.4035,
+"lieux": [
+"Berendrecht",
+"Zandvliet",
+"Antwerpen",
+"Lillo"
+],
+"population": 525935
+},
+{
+"cp": "2050",
+"commune": "Antwerpen",
+"region": "Vlaanderen",
+"lat": 51.2199,
+"lon": 4.4035,
+"lieux": [
+"Antwerpen"
+],
+"population": 525935
+},
+{
+"cp": "2060",
+"commune": "Antwerpen",
+"region": "Vlaanderen",
+"lat": 51.2199,
+"lon": 4.4035,
+"lieux": [
+"Antwerpen"
+],
+"population": 525935
+},
+{
+"cp": "2070",
+"commune": "Zwijndrecht",
+"region": "Vlaanderen",
+"lat": 51.2198,
+"lon": 4.3266,
+"lieux": [
+"Zwijndrecht",
+"Burcht"
+],
+"population": 19056
+},
+{
+"cp": "2100",
+"commune": "Deurne",
+"region": "Vlaanderen",
+"lat": 51.2213,
+"lon": 4.4659,
+"lieux": [
+"Deurne"
+],
+"population": 78747
+},
+{
+"cp": "2110",
+"commune": "Wijnegem",
+"region": "Vlaanderen",
+"lat": 51.2279,
+"lon": 4.5189,
+"lieux": [
+"Wijnegem"
+],
+"population": 9816
+},
+{
+"cp": "2140",
+"commune": "Borgerhout",
+"region": "Vlaanderen",
+"lat": 51.2096,
+"lon": 4.4354,
+"lieux": [
+"Borgerhout"
+],
+"population": 46087
+},
+{
+"cp": "2150",
+"commune": "Borsbeek",
+"region": "Vlaanderen",
+"lat": 51.1966,
+"lon": 4.4854,
+"lieux": [
+"Borsbeek"
+],
+"population": 10854
+},
+{
+"cp": "2160",
+"commune": "Wommelgem",
+"region": "Vlaanderen",
+"lat": 51.2045,
+"lon": 4.5225,
+"lieux": [
+"Wommelgem"
+],
+"population": 12865
+},
+{
+"cp": "2170",
+"commune": "Merksem",
+"region": "Vlaanderen",
+"lat": 51.2462,
+"lon": 4.449,
+"lieux": [
+"Merksem"
+],
+"population": 44435
+},
+{
+"cp": "2180",
+"commune": "Ekeren",
+"region": "Vlaanderen",
+"lat": 51.2809,
+"lon": 4.4181,
+"lieux": [
+"Ekeren"
+],
+"population": 23300
+},
+{
+"cp": "2200",
+"commune": "Herentals",
+"region": "Vlaanderen",
+"lat": 51.1766,
+"lon": 4.8325,
+"lieux": [
+"Morkhoven",
+"Noorderwijk",
+"Herentals"
+],
+"population": 28177
+},
+{
+"cp": "2220",
+"commune": "Hallaar",
+"region": "Vlaanderen",
+"lat": 51.0842,
+"lon": 4.7292,
+"lieux": [
+"Heist-Op-Den-Berg",
+"Hallaar"
+],
+"population": 3506
+},
+{
+"cp": "2221",
+"commune": "Booischot",
+"region": "Vlaanderen",
+"lat": 51.0522,
+"lon": 4.7751,
+"lieux": [
+"Booischot"
+],
+"population": 6973
+},
+{
+"cp": "2222",
+"commune": "Itegem",
+"region": "Vlaanderen",
+"lat": 51.1033,
+"lon": 4.7286,
+"lieux": [
+"Wiekevorst",
+"Itegem"
+],
+"population": 5911
+},
+{
+"cp": "2223",
+"commune": "Schriek",
+"region": "Vlaanderen",
+"lat": 51.0284,
+"lon": 4.6936,
+"lieux": [
+"Schriek"
+],
+"population": 5062
+},
+{
+"cp": "2230",
+"commune": "Herselt",
+"region": "Vlaanderen",
+"lat": 51.0516,
+"lon": 4.8823,
+"lieux": [
+"Herselt",
+"Ramsel"
+],
+"population": 14523
+},
+{
+"cp": "2235",
+"commune": "Hulshout",
+"region": "Vlaanderen",
+"lat": 51.0745,
+"lon": 4.7908,
+"lieux": [
+"Hulshout",
+"Westmeerbeek",
+"Houtvenne"
+],
+"population": 10424
+},
+{
+"cp": "2240",
+"commune": "Zandhoven",
+"region": "Vlaanderen",
+"lat": 51.2149,
+"lon": 4.6616,
+"lieux": [
+"Massenhoven",
+"Zandhoven",
+"Viersel"
+],
+"population": 13025
+},
+{
+"cp": "2242",
+"commune": "Pulderbos",
+"region": "Vlaanderen",
+"lat": 51.2171,
+"lon": 4.6936,
+"lieux": [
+"Pulderbos"
+],
+"population": 2819
+},
+{
+"cp": "2243",
+"commune": "Pulle",
+"region": "Vlaanderen",
+"lat": 51.2032,
+"lon": 4.7143,
+"lieux": [
+"Pulle"
+],
+"population": 2810
+},
+{
+"cp": "2250",
+"commune": "Olen",
+"region": "Vlaanderen",
+"lat": 51.1439,
+"lon": 4.8598,
+"lieux": [
+"Olen"
+],
+"population": 12505
+},
+{
+"cp": "2260",
+"commune": "Westerlo",
+"region": "Vlaanderen",
+"lat": 51.0905,
+"lon": 4.9154,
+"lieux": [
+"Oevel",
+"Zoerle-Parwijs",
+"Westerlo",
+"Tongerlo"
+],
+"population": 25051
+},
+{
+"cp": "2270",
+"commune": "Herenthout",
+"region": "Vlaanderen",
+"lat": 51.1401,
+"lon": 4.7557,
+"lieux": [
+"Herenthout"
+],
+"population": 9061
+},
+{
+"cp": "2275",
+"commune": "Lille",
+"region": "Vlaanderen",
+"lat": 51.242,
+"lon": 4.8231,
+"lieux": [
+"Lille",
+"Gierle",
+"Wechelderzande",
+"Poederlee"
+],
+"population": 16529
+},
+{
+"cp": "2280",
+"commune": "Grobbendonk",
+"region": "Vlaanderen",
+"lat": 51.1904,
+"lon": 4.7356,
+"lieux": [
+"Grobbendonk"
+],
+"population": 11155
+},
+{
+"cp": "2288",
+"commune": "Bouwel",
+"region": "Vlaanderen",
+"lat": 51.1729,
+"lon": 4.7418,
+"lieux": [
+"Bouwel"
+],
+"population": 3047
+},
+{
+"cp": "2290",
+"commune": "Vorselaar",
+"region": "Vlaanderen",
+"lat": 51.2024,
+"lon": 4.7726,
+"lieux": [
+"Vorselaar"
+],
+"population": 7861
+},
+{
+"cp": "2300",
+"commune": "Turnhout",
+"region": "Vlaanderen",
+"lat": 51.3225,
+"lon": 4.9447,
+"lieux": [
+"Turnhout"
+],
+"population": 44664
+},
+{
+"cp": "2310",
+"commune": "Rijkevorsel",
+"region": "Vlaanderen",
+"lat": 51.348,
+"lon": 4.7605,
+"lieux": [
+"Rijkevorsel"
+],
+"population": 12060
+},
+{
+"cp": "2320",
+"commune": "Hoogstraten",
+"region": "Vlaanderen",
+"lat": 51.4003,
+"lon": 4.7603,
+"lieux": [
+"Hoogstraten"
+],
+"population": 21355
+},
+{
+"cp": "2321",
+"commune": "Meer",
+"region": "Vlaanderen",
+"lat": 51.422,
+"lon": 4.7803,
+"lieux": [
+"Meer"
+],
+"population": 3512
+},
+{
+"cp": "2322",
+"commune": "Minderhout",
+"region": "Vlaanderen",
+"lat": 51.4171,
+"lon": 4.7629,
+"lieux": [
+"Minderhout"
+],
+"population": 4264
+},
+{
+"cp": "2323",
+"commune": "Wortel",
+"region": "Vlaanderen",
+"lat": 51.3983,
+"lon": 4.7946,
+"lieux": [
+"Wortel"
+],
+"population": 1832
+},
+{
+"cp": "2328",
+"commune": "Meerle",
+"region": "Vlaanderen",
+"lat": 51.4723,
+"lon": 4.8032,
+"lieux": [
+"Meerle"
+],
+"population": 3627
+},
+{
+"cp": "2330",
+"commune": "Merksplas",
+"region": "Vlaanderen",
+"lat": 51.3585,
+"lon": 4.8651,
+"lieux": [
+"Merksplas"
+],
+"population": 8600
+},
+{
+"cp": "2340",
+"commune": "Beerse",
+"region": "Vlaanderen",
+"lat": 51.3193,
+"lon": 4.853,
+"lieux": [
+"Beerse",
+"Vlimmeren"
+],
+"population": 18084
+},
+{
+"cp": "2350",
+"commune": "Vosselaar",
+"region": "Vlaanderen",
+"lat": 51.3086,
+"lon": 4.8896,
+"lieux": [
+"Vosselaar"
+],
+"population": 11187
+},
+{
+"cp": "2360",
+"commune": "Oud-Turnhout",
+"region": "Vlaanderen",
+"lat": 51.3198,
+"lon": 4.9841,
+"lieux": [
+"Oud-Turnhout"
+],
+"population": 13662
+},
+{
+"cp": "2370",
+"commune": "Arendonk",
+"region": "Vlaanderen",
+"lat": 51.3227,
+"lon": 5.0829,
+"lieux": [
+"Arendonk"
+],
+"population": 13293
+},
+{
+"cp": "2380",
+"commune": "Ravels",
+"region": "Vlaanderen",
+"lat": 51.3727,
+"lon": 4.9921,
+"lieux": [
+"Ravels"
+],
+"population": 15009
+},
+{
+"cp": "2381",
+"commune": "Weelde",
+"region": "Vlaanderen",
+"lat": 51.4078,
+"lon": 4.9925,
+"lieux": [
+"Weelde"
+],
+"population": 4854
+},
+{
+"cp": "2382",
+"commune": "Poppel",
+"region": "Vlaanderen",
+"lat": 51.4457,
+"lon": 5.0433,
+"lieux": [
+"Poppel"
+],
+"population": 4024
+},
+{
+"cp": "2387",
+"commune": "Baarle-Hertog",
+"region": "Vlaanderen",
+"lat": 51.405,
+"lon": 4.8923,
+"lieux": [
+"Baarle-Hertog"
+],
+"population": 2760
+},
+{
+"cp": "2390",
+"commune": "Malle",
+"region": "Vlaanderen",
+"lat": 51.2992,
+"lon": 4.7109,
+"lieux": [
+"Westmalle",
+"Malle",
+"Oostmalle"
+],
+"population": 15561
+},
+{
+"cp": "2400",
+"commune": "Mol",
+"region": "Vlaanderen",
+"lat": 51.1919,
+"lon": 5.1166,
+"lieux": [
+"Mol"
+],
+"population": 36825
+},
+{
+"cp": "2430",
+"commune": "Vorst",
+"region": "Vlaanderen",
+"lat": 51.0803,
+"lon": 5.02,
+"lieux": [
+"Vorst",
+"Laakdal",
+"Eindhout"
+],
+"population": 56289
+},
+{
+"cp": "2431",
+"commune": "Veerle",
+"region": "Vlaanderen",
+"lat": 51.0699,
+"lon": 4.9876,
+"lieux": [
+"Varendonk",
+"Veerle"
+],
+"population": 5748
+},
+{
+"cp": "2440",
+"commune": "Geel",
+"region": "Vlaanderen",
+"lat": 51.1656,
+"lon": 4.9892,
+"lieux": [
+"Geel"
+],
+"population": 40353
+},
+{
+"cp": "2450",
+"commune": "Meerhout",
+"region": "Vlaanderen",
+"lat": 51.1321,
+"lon": 5.0784,
+"lieux": [
+"Meerhout"
+],
+"population": 10361
+},
+{
+"cp": "2460",
+"commune": "Kasterlee",
+"region": "Vlaanderen",
+"lat": 51.2412,
+"lon": 4.9665,
+"lieux": [
+"Kasterlee",
+"Tielen",
+"Lichtaart"
+],
+"population": 18655
+},
+{
+"cp": "2470",
+"commune": "Retie",
+"region": "Vlaanderen",
+"lat": 51.2665,
+"lon": 5.0824,
+"lieux": [
+"Retie"
+],
+"population": 11396
+},
+{
+"cp": "2480",
+"commune": "Dessel",
+"region": "Vlaanderen",
+"lat": 51.2385,
+"lon": 5.1145,
+"lieux": [
+"Dessel"
+],
+"population": 9598
+},
+{
+"cp": "2490",
+"commune": "Balen",
+"region": "Vlaanderen",
+"lat": 51.1684,
+"lon": 5.1703,
+"lieux": [
+"Balen"
+],
+"population": 22618
+},
+{
+"cp": "2491",
+"commune": "Olmen",
+"region": "Vlaanderen",
+"lat": 51.1423,
+"lon": 5.15,
+"lieux": [
+"Olmen"
+],
+"population": 3778
+},
+{
+"cp": "2500",
+"commune": "Lier",
+"region": "Vlaanderen",
+"lat": 51.1313,
+"lon": 4.5704,
+"lieux": [
+"Koningshooikt",
+"Lier"
+],
+"population": 36242
+},
+{
+"cp": "2520",
+"commune": "Ranst",
+"region": "Vlaanderen",
+"lat": 51.1898,
+"lon": 4.5653,
+"lieux": [
+"Oelegem",
+"Ranst",
+"Emblem",
+"Broechem"
+],
+"population": 19008
+},
+{
+"cp": "2530",
+"commune": "Boechout",
+"region": "Vlaanderen",
+"lat": 51.1596,
+"lon": 4.4919,
+"lieux": [
+"Boechout"
+],
+"population": 13266
+},
+{
+"cp": "2531",
+"commune": "Vremde",
+"region": "Vlaanderen",
+"lat": 51.1753,
+"lon": 4.5232,
+"lieux": [
+"Vremde"
+],
+"population": 2592
+},
+{
+"cp": "2540",
+"commune": "Hove",
+"region": "Vlaanderen",
+"lat": 51.1545,
+"lon": 4.4707,
+"lieux": [
+"Hove"
+],
+"population": 8125
+},
+{
+"cp": "2547",
+"commune": "Lint",
+"region": "Vlaanderen",
+"lat": 51.1271,
+"lon": 4.4967,
+"lieux": [
+"Lint"
+],
+"population": 8718
+},
+{
+"cp": "2550",
+"commune": "Kontich",
+"region": "Vlaanderen",
+"lat": 51.1321,
+"lon": 4.4471,
+"lieux": [
+"Kontich",
+"Waarloos"
+],
+"population": 21115
+},
+{
+"cp": "2560",
+"commune": "Nijlen",
+"region": "Vlaanderen",
+"lat": 51.161,
+"lon": 4.6701,
+"lieux": [
+"Bevel",
+"Kessel",
+"Nijlen"
+],
+"population": 22949
+},
+{
+"cp": "2570",
+"commune": "Duffel",
+"region": "Vlaanderen",
+"lat": 51.0955,
+"lon": 4.509,
+"lieux": [
+"Duffel"
+],
+"population": 17491
+},
+{
+"cp": "2580",
+"commune": "Putte",
+"region": "Vlaanderen",
+"lat": 51.0534,
+"lon": 4.6326,
+"lieux": [
+"Putte",
+"Beerzel"
+],
+"population": 17800
+},
+{
+"cp": "2590",
+"commune": "Berlaar",
+"region": "Vlaanderen",
+"lat": 51.1176,
+"lon": 4.6584,
+"lieux": [
+"Gestel",
+"Berlaar"
+],
+"population": 11527
+},
+{
+"cp": "2600",
+"commune": "Berchem",
+"region": "Vlaanderen",
+"lat": 51.1902,
+"lon": 4.4326,
+"lieux": [
+"Berchem"
+],
+"population": 43511
+},
+{
+"cp": "2610",
+"commune": "Wilrijk",
+"region": "Vlaanderen",
+"lat": 51.1673,
+"lon": 4.3951,
+"lieux": [
+"Wilrijk"
+],
+"population": 41403
+},
+{
+"cp": "2620",
+"commune": "Hemiksem",
+"region": "Vlaanderen",
+"lat": 51.1448,
+"lon": 4.3387,
+"lieux": [
+"Hemiksem"
+],
+"population": 11559
+},
+{
+"cp": "2627",
+"commune": "Schelle",
+"region": "Vlaanderen",
+"lat": 51.1262,
+"lon": 4.3411,
+"lieux": [
+"Schelle"
+],
+"population": 8518
+},
+{
+"cp": "2630",
+"commune": "Aartselaar",
+"region": "Vlaanderen",
+"lat": 51.1341,
+"lon": 4.3868,
+"lieux": [
+"Aartselaar"
+],
+"population": 14293
+},
+{
+"cp": "2640",
+"commune": "Mortsel",
+"region": "Vlaanderen",
+"lat": 51.167,
+"lon": 4.4513,
+"lieux": [
+"Mortsel"
+],
+"population": 26099
+},
+{
+"cp": "2650",
+"commune": "Edegem",
+"region": "Vlaanderen",
+"lat": 51.1566,
+"lon": 4.445,
+"lieux": [
+"Edegem"
+],
+"population": 22063
+},
+{
+"cp": "2660",
+"commune": "Hoboken",
+"region": "Vlaanderen",
+"lat": 51.1761,
+"lon": 4.3484,
+"lieux": [
+"Hoboken"
+],
+"population": 34443
+},
+{
+"cp": "2800",
+"commune": "Mechelen",
+"region": "Vlaanderen",
+"lat": 51.0257,
+"lon": 4.4776,
+"lieux": [
+"Mechelen",
+"Walem"
+],
+"population": 86616
+},
+{
+"cp": "2801",
+"commune": "Heffen",
+"region": "Vlaanderen",
+"lat": 51.0472,
+"lon": 4.416,
+"lieux": [
+"Heffen"
+],
+"population": 2172
+},
+{
+"cp": "2811",
+"commune": "Hombeek",
+"region": "Vlaanderen",
+"lat": 51.0175,
+"lon": 4.4389,
+"lieux": [
+"Leest",
+"Hombeek"
+],
+"population": 4182
+},
+{
+"cp": "2812",
+"commune": "Muizen",
+"region": "Vlaanderen",
+"lat": 51.0111,
+"lon": 4.5143,
+"lieux": [
+"Muizen"
+],
+"population": 5386
+},
+{
+"cp": "2820",
+"commune": "Bonheiden",
+"region": "Vlaanderen",
+"lat": 51.0226,
+"lon": 4.5471,
+"lieux": [
+"Bonheiden",
+"Rijmenam"
+],
+"population": 15010
+},
+{
+"cp": "2830",
+"commune": "Willebroek",
+"region": "Vlaanderen",
+"lat": 51.0604,
+"lon": 4.3602,
+"lieux": [
+"Willebroek",
+"Heindonk",
+"Tisselt",
+"Blaasveld"
+],
+"population": 26462
+},
+{
+"cp": "2840",
+"commune": "Rumst",
+"region": "Vlaanderen",
+"lat": 51.0815,
+"lon": 4.4222,
+"lieux": [
+"Rumst",
+"Terhagen",
+"Reet"
+],
+"population": 15090
+},
+{
+"cp": "2845",
+"commune": "Niel",
+"region": "Vlaanderen",
+"lat": 51.111,
+"lon": 4.3343,
+"lieux": [
+"Niel"
+],
+"population": 10501
+},
+{
+"cp": "2850",
+"commune": "Boom",
+"region": "Vlaanderen",
+"lat": 51.0924,
+"lon": 4.3717,
+"lieux": [
+"Boom"
+],
+"population": 18244
+},
+{
+"cp": "2860",
+"commune": "Sint-Katelijne-Waver",
+"region": "Vlaanderen",
+"lat": 51.0669,
+"lon": 4.5347,
+"lieux": [
+"Sint-Katelijne-Waver"
+],
+"population": 20792
+},
+{
+"cp": "2861",
+"commune": "Onze-Lieve-Vrouw-Waver",
+"region": "Vlaanderen",
+"lat": 51.0627,
+"lon": 4.5794,
+"lieux": [
+"Onze-Lieve-Vrouw-Waver"
+],
+"population": 5621
+},
+{
+"cp": "2870",
+"commune": "Puurs-Sint-Amands",
+"region": "Vlaanderen",
+"lat": 51.0663,
+"lon": 4.3059,
+"lieux": [
+"Liezele",
+"Puurs-Sint-Amands",
+"Ruisbroek",
+"Breendonk",
+"Puurs"
+],
+"population": 25882
+},
+{
+"cp": "2880",
+"commune": "Bornem",
+"region": "Vlaanderen",
+"lat": 51.0972,
+"lon": 4.2436,
+"lieux": [
+"Mariekerke",
+"Weert",
+"Bornem",
+"Hingene"
+],
+"population": 21366
+},
+{
+"cp": "2890",
+"commune": "Sint-Amands",
+"region": "Vlaanderen",
+"lat": 51.0564,
+"lon": 4.2096,
+"lieux": [
+"Lippelo",
+"Oppuurs",
+"Sint-Amands"
+],
+"population": 8100
+},
+{
+"cp": "2900",
+"commune": "Schoten",
+"region": "Vlaanderen",
+"lat": 51.2525,
+"lon": 4.5027,
+"lieux": [
+"Schoten"
+],
+"population": 34517
+},
+{
+"cp": "2910",
+"commune": "Essen",
+"region": "Vlaanderen",
+"lat": 51.4679,
+"lon": 4.469,
+"lieux": [
+"Essen"
+],
+"population": 19038
+},
+{
+"cp": "2920",
+"commune": "Kalmthout",
+"region": "Vlaanderen",
+"lat": 51.3844,
+"lon": 4.4756,
+"lieux": [
+"Kalmthout"
+],
+"population": 18695
+},
+{
+"cp": "2930",
+"commune": "Brasschaat",
+"region": "Vlaanderen",
+"lat": 51.2912,
+"lon": 4.4918,
+"lieux": [
+"Brasschaat"
+],
+"population": 37946
+},
+{
+"cp": "2940",
+"commune": "Stabroek",
+"region": "Vlaanderen",
+"lat": 51.3319,
+"lon": 4.3713,
+"lieux": [
+"Hoevenen",
+"Stabroek"
+],
+"population": 18710
+},
+{
+"cp": "2950",
+"commune": "Kapellen",
+"region": "Vlaanderen",
+"lat": 51.3138,
+"lon": 4.4354,
+"lieux": [
+"Kapellen"
+],
+"population": 26850
+},
+{
+"cp": "2960",
+"commune": "Brecht",
+"region": "Vlaanderen",
+"lat": 51.3502,
+"lon": 4.6383,
+"lieux": [
+"Sint-Job-In-'T-Goor",
+"Sint-Lenaarts",
+"Brecht"
+],
+"population": 29268
+},
+{
+"cp": "2970",
+"commune": "Schilde",
+"region": "Vlaanderen",
+"lat": 51.2411,
+"lon": 4.5834,
+"lieux": [
+"Schilde",
+"'S Gravenwezel"
+],
+"population": 20373
+},
+{
+"cp": "2980",
+"commune": "Halle",
+"region": "Vlaanderen",
+"lat": 51.2407,
+"lon": 4.6433,
+"lieux": [
+"Zoersel",
+"Halle"
+],
+"population": 39540
+},
+{
+"cp": "2990",
+"commune": "Wuustwezel",
+"region": "Vlaanderen",
+"lat": 51.3921,
+"lon": 4.5955,
+"lieux": [
+"Wuustwezel",
+"Loenhout"
+],
+"population": 20970
+},
+{
+"cp": "3000",
+"commune": "Leuven",
+"region": "Vlaanderen",
+"lat": 50.8796,
+"lon": 4.7009,
+"lieux": [
+"Leuven"
+],
+"population": 101624
+},
+{
+"cp": "3001",
+"commune": "Heverlee",
+"region": "Vlaanderen",
+"lat": 50.8643,
+"lon": 4.696,
+"lieux": [
+"Heverlee"
+],
+"population": 23278
+},
+{
+"cp": "3010",
+"commune": "Kessel Lo",
+"region": "Vlaanderen",
+"lat": 50.8855,
+"lon": 4.7372,
+"lieux": [
+"Kessel Lo"
+],
+"population": 0
+},
+{
+"cp": "3012",
+"commune": "Wilsele",
+"region": "Vlaanderen",
+"lat": 50.8919,
+"lon": 4.6977,
+"lieux": [
+"Wilsele"
+],
+"population": 9845
+},
+{
+"cp": "3018",
+"commune": "Wijgmaal",
+"region": "Vlaanderen",
+"lat": 50.9267,
+"lon": 4.7021,
+"lieux": [
+"Wijgmaal"
+],
+"population": 0
+},
+{
+"cp": "3020",
+"commune": "Herent",
+"region": "Vlaanderen",
+"lat": 50.9086,
+"lon": 4.6706,
+"lieux": [
+"Herent",
+"Winksele",
+"Veltem-Beisem"
+],
+"population": 21682
+},
+{
+"cp": "3040",
+"commune": "Huldenberg",
+"region": "Vlaanderen",
+"lat": 50.7894,
+"lon": 4.5831,
+"lieux": [
+"Neerijse",
+"Ottenburg",
+"Huldenberg",
+"Sint-Agatha-Rode",
+"Loonbeek"
+],
+"population": 9921
+},
+{
+"cp": "3050",
+"commune": "Oud-Heverlee",
+"region": "Vlaanderen",
+"lat": 50.8352,
+"lon": 4.6642,
+"lieux": [
+"Oud-Heverlee"
+],
+"population": 11112
+},
+{
+"cp": "3051",
+"commune": "Sint-Joris-Weert",
+"region": "Vlaanderen",
+"lat": 50.8023,
+"lon": 4.6526,
+"lieux": [
+"Sint-Joris-Weert"
+],
+"population": 1907
+},
+{
+"cp": "3052",
+"commune": "Blanden",
+"region": "Vlaanderen",
+"lat": 50.8262,
+"lon": 4.7102,
+"lieux": [
+"Blanden"
+],
+"population": 2500
+},
+{
+"cp": "3053",
+"commune": "Haasrode",
+"region": "Vlaanderen",
+"lat": 50.8317,
+"lon": 4.7295,
+"lieux": [
+"Haasrode"
+],
+"population": 2970
+},
+{
+"cp": "3054",
+"commune": "Vaalbeek",
+"region": "Vlaanderen",
+"lat": 50.8262,
+"lon": 4.6898,
+"lieux": [
+"Vaalbeek"
+],
+"population": 419
+},
+{
+"cp": "3060",
+"commune": "Bertem",
+"region": "Vlaanderen",
+"lat": 50.864,
+"lon": 4.6292,
+"lieux": [
+"Korbeek-Dijle",
+"Bertem"
+],
+"population": 10007
+},
+{
+"cp": "3061",
+"commune": "Leefdaal",
+"region": "Vlaanderen",
+"lat": 50.8476,
+"lon": 4.5894,
+"lieux": [
+"Leefdaal"
+],
+"population": 4457
+},
+{
+"cp": "3070",
+"commune": "Kortenberg",
+"region": "Vlaanderen",
+"lat": 50.8898,
+"lon": 4.5435,
+"lieux": [
+"Kortenberg"
+],
+"population": 20279
+},
+{
+"cp": "3071",
+"commune": "Erps-Kwerps",
+"region": "Vlaanderen",
+"lat": 50.9012,
+"lon": 4.5598,
+"lieux": [
+"Erps-Kwerps"
+],
+"population": 6213
+},
+{
+"cp": "3078",
+"commune": "Everberg",
+"region": "Vlaanderen",
+"lat": 50.8768,
+"lon": 4.5698,
+"lieux": [
+"Meerbeek",
+"Everberg"
+],
+"population": 4064
+},
+{
+"cp": "3080",
+"commune": "Tervuren",
+"region": "Vlaanderen",
+"lat": 50.8237,
+"lon": 4.5142,
+"lieux": [
+"Vossem",
+"Tervuren",
+"Duisburg"
+],
+"population": 22422
+},
+{
+"cp": "3090",
+"commune": "Overijse",
+"region": "Vlaanderen",
+"lat": 50.7744,
+"lon": 4.5346,
+"lieux": [
+"Overijse"
+],
+"population": 25403
+},
+{
+"cp": "3110",
+"commune": "Rotselaar",
+"region": "Vlaanderen",
+"lat": 50.953,
+"lon": 4.7167,
+"lieux": [
+"Rotselaar"
+],
+"population": 16793
+},
+{
+"cp": "3111",
+"commune": "Wezemaal",
+"region": "Vlaanderen",
+"lat": 50.9485,
+"lon": 4.7554,
+"lieux": [
+"Wezemaal"
+],
+"population": 4436
+},
+{
+"cp": "3118",
+"commune": "Werchter",
+"region": "Vlaanderen",
+"lat": 50.9731,
+"lon": 4.7012,
+"lieux": [
+"Werchter"
+],
+"population": 3572
+},
+{
+"cp": "3120",
+"commune": "Tremelo",
+"region": "Vlaanderen",
+"lat": 50.9923,
+"lon": 4.7081,
+"lieux": [
+"Tremelo"
+],
+"population": 14914
+},
+{
+"cp": "3128",
+"commune": "Baal",
+"region": "Vlaanderen",
+"lat": 50.9955,
+"lon": 4.7532,
+"lieux": [
+"Baal"
+],
+"population": 5931
+},
+{
+"cp": "3130",
+"commune": "Begijnendijk",
+"region": "Vlaanderen",
+"lat": 51.0194,
+"lon": 4.7838,
+"lieux": [
+"Begijnendijk",
+"Betekom"
+],
+"population": 10114
+},
+{
+"cp": "3140",
+"commune": "Keerbergen",
+"region": "Vlaanderen",
+"lat": 51.003,
+"lon": 4.6343,
+"lieux": [
+"Keerbergen"
+],
+"population": 12850
+},
+{
+"cp": "3150",
+"commune": "Haacht",
+"region": "Vlaanderen",
+"lat": 50.9774,
+"lon": 4.6378,
+"lieux": [
+"Tildonk",
+"Wespelaar",
+"Haacht"
+],
+"population": 14577
+},
+{
+"cp": "3190",
+"commune": "Boortmeerbeek",
+"region": "Vlaanderen",
+"lat": 50.9793,
+"lon": 4.5744,
+"lieux": [
+"Boortmeerbeek"
+],
+"population": 12516
+},
+{
+"cp": "3191",
+"commune": "Hever",
+"region": "Vlaanderen",
+"lat": 50.9954,
+"lon": 4.5513,
+"lieux": [
+"Hever"
+],
+"population": 6426
+},
+{
+"cp": "3200",
+"commune": "Aarschot",
+"region": "Vlaanderen",
+"lat": 50.9871,
+"lon": 4.8369,
+"lieux": [
+"Aarschot",
+"Gelrode"
+],
+"population": 30115
+},
+{
+"cp": "3201",
+"commune": "Langdorp",
+"region": "Vlaanderen",
+"lat": 50.9956,
+"lon": 4.8717,
+"lieux": [
+"Langdorp"
+],
+"population": 7492
+},
+{
+"cp": "3202",
+"commune": "Rillaar",
+"region": "Vlaanderen",
+"lat": 50.9738,
+"lon": 4.8918,
+"lieux": [
+"Rillaar"
+],
+"population": 5518
+},
+{
+"cp": "3210",
+"commune": "Lubbeek",
+"region": "Vlaanderen",
+"lat": 50.8828,
+"lon": 4.839,
+"lieux": [
+"Lubbeek",
+"Linden"
+],
+"population": 14559
+},
+{
+"cp": "3211",
+"commune": "Binkom",
+"region": "Vlaanderen",
+"lat": 50.8716,
+"lon": 4.8841,
+"lieux": [
+"Binkom"
+],
+"population": 1546
+},
+{
+"cp": "3212",
+"commune": "Pellenberg",
+"region": "Vlaanderen",
+"lat": 50.8724,
+"lon": 4.7939,
+"lieux": [
+"Pellenberg"
+],
+"population": 2283
+},
+{
+"cp": "3220",
+"commune": "Holsbeek",
+"region": "Vlaanderen",
+"lat": 50.921,
+"lon": 4.7575,
+"lieux": [
+"Kortrijk-Dutsel",
+"Sint-Pieters-Rode",
+"Holsbeek"
+],
+"population": 10019
+},
+{
+"cp": "3221",
+"commune": "Nieuwrode",
+"region": "Vlaanderen",
+"lat": 50.95,
+"lon": 4.8333,
+"lieux": [
+"Nieuwrode"
+],
+"population": 2796
+},
+{
+"cp": "3270",
+"commune": "Scherpenheuvel-Zichem",
+"region": "Vlaanderen",
+"lat": 51.0104,
+"lon": 4.9749,
+"lieux": [
+"Scherpenheuvel-Zichem",
+"Scherpenheuvel"
+],
+"population": 23029
+},
+{
+"cp": "3271",
+"commune": "Zichem",
+"region": "Vlaanderen",
+"lat": 51.0019,
+"lon": 4.9832,
+"lieux": [
+"Averbode",
+"Zichem"
+],
+"population": 6497
+},
+{
+"cp": "3272",
+"commune": "Testelt",
+"region": "Vlaanderen",
+"lat": 51.0108,
+"lon": 4.9531,
+"lieux": [
+"Messelbroek",
+"Testelt"
+],
+"population": 3131
+},
+{
+"cp": "3290",
+"commune": "Deurne",
+"region": "Vlaanderen",
+"lat": 51.0391,
+"lon": 5.0965,
+"lieux": [
+"Schaffen",
+"Deurne",
+"Webbekom",
+"Diest"
+],
+"population": 78747
+},
+{
+"cp": "3293",
+"commune": "Kaggevinne",
+"region": "Vlaanderen",
+"lat": 50.9804,
+"lon": 5.0189,
+"lieux": [
+"Kaggevinne"
+],
+"population": 2338
+},
+{
+"cp": "3294",
+"commune": "Molenstede",
+"region": "Vlaanderen",
+"lat": 51.004,
+"lon": 5.013,
+"lieux": [
+"Molenstede"
+],
+"population": 3374
+},
+{
+"cp": "3300",
+"commune": "Tienen",
+"region": "Vlaanderen",
+"lat": 50.8074,
+"lon": 4.9378,
+"lieux": [
+"Bost",
+"Kumtich",
+"Vissenaken",
+"Oplinter",
+"Oorbeek",
+"Hakendover",
+"Sint-Margriete-Houtem",
+"Tienen",
+"Goetsenhoven"
+],
+"population": 34975
+},
+{
+"cp": "3320",
+"commune": "Hoegaarden",
+"region": "Vlaanderen",
+"lat": 50.7756,
+"lon": 4.8895,
+"lieux": [
+"Hoegaarden",
+"Meldert"
+],
+"population": 6886
+},
+{
+"cp": "3321",
+"commune": "Outgaarden",
+"region": "Vlaanderen",
+"lat": 50.7667,
+"lon": 4.9193,
+"lieux": [
+"Outgaarden"
+],
+"population": 816
+},
+{
+"cp": "3350",
+"commune": "Linter",
+"region": "Vlaanderen",
+"lat": 50.8416,
+"lon": 5.0366,
+"lieux": [
+"Wommersom",
+"Drieslinter",
+"Neerhespen",
+"Orsmaal-Gussenhoven",
+"Neerlinter",
+"Melkwezer",
+"Overhespen",
+"Linter"
+],
+"population": 7269
+},
+{
+"cp": "3360",
+"commune": "Bierbeek",
+"region": "Vlaanderen",
+"lat": 50.8288,
+"lon": 4.7595,
+"lieux": [
+"Lovenjoel",
+"Bierbeek",
+"Opvelp",
+"Korbeek-Lo"
+],
+"population": 10083
+},
+{
+"cp": "3370",
+"commune": "Boutersem",
+"region": "Vlaanderen",
+"lat": 50.8351,
+"lon": 4.8345,
+"lieux": [
+"Roosbeek",
+"Boutersem",
+"Willebringen",
+"Kerkom",
+"Neervelp",
+"Vertrijk"
+],
+"population": 8242
+},
+{
+"cp": "3380",
+"commune": "Glabbeek",
+"region": "Vlaanderen",
+"lat": 50.8727,
+"lon": 4.9562,
+"lieux": [
+"Glabbeek",
+"Bunsbeek"
+],
+"population": 5271
+},
+{
+"cp": "3381",
+"commune": "Kapellen",
+"region": "Vlaanderen",
+"lat": 50.8859,
+"lon": 4.9517,
+"lieux": [
+"Kapellen"
+],
+"population": 26850
+},
+{
+"cp": "3384",
+"commune": "Attenrode",
+"region": "Vlaanderen",
+"lat": 50.8778,
+"lon": 4.9244,
+"lieux": [
+"Attenrode"
+],
+"population": 1077
+},
+{
+"cp": "3390",
+"commune": "Tielt",
+"region": "Vlaanderen",
+"lat": 50.9421,
+"lon": 4.9051,
+"lieux": [
+"Houwaart",
+"Tielt-Winge",
+"Sint-Joris-Winge",
+"Tielt"
+],
+"population": 20502
+},
+{
+"cp": "3391",
+"commune": "Meensel-Kiezegem",
+"region": "Vlaanderen",
+"lat": 50.8962,
+"lon": 4.925,
+"lieux": [
+"Meensel-Kiezegem"
+],
+"population": 1186
+},
+{
+"cp": "3400",
+"commune": "Landen",
+"region": "Vlaanderen",
+"lat": 50.7527,
+"lon": 5.082,
+"lieux": [
+"Rumsdorp",
+"Landen",
+"Neerwinden",
+"Laar",
+"Overwinden",
+"Eliksem",
+"Wange",
+"Ezemaal"
+],
+"population": 15951
+},
+{
+"cp": "3401",
+"commune": "Walsbets",
+"region": "Vlaanderen",
+"lat": 50.7376,
+"lon": 5.0841,
+"lieux": [
+"Walsbets",
+"Waasmont",
+"Walshoutem",
+"Wezeren"
+],
+"population": 3609
+},
+{
+"cp": "3404",
+"commune": "Attenhoven",
+"region": "Vlaanderen",
+"lat": 50.9132,
+"lon": 4.7294,
+"lieux": [
+"Neerlanden",
+"Attenhoven"
+],
+"population": 1784
+},
+{
+"cp": "3440",
+"commune": "Zoutleeuw",
+"region": "Vlaanderen",
+"lat": 50.8332,
+"lon": 5.1038,
+"lieux": [
+"Zoutleeuw",
+"Dormaal",
+"Helen-Bos",
+"Halle-Booienhoven",
+"Budingen"
+],
+"population": 8480
+},
+{
+"cp": "3450",
+"commune": "Geetbets",
+"region": "Vlaanderen",
+"lat": 50.8943,
+"lon": 5.112,
+"lieux": [
+"Geetbets",
+"Grazen"
+],
+"population": 6118
+},
+{
+"cp": "3454",
+"commune": "Rummen",
+"region": "Vlaanderen",
+"lat": 50.8891,
+"lon": 5.1652,
+"lieux": [
+"Rummen"
+],
+"population": 2177
+},
+{
+"cp": "3460",
+"commune": "Bekkevoort",
+"region": "Vlaanderen",
+"lat": 50.9407,
+"lon": 4.969,
+"lieux": [
+"Assent",
+"Bekkevoort"
+],
+"population": 6306
+},
+{
+"cp": "3461",
+"commune": "Molenbeek-Wersbeek",
+"region": "Vlaanderen",
+"lat": 50.9195,
+"lon": 4.9476,
+"lieux": [
+"Molenbeek-Wersbeek"
+],
+"population": 1162
+},
+{
+"cp": "3470",
+"commune": "Kortenaken",
+"region": "Vlaanderen",
+"lat": 50.9086,
+"lon": 5.0597,
+"lieux": [
+"Kortenaken",
+"Sint-Margriete-Houtem",
+"Ransberg"
+],
+"population": 7875
+},
+{
+"cp": "3471",
+"commune": "Hoeleden",
+"region": "Vlaanderen",
+"lat": 50.8666,
+"lon": 4.9854,
+"lieux": [
+"Hoeleden"
+],
+"population": 1831
+},
+{
+"cp": "3472",
+"commune": "Kersbeek-Miskom",
+"region": "Vlaanderen",
+"lat": 50.8854,
+"lon": 4.9958,
+"lieux": [
+"Kersbeek-Miskom"
+],
+"population": 1298
+},
+{
+"cp": "3473",
+"commune": "Waanrode",
+"region": "Vlaanderen",
+"lat": 50.9162,
+"lon": 5.0048,
+"lieux": [
+"Waanrode"
+],
+"population": 1919
+},
+{
+"cp": "3500",
+"commune": "Hasselt",
+"region": "Vlaanderen",
+"lat": 50.9311,
+"lon": 5.3378,
+"lieux": [
+"Hasselt",
+"Sint-Lambrechts-Herk"
+],
+"population": 78296
+},
+{
+"cp": "3501",
+"commune": "Wimmertingen",
+"region": "Vlaanderen",
+"lat": 50.8833,
+"lon": 5.35,
+"lieux": [
+"Wimmertingen"
+],
+"population": 329
+},
+{
+"cp": "3510",
+"commune": "Kermt",
+"region": "Vlaanderen",
+"lat": 50.9476,
+"lon": 5.2483,
+"lieux": [
+"Spalbeek",
+"Kermt"
+],
+"population": 4543
+},
+{
+"cp": "3511",
+"commune": "Kuringen",
+"region": "Vlaanderen",
+"lat": 50.9443,
+"lon": 5.299,
+"lieux": [
+"Stokrooie",
+"Kuringen"
+],
+"population": 11409
+},
+{
+"cp": "3512",
+"commune": "Stevoort",
+"region": "Vlaanderen",
+"lat": 50.9186,
+"lon": 5.2533,
+"lieux": [
+"Stevoort"
+],
+"population": 3713
+},
+{
+"cp": "3520",
+"commune": "Zonhoven",
+"region": "Vlaanderen",
+"lat": 50.9906,
+"lon": 5.3682,
+"lieux": [
+"Zonhoven"
+],
+"population": 21237
+},
+{
+"cp": "3530",
+"commune": "Houthalen-Helchteren",
+"region": "Vlaanderen",
+"lat": 51.0322,
+"lon": 5.3785,
+"lieux": [
+"Helchteren",
+"Houthalen-Helchteren",
+"Houthalen"
+],
+"population": 30655
+},
+{
+"cp": "3540",
+"commune": "Schulen",
+"region": "Vlaanderen",
+"lat": 50.9597,
+"lon": 5.1901,
+"lieux": [
+"Berbroek",
+"Schulen",
+"Herk-De-Stad",
+"Donk"
+],
+"population": 2930
+},
+{
+"cp": "3545",
+"commune": "Halen",
+"region": "Vlaanderen",
+"lat": 50.9484,
+"lon": 5.111,
+"lieux": [
+"Zelem",
+"Loksbergen",
+"Halen"
+],
+"population": 9427
+},
+{
+"cp": "3550",
+"commune": "Heusden-Zolder",
+"region": "Vlaanderen",
+"lat": 51.0373,
+"lon": 5.2965,
+"lieux": [
+"Zolder",
+"Heusden-Zolder",
+"Heusden"
+],
+"population": 33708
+},
+{
+"cp": "3560",
+"commune": "Lummen",
+"region": "Vlaanderen",
+"lat": 50.9877,
+"lon": 5.1912,
+"lieux": [
+"Meldert",
+"Lummen",
+"Linkhout"
+],
+"population": 14890
+},
+{
+"cp": "3570",
+"commune": "Alken",
+"region": "Vlaanderen",
+"lat": 50.8755,
+"lon": 5.3056,
+"lieux": [
+"Alken"
+],
+"population": 11499
+},
+{
+"cp": "3580",
+"commune": "Beringen",
+"region": "Vlaanderen",
+"lat": 51.0495,
+"lon": 5.2261,
+"lieux": [
+"Beringen"
+],
+"population": 46346
+},
+{
+"cp": "3581",
+"commune": "Beverlo",
+"region": "Vlaanderen",
+"lat": 51.0865,
+"lon": 5.2185,
+"lieux": [
+"Beverlo"
+],
+"population": 8681
+},
+{
+"cp": "3582",
+"commune": "Koersel",
+"region": "Vlaanderen",
+"lat": 51.0591,
+"lon": 5.2712,
+"lieux": [
+"Koersel"
+],
+"population": 18076
+},
+{
+"cp": "3583",
+"commune": "Paal",
+"region": "Vlaanderen",
+"lat": 51.0399,
+"lon": 5.1723,
+"lieux": [
+"Paal"
+],
+"population": 11935
+},
+{
+"cp": "3590",
+"commune": "Diepenbeek",
+"region": "Vlaanderen",
+"lat": 50.9077,
+"lon": 5.4187,
+"lieux": [
+"Diepenbeek"
+],
+"population": 19031
+},
+{
+"cp": "3600",
+"commune": "Genk",
+"region": "Vlaanderen",
+"lat": 50.965,
+"lon": 5.5008,
+"lieux": [
+"Genk"
+],
+"population": 66227
+},
+{
+"cp": "3620",
+"commune": "Lanaken",
+"region": "Vlaanderen",
+"lat": 50.8932,
+"lon": 5.6468,
+"lieux": [
+"Lanaken",
+"Veldwezelt",
+"Gellik",
+"Neerharen"
+],
+"population": 25841
+},
+{
+"cp": "3621",
+"commune": "Rekem",
+"region": "Vlaanderen",
+"lat": 50.9224,
+"lon": 5.6938,
+"lieux": [
+"Rekem"
+],
+"population": 4493
+},
+{
+"cp": "3630",
+"commune": "Maasmechelen",
+"region": "Vlaanderen",
+"lat": 50.9655,
+"lon": 5.6945,
+"lieux": [
+"Vucht",
+"Eisden",
+"Leut",
+"Opgrimbie",
+"Maasmechelen",
+"Meeswijk",
+"Mechelen-Aan-De-Maas"
+],
+"population": 38516
+},
+{
+"cp": "3631",
+"commune": "Boorsem",
+"region": "Vlaanderen",
+"lat": 50.9421,
+"lon": 5.719,
+"lieux": [
+"Boorsem",
+"Uikhoven"
+],
+"population": 2260
+},
+{
+"cp": "3640",
+"commune": "Kinrooi",
+"region": "Vlaanderen",
+"lat": 51.1454,
+"lon": 5.7421,
+"lieux": [
+"Kessenich",
+"Kinrooi",
+"Molenbeersel",
+"Ophoven"
+],
+"population": 12174
+},
+{
+"cp": "3650",
+"commune": "Dilsen-Stokkem",
+"region": "Vlaanderen",
+"lat": 51.0305,
+"lon": 5.7347,
+"lieux": [
+"Lanklaar",
+"Dilsen-Stokkem",
+"Elen",
+"Rotem",
+"Stokkem",
+"Dilsen"
+],
+"population": 20590
+},
+{
+"cp": "3660",
+"commune": "Opglabbeek",
+"region": "Vlaanderen",
+"lat": 51.1394,
+"lon": 5.5154,
+"lieux": [
+"Opglabbeek"
+],
+"population": 10124
+},
+{
+"cp": "3665",
+"commune": "As",
+"region": "Vlaanderen",
+"lat": 51.0075,
+"lon": 5.5845,
+"lieux": [
+"As"
+],
+"population": 8202
+},
+{
+"cp": "3668",
+"commune": "Niel-Bij-As",
+"region": "Vlaanderen",
+"lat": 51.0185,
+"lon": 5.6053,
+"lieux": [
+"Niel-Bij-As"
+],
+"population": 0
+},
+{
+"cp": "3670",
+"commune": "Oudsbergen",
+"region": "Vlaanderen",
+"lat": 51.102,
+"lon": 5.5614,
+"lieux": [
+"Ellikom",
+"Meeuwen",
+"Gruitrode",
+"Wijshagen",
+"Neerglabbeek",
+"Oudsbergen"
+],
+"population": 23532
+},
+{
+"cp": "3680",
+"commune": "Maaseik",
+"region": "Vlaanderen",
+"lat": 51.098,
+"lon": 5.7838,
+"lieux": [
+"Neeroeteren",
+"Opoeteren",
+"Maaseik"
+],
+"population": 25317
+},
+{
+"cp": "3690",
+"commune": "Zutendaal",
+"region": "Vlaanderen",
+"lat": 50.9331,
+"lon": 5.5753,
+"lieux": [
+"Zutendaal"
+],
+"population": 7289
+},
+{
+"cp": "3700",
+"commune": "Tongeren",
+"region": "Vlaanderen",
+"lat": 50.7805,
+"lon": 5.4648,
+"lieux": [
+"Neerrepen",
+"Sluizen",
+"'S Herenelderen",
+"Tongeren",
+"Koninksem",
+"Nerem",
+"Widooie",
+"Berg",
+"Riksingen",
+"Kolmont",
+"Piringen",
+"Vreren",
+"Overrepen",
+"Rutten",
+"Haren",
+"Mal",
+"Diets-Heur",
+"Henis",
+"Lauw"
+],
+"population": 30996
+},
+{
+"cp": "3717",
+"commune": "Herstappe",
+"region": "Vlaanderen",
+"lat": 50.7261,
+"lon": 5.4266,
+"lieux": [
+"Herstappe"
+],
+"population": 93
+},
+{
+"cp": "3720",
+"commune": "Kortessem",
+"region": "Vlaanderen",
+"lat": 50.8589,
+"lon": 5.3897,
+"lieux": [
+"Kortessem"
+],
+"population": 8442
+},
+{
+"cp": "3721",
+"commune": "Vliermaalroot",
+"region": "Vlaanderen",
+"lat": 50.8651,
+"lon": 5.4262,
+"lieux": [
+"Vliermaalroot"
+],
+"population": 1321
+},
+{
+"cp": "3722",
+"commune": "Wintershoven",
+"region": "Vlaanderen",
+"lat": 50.8516,
+"lon": 5.4196,
+"lieux": [
+"Wintershoven"
+],
+"population": 600
+},
+{
+"cp": "3723",
+"commune": "Guigoven",
+"region": "Vlaanderen",
+"lat": 50.8392,
+"lon": 5.4004,
+"lieux": [
+"Guigoven"
+],
+"population": 1048
+},
+{
+"cp": "3724",
+"commune": "Vliermaal",
+"region": "Vlaanderen",
+"lat": 50.8407,
+"lon": 5.4286,
+"lieux": [
+"Vliermaal"
+],
+"population": 1961
+},
+{
+"cp": "3730",
+"commune": "Hoeselt",
+"region": "Vlaanderen",
+"lat": 50.8471,
+"lon": 5.4877,
+"lieux": [
+"Hoeselt",
+"Sint-Huibrechts-Hern",
+"Romershoven",
+"Werm"
+],
+"population": 9688
+},
+{
+"cp": "3732",
+"commune": "Schalkhoven",
+"region": "Vlaanderen",
+"lat": 50.8413,
+"lon": 5.4495,
+"lieux": [
+"Schalkhoven"
+],
+"population": 282
+},
+{
+"cp": "3740",
+"commune": "Bilzen",
+"region": "Vlaanderen",
+"lat": 50.8733,
+"lon": 5.5184,
+"lieux": [
+"Munsterbilzen",
+"Waltwilder",
+"Rosmeer",
+"Hees",
+"Rijkhoven",
+"Bilzen",
+"Kleine-Spouwen",
+"Grote-Spouwen",
+"Mopertingen",
+"Eigenbilzen",
+"Beverst"
+],
+"population": 32328
+},
+{
+"cp": "3742",
+"commune": "Martenslinde",
+"region": "Vlaanderen",
+"lat": 50.856,
+"lon": 5.5338,
+"lieux": [
+"Martenslinde"
+],
+"population": 928
+},
+{
+"cp": "3746",
+"commune": "Hoelbeek",
+"region": "Vlaanderen",
+"lat": 50.8721,
+"lon": 5.5591,
+"lieux": [
+"Hoelbeek"
+],
+"population": 537
+},
+{
+"cp": "3770",
+"commune": "Riemst",
+"region": "Vlaanderen",
+"lat": 50.8099,
+"lon": 5.6013,
+"lieux": [
+"Genoelselderen",
+"Val-Meer",
+"Kanne",
+"Vroenhoven",
+"Zichen-Zussen-Bolder",
+"Millen",
+"Membruggen",
+"Riemst",
+"Herderen",
+"Vlijtingen"
+],
+"population": 16755
+},
+{
+"cp": "3790",
+"commune": "Fourons",
+"region": "Vlaanderen",
+"lat": 50.7505,
+"lon": 5.7832,
+"lieux": [
+"Fourons",
+"Mouland",
+"Fouron-Saint-Martin"
+],
+"population": 0
+},
+{
+"cp": "3791",
+"commune": "Remersdaal",
+"region": "Vlaanderen",
+"lat": 50.7314,
+"lon": 5.8806,
+"lieux": [
+"Remersdaal"
+],
+"population": 297
+},
+{
+"cp": "3792",
+"commune": "Fouron-Saint-Pierre",
+"region": "Vlaanderen",
+"lat": 50.7386,
+"lon": 5.8222,
+"lieux": [
+"Fouron-Saint-Pierre"
+],
+"population": 0
+},
+{
+"cp": "3793",
+"commune": "Teuven",
+"region": "Vlaanderen",
+"lat": 50.7518,
+"lon": 5.8757,
+"lieux": [
+"Teuven"
+],
+"population": 476
+},
+{
+"cp": "3798",
+"commune": "Fouron-Le-Comte",
+"region": "Vlaanderen",
+"lat": 50.7587,
+"lon": 5.7611,
+"lieux": [
+"Fouron-Le-Comte"
+],
+"population": 0
+},
+{
+"cp": "3800",
+"commune": "Aalst",
+"region": "Vlaanderen",
+"lat": 50.782,
+"lon": 5.2092,
+"lieux": [
+"Sint-Truiden",
+"Zepperen",
+"Groot-Gelmen",
+"Kerkom-Bij-Sint-Truiden",
+"Aalst",
+"Halmaal",
+"Engelmanshoven",
+"Ordingen",
+"Brustem",
+"Gelinden"
+],
+"population": 86445
+},
+{
+"cp": "3803",
+"commune": "Wilderen",
+"region": "Vlaanderen",
+"lat": 50.8155,
+"lon": 5.1423,
+"lieux": [
+"Duras",
+"Wilderen",
+"Gorsem",
+"Runkelen"
+],
+"population": 1414
+},
+{
+"cp": "3806",
+"commune": "Velm",
+"region": "Vlaanderen",
+"lat": 50.7787,
+"lon": 5.131,
+"lieux": [
+"Velm"
+],
+"population": 2580
+},
+{
+"cp": "3830",
+"commune": "Wellen",
+"region": "Vlaanderen",
+"lat": 50.841,
+"lon": 5.3387,
+"lieux": [
+"Berlingen",
+"Wellen"
+],
+"population": 7372
+},
+{
+"cp": "3831",
+"commune": "Herten",
+"region": "Vlaanderen",
+"lat": 50.8351,
+"lon": 5.3221,
+"lieux": [
+"Herten"
+],
+"population": 91
+},
+{
+"cp": "3832",
+"commune": "Ulbeek",
+"region": "Vlaanderen",
+"lat": 50.8437,
+"lon": 5.305,
+"lieux": [
+"Ulbeek"
+],
+"population": 880
+},
+{
+"cp": "3840",
+"commune": "Borgloon",
+"region": "Vlaanderen",
+"lat": 50.8051,
+"lon": 5.3437,
+"lieux": [
+"Rijkel",
+"Bommershoven",
+"Haren",
+"Broekom",
+"Gors-Opleeuw",
+"Kolmont",
+"Voort",
+"Kuttekoven",
+"Gotem",
+"Groot-Loon",
+"Hendrieken",
+"Hoepertingen",
+"Borgloon",
+"Jesseren",
+"Kerniel"
+],
+"population": 10906
+},
+{
+"cp": "3850",
+"commune": "Nieuwerkerken",
+"region": "Vlaanderen",
+"lat": 50.8638,
+"lon": 5.1947,
+"lieux": [
+"Wijer",
+"Binderveld",
+"Nieuwerkerken",
+"Kozen"
+],
+"population": 6947
+},
+{
+"cp": "3870",
+"commune": "Heers",
+"region": "Vlaanderen",
+"lat": 50.7538,
+"lon": 5.3021,
+"lieux": [
+"Mechelen-Bovelingen",
+"Klein-Gelmen",
+"Horpmaal",
+"Gutshoven",
+"Mettekoven",
+"Bovelingen",
+"Veulen",
+"Vechmaal",
+"Rukkelingen-Loon",
+"Heks",
+"Opheers",
+"Heers",
+"Batsheers"
+],
+"population": 7391
+},
+{
+"cp": "3890",
+"commune": "Gingelom",
+"region": "Vlaanderen",
+"lat": 50.7479,
+"lon": 5.1342,
+"lieux": [
+"Montenaken",
+"Jeuk",
+"Niel-Bij-Sint-Truiden",
+"Boekhout",
+"Vorsen",
+"Gingelom",
+"Kortijs"
+],
+"population": 8405
+},
+{
+"cp": "3891",
+"commune": "Muizen",
+"region": "Vlaanderen",
+"lat": 50.7604,
+"lon": 5.1793,
+"lieux": [
+"Muizen",
+"Borlo",
+"Mielen-Boven-Aalst",
+"Buvingen"
+],
+"population": 5386
+},
+{
+"cp": "3900",
+"commune": "Pelt",
+"region": "Vlaanderen",
+"lat": 51.2104,
+"lon": 5.4156,
+"lieux": [
+"Overpelt",
+"Pelt"
+],
+"population": 32902
+},
+{
+"cp": "3910",
+"commune": "Neerpelt",
+"region": "Vlaanderen",
+"lat": 51.2281,
+"lon": 5.4427,
+"lieux": [
+"Neerpelt",
+"Sint-Huibrechts-Lille"
+],
+"population": 16569
+},
+{
+"cp": "3920",
+"commune": "Lommel",
+"region": "Vlaanderen",
+"lat": 51.2307,
+"lon": 5.3135,
+"lieux": [
+"Lommel"
+],
+"population": 34079
+},
+{
+"cp": "3930",
+"commune": "Hamont-Achel",
+"region": "Vlaanderen",
+"lat": 51.2497,
+"lon": 5.5055,
+"lieux": [
+"Hamont",
+"Hamont-Achel",
+"Achel"
+],
+"population": 14369
+},
+{
+"cp": "3940",
+"commune": "Hechtel-Eksel",
+"region": "Vlaanderen",
+"lat": 51.1417,
+"lon": 5.3761,
+"lieux": [
+"Hechtel",
+"Hechtel-Eksel"
+],
+"population": 12419
+},
+{
+"cp": "3941",
+"commune": "Eksel",
+"region": "Vlaanderen",
+"lat": 51.1518,
+"lon": 5.3906,
+"lieux": [
+"Eksel"
+],
+"population": 5804
+},
+{
+"cp": "3945",
+"commune": "Ham",
+"region": "Vlaanderen",
+"lat": 51.1008,
+"lon": 5.1592,
+"lieux": [
+"Kwaadmechelen",
+"Ham",
+"Oostham"
+],
+"population": 10897
+},
+{
+"cp": "3950",
+"commune": "Bocholt",
+"region": "Vlaanderen",
+"lat": 51.1734,
+"lon": 5.5799,
+"lieux": [
+"Reppel",
+"Kaulille",
+"Bocholt"
+],
+"population": 13110
+},
+{
+"cp": "3960",
+"commune": "Bree",
+"region": "Vlaanderen",
+"lat": 51.1415,
+"lon": 5.5969,
+"lieux": [
+"Gerdingen",
+"Bree",
+"Beek",
+"Tongerlo",
+"Opitter"
+],
+"population": 16085
+},
+{
+"cp": "3970",
+"commune": "Leopoldsburg",
+"region": "Vlaanderen",
+"lat": 51.1167,
+"lon": 5.25,
+"lieux": [
+"Leopoldsburg"
+],
+"population": 15755
+},
+{
+"cp": "3971",
+"commune": "Heppen",
+"region": "Vlaanderen",
+"lat": 51.1093,
+"lon": 5.229,
+"lieux": [
+"Heppen"
+],
+"population": 4838
+},
+{
+"cp": "3980",
+"commune": "Tessenderlo",
+"region": "Vlaanderen",
+"lat": 51.0651,
+"lon": 5.0886,
+"lieux": [
+"Tessenderlo"
+],
+"population": 18613
+},
+{
+"cp": "3990",
+"commune": "Peer",
+"region": "Vlaanderen",
+"lat": 51.1303,
+"lon": 5.4595,
+"lieux": [
+"Wijchmaal",
+"Kleine-Brogel",
+"Grote-Brogel",
+"Peer"
+],
+"population": 16357
+},
+{
+"cp": "4000",
+"commune": "Liège",
+"region": "Wallonie",
+"lat": 50.6337,
+"lon": 5.5675,
+"lieux": [
+"Rocourt",
+"Liège",
+"Glain"
+],
+"population": 197327
+},
+{
+"cp": "4020",
+"commune": "Liège",
+"region": "Wallonie",
+"lat": 50.6337,
+"lon": 5.5675,
+"lieux": [
+"Liège",
+"Jupille-Sur-Meuse",
+"Wandre",
+"Bressoux"
+],
+"population": 197327
+},
+{
+"cp": "4030",
+"commune": "Grivegnée",
+"region": "Wallonie",
+"lat": 50.6215,
+"lon": 5.611,
+"lieux": [
+"Grivegnée"
+],
+"population": 21057
+},
+{
+"cp": "4031",
+"commune": "Angleur",
+"region": "Wallonie",
+"lat": 50.6113,
+"lon": 5.5994,
+"lieux": [
+"Angleur"
+],
+"population": 10647
+},
+{
+"cp": "4032",
+"commune": "Chênée",
+"region": "Wallonie",
+"lat": 50.612,
+"lon": 5.6141,
+"lieux": [
+"Chênée"
+],
+"population": 9163
+},
+{
+"cp": "4040",
+"commune": "Herstal",
+"region": "Wallonie",
+"lat": 50.6642,
+"lon": 5.6235,
+"lieux": [
+"Herstal"
+],
+"population": 39989
+},
+{
+"cp": "4041",
+"commune": "Vottem",
+"region": "Wallonie",
+"lat": 50.6716,
+"lon": 5.5769,
+"lieux": [
+"Milmort",
+"Vottem"
+],
+"population": 7478
+},
+{
+"cp": "4042",
+"commune": "Liers",
+"region": "Wallonie",
+"lat": 50.694,
+"lon": 5.5646,
+"lieux": [
+"Liers"
+],
+"population": 1840
+},
+{
+"cp": "4050",
+"commune": "Chaudfontaine",
+"region": "Wallonie",
+"lat": 50.5828,
+"lon": 5.6341,
+"lieux": [
+"Chaudfontaine"
+],
+"population": 20960
+},
+{
+"cp": "4051",
+"commune": "Vaux-Sous-Chèvremont",
+"region": "Wallonie",
+"lat": 50.603,
+"lon": 5.6335,
+"lieux": [
+"Vaux-Sous-Chèvremont"
+],
+"population": 0
+},
+{
+"cp": "4052",
+"commune": "Beaufays",
+"region": "Wallonie",
+"lat": 50.5588,
+"lon": 5.6388,
+"lieux": [
+"Beaufays"
+],
+"population": 5489
+},
+{
+"cp": "4053",
+"commune": "Embourg",
+"region": "Wallonie",
+"lat": 50.5904,
+"lon": 5.6068,
+"lieux": [
+"Embourg"
+],
+"population": 6124
+},
+{
+"cp": "4100",
+"commune": "Seraing",
+"region": "Wallonie",
+"lat": 50.5836,
+"lon": 5.5011,
+"lieux": [
+"Boncelles",
+"Seraing"
+],
+"population": 64259
+},
+{
+"cp": "4101",
+"commune": "Jemeppe-Sur-Meuse",
+"region": "Wallonie",
+"lat": 50.617,
+"lon": 5.4985,
+"lieux": [
+"Jemeppe-Sur-Meuse"
+],
+"population": 0
+},
+{
+"cp": "4102",
+"commune": "Ougrée",
+"region": "Wallonie",
+"lat": 50.6015,
+"lon": 5.5444,
+"lieux": [
+"Ougrée"
+],
+"population": 11975
+},
+{
+"cp": "4120",
+"commune": "Neupré",
+"region": "Wallonie",
+"lat": 50.5439,
+"lon": 5.4801,
+"lieux": [
+"Rotheux-Rimière",
+"Ehein",
+"Neupré"
+],
+"population": 9923
+},
+{
+"cp": "4121",
+"commune": "Neuville-En-Condroz",
+"region": "Wallonie",
+"lat": 50.5529,
+"lon": 5.4508,
+"lieux": [
+"Neuville-En-Condroz"
+],
+"population": 0
+},
+{
+"cp": "4122",
+"commune": "Plainevaux",
+"region": "Wallonie",
+"lat": 50.5456,
+"lon": 5.5233,
+"lieux": [
+"Plainevaux"
+],
+"population": 2508
+},
+{
+"cp": "4130",
+"commune": "Esneux",
+"region": "Wallonie",
+"lat": 50.536,
+"lon": 5.5678,
+"lieux": [
+"Esneux",
+"Tilff"
+],
+"population": 13497
+},
+{
+"cp": "4140",
+"commune": "Sprimont",
+"region": "Wallonie",
+"lat": 50.5092,
+"lon": 5.6595,
+"lieux": [
+"Dolembreux",
+"Rouvreux",
+"Gomzé-Andoumont",
+"Sprimont"
+],
+"population": 14712
+},
+{
+"cp": "4141",
+"commune": "Louveigné",
+"region": "Wallonie",
+"lat": 50.532,
+"lon": 5.7084,
+"lieux": [
+"Louveigné"
+],
+"population": 4267
+},
+{
+"cp": "4160",
+"commune": "Anthisnes",
+"region": "Wallonie",
+"lat": 50.4832,
+"lon": 5.519,
+"lieux": [
+"Anthisnes"
+],
+"population": 4189
+},
+{
+"cp": "4161",
+"commune": "Villers-Aux-Tours",
+"region": "Wallonie",
+"lat": 50.4983,
+"lon": 5.5163,
+"lieux": [
+"Villers-Aux-Tours"
+],
+"population": 0
+},
+{
+"cp": "4162",
+"commune": "Hody",
+"region": "Wallonie",
+"lat": 50.4864,
+"lon": 5.5029,
+"lieux": [
+"Hody"
+],
+"population": 312
+},
+{
+"cp": "4163",
+"commune": "Tavier",
+"region": "Wallonie",
+"lat": 50.4963,
+"lon": 5.4706,
+"lieux": [
+"Tavier"
+],
+"population": 1173
+},
+{
+"cp": "4170",
+"commune": "Comblain-Au-Pont",
+"region": "Wallonie",
+"lat": 50.4749,
+"lon": 5.5771,
+"lieux": [
+"Comblain-Au-Pont"
+],
+"population": 0
+},
+{
+"cp": "4171",
+"commune": "Poulseur",
+"region": "Wallonie",
+"lat": 50.5091,
+"lon": 5.5786,
+"lieux": [
+"Poulseur"
+],
+"population": 1827
+},
+{
+"cp": "4180",
+"commune": "Hamoir",
+"region": "Wallonie",
+"lat": 50.4267,
+"lon": 5.533,
+"lieux": [
+"Comblain-La-Tour",
+"Hamoir",
+"Comblain-Fairon"
+],
+"population": 3880
+},
+{
+"cp": "4181",
+"commune": "Filot",
+"region": "Wallonie",
+"lat": 50.4254,
+"lon": 5.5674,
+"lieux": [
+"Filot"
+],
+"population": 450
+},
+{
+"cp": "4190",
+"commune": "Ferrières",
+"region": "Wallonie",
+"lat": 50.4016,
+"lon": 5.6109,
+"lieux": [
+"Vieuxville",
+"Xhoris",
+"Ferrières",
+"My",
+"Werbomont"
+],
+"population": 4935
+},
+{
+"cp": "4210",
+"commune": "Burdinne",
+"region": "Wallonie",
+"lat": 50.5845,
+"lon": 5.0766,
+"lieux": [
+"Lamontzée",
+"Oteppe",
+"Hannêche",
+"Marneffe",
+"Burdinne"
+],
+"population": 3238
+},
+{
+"cp": "4217",
+"commune": "Héron",
+"region": "Wallonie",
+"lat": 50.5473,
+"lon": 5.0977,
+"lieux": [
+"Lavoir",
+"Héron",
+"Waret-L'Evêque"
+],
+"population": 5375
+},
+{
+"cp": "4218",
+"commune": "Couthuin",
+"region": "Wallonie",
+"lat": 50.5316,
+"lon": 5.1232,
+"lieux": [
+"Couthuin"
+],
+"population": 2826
+},
+{
+"cp": "4219",
+"commune": "Wasseiges",
+"region": "Wallonie",
+"lat": 50.6219,
+"lon": 5.0053,
+"lieux": [
+"Acosse",
+"Ambresin",
+"Meeffe",
+"Wasseiges"
+],
+"population": 2937
+},
+{
+"cp": "4250",
+"commune": "Geer",
+"region": "Wallonie",
+"lat": 50.6699,
+"lon": 5.1736,
+"lieux": [
+"Lens-Saint-Servais",
+"Hollogne-Sur-Geer",
+"Geer",
+"Boëlhe"
+],
+"population": 3485
+},
+{
+"cp": "4252",
+"commune": "Omal",
+"region": "Wallonie",
+"lat": 50.656,
+"lon": 5.1998,
+"lieux": [
+"Omal"
+],
+"population": 584
+},
+{
+"cp": "4253",
+"commune": "Darion",
+"region": "Wallonie",
+"lat": 50.665,
+"lon": 5.1867,
+"lieux": [
+"Darion"
+],
+"population": 179
+},
+{
+"cp": "4254",
+"commune": "Ligney",
+"region": "Wallonie",
+"lat": 50.6618,
+"lon": 5.1824,
+"lieux": [
+"Ligney"
+],
+"population": 581
+},
+{
+"cp": "4257",
+"commune": "Berloz",
+"region": "Wallonie",
+"lat": 50.6983,
+"lon": 5.2124,
+"lieux": [
+"Rosoux-Crenwick",
+"Berloz",
+"Corswarem"
+],
+"population": 3132
+},
+{
+"cp": "4260",
+"commune": "Braives",
+"region": "Wallonie",
+"lat": 50.6174,
+"lon": 5.133,
+"lieux": [
+"Ciplet",
+"Braives",
+"Ville-En-Hesbaye",
+"Fallais",
+"Fumal",
+"Avennes"
+],
+"population": 6375
+},
+{
+"cp": "4261",
+"commune": "Latinne",
+"region": "Wallonie",
+"lat": 50.6252,
+"lon": 5.1646,
+"lieux": [
+"Latinne"
+],
+"population": 780
+},
+{
+"cp": "4263",
+"commune": "Tourinne",
+"region": "Wallonie",
+"lat": 50.6389,
+"lon": 5.1752,
+"lieux": [
+"Tourinne"
+],
+"population": 310
+},
+{
+"cp": "4280",
+"commune": "Hannut",
+"region": "Wallonie",
+"lat": 50.6714,
+"lon": 5.079,
+"lieux": [
+"Grand-Hallet",
+"Cras-Avernas",
+"Crehen",
+"Avernas-Le-Bauduin",
+"Thisnes",
+"Wansin",
+"Blehen",
+"Trognée",
+"Hannut",
+"Lens-Saint-Remy",
+"Petit-Hallet",
+"Moxhe",
+"Merdorp",
+"Avin",
+"Poucet",
+"Abolens",
+"Villers-Le-Peuplier",
+"Bertrée"
+],
+"population": 16571
+},
+{
+"cp": "4287",
+"commune": "Lincent",
+"region": "Wallonie",
+"lat": 50.7122,
+"lon": 5.0365,
+"lieux": [
+"Pellaines",
+"Lincent",
+"Racour"
+],
+"population": 3311
+},
+{
+"cp": "4300",
+"commune": "Waremme",
+"region": "Wallonie",
+"lat": 50.6976,
+"lon": 5.2552,
+"lieux": [
+"Bettincourt",
+"Waremme",
+"Oleye",
+"Grand-Axhe",
+"Bleret",
+"Bovenistier",
+"Lantremange"
+],
+"population": 15334
+},
+{
+"cp": "4317",
+"commune": "Celles",
+"region": "Wallonie",
+"lat": 50.6544,
+"lon": 5.2467,
+"lieux": [
+"Les Waleffes",
+"Celles",
+"Aineffe",
+"Viemme",
+"Faimes",
+"Borlez"
+],
+"population": 5666
+},
+{
+"cp": "4340",
+"commune": "Awans",
+"region": "Wallonie",
+"lat": 50.6677,
+"lon": 5.4633,
+"lieux": [
+"Fooz",
+"Awans",
+"Villers-L'Evêque",
+"Othée"
+],
+"population": 9318
+},
+{
+"cp": "4342",
+"commune": "Hognoul",
+"region": "Wallonie",
+"lat": 50.6818,
+"lon": 5.4539,
+"lieux": [
+"Hognoul"
+],
+"population": 1298
+},
+{
+"cp": "4347",
+"commune": "Noville",
+"region": "Wallonie",
+"lat": 50.6598,
+"lon": 5.382,
+"lieux": [
+"Roloux",
+"Freloux",
+"Noville",
+"Fexhe-Le-Haut-Clocher",
+"Voroux-Goreux"
+],
+"population": 2099
+},
+{
+"cp": "4350",
+"commune": "Remicourt",
+"region": "Wallonie",
+"lat": 50.6807,
+"lon": 5.3279,
+"lieux": [
+"Momalle",
+"Remicourt",
+"Lamine",
+"Pousset"
+],
+"population": 5906
+},
+{
+"cp": "4351",
+"commune": "Hodeige",
+"region": "Wallonie",
+"lat": 50.6963,
+"lon": 5.3416,
+"lieux": [
+"Hodeige"
+],
+"population": 1063
+},
+{
+"cp": "4357",
+"commune": "Donceel",
+"region": "Wallonie",
+"lat": 50.6483,
+"lon": 5.32,
+"lieux": [
+"Jeneffe",
+"Donceel",
+"Limont",
+"Haneffe"
+],
+"population": 3060
+},
+{
+"cp": "4360",
+"commune": "Oreye",
+"region": "Wallonie",
+"lat": 50.7175,
+"lon": 5.3488,
+"lieux": [
+"Otrange",
+"Oreye",
+"Bergilers",
+"Lens-Sur-Geer",
+"Grandville"
+],
+"population": 3895
+},
+{
+"cp": "4367",
+"commune": "Crisnée",
+"region": "Wallonie",
+"lat": 50.717,
+"lon": 5.398,
+"lieux": [
+"Kemexhe",
+"Odeur",
+"Fize-Le-Marsal",
+"Thys",
+"Crisnée"
+],
+"population": 3412
+},
+{
+"cp": "4400",
+"commune": "Flémalle",
+"region": "Wallonie",
+"lat": 50.6022,
+"lon": 5.4436,
+"lieux": [
+"Mons-Lez-Liège",
+"Flémalle-Haute",
+"Gleixhe",
+"Awirs",
+"Flémalle",
+"Chokier",
+"Flémalle-Grande",
+"Ivoz-Ramet"
+],
+"population": 26304
+},
+{
+"cp": "4420",
+"commune": "Saint-Nicolas",
+"region": "Wallonie",
+"lat": 50.6284,
+"lon": 5.5324,
+"lieux": [
+"Montegnée",
+"Tilleur",
+"Saint-Nicolas"
+],
+"population": 24263
+},
+{
+"cp": "4430",
+"commune": "Ans",
+"region": "Wallonie",
+"lat": 50.6623,
+"lon": 5.5203,
+"lieux": [
+"Ans"
+],
+"population": 28373
+},
+{
+"cp": "4431",
+"commune": "Loncin",
+"region": "Wallonie",
+"lat": 50.6665,
+"lon": 5.5051,
+"lieux": [
+"Loncin"
+],
+"population": 3118
+},
+{
+"cp": "4432",
+"commune": "Alleur",
+"region": "Wallonie",
+"lat": 50.6747,
+"lon": 5.5132,
+"lieux": [
+"Xhendremael",
+"Alleur"
+],
+"population": 9768
+},
+{
+"cp": "4450",
+"commune": "Juprelle",
+"region": "Wallonie",
+"lat": 50.7076,
+"lon": 5.5313,
+"lieux": [
+"Juprelle",
+"Slins",
+"Lantin"
+],
+"population": 9295
+},
+{
+"cp": "4451",
+"commune": "Voroux-Lez-Liers",
+"region": "Wallonie",
+"lat": 50.6875,
+"lon": 5.5544,
+"lieux": [
+"Voroux-Lez-Liers"
+],
+"population": 0
+},
+{
+"cp": "4452",
+"commune": "Wihogne",
+"region": "Wallonie",
+"lat": 50.7292,
+"lon": 5.5048,
+"lieux": [
+"Wihogne",
+"Paifve"
+],
+"population": 1209
+},
+{
+"cp": "4453",
+"commune": "Villers-Saint-Siméon",
+"region": "Wallonie",
+"lat": 50.7112,
+"lon": 5.5389,
+"lieux": [
+"Villers-Saint-Siméon"
+],
+"population": 563
+},
+{
+"cp": "4458",
+"commune": "Fexhe-Slins",
+"region": "Wallonie",
+"lat": 50.7203,
+"lon": 5.5697,
+"lieux": [
+"Fexhe-Slins"
+],
+"population": 2354
+},
+{
+"cp": "4460",
+"commune": "Grâce-Hollogne",
+"region": "Wallonie",
+"lat": 50.6345,
+"lon": 5.4757,
+"lieux": [
+"Hollogne-Aux-Pierres",
+"Horion-Hozémont",
+"Grâce-Berleur",
+"Velroux",
+"Bierset",
+"Grâce-Hollogne"
+],
+"population": 22660
+},
+{
+"cp": "4470",
+"commune": "Saint-Georges-Sur-Meuse",
+"region": "Wallonie",
+"lat": 50.6001,
+"lon": 5.3574,
+"lieux": [
+"Saint-Georges-Sur-Meuse"
+],
+"population": 0
+},
+{
+"cp": "4480",
+"commune": "Engis",
+"region": "Wallonie",
+"lat": 50.5816,
+"lon": 5.3992,
+"lieux": [
+"Clermont-Sous-Huy",
+"Engis",
+"Hermalle-Sous-Huy",
+"Ehein"
+],
+"population": 6138
+},
+{
+"cp": "4500",
+"commune": "Huy",
+"region": "Wallonie",
+"lat": 50.5189,
+"lon": 5.2328,
+"lieux": [
+"Tihange",
+"Ben-Ahin",
+"Huy"
+],
+"population": 21227
+},
+{
+"cp": "4520",
+"commune": "Wanze",
+"region": "Wallonie",
+"lat": 50.5391,
+"lon": 5.2085,
+"lieux": [
+"Moha",
+"Vinalmont",
+"Antheit",
+"Bas-Oha",
+"Wanze",
+"Huccorgne"
+],
+"population": 13738
+},
+{
+"cp": "4530",
+"commune": "Warnant-Dreye",
+"region": "Wallonie",
+"lat": 50.5951,
+"lon": 5.2256,
+"lieux": [
+"Fize-Fontaine",
+"Warnant-Dreye",
+"Vieux-Waleffe",
+"Villers-Le-Bouillet",
+"Vaux-Et-Borset"
+],
+"population": 898
+},
+{
+"cp": "4537",
+"commune": "Verlaine",
+"region": "Wallonie",
+"lat": 50.6074,
+"lon": 5.3174,
+"lieux": [
+"Verlaine",
+"Seraing-Le-Château",
+"Bodegnée",
+"Chapon-Seraing"
+],
+"population": 4228
+},
+{
+"cp": "4540",
+"commune": "Amay",
+"region": "Wallonie",
+"lat": 50.5483,
+"lon": 5.3097,
+"lieux": [
+"Jehay",
+"Flône",
+"Ombret",
+"Ampsin",
+"Amay"
+],
+"population": 14412
+},
+{
+"cp": "4550",
+"commune": "Nandrin",
+"region": "Wallonie",
+"lat": 50.5067,
+"lon": 5.4191,
+"lieux": [
+"Villers-Le-Temple",
+"Saint-Séverin",
+"Nandrin",
+"Yernée-Fraineux"
+],
+"population": 5753
+},
+{
+"cp": "4557",
+"commune": "Tinlot",
+"region": "Wallonie",
+"lat": 50.4749,
+"lon": 5.3776,
+"lieux": [
+"Ramelot",
+"Tinlot",
+"Abée",
+"Soheit-Tinlot",
+"Seny",
+"Fraiture"
+],
+"population": 2706
+},
+{
+"cp": "4560",
+"commune": "Clavier",
+"region": "Wallonie",
+"lat": 50.4007,
+"lon": 5.3515,
+"lieux": [
+"Pailhe",
+"Bois-Et-Borsu",
+"Terwagne",
+"Les Avins",
+"Clavier",
+"Ocquier"
+],
+"population": 4637
+},
+{
+"cp": "4570",
+"commune": "Marchin",
+"region": "Wallonie",
+"lat": 50.4671,
+"lon": 5.2428,
+"lieux": [
+"Marchin",
+"Vyle-Et-Tharoul"
+],
+"population": 5469
+},
+{
+"cp": "4577",
+"commune": "Modave",
+"region": "Wallonie",
+"lat": 50.4461,
+"lon": 5.2953,
+"lieux": [
+"Outrelouxhe",
+"Strée-Lez-Huy",
+"Vierset-Barse",
+"Modave"
+],
+"population": 4212
+},
+{
+"cp": "4590",
+"commune": "Ouffet",
+"region": "Wallonie",
+"lat": 50.4387,
+"lon": 5.4657,
+"lieux": [
+"Ellemelle",
+"Warzée",
+"Ouffet"
+],
+"population": 2776
+},
+{
+"cp": "4600",
+"commune": "Visé",
+"region": "Wallonie",
+"lat": 50.7376,
+"lon": 5.6991,
+"lieux": [
+"Lixhe",
+"Visé",
+"Lanaye",
+"Richelle"
+],
+"population": 17812
+},
+{
+"cp": "4601",
+"commune": "Argenteau",
+"region": "Wallonie",
+"lat": 50.7021,
+"lon": 5.6845,
+"lieux": [
+"Argenteau"
+],
+"population": 1249
+},
+{
+"cp": "4602",
+"commune": "Cheratte",
+"region": "Wallonie",
+"lat": 50.6824,
+"lon": 5.6695,
+"lieux": [
+"Cheratte"
+],
+"population": 4689
+},
+{
+"cp": "4606",
+"commune": "Saint-André",
+"region": "Wallonie",
+"lat": 50.6954,
+"lon": 5.7534,
+"lieux": [
+"Saint-André"
+],
+"population": 565
+},
+{
+"cp": "4607",
+"commune": "Dalhem",
+"region": "Wallonie",
+"lat": 50.7131,
+"lon": 5.7277,
+"lieux": [
+"Bombaye",
+"Mortroux",
+"Feneur",
+"Berneau",
+"Dalhem"
+],
+"population": 7408
+},
+{
+"cp": "4608",
+"commune": "Neufchâteau",
+"region": "Wallonie",
+"lat": 50.7196,
+"lon": 5.7755,
+"lieux": [
+"Warsage",
+"Neufchâteau"
+],
+"population": 7699
+},
+{
+"cp": "4610",
+"commune": "Beyne-Heusay",
+"region": "Wallonie",
+"lat": 50.6225,
+"lon": 5.6651,
+"lieux": [
+"Bellaire",
+"Beyne-Heusay",
+"Queue-Du-Bois"
+],
+"population": 11929
+},
+{
+"cp": "4620",
+"commune": "Fléron",
+"region": "Wallonie",
+"lat": 50.6152,
+"lon": 5.6806,
+"lieux": [
+"Fléron"
+],
+"population": 16526
+},
+{
+"cp": "4621",
+"commune": "Retinne",
+"region": "Wallonie",
+"lat": 50.6308,
+"lon": 5.6982,
+"lieux": [
+"Retinne"
+],
+"population": 4554
+},
+{
+"cp": "4623",
+"commune": "Magnée",
+"region": "Wallonie",
+"lat": 50.5998,
+"lon": 5.6883,
+"lieux": [
+"Magnée"
+],
+"population": 1402
+},
+{
+"cp": "4624",
+"commune": "Romsée",
+"region": "Wallonie",
+"lat": 50.6109,
+"lon": 5.6646,
+"lieux": [
+"Romsée"
+],
+"population": 4270
+},
+{
+"cp": "4630",
+"commune": "Soumagne",
+"region": "Wallonie",
+"lat": 50.6139,
+"lon": 5.7468,
+"lieux": [
+"Soumagne",
+"Ayeneux",
+"Micheroux",
+"Tignée"
+],
+"population": 16925
+},
+{
+"cp": "4631",
+"commune": "Evegnée",
+"region": "Wallonie",
+"lat": 50.6422,
+"lon": 5.7074,
+"lieux": [
+"Evegnée"
+],
+"population": 0
+},
+{
+"cp": "4632",
+"commune": "Cérexhe-Heuseux",
+"region": "Wallonie",
+"lat": 50.6541,
+"lon": 5.726,
+"lieux": [
+"Cérexhe-Heuseux"
+],
+"population": 0
+},
+{
+"cp": "4633",
+"commune": "Melen",
+"region": "Wallonie",
+"lat": 50.6462,
+"lon": 5.7359,
+"lieux": [
+"Melen"
+],
+"population": 3174
+},
+{
+"cp": "4650",
+"commune": "Herve",
+"region": "Wallonie",
+"lat": 50.6408,
+"lon": 5.7935,
+"lieux": [
+"Herve",
+"Chaineux",
+"Grand-Rechain",
+"Julémont"
+],
+"population": 17609
+},
+{
+"cp": "4651",
+"commune": "Battice",
+"region": "Wallonie",
+"lat": 50.6473,
+"lon": 5.821,
+"lieux": [
+"Battice"
+],
+"population": 5691
+},
+{
+"cp": "4652",
+"commune": "Xhendelesse",
+"region": "Wallonie",
+"lat": 50.6049,
+"lon": 5.778,
+"lieux": [
+"Xhendelesse"
+],
+"population": 1729
+},
+{
+"cp": "4653",
+"commune": "Bolland",
+"region": "Wallonie",
+"lat": 50.6616,
+"lon": 5.7604,
+"lieux": [
+"Bolland"
+],
+"population": 956
+},
+{
+"cp": "4654",
+"commune": "Charneux",
+"region": "Wallonie",
+"lat": 50.5471,
+"lon": 5.9546,
+"lieux": [
+"Charneux"
+],
+"population": 1600
+},
+{
+"cp": "4670",
+"commune": "Blégny",
+"region": "Wallonie",
+"lat": 50.6726,
+"lon": 5.7251,
+"lieux": [
+"Mortier",
+"Blégny",
+"Trembleur"
+],
+"population": 13292
+},
+{
+"cp": "4671",
+"commune": "Saive",
+"region": "Wallonie",
+"lat": 50.6532,
+"lon": 5.6852,
+"lieux": [
+"Barchon",
+"Housse",
+"Saive"
+],
+"population": 4771
+},
+{
+"cp": "4672",
+"commune": "Saint-Remy",
+"region": "Wallonie",
+"lat": 50.6956,
+"lon": 5.7041,
+"lieux": [
+"Saint-Remy"
+],
+"population": 1118
+},
+{
+"cp": "4680",
+"commune": "Oupeye",
+"region": "Wallonie",
+"lat": 50.7118,
+"lon": 5.6468,
+"lieux": [
+"Hermée",
+"Oupeye"
+],
+"population": 25446
+},
+{
+"cp": "4681",
+"commune": "Hermalle-Sous-Argenteau",
+"region": "Wallonie",
+"lat": 50.7123,
+"lon": 5.6775,
+"lieux": [
+"Hermalle-Sous-Argenteau"
+],
+"population": 0
+},
+{
+"cp": "4682",
+"commune": "Houtain-Saint-Siméon",
+"region": "Wallonie",
+"lat": 50.7403,
+"lon": 5.6123,
+"lieux": [
+"Houtain-Saint-Siméon",
+"Heure-Le-Romain"
+],
+"population": 1969
+},
+{
+"cp": "4683",
+"commune": "Vivegnis",
+"region": "Wallonie",
+"lat": 50.6924,
+"lon": 5.6476,
+"lieux": [
+"Vivegnis"
+],
+"population": 4369
+},
+{
+"cp": "4684",
+"commune": "Haccourt",
+"region": "Wallonie",
+"lat": 50.7309,
+"lon": 5.6696,
+"lieux": [
+"Haccourt"
+],
+"population": 3847
+},
+{
+"cp": "4690",
+"commune": "Bassenge",
+"region": "Wallonie",
+"lat": 50.7588,
+"lon": 5.6099,
+"lieux": [
+"Eben-Emael",
+"Bassenge",
+"Glons",
+"Roclenge-Sur-Geer",
+"Wonck",
+"Boirs"
+],
+"population": 8905
+},
+{
+"cp": "4700",
+"commune": "Eupen",
+"region": "Wallonie",
+"lat": 50.6279,
+"lon": 6.0365,
+"lieux": [
+"Eupen"
+],
+"population": 19677
+},
+{
+"cp": "4701",
+"commune": "Kettenis",
+"region": "Wallonie",
+"lat": 50.6476,
+"lon": 6.0469,
+"lieux": [
+"Kettenis"
+],
+"population": 4116
+},
+{
+"cp": "4710",
+"commune": "Lontzen",
+"region": "Wallonie",
+"lat": 50.6813,
+"lon": 6.0071,
+"lieux": [
+"Lontzen"
+],
+"population": 5764
+},
+{
+"cp": "4711",
+"commune": "Walhorn",
+"region": "Wallonie",
+"lat": 50.675,
+"lon": 6.0461,
+"lieux": [
+"Walhorn"
+],
+"population": 1763
+},
+{
+"cp": "4720",
+"commune": "La Calamine",
+"region": "Wallonie",
+"lat": 50.7181,
+"lon": 6.0111,
+"lieux": [
+"La Calamine"
+],
+"population": 11108
+},
+{
+"cp": "4721",
+"commune": "Neu-Moresnet",
+"region": "Wallonie",
+"lat": 50.7158,
+"lon": 6.0212,
+"lieux": [
+"Neu-Moresnet"
+],
+"population": 2807
+},
+{
+"cp": "4728",
+"commune": "Hergenrath",
+"region": "Wallonie",
+"lat": 50.7091,
+"lon": 6.0309,
+"lieux": [
+"Hergenrath"
+],
+"population": 2740
+},
+{
+"cp": "4730",
+"commune": "Raeren",
+"region": "Wallonie",
+"lat": 50.6672,
+"lon": 6.1154,
+"lieux": [
+"Raeren",
+"Hauset"
+],
+"population": 10759
+},
+{
+"cp": "4731",
+"commune": "Eynatten",
+"region": "Wallonie",
+"lat": 50.6924,
+"lon": 6.0835,
+"lieux": [
+"Eynatten"
+],
+"population": 3817
+},
+{
+"cp": "4750",
+"commune": "Butgenbach",
+"region": "Wallonie",
+"lat": 50.4269,
+"lon": 6.205,
+"lieux": [
+"Elsenborn",
+"Butgenbach"
+],
+"population": 5610
+},
+{
+"cp": "4760",
+"commune": "Bullange",
+"region": "Wallonie",
+"lat": 50.4073,
+"lon": 6.2575,
+"lieux": [
+"Manderfeld",
+"Bullange"
+],
+"population": 5478
+},
+{
+"cp": "4761",
+"commune": "Rocherath",
+"region": "Wallonie",
+"lat": 50.4371,
+"lon": 6.3005,
+"lieux": [
+"Rocherath"
+],
+"population": 1340
+},
+{
+"cp": "4770",
+"commune": "Amblève",
+"region": "Wallonie",
+"lat": 50.4643,
+"lon": 6.022,
+"lieux": [
+"Meyerode",
+"Amblève"
+],
+"population": 5474
+},
+{
+"cp": "4771",
+"commune": "Heppenbach",
+"region": "Wallonie",
+"lat": 50.3626,
+"lon": 6.2183,
+"lieux": [
+"Heppenbach"
+],
+"population": 1189
+},
+{
+"cp": "4780",
+"commune": "Saint-Vith",
+"region": "Wallonie",
+"lat": 50.2815,
+"lon": 6.1272,
+"lieux": [
+"Recht",
+"Saint-Vith"
+],
+"population": 9722
+},
+{
+"cp": "4782",
+"commune": "Schoenberg",
+"region": "Wallonie",
+"lat": 50.2892,
+"lon": 6.265,
+"lieux": [
+"Schoenberg"
+],
+"population": 760
+},
+{
+"cp": "4783",
+"commune": "Lommersweiler",
+"region": "Wallonie",
+"lat": 50.24,
+"lon": 6.165,
+"lieux": [
+"Lommersweiler"
+],
+"population": 1215
+},
+{
+"cp": "4784",
+"commune": "Crombach",
+"region": "Wallonie",
+"lat": 50.26,
+"lon": 6.0675,
+"lieux": [
+"Crombach"
+],
+"population": 2480
+},
+{
+"cp": "4790",
+"commune": "Burg-Reuland",
+"region": "Wallonie",
+"lat": 50.1957,
+"lon": 6.1345,
+"lieux": [
+"Burg-Reuland",
+"Reuland"
+],
+"population": 3935
+},
+{
+"cp": "4791",
+"commune": "Thommen",
+"region": "Wallonie",
+"lat": 50.2192,
+"lon": 6.0742,
+"lieux": [
+"Thommen"
+],
+"population": 2342
+},
+{
+"cp": "4800",
+"commune": "Verviers",
+"region": "Wallonie",
+"lat": 50.5891,
+"lon": 5.8624,
+"lieux": [
+"Polleur",
+"Petit-Rechain",
+"Verviers",
+"Lambermont",
+"Ensival"
+],
+"population": 55207
+},
+{
+"cp": "4801",
+"commune": "Stembert",
+"region": "Wallonie",
+"lat": 50.5911,
+"lon": 5.894,
+"lieux": [
+"Stembert"
+],
+"population": 8696
+},
+{
+"cp": "4802",
+"commune": "Heusy",
+"region": "Wallonie",
+"lat": 50.5746,
+"lon": 5.8662,
+"lieux": [
+"Heusy"
+],
+"population": 15420
+},
+{
+"cp": "4820",
+"commune": "Dison",
+"region": "Wallonie",
+"lat": 50.61,
+"lon": 5.8534,
+"lieux": [
+"Dison"
+],
+"population": 15248
+},
+{
+"cp": "4821",
+"commune": "Andrimont",
+"region": "Wallonie",
+"lat": 50.4392,
+"lon": 5.8907,
+"lieux": [
+"Andrimont"
+],
+"population": 7064
+},
+{
+"cp": "4830",
+"commune": "Limbourg",
+"region": "Wallonie",
+"lat": 50.6122,
+"lon": 5.9412,
+"lieux": [
+"Limbourg"
+],
+"population": 5912
+},
+{
+"cp": "4831",
+"commune": "Bilstain",
+"region": "Wallonie",
+"lat": 50.6221,
+"lon": 5.9209,
+"lieux": [
+"Bilstain"
+],
+"population": 1457
+},
+{
+"cp": "4834",
+"commune": "Goé",
+"region": "Wallonie",
+"lat": 50.6066,
+"lon": 5.9561,
+"lieux": [
+"Goé"
+],
+"population": 962
+},
+{
+"cp": "4837",
+"commune": "Baelen",
+"region": "Wallonie",
+"lat": 50.6313,
+"lon": 5.9743,
+"lieux": [
+"Baelen",
+"Membach"
+],
+"population": 4454
+},
+{
+"cp": "4840",
+"commune": "Welkenraedt",
+"region": "Wallonie",
+"lat": 50.6605,
+"lon": 5.9703,
+"lieux": [
+"Welkenraedt"
+],
+"population": 10002
+},
+{
+"cp": "4841",
+"commune": "Henri-Chapelle",
+"region": "Wallonie",
+"lat": 50.6769,
+"lon": 5.9301,
+"lieux": [
+"Henri-Chapelle"
+],
+"population": 2640
+},
+{
+"cp": "4845",
+"commune": "Jalhay",
+"region": "Wallonie",
+"lat": 50.5588,
+"lon": 5.9676,
+"lieux": [
+"Jalhay",
+"Sart-Lez-Spa"
+],
+"population": 8585
+},
+{
+"cp": "4850",
+"commune": "Plombières",
+"region": "Wallonie",
+"lat": 50.7366,
+"lon": 5.9592,
+"lieux": [
+"Plombières",
+"Montzen",
+"Moresnet"
+],
+"population": 10459
+},
+{
+"cp": "4851",
+"commune": "Gemmenich",
+"region": "Wallonie",
+"lat": 50.7461,
+"lon": 5.9951,
+"lieux": [
+"Gemmenich",
+"Sippenaeken"
+],
+"population": 3064
+},
+{
+"cp": "4852",
+"commune": "Hombourg",
+"region": "Wallonie",
+"lat": 50.7226,
+"lon": 5.9205,
+"lieux": [
+"Hombourg"
+],
+"population": 1707
+},
+{
+"cp": "4860",
+"commune": "Pepinster",
+"region": "Wallonie",
+"lat": 50.5738,
+"lon": 5.8049,
+"lieux": [
+"Pepinster",
+"Wegnez",
+"Cornesse"
+],
+"population": 9772
+},
+{
+"cp": "4861",
+"commune": "Soiron",
+"region": "Wallonie",
+"lat": 50.5913,
+"lon": 5.7909,
+"lieux": [
+"Soiron"
+],
+"population": 867
+},
+{
+"cp": "4870",
+"commune": "Trooz",
+"region": "Wallonie",
+"lat": 50.5703,
+"lon": 5.6952,
+"lieux": [
+"Nessonvaux",
+"Trooz",
+"Fraipont",
+"Forêt"
+],
+"population": 8199
+},
+{
+"cp": "4877",
+"commune": "Olne",
+"region": "Wallonie",
+"lat": 50.5899,
+"lon": 5.7466,
+"lieux": [
+"Olne"
+],
+"population": 4080
+},
+{
+"cp": "4880",
+"commune": "Aubel",
+"region": "Wallonie",
+"lat": 50.7019,
+"lon": 5.8581,
+"lieux": [
+"Aubel"
+],
+"population": 4288
+},
+{
+"cp": "4890",
+"commune": "Thimister-Clermont",
+"region": "Wallonie",
+"lat": 50.6537,
+"lon": 5.8643,
+"lieux": [
+"Thimister",
+"Clermont",
+"Thimister-Clermont"
+],
+"population": 5700
+},
+{
+"cp": "4900",
+"commune": "Spa",
+"region": "Wallonie",
+"lat": 50.4838,
+"lon": 5.8667,
+"lieux": [
+"Spa"
+],
+"population": 10756
+},
+{
+"cp": "4910",
+"commune": "Theux",
+"region": "Wallonie",
+"lat": 50.5332,
+"lon": 5.8125,
+"lieux": [
+"Theux",
+"Polleur",
+"La Reid"
+],
+"population": 12031
+},
+{
+"cp": "4920",
+"commune": "Aywaille",
+"region": "Wallonie",
+"lat": 50.4741,
+"lon": 5.6768,
+"lieux": [
+"Sougné-Remouchamps",
+"Harzé",
+"Louveigné",
+"Ernonheid",
+"Aywaille"
+],
+"population": 12436
+},
+{
+"cp": "4950",
+"commune": "Waimes",
+"region": "Wallonie",
+"lat": 50.4149,
+"lon": 6.1121,
+"lieux": [
+"Waimes",
+"Faymonville",
+"Sourbrodt",
+"Robertville"
+],
+"population": 7425
+},
+{
+"cp": "4960",
+"commune": "Malmedy",
+"region": "Wallonie",
+"lat": 50.4269,
+"lon": 6.0279,
+"lieux": [
+"Bevercé",
+"Bellevaux-Ligneuville",
+"Malmedy"
+],
+"population": 12741
+},
+{
+"cp": "4970",
+"commune": "Stavelot",
+"region": "Wallonie",
+"lat": 50.395,
+"lon": 5.9312,
+"lieux": [
+"Francorchamps",
+"Stavelot"
+],
+"population": 7169
+},
+{
+"cp": "4980",
+"commune": "Trois-Ponts",
+"region": "Wallonie",
+"lat": 50.3713,
+"lon": 5.8715,
+"lieux": [
+"Trois-Ponts",
+"Wanne",
+"Fosse"
+],
+"population": 2553
+},
+{
+"cp": "4983",
+"commune": "Basse-Bodeux",
+"region": "Wallonie",
+"lat": 50.3577,
+"lon": 5.8277,
+"lieux": [
+"Basse-Bodeux"
+],
+"population": 460
+},
+{
+"cp": "4987",
+"commune": "Stoumont",
+"region": "Wallonie",
+"lat": 50.4067,
+"lon": 5.8084,
+"lieux": [
+"Rahier",
+"Lorcé",
+"La Gleize",
+"Stoumont",
+"Chevron"
+],
+"population": 3167
+},
+{
+"cp": "4990",
+"commune": "Lierneux",
+"region": "Wallonie",
+"lat": 50.2848,
+"lon": 5.7924,
+"lieux": [
+"Lierneux",
+"Arbrefontaine",
+"Bra"
+],
+"population": 3614
+},
+{
+"cp": "5000",
+"commune": "Namur",
+"region": "Wallonie",
+"lat": 50.4669,
+"lon": 4.8675,
+"lieux": [
+"Beez",
+"Namur"
+],
+"population": 110939
+},
+{
+"cp": "5001",
+"commune": "Belgrade",
+"region": "Wallonie",
+"lat": 50.4714,
+"lon": 4.8293,
+"lieux": [
+"Belgrade"
+],
+"population": 4756
+},
+{
+"cp": "5002",
+"commune": "Saint-Servais",
+"region": "Wallonie",
+"lat": 50.4763,
+"lon": 4.8366,
+"lieux": [
+"Saint-Servais"
+],
+"population": 9516
+},
+{
+"cp": "5003",
+"commune": "Saint-Marc",
+"region": "Wallonie",
+"lat": 50.4922,
+"lon": 4.8475,
+"lieux": [
+"Saint-Marc"
+],
+"population": 1422
+},
+{
+"cp": "5004",
+"commune": "Bouge",
+"region": "Wallonie",
+"lat": 50.4719,
+"lon": 4.8922,
+"lieux": [
+"Bouge"
+],
+"population": 4486
+},
+{
+"cp": "5020",
+"commune": "Vedrin",
+"region": "Wallonie",
+"lat": 50.5027,
+"lon": 4.876,
+"lieux": [
+"Champion",
+"Temploux",
+"Daussoulx",
+"Vedrin",
+"Suarlée",
+"Malonne",
+"Flawinne"
+],
+"population": 7308
+},
+{
+"cp": "5021",
+"commune": "Boninne",
+"region": "Wallonie",
+"lat": 50.4944,
+"lon": 4.9323,
+"lieux": [
+"Boninne"
+],
+"population": 610
+},
+{
+"cp": "5022",
+"commune": "Cognelée",
+"region": "Wallonie",
+"lat": 50.5145,
+"lon": 4.9075,
+"lieux": [
+"Cognelée"
+],
+"population": 674
+},
+{
+"cp": "5024",
+"commune": "Gelbressée",
+"region": "Wallonie",
+"lat": 50.5061,
+"lon": 4.9555,
+"lieux": [
+"Marche-Les-Dames",
+"Gelbressée"
+],
+"population": 1031
+},
+{
+"cp": "5030",
+"commune": "Gembloux",
+"region": "Wallonie",
+"lat": 50.5615,
+"lon": 4.6989,
+"lieux": [
+"Lonzée",
+"Gembloux",
+"Grand-Manil",
+"Sauvenière",
+"Beuzet",
+"Ernage"
+],
+"population": 26014
+},
+{
+"cp": "5031",
+"commune": "Grand-Leez",
+"region": "Wallonie",
+"lat": 50.5839,
+"lon": 4.7751,
+"lieux": [
+"Grand-Leez"
+],
+"population": 2308
+},
+{
+"cp": "5032",
+"commune": "Mazy",
+"region": "Wallonie",
+"lat": 50.511,
+"lon": 4.6737,
+"lieux": [
+"Corroy-Le-Château",
+"Isnes",
+"Bossière",
+"Bothey",
+"Mazy"
+],
+"population": 1146
+},
+{
+"cp": "5060",
+"commune": "Sambreville",
+"region": "Wallonie",
+"lat": 50.4344,
+"lon": 4.6326,
+"lieux": [
+"Arsimont",
+"Keumiée",
+"Sambreville",
+"Auvelais",
+"Falisolle",
+"Moignelée",
+"Tamines",
+"Velaine-Sur-Sambre"
+],
+"population": 28288
+},
+{
+"cp": "5070",
+"commune": "Vitrival",
+"region": "Wallonie",
+"lat": 50.3928,
+"lon": 4.6577,
+"lieux": [
+"Aisemont",
+"Sart-Eustache",
+"Le Roux",
+"Sart-Saint-Laurent",
+"Fosses-La-Ville",
+"Vitrival"
+],
+"population": 1624
+},
+{
+"cp": "5080",
+"commune": "La Bruyère",
+"region": "Wallonie",
+"lat": 50.5501,
+"lon": 4.7983,
+"lieux": [
+"Emines",
+"Warisoulx",
+"Villers-Lez-Heest",
+"La Bruyère",
+"Rhisnes"
+],
+"population": 9276
+},
+{
+"cp": "5081",
+"commune": "Meux",
+"region": "Wallonie",
+"lat": 50.5522,
+"lon": 4.801,
+"lieux": [
+"Meux",
+"Bovesse",
+"Saint-Denis-Bovesse"
+],
+"population": 2217
+},
+{
+"cp": "5100",
+"commune": "Jambes",
+"region": "Wallonie",
+"lat": 50.4564,
+"lon": 4.8717,
+"lieux": [
+"Wépion",
+"Naninne",
+"Jambes",
+"Wierde",
+"Dave"
+],
+"population": 19658
+},
+{
+"cp": "5101",
+"commune": "Erpent",
+"region": "Wallonie",
+"lat": 50.4512,
+"lon": 4.9056,
+"lieux": [
+"Lives-Sur-Meuse",
+"Erpent",
+"Loyers"
+],
+"population": 2758
+},
+{
+"cp": "5140",
+"commune": "Sombreffe",
+"region": "Wallonie",
+"lat": 50.5287,
+"lon": 4.6009,
+"lieux": [
+"Tongrinne",
+"Ligny",
+"Sombreffe",
+"Boignée"
+],
+"population": 8440
+},
+{
+"cp": "5150",
+"commune": "Floreffe",
+"region": "Wallonie",
+"lat": 50.4345,
+"lon": 4.7596,
+"lieux": [
+"Soye",
+"Floriffoux",
+"Franière",
+"Floreffe"
+],
+"population": 8144
+},
+{
+"cp": "5170",
+"commune": "Profondeville",
+"region": "Wallonie",
+"lat": 50.3758,
+"lon": 4.8651,
+"lieux": [
+"Lustin",
+"Profondeville",
+"Rivière",
+"Lesve",
+"Arbre",
+"Bois-De-Villers"
+],
+"population": 12220
+},
+{
+"cp": "5190",
+"commune": "Spy",
+"region": "Wallonie",
+"lat": 50.4814,
+"lon": 4.7094,
+"lieux": [
+"Onoz",
+"Ham-Sur-Sambre",
+"Moustier-Sur-Sambre",
+"Saint-Martin",
+"Balâtre",
+"Jemeppe-Sur-Sambre",
+"Mornimont",
+"Spy"
+],
+"population": 4236
+},
+{
+"cp": "5300",
+"commune": "Andenne",
+"region": "Wallonie",
+"lat": 50.4894,
+"lon": 5.0951,
+"lieux": [
+"Sclayn",
+"Maizeret",
+"Andenne",
+"Thon",
+"Namêche",
+"Vezin",
+"Coutisse",
+"Landenne",
+"Seilles",
+"Bonneville"
+],
+"population": 27391
+},
+{
+"cp": "5310",
+"commune": "Leuze",
+"region": "Wallonie",
+"lat": 50.5464,
+"lon": 4.9063,
+"lieux": [
+"Mehaigne",
+"Leuze",
+"Bolinne",
+"Dhuy",
+"Longchamps",
+"Noville-Sur-Mehaigne",
+"Boneffe",
+"Saint-Germain",
+"Taviers",
+"Eghezée",
+"Branchon",
+"Aische-En-Refail",
+"Hanret",
+"Liernu",
+"Upigny",
+"Waret-La-Chaussée"
+],
+"population": 7095
+},
+{
+"cp": "5330",
+"commune": "Assesse",
+"region": "Wallonie",
+"lat": 50.3693,
+"lon": 5.022,
+"lieux": [
+"Sart-Bernard",
+"Assesse",
+"Maillen"
+],
+"population": 7032
+},
+{
+"cp": "5332",
+"commune": "Crupet",
+"region": "Wallonie",
+"lat": 50.3496,
+"lon": 4.9613,
+"lieux": [
+"Crupet"
+],
+"population": 523
+},
+{
+"cp": "5333",
+"commune": "Sorinne-La-Longue",
+"region": "Wallonie",
+"lat": 50.3893,
+"lon": 5.025,
+"lieux": [
+"Sorinne-La-Longue"
+],
+"population": 0
+},
+{
+"cp": "5334",
+"commune": "Florée",
+"region": "Wallonie",
+"lat": 50.3748,
+"lon": 5.0691,
+"lieux": [
+"Florée"
+],
+"population": 423
+},
+{
+"cp": "5336",
+"commune": "Courrière",
+"region": "Wallonie",
+"lat": 50.3802,
+"lon": 4.9861,
+"lieux": [
+"Courrière"
+],
+"population": 1496
+},
+{
+"cp": "5340",
+"commune": "Gesves",
+"region": "Wallonie",
+"lat": 50.4015,
+"lon": 5.0746,
+"lieux": [
+"Haltinne",
+"Faulx-Les-Tombes",
+"Gesves",
+"Mozet",
+"Sorée"
+],
+"population": 7202
+},
+{
+"cp": "5350",
+"commune": "Ohey",
+"region": "Wallonie",
+"lat": 50.4357,
+"lon": 5.1237,
+"lieux": [
+"Evelette",
+"Ohey"
+],
+"population": 5127
+},
+{
+"cp": "5351",
+"commune": "Haillot",
+"region": "Wallonie",
+"lat": 50.4425,
+"lon": 5.1541,
+"lieux": [
+"Haillot"
+],
+"population": 1524
+},
+{
+"cp": "5352",
+"commune": "Perwez-Haillot",
+"region": "Wallonie",
+"lat": 50.4528,
+"lon": 5.1721,
+"lieux": [
+"Perwez-Haillot"
+],
+"population": 0
+},
+{
+"cp": "5353",
+"commune": "Goesnes",
+"region": "Wallonie",
+"lat": 50.4403,
+"lon": 5.2207,
+"lieux": [
+"Goesnes"
+],
+"population": 257
+},
+{
+"cp": "5354",
+"commune": "Jallet",
+"region": "Wallonie",
+"lat": 50.4432,
+"lon": 5.1836,
+"lieux": [
+"Jallet"
+],
+"population": 290
+},
+{
+"cp": "5360",
+"commune": "Hamois",
+"region": "Wallonie",
+"lat": 50.3402,
+"lon": 5.1562,
+"lieux": [
+"Natoye",
+"Hamois"
+],
+"population": 7357
+},
+{
+"cp": "5361",
+"commune": "Mohiville",
+"region": "Wallonie",
+"lat": 50.3181,
+"lon": 5.1926,
+"lieux": [
+"Scy",
+"Mohiville"
+],
+"population": 454
+},
+{
+"cp": "5362",
+"commune": "Achet",
+"region": "Wallonie",
+"lat": 50.3335,
+"lon": 5.1752,
+"lieux": [
+"Achet"
+],
+"population": 839
+},
+{
+"cp": "5363",
+"commune": "Emptinne",
+"region": "Wallonie",
+"lat": 50.3252,
+"lon": 5.1213,
+"lieux": [
+"Emptinne"
+],
+"population": 987
+},
+{
+"cp": "5364",
+"commune": "Schaltin",
+"region": "Wallonie",
+"lat": 50.3595,
+"lon": 5.1254,
+"lieux": [
+"Schaltin"
+],
+"population": 1130
+},
+{
+"cp": "5370",
+"commune": "Havelange",
+"region": "Wallonie",
+"lat": 50.3893,
+"lon": 5.2382,
+"lieux": [
+"Jeneffe",
+"Barvaux-Condroz",
+"Verlée",
+"Porcheresse",
+"Flostoy",
+"Havelange"
+],
+"population": 5175
+},
+{
+"cp": "5372",
+"commune": "Méan",
+"region": "Wallonie",
+"lat": 50.3631,
+"lon": 5.3355,
+"lieux": [
+"Méan"
+],
+"population": 487
+},
+{
+"cp": "5374",
+"commune": "Maffe",
+"region": "Wallonie",
+"lat": 50.3538,
+"lon": 5.3121,
+"lieux": [
+"Maffe"
+],
+"population": 497
+},
+{
+"cp": "5376",
+"commune": "Miécret",
+"region": "Wallonie",
+"lat": 50.3666,
+"lon": 5.2516,
+"lieux": [
+"Miécret"
+],
+"population": 723
+},
+{
+"cp": "5377",
+"commune": "Somme-Leuze",
+"region": "Wallonie",
+"lat": 50.337,
+"lon": 5.3671,
+"lieux": [
+"Somme-Leuze",
+"Sinsin",
+"Heure",
+"Waillet",
+"Hogne",
+"Bonsin",
+"Nettinne",
+"Noiseux",
+"Baillonville"
+],
+"population": 5641
+},
+{
+"cp": "5380",
+"commune": "Fernelmont",
+"region": "Wallonie",
+"lat": 50.5534,
+"lon": 4.9861,
+"lieux": [
+"Hingeon",
+"Noville-Les-Bois",
+"Pontillas",
+"Hemptinne",
+"Marchovelette",
+"Forville",
+"Cortil-Wodon",
+"Bierwart",
+"Tillier",
+"Franc-Waret",
+"Fernelmont"
+],
+"population": 8032
+},
+{
+"cp": "5500",
+"commune": "Dinant",
+"region": "Wallonie",
+"lat": 50.2581,
+"lon": 4.9117,
+"lieux": [
+"Dréhance",
+"Furfooz",
+"Falmignoul",
+"Dinant",
+"Bouvignes-Sur-Meuse",
+"Falmagne",
+"Anseremme"
+],
+"population": 13451
+},
+{
+"cp": "5501",
+"commune": "Lisogne",
+"region": "Wallonie",
+"lat": 50.2809,
+"lon": 4.9708,
+"lieux": [
+"Lisogne"
+],
+"population": 791
+},
+{
+"cp": "5502",
+"commune": "Thynes",
+"region": "Wallonie",
+"lat": 50.2799,
+"lon": 4.9912,
+"lieux": [
+"Thynes"
+],
+"population": 424
+},
+{
+"cp": "5503",
+"commune": "Sorinnes",
+"region": "Wallonie",
+"lat": 50.2592,
+"lon": 4.9813,
+"lieux": [
+"Sorinnes"
+],
+"population": 871
+},
+{
+"cp": "5504",
+"commune": "Foy-Notre-Dame",
+"region": "Wallonie",
+"lat": 50.2472,
+"lon": 4.9899,
+"lieux": [
+"Foy-Notre-Dame"
+],
+"population": 150
+},
+{
+"cp": "5520",
+"commune": "Onhaye",
+"region": "Wallonie",
+"lat": 50.2415,
+"lon": 4.8407,
+"lieux": [
+"Onhaye",
+"Anthée"
+],
+"population": 3241
+},
+{
+"cp": "5521",
+"commune": "Serville",
+"region": "Wallonie",
+"lat": 50.2503,
+"lon": 4.7802,
+"lieux": [
+"Serville"
+],
+"population": 131
+},
+{
+"cp": "5522",
+"commune": "Falaën",
+"region": "Wallonie",
+"lat": 50.2788,
+"lon": 4.7938,
+"lieux": [
+"Falaën"
+],
+"population": 544
+},
+{
+"cp": "5523",
+"commune": "Sommière",
+"region": "Wallonie",
+"lat": 50.2754,
+"lon": 4.8493,
+"lieux": [
+"Sommière",
+"Weillen"
+],
+"population": 519
+},
+{
+"cp": "5524",
+"commune": "Gérin",
+"region": "Wallonie",
+"lat": 50.2465,
+"lon": 4.8155,
+"lieux": [
+"Gérin"
+],
+"population": 0
+},
+{
+"cp": "5530",
+"commune": "Yvoir",
+"region": "Wallonie",
+"lat": 50.3279,
+"lon": 4.8806,
+"lieux": [
+"Yvoir",
+"Houx",
+"Mont",
+"Purnode",
+"Dorinne",
+"Durnal",
+"Godinne",
+"Evrehailles",
+"Spontin"
+],
+"population": 9167
+},
+{
+"cp": "5537",
+"commune": "Anhée",
+"region": "Wallonie",
+"lat": 50.3104,
+"lon": 4.8783,
+"lieux": [
+"Anhée",
+"Haut-Le-Wastia",
+"Sosoye",
+"Denée",
+"Annevoie-Rouillon",
+"Warnant",
+"Bioul"
+],
+"population": 7125
+},
+{
+"cp": "5540",
+"commune": "Hastière",
+"region": "Wallonie",
+"lat": 50.2166,
+"lon": 4.8164,
+"lieux": [
+"Waulsort",
+"Hermeton-Sur-Meuse",
+"Hastière",
+"Hastière-Lavaux"
+],
+"population": 6022
+},
+{
+"cp": "5541",
+"commune": "Hastière-Par-Delà",
+"region": "Wallonie",
+"lat": 50.2149,
+"lon": 4.8295,
+"lieux": [
+"Hastière-Par-Delà"
+],
+"population": 0
+},
+{
+"cp": "5542",
+"commune": "Blaimont",
+"region": "Wallonie",
+"lat": 50.1923,
+"lon": 4.8423,
+"lieux": [
+"Blaimont"
+],
+"population": 445
+},
+{
+"cp": "5543",
+"commune": "Heer",
+"region": "Wallonie",
+"lat": 50.1637,
+"lon": 4.8321,
+"lieux": [
+"Heer"
+],
+"population": 845
+},
+{
+"cp": "5544",
+"commune": "Agimont",
+"region": "Wallonie",
+"lat": 50.1659,
+"lon": 4.7958,
+"lieux": [
+"Agimont"
+],
+"population": 1039
+},
+{
+"cp": "5550",
+"commune": "Alle",
+"region": "Wallonie",
+"lat": 49.8412,
+"lon": 4.9701,
+"lieux": [
+"Orchimont",
+"Laforêt",
+"Mouzaive",
+"Bohan",
+"Pussemange",
+"Alle",
+"Chairière",
+"Sugny",
+"Vresse-Sur-Semois",
+"Nafraiture",
+"Membre",
+"Bagimont"
+],
+"population": 898
+},
+{
+"cp": "5555",
+"commune": "Bièvre",
+"region": "Wallonie",
+"lat": 49.9409,
+"lon": 5.0159,
+"lieux": [
+"Bellefontaine",
+"Graide",
+"Gros-Fays",
+"Bièvre",
+"Monceau-En-Ardenne",
+"Petit-Fays",
+"Naomé",
+"Cornimont",
+"Baillamont",
+"Oizy"
+],
+"population": 3355
+},
+{
+"cp": "5560",
+"commune": "Houyet",
+"region": "Wallonie",
+"lat": 50.1862,
+"lon": 5.0076,
+"lieux": [
+"Mesnil-Eglise",
+"Ciergnon",
+"Hulsonniaux",
+"Houyet",
+"Mesnil-Saint-Blaise",
+"Finnevaux"
+],
+"population": 4956
+},
+{
+"cp": "5561",
+"commune": "Celles",
+"region": "Wallonie",
+"lat": 50.2305,
+"lon": 5.0066,
+"lieux": [
+"Celles"
+],
+"population": 5666
+},
+{
+"cp": "5562",
+"commune": "Custinne",
+"region": "Wallonie",
+"lat": 50.2106,
+"lon": 5.0489,
+"lieux": [
+"Custinne"
+],
+"population": 296
+},
+{
+"cp": "5563",
+"commune": "Hour",
+"region": "Wallonie",
+"lat": 50.1613,
+"lon": 5.0388,
+"lieux": [
+"Hour"
+],
+"population": 534
+},
+{
+"cp": "5564",
+"commune": "Wanlin",
+"region": "Wallonie",
+"lat": 50.1599,
+"lon": 5.062,
+"lieux": [
+"Wanlin"
+],
+"population": 574
+},
+{
+"cp": "5570",
+"commune": "Beauraing",
+"region": "Wallonie",
+"lat": 50.1104,
+"lon": 4.9555,
+"lieux": [
+"Beauraing",
+"Felenne",
+"Baronville",
+"Honnay",
+"Feschaux",
+"Dion",
+"Javingue",
+"Winenne",
+"Vonêche",
+"Wancennes"
+],
+"population": 9159
+},
+{
+"cp": "5571",
+"commune": "Wiesme",
+"region": "Wallonie",
+"lat": 50.1484,
+"lon": 4.9772,
+"lieux": [
+"Wiesme"
+],
+"population": 280
+},
+{
+"cp": "5572",
+"commune": "Focant",
+"region": "Wallonie",
+"lat": 50.1319,
+"lon": 5.038,
+"lieux": [
+"Focant"
+],
+"population": 403
+},
+{
+"cp": "5573",
+"commune": "Martouzin-Neuville",
+"region": "Wallonie",
+"lat": 50.1177,
+"lon": 5.0063,
+"lieux": [
+"Martouzin-Neuville"
+],
+"population": 352
+},
+{
+"cp": "5574",
+"commune": "Pondrôme",
+"region": "Wallonie",
+"lat": 50.0992,
+"lon": 5.0096,
+"lieux": [
+"Pondrôme"
+],
+"population": 1055
+},
+{
+"cp": "5575",
+"commune": "Gedinne",
+"region": "Wallonie",
+"lat": 49.9804,
+"lon": 4.9367,
+"lieux": [
+"Malvoisin",
+"Vencimont",
+"Willerzie",
+"Bourseigne-Neuve",
+"Houdremont",
+"Rienne",
+"Louette-Saint-Denis",
+"Sart-Custinne",
+"Bourseigne-Vieille",
+"Louette-Saint-Pierre",
+"Gedinne",
+"Patignies"
+],
+"population": 4632
+},
+{
+"cp": "5576",
+"commune": "Froidfontaine",
+"region": "Wallonie",
+"lat": 50.06,
+"lon": 5.0003,
+"lieux": [
+"Froidfontaine"
+],
+"population": 205
+},
+{
+"cp": "5580",
+"commune": "Rochefort",
+"region": "Wallonie",
+"lat": 50.1631,
+"lon": 5.2216,
+"lieux": [
+"Wavreille",
+"Rochefort",
+"Mont-Gauthier",
+"Han-Sur-Lesse",
+"Jemelle",
+"Ave-Et-Auffe",
+"Villers-Sur-Lesse",
+"Eprave",
+"Lavaux-Sainte-Anne",
+"Buissonville",
+"Lessive"
+],
+"population": 12611
+},
+{
+"cp": "5590",
+"commune": "Ciney",
+"region": "Wallonie",
+"lat": 50.2945,
+"lon": 5.1001,
+"lieux": [
+"Conneux",
+"Leignon",
+"Sovet",
+"Haversin",
+"Achêne",
+"Ciney",
+"Braibant",
+"Pessoux",
+"Serinchamps",
+"Chevetogne"
+],
+"population": 16580
+},
+{
+"cp": "5600",
+"commune": "Philippeville",
+"region": "Wallonie",
+"lat": 50.1961,
+"lon": 4.5437,
+"lieux": [
+"Franchimont",
+"Romedenne",
+"Sart-En-Fagne",
+"Merlemont",
+"Samart",
+"Neuville",
+"Philippeville",
+"Surice",
+"Jamagne",
+"Villers-En-Fagne",
+"Fagnolle",
+"Jamiolle",
+"Omezée",
+"Sautour",
+"Vodecée",
+"Villers-Le-Gambon",
+"Roly"
+],
+"population": 9289
+},
+{
+"cp": "5620",
+"commune": "Florennes",
+"region": "Wallonie",
+"lat": 50.2513,
+"lon": 4.6064,
+"lieux": [
+"Florennes",
+"Corenne",
+"Morville",
+"Saint-Aubin",
+"Flavion",
+"Hemptinne-Lez-Florennes",
+"Rosée"
+],
+"population": 11310
+},
+{
+"cp": "5621",
+"commune": "Morialmé",
+"region": "Wallonie",
+"lat": 50.2756,
+"lon": 4.5658,
+"lieux": [
+"Hanzinelle",
+"Hanzinne",
+"Morialmé",
+"Thy-Le-Baudouin"
+],
+"population": 1594
+},
+{
+"cp": "5630",
+"commune": "Cerfontaine",
+"region": "Wallonie",
+"lat": 50.1705,
+"lon": 4.4103,
+"lieux": [
+"Cerfontaine",
+"Villers-Deux-Eglises",
+"Daussois",
+"Senzeilles",
+"Soumoy",
+"Silenrieux"
+],
+"population": 4923
+},
+{
+"cp": "5640",
+"commune": "Mettet",
+"region": "Wallonie",
+"lat": 50.3212,
+"lon": 4.6623,
+"lieux": [
+"Biesme",
+"Saint-Gérard",
+"Oret",
+"Graux",
+"Biesmerée",
+"Mettet"
+],
+"population": 13102
+},
+{
+"cp": "5641",
+"commune": "Furnaux",
+"region": "Wallonie",
+"lat": 50.3081,
+"lon": 4.7051,
+"lieux": [
+"Furnaux"
+],
+"population": 485
+},
+{
+"cp": "5644",
+"commune": "Ermeton-Sur-Biert",
+"region": "Wallonie",
+"lat": 50.2976,
+"lon": 4.7194,
+"lieux": [
+"Ermeton-Sur-Biert"
+],
+"population": 0
+},
+{
+"cp": "5646",
+"commune": "Stave",
+"region": "Wallonie",
+"lat": 50.2801,
+"lon": 4.6591,
+"lieux": [
+"Stave"
+],
+"population": 801
+},
+{
+"cp": "5650",
+"commune": "Walcourt",
+"region": "Wallonie",
+"lat": 50.254,
+"lon": 4.438,
+"lieux": [
+"Chastrès",
+"Fontenelle",
+"Walcourt",
+"Clermont",
+"Vogenée",
+"Pry",
+"Castillon",
+"Fraire",
+"Yves-Gomezée"
+],
+"population": 18430
+},
+{
+"cp": "5651",
+"commune": "Tarcienne",
+"region": "Wallonie",
+"lat": 50.312,
+"lon": 4.4968,
+"lieux": [
+"Laneffe",
+"Thy-Le-Château",
+"Somzée",
+"Rognée",
+"Berzée",
+"Tarcienne",
+"Gourdinne"
+],
+"population": 2229
+},
+{
+"cp": "5660",
+"commune": "Couvin",
+"region": "Wallonie",
+"lat": 50.0528,
+"lon": 4.495,
+"lieux": [
+"Boussu-En-Fagne",
+"Mariembourg",
+"Presgaux",
+"Couvin",
+"Pesche",
+"Brûly-De-Pesche",
+"Petite-Chapelle",
+"Pétigny",
+"Dailly",
+"Gonrieux",
+"Brûly",
+"Aublain",
+"Cul-Des-Sarts",
+"Frasnes"
+],
+"population": 13747
+},
+{
+"cp": "5670",
+"commune": "Viroinval",
+"region": "Wallonie",
+"lat": 50.0073,
+"lon": 4.6677,
+"lieux": [
+"Nismes",
+"Vierves-Sur-Viroin",
+"Dourbes",
+"Oignies-En-Thiérache",
+"Treignes",
+"Le Mesnil",
+"Mazée",
+"Olloy-Sur-Viroin",
+"Viroinval"
+],
+"population": 5659
+},
+{
+"cp": "5680",
+"commune": "Doische",
+"region": "Wallonie",
+"lat": 50.1336,
+"lon": 4.7355,
+"lieux": [
+"Vaucelles",
+"Niverlée",
+"Matagne-La-Petite",
+"Doische",
+"Gochenée",
+"Vodelée",
+"Gimnée",
+"Matagne-La-Grande",
+"Soulme",
+"Romerée"
+],
+"population": 2997
+},
+{
+"cp": "6000",
+"commune": "Charleroi",
+"region": "Wallonie",
+"lat": 50.4114,
+"lon": 4.4445,
+"lieux": [
+"Charleroi"
+],
+"population": 202267
+},
+{
+"cp": "6001",
+"commune": "Marcinelle",
+"region": "Wallonie",
+"lat": 50.3922,
+"lon": 4.4439,
+"lieux": [
+"Marcinelle"
+],
+"population": 23696
+},
+{
+"cp": "6010",
+"commune": "Couillet",
+"region": "Wallonie",
+"lat": 50.3914,
+"lon": 4.4591,
+"lieux": [
+"Couillet"
+],
+"population": 11365
+},
+{
+"cp": "6020",
+"commune": "Dampremy",
+"region": "Wallonie",
+"lat": 50.4171,
+"lon": 4.4309,
+"lieux": [
+"Dampremy"
+],
+"population": 6716
+},
+{
+"cp": "6030",
+"commune": "Goutroux",
+"region": "Wallonie",
+"lat": 50.4133,
+"lon": 4.3623,
+"lieux": [
+"Goutroux",
+"Marchienne-Au-Pont"
+],
+"population": 2947
+},
+{
+"cp": "6031",
+"commune": "Monceau-Sur-Sambre",
+"region": "Wallonie",
+"lat": 50.4169,
+"lon": 4.3767,
+"lieux": [
+"Monceau-Sur-Sambre"
+],
+"population": 0
+},
+{
+"cp": "6032",
+"commune": "Mont-Sur-Marchienne",
+"region": "Wallonie",
+"lat": 50.39,
+"lon": 4.4073,
+"lieux": [
+"Mont-Sur-Marchienne"
+],
+"population": 0
+},
+{
+"cp": "6040",
+"commune": "Jumet",
+"region": "Wallonie",
+"lat": 50.4422,
+"lon": 4.4374,
+"lieux": [
+"Jumet"
+],
+"population": 24510
+},
+{
+"cp": "6041",
+"commune": "Gosselies",
+"region": "Wallonie",
+"lat": 50.4694,
+"lon": 4.4332,
+"lieux": [
+"Gosselies"
+],
+"population": 11017
+},
+{
+"cp": "6042",
+"commune": "Lodelinsart",
+"region": "Wallonie",
+"lat": 50.4314,
+"lon": 4.4489,
+"lieux": [
+"Lodelinsart"
+],
+"population": 8489
+},
+{
+"cp": "6043",
+"commune": "Ransart",
+"region": "Wallonie",
+"lat": 50.4617,
+"lon": 4.4762,
+"lieux": [
+"Ransart"
+],
+"population": 8813
+},
+{
+"cp": "6044",
+"commune": "Roux",
+"region": "Wallonie",
+"lat": 50.4411,
+"lon": 4.3917,
+"lieux": [
+"Roux"
+],
+"population": 8983
+},
+{
+"cp": "6060",
+"commune": "Gilly",
+"region": "Wallonie",
+"lat": 50.4245,
+"lon": 4.4789,
+"lieux": [
+"Gilly"
+],
+"population": 20043
+},
+{
+"cp": "6061",
+"commune": "Montignies-Sur-Sambre",
+"region": "Wallonie",
+"lat": 50.4108,
+"lon": 4.4911,
+"lieux": [
+"Montignies-Sur-Sambre"
+],
+"population": 0
+},
+{
+"cp": "6110",
+"commune": "Montigny-Le-Tilleul",
+"region": "Wallonie",
+"lat": 50.3806,
+"lon": 4.3758,
+"lieux": [
+"Montigny-Le-Tilleul"
+],
+"population": 0
+},
+{
+"cp": "6111",
+"commune": "Landelies",
+"region": "Wallonie",
+"lat": 50.38,
+"lon": 4.3508,
+"lieux": [
+"Landelies"
+],
+"population": 1174
+},
+{
+"cp": "6120",
+"commune": "Nalinnes",
+"region": "Wallonie",
+"lat": 50.3243,
+"lon": 4.4457,
+"lieux": [
+"Marbaix",
+"Jamioulx",
+"Ham-Sur-Heure",
+"Nalinnes",
+"Cour-Sur-Heure"
+],
+"population": 5785
+},
+{
+"cp": "6140",
+"commune": "Fontaine-L'Evêque",
+"region": "Wallonie",
+"lat": 50.4091,
+"lon": 4.3243,
+"lieux": [
+"Fontaine-L'Evêque"
+],
+"population": 0
+},
+{
+"cp": "6141",
+"commune": "Forchies-La-Marche",
+"region": "Wallonie",
+"lat": 50.4369,
+"lon": 4.3211,
+"lieux": [
+"Forchies-La-Marche"
+],
+"population": 0
+},
+{
+"cp": "6142",
+"commune": "Leernes",
+"region": "Wallonie",
+"lat": 50.3981,
+"lon": 4.3324,
+"lieux": [
+"Leernes"
+],
+"population": 3414
+},
+{
+"cp": "6150",
+"commune": "Anderlues",
+"region": "Wallonie",
+"lat": 50.407,
+"lon": 4.2714,
+"lieux": [
+"Anderlues"
+],
+"population": 12261
+},
+{
+"cp": "6180",
+"commune": "Courcelles",
+"region": "Wallonie",
+"lat": 50.4638,
+"lon": 4.3747,
+"lieux": [
+"Courcelles"
+],
+"population": 31299
+},
+{
+"cp": "6181",
+"commune": "Gouy-Lez-Piéton",
+"region": "Wallonie",
+"lat": 50.4907,
+"lon": 4.3289,
+"lieux": [
+"Gouy-Lez-Piéton"
+],
+"population": 0
+},
+{
+"cp": "6182",
+"commune": "Souvret",
+"region": "Wallonie",
+"lat": 50.4486,
+"lon": 4.3457,
+"lieux": [
+"Souvret"
+],
+"population": 4158
+},
+{
+"cp": "6183",
+"commune": "Trazegnies",
+"region": "Wallonie",
+"lat": 50.4638,
+"lon": 4.3329,
+"lieux": [
+"Trazegnies"
+],
+"population": 6798
+},
+{
+"cp": "6200",
+"commune": "Châtelet",
+"region": "Wallonie",
+"lat": 50.4034,
+"lon": 4.5283,
+"lieux": [
+"Châtelet",
+"Bouffioulx",
+"Châtelineau"
+],
+"population": 35903
+},
+{
+"cp": "6210",
+"commune": "Les Bons Villers",
+"region": "Wallonie",
+"lat": 50.5321,
+"lon": 4.435,
+"lieux": [
+"Villers-Perwin",
+"Les Bons Villers",
+"Rèves",
+"Frasnes-Lez-Gosselies",
+"Wayaux"
+],
+"population": 9451
+},
+{
+"cp": "6211",
+"commune": "Mellet",
+"region": "Wallonie",
+"lat": 50.5057,
+"lon": 4.4786,
+"lieux": [
+"Mellet"
+],
+"population": 2631
+},
+{
+"cp": "6220",
+"commune": "Fleurus",
+"region": "Wallonie",
+"lat": 50.4835,
+"lon": 4.5501,
+"lieux": [
+"Wangenies",
+"Heppignies",
+"Lambusart",
+"Fleurus"
+],
+"population": 22918
+},
+{
+"cp": "6221",
+"commune": "Saint-Amand",
+"region": "Wallonie",
+"lat": 50.5061,
+"lon": 4.5499,
+"lieux": [
+"Saint-Amand"
+],
+"population": 1056
+},
+{
+"cp": "6222",
+"commune": "Brye",
+"region": "Wallonie",
+"lat": 50.5244,
+"lon": 4.5567,
+"lieux": [
+"Brye"
+],
+"population": 348
+},
+{
+"cp": "6223",
+"commune": "Wagnelée",
+"region": "Wallonie",
+"lat": 50.5233,
+"lon": 4.5333,
+"lieux": [
+"Wagnelée"
+],
+"population": 924
+},
+{
+"cp": "6224",
+"commune": "Wanfercée-Baulet",
+"region": "Wallonie",
+"lat": 50.4729,
+"lon": 4.5875,
+"lieux": [
+"Wanfercée-Baulet"
+],
+"population": 7246
+},
+{
+"cp": "6230",
+"commune": "Viesville",
+"region": "Wallonie",
+"lat": 50.4909,
+"lon": 4.4085,
+"lieux": [
+"Pont-À-Celles",
+"Thiméon",
+"Obaix",
+"Viesville",
+"Buzet"
+],
+"population": 2307
+},
+{
+"cp": "6238",
+"commune": "Luttre",
+"region": "Wallonie",
+"lat": 50.5101,
+"lon": 4.3971,
+"lieux": [
+"Luttre",
+"Liberchies"
+],
+"population": 3489
+},
+{
+"cp": "6240",
+"commune": "Farciennes",
+"region": "Wallonie",
+"lat": 50.4301,
+"lon": 4.5415,
+"lieux": [
+"Pironchamps",
+"Farciennes"
+],
+"population": 11488
+},
+{
+"cp": "6250",
+"commune": "Aiseau",
+"region": "Wallonie",
+"lat": 50.4116,
+"lon": 4.5867,
+"lieux": [
+"Pont-De-Loup",
+"Aiseau",
+"Aiseau-Presles",
+"Roselies",
+"Presles"
+],
+"population": 10906
+},
+{
+"cp": "6280",
+"commune": "Gerpinnes",
+"region": "Wallonie",
+"lat": 50.3379,
+"lon": 4.5273,
+"lieux": [
+"Loverval",
+"Acoz",
+"Gerpinnes",
+"Joncret",
+"Villers-Poterie",
+"Gougnies"
+],
+"population": 12716
+},
+{
+"cp": "6440",
+"commune": "Froidchapelle",
+"region": "Wallonie",
+"lat": 50.1511,
+"lon": 4.3274,
+"lieux": [
+"Vergnies",
+"Boussu-Lez-Walcourt",
+"Fourbechies",
+"Froidchapelle"
+],
+"population": 3959
+},
+{
+"cp": "6441",
+"commune": "Erpion",
+"region": "Wallonie",
+"lat": 50.2119,
+"lon": 4.3556,
+"lieux": [
+"Erpion"
+],
+"population": 333
+},
+{
+"cp": "6460",
+"commune": "Chimay",
+"region": "Wallonie",
+"lat": 50.0486,
+"lon": 4.3171,
+"lieux": [
+"Bailièvre",
+"Robechies",
+"Villers-La-Tour",
+"Saint-Remy",
+"Chimay",
+"Salles"
+],
+"population": 9805
+},
+{
+"cp": "6461",
+"commune": "Virelles",
+"region": "Wallonie",
+"lat": 50.0639,
+"lon": 4.3351,
+"lieux": [
+"Virelles"
+],
+"population": 756
+},
+{
+"cp": "6462",
+"commune": "Vaulx-Lez-Chimay",
+"region": "Wallonie",
+"lat": 50.0617,
+"lon": 4.3651,
+"lieux": [
+"Vaulx-Lez-Chimay"
+],
+"population": 0
+},
+{
+"cp": "6463",
+"commune": "Lompret",
+"region": "Wallonie",
+"lat": 50.0644,
+"lon": 4.379,
+"lieux": [
+"Lompret"
+],
+"population": 181
+},
+{
+"cp": "6464",
+"commune": "Baileux",
+"region": "Wallonie",
+"lat": 50.0288,
+"lon": 4.3753,
+"lieux": [
+"Baileux",
+"Rièzes",
+"Bourlers",
+"Forges",
+"L'Escaillère"
+],
+"population": 1249
+},
+{
+"cp": "6470",
+"commune": "Sivry-Rance",
+"region": "Wallonie",
+"lat": 50.1668,
+"lon": 4.1665,
+"lieux": [
+"Montbliart",
+"Grandrieu",
+"Sautin",
+"Sivry",
+"Sivry-Rance",
+"Rance"
+],
+"population": 4798
+},
+{
+"cp": "6500",
+"commune": "Beaumont",
+"region": "Wallonie",
+"lat": 50.237,
+"lon": 4.2393,
+"lieux": [
+"Leugnies",
+"Thirimont",
+"Solre-Saint-Géry",
+"Barbençon",
+"Beaumont",
+"Leval-Chaudeville",
+"Renlies"
+],
+"population": 7124
+},
+{
+"cp": "6511",
+"commune": "Strée",
+"region": "Wallonie",
+"lat": 50.2808,
+"lon": 4.2939,
+"lieux": [
+"Strée"
+],
+"population": 1548
+},
+{
+"cp": "6530",
+"commune": "Thuin",
+"region": "Wallonie",
+"lat": 50.3393,
+"lon": 4.286,
+"lieux": [
+"Thuin",
+"Leers-Et-Fosteau"
+],
+"population": 14702
+},
+{
+"cp": "6531",
+"commune": "Biesme-Sous-Thuin",
+"region": "Wallonie",
+"lat": 50.3221,
+"lon": 4.309,
+"lieux": [
+"Biesme-Sous-Thuin"
+],
+"population": 0
+},
+{
+"cp": "6532",
+"commune": "Ragnies",
+"region": "Wallonie",
+"lat": 50.308,
+"lon": 4.2845,
+"lieux": [
+"Ragnies"
+],
+"population": 441
+},
+{
+"cp": "6533",
+"commune": "Biercée",
+"region": "Wallonie",
+"lat": 50.3242,
+"lon": 4.2594,
+"lieux": [
+"Biercée"
+],
+"population": 1122
+},
+{
+"cp": "6534",
+"commune": "Gozée",
+"region": "Wallonie",
+"lat": 50.3346,
+"lon": 4.3527,
+"lieux": [
+"Gozée"
+],
+"population": 4107
+},
+{
+"cp": "6536",
+"commune": "Thuillies",
+"region": "Wallonie",
+"lat": 50.299,
+"lon": 4.3327,
+"lieux": [
+"Donstiennes",
+"Thuillies"
+],
+"population": 1996
+},
+{
+"cp": "6540",
+"commune": "Lobbes",
+"region": "Wallonie",
+"lat": 50.3526,
+"lon": 4.2672,
+"lieux": [
+"Lobbes",
+"Mont-Sainte-Geneviève"
+],
+"population": 5832
+},
+{
+"cp": "6542",
+"commune": "Sars-La-Buissière",
+"region": "Wallonie",
+"lat": 50.3398,
+"lon": 4.2094,
+"lieux": [
+"Sars-La-Buissière"
+],
+"population": 0
+},
+{
+"cp": "6543",
+"commune": "Bienne-Lez-Happart",
+"region": "Wallonie",
+"lat": 50.3521,
+"lon": 4.2162,
+"lieux": [
+"Bienne-Lez-Happart"
+],
+"population": 0
+},
+{
+"cp": "6560",
+"commune": "Erquelinnes",
+"region": "Wallonie",
+"lat": 50.3069,
+"lon": 4.1113,
+"lieux": [
+"Erquelinnes",
+"Montignies-Saint-Christophe",
+"Bersillies-L'Abbaye",
+"Solre-Sur-Sambre",
+"Hantes-Wihéries",
+"Grand-Reng"
+],
+"population": 10003
+},
+{
+"cp": "6567",
+"commune": "Labuissière",
+"region": "Wallonie",
+"lat": 50.3194,
+"lon": 4.1809,
+"lieux": [
+"Fontaine-Valmont",
+"Merbes-Le-Château",
+"Labuissière",
+"Merbes-Sainte-Marie"
+],
+"population": 1140
+},
+{
+"cp": "6590",
+"commune": "Momignies",
+"region": "Wallonie",
+"lat": 50.0271,
+"lon": 4.1652,
+"lieux": [
+"Momignies"
+],
+"population": 5305
+},
+{
+"cp": "6591",
+"commune": "Macon",
+"region": "Wallonie",
+"lat": 50.0507,
+"lon": 4.2092,
+"lieux": [
+"Macon"
+],
+"population": 683
+},
+{
+"cp": "6592",
+"commune": "Monceau-Imbrechies",
+"region": "Wallonie",
+"lat": 50.0379,
+"lon": 4.2251,
+"lieux": [
+"Monceau-Imbrechies"
+],
+"population": 274
+},
+{
+"cp": "6593",
+"commune": "Macquenoise",
+"region": "Wallonie",
+"lat": 49.9757,
+"lon": 4.1789,
+"lieux": [
+"Macquenoise"
+],
+"population": 484
+},
+{
+"cp": "6594",
+"commune": "Beauwelz",
+"region": "Wallonie",
+"lat": 50.0143,
+"lon": 4.1568,
+"lieux": [
+"Beauwelz"
+],
+"population": 441
+},
+{
+"cp": "6596",
+"commune": "Seloignes",
+"region": "Wallonie",
+"lat": 50.0151,
+"lon": 4.2552,
+"lieux": [
+"Seloignes",
+"Forge-Philippe"
+],
+"population": 1070
+},
+{
+"cp": "6600",
+"commune": "Bastogne",
+"region": "Wallonie",
+"lat": 50.0035,
+"lon": 5.7184,
+"lieux": [
+"Wardin",
+"Villers-La-Bonne-Eau",
+"Bastogne",
+"Noville",
+"Longvilly"
+],
+"population": 15985
+},
+{
+"cp": "6630",
+"commune": "Martelange",
+"region": "Wallonie",
+"lat": 49.8319,
+"lon": 5.7365,
+"lieux": [
+"Martelange"
+],
+"population": 1876
+},
+{
+"cp": "6637",
+"commune": "Fauvillers",
+"region": "Wallonie",
+"lat": 49.8512,
+"lon": 5.6641,
+"lieux": [
+"Hollange",
+"Tintange",
+"Fauvillers"
+],
+"population": 2281
+},
+{
+"cp": "6640",
+"commune": "Sibret",
+"region": "Wallonie",
+"lat": 49.9707,
+"lon": 5.6345,
+"lieux": [
+"Vaux-Sur-Sûre",
+"Hompré",
+"Sibret",
+"Morhet",
+"Nives",
+"Vaux-Lez-Rosières"
+],
+"population": 1443
+},
+{
+"cp": "6642",
+"commune": "Juseret",
+"region": "Wallonie",
+"lat": 49.8802,
+"lon": 5.5493,
+"lieux": [
+"Juseret"
+],
+"population": 915
+},
+{
+"cp": "6660",
+"commune": "Houffalize",
+"region": "Wallonie",
+"lat": 50.1324,
+"lon": 5.7896,
+"lieux": [
+"Houffalize",
+"Nadrin"
+],
+"population": 5193
+},
+{
+"cp": "6661",
+"commune": "Mont",
+"region": "Wallonie",
+"lat": 50.0022,
+"lon": 5.744,
+"lieux": [
+"Mont",
+"Tailles"
+],
+"population": 954
+},
+{
+"cp": "6662",
+"commune": "Tavigny",
+"region": "Wallonie",
+"lat": 50.1085,
+"lon": 5.8379,
+"lieux": [
+"Tavigny"
+],
+"population": 941
+},
+{
+"cp": "6663",
+"commune": "Mabompré",
+"region": "Wallonie",
+"lat": 50.099,
+"lon": 5.7398,
+"lieux": [
+"Mabompré"
+],
+"population": 661
+},
+{
+"cp": "6666",
+"commune": "Wibrin",
+"region": "Wallonie",
+"lat": 50.1655,
+"lon": 5.7211,
+"lieux": [
+"Wibrin"
+],
+"population": 497
+},
+{
+"cp": "6670",
+"commune": "Gouvy",
+"region": "Wallonie",
+"lat": 50.186,
+"lon": 5.9392,
+"lieux": [
+"Limerlé",
+"Gouvy"
+],
+"population": 5286
+},
+{
+"cp": "6671",
+"commune": "Bovigny",
+"region": "Wallonie",
+"lat": 50.2242,
+"lon": 5.9169,
+"lieux": [
+"Bovigny"
+],
+"population": 1210
+},
+{
+"cp": "6672",
+"commune": "Beho",
+"region": "Wallonie",
+"lat": 50.2206,
+"lon": 5.9981,
+"lieux": [
+"Beho"
+],
+"population": 843
+},
+{
+"cp": "6673",
+"commune": "Cherain",
+"region": "Wallonie",
+"lat": 50.18,
+"lon": 5.8652,
+"lieux": [
+"Cherain"
+],
+"population": 745
+},
+{
+"cp": "6674",
+"commune": "Montleban",
+"region": "Wallonie",
+"lat": 50.1895,
+"lon": 5.8354,
+"lieux": [
+"Montleban"
+],
+"population": 633
+},
+{
+"cp": "6680",
+"commune": "Sainte-Ode",
+"region": "Wallonie",
+"lat": 50.0172,
+"lon": 5.5193,
+"lieux": [
+"Sainte-Ode",
+"Amberloup",
+"Tillet"
+],
+"population": 2555
+},
+{
+"cp": "6681",
+"commune": "Lavacherie",
+"region": "Wallonie",
+"lat": 50.0528,
+"lon": 5.5109,
+"lieux": [
+"Lavacherie"
+],
+"population": 716
+},
+{
+"cp": "6686",
+"commune": "Flamierge",
+"region": "Wallonie",
+"lat": 50.0332,
+"lon": 5.6029,
+"lieux": [
+"Flamierge"
+],
+"population": 1202
+},
+{
+"cp": "6687",
+"commune": "Bertogne",
+"region": "Wallonie",
+"lat": 50.0836,
+"lon": 5.6669,
+"lieux": [
+"Bertogne"
+],
+"population": 3659
+},
+{
+"cp": "6688",
+"commune": "Longchamps",
+"region": "Wallonie",
+"lat": 50.0534,
+"lon": 5.6903,
+"lieux": [
+"Longchamps"
+],
+"population": 1398
+},
+{
+"cp": "6690",
+"commune": "Vielsalm",
+"region": "Wallonie",
+"lat": 50.2841,
+"lon": 5.915,
+"lieux": [
+"Bihain",
+"Vielsalm"
+],
+"population": 7814
+},
+{
+"cp": "6692",
+"commune": "Petit-Thier",
+"region": "Wallonie",
+"lat": 50.3071,
+"lon": 5.9678,
+"lieux": [
+"Petit-Thier"
+],
+"population": 620
+},
+{
+"cp": "6698",
+"commune": "Grand-Halleux",
+"region": "Wallonie",
+"lat": 50.3258,
+"lon": 5.9072,
+"lieux": [
+"Grand-Halleux"
+],
+"population": 1329
+},
+{
+"cp": "6700",
+"commune": "Arlon",
+"region": "Wallonie",
+"lat": 49.6833,
+"lon": 5.8167,
+"lieux": [
+"Heinsch",
+"Bonnert",
+"Toernich",
+"Arlon"
+],
+"population": 29858
+},
+{
+"cp": "6704",
+"commune": "Guirsch",
+"region": "Wallonie",
+"lat": 49.7183,
+"lon": 5.8521,
+"lieux": [
+"Guirsch"
+],
+"population": 275
+},
+{
+"cp": "6706",
+"commune": "Autelbas",
+"region": "Wallonie",
+"lat": 49.6481,
+"lon": 5.868,
+"lieux": [
+"Autelbas"
+],
+"population": 2530
+},
+{
+"cp": "6717",
+"commune": "Attert",
+"region": "Wallonie",
+"lat": 49.7503,
+"lon": 5.7863,
+"lieux": [
+"Tontelange",
+"Thiaumont",
+"Nothomb",
+"Nobressart",
+"Attert"
+],
+"population": 5578
+},
+{
+"cp": "6720",
+"commune": "Habay",
+"region": "Wallonie",
+"lat": 49.7233,
+"lon": 5.62,
+"lieux": [
+"Habay-La-Neuve",
+"Habay",
+"Hachy"
+],
+"population": 8409
+},
+{
+"cp": "6721",
+"commune": "Anlier",
+"region": "Wallonie",
+"lat": 49.7714,
+"lon": 5.6201,
+"lieux": [
+"Anlier"
+],
+"population": 387
+},
+{
+"cp": "6723",
+"commune": "Habay-La-Vieille",
+"region": "Wallonie",
+"lat": 49.7233,
+"lon": 5.62,
+"lieux": [
+"Habay-La-Vieille"
+],
+"population": 0
+},
+{
+"cp": "6724",
+"commune": "Rulles",
+"region": "Wallonie",
+"lat": 49.7181,
+"lon": 5.5596,
+"lieux": [
+"Rulles",
+"Houdemont"
+],
+"population": 2129
+},
+{
+"cp": "6730",
+"commune": "Tintigny",
+"region": "Wallonie",
+"lat": 49.6833,
+"lon": 5.5135,
+"lieux": [
+"Saint-Vincent",
+"Rossignol",
+"Bellefontaine",
+"Tintigny"
+],
+"population": 4300
+},
+{
+"cp": "6740",
+"commune": "Etalle",
+"region": "Wallonie",
+"lat": 49.6738,
+"lon": 5.6002,
+"lieux": [
+"Etalle",
+"Sainte-Marie-Sur-Semois",
+"Villers-Sur-Semois"
+],
+"population": 0
+},
+{
+"cp": "6741",
+"commune": "Vance",
+"region": "Wallonie",
+"lat": 49.6716,
+"lon": 5.6657,
+"lieux": [
+"Vance"
+],
+"population": 1177
+},
+{
+"cp": "6742",
+"commune": "Chantemelle",
+"region": "Wallonie",
+"lat": 49.6527,
+"lon": 5.6523,
+"lieux": [
+"Chantemelle"
+],
+"population": 485
+},
+{
+"cp": "6743",
+"commune": "Buzenol",
+"region": "Wallonie",
+"lat": 49.6439,
+"lon": 5.5947,
+"lieux": [
+"Buzenol"
+],
+"population": 335
+},
+{
+"cp": "6747",
+"commune": "Saint-Léger",
+"region": "Wallonie",
+"lat": 49.612,
+"lon": 5.6569,
+"lieux": [
+"Saint-Léger",
+"Châtillon",
+"Meix-Le-Tige"
+],
+"population": 3608
+},
+{
+"cp": "6750",
+"commune": "Musson",
+"region": "Wallonie",
+"lat": 49.5583,
+"lon": 5.7053,
+"lieux": [
+"Signeulx",
+"Mussy-La-Ville",
+"Musson"
+],
+"population": 4551
+},
+{
+"cp": "6760",
+"commune": "Virton",
+"region": "Wallonie",
+"lat": 49.5682,
+"lon": 5.5326,
+"lieux": [
+"Virton",
+"Ethe",
+"Bleid",
+"Ruette"
+],
+"population": 11332
+},
+{
+"cp": "6761",
+"commune": "Latour",
+"region": "Wallonie",
+"lat": 49.5574,
+"lon": 5.5706,
+"lieux": [
+"Latour"
+],
+"population": 1199
+},
+{
+"cp": "6762",
+"commune": "Saint-Mard",
+"region": "Wallonie",
+"lat": 49.554,
+"lon": 5.5343,
+"lieux": [
+"Saint-Mard"
+],
+"population": 2888
+},
+{
+"cp": "6767",
+"commune": "Rouvroy",
+"region": "Wallonie",
+"lat": 49.5377,
+"lon": 5.4903,
+"lieux": [
+"Dampicourt",
+"Rouvroy",
+"Lamorteau",
+"Harnoncourt",
+"Torgny"
+],
+"population": 2107
+},
+{
+"cp": "6769",
+"commune": "Gérouville",
+"region": "Wallonie",
+"lat": 49.619,
+"lon": 5.4265,
+"lieux": [
+"Sommethonne",
+"Villers-La-Loue",
+"Meix-Devant-Virton",
+"Robelmont",
+"Gérouville"
+],
+"population": 639
+},
+{
+"cp": "6780",
+"commune": "Messancy",
+"region": "Wallonie",
+"lat": 49.592,
+"lon": 5.8188,
+"lieux": [
+"Hondelange",
+"Wolkrange",
+"Messancy"
+],
+"population": 8218
+},
+{
+"cp": "6781",
+"commune": "Sélange",
+"region": "Wallonie",
+"lat": 49.6093,
+"lon": 5.8505,
+"lieux": [
+"Sélange"
+],
+"population": 774
+},
+{
+"cp": "6782",
+"commune": "Habergy",
+"region": "Wallonie",
+"lat": 49.6147,
+"lon": 5.7601,
+"lieux": [
+"Habergy"
+],
+"population": 799
+},
+{
+"cp": "6790",
+"commune": "Aubange",
+"region": "Wallonie",
+"lat": 49.5665,
+"lon": 5.8049,
+"lieux": [
+"Aubange"
+],
+"population": 17093
+},
+{
+"cp": "6791",
+"commune": "Athus",
+"region": "Wallonie",
+"lat": 49.5648,
+"lon": 5.8374,
+"lieux": [
+"Athus"
+],
+"population": 8028
+},
+{
+"cp": "6792",
+"commune": "Halanzy",
+"region": "Wallonie",
+"lat": 49.5605,
+"lon": 5.7443,
+"lieux": [
+"Rachecourt",
+"Halanzy"
+],
+"population": 3890
+},
+{
+"cp": "6800",
+"commune": "Libramont-Chevigny",
+"region": "Wallonie",
+"lat": 49.9496,
+"lon": 5.4292,
+"lieux": [
+"Saint-Pierre",
+"Moircy",
+"Freux",
+"Sainte-Marie-Chevigny",
+"Bras",
+"Remagne",
+"Recogne",
+"Libramont-Chevigny"
+],
+"population": 11276
+},
+{
+"cp": "6810",
+"commune": "Chiny",
+"region": "Wallonie",
+"lat": 49.7383,
+"lon": 5.341,
+"lieux": [
+"Chiny",
+"Jamoigne",
+"Izel"
+],
+"population": 5180
+},
+{
+"cp": "6811",
+"commune": "Les Bulles",
+"region": "Wallonie",
+"lat": 49.7046,
+"lon": 5.4238,
+"lieux": [
+"Les Bulles"
+],
+"population": 534
+},
+{
+"cp": "6812",
+"commune": "Suxy",
+"region": "Wallonie",
+"lat": 49.7644,
+"lon": 5.3997,
+"lieux": [
+"Suxy"
+],
+"population": 375
+},
+{
+"cp": "6813",
+"commune": "Termes",
+"region": "Wallonie",
+"lat": 49.7066,
+"lon": 5.4574,
+"lieux": [
+"Termes"
+],
+"population": 250
+},
+{
+"cp": "6820",
+"commune": "Florenville",
+"region": "Wallonie",
+"lat": 49.6998,
+"lon": 5.3074,
+"lieux": [
+"Muno",
+"Florenville",
+"Fontenoille",
+"Sainte-Cécile"
+],
+"population": 5578
+},
+{
+"cp": "6821",
+"commune": "Lacuisine",
+"region": "Wallonie",
+"lat": 49.7159,
+"lon": 5.3177,
+"lieux": [
+"Lacuisine"
+],
+"population": 684
+},
+{
+"cp": "6823",
+"commune": "Villers-Devant-Orval",
+"region": "Wallonie",
+"lat": 49.6195,
+"lon": 5.3305,
+"lieux": [
+"Villers-Devant-Orval"
+],
+"population": 0
+},
+{
+"cp": "6824",
+"commune": "Chassepierre",
+"region": "Wallonie",
+"lat": 49.7073,
+"lon": 5.2618,
+"lieux": [
+"Chassepierre"
+],
+"population": 440
+},
+{
+"cp": "6830",
+"commune": "Bouillon",
+"region": "Wallonie",
+"lat": 49.7932,
+"lon": 5.067,
+"lieux": [
+"Les Hayons",
+"Rochehaut",
+"Poupehan",
+"Bouillon"
+],
+"population": 5411
+},
+{
+"cp": "6831",
+"commune": "Noirfontaine",
+"region": "Wallonie",
+"lat": 49.9619,
+"lon": 5.5136,
+"lieux": [
+"Noirfontaine"
+],
+"population": 0
+},
+{
+"cp": "6832",
+"commune": "Sensenruth",
+"region": "Wallonie",
+"lat": 49.8249,
+"lon": 5.0746,
+"lieux": [
+"Sensenruth"
+],
+"population": 502
+},
+{
+"cp": "6833",
+"commune": "Vivy",
+"region": "Wallonie",
+"lat": 49.8672,
+"lon": 5.038,
+"lieux": [
+"Ucimont",
+"Vivy"
+],
+"population": 348
+},
+{
+"cp": "6834",
+"commune": "Bellevaux",
+"region": "Wallonie",
+"lat": 49.8403,
+"lon": 5.1104,
+"lieux": [
+"Bellevaux"
+],
+"population": 201
+},
+{
+"cp": "6836",
+"commune": "Dohan",
+"region": "Wallonie",
+"lat": 49.7958,
+"lon": 5.1416,
+"lieux": [
+"Dohan"
+],
+"population": 185
+},
+{
+"cp": "6838",
+"commune": "Corbion",
+"region": "Wallonie",
+"lat": 49.7977,
+"lon": 5.0074,
+"lieux": [
+"Corbion"
+],
+"population": 567
+},
+{
+"cp": "6840",
+"commune": "Neufchâteau",
+"region": "Wallonie",
+"lat": 49.8407,
+"lon": 5.4353,
+"lieux": [
+"Grandvoir",
+"Longlier",
+"Tournay",
+"Neufchâteau",
+"Hamipré",
+"Grapfontaine"
+],
+"population": 7699
+},
+{
+"cp": "6850",
+"commune": "Paliseul",
+"region": "Wallonie",
+"lat": 49.904,
+"lon": 5.1354,
+"lieux": [
+"Offagne",
+"Carlsbourg",
+"Paliseul"
+],
+"population": 5389
+},
+{
+"cp": "6851",
+"commune": "Nollevaux",
+"region": "Wallonie",
+"lat": 49.8713,
+"lon": 5.1213,
+"lieux": [
+"Nollevaux"
+],
+"population": 346
+},
+{
+"cp": "6852",
+"commune": "Maissin",
+"region": "Wallonie",
+"lat": 49.9648,
+"lon": 5.1782,
+"lieux": [
+"Opont",
+"Maissin"
+],
+"population": 556
+},
+{
+"cp": "6853",
+"commune": "Framont",
+"region": "Wallonie",
+"lat": 49.9192,
+"lon": 5.16,
+"lieux": [
+"Framont"
+],
+"population": 209
+},
+{
+"cp": "6856",
+"commune": "Fays-Les-Veneurs",
+"region": "Wallonie",
+"lat": 49.8661,
+"lon": 5.1612,
+"lieux": [
+"Fays-Les-Veneurs"
+],
+"population": 0
+},
+{
+"cp": "6860",
+"commune": "Léglise",
+"region": "Wallonie",
+"lat": 49.7998,
+"lon": 5.5365,
+"lieux": [
+"Mellier",
+"Léglise",
+"Witry",
+"Assenois",
+"Ebly"
+],
+"population": 5471
+},
+{
+"cp": "6870",
+"commune": "Saint-Hubert",
+"region": "Wallonie",
+"lat": 50.0267,
+"lon": 5.374,
+"lieux": [
+"Vesqueville",
+"Saint-Hubert",
+"Mirwart",
+"Arville",
+"Hatrival",
+"Awenne"
+],
+"population": 5569
+},
+{
+"cp": "6880",
+"commune": "Bertrix",
+"region": "Wallonie",
+"lat": 49.856,
+"lon": 5.2554,
+"lieux": [
+"Auby-Sur-Semois",
+"Orgeo",
+"Bertrix",
+"Cugnon",
+"Jehonville"
+],
+"population": 8793
+},
+{
+"cp": "6887",
+"commune": "Herbeumont",
+"region": "Wallonie",
+"lat": 49.7809,
+"lon": 5.2358,
+"lieux": [
+"Straimont",
+"Saint-Médard",
+"Herbeumont"
+],
+"population": 1624
+},
+{
+"cp": "6890",
+"commune": "Libin",
+"region": "Wallonie",
+"lat": 49.9811,
+"lon": 5.2561,
+"lieux": [
+"Ochamps",
+"Transinne",
+"Libin",
+"Villance",
+"Smuid",
+"Redu",
+"Anloy"
+],
+"population": 5223
+},
+{
+"cp": "6900",
+"commune": "Waha",
+"region": "Wallonie",
+"lat": 50.2092,
+"lon": 5.3417,
+"lieux": [
+"Waha",
+"Marche-En-Famenne",
+"Humain",
+"On",
+"Roy",
+"Aye",
+"Hargimont"
+],
+"population": 4923
+},
+{
+"cp": "6920",
+"commune": "Wellin",
+"region": "Wallonie",
+"lat": 50.0813,
+"lon": 5.1141,
+"lieux": [
+"Sohier",
+"Wellin"
+],
+"population": 3093
+},
+{
+"cp": "6921",
+"commune": "Chanly",
+"region": "Wallonie",
+"lat": 50.0797,
+"lon": 5.1529,
+"lieux": [
+"Chanly"
+],
+"population": 558
+},
+{
+"cp": "6922",
+"commune": "Halma",
+"region": "Wallonie",
+"lat": 50.076,
+"lon": 5.1351,
+"lieux": [
+"Halma"
+],
+"population": 378
+},
+{
+"cp": "6924",
+"commune": "Lomprez",
+"region": "Wallonie",
+"lat": 50.0762,
+"lon": 5.0914,
+"lieux": [
+"Lomprez"
+],
+"population": 333
+},
+{
+"cp": "6927",
+"commune": "Tellin",
+"region": "Wallonie",
+"lat": 50.0804,
+"lon": 5.2164,
+"lieux": [
+"Grupont",
+"Tellin",
+"Bure",
+"Resteigne"
+],
+"population": 2432
+},
+{
+"cp": "6929",
+"commune": "Daverdisse",
+"region": "Wallonie",
+"lat": 50.0216,
+"lon": 5.1181,
+"lieux": [
+"Porcheresse",
+"Haut-Fays",
+"Gembes",
+"Daverdisse"
+],
+"population": 1395
+},
+{
+"cp": "6940",
+"commune": "Durbuy",
+"region": "Wallonie",
+"lat": 50.3529,
+"lon": 5.4563,
+"lieux": [
+"Grandhan",
+"Durbuy",
+"Septon",
+"Wéris",
+"Barvaux-Sur-Ourthe"
+],
+"population": 11395
+},
+{
+"cp": "6941",
+"commune": "Tohogne",
+"region": "Wallonie",
+"lat": 50.3801,
+"lon": 5.479,
+"lieux": [
+"Bende",
+"Borlon",
+"Izier",
+"Bomal-Sur-Ourthe",
+"Villers-Sainte-Gertrude",
+"Tohogne",
+"Heyd"
+],
+"population": 1460
+},
+{
+"cp": "6950",
+"commune": "Nassogne",
+"region": "Wallonie",
+"lat": 50.1285,
+"lon": 5.3427,
+"lieux": [
+"Nassogne",
+"Harsin"
+],
+"population": 5498
+},
+{
+"cp": "6951",
+"commune": "Bande",
+"region": "Wallonie",
+"lat": 50.1664,
+"lon": 5.4144,
+"lieux": [
+"Bande"
+],
+"population": 797
+},
+{
+"cp": "6952",
+"commune": "Grune",
+"region": "Wallonie",
+"lat": 50.1552,
+"lon": 5.3816,
+"lieux": [
+"Grune"
+],
+"population": 331
+},
+{
+"cp": "6953",
+"commune": "Forrières",
+"region": "Wallonie",
+"lat": 50.1313,
+"lon": 5.2827,
+"lieux": [
+"Lesterny",
+"Masbourg",
+"Forrières",
+"Ambly"
+],
+"population": 1345
+},
+{
+"cp": "6960",
+"commune": "Manhay",
+"region": "Wallonie",
+"lat": 50.2867,
+"lon": 5.6565,
+"lieux": [
+"Dochamps",
+"Manhay",
+"Vaux-Chavanne",
+"Grandménil",
+"Harre",
+"Odeigne",
+"Malempré"
+],
+"population": 3556
+},
+{
+"cp": "6970",
+"commune": "Tenneville",
+"region": "Wallonie",
+"lat": 50.095,
+"lon": 5.5289,
+"lieux": [
+"Tenneville"
+],
+"population": 2832
+},
+{
+"cp": "6971",
+"commune": "Champlon",
+"region": "Wallonie",
+"lat": 50.1082,
+"lon": 5.5019,
+"lieux": [
+"Champlon"
+],
+"population": 1148
+},
+{
+"cp": "6972",
+"commune": "Erneuville",
+"region": "Wallonie",
+"lat": 50.1129,
+"lon": 5.5495,
+"lieux": [
+"Erneuville"
+],
+"population": 396
+},
+{
+"cp": "6980",
+"commune": "Beausaint",
+"region": "Wallonie",
+"lat": 50.1681,
+"lon": 5.5486,
+"lieux": [
+"La Roche-En-Ardenne",
+"Beausaint"
+],
+"population": 625
+},
+{
+"cp": "6982",
+"commune": "Samrée",
+"region": "Wallonie",
+"lat": 50.2104,
+"lon": 5.6344,
+"lieux": [
+"Samrée"
+],
+"population": 706
+},
+{
+"cp": "6983",
+"commune": "Ortho",
+"region": "Wallonie",
+"lat": 50.1248,
+"lon": 5.6132,
+"lieux": [
+"Ortho"
+],
+"population": 939
+},
+{
+"cp": "6984",
+"commune": "Hives",
+"region": "Wallonie",
+"lat": 50.1507,
+"lon": 5.5774,
+"lieux": [
+"Hives"
+],
+"population": 252
+},
+{
+"cp": "6986",
+"commune": "Halleux",
+"region": "Wallonie",
+"lat": 50.1732,
+"lon": 5.501,
+"lieux": [
+"Halleux"
+],
+"population": 183
+},
+{
+"cp": "6987",
+"commune": "Rendeux",
+"region": "Wallonie",
+"lat": 50.2342,
+"lon": 5.5041,
+"lieux": [
+"Rendeux",
+"Beffe",
+"Hodister",
+"Marcourt"
+],
+"population": 2637
+},
+{
+"cp": "6990",
+"commune": "Hotton",
+"region": "Wallonie",
+"lat": 50.2674,
+"lon": 5.4461,
+"lieux": [
+"Hampteau",
+"Hotton",
+"Marenne",
+"Fronville"
+],
+"population": 5556
+},
+{
+"cp": "6997",
+"commune": "Soy",
+"region": "Wallonie",
+"lat": 50.286,
+"lon": 5.5115,
+"lieux": [
+"Mormont",
+"Erezée",
+"Amonines",
+"Soy"
+],
+"population": 1411
+},
+{
+"cp": "7000",
+"commune": "Mons",
+"region": "Wallonie",
+"lat": 50.4541,
+"lon": 3.9523,
+"lieux": [
+"Mons"
+],
+"population": 95613
+},
+{
+"cp": "7011",
+"commune": "Ghlin",
+"region": "Wallonie",
+"lat": 50.4731,
+"lon": 3.9029,
+"lieux": [
+"Ghlin"
+],
+"population": 8485
+},
+{
+"cp": "7012",
+"commune": "Jemappes",
+"region": "Wallonie",
+"lat": 50.4491,
+"lon": 3.891,
+"lieux": [
+"Jemappes",
+"Flénu"
+],
+"population": 10809
+},
+{
+"cp": "7020",
+"commune": "Nimy",
+"region": "Wallonie",
+"lat": 50.4767,
+"lon": 3.9552,
+"lieux": [
+"Maisières",
+"Nimy"
+],
+"population": 4726
+},
+{
+"cp": "7021",
+"commune": "Havré",
+"region": "Wallonie",
+"lat": 50.464,
+"lon": 4.0467,
+"lieux": [
+"Havré"
+],
+"population": 6219
+},
+{
+"cp": "7022",
+"commune": "Hyon",
+"region": "Wallonie",
+"lat": 50.438,
+"lon": 3.9603,
+"lieux": [
+"Hyon",
+"Nouvelles",
+"Harveng",
+"Harmignies",
+"Mesvin"
+],
+"population": 4071
+},
+{
+"cp": "7024",
+"commune": "Ciply",
+"region": "Wallonie",
+"lat": 50.4187,
+"lon": 3.9442,
+"lieux": [
+"Ciply"
+],
+"population": 750
+},
+{
+"cp": "7030",
+"commune": "Saint-Symphorien",
+"region": "Wallonie",
+"lat": 50.439,
+"lon": 4.0073,
+"lieux": [
+"Saint-Symphorien"
+],
+"population": 3402
+},
+{
+"cp": "7031",
+"commune": "Villers-Saint-Ghislain",
+"region": "Wallonie",
+"lat": 50.4303,
+"lon": 4.0399,
+"lieux": [
+"Villers-Saint-Ghislain"
+],
+"population": 660
+},
+{
+"cp": "7032",
+"commune": "Spiennes",
+"region": "Wallonie",
+"lat": 50.425,
+"lon": 3.9874,
+"lieux": [
+"Spiennes"
+],
+"population": 949
+},
+{
+"cp": "7033",
+"commune": "Cuesmes",
+"region": "Wallonie",
+"lat": 50.4362,
+"lon": 3.9232,
+"lieux": [
+"Cuesmes"
+],
+"population": 9992
+},
+{
+"cp": "7034",
+"commune": "Obourg",
+"region": "Wallonie",
+"lat": 50.4738,
+"lon": 4.0088,
+"lieux": [
+"Saint-Denis",
+"Obourg"
+],
+"population": 4429
+},
+{
+"cp": "7040",
+"commune": "Quévy",
+"region": "Wallonie",
+"lat": 50.3684,
+"lon": 3.9293,
+"lieux": [
+"Blaregnies",
+"Aulnois",
+"Quévy",
+"Asquillies",
+"Bougnies",
+"Quévy-Le-Grand",
+"Goegnies-Chaussée",
+"Quévy-Le-Petit",
+"Genly"
+],
+"population": 8138
+},
+{
+"cp": "7041",
+"commune": "Givry",
+"region": "Wallonie",
+"lat": 50.3783,
+"lon": 4.0293,
+"lieux": [
+"Givry",
+"Havay"
+],
+"population": 1496
+},
+{
+"cp": "7050",
+"commune": "Jurbise",
+"region": "Wallonie",
+"lat": 50.531,
+"lon": 3.9094,
+"lieux": [
+"Jurbise",
+"Erbisoeul",
+"Herchies",
+"Masnuy-Saint-Jean",
+"Erbaut",
+"Masnuy-Saint-Pierre"
+],
+"population": 10383
+},
+{
+"cp": "7060",
+"commune": "Soignies",
+"region": "Wallonie",
+"lat": 50.579,
+"lon": 4.0713,
+"lieux": [
+"Soignies",
+"Horrues"
+],
+"population": 28016
+},
+{
+"cp": "7061",
+"commune": "Casteau",
+"region": "Wallonie",
+"lat": 50.5123,
+"lon": 4.0112,
+"lieux": [
+"Casteau",
+"Thieusies"
+],
+"population": 2989
+},
+{
+"cp": "7062",
+"commune": "Naast",
+"region": "Wallonie",
+"lat": 50.5541,
+"lon": 4.1008,
+"lieux": [
+"Naast"
+],
+"population": 2832
+},
+{
+"cp": "7063",
+"commune": "Neufvilles",
+"region": "Wallonie",
+"lat": 50.5711,
+"lon": 4.0004,
+"lieux": [
+"Neufvilles",
+"Chaussée-Notre-Dame-Louvignies"
+],
+"population": 3514
+},
+{
+"cp": "7070",
+"commune": "Le Roeulx",
+"region": "Wallonie",
+"lat": 50.4941,
+"lon": 4.0936,
+"lieux": [
+"Le Roeulx",
+"Thieu",
+"Gottignies",
+"Ville-Sur-Haine",
+"Mignault"
+],
+"population": 8716
+},
+{
+"cp": "7080",
+"commune": "Frameries",
+"region": "Wallonie",
+"lat": 50.4058,
+"lon": 3.896,
+"lieux": [
+"Sars-La-Bruyère",
+"La Bouverie",
+"Frameries",
+"Noirchain",
+"Eugies"
+],
+"population": 21934
+},
+{
+"cp": "7090",
+"commune": "Hennuyères",
+"region": "Wallonie",
+"lat": 50.6386,
+"lon": 4.1694,
+"lieux": [
+"Ronquières",
+"Hennuyères",
+"Petit-Roeulx-Lez-Braine",
+"Steenkerque",
+"Braine-Le-Comte",
+"Henripont"
+],
+"population": 3379
+},
+{
+"cp": "7100",
+"commune": "La Louvière",
+"region": "Wallonie",
+"lat": 50.4866,
+"lon": 4.1879,
+"lieux": [
+"Trivières",
+"Saint-Vaast",
+"Haine-Saint-Pierre",
+"Haine-Saint-Paul",
+"La Louvière"
+],
+"population": 78233
+},
+{
+"cp": "7110",
+"commune": "Houdeng-Goegnies",
+"region": "Wallonie",
+"lat": 50.4903,
+"lon": 4.1751,
+"lieux": [
+"Strépy-Bracquegnies",
+"Houdeng-Aimeries",
+"Houdeng-Goegnies",
+"Maurage",
+"Boussoit"
+],
+"population": 14312
+},
+{
+"cp": "7120",
+"commune": "Estinnes",
+"region": "Wallonie",
+"lat": 50.3794,
+"lon": 4.0972,
+"lieux": [
+"Fauroeulx",
+"Estinnes-Au-Val",
+"Haulchin",
+"Croix-Lez-Rouveroy",
+"Peissant",
+"Rouveroy",
+"Vellereille-Les-Brayeux",
+"Estinnes-Au-Mont",
+"Vellereille-Le-Sec",
+"Estinnes"
+],
+"population": 7711
+},
+{
+"cp": "7130",
+"commune": "Binche",
+"region": "Wallonie",
+"lat": 50.4116,
+"lon": 4.1647,
+"lieux": [
+"Battignies",
+"Binche",
+"Bray"
+],
+"population": 32845
+},
+{
+"cp": "7131",
+"commune": "Waudrez",
+"region": "Wallonie",
+"lat": 50.4135,
+"lon": 4.1505,
+"lieux": [
+"Waudrez"
+],
+"population": 2750
+},
+{
+"cp": "7133",
+"commune": "Buvrinnes",
+"region": "Wallonie",
+"lat": 50.3887,
+"lon": 4.2054,
+"lieux": [
+"Buvrinnes"
+],
+"population": 1955
+},
+{
+"cp": "7134",
+"commune": "Leval-Trahegnies",
+"region": "Wallonie",
+"lat": 50.4213,
+"lon": 4.2256,
+"lieux": [
+"Péronnes-Lez-Binche",
+"Leval-Trahegnies",
+"Epinois",
+"Ressaix"
+],
+"population": 6473
+},
+{
+"cp": "7140",
+"commune": "Morlanwelz",
+"region": "Wallonie",
+"lat": 50.455,
+"lon": 4.2452,
+"lieux": [
+"Morlanwelz",
+"Morlanwelz-Mariemont"
+],
+"population": 19139
+},
+{
+"cp": "7141",
+"commune": "Carnières",
+"region": "Wallonie",
+"lat": 50.4443,
+"lon": 4.2551,
+"lieux": [
+"Carnières",
+"Mont-Sainte-Aldegonde"
+],
+"population": 8087
+},
+{
+"cp": "7160",
+"commune": "Piéton",
+"region": "Wallonie",
+"lat": 50.4397,
+"lon": 4.2975,
+"lieux": [
+"Godarville",
+"Piéton",
+"Chapelle-Lez-Herlaimont"
+],
+"population": 2404
+},
+{
+"cp": "7170",
+"commune": "Manage",
+"region": "Wallonie",
+"lat": 50.5031,
+"lon": 4.2359,
+"lieux": [
+"Fayt-Lez-Manage",
+"Bois-D'Haine",
+"La Hestre",
+"Bellecourt",
+"Manage"
+],
+"population": 22493
+},
+{
+"cp": "7180",
+"commune": "Seneffe",
+"region": "Wallonie",
+"lat": 50.5313,
+"lon": 4.263,
+"lieux": [
+"Seneffe"
+],
+"population": 11025
+},
+{
+"cp": "7181",
+"commune": "Arquennes",
+"region": "Wallonie",
+"lat": 50.5676,
+"lon": 4.2734,
+"lieux": [
+"Arquennes",
+"Familleureux",
+"Petit-Roeulx-Lez-Nivelles",
+"Feluy"
+],
+"population": 3130
+},
+{
+"cp": "7190",
+"commune": "Marche-Lez-Ecaussinnes",
+"region": "Wallonie",
+"lat": 50.546,
+"lon": 4.1818,
+"lieux": [
+"Marche-Lez-Ecaussinnes",
+"Ecaussinnes",
+"Ecaussinnes-D'Enghien"
+],
+"population": 0
+},
+{
+"cp": "7191",
+"commune": "Ecaussinnes-Lalaing",
+"region": "Wallonie",
+"lat": 50.5687,
+"lon": 4.184,
+"lieux": [
+"Ecaussinnes-Lalaing"
+],
+"population": 0
+},
+{
+"cp": "7300",
+"commune": "Boussu",
+"region": "Wallonie",
+"lat": 50.4342,
+"lon": 3.7944,
+"lieux": [
+"Boussu"
+],
+"population": 20058
+},
+{
+"cp": "7301",
+"commune": "Hornu",
+"region": "Wallonie",
+"lat": 50.4328,
+"lon": 3.8274,
+"lieux": [
+"Hornu"
+],
+"population": 8793
+},
+{
+"cp": "7320",
+"commune": "Bernissart",
+"region": "Wallonie",
+"lat": 50.4746,
+"lon": 3.6496,
+"lieux": [
+"Bernissart"
+],
+"population": 11859
+},
+{
+"cp": "7321",
+"commune": "Blaton",
+"region": "Wallonie",
+"lat": 50.5004,
+"lon": 3.6601,
+"lieux": [
+"Blaton",
+"Harchies"
+],
+"population": 4258
+},
+{
+"cp": "7322",
+"commune": "Pommeroeul",
+"region": "Wallonie",
+"lat": 50.4619,
+"lon": 3.7125,
+"lieux": [
+"Ville-Pommeroeul",
+"Pommeroeul"
+],
+"population": 2526
+},
+{
+"cp": "7330",
+"commune": "Saint-Ghislain",
+"region": "Wallonie",
+"lat": 50.4482,
+"lon": 3.8189,
+"lieux": [
+"Saint-Ghislain"
+],
+"population": 23311
+},
+{
+"cp": "7331",
+"commune": "Baudour",
+"region": "Wallonie",
+"lat": 50.483,
+"lon": 3.8332,
+"lieux": [
+"Baudour"
+],
+"population": 6137
+},
+{
+"cp": "7332",
+"commune": "Sirault",
+"region": "Wallonie",
+"lat": 50.5055,
+"lon": 3.7891,
+"lieux": [
+"Sirault",
+"Neufmaison"
+],
+"population": 3747
+},
+{
+"cp": "7333",
+"commune": "Tertre",
+"region": "Wallonie",
+"lat": 50.4692,
+"lon": 3.8124,
+"lieux": [
+"Tertre"
+],
+"population": 4792
+},
+{
+"cp": "7334",
+"commune": "Hautrage",
+"region": "Wallonie",
+"lat": 50.4819,
+"lon": 3.7652,
+"lieux": [
+"Villerot",
+"Hautrage"
+],
+"population": 2951
+},
+{
+"cp": "7340",
+"commune": "Colfontaine",
+"region": "Wallonie",
+"lat": 50.4141,
+"lon": 3.8557,
+"lieux": [
+"Warquignies",
+"Colfontaine",
+"Pâturages",
+"Wasmes"
+],
+"population": 20811
+},
+{
+"cp": "7350",
+"commune": "Hensies",
+"region": "Wallonie",
+"lat": 50.4326,
+"lon": 3.6841,
+"lieux": [
+"Hensies",
+"Thulin",
+"Montroeul-Sur-Haine",
+"Hainin"
+],
+"population": 6828
+},
+{
+"cp": "7370",
+"commune": "Dour",
+"region": "Wallonie",
+"lat": 50.3958,
+"lon": 3.7779,
+"lieux": [
+"Blaugies",
+"Wihéries",
+"Dour",
+"Elouges"
+],
+"population": 16861
+},
+{
+"cp": "7380",
+"commune": "Quiévrain",
+"region": "Wallonie",
+"lat": 50.4074,
+"lon": 3.6835,
+"lieux": [
+"Baisieux",
+"Quiévrain"
+],
+"population": 6822
+},
+{
+"cp": "7382",
+"commune": "Audregnies",
+"region": "Wallonie",
+"lat": 50.3832,
+"lon": 3.7213,
+"lieux": [
+"Audregnies"
+],
+"population": 863
+},
+{
+"cp": "7387",
+"commune": "Honnelles",
+"region": "Wallonie",
+"lat": 50.3587,
+"lon": 3.7271,
+"lieux": [
+"Fayt-Le-Franc",
+"Marchipont",
+"Autreppe",
+"Angre",
+"Erquennes",
+"Honnelles",
+"Athis",
+"Roisin",
+"Angreau",
+"Montignies-Sur-Roc",
+"Onnezies"
+],
+"population": 5159
+},
+{
+"cp": "7390",
+"commune": "Quaregnon",
+"region": "Wallonie",
+"lat": 50.4407,
+"lon": 3.8653,
+"lieux": [
+"Wasmuel",
+"Quaregnon"
+],
+"population": 19007
+},
+{
+"cp": "7500",
+"commune": "Tournai",
+"region": "Wallonie",
+"lat": 50.6071,
+"lon": 3.3893,
+"lieux": [
+"Saint-Maur",
+"Ere",
+"Tournai"
+],
+"population": 69554
+},
+{
+"cp": "7501",
+"commune": "Orcq",
+"region": "Wallonie",
+"lat": 50.6032,
+"lon": 3.3492,
+"lieux": [
+"Orcq"
+],
+"population": 2365
+},
+{
+"cp": "7502",
+"commune": "Esplechin",
+"region": "Wallonie",
+"lat": 50.5736,
+"lon": 3.3043,
+"lieux": [
+"Esplechin"
+],
+"population": 909
+},
+{
+"cp": "7503",
+"commune": "Froyennes",
+"region": "Wallonie",
+"lat": 50.6219,
+"lon": 3.3546,
+"lieux": [
+"Froyennes"
+],
+"population": 2075
+},
+{
+"cp": "7504",
+"commune": "Froidmont",
+"region": "Wallonie",
+"lat": 50.5772,
+"lon": 3.3296,
+"lieux": [
+"Froidmont"
+],
+"population": 0
+},
+{
+"cp": "7506",
+"commune": "Willemeau",
+"region": "Wallonie",
+"lat": 50.5744,
+"lon": 3.3503,
+"lieux": [
+"Willemeau"
+],
+"population": 1667
+},
+{
+"cp": "7520",
+"commune": "Templeuve",
+"region": "Wallonie",
+"lat": 50.6441,
+"lon": 3.2801,
+"lieux": [
+"Ramegnies-Chin",
+"Templeuve"
+],
+"population": 3627
+},
+{
+"cp": "7521",
+"commune": "Chercq",
+"region": "Wallonie",
+"lat": 50.5884,
+"lon": 3.4212,
+"lieux": [
+"Chercq"
+],
+"population": 970
+},
+{
+"cp": "7522",
+"commune": "Marquain",
+"region": "Wallonie",
+"lat": 50.6068,
+"lon": 3.3209,
+"lieux": [
+"Blandain",
+"Lamain",
+"Hertain",
+"Marquain"
+],
+"population": 1233
+},
+{
+"cp": "7530",
+"commune": "Gaurain-Ramecroix",
+"region": "Wallonie",
+"lat": 50.5892,
+"lon": 3.488,
+"lieux": [
+"Gaurain-Ramecroix"
+],
+"population": 3603
+},
+{
+"cp": "7531",
+"commune": "Havinnes",
+"region": "Wallonie",
+"lat": 50.6166,
+"lon": 3.4634,
+"lieux": [
+"Havinnes"
+],
+"population": 1250
+},
+{
+"cp": "7532",
+"commune": "Béclers",
+"region": "Wallonie",
+"lat": 50.6212,
+"lon": 3.5042,
+"lieux": [
+"Béclers"
+],
+"population": 1355
+},
+{
+"cp": "7533",
+"commune": "Thimougies",
+"region": "Wallonie",
+"lat": 50.6336,
+"lon": 3.5104,
+"lieux": [
+"Thimougies"
+],
+"population": 408
+},
+{
+"cp": "7534",
+"commune": "Barry",
+"region": "Wallonie",
+"lat": 50.5877,
+"lon": 3.5427,
+"lieux": [
+"Maulde",
+"Barry"
+],
+"population": 1670
+},
+{
+"cp": "7536",
+"commune": "Vaulx",
+"region": "Wallonie",
+"lat": 50.5941,
+"lon": 3.4295,
+"lieux": [
+"Vaulx"
+],
+"population": 0
+},
+{
+"cp": "7538",
+"commune": "Vezon",
+"region": "Wallonie",
+"lat": 50.5692,
+"lon": 3.5047,
+"lieux": [
+"Vezon"
+],
+"population": 1360
+},
+{
+"cp": "7540",
+"commune": "Kain",
+"region": "Wallonie",
+"lat": 50.6387,
+"lon": 3.3969,
+"lieux": [
+"Melles",
+"Quartes",
+"Kain",
+"Rumillies"
+],
+"population": 7412
+},
+{
+"cp": "7542",
+"commune": "Mont-Saint-Aubert",
+"region": "Wallonie",
+"lat": 50.6543,
+"lon": 3.4007,
+"lieux": [
+"Mont-Saint-Aubert"
+],
+"population": 106
+},
+{
+"cp": "7543",
+"commune": "Mourcourt",
+"region": "Wallonie",
+"lat": 50.6532,
+"lon": 3.4447,
+"lieux": [
+"Mourcourt"
+],
+"population": 1345
+},
+{
+"cp": "7548",
+"commune": "Warchin",
+"region": "Wallonie",
+"lat": 50.6092,
+"lon": 3.424,
+"lieux": [
+"Warchin"
+],
+"population": 1458
+},
+{
+"cp": "7600",
+"commune": "Péruwelz",
+"region": "Wallonie",
+"lat": 50.5082,
+"lon": 3.5937,
+"lieux": [
+"Péruwelz"
+],
+"population": 17159
+},
+{
+"cp": "7601",
+"commune": "Roucourt",
+"region": "Wallonie",
+"lat": 50.5288,
+"lon": 3.5863,
+"lieux": [
+"Roucourt"
+],
+"population": 879
+},
+{
+"cp": "7602",
+"commune": "Bury",
+"region": "Wallonie",
+"lat": 50.5428,
+"lon": 3.5939,
+"lieux": [
+"Bury"
+],
+"population": 679
+},
+{
+"cp": "7603",
+"commune": "Bon-Secours",
+"region": "Wallonie",
+"lat": 50.498,
+"lon": 3.6082,
+"lieux": [
+"Bon-Secours"
+],
+"population": 1599
+},
+{
+"cp": "7604",
+"commune": "Callenelle",
+"region": "Wallonie",
+"lat": 50.5304,
+"lon": 3.5227,
+"lieux": [
+"Brasménil",
+"Baugnies",
+"Wasmes-Audemez-Briffoeil",
+"Callenelle",
+"Braffe"
+],
+"population": 620
+},
+{
+"cp": "7608",
+"commune": "Wiers",
+"region": "Wallonie",
+"lat": 50.5086,
+"lon": 3.5347,
+"lieux": [
+"Wiers"
+],
+"population": 2886
+},
+{
+"cp": "7610",
+"commune": "Rumes",
+"region": "Wallonie",
+"lat": 50.5545,
+"lon": 3.3054,
+"lieux": [
+"Rumes"
+],
+"population": 5167
+},
+{
+"cp": "7611",
+"commune": "La Glanerie",
+"region": "Wallonie",
+"lat": 50.5299,
+"lon": 3.3009,
+"lieux": [
+"La Glanerie"
+],
+"population": 827
+},
+{
+"cp": "7618",
+"commune": "Taintignies",
+"region": "Wallonie",
+"lat": 50.5528,
+"lon": 3.3422,
+"lieux": [
+"Taintignies"
+],
+"population": 2635
+},
+{
+"cp": "7620",
+"commune": "Brunehaut",
+"region": "Wallonie",
+"lat": 50.5374,
+"lon": 3.4003,
+"lieux": [
+"Hollain",
+"Jollain-Merlin",
+"Bléharies",
+"Wez-Velvain",
+"Brunehaut",
+"Guignies"
+],
+"population": 8080
+},
+{
+"cp": "7621",
+"commune": "Lesdain",
+"region": "Wallonie",
+"lat": 50.5213,
+"lon": 3.3874,
+"lieux": [
+"Lesdain"
+],
+"population": 495
+},
+{
+"cp": "7622",
+"commune": "Laplaigne",
+"region": "Wallonie",
+"lat": 50.5219,
+"lon": 3.4473,
+"lieux": [
+"Laplaigne"
+],
+"population": 1391
+},
+{
+"cp": "7623",
+"commune": "Rongy",
+"region": "Wallonie",
+"lat": 50.5072,
+"lon": 3.3895,
+"lieux": [
+"Rongy"
+],
+"population": 1240
+},
+{
+"cp": "7624",
+"commune": "Howardries",
+"region": "Wallonie",
+"lat": 50.5065,
+"lon": 3.356,
+"lieux": [
+"Howardries"
+],
+"population": 111
+},
+{
+"cp": "7640",
+"commune": "Antoing",
+"region": "Wallonie",
+"lat": 50.5677,
+"lon": 3.4492,
+"lieux": [
+"Péronnes-Lez-Antoing",
+"Antoing",
+"Maubray"
+],
+"population": 7687
+},
+{
+"cp": "7641",
+"commune": "Bruyelle",
+"region": "Wallonie",
+"lat": 50.558,
+"lon": 3.4279,
+"lieux": [
+"Bruyelle"
+],
+"population": 757
+},
+{
+"cp": "7642",
+"commune": "Calonne",
+"region": "Wallonie",
+"lat": 50.5777,
+"lon": 3.4351,
+"lieux": [
+"Calonne"
+],
+"population": 669
+},
+{
+"cp": "7643",
+"commune": "Fontenoy",
+"region": "Wallonie",
+"lat": 50.5676,
+"lon": 3.4735,
+"lieux": [
+"Fontenoy"
+],
+"population": 714
+},
+{
+"cp": "7700",
+"commune": "Mouscron",
+"region": "Wallonie",
+"lat": 50.745,
+"lon": 3.2064,
+"lieux": [
+"Luingne",
+"Mouscron"
+],
+"population": 55202
+},
+{
+"cp": "7711",
+"commune": "Dottignies",
+"region": "Wallonie",
+"lat": 50.7333,
+"lon": 3.3,
+"lieux": [
+"Dottignies"
+],
+"population": 8299
+},
+{
+"cp": "7712",
+"commune": "Herseaux",
+"region": "Wallonie",
+"lat": 50.7167,
+"lon": 3.2167,
+"lieux": [
+"Herseaux"
+],
+"population": 9048
+},
+{
+"cp": "7730",
+"commune": "Estaimpuis",
+"region": "Wallonie",
+"lat": 50.7049,
+"lon": 3.2678,
+"lieux": [
+"Néchin",
+"Estaimbourg",
+"Estaimpuis",
+"Bailleul",
+"Leers-Nord",
+"Evregnies",
+"Saint-Léger"
+],
+"population": 10478
+},
+{
+"cp": "7740",
+"commune": "Pecq",
+"region": "Wallonie",
+"lat": 50.6862,
+"lon": 3.3379,
+"lieux": [
+"Pecq",
+"Warcoing"
+],
+"population": 5698
+},
+{
+"cp": "7742",
+"commune": "Hérinnes-Lez-Pecq",
+"region": "Wallonie",
+"lat": 50.7006,
+"lon": 3.3632,
+"lieux": [
+"Hérinnes-Lez-Pecq"
+],
+"population": 0
+},
+{
+"cp": "7743",
+"commune": "Obigies",
+"region": "Wallonie",
+"lat": 50.6618,
+"lon": 3.3641,
+"lieux": [
+"Esquelmes",
+"Obigies"
+],
+"population": 602
+},
+{
+"cp": "7750",
+"commune": "Amougies",
+"region": "Wallonie",
+"lat": 50.7445,
+"lon": 3.5067,
+"lieux": [
+"Mont-De-L'Enclus",
+"Amougies",
+"Anseroeul",
+"Russeignies",
+"Orroir"
+],
+"population": 1132
+},
+{
+"cp": "7760",
+"commune": "Celles",
+"region": "Wallonie",
+"lat": 50.7123,
+"lon": 3.4573,
+"lieux": [
+"Molenbaix",
+"Celles",
+"Velaines",
+"Escanaffles",
+"Pottes",
+"Popuelles"
+],
+"population": 5666
+},
+{
+"cp": "7780",
+"commune": "Comines-Warneton",
+"region": "Wallonie",
+"lat": 50.7607,
+"lon": 3.0017,
+"lieux": [
+"Comines-Warneton",
+"Comines"
+],
+"population": 17802
+},
+{
+"cp": "7781",
+"commune": "Houthem",
+"region": "Wallonie",
+"lat": 50.7869,
+"lon": 2.9638,
+"lieux": [
+"Houthem"
+],
+"population": 1256
+},
+{
+"cp": "7782",
+"commune": "Ploegsteert",
+"region": "Wallonie",
+"lat": 50.7266,
+"lon": 2.8802,
+"lieux": [
+"Ploegsteert"
+],
+"population": 4352
+},
+{
+"cp": "7783",
+"commune": "Bizet",
+"region": "Wallonie",
+"lat": 50.7083,
+"lon": 2.8845,
+"lieux": [
+"Bizet"
+],
+"population": 0
+},
+{
+"cp": "7784",
+"commune": "Warneton",
+"region": "Wallonie",
+"lat": 50.7516,
+"lon": 2.9464,
+"lieux": [
+"Warneton",
+"Bas-Warneton"
+],
+"population": 3039
+},
+{
+"cp": "7800",
+"commune": "Ath",
+"region": "Wallonie",
+"lat": 50.6294,
+"lon": 3.778,
+"lieux": [
+"Ath",
+"Lanquesaint"
+],
+"population": 29311
+},
+{
+"cp": "7801",
+"commune": "Irchonwelz",
+"region": "Wallonie",
+"lat": 50.6207,
+"lon": 3.7508,
+"lieux": [
+"Irchonwelz"
+],
+"population": 1137
+},
+{
+"cp": "7802",
+"commune": "Ormeignies",
+"region": "Wallonie",
+"lat": 50.595,
+"lon": 3.7518,
+"lieux": [
+"Ormeignies"
+],
+"population": 1119
+},
+{
+"cp": "7803",
+"commune": "Bouvignies",
+"region": "Wallonie",
+"lat": 50.6463,
+"lon": 3.7657,
+"lieux": [
+"Bouvignies"
+],
+"population": 738
+},
+{
+"cp": "7804",
+"commune": "Rebaix",
+"region": "Wallonie",
+"lat": 50.66,
+"lon": 3.7831,
+"lieux": [
+"Ostiches",
+"Rebaix"
+],
+"population": 981
+},
+{
+"cp": "7810",
+"commune": "Maffle",
+"region": "Wallonie",
+"lat": 50.6179,
+"lon": 3.8032,
+"lieux": [
+"Maffle"
+],
+"population": 1733
+},
+{
+"cp": "7811",
+"commune": "Arbre",
+"region": "Wallonie",
+"lat": 50.6104,
+"lon": 3.8152,
+"lieux": [
+"Arbre"
+],
+"population": 763
+},
+{
+"cp": "7812",
+"commune": "Mainvault",
+"region": "Wallonie",
+"lat": 50.6491,
+"lon": 3.7175,
+"lieux": [
+"Villers-Notre-Dame",
+"Villers-Saint-Amand",
+"Mainvault",
+"Houtaing",
+"Ligne",
+"Moulbaix"
+],
+"population": 1397
+},
+{
+"cp": "7822",
+"commune": "Isières",
+"region": "Wallonie",
+"lat": 50.6632,
+"lon": 3.8193,
+"lieux": [
+"Ghislenghien",
+"Isières",
+"Meslin-L'Evêque"
+],
+"population": 1205
+},
+{
+"cp": "7823",
+"commune": "Gibecq",
+"region": "Wallonie",
+"lat": 50.6379,
+"lon": 3.8878,
+"lieux": [
+"Gibecq"
+],
+"population": 296
+},
+{
+"cp": "7830",
+"commune": "Silly",
+"region": "Wallonie",
+"lat": 50.6488,
+"lon": 3.9236,
+"lieux": [
+"Gondregnies",
+"Fouleng",
+"Silly",
+"Graty",
+"Hellebecq",
+"Hoves",
+"Bassilly",
+"Thoricourt"
+],
+"population": 8168
+},
+{
+"cp": "7850",
+"commune": "Enghien",
+"region": "Wallonie",
+"lat": 50.6837,
+"lon": 4.0328,
+"lieux": [
+"Marcq",
+"Petit-Enghien",
+"Enghien"
+],
+"population": 12836
+},
+{
+"cp": "7860",
+"commune": "Lessines",
+"region": "Wallonie",
+"lat": 50.711,
+"lon": 3.8358,
+"lieux": [
+"Lessines"
+],
+"population": 18414
+},
+{
+"cp": "7861",
+"commune": "Papignies",
+"region": "Wallonie",
+"lat": 50.615,
+"lon": 3.9282,
+"lieux": [
+"Papignies",
+"Wannebecq"
+],
+"population": 1297
+},
+{
+"cp": "7862",
+"commune": "Ogy",
+"region": "Wallonie",
+"lat": 50.7207,
+"lon": 3.7805,
+"lieux": [
+"Ogy"
+],
+"population": 726
+},
+{
+"cp": "7863",
+"commune": "Ghoy",
+"region": "Wallonie",
+"lat": 50.7283,
+"lon": 3.8098,
+"lieux": [
+"Ghoy"
+],
+"population": 1057
+},
+{
+"cp": "7864",
+"commune": "Deux-Acren",
+"region": "Wallonie",
+"lat": 50.7303,
+"lon": 3.8531,
+"lieux": [
+"Deux-Acren"
+],
+"population": 3896
+},
+{
+"cp": "7866",
+"commune": "Ollignies",
+"region": "Wallonie",
+"lat": 50.6879,
+"lon": 3.8623,
+"lieux": [
+"Ollignies",
+"Bois-De-Lessines"
+],
+"population": 1539
+},
+{
+"cp": "7870",
+"commune": "Lens",
+"region": "Wallonie",
+"lat": 50.5797,
+"lon": 3.9142,
+"lieux": [
+"Lens",
+"Lombise",
+"Bauffe",
+"Cambron-Saint-Vincent",
+"Montignies-Lez-Lens"
+],
+"population": 4525
+},
+{
+"cp": "7880",
+"commune": "Flobecq",
+"region": "Wallonie",
+"lat": 50.7373,
+"lon": 3.7388,
+"lieux": [
+"Flobecq"
+],
+"population": 3447
+},
+{
+"cp": "7890",
+"commune": "Ellezelles",
+"region": "Wallonie",
+"lat": 50.7351,
+"lon": 3.6798,
+"lieux": [
+"Lahamaide",
+"Wodecq",
+"Ellezelles"
+],
+"population": 5975
+},
+{
+"cp": "7900",
+"commune": "Grandmetz",
+"region": "Wallonie",
+"lat": 50.6255,
+"lon": 3.6314,
+"lieux": [
+"Leuze-En-Hainaut",
+"Grandmetz"
+],
+"population": 714
+},
+{
+"cp": "7901",
+"commune": "Thieulain",
+"region": "Wallonie",
+"lat": 50.6181,
+"lon": 3.6051,
+"lieux": [
+"Thieulain"
+],
+"population": 758
+},
+{
+"cp": "7903",
+"commune": "Blicquy",
+"region": "Wallonie",
+"lat": 50.5881,
+"lon": 3.6856,
+"lieux": [
+"Chapelle-À-Wattines",
+"Chapelle-À-Oie",
+"Blicquy"
+],
+"population": 753
+},
+{
+"cp": "7904",
+"commune": "Pipaix",
+"region": "Wallonie",
+"lat": 50.6152,
+"lon": 3.4486,
+"lieux": [
+"Willaupuis",
+"Tourpes",
+"Pipaix"
+],
+"population": 1582
+},
+{
+"cp": "7906",
+"commune": "Gallaix",
+"region": "Wallonie",
+"lat": 50.6051,
+"lon": 3.5737,
+"lieux": [
+"Gallaix"
+],
+"population": 232
+},
+{
+"cp": "7910",
+"commune": "Forest",
+"region": "Wallonie",
+"lat": 50.6733,
+"lon": 3.536,
+"lieux": [
+"Forest",
+"Arc-Ainières",
+"Wattripont",
+"Arc-Wattripont",
+"Anvaing",
+"Frasnes-Lez-Anvaing",
+"Cordes",
+"Ellignies-Lez-Frasnes"
+],
+"population": 56254
+},
+{
+"cp": "7911",
+"commune": "Oeudeghien",
+"region": "Wallonie",
+"lat": 50.6781,
+"lon": 3.7123,
+"lieux": [
+"Hacquegnies",
+"Frasnes-Lez-Buissenal",
+"Buissenal",
+"Herquegies",
+"Moustier",
+"Montroeul-Au-Bois",
+"Oeudeghien"
+],
+"population": 819
+},
+{
+"cp": "7912",
+"commune": "Saint-Sauveur",
+"region": "Wallonie",
+"lat": 50.706,
+"lon": 3.5978,
+"lieux": [
+"Saint-Sauveur",
+"Dergneau"
+],
+"population": 1843
+},
+{
+"cp": "7940",
+"commune": "Brugelette",
+"region": "Wallonie",
+"lat": 50.5958,
+"lon": 3.8536,
+"lieux": [
+"Brugelette",
+"Cambron-Casteau"
+],
+"population": 3728
+},
+{
+"cp": "7941",
+"commune": "Attre",
+"region": "Wallonie",
+"lat": 50.6073,
+"lon": 3.8392,
+"lieux": [
+"Attre"
+],
+"population": 750
+},
+{
+"cp": "7942",
+"commune": "Mévergnies-Lez-Lens",
+"region": "Wallonie",
+"lat": 50.6049,
+"lon": 3.8485,
+"lieux": [
+"Mévergnies-Lez-Lens"
+],
+"population": 0
+},
+{
+"cp": "7943",
+"commune": "Gages",
+"region": "Wallonie",
+"lat": 50.6069,
+"lon": 3.8914,
+"lieux": [
+"Gages"
+],
+"population": 368
+},
+{
+"cp": "7950",
+"commune": "Chièvres",
+"region": "Wallonie",
+"lat": 50.5879,
+"lon": 3.8071,
+"lieux": [
+"Chièvres",
+"Ladeuze",
+"Tongre-Saint-Martin",
+"Grosage",
+"Huissignies"
+],
+"population": 6916
+},
+{
+"cp": "7951",
+"commune": "Tongre-Notre-Dame",
+"region": "Wallonie",
+"lat": 50.582,
+"lon": 3.7762,
+"lieux": [
+"Tongre-Notre-Dame"
+],
+"population": 618
+},
+{
+"cp": "7970",
+"commune": "Beloeil",
+"region": "Wallonie",
+"lat": 50.5505,
+"lon": 3.7348,
+"lieux": [
+"Beloeil"
+],
+"population": 14068
+},
+{
+"cp": "7971",
+"commune": "Basècles",
+"region": "Wallonie",
+"lat": 50.5255,
+"lon": 3.6494,
+"lieux": [
+"Thumaide",
+"Wadelincourt",
+"Basècles",
+"Ramegnies"
+],
+"population": 3548
+},
+{
+"cp": "7972",
+"commune": "Quevaucamps",
+"region": "Wallonie",
+"lat": 50.5189,
+"lon": 3.6813,
+"lieux": [
+"Ellignies-Sainte-Anne",
+"Aubechies",
+"Quevaucamps"
+],
+"population": 3330
+},
+{
+"cp": "7973",
+"commune": "Stambruges",
+"region": "Wallonie",
+"lat": 50.5094,
+"lon": 3.7162,
+"lieux": [
+"Stambruges",
+"Grandglise"
+],
+"population": 2506
+},
+{
+"cp": "8000",
+"commune": "Brugge",
+"region": "Vlaanderen",
+"lat": 51.2089,
+"lon": 3.2242,
+"lieux": [
+"Koolkerke",
+"Brugge"
+],
+"population": 118509
+},
+{
+"cp": "8020",
+"commune": "Oostkamp",
+"region": "Vlaanderen",
+"lat": 51.1543,
+"lon": 3.2313,
+"lieux": [
+"Ruddervoorde",
+"Waardamme",
+"Oostkamp",
+"Hertsberge"
+],
+"population": 23698
+},
+{
+"cp": "8200",
+"commune": "Sint-Andries",
+"region": "Vlaanderen",
+"lat": 51.197,
+"lon": 3.1789,
+"lieux": [
+"Sint-Andries",
+"Sint-Michiels"
+],
+"population": 19336
+},
+{
+"cp": "8210",
+"commune": "Zedelgem",
+"region": "Vlaanderen",
+"lat": 51.1424,
+"lon": 3.1368,
+"lieux": [
+"Loppem",
+"Zedelgem",
+"Veldegem"
+],
+"population": 22819
+},
+{
+"cp": "8211",
+"commune": "Aartrijke",
+"region": "Vlaanderen",
+"lat": 51.1191,
+"lon": 3.0908,
+"lieux": [
+"Aartrijke"
+],
+"population": 4837
+},
+{
+"cp": "8300",
+"commune": "Knokke-Heist",
+"region": "Vlaanderen",
+"lat": 51.35,
+"lon": 3.2667,
+"lieux": [
+"Knokke",
+"Knokke-Heist",
+"Westkapelle"
+],
+"population": 33781
+},
+{
+"cp": "8301",
+"commune": "Ramskapelle",
+"region": "Vlaanderen",
+"lat": 51.3151,
+"lon": 3.2506,
+"lieux": [
+"Ramskapelle",
+"Heist-Aan-Zee"
+],
+"population": 813
+},
+{
+"cp": "8310",
+"commune": "Assebroek",
+"region": "Vlaanderen",
+"lat": 51.1937,
+"lon": 3.2623,
+"lieux": [
+"Assebroek",
+"Sint-Kruis"
+],
+"population": 19772
+},
+{
+"cp": "8340",
+"commune": "Damme",
+"region": "Vlaanderen",
+"lat": 51.2515,
+"lon": 3.2814,
+"lieux": [
+"Hoeke",
+"Damme",
+"Oostkerke",
+"Sijsele",
+"Lapscheure",
+"Moerkerke"
+],
+"population": 10993
+},
+{
+"cp": "8370",
+"commune": "Blankenberge",
+"region": "Vlaanderen",
+"lat": 51.3131,
+"lon": 3.1323,
+"lieux": [
+"Uitkerke",
+"Blankenberge"
+],
+"population": 20436
+},
+{
+"cp": "8377",
+"commune": "Zuienkerke",
+"region": "Vlaanderen",
+"lat": 51.2651,
+"lon": 3.1551,
+"lieux": [
+"Nieuwmunster",
+"Zuienkerke",
+"Houtave",
+"Meetkerke"
+],
+"population": 2736
+},
+{
+"cp": "8380",
+"commune": "Lissewege",
+"region": "Vlaanderen",
+"lat": 51.2943,
+"lon": 3.1933,
+"lieux": [
+"Dudzele",
+"Lissewege",
+"Zeebrugge"
+],
+"population": 7699
+},
+{
+"cp": "8400",
+"commune": "Oostende",
+"region": "Vlaanderen",
+"lat": 51.2155,
+"lon": 2.927,
+"lieux": [
+"Zandvoorde",
+"Oostende",
+"Stene"
+],
+"population": 71494
+},
+{
+"cp": "8420",
+"commune": "De Haan",
+"region": "Vlaanderen",
+"lat": 51.2703,
+"lon": 3.0531,
+"lieux": [
+"De Haan",
+"Wenduine",
+"Klemskerke"
+],
+"population": 12666
+},
+{
+"cp": "8421",
+"commune": "Vlissegem",
+"region": "Vlaanderen",
+"lat": 51.2553,
+"lon": 3.056,
+"lieux": [
+"Vlissegem"
+],
+"population": 2112
+},
+{
+"cp": "8430",
+"commune": "Middelkerke",
+"region": "Vlaanderen",
+"lat": 51.1853,
+"lon": 2.8208,
+"lieux": [
+"Middelkerke"
+],
+"population": 19336
+},
+{
+"cp": "8431",
+"commune": "Wilskerke",
+"region": "Vlaanderen",
+"lat": 51.1812,
+"lon": 2.84,
+"lieux": [
+"Wilskerke"
+],
+"population": 805
+},
+{
+"cp": "8432",
+"commune": "Leffinge",
+"region": "Vlaanderen",
+"lat": 51.1758,
+"lon": 2.8758,
+"lieux": [
+"Leffinge"
+],
+"population": 2464
+},
+{
+"cp": "8433",
+"commune": "Sint-Pieters-Kapelle",
+"region": "Vlaanderen",
+"lat": 51.1259,
+"lon": 2.8766,
+"lieux": [
+"Sint-Pieters-Kapelle",
+"Schore",
+"Slijpe",
+"Mannekensvere"
+],
+"population": 1421
+},
+{
+"cp": "8434",
+"commune": "Westende",
+"region": "Vlaanderen",
+"lat": 51.1596,
+"lon": 2.7687,
+"lieux": [
+"Westende",
+"Lombardsijde"
+],
+"population": 5522
+},
+{
+"cp": "8450",
+"commune": "Bredene",
+"region": "Vlaanderen",
+"lat": 51.2349,
+"lon": 2.9756,
+"lieux": [
+"Bredene"
+],
+"population": 18095
+},
+{
+"cp": "8460",
+"commune": "Oudenburg",
+"region": "Vlaanderen",
+"lat": 51.1849,
+"lon": 3.0004,
+"lieux": [
+"Ettelgem",
+"Westkerke",
+"Roksem",
+"Oudenburg"
+],
+"population": 9381
+},
+{
+"cp": "8470",
+"commune": "Gistel",
+"region": "Vlaanderen",
+"lat": 51.1561,
+"lon": 2.9639,
+"lieux": [
+"Gistel",
+"Zevekote",
+"Moere",
+"Snaaskerke"
+],
+"population": 12178
+},
+{
+"cp": "8480",
+"commune": "Ichtegem",
+"region": "Vlaanderen",
+"lat": 51.0957,
+"lon": 3.0155,
+"lieux": [
+"Eernegem",
+"Bekegem",
+"Ichtegem"
+],
+"population": 14050
+},
+{
+"cp": "8490",
+"commune": "Jabbeke",
+"region": "Vlaanderen",
+"lat": 51.1818,
+"lon": 3.0894,
+"lieux": [
+"Jabbeke",
+"Stalhille",
+"Zerkegem",
+"Varsenare",
+"Snellegem"
+],
+"population": 13865
+},
+{
+"cp": "8500",
+"commune": "Kortrijk",
+"region": "Vlaanderen",
+"lat": 50.828,
+"lon": 3.2649,
+"lieux": [
+"Kortrijk"
+],
+"population": 76735
+},
+{
+"cp": "8501",
+"commune": "Heule",
+"region": "Vlaanderen",
+"lat": 50.8375,
+"lon": 3.2382,
+"lieux": [
+"Bissegem",
+"Heule"
+],
+"population": 11873
+},
+{
+"cp": "8510",
+"commune": "Marke",
+"region": "Vlaanderen",
+"lat": 50.8068,
+"lon": 3.2334,
+"lieux": [
+"Marke",
+"Kooigem",
+"Rollegem",
+"Bellegem"
+],
+"population": 7575
+},
+{
+"cp": "8511",
+"commune": "Aalbeke",
+"region": "Vlaanderen",
+"lat": 50.7785,
+"lon": 3.2295,
+"lieux": [
+"Aalbeke"
+],
+"population": 2922
+},
+{
+"cp": "8520",
+"commune": "Kuurne",
+"region": "Vlaanderen",
+"lat": 50.8514,
+"lon": 3.2824,
+"lieux": [
+"Kuurne"
+],
+"population": 13484
+},
+{
+"cp": "8530",
+"commune": "Harelbeke",
+"region": "Vlaanderen",
+"lat": 50.8534,
+"lon": 3.3094,
+"lieux": [
+"Harelbeke"
+],
+"population": 28158
+},
+{
+"cp": "8531",
+"commune": "Bavikhove",
+"region": "Vlaanderen",
+"lat": 50.8753,
+"lon": 3.3106,
+"lieux": [
+"Hulste",
+"Bavikhove"
+],
+"population": 3742
+},
+{
+"cp": "8540",
+"commune": "Deerlijk",
+"region": "Vlaanderen",
+"lat": 50.8534,
+"lon": 3.3542,
+"lieux": [
+"Deerlijk"
+],
+"population": 11946
+},
+{
+"cp": "8550",
+"commune": "Zwevegem",
+"region": "Vlaanderen",
+"lat": 50.8127,
+"lon": 3.3385,
+"lieux": [
+"Zwevegem"
+],
+"population": 24656
+},
+{
+"cp": "8551",
+"commune": "Heestert",
+"region": "Vlaanderen",
+"lat": 50.782,
+"lon": 3.4122,
+"lieux": [
+"Heestert"
+],
+"population": 2864
+},
+{
+"cp": "8552",
+"commune": "Moen",
+"region": "Vlaanderen",
+"lat": 50.7701,
+"lon": 3.3948,
+"lieux": [
+"Moen"
+],
+"population": 2729
+},
+{
+"cp": "8553",
+"commune": "Otegem",
+"region": "Vlaanderen",
+"lat": 50.8069,
+"lon": 3.4204,
+"lieux": [
+"Otegem"
+],
+"population": 2565
+},
+{
+"cp": "8554",
+"commune": "Sint-Denijs",
+"region": "Vlaanderen",
+"lat": 50.752,
+"lon": 3.3663,
+"lieux": [
+"Sint-Denijs"
+],
+"population": 2489
+},
+{
+"cp": "8560",
+"commune": "Wevelgem",
+"region": "Vlaanderen",
+"lat": 50.8,
+"lon": 3.1667,
+"lieux": [
+"Wevelgem",
+"Moorsele",
+"Gullegem"
+],
+"population": 31406
+},
+{
+"cp": "8570",
+"commune": "Anzegem",
+"region": "Vlaanderen",
+"lat": 50.837,
+"lon": 3.4779,
+"lieux": [
+"Anzegem",
+"Gijzelbrechtegem",
+"Vichte",
+"Ingooigem"
+],
+"population": 14716
+},
+{
+"cp": "8572",
+"commune": "Kaster",
+"region": "Vlaanderen",
+"lat": 50.8133,
+"lon": 3.4959,
+"lieux": [
+"Kaster"
+],
+"population": 767
+},
+{
+"cp": "8573",
+"commune": "Tiegem",
+"region": "Vlaanderen",
+"lat": 50.809,
+"lon": 3.4748,
+"lieux": [
+"Tiegem"
+],
+"population": 1556
+},
+{
+"cp": "8580",
+"commune": "Avelgem",
+"region": "Vlaanderen",
+"lat": 50.7762,
+"lon": 3.445,
+"lieux": [
+"Avelgem"
+],
+"population": 10158
+},
+{
+"cp": "8581",
+"commune": "Kerkhove",
+"region": "Vlaanderen",
+"lat": 50.7985,
+"lon": 3.5027,
+"lieux": [
+"Waarmaarde",
+"Kerkhove"
+],
+"population": 1004
+},
+{
+"cp": "8582",
+"commune": "Outrijve",
+"region": "Vlaanderen",
+"lat": 50.7577,
+"lon": 3.4296,
+"lieux": [
+"Outrijve"
+],
+"population": 1165
+},
+{
+"cp": "8583",
+"commune": "Bossuit",
+"region": "Vlaanderen",
+"lat": 50.7485,
+"lon": 3.4082,
+"lieux": [
+"Bossuit"
+],
+"population": 514
+},
+{
+"cp": "8587",
+"commune": "Helchin",
+"region": "Vlaanderen",
+"lat": 50.7321,
+"lon": 3.3841,
+"lieux": [
+"Helchin",
+"Espierres-Helchin",
+"Espierres"
+],
+"population": 0
+},
+{
+"cp": "8600",
+"commune": "Diksmuide",
+"region": "Vlaanderen",
+"lat": 51.0325,
+"lon": 2.8638,
+"lieux": [
+"Vladslo",
+"Sint-Jacobs-Kapelle",
+"Esen",
+"Keiem",
+"Beerst",
+"Diksmuide",
+"Leke",
+"Nieuwkapelle",
+"Driekapellen",
+"Oostkerke",
+"Pervijze",
+"Woumen",
+"Stuivekenskerke",
+"Lampernisse",
+"Oudekapelle",
+"Kaaskerke"
+],
+"population": 16743
+},
+{
+"cp": "8610",
+"commune": "Kortemark",
+"region": "Vlaanderen",
+"lat": 51.0295,
+"lon": 3.0411,
+"lieux": [
+"Werken",
+"Kortemark",
+"Zarren",
+"Handzame"
+],
+"population": 12616
+},
+{
+"cp": "8620",
+"commune": "Nieuwpoort",
+"region": "Vlaanderen",
+"lat": 51.1301,
+"lon": 2.7513,
+"lieux": [
+"Sint-Joris",
+"Nieuwpoort",
+"Ramskapelle"
+],
+"population": 11621
+},
+{
+"cp": "8630",
+"commune": "Veurne",
+"region": "Vlaanderen",
+"lat": 51.0732,
+"lon": 2.668,
+"lieux": [
+"Bulskamp",
+"Houtem",
+"Zoutenaaie",
+"Veurne",
+"Wulveringem",
+"Booitshoeke",
+"Avekapelle",
+"De Moeren",
+"Eggewaartskapelle",
+"Vinkem",
+"Steenkerke"
+],
+"population": 11983
+},
+{
+"cp": "8640",
+"commune": "Vleteren",
+"region": "Vlaanderen",
+"lat": 50.9201,
+"lon": 2.7492,
+"lieux": [
+"Vleteren",
+"Oostvleteren",
+"Woesten",
+"Westvleteren"
+],
+"population": 3691
+},
+{
+"cp": "8647",
+"commune": "Lo-Reninge",
+"region": "Vlaanderen",
+"lat": 50.9635,
+"lon": 2.7704,
+"lieux": [
+"Noordschote",
+"Lo",
+"Pollinkhove",
+"Reninge",
+"Lo-Reninge"
+],
+"population": 3291
+},
+{
+"cp": "8650",
+"commune": "Houthulst",
+"region": "Vlaanderen",
+"lat": 50.9782,
+"lon": 2.9505,
+"lieux": [
+"Klerken",
+"Houthulst",
+"Merkem"
+],
+"population": 10098
+},
+{
+"cp": "8660",
+"commune": "De Panne",
+"region": "Vlaanderen",
+"lat": 51.0979,
+"lon": 2.5937,
+"lieux": [
+"De Panne",
+"Adinkerke"
+],
+"population": 11176
+},
+{
+"cp": "8670",
+"commune": "Koksijde",
+"region": "Vlaanderen",
+"lat": 51.1164,
+"lon": 2.6377,
+"lieux": [
+"Koksijde",
+"Wulpen",
+"Oostduinkerke"
+],
+"population": 21957
+},
+{
+"cp": "8680",
+"commune": "Koekelare",
+"region": "Vlaanderen",
+"lat": 51.0905,
+"lon": 2.9783,
+"lieux": [
+"Koekelare",
+"Bovekerke",
+"Zande"
+],
+"population": 8777
+},
+{
+"cp": "8690",
+"commune": "Alveringem",
+"region": "Vlaanderen",
+"lat": 51.0124,
+"lon": 2.7112,
+"lieux": [
+"Alveringem",
+"Hoogstade",
+"Oeren",
+"Sint-Rijkers"
+],
+"population": 5047
+},
+{
+"cp": "8691",
+"commune": "Leisele",
+"region": "Vlaanderen",
+"lat": 50.9844,
+"lon": 2.62,
+"lieux": [
+"Stavele",
+"Beveren-Aan-De-Ijzer",
+"Leisele",
+"Izenberge",
+"Gijverinkhove"
+],
+"population": 815
+},
+{
+"cp": "8700",
+"commune": "Tielt",
+"region": "Vlaanderen",
+"lat": 50.9993,
+"lon": 3.3271,
+"lieux": [
+"Schuiferskapelle",
+"Tielt",
+"Aarsele",
+"Kanegem"
+],
+"population": 20502
+},
+{
+"cp": "8710",
+"commune": "Wielsbeke",
+"region": "Vlaanderen",
+"lat": 50.9,
+"lon": 3.3667,
+"lieux": [
+"Wielsbeke",
+"Sint-Baafs-Vijve",
+"Ooigem"
+],
+"population": 9641
+},
+{
+"cp": "8720",
+"commune": "Dentergem",
+"region": "Vlaanderen",
+"lat": 50.9643,
+"lon": 3.4162,
+"lieux": [
+"Wakken",
+"Oeselgem",
+"Dentergem",
+"Markegem"
+],
+"population": 8555
+},
+{
+"cp": "8730",
+"commune": "Beernem",
+"region": "Vlaanderen",
+"lat": 51.1398,
+"lon": 3.339,
+"lieux": [
+"Sint-Joris",
+"Beernem",
+"Oedelem"
+],
+"population": 15763
+},
+{
+"cp": "8740",
+"commune": "Pittem",
+"region": "Vlaanderen",
+"lat": 50.9928,
+"lon": 3.2632,
+"lieux": [
+"Pittem",
+"Egem"
+],
+"population": 6738
+},
+{
+"cp": "8750",
+"commune": "Wingene",
+"region": "Vlaanderen",
+"lat": 51.0578,
+"lon": 3.2736,
+"lieux": [
+"Zwevezele",
+"Wingene"
+],
+"population": 14263
+},
+{
+"cp": "8755",
+"commune": "Ruiselede",
+"region": "Vlaanderen",
+"lat": 51.0404,
+"lon": 3.3942,
+"lieux": [
+"Ruiselede"
+],
+"population": 5358
+},
+{
+"cp": "8760",
+"commune": "Meulebeke",
+"region": "Vlaanderen",
+"lat": 50.9514,
+"lon": 3.288,
+"lieux": [
+"Meulebeke"
+],
+"population": 10948
+},
+{
+"cp": "8770",
+"commune": "Ingelmunster",
+"region": "Vlaanderen",
+"lat": 50.9208,
+"lon": 3.2557,
+"lieux": [
+"Ingelmunster"
+],
+"population": 10996
+},
+{
+"cp": "8780",
+"commune": "Oostrozebeke",
+"region": "Vlaanderen",
+"lat": 50.9209,
+"lon": 3.338,
+"lieux": [
+"Oostrozebeke"
+],
+"population": 7932
+},
+{
+"cp": "8790",
+"commune": "Waregem",
+"region": "Vlaanderen",
+"lat": 50.889,
+"lon": 3.4276,
+"lieux": [
+"Waregem"
+],
+"population": 38266
+},
+{
+"cp": "8791",
+"commune": "Beveren",
+"region": "Vlaanderen",
+"lat": 50.8754,
+"lon": 3.3403,
+"lieux": [
+"Beveren"
+],
+"population": 48668
+},
+{
+"cp": "8792",
+"commune": "Desselgem",
+"region": "Vlaanderen",
+"lat": 50.8861,
+"lon": 3.3596,
+"lieux": [
+"Desselgem"
+],
+"population": 5234
+},
+{
+"cp": "8793",
+"commune": "Sint-Eloois-Vijve",
+"region": "Vlaanderen",
+"lat": 50.9091,
+"lon": 3.4155,
+"lieux": [
+"Sint-Eloois-Vijve"
+],
+"population": 3953
+},
+{
+"cp": "8800",
+"commune": "Roeselare",
+"region": "Vlaanderen",
+"lat": 50.9465,
+"lon": 3.1227,
+"lieux": [
+"Oekene",
+"Roeselare",
+"Rumbeke",
+"Beveren"
+],
+"population": 62954
+},
+{
+"cp": "8810",
+"commune": "Lichtervelde",
+"region": "Vlaanderen",
+"lat": 51.0333,
+"lon": 3.15,
+"lieux": [
+"Lichtervelde"
+],
+"population": 8926
+},
+{
+"cp": "8820",
+"commune": "Torhout",
+"region": "Vlaanderen",
+"lat": 51.0656,
+"lon": 3.1008,
+"lieux": [
+"Torhout"
+],
+"population": 20463
+},
+{
+"cp": "8830",
+"commune": "Hooglede",
+"region": "Vlaanderen",
+"lat": 50.9833,
+"lon": 3.0833,
+"lieux": [
+"Hooglede",
+"Gits"
+],
+"population": 9987
+},
+{
+"cp": "8840",
+"commune": "Staden",
+"region": "Vlaanderen",
+"lat": 50.9746,
+"lon": 3.0147,
+"lieux": [
+"Westrozebeke",
+"Oostnieuwkerke",
+"Staden"
+],
+"population": 11489
+},
+{
+"cp": "8850",
+"commune": "Ardooie",
+"region": "Vlaanderen",
+"lat": 50.9757,
+"lon": 3.1974,
+"lieux": [
+"Ardooie"
+],
+"population": 9161
+},
+{
+"cp": "8851",
+"commune": "Koolskamp",
+"region": "Vlaanderen",
+"lat": 51.0023,
+"lon": 3.2104,
+"lieux": [
+"Koolskamp"
+],
+"population": 2246
+},
+{
+"cp": "8860",
+"commune": "Lendelede",
+"region": "Vlaanderen",
+"lat": 50.8863,
+"lon": 3.2375,
+"lieux": [
+"Lendelede"
+],
+"population": 5747
+},
+{
+"cp": "8870",
+"commune": "Izegem",
+"region": "Vlaanderen",
+"lat": 50.914,
+"lon": 3.2138,
+"lieux": [
+"Kachtem",
+"Izegem",
+"Emelgem"
+],
+"population": 28018
+},
+{
+"cp": "8880",
+"commune": "Ledegem",
+"region": "Vlaanderen",
+"lat": 50.8579,
+"lon": 3.1241,
+"lieux": [
+"Sint-Eloois-Winkel",
+"Ledegem",
+"Rollegem-Kapelle"
+],
+"population": 9695
+},
+{
+"cp": "8890",
+"commune": "Moorslede",
+"region": "Vlaanderen",
+"lat": 50.8919,
+"lon": 3.0612,
+"lieux": [
+"Moorslede",
+"Dadizele"
+],
+"population": 11250
+},
+{
+"cp": "8900",
+"commune": "Ieper",
+"region": "Vlaanderen",
+"lat": 50.8511,
+"lon": 2.8857,
+"lieux": [
+"Ieper",
+"Sint-Jan",
+"Brielen",
+"Dikkebus"
+],
+"population": 35089
+},
+{
+"cp": "8902",
+"commune": "Zillebeke",
+"region": "Vlaanderen",
+"lat": 50.8346,
+"lon": 2.9225,
+"lieux": [
+"Voormezele",
+"Zillebeke",
+"Hollebeke"
+],
+"population": 2058
+},
+{
+"cp": "8904",
+"commune": "Boezinge",
+"region": "Vlaanderen",
+"lat": 50.8967,
+"lon": 2.8542,
+"lieux": [
+"Boezinge",
+"Zuidschote"
+],
+"population": 2061
+},
+{
+"cp": "8906",
+"commune": "Elverdinge",
+"region": "Vlaanderen",
+"lat": 50.8848,
+"lon": 2.8171,
+"lieux": [
+"Elverdinge"
+],
+"population": 1751
+},
+{
+"cp": "8908",
+"commune": "Vlamertinge",
+"region": "Vlaanderen",
+"lat": 50.8549,
+"lon": 2.8202,
+"lieux": [
+"Vlamertinge"
+],
+"population": 3619
+},
+{
+"cp": "8920",
+"commune": "Langemark-Poelkapelle",
+"region": "Vlaanderen",
+"lat": 50.9197,
+"lon": 2.913,
+"lieux": [
+"Poelkapelle",
+"Bikschote",
+"Langemark-Poelkapelle",
+"Langemark"
+],
+"population": 7819
+},
+{
+"cp": "8930",
+"commune": "Menen",
+"region": "Vlaanderen",
+"lat": 50.7972,
+"lon": 3.1224,
+"lieux": [
+"Menen",
+"Lauwe",
+"Rekkem"
+],
+"population": 33385
+},
+{
+"cp": "8940",
+"commune": "Wervik",
+"region": "Vlaanderen",
+"lat": 50.7807,
+"lon": 3.0385,
+"lieux": [
+"Wervik",
+"Geluwe"
+],
+"population": 18767
+},
+{
+"cp": "8950",
+"commune": "Heuvelland",
+"region": "Vlaanderen",
+"lat": 50.776,
+"lon": 2.8223,
+"lieux": [
+"Heuvelland",
+"Nieuwkerke"
+],
+"population": 7909
+},
+{
+"cp": "8951",
+"commune": "Dranouter",
+"region": "Vlaanderen",
+"lat": 50.766,
+"lon": 2.7839,
+"lieux": [
+"Dranouter"
+],
+"population": 656
+},
+{
+"cp": "8952",
+"commune": "Wulvergem",
+"region": "Vlaanderen",
+"lat": 50.7602,
+"lon": 2.8524,
+"lieux": [
+"Wulvergem"
+],
+"population": 271
+},
+{
+"cp": "8953",
+"commune": "Wijtschate",
+"region": "Vlaanderen",
+"lat": 50.7863,
+"lon": 2.8837,
+"lieux": [
+"Wijtschate"
+],
+"population": 1978
+},
+{
+"cp": "8954",
+"commune": "Westouter",
+"region": "Vlaanderen",
+"lat": 50.7972,
+"lon": 2.7465,
+"lieux": [
+"Westouter"
+],
+"population": 1266
+},
+{
+"cp": "8956",
+"commune": "Kemmel",
+"region": "Vlaanderen",
+"lat": 50.7833,
+"lon": 2.8271,
+"lieux": [
+"Kemmel"
+],
+"population": 1157
+},
+{
+"cp": "8957",
+"commune": "Messines",
+"region": "Vlaanderen",
+"lat": 50.7658,
+"lon": 2.8976,
+"lieux": [
+"Messines"
+],
+"population": 975
+},
+{
+"cp": "8958",
+"commune": "Loker",
+"region": "Vlaanderen",
+"lat": 50.7817,
+"lon": 2.7723,
+"lieux": [
+"Loker"
+],
+"population": 564
+},
+{
+"cp": "8970",
+"commune": "Poperinge",
+"region": "Vlaanderen",
+"lat": 50.8539,
+"lon": 2.7266,
+"lieux": [
+"Reningelst",
+"Poperinge"
+],
+"population": 19702
+},
+{
+"cp": "8972",
+"commune": "Proven",
+"region": "Vlaanderen",
+"lat": 50.8898,
+"lon": 2.6572,
+"lieux": [
+"Roesbrugge-Haringe",
+"Proven",
+"Krombeke"
+],
+"population": 1212
+},
+{
+"cp": "8978",
+"commune": "Watou",
+"region": "Vlaanderen",
+"lat": 50.8586,
+"lon": 2.6207,
+"lieux": [
+"Watou"
+],
+"population": 1713
+},
+{
+"cp": "8980",
+"commune": "Zonnebeke",
+"region": "Vlaanderen",
+"lat": 50.8726,
+"lon": 2.9873,
+"lieux": [
+"Zonnebeke",
+"Passendale",
+"Beselare",
+"Geluveld",
+"Zandvoorde"
+],
+"population": 12481
+},
+{
+"cp": "9000",
+"commune": "Gent",
+"region": "Vlaanderen",
+"lat": 51.05,
+"lon": 3.7167,
+"lieux": [
+"Gent"
+],
+"population": 265086
+},
+{
+"cp": "9030",
+"commune": "Mariakerke",
+"region": "Vlaanderen",
+"lat": 51.0748,
+"lon": 3.6829,
+"lieux": [
+"Mariakerke"
+],
+"population": 17062
+},
+{
+"cp": "9031",
+"commune": "Drongen",
+"region": "Vlaanderen",
+"lat": 51.0507,
+"lon": 3.6565,
+"lieux": [
+"Drongen"
+],
+"population": 13016
+},
+{
+"cp": "9032",
+"commune": "Wondelgem",
+"region": "Vlaanderen",
+"lat": 51.087,
+"lon": 3.7091,
+"lieux": [
+"Wondelgem"
+],
+"population": 23546
+},
+{
+"cp": "9040",
+"commune": "Sint-Amandsberg",
+"region": "Vlaanderen",
+"lat": 51.0595,
+"lon": 3.7494,
+"lieux": [
+"Sint-Amandsberg"
+],
+"population": 32115
+},
+{
+"cp": "9041",
+"commune": "Oostakker",
+"region": "Vlaanderen",
+"lat": 51.1012,
+"lon": 3.7695,
+"lieux": [
+"Oostakker"
+],
+"population": 7885
+},
+{
+"cp": "9042",
+"commune": "Desteldonk",
+"region": "Vlaanderen",
+"lat": 51.1219,
+"lon": 3.787,
+"lieux": [
+"Desteldonk",
+"Sint-Kruis-Winkel",
+"Mendonk"
+],
+"population": 1046
+},
+{
+"cp": "9050",
+"commune": "Gentbrugge",
+"region": "Vlaanderen",
+"lat": 51.0369,
+"lon": 3.7651,
+"lieux": [
+"Gentbrugge",
+"Ledeberg"
+],
+"population": 15885
+},
+{
+"cp": "9051",
+"commune": "Sint-Denijs-Westrem",
+"region": "Vlaanderen",
+"lat": 51.0213,
+"lon": 3.672,
+"lieux": [
+"Sint-Denijs-Westrem",
+"Afsnee"
+],
+"population": 6419
+},
+{
+"cp": "9052",
+"commune": "Zwijnaarde",
+"region": "Vlaanderen",
+"lat": 51.0008,
+"lon": 3.7075,
+"lieux": [
+"Zwijnaarde"
+],
+"population": 7379
+},
+{
+"cp": "9060",
+"commune": "Zelzate",
+"region": "Vlaanderen",
+"lat": 51.1896,
+"lon": 3.8078,
+"lieux": [
+"Zelzate"
+],
+"population": 12854
+},
+{
+"cp": "9070",
+"commune": "Heusden",
+"region": "Vlaanderen",
+"lat": 51.0281,
+"lon": 3.8043,
+"lieux": [
+"Heusden",
+"Destelbergen"
+],
+"population": 31017
+},
+{
+"cp": "9080",
+"commune": "Lochristi",
+"region": "Vlaanderen",
+"lat": 51.0964,
+"lon": 3.8319,
+"lieux": [
+"Zeveneken",
+"Beervelde",
+"Lochristi",
+"Zaffelare"
+],
+"population": 22489
+},
+{
+"cp": "9090",
+"commune": "Melle",
+"region": "Vlaanderen",
+"lat": 51.0023,
+"lon": 3.8053,
+"lieux": [
+"Gontrode",
+"Melle"
+],
+"population": 11736
+},
+{
+"cp": "9100",
+"commune": "Sint-Niklaas",
+"region": "Vlaanderen",
+"lat": 51.1651,
+"lon": 4.1437,
+"lieux": [
+"Sint-Niklaas",
+"Nieuwkerken-Waas"
+],
+"population": 77679
+},
+{
+"cp": "9111",
+"commune": "Belsele",
+"region": "Vlaanderen",
+"lat": 51.146,
+"lon": 4.0886,
+"lieux": [
+"Belsele"
+],
+"population": 10489
+},
+{
+"cp": "9112",
+"commune": "Sinaai-Waas",
+"region": "Vlaanderen",
+"lat": 51.1579,
+"lon": 4.0409,
+"lieux": [
+"Sinaai-Waas"
+],
+"population": 0
+},
+{
+"cp": "9120",
+"commune": "Melsele",
+"region": "Vlaanderen",
+"lat": 51.2229,
+"lon": 4.282,
+"lieux": [
+"Haasdonk",
+"Kallo",
+"Melsele",
+"Vrasene",
+"Beveren-Waas"
+],
+"population": 10941
+},
+{
+"cp": "9130",
+"commune": "Kieldrecht",
+"region": "Vlaanderen",
+"lat": 51.2891,
+"lon": 4.1759,
+"lieux": [
+"Doel",
+"Kallo",
+"Kieldrecht",
+"Verrebroek"
+],
+"population": 3981
+},
+{
+"cp": "9140",
+"commune": "Temse",
+"region": "Vlaanderen",
+"lat": 51.1279,
+"lon": 4.2137,
+"lieux": [
+"Tielrode",
+"Steendorp",
+"Elversele",
+"Temse"
+],
+"population": 29926
+},
+{
+"cp": "9150",
+"commune": "Kruibeke",
+"region": "Vlaanderen",
+"lat": 51.1705,
+"lon": 4.3144,
+"lieux": [
+"Rupelmonde",
+"Bazel",
+"Kruibeke"
+],
+"population": 16745
+},
+{
+"cp": "9160",
+"commune": "Lokeren",
+"region": "Vlaanderen",
+"lat": 51.1036,
+"lon": 3.9934,
+"lieux": [
+"Daknam",
+"Eksaarde",
+"Lokeren"
+],
+"population": 41690
+},
+{
+"cp": "9170",
+"commune": "Sint-Gillis-Waas",
+"region": "Vlaanderen",
+"lat": 51.2191,
+"lon": 4.1237,
+"lieux": [
+"De Klinge",
+"Sint-Gillis-Waas",
+"Sint-Pauwels",
+"Meerdonk"
+],
+"population": 19370
+},
+{
+"cp": "9180",
+"commune": "Moerbeke-Waas",
+"region": "Vlaanderen",
+"lat": 51.1741,
+"lon": 3.93,
+"lieux": [
+"Moerbeke-Waas"
+],
+"population": 0
+},
+{
+"cp": "9185",
+"commune": "Wachtebeke",
+"region": "Vlaanderen",
+"lat": 51.1685,
+"lon": 3.8718,
+"lieux": [
+"Wachtebeke"
+],
+"population": 7771
+},
+{
+"cp": "9190",
+"commune": "Stekene",
+"region": "Vlaanderen",
+"lat": 51.2099,
+"lon": 4.0365,
+"lieux": [
+"Stekene",
+"Kemzeke"
+],
+"population": 18445
+},
+{
+"cp": "9200",
+"commune": "Dendermonde",
+"region": "Vlaanderen",
+"lat": 51.0287,
+"lon": 4.1011,
+"lieux": [
+"Mespelare",
+"Appels",
+"Grembergen",
+"Oudegem",
+"Baasrode",
+"Sint-Gillis-Dendermonde",
+"Dendermonde",
+"Schoonaarde"
+],
+"population": 45769
+},
+{
+"cp": "9220",
+"commune": "Hamme",
+"region": "Vlaanderen",
+"lat": 51.0982,
+"lon": 4.137,
+"lieux": [
+"Moerzeke",
+"Hamme"
+],
+"population": 24865
+},
+{
+"cp": "9230",
+"commune": "Wetteren",
+"region": "Vlaanderen",
+"lat": 51.0053,
+"lon": 3.8834,
+"lieux": [
+"Westrem",
+"Wetteren",
+"Massemen"
+],
+"population": 25815
+},
+{
+"cp": "9240",
+"commune": "Zele",
+"region": "Vlaanderen",
+"lat": 51.0657,
+"lon": 4.0403,
+"lieux": [
+"Zele"
+],
+"population": 21125
+},
+{
+"cp": "9250",
+"commune": "Waasmunster",
+"region": "Vlaanderen",
+"lat": 51.1057,
+"lon": 4.0857,
+"lieux": [
+"Waasmunster"
+],
+"population": 10801
+},
+{
+"cp": "9255",
+"commune": "Buggenhout",
+"region": "Vlaanderen",
+"lat": 51.0159,
+"lon": 4.2017,
+"lieux": [
+"Opdorp",
+"Buggenhout"
+],
+"population": 14517
+},
+{
+"cp": "9260",
+"commune": "Wichelen",
+"region": "Vlaanderen",
+"lat": 51.0053,
+"lon": 3.9768,
+"lieux": [
+"Schellebelle",
+"Wichelen",
+"Serskamp"
+],
+"population": 11672
+},
+{
+"cp": "9270",
+"commune": "Laarne",
+"region": "Vlaanderen",
+"lat": 51.0308,
+"lon": 3.8508,
+"lieux": [
+"Kalken",
+"Laarne"
+],
+"population": 12370
+},
+{
+"cp": "9280",
+"commune": "Lebbeke",
+"region": "Vlaanderen",
+"lat": 51.0046,
+"lon": 4.1346,
+"lieux": [
+"Denderbelle",
+"Wieze",
+"Lebbeke"
+],
+"population": 19321
+},
+{
+"cp": "9290",
+"commune": "Berlare",
+"region": "Vlaanderen",
+"lat": 51.0333,
+"lon": 4.0,
+"lieux": [
+"Berlare",
+"Overmere",
+"Uitbergen"
+],
+"population": 14958
+},
+{
+"cp": "9300",
+"commune": "Aalst",
+"region": "Vlaanderen",
+"lat": 50.936,
+"lon": 4.0355,
+"lieux": [
+"Aalst"
+],
+"population": 86445
+},
+{
+"cp": "9308",
+"commune": "Hofstade",
+"region": "Vlaanderen",
+"lat": 50.9613,
+"lon": 4.0266,
+"lieux": [
+"Gijzegem",
+"Hofstade"
+],
+"population": 5927
+},
+{
+"cp": "9310",
+"commune": "Moorsel",
+"region": "Vlaanderen",
+"lat": 50.9474,
+"lon": 4.0983,
+"lieux": [
+"Baardegem",
+"Meldert",
+"Moorsel",
+"Herdersem"
+],
+"population": 5103
+},
+{
+"cp": "9320",
+"commune": "Erembodegem",
+"region": "Vlaanderen",
+"lat": 50.919,
+"lon": 4.0504,
+"lieux": [
+"Erembodegem",
+"Nieuwerkerken"
+],
+"population": 12152
+},
+{
+"cp": "9340",
+"commune": "Lede",
+"region": "Vlaanderen",
+"lat": 50.9663,
+"lon": 3.9859,
+"lieux": [
+"Smetlede",
+"Lede",
+"Oordegem",
+"Impe",
+"Wanzele"
+],
+"population": 18701
+},
+{
+"cp": "9400",
+"commune": "Ninove",
+"region": "Vlaanderen",
+"lat": 50.8278,
+"lon": 4.0266,
+"lieux": [
+"Denderwindeke",
+"Lieferinge",
+"Ninove",
+"Voorde",
+"Nederhasselt",
+"Okegem",
+"Appelterre-Eichem"
+],
+"population": 38911
+},
+{
+"cp": "9401",
+"commune": "Pollare",
+"region": "Vlaanderen",
+"lat": 50.8171,
+"lon": 4.006,
+"lieux": [
+"Pollare"
+],
+"population": 1362
+},
+{
+"cp": "9402",
+"commune": "Meerbeke",
+"region": "Vlaanderen",
+"lat": 50.8244,
+"lon": 4.0367,
+"lieux": [
+"Meerbeke"
+],
+"population": 5866
+},
+{
+"cp": "9403",
+"commune": "Neigem",
+"region": "Vlaanderen",
+"lat": 50.8027,
+"lon": 4.0599,
+"lieux": [
+"Neigem"
+],
+"population": 592
+},
+{
+"cp": "9404",
+"commune": "Aspelare",
+"region": "Vlaanderen",
+"lat": 50.8419,
+"lon": 3.9574,
+"lieux": [
+"Aspelare"
+],
+"population": 1622
+},
+{
+"cp": "9406",
+"commune": "Outer",
+"region": "Vlaanderen",
+"lat": 50.8419,
+"lon": 3.9987,
+"lieux": [
+"Outer"
+],
+"population": 3221
+},
+{
+"cp": "9420",
+"commune": "Erpe-Mere",
+"region": "Vlaanderen",
+"lat": 50.9215,
+"lon": 3.932,
+"lieux": [
+"Erpe",
+"Vlekkem",
+"Burst",
+"Ottergem",
+"Erpe-Mere",
+"Erondegem",
+"Mere",
+"Bambrugge",
+"Aaigem"
+],
+"population": 19811
+},
+{
+"cp": "9450",
+"commune": "Haaltert",
+"region": "Vlaanderen",
+"lat": 50.9063,
+"lon": 4.0009,
+"lieux": [
+"Heldergem",
+"Denderhoutem",
+"Haaltert"
+],
+"population": 18633
+},
+{
+"cp": "9451",
+"commune": "Kerksken",
+"region": "Vlaanderen",
+"lat": 50.8907,
+"lon": 3.9948,
+"lieux": [
+"Kerksken"
+],
+"population": 2740
+},
+{
+"cp": "9470",
+"commune": "Denderleeuw",
+"region": "Vlaanderen",
+"lat": 50.8851,
+"lon": 4.076,
+"lieux": [
+"Denderleeuw"
+],
+"population": 20338
+},
+{
+"cp": "9472",
+"commune": "Iddergem",
+"region": "Vlaanderen",
+"lat": 50.8763,
+"lon": 4.0443,
+"lieux": [
+"Iddergem"
+],
+"population": 2792
+},
+{
+"cp": "9473",
+"commune": "Welle",
+"region": "Vlaanderen",
+"lat": 50.8988,
+"lon": 4.056,
+"lieux": [
+"Welle"
+],
+"population": 4722
+},
+{
+"cp": "9500",
+"commune": "Geraardsbergen",
+"region": "Vlaanderen",
+"lat": 50.7734,
+"lon": 3.8822,
+"lieux": [
+"Moerbeke",
+"Goeferdinge",
+"Ophasselt",
+"Zarlardinge",
+"Viane",
+"Geraardsbergen",
+"Nederboelare",
+"Onkerzele",
+"Overboelare"
+],
+"population": 33439
+},
+{
+"cp": "9506",
+"commune": "Schendelbeke",
+"region": "Vlaanderen",
+"lat": 50.7987,
+"lon": 3.8988,
+"lieux": [
+"Waarbeke",
+"Idegem",
+"Nieuwenhove",
+"Zandbergen",
+"Smeerebbe-Vloerzegem",
+"Schendelbeke",
+"Grimminge"
+],
+"population": 1870
+},
+{
+"cp": "9520",
+"commune": "Sint-Lievens-Houtem",
+"region": "Vlaanderen",
+"lat": 50.9197,
+"lon": 3.8623,
+"lieux": [
+"Zonnegem",
+"Sint-Lievens-Houtem",
+"Oombergen",
+"Vlierzele",
+"Bavegem"
+],
+"population": 10342
+},
+{
+"cp": "9521",
+"commune": "Letterhoutem",
+"region": "Vlaanderen",
+"lat": 50.9277,
+"lon": 3.8797,
+"lieux": [
+"Letterhoutem"
+],
+"population": 1206
+},
+{
+"cp": "9550",
+"commune": "Herzele",
+"region": "Vlaanderen",
+"lat": 50.8868,
+"lon": 3.8901,
+"lieux": [
+"Hillegem",
+"Sint-Lievens-Esse",
+"Sint-Antelinks",
+"Herzele",
+"Steenhuize-Wijnhuize",
+"Woubrechtegem"
+],
+"population": 18027
+},
+{
+"cp": "9551",
+"commune": "Ressegem",
+"region": "Vlaanderen",
+"lat": 50.8911,
+"lon": 3.9113,
+"lieux": [
+"Ressegem"
+],
+"population": 1280
+},
+{
+"cp": "9552",
+"commune": "Borsbeke",
+"region": "Vlaanderen",
+"lat": 50.9063,
+"lon": 3.89,
+"lieux": [
+"Borsbeke"
+],
+"population": 2363
+},
+{
+"cp": "9570",
+"commune": "Lierde",
+"region": "Vlaanderen",
+"lat": 50.8041,
+"lon": 3.844,
+"lieux": [
+"Deftinge",
+"Sint-Maria-Lierde",
+"Lierde"
+],
+"population": 6616
+},
+{
+"cp": "9571",
+"commune": "Hemelveerdegem",
+"region": "Vlaanderen",
+"lat": 50.8073,
+"lon": 3.8576,
+"lieux": [
+"Hemelveerdegem"
+],
+"population": 401
+},
+{
+"cp": "9572",
+"commune": "Sint-Martens-Lierde",
+"region": "Vlaanderen",
+"lat": 50.8037,
+"lon": 3.8254,
+"lieux": [
+"Sint-Martens-Lierde"
+],
+"population": 1892
+},
+{
+"cp": "9600",
+"commune": "Renaix",
+"region": "Vlaanderen",
+"lat": 50.7457,
+"lon": 3.6005,
+"lieux": [
+"Renaix"
+],
+"population": 0
+},
+{
+"cp": "9620",
+"commune": "Zottegem",
+"region": "Vlaanderen",
+"lat": 50.8696,
+"lon": 3.8105,
+"lieux": [
+"Velzeke-Ruddershove",
+"Zottegem",
+"Elene",
+"Grotenberge",
+"Sint-Goriks-Oudenhove",
+"Strijpen",
+"Leeuwergem",
+"Erwetegem",
+"Oombergen",
+"Godveerdegem",
+"Sint-Maria-Oudenhove"
+],
+"population": 26582
+},
+{
+"cp": "9630",
+"commune": "Zwalm",
+"region": "Vlaanderen",
+"lat": 50.882,
+"lon": 3.7277,
+"lieux": [
+"Munkzwalm",
+"Sint-Maria-Latem",
+"Sint-Blasius-Boekel",
+"Hundelgem",
+"Dikkele",
+"Zwalm",
+"Roborst",
+"Rozebeke",
+"Sint-Denijs-Boekel",
+"Meilegem",
+"Paulatem",
+"Beerlegem"
+],
+"population": 8148
+},
+{
+"cp": "9636",
+"commune": "Nederzwalm-Hermelgem",
+"region": "Vlaanderen",
+"lat": 50.8833,
+"lon": 3.6833,
+"lieux": [
+"Nederzwalm-Hermelgem"
+],
+"population": 940
+},
+{
+"cp": "9660",
+"commune": "Brakel",
+"region": "Vlaanderen",
+"lat": 50.801,
+"lon": 3.7626,
+"lieux": [
+"Opbrakel",
+"Zegelsem",
+"Brakel",
+"Nederbrakel",
+"Elst",
+"Everbeek",
+"Michelbeke",
+"Sint-Maria-Oudenhove"
+],
+"population": 14801
+},
+{
+"cp": "9661",
+"commune": "Parike",
+"region": "Vlaanderen",
+"lat": 50.7849,
+"lon": 3.7975,
+"lieux": [
+"Parike"
+],
+"population": 676
+},
+{
+"cp": "9667",
+"commune": "Horebeke",
+"region": "Vlaanderen",
+"lat": 50.8367,
+"lon": 3.6929,
+"lieux": [
+"Horebeke",
+"Sint-Kornelis-Horebeke",
+"Sint-Maria-Horebeke"
+],
+"population": 2036
+},
+{
+"cp": "9680",
+"commune": "Maarkedal",
+"region": "Vlaanderen",
+"lat": 50.816,
+"lon": 3.6451,
+"lieux": [
+"Maarkedal",
+"Maarke-Kerkem",
+"Etikhove"
+],
+"population": 6343
+},
+{
+"cp": "9681",
+"commune": "Nukerke",
+"region": "Vlaanderen",
+"lat": 50.7956,
+"lon": 3.5949,
+"lieux": [
+"Nukerke"
+],
+"population": 1916
+},
+{
+"cp": "9688",
+"commune": "Schorisse",
+"region": "Vlaanderen",
+"lat": 50.8031,
+"lon": 3.6763,
+"lieux": [
+"Schorisse"
+],
+"population": 1602
+},
+{
+"cp": "9690",
+"commune": "Berchem",
+"region": "Vlaanderen",
+"lat": 50.779,
+"lon": 3.5267,
+"lieux": [
+"Zulzeke",
+"Kluisbergen",
+"Kwaremont",
+"Berchem",
+"Ruien"
+],
+"population": 43511
+},
+{
+"cp": "9700",
+"commune": "Oudenaarde",
+"region": "Vlaanderen",
+"lat": 50.8517,
+"lon": 3.6089,
+"lieux": [
+"Nederename",
+"Ooike",
+"Welden",
+"Eine",
+"Ename",
+"Oudenaarde",
+"Mater",
+"Edelare",
+"Melden",
+"Heurne",
+"Bevere",
+"Leupegem",
+"Volkegem",
+"Mullem"
+],
+"population": 31866
+},
+{
+"cp": "9750",
+"commune": "Zingem",
+"region": "Vlaanderen",
+"lat": 50.9041,
+"lon": 3.653,
+"lieux": [
+"Zingem",
+"Huise",
+"Ouwegem"
+],
+"population": 7221
+},
+{
+"cp": "9770",
+"commune": "Kruisem",
+"region": "Vlaanderen",
+"lat": 50.9017,
+"lon": 3.5259,
+"lieux": [
+"Kruishoutem",
+"Kruisem"
+],
+"population": 15641
+},
+{
+"cp": "9771",
+"commune": "Nokere",
+"region": "Vlaanderen",
+"lat": 50.8854,
+"lon": 3.5101,
+"lieux": [
+"Nokere"
+],
+"population": 774
+},
+{
+"cp": "9772",
+"commune": "Wannegem-Lede",
+"region": "Vlaanderen",
+"lat": 50.8904,
+"lon": 3.5514,
+"lieux": [
+"Wannegem-Lede"
+],
+"population": 727
+},
+{
+"cp": "9790",
+"commune": "Wortegem-Petegem",
+"region": "Vlaanderen",
+"lat": 50.8465,
+"lon": 3.5432,
+"lieux": [
+"Wortegem-Petegem",
+"Elsegem",
+"Moregem",
+"Petegem-Aan-De-Schelde",
+"Wortegem",
+"Ooike"
+],
+"population": 6397
+},
+{
+"cp": "9800",
+"commune": "Deinze",
+"region": "Vlaanderen",
+"lat": 50.9817,
+"lon": 3.531,
+"lieux": [
+"Meigem",
+"Grammene",
+"Sint-Martens-Leerne",
+"Bachte-Maria-Leerne",
+"Petegem-Aan-De-Leie",
+"Vinkt",
+"Gottem",
+"Astene",
+"Deinze",
+"Zeveren",
+"Wontergem"
+],
+"population": 43571
+},
+{
+"cp": "9810",
+"commune": "Nazareth",
+"region": "Vlaanderen",
+"lat": 51.0,
+"lon": 3.65,
+"lieux": [
+"Eke",
+"Nazareth"
+],
+"population": 11619
+},
+{
+"cp": "9820",
+"commune": "Merelbeke",
+"region": "Vlaanderen",
+"lat": 50.9945,
+"lon": 3.7462,
+"lieux": [
+"Munte",
+"Lemberge",
+"Melsen",
+"Merelbeke",
+"Schelderode",
+"Bottelare"
+],
+"population": 24660
+},
+{
+"cp": "9830",
+"commune": "Sint-Martens-Latem",
+"region": "Vlaanderen",
+"lat": 51.0146,
+"lon": 3.6378,
+"lieux": [
+"Sint-Martens-Latem"
+],
+"population": 8392
+},
+{
+"cp": "9831",
+"commune": "Deurle",
+"region": "Vlaanderen",
+"lat": 51.0041,
+"lon": 3.6147,
+"lieux": [
+"Deurle"
+],
+"population": 2454
+},
+{
+"cp": "9840",
+"commune": "De Pinte",
+"region": "Vlaanderen",
+"lat": 50.9934,
+"lon": 3.6475,
+"lieux": [
+"De Pinte",
+"Zevergem"
+],
+"population": 10683
+},
+{
+"cp": "9850",
+"commune": "Nevele",
+"region": "Vlaanderen",
+"lat": 51.0353,
+"lon": 3.5457,
+"lieux": [
+"Landegem",
+"Vosselare",
+"Poesele",
+"Merendree",
+"Nevele",
+"Hansbeke"
+],
+"population": 11902
+},
+{
+"cp": "9860",
+"commune": "Oosterzele",
+"region": "Vlaanderen",
+"lat": 50.9526,
+"lon": 3.7983,
+"lieux": [
+"Gijzenzele",
+"Landskouter",
+"Scheldewindeke",
+"Oosterzele",
+"Balegem",
+"Moortsele"
+],
+"population": 13590
+},
+{
+"cp": "9870",
+"commune": "Zulte",
+"region": "Vlaanderen",
+"lat": 50.9195,
+"lon": 3.4486,
+"lieux": [
+"Olsene",
+"Machelen",
+"Zulte"
+],
+"population": 15720
+},
+{
+"cp": "9880",
+"commune": "Aalter",
+"region": "Vlaanderen",
+"lat": 51.0902,
+"lon": 3.4469,
+"lieux": [
+"Aalter",
+"Lotenhulle",
+"Poeke"
+],
+"population": 28906
+},
+{
+"cp": "9881",
+"commune": "Bellem",
+"region": "Vlaanderen",
+"lat": 51.094,
+"lon": 3.4928,
+"lieux": [
+"Bellem"
+],
+"population": 2274
+},
+{
+"cp": "9890",
+"commune": "Gavere",
+"region": "Vlaanderen",
+"lat": 50.9292,
+"lon": 3.6618,
+"lieux": [
+"Semmerzake",
+"Gavere",
+"Asper",
+"Vurste",
+"Dikkelvenne",
+"Baaigem"
+],
+"population": 12805
+},
+{
+"cp": "9900",
+"commune": "Eeklo",
+"region": "Vlaanderen",
+"lat": 51.187,
+"lon": 3.5565,
+"lieux": [
+"Eeklo"
+],
+"population": 21134
+},
+{
+"cp": "9910",
+"commune": "Knesselare",
+"region": "Vlaanderen",
+"lat": 51.1393,
+"lon": 3.4128,
+"lieux": [
+"Knesselare",
+"Ursel"
+],
+"population": 8178
+},
+{
+"cp": "9920",
+"commune": "Lovendegem",
+"region": "Vlaanderen",
+"lat": 51.1017,
+"lon": 3.613,
+"lieux": [
+"Lovendegem"
+],
+"population": 9445
+},
+{
+"cp": "9921",
+"commune": "Vinderhoute",
+"region": "Vlaanderen",
+"lat": 51.0876,
+"lon": 3.6416,
+"lieux": [
+"Vinderhoute"
+],
+"population": 1182
+},
+{
+"cp": "9930",
+"commune": "Lievegem",
+"region": "Vlaanderen",
+"lat": 51.1199,
+"lon": 3.565,
+"lieux": [
+"Zomergem",
+"Lievegem"
+],
+"population": 26162
+},
+{
+"cp": "9931",
+"commune": "Oostwinkel",
+"region": "Vlaanderen",
+"lat": 51.1515,
+"lon": 3.532,
+"lieux": [
+"Oostwinkel"
+],
+"population": 788
+},
+{
+"cp": "9932",
+"commune": "Ronsele",
+"region": "Vlaanderen",
+"lat": 51.1306,
+"lon": 3.5518,
+"lieux": [
+"Ronsele"
+],
+"population": 553
+},
+{
+"cp": "9940",
+"commune": "Evergem",
+"region": "Vlaanderen",
+"lat": 51.1131,
+"lon": 3.7098,
+"lieux": [
+"Ertvelde",
+"Evergem",
+"Sleidinge",
+"Kluizen"
+],
+"population": 35447
+},
+{
+"cp": "9950",
+"commune": "Waarschoot",
+"region": "Vlaanderen",
+"lat": 51.1525,
+"lon": 3.605,
+"lieux": [
+"Waarschoot"
+],
+"population": 7915
+},
+{
+"cp": "9960",
+"commune": "Assenede",
+"region": "Vlaanderen",
+"lat": 51.226,
+"lon": 3.7509,
+"lieux": [
+"Assenede"
+],
+"population": 14256
+},
+{
+"cp": "9961",
+"commune": "Boekhoute",
+"region": "Vlaanderen",
+"lat": 51.2586,
+"lon": 3.7178,
+"lieux": [
+"Boekhoute"
+],
+"population": 2129
+},
+{
+"cp": "9968",
+"commune": "Bassevelde",
+"region": "Vlaanderen",
+"lat": 51.231,
+"lon": 3.678,
+"lieux": [
+"Oosteeklo",
+"Bassevelde"
+],
+"population": 3282
+},
+{
+"cp": "9970",
+"commune": "Kaprijke",
+"region": "Vlaanderen",
+"lat": 51.2172,
+"lon": 3.6152,
+"lieux": [
+"Kaprijke"
+],
+"population": 6434
+},
+{
+"cp": "9971",
+"commune": "Lembeke",
+"region": "Vlaanderen",
+"lat": 51.1949,
+"lon": 3.6333,
+"lieux": [
+"Lembeke"
+],
+"population": 3679
+},
+{
+"cp": "9980",
+"commune": "Sint-Laureins",
+"region": "Vlaanderen",
+"lat": 51.242,
+"lon": 3.5244,
+"lieux": [
+"Sint-Laureins"
+],
+"population": 6783
+},
+{
+"cp": "9981",
+"commune": "Sint-Margriete",
+"region": "Vlaanderen",
+"lat": 51.2822,
+"lon": 3.5464,
+"lieux": [
+"Sint-Margriete"
+],
+"population": 657
+},
+{
+"cp": "9982",
+"commune": "Sint-Jan-In-Eremo",
+"region": "Vlaanderen",
+"lat": 51.2716,
+"lon": 3.5806,
+"lieux": [
+"Sint-Jan-In-Eremo"
+],
+"population": 0
+},
+{
+"cp": "9988",
+"commune": "Watervliet",
+"region": "Vlaanderen",
+"lat": 51.2749,
+"lon": 3.626,
+"lieux": [
+"Watervliet",
+"Waterland-Oudeman"
+],
+"population": 1710
+},
+{
+"cp": "9990",
+"commune": "Maldegem",
+"region": "Vlaanderen",
+"lat": 51.2074,
+"lon": 3.4451,
+"lieux": [
+"Maldegem"
+],
+"population": 23774
+},
+{
+"cp": "9991",
+"commune": "Adegem",
+"region": "Vlaanderen",
+"lat": 51.2051,
+"lon": 3.4954,
+"lieux": [
+"Adegem"
+],
+"population": 6473
+},
+{
+"cp": "9992",
+"commune": "Middelburg",
+"region": "Vlaanderen",
+"lat": 51.2561,
+"lon": 3.416,
+"lieux": [
+"Middelburg"
+],
+"population": 653
+}
+]
+}

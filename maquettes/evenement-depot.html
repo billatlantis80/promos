@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Kazendra — dépôt d'un événement en 4 étapes</title>
+<style>
+  :root{--navy:#0D3B5B;--deep:#0A2F49;--orange:#EB912D;--ink:#13222E;--ink2:#4A5C6B;
+        --muted:#5E7180;--line:#E3E8ED;--bg2:#F5F7F9}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Liberation Sans','DejaVu Sans',Arial,sans-serif;color:var(--ink);background:#fff;
+       width:1440px;padding:32px 40px 30px;-webkit-font-smoothing:antialiased}
+  .ico{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;
+       stroke-linejoin:round}
+  h1{font-size:23px;letter-spacing:-.6px}
+  .sub{font-size:13px;color:var(--ink2);margin-top:6px;max-width:940px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:22px;align-items:start}
+  .st{border:1px solid var(--line);border-radius:14px;padding:16px 18px 18px;background:#fff}
+  .st .hd{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+  .st .num{width:26px;height:26px;border-radius:8px;background:var(--navy);color:#fff;font-size:13px;
+           font-weight:800;display:flex;align-items:center;justify-content:center;flex:none}
+  .st .tt{font-size:14px;font-weight:800}
+  .st .stp{margin-left:auto;font-size:11px;color:var(--muted);font-weight:700}
+  .lab{font-size:11.5px;font-weight:700;color:#5E7180;margin:12px 0 7px}
+  .lab:first-of-type{margin-top:0}
+  .seg{display:flex;border:1px solid var(--line);border-radius:9px;overflow:hidden;width:fit-content}
+  .seg div{padding:8px 18px;font-size:12.5px;font-weight:700;color:var(--ink2)}
+  .seg div.on{background:var(--navy);color:#fff}
+  .seg div+div{border-left:1px solid var(--line)}
+  .chips{display:flex;gap:6px;flex-wrap:wrap}
+  .chip{font-size:11.5px;padding:5px 10px;border-radius:999px;border:1px solid var(--line);
+        color:var(--ink2);white-space:nowrap}
+  .chip.on{background:var(--navy);border-color:var(--navy);color:#fff;font-weight:700}
+  .field{border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:12.5px;color:#7E93A2}
+  .field.f{color:var(--ink);font-weight:700;border-color:#C9D6DF}
+  .row{display:flex;gap:8px}
+  .row>*{flex:1;min-width:0}
+  .note{margin-top:11px;background:var(--bg2);border-radius:9px;padding:9px 11px;font-size:11px;
+        line-height:1.55;color:var(--ink2)}
+  .note b{color:var(--ink)}
+  .warn{margin-top:11px;border-radius:9px;padding:9px 11px;font-size:11px;line-height:1.55}
+  .warn.red{background:#FCEBE9;border:1px solid #F0C4BE;color:#8A2419}
+  .warn.red b{display:block;margin-bottom:3px;color:#6E1B12}
+  .warn.blue{background:#EAF1F5;color:#123F5F}
+  .warn.blue b{display:block;margin-bottom:3px}
+  .warn.amber{background:#FDF7EE;border:1px solid #F3D6AE;color:#6B4A16}
+  .warn.amber b{display:block;margin-bottom:3px}
+  /* dates de la série */
+  .dates{border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  .dl{display:grid;grid-template-columns:1fr 1fr 1fr 26px;gap:8px;padding:9px 11px;align-items:center;
+      border-top:1px solid var(--line);font-size:12.5px}
+  .dl:first-child{border-top:0;background:#FAFCFD;font-size:10.5px;font-weight:800;text-transform:uppercase;
+                  letter-spacing:.5px;color:#5E7180}
+  .dl .x{color:#B3261E;font-weight:800;text-align:center}
+  .add{margin-top:8px;font-size:12px;color:var(--navy);font-weight:700;text-align:center;
+       border:1px dashed #C9D6DF;border-radius:8px;padding:8px}
+  /* lieu */
+  .lieu{border:1px solid var(--line);border-radius:11px;padding:12px;margin-top:10px;background:#FAFCFD}
+  .lieu .lh{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:#5E7180;
+            margin-bottom:8px}
+  .itin{margin-top:9px;display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--ink2);
+        background:#fff;border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+  .itin b{color:var(--navy)}
+  .itin .go{margin-left:auto;background:var(--navy);color:#fff;font-weight:700;font-size:11px;
+            padding:5px 9px;border-radius:6px}
+  /* prix */
+  .price{border:1px solid var(--line);border-radius:12px;padding:13px 14px;margin-top:12px;background:#fff}
+  .pl{display:flex;align-items:baseline;gap:8px;font-size:12px;color:var(--ink2)}
+  .pl b{margin-left:auto;font-size:20px;color:var(--navy);letter-spacing:-.4px}
+  .pl b.grat{color:#0E7A66;font-size:17px}
+  .psub{font-size:11px;color:var(--muted);margin-top:5px;line-height:1.5}
+  /* étape 4 */
+  .files{display:flex;gap:8px;margin-top:4px}
+  .fl{width:70px;height:70px;border-radius:9px;background:#DCE6EC;display:flex;align-items:center;
+      justify-content:center;color:#8FA6B5;flex:none}
+  .fl.add{border:1px dashed #C9D6DF;background:#fff;font-size:22px;color:#9FB3C0}
+  .area{margin-top:6px;border:1px solid #C9D6DF;border-radius:9px;padding:10px 11px;font-size:12.5px;
+        line-height:1.6;color:var(--ink)}
+  .cnt{text-align:right;font-size:10.5px;color:var(--muted);margin-top:4px}
+  .check{display:flex;gap:8px;align-items:flex-start;font-size:11.5px;color:var(--ink2);margin-top:8px;
+         line-height:1.5}
+  .box{width:14px;height:14px;border-radius:4px;border:1.5px solid #9FB3C0;flex:none;margin-top:1px}
+  .box.on{background:var(--navy);border-color:var(--navy);position:relative}
+  .box.on::after{content:"✓";position:absolute;inset:-2px 0 0 1px;color:#fff;font-size:10px;font-weight:800}
+  .foot{margin-top:18px;display:flex;align-items:center;gap:14px;border-top:1px solid var(--line);padding-top:14px}
+  .foot .left{font-size:11.5px;color:var(--muted);line-height:1.5;max-width:620px}
+  .foot .btn{margin-left:auto;background:var(--orange);color:#2A1602;font-weight:800;font-size:13.5px;
+             padding:12px 22px;border-radius:9px}
+</style>
+</head>
+<body>
+
+<h1>Publier un événement — quatre étapes</h1>
+<div class="sub">
+  Deux choses changent tout par rapport à une annonce : la <b>date</b> décide de la durée de publication,
+  et le <b>lieu</b> a deux régimes — lieu public (adresse affichée) ou adresse privée (code postal seul).
+  Aucun champ n'existe pour vendre une place.
+</div>
+
+<div class="grid">
+
+  <!-- ÉTAPE 1 -->
+  <div class="st">
+    <div class="hd"><div class="num">1</div><div class="tt">Quoi et quand</div><div class="stp">1 / 4</div></div>
+
+    <div class="lab">Titre</div>
+    <div class="field f">Brocante d'automne du quartier Saint-Servais</div>
+
+    <div class="lab">Catégorie</div>
+    <div class="chips">
+      <span class="chip">Musique, concert</span><span class="chip">Spectacle, théâtre</span>
+      <span class="chip">Exposition, culture</span><span class="chip on">Fête, kermesse, brocante</span>
+      <span class="chip">Marché, terroir</span><span class="chip">Sport</span>
+      <span class="chip">Enfants, famille</span><span class="chip">Atelier, formation</span>
+      <span class="chip">Nature, balade</span><span class="chip">Vie locale, citoyen</span>
+      <span class="chip">Gastronomie</span>
+    </div>
+    <div class="note">
+      <b>Pas de catégorie « divers ».</b> Si l'événement ne rentre dans aucune case, il est refusé à la
+      publication — un agenda qui accepte tout ne se consulte plus.
+    </div>
+
+    <div class="lab">Dates — jusqu'à 8, une ligne par date</div>
+    <div class="dates">
+      <div class="dl"><div>Date</div><div>Début</div><div>Fin</div><div></div></div>
+      <div class="dl"><div class="f" style="font-weight:700">25/10/2026</div><div>08:00</div><div>17:00</div><div class="x">×</div></div>
+      <div class="dl"><div class="f" style="font-weight:700">02/11/2026</div><div>08:00</div><div>17:00</div><div class="x">×</div></div>
+    </div>
+    <div class="add">+ Ajouter une date</div>
+    <div class="note">
+      <b>Pas de récurrence automatique.</b> Une série de dates choisies une par une s'arrête toute seule ;
+      un « tous les mardis » continue d'exister le jour où le marché ferme, et personne ne vient le couper.
+    </div>
+
+    <div class="warn blue">
+      <b>Mise en ligne programmée</b>
+      Une date à plus de 90 jours est acceptée et payée tout de suite, mais la fiche ne s'affiche qu'au
+      J−90. Vous ne perdez pas votre visibilité pour vous y être pris tôt.
+    </div>
+  </div>
+
+  <!-- ÉTAPE 2 -->
+  <div class="st">
+    <div class="hd"><div class="num">2</div><div class="tt">Où ça se passe</div><div class="stp">2 / 4</div></div>
+
+    <div class="lab">Type de lieu</div>
+    <div class="seg"><div class="on">Lieu public</div><div>Adresse privée</div></div>
+
+    <div class="lieu">
+      <div class="lh">Régime choisi : lieu public — l'adresse est affichée</div>
+      <div class="row">
+        <div><div class="lab" style="margin-top:0">Nom du lieu</div><div class="field f">Place Saint-Servais</div></div>
+        <div style="max-width:210px"><div class="lab" style="margin-top:0">Code postal · commune</div><div class="field f">5000 · Namur</div></div>
+      </div>
+      <div class="lab">Rue et numéro</div>
+      <div class="field f">Place Saint-Servais</div>
+      <div class="itin">
+        <svg class="ico" viewBox="0 0 24 24"><path d="M21 3L3 10.5l7.5 3L14 21z"/></svg>
+        Itinéraire : <b>google.com/maps/dir/?api=1&amp;destination=Place+Saint-Servais,+5000,+Belgique</b>
+        <span class="go">Tester</span>
+      </div>
+      <div class="note" style="margin-top:8px">
+        <b>Lien, jamais carte.</b> Une carte intégrée demande un compte Google Cloud, une clé et une
+        facturation à l'usage. Le lien d'itinéraire est gratuit, sans clé, et calcule la distance depuis
+        la position du visiteur.
+      </div>
+    </div>
+
+    <div class="warn amber">
+      <b>Si vous choisissez « adresse privée »</b>
+      La fiche n'affichera que <b>5000 Namur</b>. L'adresse exacte se donne dans la messagerie, à ceux qui
+      vous écrivent. L'itinéraire et l'export agenda s'arrêtent aussi au code postal — sinon l'adresse
+      d'un particulier deviendrait publique par la bande.
+    </div>
+  </div>
+
+  <!-- ÉTAPE 3 -->
+  <div class="st">
+    <div class="hd"><div class="num">3</div><div class="tt">Entrée et billetterie</div><div class="stp">3 / 4</div></div>
+
+    <div class="lab">Entrée</div>
+    <div class="seg"><div class="on">Gratuit</div><div>Participation libre</div><div>Payant</div></div>
+
+    <div class="note">
+      <b>Participation libre = aucun montant affiché.</b> Un montant suggéré transforme un chapeau en
+      prix, donc en vente. <b>Payant = un prix total, TVA comprise</b> : « à partir de » est refusé, parce
+      qu'un prix d'appel qui double à l'entrée est exactement ce que le droit belge encadre.
+    </div>
+
+    <div class="lab">Billetterie — une seule option, pas de champ libre</div>
+    <div class="chips">
+      <span class="chip on">Sur place</span><span class="chip">Chez l'organisateur (message)</span>
+      <span class="chip">Lien officiel déclaré</span>
+    </div>
+
+    <div class="warn blue" style="margin-top:10px">
+      <b>L'option « lien officiel déclaré » n'est pas ouverte à tous</b>
+      Réservée aux comptes professionnels et ASBL vérifiés, affichée avec la mention « lien fourni par
+      l'organisateur, non vérifié », et la fiche passe en <b style="white-space:nowrap">pré-modération</b>
+      avant publication.
+    </div>
+
+    <div class="note" style="margin-top:10px">
+      <b>Ce que la fiche n'affichera jamais :</b> nombre de places, liste des inscrits, prix barré,
+      QR code d'entrée. Ce sont les quatre éléments qui transforment un agenda en billetterie.
+    </div>
+
+    <div class="warn red">
+      <b>Publication bloquée automatiquement</b>
+      Un IBAN, un numéro de compte ou un lien de paiement dans la description bloque la fiche. Un texte
+      du type « billet à vendre » ou « place à vendre » aussi : en Belgique, la revente de billets de
+      spectacle au-dessus du prix fixé par l'organisateur est interdite (SPF Économie, consulté le
+      24/10/2026).
+    </div>
+  </div>
+
+  <!-- ÉTAPE 4 -->
+  <div class="st">
+    <div class="hd"><div class="num">4</div><div class="tt">Affiche, description et règles</div><div class="stp">4 / 4</div></div>
+
+    <div class="lab">Affiche (1 à 3 images)</div>
+    <div class="files">
+      <div class="fl"><svg class="ico" viewBox="0 0 24 24" style="width:26px;height:26px"><path d="M3 9h18M6 9V6h12v3M4 9v11h16V9"/></svg></div>
+      <div class="fl add">+</div>
+    </div>
+
+    <div class="lab">À propos de cet événement</div>
+    <div class="area">
+      La brocante du quartier revient pour sa treizième édition. Une soixantaine d'emplacements sur la
+      place, un coin réservé aux enfants, et la petite restauration tenue par le comité. Les exposants
+      s'installent dès 06:30 ; les visiteurs sont attendus à partir de 08:00.
+    </div>
+    <div class="cnt">312 / 2 000 caractères · minimum 200</div>
+
+    <div class="row" style="margin-top:10px">
+      <div><div class="lab" style="margin-top:0">Accès PMR</div><div class="field f">Partiel</div></div>
+      <div><div class="lab" style="margin-top:0">Public</div><div class="field f">Tout public</div></div>
+      <div><div class="lab" style="margin-top:0">Plein air</div><div class="field f">Oui</div></div>
+    </div>
+
+    <div class="check"><div class="box on"></div><div>L'événement est <b>ouvert au public</b> — pas une fête privée.</div></div>
+    <div class="check"><div class="box on"></div><div>Nous n'avons <b>rien à vendre</b> ici : aucune place, aucun billet, aucun acompte.</div></div>
+    <div class="check"><div class="box on"></div><div>Les informations sont exactes et je préviendrai <b>si la date change ou si l'événement est annulé</b>.</div></div>
+
+    <div class="price">
+      <div class="pl">Compte ASBL · publication jusqu'au 25/10 + 7 jours <b class="grat">Gratuit</b></div>
+      <div class="psub">Sur un compte professionnel, le même événement coûterait <b>12 € HTVA</b> — une facture, sans reconduction.</div>
+    </div>
+
+    <div class="warn blue" style="margin-top:10px">
+      <b>Après validation</b>
+      Publication immédiate · contrôle humain sous 24 h · retrait sur signalement. En cas d'annulation,
+      la fiche reste 7 jours avec un bandeau rouge, et les personnes intéressées sont prévenues.
+    </div>
+  </div>
+</div>
+
+<div class="foot">
+  <div class="left">
+    Données de démonstration fictives. Aucun événement réel, aucun compte réel, aucun paiement.
+    Les textes de cette maquette sont ceux que l'utilisateur lira à l'écran.
+  </div>
+  <div class="btn">Publier l'événement</div>
+</div>
+
+</body>
+</html>

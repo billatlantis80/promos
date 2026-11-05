@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Kazendra — maquette /emploi</title>
+<style>
+  :root{--navy:#0D3B5B;--deep:#0A2F49;--orange:#EB912D;--ink:#13222E;--ink2:#4A5C6B;
+        --muted:#5E7180;--line:#E3E8ED;--bg2:#F5F7F9;--warm:#FFFBF5;--warmline:#F0DCC0}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Liberation Sans','DejaVu Sans',Arial,sans-serif;color:var(--ink);background:#fff;
+       width:1440px;-webkit-font-smoothing:antialiased}
+  .wrap{width:1200px;margin:0 auto}
+  a{color:inherit;text-decoration:none}
+  .ico{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;
+       stroke-linejoin:round}
+  .cap{background:#E7EBEF;font-size:11.5px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;
+       color:#5E7180;padding:9px 0 9px 120px}
+  header{background:var(--deep);color:#fff}
+  .bar{display:flex;align-items:center;gap:22px;height:70px}
+  .brand{display:flex;align-items:center;gap:10px}
+  .kmark{width:36px;height:38px;border-radius:9px;background:var(--orange);color:#2A1602;font-size:20px;
+         font-weight:800;display:flex;align-items:center;justify-content:center;letter-spacing:-1px}
+  .brand .nm{font-size:20px;font-weight:700;letter-spacing:-.3px}
+  nav{display:flex;gap:13px;font-size:12.5px;color:#CFE0EB;margin-left:4px;white-space:nowrap}
+  nav a.on{color:#fff;font-weight:700}
+  .right{margin-left:auto;display:flex;align-items:center;gap:12px}
+  .right .lnk{font-size:13px;color:#CFE0EB}
+  .av{width:32px;height:32px;border-radius:50%;background:var(--orange);color:#2A1602;font-size:12.5px;
+      font-weight:700;display:flex;align-items:center;justify-content:center}
+
+  .pageh{padding:30px 0 16px;display:flex;align-items:flex-end;gap:16px}
+  .pageh h1{font-size:33px;letter-spacing:-1.1px}
+  .pageh .sub{font-size:13px;color:var(--ink2);line-height:1.6;margin-top:8px;max-width:640px}
+  .pageh .sub b{color:var(--ink)}
+  .pageh .rt{margin-left:auto;text-align:right;font-size:11.5px;color:var(--muted);line-height:1.6}
+  .pageh .rt b{color:var(--ink);font-size:13px}
+
+  /* ---- filtres ---- */
+  .split{display:grid;grid-template-columns:296px 1fr;gap:30px;padding-bottom:40px;align-items:start}
+  .fcard{border:1px solid var(--line);border-radius:14px;padding:15px 16px 16px;margin-bottom:12px}
+  .fcard h4{font-size:11px;letter-spacing:.7px;text-transform:uppercase;color:#5E7180}
+  .fcard .hint{font-size:10.5px;line-height:1.5;color:var(--muted);margin-top:7px}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+  .chip{font-size:10.5px;font-weight:700;border:1px solid var(--line);border-radius:999px;
+        padding:6px 10px;background:#fff;color:var(--ink2)}
+  .chip.on{border-color:var(--navy);background:#F4F9FC;color:var(--navy);box-shadow:0 0 0 2px #EAF1F5}
+  .fake{display:flex;align-items:center;justify-content:space-between;border:1px solid #C9D6DF;
+        border-radius:9px;padding:9px 11px;font-size:12px;color:var(--ink2);margin-top:9px;background:#fff}
+  .range{display:flex;justify-content:space-between;font-size:9.5px;color:var(--muted);margin-top:5px}
+  .gauge{position:relative;height:4px;border-radius:99px;background:#E7EDF2;overflow:hidden;margin-top:9px}
+  .gauge i{position:absolute;left:0;top:0;bottom:0;border-radius:99px;background:var(--navy)}
+
+  /* ---- lignes d'offres ---- */
+  .olist{border-top:1px solid var(--line)}
+  .orow{display:grid;grid-template-columns:1fr 210px 132px;gap:14px;align-items:center;
+        padding:15px 0;border-bottom:1px solid #EDF2F6}
+  .orow .t b{font-size:14px;display:block;letter-spacing:-.2px}
+  .orow .t > span{font-size:11.5px;color:var(--ink2);display:block;margin-top:4px}
+  /* Cinquième et sixième occurrence du même défaut : le badge d'âge ET l'étiquette de contrat sont
+     aussi des <span> enfants directs de .t, donc la règle ci-dessus les étirait sur toute la largeur.
+     Le premier correctif était un :not(.b18) — il a réparé le badge et cassé l'étiquette, parce
+     qu'une exclusion doit être tenue à jour à chaque nouvel élément. L'override explicite, lui, se
+     lit à côté de la règle qu'il corrige et ne peut pas être oublié. */
+  .orow .t > span.b18, .orow .t > span.mt{display:inline-block}
+  .orow .t .mt{font-size:9.5px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;
+        background:#EAF1F5;color:var(--navy);border-radius:5px;padding:3px 6px;display:inline-block;
+        margin-top:7px;letter-spacing:.5px}
+  .orow .mid{font-size:11px;color:var(--ink2);line-height:1.6}
+  .orow .mid b{color:var(--ink)}
+  .orow .ac{text-align:right}
+  .orow .ac .go{background:var(--orange);color:#2A1602;font-size:11.5px;font-weight:800;border-radius:8px;
+        padding:10px 12px;display:inline-block;min-height:40px}
+  .orow .ac .dt{font-size:10px;color:var(--muted);margin-top:6px}
+  .b18{font-size:9px;font-weight:800;color:#8A2F1F;background:#FBE9E5;border-radius:4px;padding:2px 5px;
+       margin-left:6px;white-space:nowrap;display:inline-block}
+
+  /* ---- fiche ---- */
+  .fiche{display:grid;grid-template-columns:1fr 366px;gap:30px;padding:22px 0 40px;align-items:start}
+  .wcard{border:1px solid var(--line);border-radius:16px;padding:18px 20px 20px}
+  .whead{display:flex;align-items:baseline;gap:10px;margin-bottom:12px}
+  .whead h2{font-size:16px;letter-spacing:-.3px}
+  .whead span{font-size:10.5px;color:var(--muted);margin-left:auto;text-align:right}
+  .ment{display:flex;align-items:flex-start;gap:9px;font-size:11.5px;padding:7px 0;color:var(--ink2);
+        line-height:1.55}
+  .ment > .ck2{width:15px;height:15px;border-radius:50%;background:#E7F3EC;color:#25634A;display:flex;
+        align-items:center;justify-content:center;flex:none;margin-top:1px;font-size:8.5px;font-weight:900}
+  .ment b{color:var(--ink)}
+  .txt{font-size:12.5px;line-height:1.72;color:var(--ink2)}
+  .txt b{color:var(--ink)}
+  .scard{border:1px solid var(--line);border-radius:14px;padding:15px 16px 16px;margin-bottom:12px}
+  /* Image de marque de l'employeur (décision 37). Ici une PHOTO d'entreprise : la boulangerie n'a
+     pas de logo, et c'est exactement le cas que la règle doit couvrir. La même image sert sur
+     /job-etudiant — c'est le compte qui la porte, pas la porte. */
+  .empimg{width:38px;height:38px;border-radius:9px;overflow:hidden;flex:none;background:#F1F5F8}
+  .empimg svg,.empimg img{width:100%;height:100%;display:block}
+  .empwho{display:flex;align-items:center;gap:10px;margin-top:9px}
+  .empwho .nm3{font-size:12.5px;font-weight:800;color:var(--navy);letter-spacing:-.2px}
+  .scard h4{font-size:12.5px;letter-spacing:-.1px}
+  .scard .txt{margin-top:7px}
+  .entrow{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;font-size:11px;
+        padding:6px 0;border-top:1px solid #EDF2F6}
+  .entrow:first-of-type{border-top:0}
+  .entrow > b{color:var(--muted);font-weight:700;white-space:nowrap}
+  .entrow > span{text-align:right;color:var(--ink2);line-height:1.5}
+  .entrow > span b{color:#25634A}
+  .swnote{font-size:10.5px;line-height:1.6;color:var(--muted);margin-top:8px}
+  .swnote b{color:var(--ink2)}
+  .alert{background:#FDF3F1;border:1px solid #F0C9C0;border-radius:11px;padding:11px 13px;font-size:11px;
+        line-height:1.6;color:#7B2E1E;margin-bottom:12px}
+  .alert b{display:block;margin-bottom:3px;color:#6E2517}
+
+  /* ---- l'adresse, et le geste ---- */
+  .addrbox{margin-top:11px;border:1px dashed #C9D6DF;border-radius:10px;padding:10px 12px;background:#FBFDFE}
+  .addrbox .lb{font-size:9.5px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:#5E7180}
+  .addrbox .ad{font-size:12.5px;font-weight:700;color:var(--navy);margin-top:4px;word-break:break-all}
+  .addrbox .at{color:var(--orange);font-weight:800}
+  .addrbox .cp{font-size:10px;color:var(--muted);margin-top:5px}
+  .postuler{display:flex;align-items:center;justify-content:center;gap:9px;background:var(--orange);
+        color:#2A1602;font-size:13px;font-weight:800;border-radius:10px;padding:14px 16px;
+        min-height:46px;margin-top:11px;cursor:pointer}
+  .postuler .ico{width:17px;height:17px}
+  .whynot{font-size:10.5px;line-height:1.6;color:var(--muted);margin-top:7px}
+  /* Le brouillon proposé : montré AVANT le clic, jamais imposé. */
+  .draft{margin-top:11px;border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:#fff}
+  .draft .lb{font-size:9.5px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:#5E7180}
+  .draft .dtxt{font-size:11px;line-height:1.62;color:var(--ink2);margin-top:6px;white-space:pre-line}
+  .sans{display:flex;align-items:center;justify-content:center;min-height:44px;margin-top:8px;
+        font-size:11.5px;font-weight:700;color:var(--navy);border:1px solid var(--line);border-radius:9px;
+        background:#FBFDFE;text-align:center;padding:8px 10px}
+  .sans:hover{border-color:var(--navy);background:#F4F9FC}
+  .msans{display:flex;align-items:center;justify-content:center;min-height:44px;margin-top:4px;
+        font-size:11px;font-weight:700;color:var(--navy)}
+  .share{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:#fff;
+        color:var(--navy);display:flex;align-items:center;justify-content:center;margin-left:auto}
+  .share:hover{background:var(--orange);border-color:var(--orange);color:#2A1602}
+  .share .ico{width:15px;height:15px}
+
+  /* ---- champs factices ---- */
+  .formbox{border:1px solid var(--line);border-radius:16px;padding:20px 22px 22px}
+  .fsec{border-top:1px solid var(--line);padding-top:16px;margin-top:17px}
+  .fsec.first{border-top:0;padding-top:0;margin-top:0}
+  .fsec .fh{display:flex;align-items:baseline;gap:9px}
+  .fsec h3{font-size:11px;letter-spacing:.7px;text-transform:uppercase;color:#5E7180}
+  .fsec .fh span{font-size:10.5px;color:var(--muted);margin-left:auto}
+  .fgrid{display:grid;grid-template-columns:1fr 1fr;gap:13px 16px;margin-top:11px}
+  .fgrid .full{grid-column:1/-1}
+  .f label{font-size:10px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;color:#5E7180;
+        display:block;margin-bottom:5px}
+  .f .in{border:1px solid #C9D6DF;border-radius:9px;padding:10px 11px;font-size:12px;color:var(--ink2);
+        background:#fff;min-height:40px;display:flex;align-items:center;justify-content:space-between}
+  .f .hint2{font-size:10px;line-height:1.5;color:var(--muted);margin-top:5px}
+  .locked{display:grid;grid-template-columns:20px 1fr;gap:9px;border:1px solid #E3E8ED;border-radius:10px;
+        padding:10px 12px;background:#F7F9FB;font-size:11.5px;line-height:1.55;color:var(--ink2)}
+  .locked .lk{width:18px;height:18px;border-radius:50%;background:#E7EDF2;color:var(--navy);font-size:9px;
+        font-weight:800;display:flex;align-items:center;justify-content:center;margin-top:1px}
+  .locked b{color:var(--ink)}
+
+  /* ---- mes offres ---- */
+  .arow{display:grid;grid-template-columns:1fr 168px 116px;gap:12px;align-items:center;padding:13px 0;
+        border-top:1px solid #EDF2F6}
+  .arow.first{border-top:0}
+  .arow .t b{font-size:12.5px;display:block}
+  .arow .t > span{font-size:10.5px;color:var(--ink2);display:block;margin-top:3px}
+  .arow .motif{font-size:10px;color:#7B2E1E;background:#FDF3F1;border-radius:6px;padding:5px 8px;
+        margin-top:6px;display:inline-block;line-height:1.45}
+  .arow .st{font-size:10.5px;color:var(--muted);line-height:1.45}
+  .arow .ac{text-align:right;font-size:11px;font-weight:800;color:var(--navy)}
+  .tagx{font-size:9.5px;font-weight:800;letter-spacing:.3px;border-radius:5px;padding:3px 7px;
+        display:inline-block;background:#EAF1F5;color:var(--navy)}
+  .tagx.ok{background:#E7F3EC;color:#25634A}
+  .tagx.bad{background:#FBE9E5;color:#8A2F1F}
+  .tagx.draft{background:#EEF2F5;color:#5E7180}
+  .cnt{font-size:11.5px;color:var(--ink2);margin-bottom:12px}
+  .cnt b{color:var(--ink)}
+
+  /* ---- mobile ---- */
+  .mob{display:flex;gap:26px;padding:22px 0 40px;justify-content:center;background:#EEF2F5}
+  .phone{width:390px;background:#fff;border-radius:22px;overflow:hidden;box-shadow:0 14px 40px rgba(11,40,62,.16);
+        display:flex;flex-direction:column;position:relative}
+  .phead{background:var(--deep);color:#fff;padding:14px 16px 13px;display:flex;align-items:center;gap:10px}
+  .phead .pt2{font-size:13px;font-weight:700}
+  .phead .ps{font-size:10px;color:#B9CFDD;margin-top:2px}
+  .phead .badge{margin-left:auto;font-size:9.5px;font-weight:800;background:rgba(255,255,255,.14);
+        border-radius:5px;padding:3px 7px}
+  .pbody{padding:12px 14px 14px;flex:1}
+  .pcard{border:1px solid var(--line);border-radius:12px;padding:12px 13px;margin-bottom:9px}
+  .pcard .pt{font-size:13.5px;font-weight:700;letter-spacing:-.2px}
+  .pcard .pm{font-size:10.5px;color:var(--ink2);margin-top:4px;line-height:1.5}
+  .pcard .pfoot{display:flex;align-items:center;gap:7px;margin-top:9px;font-size:10px;color:var(--muted)}
+  .pcard .pgo{margin-left:auto;background:var(--orange);color:#2A1602;font-size:10.5px;font-weight:800;
+        border-radius:7px;padding:9px 11px;min-height:44px;display:flex;align-items:center}
+  .sticky{position:sticky;bottom:0;background:#fff;border-top:1px solid var(--line);padding:11px 14px;
+        display:flex;gap:9px;align-items:center}
+  .sticky .gh{font-size:10.5px;font-weight:700;color:var(--muted);border:1px solid var(--line);
+        border-radius:8px;padding:11px 12px;min-height:44px;display:flex;align-items:center}
+  .sticky .go{flex:1;background:var(--orange);color:#2A1602;font-size:12.5px;font-weight:800;
+        border-radius:9px;padding:12px 14px;min-height:44px;display:flex;align-items:center;
+        justify-content:center}
+  .foot{font-size:10.5px;line-height:1.65;color:var(--muted);border-top:1px solid var(--line);
+        margin-top:6px;padding:14px 0 30px;max-width:980px}
+  .foot code{font-family:'DejaVu Sans Mono',monospace;font-size:10px;color:var(--ink2)}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════ ÉCRAN 1 ═══════════════════════ -->
+<div class="cap">Écran 1 — La liste&nbsp;: on cherche sans compte, et rien ne se cache derrière une inscription</div>
+<header><div class="wrap bar">
+  <div class="brand"><div class="kmark">K</div><div class="nm">Kazendra</div></div>
+  <nav><a href="#">Accueil</a><a href="#">Promos</a><a href="#">Annonces</a><a href="#">Immo</a>
+    <a href="#">Événements</a><a href="#">Rencontres</a><a href="#">Jobs étudiants</a>
+    <a class="on" href="#">Emploi</a><a href="#">Artisans</a></nav>
+  <div class="right"><a class="lnk" href="#">Se connecter</a></div>
+</div></header>
+
+<div class="wrap">
+  <div class="pageh">
+    <div>
+      <h1>Emploi</h1>
+      <div class="sub">Les offres des employeurs de ta région, avec <b>l'adresse à laquelle écrire</b>.
+        Pas de compte, pas de formulaire, pas de CV déposé ici&nbsp;: tu écris directement à l'employeur,
+        depuis ta propre boîte mail.</div>
+    </div>
+    <div class="rt"><b>128 offres</b><br>18 dans ta commune<br>mise à jour il y a 6 min</div>
+  </div>
+
+  <div class="split">
+    <div>
+      <div class="fcard">
+        <h4>Métier</h4>
+        <div class="chips">
+          <span class="chip on">Commerce et vente</span><span class="chip">Horeca</span>
+          <span class="chip">Logistique</span><span class="chip">Administration</span>
+          <span class="chip">Construction</span><span class="chip">Soins</span>
+          <span class="chip">Informatique</span><span class="chip">Industrie</span>
+        </div>
+        <div class="hint">Douze familles, pas deux cents métiers&nbsp;: une liste qu'on peut tenir à jour.</div>
+      </div>
+
+      <div class="fcard">
+        <h4>Commune</h4>
+        <div class="fake"><span>1170 · Watermael-Boitsfort</span>
+          <svg class="ico" viewBox="0 0 24 24" style="width:14px;height:14px"><path d="M6 9l6 6 6-6"/></svg></div>
+        <div class="gauge"><i style="width:38%"></i></div>
+        <div class="range"><span>ma commune</span><span>30 km</span></div>
+        <div class="hint">Rayon estimé <b>entre communes</b>, depuis ton code postal — jamais ta position,
+          qui n'est pas demandée.</div>
+      </div>
+
+      <div class="fcard">
+        <h4>Contrat</h4>
+        <div class="chips">
+          <span class="chip">CDI</span><span class="chip on">CDD</span><span class="chip">Intérim</span>
+          <span class="chip">Saisonnier</span><span class="chip">Stage</span>
+        </div>
+        <h4 style="margin-top:13px">Temps</h4>
+        <div class="chips"><span class="chip on">Plein</span><span class="chip">Partiel</span></div>
+        <div class="hint">Le <b>statut</b> et la <b>durée</b> sont dans l'offre, jamais un âge&nbsp;:
+          c'est un critère protégé, y compris pour un emploi.</div>
+      </div>
+    </div>
+
+    <div>
+      <div class="cnt"><b>14 offres</b> correspondent · les plus récentes d'abord</div>
+      <div class="olist">
+
+        <div class="orow">
+          <div class="t"><b>Vendeur·se en boulangerie</b>
+            <span>Boulangerie du Parc · Watermael-Boitsfort</span>
+            <span class="mt">CDI · 38 h · temps plein</span></div>
+          <div class="mid">Salaire convenu<br><b>CP 118</b> · boulangeries</div>
+          <div class="ac"><span class="go">Écrire</span><div class="dt">il y a 2 jours</div></div>
+        </div>
+
+        <div class="orow">
+          <div class="t"><b>Préparateur·rice de commandes</b>
+            <span>Délices du Marché SA · Anderlecht</span>
+            <span class="mt">CDD 6 mois · 38 h · temps plein</span></div>
+          <div class="mid">Salaire convenu<br><b>CP 118</b> · alimentation</div>
+          <div class="ac"><span class="go">Écrire</span><div class="dt">il y a 3 jours</div></div>
+        </div>
+
+        <div class="orow">
+          <div class="t"><b>Aide-soignant·e (nuit)</b><span class="b18">18 ans et plus</span>
+            <span>Résidence Les Tilleuls · Ixelles</span>
+            <span class="mt">CDI · 30 h · temps partiel</span></div>
+          <div class="mid">Salaire convenu<br><b>CP 330</b> · soins de santé</div>
+          <div class="ac"><span class="go">Écrire</span><div class="dt">il y a 4 jours</div></div>
+        </div>
+
+        <div class="orow">
+          <div class="t"><b>Employé·e administratif·ve</b>
+            <span>ASBL Quartier Solidaire · Forest</span>
+            <span class="mt">CDI · 32 h · temps partiel</span></div>
+          <div class="mid">Salaire convenu<br><b>CP 329</b> · socio-culturel</div>
+          <div class="ac"><span class="go">Écrire</span><div class="dt">il y a 5 jours</div></div>
+        </div>
+
+      </div>
+      <div class="foot">Cette porte est en <b>affichage pur</b>&nbsp;: Kazendra ne reçoit aucune
+        candidature, ne transmet rien, et ne conserve aucune donnée de candidat. Le bouton
+        « Écrire » ouvre <b>ton</b> gestionnaire de courrier avec l'adresse de l'employeur — rien ne
+        passe par Kazendra, ni dans un sens ni dans l'autre.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ ÉCRAN 2 ═══════════════════════ -->
+<div class="cap">Écran 2 — Une offre&nbsp;: les cinq mentions, l'adresse, et le seul geste de la porte</div>
+<header><div class="wrap bar">
+  <div class="brand"><div class="kmark">K</div><div class="nm">Kazendra</div></div>
+  <nav><a href="#">Accueil</a><a href="#">Promos</a><a href="#">Annonces</a><a href="#">Immo</a>
+    <a href="#">Événements</a><a href="#">Rencontres</a><a href="#">Jobs étudiants</a>
+    <a class="on" href="#">Emploi</a><a href="#">Artisans</a></nav>
+  <div class="right"><a class="lnk" href="#">Se connecter</a></div>
+</div></header>
+
+<div class="wrap">
+  <div class="fiche">
+    <div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:9px">
+        <span class="chip on">CDI</span><span class="chip">38 h · temps plein</span>
+        <span class="chip">Watermael-Boitsfort</span>
+        <span style="margin-left:auto;font-size:10.5px;color:var(--muted)">publiée il y a 2 jours ·
+          valable jusqu'au 24 novembre</span>
+      </div>
+      <h1 style="font-size:29px;letter-spacing:-1px">Vendeur·se en boulangerie</h1>
+
+      <div class="wcard" style="margin-top:14px">
+        <div class="whead"><h2>Les cinq mentions obligatoires</h2>
+          <span>et elles y sont toutes</span></div>
+        <div class="ment"><span class="ck2">✓</span><div><b>Employeur identifié</b> — Boulangerie du
+          Parc, numéro d'entreprise 0748.512.396, <b>vérifié à la main le 12 octobre 2026</b>. Aucune
+          annonce anonyme n'est acceptée.</div></div>
+        <div class="ment"><span class="ck2">✓</span><div><b>Lieu</b> — Watermael-Boitsfort (1170). Le
+          lieu d'exécution est la commune, jamais l'adresse d'un particulier.</div></div>
+        <div class="ment"><span class="ck2">✓</span><div><b>Durée</b> — contrat à durée indéterminée,
+          38 h par semaine.</div></div>
+        <div class="ment"><span class="ck2">✓</span><div><b>Statut</b> — salarié. Ce n'est pas un stage,
+          pas une intérim, pas une mission d'indépendant.</div></div>
+        <div class="ment"><span class="ck2">✓</span><div><b>Rémunération</b> — salaire convenu, encadré
+          par la commission paritaire 118 (boulangeries et pâtisseries). <b>Kazendra n'affiche aucun
+          barème</b>&nbsp;: nous ne le connaissons pas, et un chiffre inventé serait pire qu'aucun.</div></div>
+      </div>
+
+      <div class="wcard" style="margin-top:12px">
+        <div class="whead"><h2>L'offre</h2><span>écrite par l'employeur</span></div>
+        <div class="txt">
+          Mise en place du magasin, service au comptoir et encaissement, du mardi au samedi de 7 h à
+          15 h. Vous travaillez avec la boulangère&nbsp;; jamais seul·e en caisse les deux premières
+          semaines.
+          <br><br>
+          Nous cherchons quelqu'un de ponctuel et à l'aise avec le public. Aucune expérience n'est
+          exigée&nbsp;: la mise au courant se fait sur place, et elle est payée.
+        </div>
+      </div>
+
+      <div class="wcard" style="margin-top:12px">
+        <div class="whead"><h2>Ce qu'une offre ne peut pas écrire ici</h2>
+          <span>bloqué à la saisie, pas seulement déconseillé</span></div>
+        <div class="ment"><span class="ck2">✓</span><div>Un âge, une fourchette d'âge, ou «&nbsp;jeune&nbsp;»
+          comme qualité — l'âge est un critère protégé, <i>Unia</i> le rappelle pour le recrutement.</div></div>
+        <div class="ment"><span class="ck2">✓</span><div>Une préférence de sexe, d'origine ou de religion.</div></div>
+        <div class="ment"><span class="ck2">✓</span><div>Un IBAN, un numéro de compte, ou une demande
+          d'argent&nbsp;: un employeur ne fait jamais payer pour postuler.</div></div>
+        <div class="ment"><span class="ck2">✓</span><div>Une photo ou un logo comme argument de vente.</div></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="scard">
+        <h4>Écrire à l'employeur</h4>
+        <div class="txt" style="margin-top:6px">Un courriel s'ouvre dans <b>ton</b> application de
+          messagerie, déjà adressé. Rien ne passe par Kazendra&nbsp;: ni ta candidature, ni ton CV, ni
+          ton nom.</div>
+
+        <div class="addrbox">
+          <div class="lb">Adresse de contact</div>
+          <div class="ad">recrutement<span class="at"> [arobase] </span>boulangerie-du-parc.be</div>
+          <div class="cp">Affichée ainsi pour qu'un robot ne la récolte pas telle quelle. Un humain la
+            lit et la copie sans effort — ce n'est pas une protection, c'est un ralentisseur.</div>
+        </div>
+
+        <div class="draft">
+          <div class="lb">Le message proposé</div>
+          <div class="dtxt">Madame, Monsieur,
+
+Votre offre « Vendeur·se en boulangerie » retient mon attention. Je vous propose ma candidature et reste disponible pour un entretien à votre convenance.
+
+Je vous prie d'agréer, Madame, Monsieur, mes salutations distinguées.</div>
+        </div>
+
+        <div class="postuler" id="postuler" data-a="recrutement" data-b="boulangerie-du-parc.be"
+             data-sujet="Vendeur·se en boulangerie — candidature"
+             data-corps="Madame, Monsieur,\n\nVotre offre « Vendeur·se en boulangerie » retient mon attention. Je vous propose ma candidature et reste disponible pour un entretien à votre convenance.\n\nJe vous prie d'agréer, Madame, Monsieur, mes salutations distinguées.">
+          <svg class="ico" viewBox="0 0 24 24"><path d="M4 6h16v12H4z"/><path d="M4 7l8 6 8-6"/></svg>
+          Écrire avec ce texte
+        </div>
+        <a class="sans" data-a="recrutement" data-b="boulangerie-du-parc.be"
+           data-sujet="Vendeur·se en boulangerie — candidature">Écrire sans texte — message vide</a>
+        <div class="whynot">Ouvre ton gestionnaire de courrier par défaut, avec le texte ci-dessus
+          <b>que tu peux modifier ou effacer</b>. S'il ne s'ouvre pas — ou s'il n'y en a pas —
+          <b>copie l'adresse</b>&nbsp;: elle est là pour ça.</div>
+      </div>
+
+      <div class="alert">
+        <b>Ne donnez jamais ces trois choses</b>
+        Votre IBAN ou numéro de compte, une copie de votre carte d'identité, ou un mot de passe. Aucun
+        employeur sérieux ne les demande avant un contrat signé. Et cette conversation ne passe plus par
+        Kazendra&nbsp;: personne ne relira le message à votre place.
+      </div>
+
+      <div class="scard">
+        <h4>L'employeur</h4>
+        <div class="empwho"><span class="empimg"><svg viewBox="0 0 64 64" role="img" aria-label="Photo de la Boulangerie du Parc">
+          <rect width="64" height="64" fill="#E8DCC8"/>
+          <rect y="14" width="64" height="11" fill="#EB912D"/>
+          <path d="M5 14h7v11H5zM19 14h7v11h-7zM33 14h7v11h-7zM47 14h7v11h-7zM61 14h3v11h-3z" fill="#FFF6E8"/>
+          <rect x="7" y="31" width="21" height="17" fill="#9FB6C4"/>
+          <rect x="36" y="31" width="18" height="29" fill="#0D3B5B"/>
+          <rect x="3" y="56" width="58" height="8" fill="#C9B89C"/></svg></span>
+          <span class="nm3">Boulangerie du Parc</span></div>
+        <div class="entrow" style="margin-top:8px"><b>Numéro BCE</b><span>0748.512.396 — <b>vérifié à la main le 12/10/2026</b></span></div>
+        <div class="entrow"><b>Commission</b><span>118 — boulangeries et pâtisseries (déclarée par
+          l'employeur)</span></div>
+        <div class="entrow"><b>Lieu</b><span>Watermael-Boitsfort (1170)</span></div>
+        <div class="swnote">Vérifié à la main, jamais «&nbsp;certifié&nbsp;»&nbsp;: nous contrôlons le
+          numéro d'entreprise, pas la santé de la société.</div>
+      </div>
+
+      <div class="scard">
+        <h4>Ouverte aux adultes</h4>
+        <div class="txt" style="margin-top:6px">Cette porte est réservée aux <b>18 ans et plus</b> — ce
+          n'est pas un filtre d'âge caché, c'est la nature du contrat. Les jobs étudiants ont leur propre
+          porte, avec leurs propres règles.</div>
+      </div>
+
+      <div class="scard" style="display:flex;align-items:center;gap:10px">
+        <h4 style="margin:0">Partager</h4>
+        <a href="#" class="share" aria-label="Partager cette offre">
+          <svg class="ico" viewBox="0 0 24 24"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7"/>
+            <path d="M12 16V4"/><path d="M8 8l4-4 4 4"/></svg>
+        </a>
+        <a href="#" class="swnote" style="margin:0 0 0 auto;color:var(--muted)">Signaler cette offre</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ ÉCRAN 3 ═══════════════════════ -->
+<div class="cap">Écran 3 — Le dépôt&nbsp;: l'annonce, l'adresse qui sera publique, et la déclaration qui va avec</div>
+<header><div class="wrap bar">
+  <div class="brand"><div class="kmark">K</div><div class="nm">Kazendra</div></div>
+  <nav><a href="#">Accueil</a><a href="#">Promos</a><a href="#">Annonces</a><a href="#">Immo</a>
+    <a href="#">Événements</a><a href="#">Rencontres</a><a href="#">Jobs étudiants</a>
+    <a class="on" href="#">Emploi</a><a href="#">Artisans</a></nav>
+  <div class="right"><span class="lnk">Boulangerie du Parc</span><div class="av">B</div></div>
+</div></header>
+
+<div class="wrap">
+  <div class="pageh"><div><h1 style="font-size:29px;letter-spacing:-1px">Publier une offre</h1>
+    <div class="sub">Cinq mentions obligatoires, une adresse de contact, et une case à cocher qui n'est
+      pas décorative.</div></div>
+    <div class="rt"><b>Gratuit au lancement</b><br>3 annonces actives maximum</div></div>
+
+  <div class="fiche" style="padding-top:6px">
+    <div class="formbox">
+      <div class="fsec first">
+        <div class="fh"><h3>1 · L'employeur</h3><span>déjà vérifié, on ne redemande pas</span></div>
+        <div class="fgrid">
+          <div class="f"><label>Dénomination</label><div class="in">Boulangerie du Parc</div></div>
+          <div class="f"><label>Numéro d'entreprise</label>
+            <div class="in">0748.512.396 <span style="color:#25634A;font-weight:800;font-size:10px">vérifié</span></div></div>
+        </div>
+      </div>
+
+      <div class="fsec">
+        <div class="fh"><h3>2 · L'offre</h3><span>les cinq mentions</span></div>
+        <div class="fgrid">
+          <div class="f full"><label>Intitulé du poste</label>
+            <div class="in">Vendeur·se en boulangerie</div></div>
+          <div class="f"><label>Métier</label><div class="in">Commerce et vente
+            <svg class="ico" viewBox="0 0 24 24" style="width:13px;height:13px"><path d="M6 9l6 6 6-6"/></svg></div></div>
+          <div class="f"><label>Lieu (commune)</label><div class="in">1170 · Watermael-Boitsfort
+            <svg class="ico" viewBox="0 0 24 24" style="width:13px;height:13px"><path d="M6 9l6 6 6-6"/></svg></div></div>
+          <div class="f"><label>Type de contrat</label><div class="in">CDI
+            <svg class="ico" viewBox="0 0 24 24" style="width:13px;height:13px"><path d="M6 9l6 6 6-6"/></svg></div></div>
+          <div class="f"><label>Temps de travail</label><div class="in">38 h · temps plein</div></div>
+          <div class="f full"><label>Rémunération et commission paritaire</label>
+            <div class="in">Salaire convenu · CP 118</div>
+            <div class="hint2">Kazendra n'affiche aucun barème&nbsp;: c'est vous qui déclarez, et c'est
+              écrit sur l'offre comme déclaré.</div></div>
+          <div class="f full"><label>Description</label>
+            <div class="in" style="min-height:64px;align-items:flex-start">Mise en place, service au comptoir, encaissement…</div></div>
+        </div>
+      </div>
+
+      <div class="fsec">
+        <div class="fh"><h3>3 · L'adresse qui recevra les candidatures</h3><span>elle sera publique</span></div>
+        <div class="fgrid">
+          <div class="f full"><label>Adresse de contact</label>
+            <div class="in">recrutement@boulangerie-du-parc.be</div>
+            <div class="hint2"><b>Cette adresse sera publique et récupérable par des robots.</b> Si vous
+              ne voulez pas de publicité indésirable, utilisez une adresse dédiée au recrutement. Elle
+              est effacée avec l'annonce.</div></div>
+        </div>
+        <div class="locked" style="margin-top:11px">
+          <span class="lk">✓</span>
+          <div><b>Je déclare être autorisé·e à publier cette adresse</b> et j'accepte qu'elle soit
+            publique pendant la durée de l'annonce. La déclaration est horodatée et conservée avec
+            l'offre. <span style="color:var(--muted)">— si elle appartient à une personne nommée, c'est
+            son accord qu'il faut, pas seulement le vôtre.</span></div>
+        </div>
+      </div>
+
+      <div class="fsec">
+        <div class="fh"><h3>4 · Ce qui est verrouillé</h3><span>pas un interrupteur</span></div>
+        <div class="locked">
+          <span class="lk">🔒</span>
+          <div><b>Offre réservée aux 18 ans et plus</b> — toujours. Ce n'est pas un choix&nbsp;: la
+            porte s'adresse aux adultes, et les jobs étudiants ont la leur. Laisser cocher reviendrait à
+            laisser croire que c'est négociable.</div>
+        </div>
+      </div>
+
+      <div class="fsec">
+        <div class="fh"><h3>5 · Avant publication</h3></div>
+        <div class="locked">
+          <span class="lk">👁</span>
+          <div><b>Une personne relit l'offre sous 24 h.</b> Pas d'automatisme&nbsp;: le contact sort de
+            Kazendra, donc c'est le seul contrôle qui reste. Une adresse <code>@gmail.com</code> pour une
+            société qui a un nom de domaine déclenche une question, pas un refus.</div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="scard">
+        <h4>Ce que vous ne pouvez pas écrire</h4>
+        <div class="ment" style="padding:5px 0"><span class="ck2">✓</span><div>Un âge, une fourchette
+          d'âge, ou «&nbsp;jeune&nbsp;» comme qualité</div></div>
+        <div class="ment" style="padding:5px 0"><span class="ck2">✓</span><div>Une préférence de sexe,
+          d'origine ou de religion</div></div>
+        <div class="ment" style="padding:5px 0"><span class="ck2">✓</span><div>Un IBAN, ou une demande
+          d'argent au candidat</div></div>
+        <div class="ment" style="padding:5px 0"><span class="ck2">✓</span><div>Une photo ou un logo
+          comme argument</div></div>
+      </div>
+
+      <div class="scard">
+        <h4>Ce que Kazendra ne fait pas</h4>
+        <div class="txt" style="margin-top:6px">Il ne reçoit <b>aucune candidature</b>, ne transmet
+          <b>aucun CV</b>, ne trie <b>aucun profil</b> et ne facture <b>aucune heure</b>. Le contrat est
+          entre vous et la personne que vous engagez&nbsp;: c'est ce qui nous garde hors du rôle de
+          placeur.</div>
+      </div>
+
+      <div class="scard">
+        <h4>Ce que ça coûte</h4>
+        <div class="txt" style="margin-top:6px"><b>0 € au lancement.</b> Le prix de 39 € est un réglage,
+          pas une constante&nbsp;: il s'activera dans le panneau, et l'annonce portera alors la mention
+          «&nbsp;annonce sponsorisée&nbsp;». Jamais facturé à celui qui cherche un emploi.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ ÉCRAN 4 ═══════════════════════ -->
+<div class="cap">Écran 4 — Mes offres&nbsp;: cinq états, une action par ligne, et le plafond qui se voit venir</div>
+<header><div class="wrap bar">
+  <div class="brand"><div class="kmark">K</div><div class="nm">Kazendra</div></div>
+  <nav><a href="#">Accueil</a><a href="#">Promos</a><a href="#">Annonces</a><a href="#">Immo</a>
+    <a href="#">Événements</a><a href="#">Rencontres</a><a href="#">Jobs étudiants</a>
+    <a class="on" href="#">Emploi</a><a href="#">Artisans</a></nav>
+  <div class="right"><span class="lnk">Boulangerie du Parc</span><div class="av">B</div></div>
+</div></header>
+
+<div class="wrap">
+  <div class="pageh"><div><h1 style="font-size:29px;letter-spacing:-1px">Mes offres</h1>
+    <div class="sub">Un brouillon, une offre en relecture, une publiée, une refusée, une expirée&nbsp;:
+      cinq états, et une seule action par ligne.</div></div>
+    <div class="rt"><b>2 sur 3 annonces actives</b><br>le plafond ne compte ni les brouillons,<br>ni
+      les refusées, ni les expirées</div></div>
+
+  <div class="fiche" style="padding-top:6px">
+    <div>
+      <div class="arow first">
+        <div class="t"><b>Vendeur·se en boulangerie</b>
+          <span>CDI · 38 h · Watermael-Boitsfort · publiée il y a 2 jours</span></div>
+        <div class="st">valable jusqu'au 24 novembre<br><span class="tagx ok">publiée</span></div>
+        <div class="ac">Voir l'offre</div>
+      </div>
+
+      <div class="arow">
+        <div class="t"><b>Second·e de comptoir (week-end)</b>
+          <span>CDD · 16 h · Watermael-Boitsfort · déposée hier</span></div>
+        <div class="st"><span class="tagx">en relecture</span><br>relue sous 24 h</div>
+        <div class="ac">Modifier</div>
+      </div>
+
+      <div class="arow">
+        <div class="t"><b>Apprenti·e pâtissier·ère</b>
+          <span>CDI · 38 h · Watermael-Boitsfort · déposée le 12 octobre</span>
+          <div class="motif">Refusée&nbsp;: «&nbsp;apprenti·e&nbsp;» n'est pas un contrat d'occupation —
+            précisez le type de contrat, ou déposez sur la porte Jobs étudiants.</div></div>
+        <div class="st"><span class="tagx bad">refusée</span><br>motif conservé</div>
+        <div class="ac">Corriger</div>
+      </div>
+
+      <div class="arow">
+        <div class="t"><b>Vendeur·se (étudiant)</b>
+          <span>CDD · 12 h · publiée le 20 septembre</span></div>
+        <div class="st">expirée le 20 octobre<br><span class="tagx draft">expirée</span></div>
+        <div class="ac">Republier</div>
+      </div>
+
+      <div class="arow">
+        <div class="t"><b>Préparateur·rice de commandes</b>
+          <span>CDD · 38 h · Anderlecht · brouillon</span></div>
+        <div class="st"><span class="tagx draft">brouillon</span><br>jamais soumise</div>
+        <div class="ac">Continuer</div>
+      </div>
+    </div>
+
+    <div>
+      <div class="scard">
+        <h4>Le plafond, et pourquoi il existe</h4>
+        <div class="txt" style="margin-top:6px"><b>Trois annonces actives</b> par entreprise. Une offre
+          qui a un mois est périmée&nbsp;: au-delà de trois en même temps, la page devient un mur et
+          plus personne ne lit.</div>
+        <div class="swnote">Les brouillons, les refusées et les expirées <b>ne comptent pas</b> dans le
+          plafond&nbsp;: on ne punit pas quelqu'un pour un brouillon.</div>
+      </div>
+
+      <div class="scard">
+        <h4>L'expiration se voit venir</h4>
+        <div class="txt" style="margin-top:6px">30 jours, avec la date affichée dès la publication. La
+          republication est un geste, pas une reconstruction&nbsp;: l'offre repart telle quelle.</div>
+      </div>
+
+      <div class="scard">
+        <h4>Un refus porte un motif</h4>
+        <div class="txt" style="margin-top:6px">Le motif reste affiché, ce qui permet de contester — et
+          de voir qu'on n'a pas été refusé deux fois pour la même raison.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ ÉCRAN 5 ═══════════════════════ -->
+<div class="cap">Écran 5 — Mobile 390 px&nbsp;: la liste et la fiche, avec un seul geste qui reste au pouce</div>
+<div class="mob">
+  <div class="phone">
+    <div class="phead"><div><div class="pt2">Emploi</div>
+      <div class="ps">14 offres · Watermael-Boitsfort</div></div><span class="badge">390 px</span></div>
+    <div class="pbody">
+      <div class="pcard">
+        <div class="pt">Vendeur·se en boulangerie</div>
+        <div class="pm">Boulangerie du Parc · Watermael-Boitsfort<br>CDI · 38 h · temps plein</div>
+        <div class="pfoot"><span>il y a 2 jours</span><span class="pgo">Écrire</span></div>
+      </div>
+      <div class="pcard">
+        <div class="pt">Préparateur·rice de commandes</div>
+        <div class="pm">Délices du Marché SA · Anderlecht<br>CDD 6 mois · 38 h</div>
+        <div class="pfoot"><span>il y a 3 jours</span><span class="pgo">Écrire</span></div>
+      </div>
+      <div class="pcard">
+        <div class="pt">Aide-soignant·e (nuit) <span class="b18">18 ans et plus</span></div>
+        <div class="pm">Résidence Les Tilleuls · Ixelles<br>CDI · 30 h · temps partiel</div>
+        <div class="pfoot"><span>il y a 4 jours</span><span class="pgo">Écrire</span></div>
+      </div>
+      <div class="pcard">
+        <div class="pt">Employé·e administratif·ve</div>
+        <div class="pm">ASBL Quartier Solidaire · Forest<br>CDI · 32 h · temps partiel</div>
+        <div class="pfoot"><span>il y a 5 jours</span><span class="pgo">Écrire</span></div>
+      </div>
+      <div class="pcard">
+        <div class="pt">Chauffeur·se livreur·se</div>
+        <div class="pm">Transports Midi SA · Anderlecht<br>CDI · 38 h · temps plein</div>
+        <div class="pfoot"><span>il y a 6 jours</span><span class="pgo">Écrire</span></div>
+      </div>
+      <div class="swnote" style="text-align:center">Aucun compte pour consulter.<br>Rien à télécharger
+        pour postuler.</div>
+    </div>
+  </div>
+
+  <div class="phone">
+    <div class="phead"><div><div class="pt2">Vendeur·se en boulangerie</div>
+      <div class="ps">Boulangerie du Parc · 1170</div></div><span class="badge">CDI</span></div>
+    <div class="pbody" style="padding-bottom:0">
+      <div class="pcard" style="border:0;padding:0 0 10px">
+        <div class="pm" style="margin:0">Salaire convenu · CP 118 · 38 h<br>
+          <b style="color:#25634A">Employeur vérifié à la main le 12/10/2026</b></div>
+      </div>
+      <div class="pcard">
+        <div class="pt" style="font-size:12.5px">Écrire à l'employeur</div>
+        <div class="pm">Un courriel s'ouvre dans <b>ton</b> application, déjà adressé. Rien ne passe par
+          Kazendra.</div>
+        <div class="addrbox" style="margin-top:9px">
+          <div class="lb">Adresse de contact</div>
+          <div class="ad" style="font-size:11.5px">recrutement<span class="at"> [arobase] </span>boulangerie-du-parc.be</div>
+        </div>
+        <div class="draft" style="margin-top:9px">
+          <div class="lb">Le message proposé</div>
+          <div class="dtxt" style="font-size:10.5px">Madame, Monsieur,
+
+Votre offre « Vendeur·se en boulangerie » retient mon attention. Je vous propose ma candidature et reste disponible pour un entretien à votre convenance.
+
+Je vous prie d'agréer, Madame, Monsieur, mes salutations distinguées.</div>
+        </div>
+        <a class="msans" data-a="recrutement" data-b="boulangerie-du-parc.be"
+           data-sujet="Vendeur·se en boulangerie — candidature">ou écrire sans texte</a>
+      </div>
+      <div class="alert" style="font-size:10.5px">
+        <b>Jamais d'IBAN, de carte d'identité ni de mot de passe</b>
+        Et personne ne relira le message à votre place&nbsp;: il ne passe plus par Kazendra.
+      </div>
+      <div class="pcard">
+        <div class="pt" style="font-size:12.5px">Les cinq mentions obligatoires</div>
+        <div class="pm" style="margin-top:6px">Employeur identifié · lieu · durée · statut ·
+          rémunération, <b>et la commission paritaire</b>. Elles y sont toutes&nbsp;: une offre
+          incomplète ne serait pas publiée.</div>
+        <div class="pm" style="margin-top:6px">Aucun âge, aucune fourchette d'âge&nbsp;: c'est un
+          critère protégé, y compris pour un emploi.</div>
+      </div>
+    </div>
+    <div class="sticky">
+      <div class="gh">Signaler</div>
+      <div class="go" data-a="recrutement" data-b="boulangerie-du-parc.be"
+           data-sujet="Vendeur·se en boulangerie — candidature"
+           data-corps="Madame, Monsieur,\n\nVotre offre « Vendeur·se en boulangerie » retient mon attention. Je vous propose ma candidature et reste disponible pour un entretien à votre convenance.\n\nJe vous prie d'agréer, Madame, Monsieur, mes salutations distinguées.">Écrire</div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap"><div class="foot">
+  <b>La mécanique, écrite pour être vérifiée</b> — l'adresse complète n'existe sur <b>aucun écran
+  public</b>&nbsp;: elle est portée par deux attributs séparés (<code>data-a</code>,
+  <code>data-b</code>) et assemblée au clic en <code>mailto:</code>. C'est un ralentisseur pour les
+  robots, pas une protection — et on ne prétend pas le contraire. Le corps du message est
+  <b>proposé, jamais imposé</b>&nbsp;: il n'est ajouté que par le geste «&nbsp;avec ce texte&nbsp;», et
+  le second geste ouvre un message <b>vide</b>. Aucune signature, aucune mention de Kazendra, et
+  jamais «&nbsp;je joins mon CV&nbsp;»&nbsp;: rien n'est joint.
+</div></div>
+
+<script>
+  // L'adresse n'est jamais écrite en clair dans le document : elle est assemblée au clic.
+  document.querySelectorAll('[data-a][data-b]').forEach(function (b) {
+    b.addEventListener('click', function (e) {
+      e.preventDefault();
+      var adresse = b.dataset.a + '\u0040' + b.dataset.b;
+      var lien = 'mailto:' + adresse + '?subject=' + encodeURIComponent(b.dataset.sujet || '');
+      // Le corps est PROPOSÉ, jamais imposé : le geste « sans texte » n'a pas de data-corps,
+      // donc il n'y a pas de &body= du tout. Les \n de l'attribut redeviennent des retours à la ligne.
+      if (b.dataset.corps) {
+        lien += '&body=' + encodeURIComponent(b.dataset.corps.replace(/\\n/g, '\n'));
+      }
+      // Témoin de ce que la maquette s'apprête à faire : c'est ce que l'audit lit, parce que
+      // window.location n'est pas observable depuis Playwright (propriété non reconfigurable).
+      document.documentElement.dataset.dernierCourriel = lien;
+      window.location.href = lien;
+    });
+  });
+</script>
+</body>
+</html>

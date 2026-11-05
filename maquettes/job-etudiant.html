@@ -1,0 +1,2193 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Kazendra — maquette /job-etudiant</title>
+<style>
+  :root{--navy:#0D3B5B;--deep:#0A2F49;--orange:#EB912D;--ink:#13222E;--ink2:#4A5C6B;
+        --muted:#5E7180;--line:#E3E8ED;--bg2:#F5F7F9;--warm:#FFFBF5;--warmline:#F0DCC0}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Liberation Sans','DejaVu Sans',Arial,sans-serif;color:var(--ink);background:#fff;
+       width:1440px;-webkit-font-smoothing:antialiased}
+  .wrap{width:1200px;margin:0 auto}
+  a{color:inherit;text-decoration:none}
+  .ico{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;
+       stroke-linejoin:round}
+  .cap{background:#E7EBEF;font-size:11.5px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;
+       color:#5E7180;padding:9px 0 9px 120px}
+
+  header{background:var(--deep);color:#fff}
+  .bar{display:flex;align-items:center;gap:22px;height:70px}
+  .brand{display:flex;align-items:center;gap:10px}
+  .brand img{width:36px;height:38px;border-radius:9px}
+  .brand .nm{font-size:20px;font-weight:700;letter-spacing:-.3px}
+  nav{display:flex;gap:13px;font-size:12.5px;color:#CFE0EB;margin-left:4px;white-space:nowrap}
+  nav a.on{color:#fff;font-weight:700}
+  .right{margin-left:auto;display:flex;align-items:center;gap:12px}
+  .right .lnk{font-size:13px;color:#CFE0EB}
+  .av{width:32px;height:32px;border-radius:50%;background:var(--orange);color:#2A1602;font-size:12.5px;
+      font-weight:700;display:flex;align-items:center;justify-content:center}
+
+  /* ---------- héros ---------- */
+  .hero{display:grid;grid-template-columns:1fr 452px;gap:52px;padding:42px 0 30px;align-items:center}
+  .kick{font-size:11px;font-weight:800;letter-spacing:.9px;text-transform:uppercase;color:#7A5217;
+        background:#FDF3E6;border:1px solid var(--warmline);border-radius:999px;padding:5px 12px;
+        display:inline-block}
+  h1{font-size:45px;line-height:1.07;letter-spacing:-1.7px;margin-top:18px}
+  h1 em{font-style:normal;color:var(--orange)}
+  .lead{font-size:15px;line-height:1.72;color:var(--ink2);margin-top:17px;max-width:548px}
+  .lead b{color:var(--ink)}
+  .hbtns{display:flex;gap:10px;margin-top:23px}
+  .btn-o{background:var(--orange);color:#2A1602;font-weight:800;font-size:13.5px;padding:13px 19px;
+         border-radius:10px;display:inline-flex;align-items:center;gap:9px}
+  .btn-g{background:#fff;border:1px solid #C9D6DF;color:var(--navy);font-weight:700;font-size:13.5px;
+         padding:12px 18px;border-radius:10px;display:inline-flex;align-items:center;gap:9px}
+  .hnote{font-size:11.5px;color:var(--muted);margin-top:11px;display:flex;align-items:center;gap:7px}
+  .hnote .dot{width:5px;height:5px;border-radius:50%;background:#9FB2BF}
+
+  /* deux cartes concrètes, côte à côte dans le héros */
+  .minis{display:flex;flex-direction:column;gap:13px}
+  .mini{border:1px solid var(--line);border-radius:14px;padding:15px 16px 14px;background:#fff;
+        box-shadow:0 12px 28px rgba(11,40,62,.07)}
+  .mini.j{border-color:var(--warmline);background:var(--warm)}
+  .mtag{font-size:9.5px;font-weight:800;letter-spacing:.7px;text-transform:uppercase;color:#fff;
+        background:var(--navy);border-radius:5px;padding:3px 7px;display:inline-block}
+  .mini.j .mtag{background:#8A5A16;color:#FFF3DF}
+  .mini h4{font-size:16px;letter-spacing:-.3px;margin-top:9px}
+  .mmeta{font-size:11.5px;color:var(--ink2);margin-top:5px;display:flex;align-items:center;gap:6px}
+  .mmeta .sep{color:#C3D0DA}
+  .mprice{font-size:13px;font-weight:800;color:var(--navy);margin-top:9px}
+  .mini.j .mprice{color:#7A5217}
+  .mprice span{font-weight:400;font-size:11px;color:var(--ink2)}
+  .mfoot{font-size:10.5px;color:var(--muted);margin-top:7px;padding-top:8px;border-top:1px solid #EDF2F6}
+  .mini.j .mfoot{border-color:#F3E4D0}
+  .mfoot b{color:#3E5566}
+
+  /* ---------- les deux univers ---------- */
+  .twouniv{display:grid;grid-template-columns:1fr 1fr;gap:26px;padding:8px 0 30px}
+  .univ{border:1px solid var(--line);border-radius:16px;padding:22px 22px 20px;background:#fff;
+        display:flex;flex-direction:column}
+  .univ.e{background:#F8FAFC}
+  .univ.j{background:var(--warm);border-color:var(--warmline)}
+  .utag{font-size:10px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:#5E7180}
+  .univ.j .utag{color:#8A5A16}
+  .univ h2{font-size:23px;letter-spacing:-.6px;margin-top:6px}
+  .who{font-size:12.5px;line-height:1.6;color:var(--ink2);margin-top:8px;min-height:40px}
+  .who b{color:var(--ink)}
+  .ul{list-style:none;margin-top:13px}
+  .ul li{display:grid;grid-template-columns:132px 1fr;gap:12px;font-size:12.5px;line-height:1.55;
+         padding:9px 0;border-top:1px solid #E9EEF3;color:var(--ink)}
+  .univ.j .ul li{border-color:#F3E4D0}
+  .ul li > b{font-size:10px;font-weight:800;color:#5E7180;text-transform:uppercase;letter-spacing:.5px;
+             padding-top:2px}
+  .univ.j .ul li > b{color:#8A5A16}
+  .ul li span b{font-size:12.5px;letter-spacing:0;text-transform:none;color:var(--ink)}
+  .uact{display:flex;align-items:center;gap:12px;margin-top:auto;padding-top:16px}
+  .uact .main{flex:1;text-align:center;background:var(--navy);color:#fff;font-weight:800;font-size:13px;
+              padding:12px;border-radius:10px}
+  .univ.j .uact .main{background:var(--orange);color:#2A1602}
+  .uact .sec2{font-size:12px;color:var(--ink2);font-weight:700;white-space:nowrap}
+
+  /* ---------- la frontière ---------- */
+  .guard{border:1px solid var(--line);border-radius:16px;padding:22px 24px 20px;margin-bottom:28px}
+  .guard .gh{display:flex;align-items:flex-start;gap:18px}
+  .guard h2{font-size:20px;letter-spacing:-.4px;white-space:nowrap}
+  .guard p{font-size:12.5px;line-height:1.65;color:var(--ink2);max-width:720px}
+  .guard p b{color:var(--ink)}
+  .rail{margin-top:18px;display:flex;flex-direction:column;gap:9px}
+  .rrow{display:grid;grid-template-columns:1fr 46px 1fr;align-items:center}
+  .node{border:1px solid var(--line);border-radius:11px;padding:11px 13px;background:#fff}
+  .node b{display:block;font-size:13px;letter-spacing:-.2px}
+  .node span{display:block;font-size:11px;color:var(--ink2);margin-top:3px;line-height:1.45}
+  .node.out{border-left:3px solid var(--navy);background:#F6FAFC}
+  .node.out.j{border-left-color:var(--orange);background:var(--warm)}
+  .arr{text-align:center;color:#B7C7D3;font-size:17px;font-weight:700}
+  .switches{margin-top:16px;padding-top:14px;border-top:1px dashed #D5DEE6;font-size:12px;line-height:1.6;
+            color:var(--ink2);display:flex;align-items:center;gap:9px}
+  .switches b{color:var(--ink)}
+  .pill{font-size:10.5px;font-weight:800;background:#EAF1F5;color:var(--navy);border-radius:999px;
+        padding:4px 9px;white-space:nowrap}
+
+  /* ---------- trois lignes rouges ---------- */
+  .reds{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;padding-bottom:36px}
+  .red{border:1px solid var(--line);border-top:3px solid #B4472F;border-radius:4px 4px 14px 14px;
+       padding:16px 17px 15px}
+  .red .n{font-size:10.5px;font-weight:800;letter-spacing:.8px;color:#9C3B26;text-transform:uppercase}
+  .red h3{font-size:14.5px;letter-spacing:-.2px;margin-top:7px}
+  .red p{font-size:12px;line-height:1.62;color:var(--ink2);margin-top:7px}
+  .red p b{color:var(--ink)}
+  .redfoot{font-size:11.5px;color:var(--muted);line-height:1.6;padding:0 0 6px}
+
+  /* ---------- écran 2 : parcours ---------- */
+  .doorhead{border-bottom:1px solid var(--line);padding:24px 0 18px}
+  .doorhead .top{display:flex;align-items:flex-end;gap:16px}
+  .doorhead h1{font-size:29px;letter-spacing:-.8px;margin:0}
+  .doorhead .count{font-size:13px;color:var(--ink2);margin-top:6px;max-width:760px;line-height:1.6}
+  .doorhead .count b{color:var(--ink)}
+  .doorhead .cnt{margin-left:auto;text-align:right;font-size:12.5px;color:var(--ink2);line-height:1.5;
+                 white-space:nowrap}
+  .doorhead .cnt b{color:var(--ink)}
+  .steps{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;padding:24px 0 26px;position:relative}
+  .step{border:1px solid var(--line);border-radius:14px;padding:15px 15px 14px;background:#fff;position:relative}
+  .step .num{width:26px;height:26px;border-radius:50%;background:var(--navy);color:#fff;font-size:12px;
+             font-weight:800;display:flex;align-items:center;justify-content:center}
+  .step.last .num{background:var(--orange);color:#2A1602}
+  .step h4{font-size:13.5px;letter-spacing:-.2px;margin-top:10px;line-height:1.3}
+  .step p{font-size:11.5px;line-height:1.6;color:var(--ink2);margin-top:6px}
+  .step p b{color:var(--ink)}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:26px;padding-bottom:28px;align-items:start}
+  .box{border:1px solid var(--line);border-radius:16px;padding:20px 22px}
+  .box > h3{font-size:12px;letter-spacing:.6px;text-transform:uppercase;color:#5E7180}
+  .box > .sub{font-size:11.5px;color:var(--muted);margin-top:5px;line-height:1.55}
+  .crow{padding:12px 0;border-top:1px solid #EDF2F6}
+  .crow:first-of-type{border-top:0;margin-top:8px}
+  .crow .ch{display:flex;align-items:baseline;gap:8px}
+  .crow .ch b{font-size:13px}
+  .crow .ch .v{margin-left:auto;font-size:12.5px;font-weight:800;color:var(--navy);white-space:nowrap}
+  .crow .ch .v.warn{color:#8A5A16}
+  .gauge{height:7px;border-radius:99px;background:#E9EEF3;margin-top:8px;position:relative;overflow:hidden}
+  .gauge i{position:absolute;left:0;top:0;bottom:0;border-radius:99px;background:var(--navy)}
+  .gauge i.warm{background:var(--orange)}
+  .gauge i.cold{background:#8CA6B8}
+  .crow .cw{font-size:11px;line-height:1.55;color:var(--ink2);margin-top:7px}
+  .crow .cw b{color:var(--ink)}
+
+  /* mineurs */
+  .mineurs{border:1px solid var(--line);border-radius:16px;padding:22px 24px 20px;margin-bottom:14px;
+           background:#FCFDFE}
+  .mineurs .mh{display:flex;align-items:center;gap:12px}
+  .mineurs h2{font-size:20px;letter-spacing:-.4px}
+  .badge16{background:var(--navy);color:#fff;font-size:11px;font-weight:800;letter-spacing:.6px;
+           border-radius:6px;padding:4px 9px}
+  .mineurs .mlist{display:grid;grid-template-columns:1fr 1fr;gap:11px 30px;margin-top:16px}
+  .mitem{display:grid;grid-template-columns:20px 1fr;gap:9px;font-size:12px;line-height:1.6;
+         color:var(--ink2)}
+  .mitem .k{width:18px;height:18px;border-radius:50%;background:#EAF1F5;color:var(--navy);font-size:9.5px;
+            font-weight:800;display:flex;align-items:center;justify-content:center;margin-top:2px}
+  .mitem b{color:var(--ink)}
+  .honest{margin-top:16px;border-radius:11px;padding:12px 14px;background:#FDF7EE;border:1px solid var(--warmline);
+          font-size:11.5px;line-height:1.65;color:#6B4A16}
+  .honest .hh{display:block;margin-bottom:3px;color:#5A3D0F}
+  .honest b{color:#5A3D0F}
+
+  /* ---------- écran 3 : inscription ---------- */
+  .langbar{border-bottom:1px solid var(--line);padding:11px 0;display:flex;align-items:center;gap:10px;
+           font-size:11.5px;color:var(--ink2)}
+  .langbar .ll{font-weight:800;color:#5E7180;text-transform:uppercase;letter-spacing:.5px;font-size:10px}
+  .langopt{display:flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:8px;
+           padding:5px 9px;background:#fff}
+  .langopt.on{border-color:var(--navy);box-shadow:0 0 0 2px #EAF1F5}
+  .langopt img{width:20px;height:13px;object-fit:cover;border-radius:2px;border:1px solid #DCE4EA}
+  .langopt span{font-size:11px;font-weight:700}
+  .langbar .why{margin-left:auto;font-size:10.5px;color:var(--muted)}
+
+  .inscr{display:grid;grid-template-columns:1fr 366px;gap:34px;padding:22px 0 44px;align-items:start}
+  .itop{display:flex;align-items:flex-end;gap:14px;margin-bottom:4px}
+  .itop h1{font-size:31px;letter-spacing:-1px;margin:0}
+  .itop .cnt{font-size:12.5px;color:var(--ink2);margin-left:auto;text-align:right;line-height:1.5}
+  .itop .cnt b{color:var(--ink)}
+  .isub{font-size:13px;line-height:1.65;color:var(--ink2);margin:9px 0 16px;max-width:700px}
+  .isub b{color:var(--ink)}
+
+  .formbox{border:1px solid var(--line);border-radius:16px;padding:20px 22px 22px}
+  .fsec{border-top:1px solid var(--line);padding-top:16px;margin-top:17px}
+  .fsec.first{border-top:0;padding-top:0;margin-top:0}
+  .fsec .fh{display:flex;align-items:baseline;gap:9px}
+  .fsec h3{font-size:11px;letter-spacing:.7px;text-transform:uppercase;color:#5E7180}
+  .fsec .fh span{font-size:10.5px;color:var(--muted)}
+  .fgrid{display:grid;grid-template-columns:1fr 1fr;gap:13px 16px;margin-top:11px}
+  .fgrid .full{grid-column:1/-1}
+  .f label{display:flex;align-items:baseline;gap:2px;font-size:11px;font-weight:800;color:#3E5566;
+           margin-bottom:5px}
+  .f .in{border:1px solid #D5DEE6;border-radius:9px;padding:10px 11px;font-size:12.5px;color:#8A9BA8;
+         background:#fff;display:flex;align-items:center;gap:7px}
+  .f .in.filled{color:var(--ink)}
+  .f .in .ck{margin-left:auto;color:#2E7D5B}
+  .f .hint{font-size:10px;color:var(--muted);margin-top:4px;line-height:1.45}
+  .f .hint b{color:#3E5566}
+
+  /* la question de fond : la communauté */
+  .commblock{margin-top:11px;border:1px solid #C9DCE8;border-radius:13px;padding:13px 14px 14px;
+             background:#F6FAFC}
+  .commblock .q{font-size:12.5px;font-weight:800}
+  .commblock .qd{font-size:11px;color:var(--ink2);margin-top:4px;line-height:1.55}
+  .comm{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin-top:11px}
+  .ctile{display:flex;align-items:center;gap:9px;border:1.5px solid #D5DEE6;border-radius:11px;
+         padding:9px 10px;background:#fff}
+  .ctile.on{border-color:var(--navy);box-shadow:0 0 0 3px #E3EEF5;background:#fff}
+  .ctile img{width:34px;height:23px;object-fit:cover;border-radius:3px;border:1px solid #DCE4EA;flex:none}
+  .ctile .ct{font-size:11px;font-weight:800;line-height:1.25}
+  .ctile .cs{font-size:9.5px;color:var(--muted);margin-top:2px}
+  .ctile.on .cs{color:#3E5566}
+
+  /* interrupteurs */
+  .swrow{display:flex;align-items:flex-start;gap:11px;border:1px solid var(--line);border-radius:11px;
+         padding:11px 12px;margin-top:9px;background:#fff}
+  .swrow.on{border-color:#C9DCE8;background:#FAFDFE}
+  .sw{width:34px;height:20px;border-radius:99px;background:#CBD8E1;position:relative;flex:none;margin-top:2px}
+  .sw.on{background:var(--navy)}
+  .sw.j.on{background:var(--orange)}
+  .sw i{position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;
+        box-shadow:0 1px 2px rgba(0,0,0,.22)}
+  .sw.on i{left:16px}
+  .swnote{font-size:10.5px;color:var(--ink2);margin-top:8px;line-height:1.55}
+  .swnote b{color:var(--ink)}
+  .swrow .st{font-size:12.5px;font-weight:800}
+  .swrow.locked{background:#F5F7F9;border-style:dashed}
+  .swrow .lk{width:20px;height:20px;border-radius:6px;background:#EAF1F5;color:var(--navy);display:flex;
+             align-items:center;justify-content:center;flex:none;margin-top:1px}
+  .pill2{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;background:#EAF1F5;
+         color:var(--navy);border-radius:4px;padding:2px 5px;margin-left:5px}
+  .swrow .sd{font-size:11px;color:var(--ink2);margin-top:3px;line-height:1.5}
+
+  /* tuiles de choix */
+  .chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+  .chip{font-size:11px;padding:5px 10px;border-radius:999px;border:1px solid var(--line);color:var(--ink2);
+        white-space:nowrap;background:#fff}
+  .chip.on{background:var(--navy);border-color:var(--navy);color:#fff;font-weight:700}
+
+  /* photo facultative — jamais un cadre vide */
+  .photo2{display:flex;align-items:center;gap:14px;margin-top:11px;border:1px solid var(--line);
+          border-radius:11px;padding:12px 13px;background:#FAFCFD}
+  .pslot{width:54px;height:54px;border-radius:10px;border:1px dashed #C3D0DA;display:flex;align-items:center;
+         justify-content:center;color:#9FB2BF;flex:none;background:#fff}
+  .photo2 .pt b{font-size:12px}
+  .photo2 .pt p{font-size:10.5px;color:var(--ink2);margin-top:3px;line-height:1.55}
+  .photo2 .pf{margin-left:auto;font-size:10.5px;font-weight:800;color:var(--ink2);border:1px solid #D5DEE6;
+              border-radius:8px;padding:7px 11px;background:#fff;white-space:nowrap}
+
+  /* accords */
+  .agr{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+  .ag{display:flex;align-items:flex-start;gap:9px;font-size:11.5px;line-height:1.6;color:var(--ink2)}
+  .ag .bx{width:15px;height:15px;border-radius:4px;border:1.5px solid #C3D0DA;flex:none;margin-top:2px;
+          background:#fff}
+  .ag .bx.ck{background:var(--navy);border-color:var(--navy);display:flex;align-items:center;
+             justify-content:center;color:#fff}
+  .ag b{color:var(--ink)}
+  .send{display:flex;align-items:center;gap:14px;margin-top:16px;padding-top:15px;border-top:1px solid var(--line)}
+  .send .go{background:var(--orange);color:#2A1602;font-weight:800;font-size:13.5px;padding:13px 22px;
+            border-radius:10px}
+  .send .after{font-size:10.5px;color:var(--muted);line-height:1.55;max-width:300px}
+
+  /* colonne de droite de l'inscription */
+  .side{display:flex;flex-direction:column;gap:13px}
+  .scard{border:1px solid var(--line);border-radius:13px;padding:14px 15px}
+  .scard.tut{border-color:#C9DCE8;border-style:dashed;background:#F6FAFC}
+  .scard h4{font-size:10.5px;text-transform:uppercase;letter-spacing:.6px;color:#5E7180;display:flex;
+            align-items:center;gap:8px}
+  .scard h4 .tg{background:var(--navy);color:#fff;border-radius:5px;padding:2px 6px;font-size:9px;
+                letter-spacing:.4px}
+  .scard .txt{font-size:11px;line-height:1.62;color:var(--ink2);margin-top:8px}
+  .scard .txt b{color:var(--ink)}
+  .tfields{display:flex;flex-direction:column;gap:7px;margin-top:10px}
+  .tf{border:1px solid #D5DEE6;border-radius:8px;padding:7px 9px;font-size:10.5px;color:#8A9BA8;
+      background:#fff;display:flex;align-items:center;gap:6px}
+  .tf .lb{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:#5E7180;
+          min-width:62px}
+  .never{list-style:none;margin-top:8px}
+  .never li{font-size:10.5px;line-height:1.55;color:var(--ink2);padding:4px 0 4px 15px;position:relative}
+  .never li:before{content:"—";position:absolute;left:0;color:#B4472F}
+  .checklist{margin-top:8px}
+  .checklist > div{font-size:10.5px;line-height:1.55;color:var(--ink2);padding:5px 0;
+                   border-top:1px solid #EDF2F6;display:flex;gap:7px}
+  .checklist > div:first-child{border-top:0}
+  .checklist .ct{display:block;flex:1}
+  .checklist .n{color:var(--navy);font-weight:800;font-size:9.5px;margin-top:1px}
+
+  /* ---------- écran 4 : agenda ---------- */
+  .banner{display:flex;align-items:center;gap:13px;border:1px solid #C9DCE8;background:#F1F8FC;
+          border-radius:13px;padding:12px 16px;margin:18px 0 0}
+  .banner .ic2{width:28px;height:28px;border-radius:8px;background:#DCEBF4;display:flex;align-items:center;
+               justify-content:center;flex:none;color:var(--navy)}
+  .banner .bt{font-size:12px;line-height:1.55;color:#123F5F}
+  .banner .bt b{color:var(--navy)}
+  .banner .sep2{margin-left:auto;font-size:10.5px;line-height:1.5;color:#3E5566;max-width:340px;
+                border-left:1px solid #C9DCE8;padding-left:14px}
+  .agenda{display:grid;grid-template-columns:1fr 372px;gap:26px;padding:18px 0 26px;align-items:start}
+  .wcard{border:1px solid var(--line);border-radius:16px;padding:18px 20px 15px;background:#fff}
+  .whead{display:flex;align-items:baseline;gap:10px;margin-bottom:12px}
+  .whead h2{font-size:19px;letter-spacing:-.4px}
+  .whead span{font-size:11px;color:var(--muted);margin-left:auto}
+  .week{display:grid;grid-template-columns:40px repeat(7,1fr);gap:3px}
+  .dh{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:#5E7180;
+      text-align:center;padding-bottom:3px}
+  .dh b{display:block;font-size:11.5px;color:var(--ink);letter-spacing:0;margin-top:1px}
+  .dh.dim{color:#A8682F}
+  .hr{font-size:9px;color:var(--muted);text-align:right;padding-right:6px;line-height:21px}
+  .cell{height:21px;border-radius:5px;background:#F2F6F9}
+  .cell.vac{background:#CFE3EF}
+  .cell.libre{background:var(--navy)}
+  .cell.res{background:var(--orange)}
+  .cell.off{background:#EDF1F4;background-image:repeating-linear-gradient(135deg,#E2E8ED 0 3px,#EDF1F4 3px 6px)}
+  .legend{display:flex;gap:15px;flex-wrap:wrap;margin-top:12px;padding-top:11px;border-top:1px solid var(--line)}
+  .legend div{display:flex;align-items:center;gap:6px;font-size:10.5px;color:var(--ink2)}
+  .legend i{width:12px;height:12px;border-radius:3px;display:block;flex:none}
+  .statusbtns{display:flex;flex-direction:column;gap:7px;margin-top:10px}
+  .statusbtn{display:flex;align-items:center;gap:9px;border:1px solid var(--line);border-radius:10px;
+             padding:9px 11px;font-size:11.5px;font-weight:700;color:var(--ink2);background:#fff}
+  .statusbtn.on{border-color:var(--navy);background:#F1F7FA;color:var(--navy);box-shadow:0 0 0 2px #E3EEF5}
+  .statusbtn .dot2{width:8px;height:8px;border-radius:50%;background:#B7C7D3;flex:none}
+  .statusbtn.on .dot2{background:#2E7D5B}
+  .statusbtn .sm{margin-left:auto;font-size:9.5px;font-weight:400;color:var(--muted)}
+  .tot{display:flex;align-items:baseline;gap:7px;margin-top:8px}
+  .tot b{font-size:21px;letter-spacing:-.6px}
+  .tot span{font-size:11px;color:var(--muted)}
+  .seeslot{display:flex;align-items:center;gap:9px;border:1px solid var(--line);border-radius:9px;
+           padding:8px 10px;margin-top:6px;background:#fff}
+  .seeslot .d{font-size:10.5px;font-weight:800}
+  .seeslot .h{font-size:10.5px;color:var(--ink2)}
+  .seeslot .p{margin-left:auto;font-size:10.5px;font-weight:800;color:var(--navy)}
+
+  /* ---------- écran 5 : la demande ---------- */
+  .dem{display:grid;grid-template-columns:1fr 372px;gap:26px;padding:18px 0 26px;align-items:start}
+  .needs{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;margin-top:10px}
+  .need{border:1.5px solid var(--line);border-radius:11px;padding:11px 7px;text-align:center;background:#fff;
+        display:flex;flex-direction:column;align-items:center}
+  .need.on{border-color:var(--navy);box-shadow:0 0 0 3px #E3EEF5;background:#FBFDFE}
+  .need .ico{width:19px;height:19px;margin:0 auto;color:#7E93A2;display:block}
+  .need.on .ico{color:var(--navy)}
+  .need .t{font-size:10px;font-weight:700;margin-top:6px;line-height:1.25;min-height:25px;
+           display:flex;align-items:center;justify-content:center}
+  .slotb{display:flex;align-items:center;gap:11px;border:1px solid var(--line);border-radius:11px;
+         padding:10px 12px;margin-top:7px;background:#fff}
+  .slotb.on{border-color:var(--navy);box-shadow:0 0 0 2px #E3EEF5;background:#FAFDFE}
+  .slotb .av2{width:30px;height:30px;border-radius:50%;background:#EAF1F5;color:var(--navy);font-size:11px;
+              font-weight:800;display:flex;align-items:center;justify-content:center;flex:none}
+  .slotb .n{font-size:11.5px;font-weight:800}
+  .slotb .m{font-size:10.5px;color:var(--ink2);margin-top:2px}
+  .slotb .pr{margin-left:auto;text-align:right}
+  .slotb .pr b{font-size:12.5px;color:var(--navy)}
+  .slotb .pr span{display:block;font-size:9px;color:var(--muted)}
+
+  /* ---------- écran 6 : la mission ---------- */
+  .mis{display:grid;grid-template-columns:1fr 1fr;gap:26px;padding:18px 0 26px;align-items:start}
+  .phone{border:1px solid var(--line);border-radius:16px;padding:16px 18px 15px;background:#fff}
+  .phead{display:flex;align-items:center;gap:9px;padding-bottom:11px;border-bottom:1px solid var(--line)}
+  .phead .pt2{font-size:13px;font-weight:800}
+  .phead .ps{font-size:10.5px;color:var(--muted);margin-top:2px}
+  .phead .badge{margin-left:auto;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;
+                background:#EAF1F5;color:var(--navy);border-radius:5px;padding:3px 7px;white-space:nowrap}
+  .tl{margin-top:13px}
+  .tli{display:grid;grid-template-columns:40px 12px 1fr;gap:9px;font-size:11px;color:var(--ink2);
+       padding-bottom:11px}
+  .tli .h2r{color:var(--muted);font-size:10px}
+  .tli .pt3{width:9px;height:9px;border-radius:50%;background:#CBD8E1;margin-top:3px}
+  .tli.done .pt3{background:#2E7D5B}
+  .tli.now .pt3{background:var(--orange);box-shadow:0 0 0 3px #FBE9D2}
+  .tli b{color:var(--ink)}
+  .codebox{display:flex;gap:8px;justify-content:center;margin-top:13px}
+  .codebox .cb{width:44px;height:52px;border:1.5px solid #C9D6DF;border-radius:9px;display:flex;
+               align-items:center;justify-content:center;font-size:19px;font-weight:800;color:var(--navy);
+               background:#fff}
+  .codebox .cb.f{border-color:var(--navy);background:#F4F9FC}
+  .codebox .cb.empty{color:#C3D0DA}
+  .act{display:flex;gap:9px;margin-top:13px}
+  .act .main2{flex:1;text-align:center;background:var(--orange);color:#2A1602;font-weight:800;font-size:12.5px;
+              padding:11px;border-radius:9px}
+  .act .ghost{flex:0 0 auto;border:1px solid var(--line);border-radius:9px;padding:11px 13px;font-size:11.5px;
+              font-weight:700;color:var(--ink2)}
+  .qbig{font-size:13.5px;font-weight:800;margin-top:12px;line-height:1.4}
+  .qans{display:flex;gap:9px;margin-top:10px}
+  .qans div{flex:1;text-align:center;border:1.5px solid var(--line);border-radius:10px;padding:11px;
+            font-size:12.5px;font-weight:800;color:var(--ink2);background:#fff}
+  .qans div.y{border-color:var(--navy);background:#F4F9FC;color:var(--navy)}
+
+  /* ---------- écran 7 : le carnet ---------- */
+  .carn{display:grid;grid-template-columns:1fr 372px;gap:26px;padding:18px 0 26px;align-items:start}
+  .crow2{display:grid;grid-template-columns:88px 1fr 68px 128px;gap:10px;align-items:center;
+         padding:12px 0;border-top:1px solid #EDF2F6;font-size:11.5px}
+  .crow2.first{border-top:0}
+  .crow2 .dt{font-size:10.5px;color:var(--ink2);line-height:1.4}
+  .crow2 .bs b{font-size:12px;display:block}
+  .crow2 .bs span{font-size:10px;color:var(--muted)}
+  .crow2 .du{font-weight:800;text-align:right}
+  .crow2 > div:last-child{display:flex;justify-content:flex-end}
+  .tagx{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;border-radius:5px;
+        padding:4px 8px;text-align:center;min-width:104px;display:inline-block}
+  .tagx.ok{background:#E7F3EC;color:#25634A}
+  .tagx.self{background:#EAF1F5;color:#1F4E6B}
+  .tagx.wait{background:#FDF3E6;color:#7A5217}
+  .tagx.none{background:#F1F4F6;color:#7E8E9A}
+  .mline{font-size:11.5px;line-height:1.65;color:var(--ink2)}
+  .mline b{color:var(--ink)}
+
+  /* ---------- écrans 8 à 11 : annonces d'entreprise ---------- */
+  .jobs{display:grid;grid-template-columns:290px 1fr;gap:26px;padding:18px 0 26px;align-items:start}
+  .jlist{display:flex;flex-direction:column;gap:12px}
+  .jcard{border:1px solid var(--line);border-radius:14px;padding:15px 17px 13px;background:#fff}
+  .jtop{display:flex;align-items:flex-start;gap:10px}
+  .jcard h3{font-size:15px;letter-spacing:-.2px;line-height:1.3}
+  .b18{background:#8A2F1F;color:#FFF1EC;font-size:9px;font-weight:800;letter-spacing:.5px;padding:3px 7px;
+       border-radius:5px;white-space:nowrap;margin-left:auto;flex:none}
+  .jent{font-size:11.5px;color:var(--ink2);margin-top:5px;display:flex;align-items:center;gap:6px;
+        flex-wrap:wrap}
+  .jent .vf{font-size:10px;font-weight:800;color:#25634A;background:#E7F3EC;border-radius:5px;padding:2px 6px}
+  .jent .cat2{font-size:10.5px;color:var(--ink2);border:1px solid var(--line);border-radius:5px;padding:2px 6px}
+  .jmeta{display:flex;gap:16px;margin-top:9px;font-size:11px;color:var(--ink2)}
+  .jmeta b{color:var(--ink);font-size:12px}
+  .jfoot{display:flex;align-items:center;gap:10px;margin-top:11px;padding-top:10px;
+         border-top:1px solid #EDF2F6}
+  .jfoot .ech{font-size:10.5px;color:var(--muted)}
+  .jfoot .voirm{margin-left:auto;font-size:11.5px;font-weight:800;color:var(--navy)}
+  .entblk{border:1px solid var(--line);border-radius:13px;padding:15px 16px;background:#FAFCFD}
+  .entblk h4{font-size:10.5px;text-transform:uppercase;letter-spacing:.6px;color:#5E7180}
+  /* Image de marque de l'entreprise (décision 37) : la MÊME image que sur /emploi, à l'octet près.
+     La boulangerie n'a pas de logo, elle a mis une photo de sa façade — et elle ne la redépose pas
+     sur chaque porte : c'est le compte qui la porte. */
+  .empimg{width:38px;height:38px;border-radius:9px;overflow:hidden;flex:none;background:#F1F5F8}
+  .empimg svg,.empimg img{width:100%;height:100%;display:block}
+  .empwho{display:flex;align-items:center;gap:10px;margin-top:7px}
+  .entblk .empwho .nm2{margin-top:0}
+  .entblk .nm2{font-size:14px;font-weight:800;margin-top:6px}
+  .entrow{display:grid;grid-template-columns:142px 1fr;gap:10px;font-size:10.5px;padding:5px 0;
+          border-top:1px solid #EDF2F6;line-height:1.5;color:var(--ink2)}
+  .entrow > b{color:#5E7180;font-weight:800;font-size:9.5px;text-transform:uppercase;letter-spacing:.4px;
+              padding-top:2px}
+  .entrow span b{font-size:10.5px;font-weight:800;text-transform:none;letter-spacing:0}
+  .ment{display:flex;align-items:flex-start;gap:8px;font-size:11px;padding:6px 0;color:var(--ink2);
+        line-height:1.5}
+  .ment .ck2{width:14px;height:14px;border-radius:50%;background:#E7F3EC;color:#25634A;display:flex;
+             align-items:center;justify-content:center;flex:none;margin-top:1px;font-size:8px;font-weight:900}
+  .ment b{color:var(--ink)}
+  .alert{background:#FDF3F1;border:1px solid #F0C9C0;border-radius:11px;padding:11px 13px;font-size:11px;
+         line-height:1.6;color:#7B2E1E}
+  .alert b{display:block;margin-bottom:3px;color:#6E2517}
+  .fichejob{display:grid;grid-template-columns:1fr 366px;gap:26px;padding:18px 0 26px;align-items:start}
+  .depotj{display:grid;grid-template-columns:1fr 366px;gap:32px;padding:18px 0 26px;align-items:start}
+  .catgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:9px}
+  .cat{border:1.5px solid var(--line);border-radius:10px;padding:9px 7px;font-size:10px;font-weight:700;
+       text-align:center;background:#fff;line-height:1.25}
+  .cat.on{border-color:var(--navy);box-shadow:0 0 0 3px #E3EEF5;background:#FBFDFE}
+  .cat .maj{display:block;font-size:8px;font-weight:800;color:#8A2F1F;margin-top:4px;letter-spacing:.3px}
+  .counter{font-size:9.5px;color:var(--muted);margin-left:auto;font-weight:400;letter-spacing:0}
+  .mesann{display:grid;grid-template-columns:1fr 366px;gap:26px;padding:18px 0 26px;align-items:start}
+  .arow{display:grid;grid-template-columns:1fr 176px 118px;gap:12px;align-items:center;padding:13px 0;
+        border-top:1px solid #EDF2F6}
+  .b18mini{font-size:9px;font-weight:800;color:#8A2F1F;background:#FBE9E5;border-radius:4px;
+           padding:2px 5px;margin-left:5px;white-space:nowrap;display:inline-block}
+  .arow.first{border-top:0}
+  .arow .t b{font-size:12.5px;display:block;letter-spacing:-.1px}
+  .arow .t > span{font-size:10.5px;color:var(--ink2);display:block;margin-top:3px}
+  .arow .motif{font-size:10px;color:#7B2E1E;background:#FDF3F1;border-radius:6px;padding:5px 8px;
+               margin-top:6px;display:inline-block;line-height:1.45}
+  .arow .st{font-size:10.5px;color:var(--muted);line-height:1.45}
+  .arow .ac{text-align:right;font-size:11px;font-weight:800;color:var(--navy)}
+  .tagx.bad{background:#FBE9E5;color:#8A2F1F}
+  .tagx.draft{background:#EEF2F5;color:#5E7180}
+
+  .foot{font-size:10.5px;line-height:1.65;color:var(--muted);border-top:1px solid var(--line);
+        margin-top:8px;padding:14px 0 30px;max-width:980px}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════ ÉCRAN 1 ═══════════════════════════ -->
+<div class="cap">Écran 1 — L'accueil&nbsp;: deux univers, et une frontière qui ne se choisit pas</div>
+<header>
+  <div class="wrap bar">
+    <div class="brand"><img src="kazendra-icone-256.png" alt="Kazendra"><div class="nm">Kazendra</div></div>
+    <nav><a href="#">Accueil</a><a href="#">Promos</a><a href="#">Annonces</a><a href="#">Immo</a>
+      <a href="#">Événements</a><a href="#">Rencontres</a><a href="#" class="on">Jobs étudiants</a>
+      <a href="#">Emploi</a><a href="#">Artisans</a></nav>
+    <div class="right"><span class="lnk">Se connecter</span><div class="av">B</div></div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <section class="hero">
+    <div>
+      <div class="kick">Coups de main &amp; jobs étudiants</div>
+      <h1>Un coup de main,<br>ou un <em>job</em> étudiant.</h1>
+      <p class="lead">
+        Deux choses qui n'ont ni le même droit, ni le même mot, ni le même payeur. <b>Un seul compte</b>,
+        un seul parcours d'inscription. Et une frontière qui ne se franchit pas en cochant une case&nbsp;:
+        elle suit le statut vérifié de celui qui publie.
+      </p>
+      <div class="hbtns">
+        <a href="#" class="btn-o">Je cherche un coup de main
+          <svg class="ico" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <a href="#" class="btn-g">Je cherche un job</a>
+      </div>
+      <div class="hnote"><span class="dot"></span>Gratuit pour les étudiants, aujourd'hui comme après
+        <span class="dot"></span>Aucune carte bancaire, jamais</div>
+    </div>
+
+    <div class="minis">
+      <div class="mini">
+        <span class="mtag">Entraide · exemple</span>
+        <h4>Courses et pharmacie</h4>
+        <div class="mmeta">Jeudi 14 h – 16 h<span class="sep">·</span>2 h<span class="sep">·</span>à 2 km</div>
+        <div class="mprice">15 € <span>— prix fixé par Léa</span></div>
+        <div class="mfoot"><b>1170 Watermael-Boitsfort</b> · demandé par un particulier</div>
+      </div>
+      <div class="mini j">
+        <span class="mtag">Jobs · exemple</span>
+        <h4>Vendeur·se en boulangerie</h4>
+        <div class="mmeta">10 h par semaine<span class="sep">·</span>horaires à convenir</div>
+        <div class="mprice">salaire convenu <span>— commission paritaire</span></div>
+        <div class="mfoot"><b>1170 Watermael-Boitsfort</b> · entreprise au numéro BCE vérifié</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="twouniv">
+    <div class="univ e">
+      <div class="utag">Univers 1 — Entraide</div>
+      <h2>Un coup de main</h2>
+      <div class="who">Publié par un <b>particulier</b>&nbsp;: un senior, une famille, un voisin. Jamais
+        par une entreprise.</div>
+      <ul class="ul">
+        <li><b>Ce que c'est</b><span>Courses, pharmacie, compagnie, accompagnement, autre.</span></li>
+        <li><b>Qui paie</b><span>La personne aidée, directement. <b>L'étudiant fixe son prix.</b></span></li>
+        <li><b>Plafond</b><span>8 h par semaine. Une mission de 8 h consomme la semaine.</span></li>
+        <li><b>Contrat</b><span>Aucun. C'est un service rendu, pas un emploi.</span></li>
+        <li><b>Le mot</b><span>«&nbsp;un coup de main&nbsp;». Jamais «&nbsp;louer un étudiant&nbsp;».</span></li>
+      </ul>
+      <div class="uact"><a href="#" class="main">Voir les demandes près de chez moi</a>
+        <a href="#" class="sec2">Je publie une demande</a></div>
+    </div>
+
+    <div class="univ j">
+      <div class="utag">Univers 2 — Jobs</div>
+      <h2>Une mission</h2>
+      <div class="who">Publié par une <b>entreprise ou une ASBL</b>. Le numéro d'entreprise est vérifié
+        à la main, une fois.</div>
+      <ul class="ul">
+        <li><b>Ce que c'est</b><span>Commerce, horaire, événementiel, administration, soutien scolaire.</span></li>
+        <li><b>Qui paie</b><span>L'employeur. Salaire convenu, encadré par la commission paritaire.</span></li>
+        <li><b>Plafond</b><span>650 h par an, tous employeurs confondus. 12 mois chez le même.</span></li>
+        <li><b>Contrat</b><span>Contrat d'occupation d'étudiant, deux exemplaires. DIMONA et DmfA par
+          l'employeur.</span></li>
+        <li><b>Le mot</b><span>«&nbsp;une mission&nbsp;», «&nbsp;un job&nbsp;».</span></li>
+      </ul>
+      <div class="uact"><a href="#" class="main">Voir les jobs étudiants</a>
+        <a href="#" class="sec2">Je publie une offre</a></div>
+    </div>
+  </div>
+
+  <section class="guard">
+    <div class="gh">
+      <h2>La frontière ne se choisit pas.</h2>
+      <p>
+        Une entreprise qui se déclarerait «&nbsp;particulier&nbsp;» commettrait du travail dissimulé&nbsp;; un
+        particulier qui publierait une offre d'emploi deviendrait un employeur sans le savoir. Alors la
+        bascule ne suit pas un choix libre — <b>elle suit le statut vérifié du compte</b>.
+      </p>
+    </div>
+    <div class="rail">
+      <div class="rrow">
+        <div class="node"><b>Compte particulier</b><span>senior, famille, voisin — e-mail et téléphone vérifiés</span></div>
+        <div class="arr">→</div>
+        <div class="node out"><b>Entraide</b><span>il demande un coup de main · 8 h par semaine</span></div>
+      </div>
+      <div class="rrow">
+        <div class="node"><b>Compte entreprise ou ASBL</b><span>numéro BCE vérifié à la main, une fois</span></div>
+        <div class="arr">→</div>
+        <div class="node out j"><b>Jobs</b><span>elle publie une offre · 650 h par an</span></div>
+      </div>
+    </div>
+    <div class="switches">
+      <span class="pill">Côté étudiant</span>
+      Deux interrupteurs, un seul compte&nbsp;: <b>profil entraide</b>, <b>profil jobs</b>, ou les deux.
+      Un compte, deux jeux de compteurs.
+    </div>
+  </section>
+
+  <div class="reds">
+    <div class="red">
+      <div class="n">Ligne rouge 1</div>
+      <h3>Jamais employeur, jamais placeur.</h3>
+      <p>Le contrat est entre l'étudiant et l'entreprise. La plateforme n'encadre pas le travail, ne
+        facture aucune heure, <b>ne place personne</b>. Le travail intérimaire demande un agrément
+        régional&nbsp;: ce n'est pas notre métier.</p>
+    </div>
+    <div class="red">
+      <div class="n">Ligne rouge 2</div>
+      <h3>L'argent ne passe jamais par ici.</h3>
+      <p>Aucun encaissement, aucun séquestre, aucune commission, <b>aucune donnée bancaire</b>. Et jamais
+        l'expression «&nbsp;paiement sécurisé&nbsp;»&nbsp;: on ne garantit pas ce qu'on ne voit pas.</p>
+    </div>
+    <div class="red">
+      <div class="n">Ligne rouge 3</div>
+      <h3>Jamais de suivi de trajet. Jamais de position.</h3>
+      <p>On ne demande <b>aucune position</b>, ni à l'étudiant, ni à la personne aidée. La distance se
+        calcule <b>entre deux communes</b>, depuis le code postal. Elle ne sert jamais à contrôler
+        l'exécution d'une mission, ni à savoir où quelqu'un est passé.</p>
+    </div>
+  </div>
+  <div class="redfoot">
+    Ces trois lignes ne sont pas des promesses commerciales&nbsp;: ce sont les conditions qui gardent la
+    plateforme hors du champ du travail intérimaire et de la mise à disposition de personnel.
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════ ÉCRAN 2 ═══════════════════════════ -->
+<div class="cap">Écran 2 — Une mission, de bout en bout — et les cinq compteurs qui bloquent avant l'erreur</div>
+<header>
+  <div class="wrap bar">
+    <div class="brand"><img src="kazendra-icone-256.png" alt="Kazendra"><div class="nm">Kazendra</div></div>
+    <nav><a href="#">Accueil</a><a href="#">Promos</a><a href="#">Annonces</a><a href="#">Immo</a>
+      <a href="#">Événements</a><a href="#">Rencontres</a><a href="#" class="on">Jobs étudiants</a>
+      <a href="#">Emploi</a><a href="#">Artisans</a></nav>
+    <div class="right"><span class="lnk">Se connecter</span><div class="av">B</div></div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="doorhead">
+    <div class="top">
+      <h1>Jobs étudiants</h1>
+      <div class="cnt">Deux univers, une seule application · <b>1 146</b> codes postaux<br>
+        <b>Gratuit</b> pour les étudiants · entreprises&nbsp;: gratuit au lancement</div>
+    </div>
+    <div class="count">
+      Ce qui suit n'est pas un mode d'emploi commercial&nbsp;: c'est le mécanisme exact, avec ses refus.
+      Chaque étape existe parce qu'une des trois lignes rouges l'exige.
+    </div>
+  </div>
+
+  <div class="steps">
+    <div class="step">
+      <div class="num">1</div>
+      <h4>Une demande</h4>
+      <p>Le particulier choisit un besoin dans une <b>liste fermée</b>. Aucun âge dans le texte, aucune
+        adresse exacte, aucune photo obligatoire.</p>
+    </div>
+    <div class="step">
+      <div class="num">2</div>
+      <h4>Un créneau accepté</h4>
+      <p>L'étudiant ne voit <b>que les heures libres</b>. Jamais l'agenda occupé de l'autre, jamais
+        l'horaire d'école de quelqu'un.</p>
+    </div>
+    <div class="step">
+      <div class="num">3</div>
+      <h4>Un code à quatre chiffres</h4>
+      <p>La mission commence quand le code est saisi, <b>chez la personne aidée</b>. C'est la seule
+        preuve de présence — et elle ne suit personne.</p>
+    </div>
+    <div class="step">
+      <div class="num">4</div>
+      <h4>Une confirmation</h4>
+      <p>Une seule question&nbsp;: «&nbsp;la mission a-t-elle eu lieu&nbsp;?&nbsp;». <b>Sans durée, sans montant.</b> Un
+        «&nbsp;non&nbsp;» n'entraîne aucune sanction automatique.</p>
+    </div>
+    <div class="step last">
+      <div class="num">5</div>
+      <h4>Ton carnet</h4>
+      <p>Les heures sont <b>déclarées par l'étudiant</b>. La plateforme n'en certifie aucune et renvoie
+        vers Student@work.</p>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="box">
+      <h3>Les compteurs</h3>
+      <div class="sub">Ils refusent avant que l'erreur arrive, et ils s'appliquent aussi aux mineurs.</div>
+
+      <div class="crow">
+        <div class="ch"><b>8 h par semaine</b><span class="v">4 h sur 8 h</span></div>
+        <div class="gauge"><i style="width:50%"></i></div>
+        <div class="cw">Entraide. Au-delà, <b>la mission suivante est refusée</b>&nbsp;: une mission de 8 h
+          consomme la semaine entière.</div>
+      </div>
+
+      <div class="crow">
+        <div class="ch"><b>650 h par an</b><span class="v">128 h sur 650 h</span></div>
+        <div class="gauge"><i class="warm" style="width:19.7%"></i></div>
+        <div class="cw">Jobs, tous employeurs confondus. Un avertissement, pas un couperet&nbsp;: la
+          référence officielle reste <b>Student@work</b>.</div>
+      </div>
+
+      <div class="crow">
+        <div class="ch"><b>12 mois chez le même employeur</b><span class="v">3 mois</span></div>
+        <div class="gauge"><i class="cold" style="width:25%"></i></div>
+        <div class="cw">Au-delà de douze mois ininterrompus, l'étudiant devient <b>travailleur
+          ordinaire</b>&nbsp;: alerte, et l'employeur doit régulariser.</div>
+      </div>
+
+      <div class="crow">
+        <div class="ch"><b>3 sollicitations par jour</b><span class="v warn">1 sur 3 aujourd'hui</span></div>
+        <div class="gauge"><i style="width:33.3%"></i></div>
+        <div class="cw">Les missions de dernière minute s'arrêtent là, <b>jusqu'au lendemain</b>.</div>
+      </div>
+
+      <div class="crow">
+        <div class="ch"><b>3 signalements sur une fiche</b><span class="v">0 sur 3</span></div>
+        <div class="gauge"><i style="width:0"></i></div>
+        <div class="cw">Trois signalements distincts&nbsp;: <b>masquage provisoire</b>, puis décision humaine
+          sous 24 h. Un seul signalement ne masque rien.</div>
+      </div>
+    </div>
+
+    <div class="box">
+      <h3>Ce que l'étudiant garde</h3>
+      <div class="sub">Le projet a une règle qui passe avant les autres&nbsp;: refuser ne coûte rien.</div>
+
+      <div class="crow">
+        <div class="ch"><b>Son prix</b><span class="v">lui seul</span></div>
+        <div class="cw">Aucune grille de tarifs imposés côté entraide. Le prix est un champ de son profil,
+          modifiable à tout moment.</div>
+      </div>
+      <div class="crow">
+        <div class="ch"><b>Ses heures</b><span class="v">heure par heure</span></div>
+        <div class="cw">Un bouton de statut, comme dans une messagerie d'équipe&nbsp;: disponible, occupé,
+          ne pas déranger. «&nbsp;Disponible&nbsp;» ouvre les missions de dernière minute.</div>
+      </div>
+      <div class="crow">
+        <div class="ch"><b>Le droit de dire non</b><span class="v">sans conséquence</span></div>
+        <div class="cw">Aucune moyenne d'étoiles, aucun score&nbsp;: <b>une note qui baisse quand on refuse</b>
+          est un critère de salariat, et c'est aussi une mauvaise raison d'accepter.</div>
+      </div>
+      <div class="crow">
+        <div class="ch"><b>Son carnet</b><span class="v">il le supprime</span></div>
+        <div class="cw">Les heures vivent tant que le compte vit. Aucune attestation d'heures n'est émise
+          par la plateforme.</div>
+      </div>
+      <div class="crow">
+        <div class="ch"><b>Sa photo</b><span class="v">0 ou 1, facultative</span></div>
+        <div class="cw">Un profil sans photo s'affiche <b>entier et normalement</b>&nbsp;: pas de cadre vide,
+          pas de mention «&nbsp;sans photo&nbsp;». Le filtre «&nbsp;avec photo&nbsp;» n'existe que côté recherche.</div>
+      </div>
+      <div class="crow">
+        <div class="ch"><b>Sa commune</b><span class="v">jamais son adresse</span></div>
+        <div class="cw">La distance se calcule <b>entre deux communes</b>, depuis le code postal&nbsp;:
+          jamais «&nbsp;0 km&nbsp;» mais «&nbsp;même commune&nbsp;». La rue et le numéro n'existent nulle
+          part dans son profil.</div>
+      </div>
+    </div>
+  </div>
+
+  <section class="mineurs">
+    <div class="mh">
+      <span class="badge16">16 ans</span>
+      <h2>Seize et dix-sept ans&nbsp;: sept règles dans le code, pas dans un avertissement</h2>
+    </div>
+    <div class="mlist">
+      <div class="mitem"><span class="k">1</span><div><b>Pas de nuit.</b> Aucune mission entre 22 h et
+        06 h, sans exception.</div></div>
+      <div class="mitem"><span class="k">2</span><div><b>Pas le dimanche ni les jours fériés.</b> Les
+        fériés belges sont une table, jamais une saisie libre.</div></div>
+      <div class="mitem"><span class="k">3</span><div><b>Pas pendant les heures de cours.</b> Bloquées
+        par défaut&nbsp;; une ouverture de journée vaut <b>six mois</b> et se révoque toute seule.</div></div>
+      <div class="mitem"><span class="k">4</span><div><b>Les vacances de sa communauté.</b> Pendant les
+        vacances scolaires de son école, la journée s'ouvre sans rien cocher.</div></div>
+      <div class="mitem"><span class="k">5</span><div><b>L'accord d'un parent.</b> Recueilli à
+        l'inscription et <b>tracé</b>&nbsp;: qui, quand. Sans lui le compte reste en attente, ne publie rien
+        et ne reçoit aucune mission.</div></div>
+      <div class="mitem"><span class="k">6</span><div><b>La liste noire reste entière.</b> Ménage,
+        repassage, vitres, jardinage lourd&nbsp;: interdits — et un mineur est encore moins protégé par
+        l'exemption.</div></div>
+      <div class="mitem"><span class="k">7</span><div><b>Rien ne reste après un refus.</b> Moins de
+        16 ans, ou accord parental refusé&nbsp;: la fiche est <b>effacée</b>, pas mise de côté.</div></div>
+      <div class="mitem"><span class="k">8</span><div><b>Les compteurs ne bougent pas.</b> 8 h par
+        semaine, 650 h par an, 12 mois chez le même employeur&nbsp;: un mineur ne les contourne pas parce
+        qu'il est mineur.</div></div>
+    </div>
+    <div class="honest">
+      <b class="hh">Ce qui est ouvert aujourd'hui, et ce qui ne l'est pas encore</b>
+      Les <b>jobs</b> sont ouverts dès 16 ans&nbsp;: le contrat d'occupation d'étudiant est signé par
+      l'employeur, qui porte DIMONA, DmfA et l'assurance — le droit est clair. Les <b>coups de main</b>
+      restent à 18 ans tant que la condition d'âge de l'exemption ONSS des activités occasionnelles n'a
+      pas été lue sur la source officielle. Ce n'est pas un refus de la règle à 16 ans&nbsp;: c'est la même
+      règle, appliquée là où elle est certaine.
+    </div>
+  </section>
+
+  <div class="foot">
+    Cette page décrit un mécanisme, pas un service en ligne&nbsp;: rien n'est ouvert au public à ce jour.
+    Les montants cités sont des exemples d'affichage, pas des tarifs. Kazendra n'est ni employeur, ni
+    bureau de placement, ni intermédiaire de paiement. Dernière mise à jour&nbsp;: 25 octobre 2026.
+  </div>
+</div>
+
+<!-- ═══════════════════════════ ÉCRAN 3 ═══════════════════════════ -->
+<div class="cap">Écran 3 — L'inscription&nbsp;: un seul écran, une seule question de fond (la communauté de l'école)</div>
+<header>
+  <div class="wrap bar">
+    <div class="brand"><img src="kazendra-icone-256.png" alt="Kazendra"><div class="nm">Kazendra</div></div>
+    <nav><a href="#">Accueil</a><a href="#">Promos</a><a href="#">Annonces</a><a href="#">Immo</a>
+      <a href="#">Événements</a><a href="#">Rencontres</a><a href="#" class="on">Jobs étudiants</a>
+      <a href="#">Emploi</a><a href="#">Artisans</a></nav>
+    <div class="right"><span class="lnk">Déjà un compte&nbsp;?</span><div class="av">B</div></div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="langbar">
+    <span class="ll">Cette page en</span>
+    <span class="langopt on"><img src="drapeaux/france.svg" alt=""><span>Français</span></span>
+    <span class="langopt"><img src="drapeaux/pays-bas.svg" alt=""><span>Nederlands</span></span>
+    <span class="langopt"><img src="drapeaux/allemagne.svg" alt=""><span>Deutsch</span></span>
+    <span class="why">La langue change la lecture de la page — jamais le calendrier scolaire.</span>
+  </div>
+
+  <div class="inscr">
+    <div>
+      <div class="itop">
+        <h1>Créer ton compte</h1>
+        <div class="cnt">Étudiant · <b>gratuit</b>, toujours<br>Un seul écran, cinq blocs</div>
+      </div>
+      <p class="isub">
+        Une seule question de fond&nbsp;: <b>dans quelle communauté est ton école</b> — c'est elle qui décide
+        de tes vacances et des heures de cours bloquées. Tes heures libres, elles, se posent juste après
+        sur ton agenda&nbsp;: <b>ce n'est pas une deuxième inscription</b>.
+      </p>
+
+      <div class="formbox">
+
+        <div class="fsec first">
+          <div class="fh"><h3>1 · Toi</h3><span>cinq champs, rien de plus</span></div>
+          <div class="fgrid">
+            <div class="f">
+              <label>Prénom</label>
+              <div class="in filled">Léa</div>
+              <div class="hint">Le seul nom qui s'affiche. <b>Ton nom de famille n'est jamais demandé.</b></div>
+            </div>
+            <div class="f">
+              <label>Date de naissance</label>
+              <div class="in filled">14 / 03 / 2008</div>
+              <div class="hint">Sert à calculer ton âge. <b>Jamais affichée</b> sur ta fiche.</div>
+            </div>
+            <div class="f">
+              <label>E-mail</label>
+              <div class="in filled">lea.<span style="color:#B9C7D1">•••••</span>@mail.be
+                <svg class="ck ico" viewBox="0 0 24 24" style="width:14px;height:14px"><path d="M4 12l5 5L20 6"/></svg></div>
+              <div class="hint">Vérifié par un lien. Sert aussi aux nouvelles d'une mission.</div>
+            </div>
+            <div class="f">
+              <label>Téléphone</label>
+              <div class="in filled">+32 4<span style="color:#B9C7D1">•• •• •• ••</span></div>
+              <div class="hint">Vérifié par SMS. <b>Jamais publié</b>, jamais donné à un autre compte.</div>
+            </div>
+            <div class="f full">
+              <label>Commune</label>
+              <div class="in filled">1170 — Watermael-Boitsfort
+                <svg class="ico" viewBox="0 0 24 24" style="width:14px;height:14px;margin-left:auto;color:#9FB2BF"><path d="M6 9l6 6 6-6"/></svg></div>
+              <div class="hint">Choisie dans la liste des <b>1 146 codes postaux</b> belges. <b>Jamais ton
+                adresse</b>, ni ta rue, ni ton numéro.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fsec">
+          <div class="fh"><h3>2 · Ton école</h3><span>la seule question de fond de cet écran</span></div>
+          <div class="commblock">
+            <div class="q">Dans quelle communauté est ton école&nbsp;?</div>
+            <div class="qd">Elle décide des <b>vacances</b> et des <b>heures de cours bloquées</b>. Elle
+              ne change pas avec la langue de la page, et ne se modifie que sur preuve.</div>
+            <div class="comm">
+              <div class="ctile on"><img src="drapeaux/wallonie.svg" alt="Wallonie-Bruxelles">
+                <div><div class="ct">Wallonie-Bruxelles</div><div class="cs">Fédération W-B</div></div></div>
+              <div class="ctile"><img src="drapeaux/flandre.svg" alt="Flandre">
+                <div><div class="ct">Flandre</div><div class="cs">Vlaamse Gemeenschap</div></div></div>
+              <div class="ctile"><img src="drapeaux/germanophone.svg" alt="Ostbelgien">
+                <div><div class="ct">Ostbelgien</div><div class="cs">Communauté germanophone</div></div></div>
+            </div>
+          </div>
+          <div class="fgrid" style="margin-top:12px">
+            <div class="f">
+              <label>Établissement</label>
+              <div class="in">Institut de la vallée</div>
+              <div class="hint">Sert à vérifier ton attestation à la main. <b>Le nom de l'école n'est
+                jamais publié.</b></div>
+            </div>
+            <div class="f">
+              <label>Année d'études</label>
+              <div class="in">6<sup>e</sup> secondaire</div>
+              <div class="hint">Affichée seulement si tu la gardes&nbsp;: «&nbsp;6<sup>e</sup> secondaire&nbsp;», sans
+                le nom de l'école.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fsec">
+          <div class="fh"><h3>3 · Ce que tu cherches</h3><span>les deux peuvent rester allumés</span></div>
+          <div class="swrow on">
+            <div class="sw on"><i></i></div>
+            <div><div class="st">Des coups de main</div>
+              <div class="sd">Courses, pharmacie, compagnie, accompagnement. <b>Tu fixes ton prix</b>,
+                8 h par semaine maximum.</div></div>
+          </div>
+          <div class="swrow on">
+            <div class="sw j on"><i></i></div>
+            <div><div class="st">Des jobs étudiants</div>
+              <div class="sd">Chez une entreprise ou une ASBL, avec contrat d'occupation d'étudiant.
+                650 h par an, tous employeurs confondus.</div></div>
+          </div>
+          <div class="swnote">Un seul compte, deux jeux de compteurs. Tu peux couper l'un des deux à
+            tout moment, sans rien perdre.</div>
+        </div>
+
+        <div class="fsec">
+          <div class="fh"><h3>4 · Ta fiche</h3><span>ce que les autres verront</span></div>
+          <div class="fgrid">
+            <div class="f full">
+              <label>Langues que tu parles</label>
+              <div class="chips">
+                <span class="chip on">Français</span><span class="chip">Nederlands</span>
+                <span class="chip on">English</span><span class="chip">Deutsch</span>
+              </div>
+            </div>
+            <div class="f full">
+              <label>Ce que tu sais faire</label>
+              <div class="chips">
+                <span class="chip on">Courses</span><span class="chip on">Pharmacie</span>
+                <span class="chip">Compagnie</span><span class="chip">Accompagnement</span>
+                <span class="chip">Autre</span>
+              </div>
+              <div class="hint" style="margin-top:6px">Cette liste est <b>fermée</b>&nbsp;: ce sont
+                exactement les services que l'exemption ONSS cite. Un besoin qui n'y est pas passe par
+                «&nbsp;Autre&nbsp;» et un contrôle à la main.</div>
+            </div>
+            <div class="f">
+              <label>Ton prix, par heure</label>
+              <div class="in filled">15 €</div>
+              <div class="hint"><b>Toi seul le fixes.</b> Modifiable à tout moment. Aucune grille
+                imposée, aucune commission prélevée.</div>
+            </div>
+            <div class="f">
+              <label>Photo</label>
+              <div class="photo2">
+                <div class="pslot"><svg class="ico" viewBox="0 0 24 24" style="width:20px;height:20px">
+                  <rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="12" cy="13" r="3.2"/>
+                  <path d="M8 6l1.5-2h5L16 6"/></svg></div>
+                <div class="pt"><b>0 ou 1 photo — facultative</b>
+                  <p>Sans photo, ta fiche s'affiche entière et normalement&nbsp;: pas de cadre vide, pas de
+                    mention «&nbsp;sans photo&nbsp;».</p></div>
+                <div class="pf">Choisir</div>
+              </div>
+            </div>
+            <div class="f full">
+              <label>Ta présentation</label>
+              <div class="in" style="height:74px;align-items:flex-start;line-height:1.6">
+                Deux ou trois phrases&nbsp;: ce que tu fais le mieux, quand tu es libre, comment tu
+                travailles.
+              </div>
+              <div class="hint">300 à 1 200 caractères. Aucun âge, aucune adresse, aucun nom
+                d'établissement dans le texte&nbsp;: ces trois-là sont bloqués à la saisie.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fsec">
+          <div class="fh"><h3>5 · Tes accords</h3><span>trois lignes, à lire avant d'envoyer</span></div>
+          <div class="agr">
+            <div class="ag"><span class="bx ck"><svg class="ico" viewBox="0 0 24 24"
+              style="width:9px;height:9px;stroke-width:3.4"><path d="M4 12l5 5L20 6"/></svg></span>
+              <div><b>Je peux refuser une mission, et je ne suis jamais sanctionné pour ça.</b> Aucune
+                note ne baisse quand je dis non, et personne ne voit combien de fois j'ai refusé.</div></div>
+            <div class="ag"><span class="bx ck"><svg class="ico" viewBox="0 0 24 24"
+              style="width:9px;height:9px;stroke-width:3.4"><path d="M4 12l5 5L20 6"/></svg></span>
+              <div><b>Je déclare sur l'honneur que mes informations sont exactes.</b> La plateforme ne me
+                demande ni casier judiciaire, ni pièce d'identité, ni compte bancaire — et n'en gardera
+                pas.</div></div>
+            <div class="ag"><span class="bx"></span>
+              <div><b>J'ai lu ce que la plateforme ne fera jamais.</b> Elle n'est ni mon employeur, ni un
+                bureau de placement&nbsp;; l'argent ne passe pas par elle&nbsp;; le contrat, quand il y en a un,
+                est signé par l'entreprise.</div></div>
+          </div>
+          <div class="send">
+            <a href="#" class="go">Créer mon compte</a>
+            <div class="after">Rien n'est publié avant la vérification de ton attestation, faite à la
+              main. Si tu as 16 ou 17 ans, il faut aussi l'accord de ton parent — à droite.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="side">
+      <div class="scard tut">
+        <h4>Variante 16–17 ans <span class="tg">Ce bloc s'ajoute</span></h4>
+        <div class="txt">
+          Ce n'est pas une case à cocher&nbsp;: <b>le lien de confirmation part chez ton parent</b>, pas chez
+          toi. Sans son accord, le compte reste <b>en attente</b>&nbsp;: il ne publie rien et ne reçoit aucune
+          mission. Si le parcours s'arrête, <b>rien n'est conservé</b>.
+        </div>
+        <div class="tfields">
+          <div class="tf"><span class="lb">Parent</span>Prénom et nom</div>
+          <div class="tf"><span class="lb">E-mail</span>adresse@mail.be</div>
+          <div class="tf"><span class="lb">Téléphone</span>+32 4 •• •• •• ••</div>
+          <div class="tf"><span class="lb">Lien</span>parent · tuteur · autre</div>
+        </div>
+        <div class="txt" style="border-top:1px solid #D6E6EF;margin-top:10px;padding-top:9px">
+          Il reçoit un e-mail avec le lien, peut refuser en un clic, et <b>révoquer son accord à tout
+          moment</b>&nbsp;: le compte repasse alors en attente.
+        </div>
+        <div class="txt" style="border-top:1px solid #D6E6EF;margin-top:9px;padding-top:9px;
+             font-size:10px;color:var(--muted)">
+          Léa a 18 ans&nbsp;: ce bloc ne s'affiche pas sur son écran. Il est montré ici en pointillés pour
+          qu'on voie exactement ce qu'un compte de 17 ans doit remplir.
+        </div>
+      </div>
+
+      <div class="scard">
+        <h4>Ce qui n'est jamais demandé</h4>
+        <ul class="never">
+          <li>IBAN, numéro de compte, toute donnée bancaire</li>
+          <li>Pièce d'identité, carte, passeport</li>
+          <li>Extrait de casier judiciaire</li>
+          <li>Ton adresse exacte, ta rue, ton numéro</li>
+          <li>Numéro de registre national</li>
+          <li>Données de santé, ordonnance, dossier médical</li>
+          <li>Position exacte, suivi du trajet</li>
+          <li>Ton nom de famille publié, ton téléphone publié</li>
+        </ul>
+      </div>
+
+      <div class="scard">
+        <h4>Ce qu'on vérifie à la main</h4>
+        <div class="checklist">
+          <div><span class="n">1</span><div class="ct">Ton attestation d'inscription. On garde
+            <b>la date et qui l'a vérifiée</b> — jamais le fichier.</div></div>
+          <div><span class="n">2</span><div class="ct">Un appel de deux minutes, pour que ton téléphone
+            sonne vraiment.</div></div>
+          <div><span class="n">3</span><div class="ct">Que ta commune est cohérente avec tes heures
+            libres.</div></div>
+        </div>
+        <div class="txt" style="border-top:1px solid #EDF2F6;margin-top:2px;padding-top:9px">
+          C'est humain, donc ça prend quelques heures — pas quelques secondes. On préfère ça à un badge
+          qui ne veut rien dire.
+        </div>
+      </div>
+
+      <div class="scard">
+        <h4>Ce qui arrive juste après</h4>
+        <div class="checklist">
+          <div><span class="n">1</span><div class="ct">Tu poses tes <b>heures libres</b>, heure par heure,
+            sur ton agenda. Pas de deuxième formulaire.</div></div>
+          <div><span class="n">2</span><div class="ct">Tu choisis ton <b>statut</b>&nbsp;: disponible, occupé,
+            ne pas déranger. «&nbsp;Disponible&nbsp;» ouvre les missions de dernière minute.</div></div>
+          <div><span class="n">3</span><div class="ct">Les heures de cours restent bloquées et
+            <b>s'ouvrent seules</b> pendant les vacances de ta communauté.</div></div>
+        </div>
+      </div>
+
+      <div class="scard">
+        <h4>Ce que ça coûte</h4>
+        <div class="txt" style="margin-top:6px">
+          <b>0 €.</b> L'inscription, la recherche et la mise en relation sont gratuites pour l'étudiant —
+          au lancement comme après. <b>Aucune commission</b> n'est prélevée sur un coup de main, et
+          aucune carte n'est demandée, à aucun moment.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    Maquette de travail, 25 octobre 2026. Les champs montrés ici sont ceux du modèle de données
+    (23 tables). Aucun nom réel, aucune donnée réelle&nbsp;: les valeurs affichées sont des exemples
+    d'affichage. L'inscription tient sur un seul écran&nbsp;; la langue de la page est une commande, pas une
+    question du formulaire.
+  </div>
+</div>
+
+<!-- ═══════════════════════════ ÉCRAN 4 ═══════════════════════════ -->
+<div class="cap">Écran 4 — L'agenda&nbsp;: heure par heure, et ce que la personne aidée n'y voit jamais</div>
+<header>
+  <div class="wrap bar">
+    <div class="brand"><img src="kazendra-icone-256.png" alt="Kazendra"><div class="nm">Kazendra</div></div>
+    <nav><a href="#">Accueil</a><a href="#">Promos</a><a href="#">Annonces</a><a href="#">Immo</a>
+      <a href="#">Événements</a><a href="#">Rencontres</a><a href="#" class="on">Jobs étudiants</a>
+      <a href="#">Emploi</a><a href="#">Artisans</a></nav>
+    <div class="right"><span class="lnk">Léa · 18 ans</span><div class="av">L</div></div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="doorhead">
+    <div class="top">
+      <h1>Mon agenda</h1>
+      <div class="cnt">Semaine <b>19 → 25 octobre 2026</b><br>Rhéto · Fédération Wallonie-Bruxelles</div>
+    </div>
+    <div class="count">
+      Tu poses tes heures libres <b>heure par heure</b>. Le reste de ton agenda reste chez toi&nbsp;: personne
+      d'autre ne le voit, jamais.
+    </div>
+  </div>
+
+  <div class="banner">
+    <div class="ic2"><svg class="ico" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/>
+      <path d="M8 3v4M16 3v4M3 10h18"/></svg></div>
+    <div class="bt"><b>Vacances de Toussaint, du 19 octobre au 1<sup>er</sup> novembre.</b>
+      Cette semaine, tes heures de cours sont <b>ouvertes automatiquement</b> — rien à cocher. Au retour,
+      elles se referment seules le 2 novembre.</div>
+    <div class="sep2">Ce n'est pas la langue qui décide&nbsp;: un étudiant de Flandre est encore en cours
+      cette semaine (Toussaint du 2 au 8 novembre). La <b>communauté</b> de son école, et elle seule.</div>
+  </div>
+
+  <div class="agenda">
+    <div class="wcard">
+      <div class="whead"><h2>Lundi 19 → dimanche 25</h2><span>clique une heure pour la poser libre</span></div>
+      <div class="week">
+        <div></div>
+        <div class="dh">Lun<b>19</b></div><div class="dh">Mar<b>20</b></div><div class="dh">Mer<b>21</b></div>
+        <div class="dh">Jeu<b>22</b></div><div class="dh">Ven<b>23</b></div><div class="dh">Sam<b>24</b></div>
+        <div class="dh dim">Dim<b>25</b></div>
+
+        <div class="hr">08</div>
+        <div class="cell off"></div><div class="cell off"></div><div class="cell off"></div>
+        <div class="cell off"></div><div class="cell off"></div><div class="cell off"></div>
+        <div class="cell off"></div>
+
+        <div class="hr">09</div>
+        <div class="cell vac"></div><div class="cell off"></div><div class="cell vac"></div>
+        <div class="cell off"></div><div class="cell vac"></div><div class="cell res"></div>
+        <div class="cell off"></div>
+
+        <div class="hr">10</div>
+        <div class="cell vac"></div><div class="cell libre"></div><div class="cell vac"></div>
+        <div class="cell libre"></div><div class="cell vac"></div><div class="cell res"></div>
+        <div class="cell off"></div>
+
+        <div class="hr">11</div>
+        <div class="cell vac"></div><div class="cell libre"></div><div class="cell vac"></div>
+        <div class="cell libre"></div><div class="cell vac"></div><div class="cell libre"></div>
+        <div class="cell off"></div>
+
+        <div class="hr">12</div>
+        <div class="cell vac"></div><div class="cell off"></div><div class="cell vac"></div>
+        <div class="cell off"></div><div class="cell vac"></div><div class="cell off"></div>
+        <div class="cell off"></div>
+
+        <div class="hr">13</div>
+        <div class="cell libre"></div><div class="cell off"></div><div class="cell off"></div>
+        <div class="cell off"></div><div class="cell off"></div><div class="cell libre"></div>
+        <div class="cell off"></div>
+
+        <div class="hr">14</div>
+        <div class="cell vac"></div><div class="cell res"></div><div class="cell vac"></div>
+        <div class="cell res"></div><div class="cell vac"></div><div class="cell libre"></div>
+        <div class="cell off"></div>
+
+        <div class="hr">15</div>
+        <div class="cell vac"></div><div class="cell res"></div><div class="cell vac"></div>
+        <div class="cell res"></div><div class="cell vac"></div><div class="cell off"></div>
+        <div class="cell off"></div>
+
+        <div class="hr">16</div>
+        <div class="cell off"></div><div class="cell off"></div><div class="cell vac"></div>
+        <div class="cell off"></div><div class="cell off"></div><div class="cell off"></div>
+        <div class="cell off"></div>
+
+        <div class="hr">17</div>
+        <div class="cell libre"></div><div class="cell off"></div><div class="cell libre"></div>
+        <div class="cell off"></div><div class="cell libre"></div><div class="cell off"></div>
+        <div class="cell off"></div>
+
+        <div class="hr">18</div>
+        <div class="cell libre"></div><div class="cell off"></div><div class="cell libre"></div>
+        <div class="cell off"></div><div class="cell libre"></div><div class="cell off"></div>
+        <div class="cell off"></div>
+
+        <div class="hr">19</div>
+        <div class="cell libre"></div><div class="cell off"></div><div class="cell off"></div>
+        <div class="cell off"></div><div class="cell off"></div><div class="cell off"></div>
+        <div class="cell off"></div>
+      </div>
+      <div class="legend">
+        <div><i style="background:#0D3B5B"></i>Libre — tu l'as posée</div>
+        <div><i style="background:#CFE3EF"></i>Ouverte par les vacances</div>
+        <div><i style="background:#EB912D"></i>Réservée</div>
+        <div><i style="background:#EDF1F4;border:1px solid #E2E8ED"></i>Indisponible</div>
+      </div>
+      <div class="swnote" style="margin-top:10px">
+        Le dimanche, ce n'est pas une case grisée chez toi&nbsp;: c'est <b>une impossibilité pour un compte
+        de 16–17 ans</b>. À 18 ans tu peux, tu ne le fais pas — c'est ton choix, et il est respecté.
+      </div>
+    </div>
+
+    <div class="side">
+      <div class="scard">
+        <h4>Ton statut</h4>
+        <div class="statusbtns">
+          <div class="statusbtn on"><span class="dot2"></span>Disponible
+            <span class="sm">depuis 12 min</span></div>
+          <div class="statusbtn"><span class="dot2"></span>Occupé</div>
+          <div class="statusbtn"><span class="dot2"></span>Ne pas déranger</div>
+        </div>
+        <div class="txt" style="border-top:1px solid #EDF2F6;margin-top:10px;padding-top:9px">
+          «&nbsp;Disponible&nbsp;» ouvre les missions de dernière minute&nbsp;: <b>3 sollicitations par jour au
+          maximum</b>, jamais plus. Les deux autres statuts ne reçoivent rien.
+        </div>
+      </div>
+
+      <div class="scard">
+        <h4>Cette semaine</h4>
+        <div class="tot"><b>6 h</b><span>sur 8 h — entraide</span></div>
+        <div class="gauge" style="margin-top:9px"><i style="width:75%"></i></div>
+        <div class="txt" style="margin-top:8px">
+          4 h terminées, <b>2 h réservées samedi 24</b>. Il te reste 2 h&nbsp;: une mission de 4 h serait
+          refusée, et c'est le compteur qui refuse, pas un humain qui juge.
+        </div>
+      </div>
+
+      <div class="scard">
+        <h4>Ce que voit la personne aidée</h4>
+        <div class="txt" style="margin-top:5px">Trois créneaux — et rien d'autre.</div>
+        <div class="seeslot"><span class="d">Mar. 20</span><span class="h">10 h – 12 h</span>
+          <span class="p">15 €</span></div>
+        <div class="seeslot"><span class="d">Jeu. 22</span><span class="h">10 h – 12 h</span>
+          <span class="p">15 €</span></div>
+        <div class="seeslot"><span class="d">Sam. 24</span><span class="h">13 h – 15 h</span>
+          <span class="p">15 €</span></div>
+        <div class="txt" style="border-top:1px solid #EDF2F6;margin-top:10px;padding-top:9px">
+          Elle ne voit <b>ni tes cours</b>, ni tes heures occupées, ni le reste de ta semaine. Elle voit
+          des heures libres et un prix. C'est tout.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ ÉCRAN 5 ═══════════════════════════ -->
+<div class="cap">Écran 5 — La demande&nbsp;: cinq tuiles, des créneaux libres, et un prix qu'elle ne fixe pas</div>
+<header>
+  <div class="wrap bar">
+    <div class="brand"><img src="kazendra-icone-256.png" alt="Kazendra"><div class="nm">Kazendra</div></div>
+    <nav><a href="#">Accueil</a><a href="#">Promos</a><a href="#">Annonces</a><a href="#">Immo</a>
+      <a href="#">Événements</a><a href="#">Rencontres</a><a href="#" class="on">Jobs étudiants</a>
+      <a href="#">Emploi</a><a href="#">Artisans</a></nav>
+    <div class="right"><span class="lnk">Marianne</span><div class="av">M</div></div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="doorhead">
+    <div class="top">
+      <h1>Demander un coup de main</h1>
+      <div class="cnt">Aucun contrat, aucune déclaration<br><b>0 €</b> pour vous</div>
+    </div>
+    <div class="count">
+      Vous choisissez un besoin et une heure libre. Vous <b>ne fixez pas le prix</b>&nbsp;: c'est l'étudiant
+      qui fixe le sien, et vous pouvez refuser.
+    </div>
+  </div>
+
+  <div class="dem">
+    <div class="wcard">
+      <div class="whead"><h2>De quoi avez-vous besoin&nbsp;?</h2><span>liste fermée — rien d'autre n'est proposé</span></div>
+      <div class="needs">
+        <div class="need on">
+          <svg class="ico" viewBox="0 0 24 24"><path d="M6 8h12l-1.2 12H7.2L6 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
+          <div class="t">Courses</div></div>
+        <div class="need">
+          <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>
+          <div class="t">Pharmacie</div></div>
+        <div class="need">
+          <svg class="ico" viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 21l1.9-5.3A8 8 0 1 1 21 12z"/></svg>
+          <div class="t">Compagnie</div></div>
+        <div class="need">
+          <svg class="ico" viewBox="0 0 24 24"><circle cx="14.2" cy="4.6" r="1.9"/>
+            <path d="M14.2 8.2v5.9M14.2 14.1 12 21M14.2 14.1l2.3 4.9"/><path d="M14.2 9.8 10.4 11.6"/>
+            <path d="M9.6 7.6v13.4"/></svg>
+          <div class="t">Accompagner</div></div>
+        <div class="need">
+          <svg class="ico" viewBox="0 0 24 24"><circle cx="6" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/>
+            <circle cx="18" cy="12" r="1.5"/></svg>
+          <div class="t">Autre</div></div>
+      </div>
+
+      <div class="f" style="margin-top:14px">
+        <label>Précisez en une phrase</label>
+        <div class="in filled" style="padding:11px 12px">Du pain, des fruits, et passer à la pharmacie.</div>
+        <div class="hint">Pas d'âge, pas d'adresse exacte, pas de numéro de téléphone dans le texte&nbsp;: ces
+          trois-là sont bloqués à la saisie.</div>
+      </div>
+
+      <div class="f" style="margin-top:15px">
+        <label>Quand&nbsp;? Voici les créneaux réellement libres</label>
+        <div class="slotb on">
+          <div class="av2">L</div>
+          <div><div class="n">Mardi 20 octobre · 10 h – 12 h</div>
+            <div class="m">Léa · 2 km · 5 missions terminées, 4 confirmées</div></div>
+          <div class="pr"><b>15 €</b><span>prix fixé par Léa</span></div>
+        </div>
+        <div class="slotb">
+          <div class="av2">S</div>
+          <div><div class="n">Jeudi 22 octobre · 10 h – 12 h</div>
+            <div class="m">Sam · 3 km · 14 missions terminées, 12 confirmées</div></div>
+          <div class="pr"><b>12 €</b><span>prix fixé par Sam</span></div>
+        </div>
+        <div class="slotb">
+          <div class="av2">N</div>
+          <div><div class="n">Samedi 24 octobre · 13 h – 15 h</div>
+            <div class="m">Noor · 1 km · 3 missions terminées, 3 confirmées</div></div>
+          <div class="pr"><b>15 €</b><span>prix fixé par Noor</span></div>
+        </div>
+        <div class="hint">Vous ne voyez <b>que les créneaux libres</b>. Jamais l'agenda occupé de
+          quelqu'un, ni ses heures de cours.</div>
+      </div>
+
+      <div class="f" style="margin-top:15px">
+        <label>Où&nbsp;?</label>
+        <div class="in filled">1170 — Watermael-Boitsfort</div>
+        <div class="hint"><b>L'adresse exacte n'est demandée qu'après l'acceptation</b>, et elle est
+          effacée 30 jours après la mission. Elle n'est jamais visible avant.</div>
+      </div>
+
+      <div class="send">
+        <a href="#" class="go">Envoyer la demande</a>
+        <div class="after">La demande expire <b>deux heures avant le créneau</b> si personne n'a répondu.
+          Rien n'est perdu&nbsp;: vous en choisissez une autre.</div>
+      </div>
+    </div>
+
+    <div class="side">
+      <div class="scard">
+        <h4>Ce que vous ne faites pas</h4>
+        <ul class="never">
+          <li>Fixer le prix&nbsp;: il est celui de l'étudiant, vous pouvez refuser</li>
+          <li>Payer par la plateforme&nbsp;: vous réglez directement</li>
+          <li>Donner une donnée bancaire&nbsp;: jamais demandée, jamais stockée</li>
+          <li>Publier une photo&nbsp;: elle est facultative partout</li>
+          <li>Signer un contrat&nbsp;: il n'y en a pas</li>
+        </ul>
+      </div>
+
+      <div class="scard">
+        <h4>Votre adresse</h4>
+        <div class="txt" style="margin-top:6px">
+          Elle n'est <b>pas</b> dans votre fiche. Elle vit à part, n'est révélée qu'à l'étudiant dont vous
+          acceptez la mission, et <b>effacée 30 jours après</b>. Vous pouvez refuser une demande sans
+          jamais donner votre rue.
+        </div>
+      </div>
+
+      <div class="scard">
+        <h4>Si vous n'avez pas d'ordinateur</h4>
+        <div class="txt" style="margin-top:6px">
+          La fiche papier existe, et quelqu'un la saisit pour vous — votre fille, votre fils, un voisin.
+          Vous signez, ou vous donnez votre accord. <b>Aucune application à installer.</b>
+        </div>
+      </div>
+
+      <div class="scard">
+        <h4>Ce que ça coûte</h4>
+        <div class="txt" style="margin-top:6px">
+          <b>0 €.</b> La plateforme ne prend rien, ni à vous ni à l'étudiant. Vous payez l'étudiant,
+          directement, comme vous payez un voisin qui vous rend service.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ ÉCRAN 6 ═══════════════════════════ -->
+<div class="cap">Écran 6 — La mission&nbsp;: un code à quatre chiffres, et une question sans durée</div>
+<header>
+  <div class="wrap bar">
+    <div class="brand"><img src="kazendra-icone-256.png" alt="Kazendra"><div class="nm">Kazendra</div></div>
+    <nav><a href="#">Accueil</a><a href="#">Promos</a><a href="#">Annonces</a><a href="#">Immo</a>
+      <a href="#">Événements</a><a href="#">Rencontres</a><a href="#" class="on">Jobs étudiants</a>
+      <a href="#">Emploi</a><a href="#">Artisans</a></nav>
+    <div class="right"><span class="lnk">Léa · 18 ans</span><div class="av">L</div></div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="doorhead">
+    <div class="top">
+      <h1>La mission, jeudi 22 octobre</h1>
+      <div class="cnt">Deux écrans, un code<br>Le même jour, la même heure</div>
+    </div>
+    <div class="count">
+      Il n'y a <b>aucun suivi de position</b>&nbsp;: le code prouve la présence, le temps, et rien d'autre. Ce
+      qui se passe entre les deux ne regarde personne.
+    </div>
+  </div>
+
+  <div class="mis">
+    <div class="phone">
+      <div class="phead">
+        <div><div class="pt2">Courses et pharmacie</div>
+          <div class="ps">Jeudi 22 octobre · 14 h – 16 h · 1170</div></div>
+        <span class="badge">en cours</span>
+      </div>
+
+      <div class="tl">
+        <div class="tli done"><div class="h2r">13:56</div><div class="pt3"></div>
+          <div><b>En route.</b> Un bouton, posé par toi — pas une position relevée.</div></div>
+        <div class="tli done"><div class="h2r">14:02</div><div class="pt3"></div>
+          <div><b>Arrivée.</b> La personne aidée te donne le code de la mission.</div></div>
+        <div class="tli now"><div class="h2r">14:03</div><div class="pt3"></div>
+          <div><b>Saisir le code.</b> Sans lui, la mission ne démarre pas et les heures ne comptent pas.</div></div>
+      </div>
+
+      <div class="codebox">
+        <div class="cb f">4</div><div class="cb f">7</div><div class="cb f">2</div>
+        <div class="cb empty">·</div>
+      </div>
+
+      <div class="act">
+        <div class="main2">Valider le code</div>
+        <div class="ghost">Signaler un problème</div>
+      </div>
+
+      <div class="txt" style="border-top:1px solid #EDF2F6;margin-top:13px;padding-top:10px;
+           font-size:11px;line-height:1.62;color:var(--ink2)">
+        Le code, c'est <b>la personne aidée</b> qui te le donne en t'ouvrant. Il change à chaque mission, il
+        ne dit pas où elle habite, et il ne prouve rien d'autre que ta présence à cette heure-là.
+        <br><br>
+        Ensuite&nbsp;: la durée se compte toute seule. <b>Pause de 30 minutes au-delà de 4 h 30, d'une heure
+        au-delà de 6 h</b> — et c'est toi qui appuies sur «&nbsp;Terminer&nbsp;». <b>15 €, réglés directement</b> — la plateforme
+        ne touche pas cet argent et ne le voit pas passer.
+      </div>
+    </div>
+
+    <div class="phone">
+      <div class="phead">
+        <div><div class="pt2">Le code de la mission</div>
+          <div class="ps">À donner à Léa quand elle arrive</div></div>
+        <span class="badge">jeudi 22</span>
+      </div>
+
+      <div class="codebox">
+        <div class="cb f">4</div><div class="cb f">7</div><div class="cb f">2</div><div class="cb f">9</div>
+      </div>
+      <div class="swnote" style="text-align:center;margin-top:8px">
+        Il change à chaque mission. Il ne dit rien de vous&nbsp;: ni votre nom, ni votre rue.
+      </div>
+
+      <div style="border-top:1px solid var(--line);margin-top:14px;padding-top:2px">
+        <div class="qbig">La mission a-t-elle eu lieu&nbsp;?</div>
+        <div class="qans"><div class="y">Oui</div><div>Non</div></div>
+        <div class="txt" style="margin-top:9px;font-size:10.5px">
+          Une seule question. <b>Sans durée, sans montant</b>&nbsp;: vous ne dites pas combien de temps, vous ne
+          dites pas combien d'argent. Un «&nbsp;non&nbsp;» n'entraîne <b>aucune sanction automatique</b> — une
+          personne regarde, et vous êtes prévenue de ce qu'elle a décidé.
+        </div>
+      </div>
+
+      <div style="border-top:1px solid var(--line);margin-top:12px;padding-top:10px">
+        <div class="txt" style="font-size:10.5px">
+          <b>Si vous ne pouvez pas répondre</b>, une personne de confiance peut confirmer à votre place.
+          Deux identifiants, deux comptes, un lien — jamais un mot de passe partagé, parce que ce qui
+          compte c'est de savoir <b>qui</b> a confirmé.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ ÉCRAN 7 ═══════════════════════════ -->
+<div class="cap">Écran 7 — Le carnet&nbsp;: «&nbsp;confirmé&nbsp;» n'est pas «&nbsp;validé&nbsp;», et les heures restent à toi</div>
+<header>
+  <div class="wrap bar">
+    <div class="brand"><img src="kazendra-icone-256.png" alt="Kazendra"><div class="nm">Kazendra</div></div>
+    <nav><a href="#">Accueil</a><a href="#">Promos</a><a href="#">Annonces</a><a href="#">Immo</a>
+      <a href="#">Événements</a><a href="#">Rencontres</a><a href="#" class="on">Jobs étudiants</a>
+      <a href="#">Emploi</a><a href="#">Artisans</a></nav>
+    <div class="right"><span class="lnk">Léa · 18 ans</span><div class="av">L</div></div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="doorhead">
+    <div class="top">
+      <h1>Mon carnet</h1>
+      <div class="cnt">5 missions · 10 h déclarées<br><b>Aucune</b> n'est certifiée par nous</div>
+    </div>
+    <div class="count">
+      Les heures sont <b>déclarées par toi</b>. La plateforme ne les certifie pas, n'émet aucune
+      attestation, et ne les transmet à personne. Pour une preuve officielle, il y a Student@work.
+    </div>
+  </div>
+
+  <div class="carn">
+    <div class="wcard">
+      <div class="whead"><h2>Octobre 2026</h2><span>du plus récent au plus ancien</span></div>
+
+      <div class="crow2 first">
+        <div class="dt">Jeu. 22 oct.</div>
+        <div class="bs"><b>Pharmacie</b><span>Marianne · 1170</span></div>
+        <div class="du">2 h</div>
+        <div><span class="tagx ok">confirmé</span></div>
+      </div>
+      <div class="crow2">
+        <div class="dt">Mar. 20 oct.</div>
+        <div class="bs"><b>Courses</b><span>Marianne · 1170</span></div>
+        <div class="du">2 h</div>
+        <div><span class="tagx ok">confirmé</span></div>
+      </div>
+      <div class="crow2">
+        <div class="dt">Sam. 17 oct.</div>
+        <div class="bs"><b>Compagnie</b><span>Marianne · 1170</span></div>
+        <div class="du">2 h</div>
+        <div><span class="tagx self">déclaré par toi</span></div>
+      </div>
+      <div class="crow2">
+        <div class="dt">Jeu. 15 oct.</div>
+        <div class="bs"><b>Courses</b><span>Marianne · 1170</span></div>
+        <div class="du">2 h</div>
+        <div><span class="tagx ok">confirmé</span></div>
+      </div>
+      <div class="crow2">
+        <div class="dt">Mar. 13 oct.</div>
+        <div class="bs"><b>Accompagnement</b><span>annulée par la personne aidée</span></div>
+        <div class="du">—</div>
+        <div><span class="tagx none">annulée</span></div>
+      </div>
+      <div class="crow2">
+        <div class="dt">Sam. 10 oct.</div>
+        <div class="bs"><b>Courses</b><span>Marianne · 1170</span></div>
+        <div class="du">2 h</div>
+        <div><span class="tagx ok">confirmé</span></div>
+      </div>
+
+      <div style="border-top:1px solid var(--line);margin-top:6px;padding-top:12px">
+        <div class="mline"><b>«&nbsp;Confirmé&nbsp;»</b> = la personne aidée a dit que la mission a eu lieu.
+          <b>«&nbsp;Déclaré par toi&nbsp;»</b> = la durée, que personne ne certifie. Le mot «&nbsp;validé&nbsp;» ne s'applique
+          jamais à des heures&nbsp;: nous n'avons pas l'autorité pour le dire.</div>
+      </div>
+
+      <div class="honest" style="margin-top:12px">
+        <b class="hh">Une preuve officielle, ce n'est pas ici</b>
+        Pour un employeur, une école ou un dossier, la référence est <b>Student@work</b> — c'est lui qui
+        compte les 650 heures. Kazendra affiche ce que tu as déclaré, et te renvoie là-bas.
+      </div>
+    </div>
+
+    <div class="side">
+      <div class="scard">
+        <h4>Cette semaine — entraide</h4>
+        <div class="tot"><b>6 h</b><span>sur 8 h</span></div>
+        <div class="gauge" style="margin-top:8px"><i style="width:75%"></i></div>
+        <div class="txt" style="margin-top:8px">4 h terminées, 2 h réservées samedi 24. Il reste 2 h&nbsp;:
+          une mission de 4 h serait refusée.</div>
+      </div>
+
+      <div class="scard">
+        <h4>Cette année — jobs</h4>
+        <div class="tot"><b>0 h</b><span>sur 650 h</span></div>
+        <div class="gauge" style="margin-top:8px"><i class="warm" style="width:0"></i></div>
+        <div class="txt" style="margin-top:8px">Aucun job pour l'instant. Le jour où tu en prends un, le
+          compteur se remplit ici — <b>tous employeurs confondus</b>, parce que c'est comme ça que la
+          règle se calcule.</div>
+      </div>
+
+      <div class="scard">
+        <h4>Chez le même employeur</h4>
+        <div class="tot"><b>—</b><span>sur 12 mois</span></div>
+        <div class="txt" style="margin-top:8px">Aucun employeur enregistré. Au-delà de douze mois
+          ininterrompus chez le même, tu deviens <b>travailleur ordinaire</b>&nbsp;: alerte, à toi et à lui.</div>
+      </div>
+
+      <div class="scard">
+        <h4>À qui il appartient</h4>
+        <div class="txt" style="margin-top:6px">
+          <b>À toi.</b> Personne d'autre ne lit ce carnet — ni la personne aidée, ni un employeur, ni un
+          autre étudiant. Il part avec ton compte le jour où tu le supprimes.
+        </div>
+        <div class="pf" style="margin-top:10px;text-align:center;font-size:10.5px;font-weight:800;
+             color:var(--ink2);border:1px solid #D5DEE6;border-radius:8px;padding:8px">Supprimer mon carnet</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    Second lot de maquettes, 25 octobre 2026. Les vacances scolaires affichées sont celles de la
+    Fédération Wallonie-Bruxelles relevées le 11 octobre (<code>app3/veille/table-vacances.csv</code>)&nbsp;:
+    Toussaint 2026 du 19 octobre au 1<sup>er</sup> novembre, Flandre du 2 au 8 novembre. Les noms,
+    prénoms, communes et montants sont des exemples d'affichage.
+  </div>
+</div>
+
+<!-- ═══════════════════════════ ÉCRAN 8 ═══════════════════════════ -->
+<div class="cap">Écran 8 — Les offres d'entreprise&nbsp;: aucune ne porte d'âge, et chacune dit qui l'a vérifiée</div>
+<header>
+  <div class="wrap bar">
+    <div class="brand"><img src="kazendra-icone-256.png" alt="Kazendra"><div class="nm">Kazendra</div></div>
+    <nav><a href="#">Accueil</a><a href="#">Promos</a><a href="#">Annonces</a><a href="#">Immo</a>
+      <a href="#">Événements</a><a href="#">Rencontres</a><a href="#" class="on">Jobs étudiants</a>
+      <a href="#">Emploi</a><a href="#">Artisans</a></nav>
+    <div class="right"><span class="lnk">Léa · 18 ans</span><div class="av">L</div></div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="doorhead">
+    <div class="top">
+      <h1>Les offres</h1>
+      <div class="cnt">128 offres · 41 entreprises<br>Toutes contrôlées à la main avant publication</div>
+    </div>
+    <div class="count">
+      Aucune offre ne contient d'âge&nbsp;: l'âge n'est pas un critère, il sert seulement à appliquer les
+      protections légales en interne. Une offre qui tombe dans une activité interdite aux mineurs est
+      <b>réservée aux 18 ans et plus</b>, et elle le dit.
+    </div>
+  </div>
+
+  <div class="jobs">
+    <div class="side">
+      <div class="scard">
+        <h4>Où</h4>
+        <div class="txt" style="margin-top:6px"><b>1170 · Watermael-Boitsfort</b></div>
+        <div class="gauge" style="margin-top:9px"><i style="width:42%"></i></div>
+        <div class="input-range" style="display:flex;justify-content:space-between;font-size:9.5px;
+             color:var(--muted);margin-top:5px"><span>ma commune</span><span>30 km</span></div>
+        <div class="txt" style="margin-top:5px">rayon estimé de <b>10 km</b> depuis le centre de ta
+          commune</div>
+        <div class="swnote">Distance estimée <b>entre communes</b>, depuis ton code postal — jamais ta
+          position, qui n'est pas demandée. Même commune&nbsp;: «&nbsp;même commune&nbsp;», jamais
+          «&nbsp;0 km&nbsp;».</div>
+      </div>
+
+      <div class="scard">
+        <h4>Catégorie</h4>
+        <div class="chips" style="margin-top:8px">
+          <span class="chip on">Commerce et vente</span><span class="chip">Horeca</span>
+          <span class="chip">Logistique</span><span class="chip">Administration</span>
+          <span class="chip">Animation</span><span class="chip">Soutien scolaire</span>
+          <span class="chip">Informatique</span><span class="chip">Industrie</span>
+        </div>
+      </div>
+
+      <div class="scard">
+        <h4>Durée</h4>
+        <div class="chips" style="margin-top:8px">
+          <span class="chip">moins de 10 h</span><span class="chip on">10 à 20 h</span>
+          <span class="chip">plus de 20 h</span>
+        </div>
+        <h4 style="margin-top:14px">Qui peut postuler</h4>
+        <div class="chips" style="margin-top:8px">
+          <span class="chip on">Toutes les offres</span><span class="chip">Accessibles dès 16 ans</span>
+        </div>
+        <div class="swnote">Le second filtre ne montre que les offres sans travail de nuit, sans dimanche
+          et sans activité interdite aux mineurs.</div>
+      </div>
+
+      <div class="scard">
+        <h4>Statut</h4>
+        <div class="chips" style="margin-top:8px">
+          <span class="chip on">Contrat d'occupation d'étudiant</span>
+          <span class="chip">Bénévolat</span>
+        </div>
+        <div class="swnote">Deux statuts pour une entreprise ou une ASBL, pas trois. Une <b>mission chez
+          un particulier</b> n'est jamais publiée ici&nbsp;: c'est l'univers entraide — et un particulier
+          n'y publie pas d'offre d'emploi non plus.</div>
+      </div>
+    </div>
+
+    <div class="jlist">
+      <div class="jcard">
+        <div class="jtop">
+          <h3>Vendeur·se en boulangerie</h3>
+        </div>
+        <div class="jent">Boulangerie du Parc <span class="vf">entreprise vérifiée le 12/10</span>
+          <span class="cat2">Commerce et vente</span></div>
+        <div class="jmeta"><span><b>10 h</b> par semaine</span><span><b>salaire convenu</b> · CP 118</span>
+          <span>Watermael-Boitsfort</span></div>
+        <div class="jfoot"><span class="ech">À pourvoir jusqu'au 15 novembre</span>
+          <span class="voirm">Voir l'offre</span></div>
+      </div>
+
+      <div class="jcard">
+        <div class="jtop">
+          <h3>Serveur·se de soirée</h3>
+          <span class="b18">18 ans et plus</span>
+        </div>
+        <div class="jent">Brasserie Saint-Antoine <span class="vf">entreprise vérifiée le 09/10</span>
+          <span class="cat2">Horeca</span></div>
+        <div class="jmeta"><span><b>20 h</b> par semaine</span><span><b>salaire convenu</b> · CP 302</span>
+          <span>Ixelles</span></div>
+        <div class="jfoot"><span class="ech">Service jusqu'à 2 h du matin&nbsp;: le travail de nuit est interdit
+          aux mineurs, pas déconseillé</span><span class="voirm">Voir l'offre</span></div>
+      </div>
+
+      <div class="jcard">
+        <div class="jtop">
+          <h3>Animateur·rice de stages de vacances</h3>
+        </div>
+        <div class="jent">ASBL Les Trois Pommiers <span class="vf">entreprise vérifiée le 03/10</span>
+          <span class="cat2">Animation</span></div>
+        <div class="jmeta"><span><b>15 h</b> par semaine</span><span><b>salaire convenu</b> · CP 329</span>
+          <span>Uccle</span></div>
+        <div class="jfoot"><span class="ech">À pourvoir jusqu'au 20 novembre · pendant les vacances
+          scolaires</span><span class="voirm">Voir l'offre</span></div>
+      </div>
+
+      <div class="jcard">
+        <div class="jtop">
+          <h3>Aide-administratif·ve</h3>
+        </div>
+        <div class="jent">Cabinet Delvaux &amp; Associés <span class="vf">entreprise vérifiée le 28/09</span>
+          <span class="cat2">Administration</span></div>
+        <div class="jmeta"><span><b>8 h</b> par semaine</span><span><b>salaire convenu</b> · CP 336</span>
+          <span>Woluwe-Saint-Lambert</span></div>
+        <div class="jfoot"><span class="ech">À pourvoir jusqu'au 8 novembre</span>
+          <span class="voirm">Voir l'offre</span></div>
+      </div>
+
+      <div class="swnote" style="padding:2px 2px 0">
+        Aucune offre n'affiche de photo, de logo ni de nombre de vues. Le classement suit la date limite
+        la plus proche, pas un paiement.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ ÉCRAN 9 ═══════════════════════════ -->
+<div class="cap">Écran 9 — Une offre&nbsp;: les cinq mentions obligatoires, et ce qu'elle ne peut pas écrire</div>
+<header>
+  <div class="wrap bar">
+    <div class="brand"><img src="kazendra-icone-256.png" alt="Kazendra"><div class="nm">Kazendra</div></div>
+    <nav><a href="#">Accueil</a><a href="#">Promos</a><a href="#">Annonces</a><a href="#">Immo</a>
+      <a href="#">Événements</a><a href="#">Rencontres</a><a href="#" class="on">Jobs étudiants</a>
+      <a href="#">Emploi</a><a href="#">Artisans</a></nav>
+    <div class="right"><span class="lnk">Léa · 18 ans</span><div class="av">L</div></div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="crumb" style="font-size:12px;color:var(--muted);padding-top:16px">
+    Jobs étudiants › Commerce et vente › Vendeur·se en boulangerie
+  </div>
+  <div class="fichejob">
+    <div>
+      <div class="itop" style="margin-top:8px">
+        <h1 style="font-size:27px;letter-spacing:-.8px;margin:0">Vendeur·se en boulangerie</h1>
+        <div class="cnt">Contrat d'occupation d'étudiant<br>Publiée le 21 octobre 2026</div>
+      </div>
+      <div class="jmeta" style="margin-top:10px;font-size:12px">
+        <span><b>10 h</b> par semaine</span>
+        <span><b>salaire convenu</b></span>
+        <span>Watermael-Boitsfort · à 2 km</span>
+      </div>
+
+      <div class="wcard" style="margin-top:16px">
+        <div class="whead"><h2 style="font-size:15px">Ce que le poste demande</h2>
+          <span>écrit par l'entreprise, contrôlé avant publication</span></div>
+        <div class="txt" style="font-size:12.5px;line-height:1.75;color:var(--ink2)">
+          Le samedi et le mercredi matin, de 8 h à 13 h&nbsp;: mise en place du magasin, service au comptoir,
+          encaissement, et remise en ordre en fin de service. Vous travaillez avec la boulangère, jamais
+          seul·e en caisse les deux premières semaines.
+          <br><br>
+          Nous cherchons quelqu'un de ponctuel et à l'aise avec le public. Aucune expérience n'est
+          exigée&nbsp;: la mise au courant se fait sur place, et elle est payée.
+          <br><br>
+          Le contrat d'occupation d'étudiant est signé en deux exemplaires, l'un pour vous, l'autre pour
+          nous. Votre horaire de cours reste prioritaire&nbsp;: nous ne demandons jamais d'heure pendant les
+          heures de classe.
+        </div>
+      </div>
+
+      <div class="wcard" style="margin-top:12px">
+        <div class="whead"><h2 style="font-size:15px">Les cinq mentions obligatoires</h2>
+          <span>et elles y sont toutes</span></div>
+        <div class="ment"><span class="ck2">✓</span><div><b>Employeur identifié</b> — Boulangerie du
+          Parc, numéro d'entreprise 0748.512.396, vérifié à la main le 12 octobre 2026. Aucune annonce
+          anonyme n'est acceptée.</div></div>
+        <div class="ment"><span class="ck2">✓</span><div><b>Lieu</b> — Watermael-Boitsfort (1170).
+          L'adresse exacte est donnée après la prise de contact, jamais dans l'offre.</div></div>
+        <div class="ment"><span class="ck2">✓</span><div><b>Durée</b> — 10 h par semaine, samedi et
+          mercredi de 8 h à 13 h, pendant l'année scolaire.</div></div>
+        <div class="ment"><span class="ck2">✓</span><div><b>Statut</b> — contrat d'occupation
+          d'étudiant. DIMONA et DmfA déclarées par l'employeur, pas par vous.</div></div>
+        <div class="ment"><span class="ck2">✓</span><div><b>Rémunération</b> — salaire convenu, encadré par
+          la commission paritaire 118 (boulangeries et pâtisseries). <b>Kazendra n'affiche aucun
+          barème</b>&nbsp;: nous ne le connaissons pas, et un chiffre inventé serait pire qu'aucun.</div></div>
+      </div>
+
+      <div class="wcard" style="margin-top:12px">
+        <div class="whead"><h2 style="font-size:15px">Ce qu'une offre ne peut pas écrire</h2>
+          <span>bloqué à la saisie, pas seulement déconseillé</span></div>
+        <ul class="never" style="margin-top:4px">
+          <li>Un âge, une fourchette d'âge, ou «&nbsp;jeune&nbsp;» comme qualité — l'âge est un critère protégé,
+            y compris dans une offre d'emploi</li>
+          <li>Une préférence de sexe, d'origine ou de religion</li>
+          <li>«&nbsp;CV à envoyer à…&nbsp;»&nbsp;: aucun CV ne passe par ici</li>
+          <li>Une photo, un logo ou un nombre de vues comme argument</li>
+          <li>Le texte est figé une fois publié&nbsp;: le modifier repasse par le contrôle</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="side">
+      <div class="entblk">
+        <h4>L'employeur</h4>
+        <div class="empwho"><span class="empimg"><svg viewBox="0 0 64 64" role="img" aria-label="Photo de la Boulangerie du Parc">
+          <rect width="64" height="64" fill="#E8DCC8"/>
+          <rect y="14" width="64" height="11" fill="#EB912D"/>
+          <path d="M5 14h7v11H5zM19 14h7v11h-7zM33 14h7v11h-7zM47 14h7v11h-7zM61 14h3v11h-3z" fill="#FFF6E8"/>
+          <rect x="7" y="31" width="21" height="17" fill="#9FB6C4"/>
+          <rect x="36" y="31" width="18" height="29" fill="#0D3B5B"/>
+          <rect x="3" y="56" width="58" height="8" fill="#C9B89C"/></svg></span>
+          <span class="nm2">Boulangerie du Parc</span></div>
+        <div class="entrow" style="margin-top:8px"><b>Numéro BCE</b><span>0748.512.396 —
+          <b style="color:#25634A">vérifié à la main le 12/10/2026</b></span></div>
+        <div class="entrow"><b>Commission</b><span>118 — boulangeries et pâtisseries (déclarée par
+          l'employeur)</span></div>
+        <div class="entrow"><b>Secrétariat social</b><span>déclaré, repris sur le contrat</span></div>
+        <div class="entrow"><b>Prévention</b><span>service de prévention interne, coordonnées sur le
+          contrat</span></div>
+        <div class="entrow"><b>Lois sociales</b><span>Contrôle des lois sociales du district, sur le
+          contrat</span></div>
+        <div class="entrow"><b>Assurance</b><span>accidents du travail, par l'employeur</span></div>
+        <div class="swnote">Ces mentions sont collectées <b>une fois</b>, à l'ouverture du compte
+          entreprise. On ne les redemande pas à chaque offre.</div>
+      </div>
+
+      <div class="scard">
+        <h4>Écrire à l'entreprise</h4>
+        <div class="txt" style="margin-top:6px">Un message, pas un dossier. <b>Aucun CV, aucun fichier,
+          aucune candidature déposée chez Kazendra</b>&nbsp;: la conversation reste une conversation, et c'est
+          l'entreprise qui vous engage.</div>
+        <div class="act"><div class="main2" style="font-size:12px">Écrire à l'entreprise</div></div>
+        <div class="swnote" style="margin-top:9px">Quelque chose ne va pas dans cette offre&nbsp;?
+          <b style="color:var(--navy)">Signaler</b> — c'est l'exploitant qui lit, jamais l'employeur, et
+          jamais l'annonceur.</div>
+      </div>
+
+      <div class="alert">
+        <b>Ne donnez jamais ces trois choses</b>
+        Votre IBAN ou numéro de compte, une copie de votre carte d'identité, ou un mot de passe. Aucun
+        employeur sérieux ne les demande avant un contrat signé — et Kazendra ne les demande jamais, à
+        personne.
+      </div>
+
+      <div class="scard">
+        <h4>Ouverte dès 16 ans</h4>
+        <div class="txt" style="margin-top:6px">Aucun horaire après 22 h, aucun dimanche, aucune activité
+          interdite aux mineurs&nbsp;: cette offre s'affiche donc aussi pour un compte de 16–17 ans. Ce n'est
+          pas une faveur, c'est une vérification.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ ÉCRAN 10 ═══════════════════════════ -->
+<div class="cap">Écran 10 — Le dépôt&nbsp;: ce que l'entreprise ne peut pas écrire, et ce qu'on ne lui redemande pas</div>
+<header>
+  <div class="wrap bar">
+    <div class="brand"><img src="kazendra-icone-256.png" alt="Kazendra"><div class="nm">Kazendra</div></div>
+    <nav><a href="#">Accueil</a><a href="#">Promos</a><a href="#">Annonces</a><a href="#">Immo</a>
+      <a href="#">Événements</a><a href="#">Rencontres</a><a href="#" class="on">Jobs étudiants</a>
+      <a href="#">Emploi</a><a href="#">Artisans</a></nav>
+    <div class="right"><span class="lnk">Boulangerie du Parc</span><div class="av">B</div></div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="doorhead">
+    <div class="top">
+      <h1>Publier une offre</h1>
+      <div class="cnt">Contrôle humain sous <b>24 h</b><br>Rien n'est visible avant</div>
+    </div>
+    <div class="count">
+      Votre compte entreprise est vérifié&nbsp;: la vérification du numéro d'entreprise est faite à la main,
+      une fois. Les mentions du contrat d'occupation d'étudiant sont déjà enregistrées — on ne vous les
+      redemande pas à chaque offre.
+    </div>
+  </div>
+
+  <div class="depotj">
+    <div class="wcard">
+      <div class="fsec first">
+        <div class="fh"><h3>1 · L'offre</h3><span>quatre champs, et rien de plus</span></div>
+        <div class="fgrid">
+          <div class="f full">
+            <label>Titre <span class="counter">42 / 70</span></label>
+            <div class="in filled">Vendeur·se en boulangerie</div>
+            <div class="hint">Le titre dit le poste, pas la personne. «&nbsp;Jeune dynamique&nbsp;» est refusé par
+              le formulaire, comme tout adjectif qui vise un âge.</div>
+          </div>
+        </div>
+        <div class="f" style="margin-top:13px">
+          <label>Catégorie</label>
+          <div class="catgrid">
+            <div class="cat on">Commerce<br>et vente</div>
+            <div class="cat">Horeca</div>
+            <div class="cat">Logistique</div>
+            <div class="cat">Administration</div>
+            <div class="cat">Animation</div>
+            <div class="cat">Soutien<br>scolaire</div>
+            <div class="cat">Informatique</div>
+            <div class="cat">Industrie<span class="maj">18+</span></div>
+          </div>
+          <div class="hint">Liste fermée. «&nbsp;Industrie et atelier&nbsp;» est <b>réservée aux 18 ans et plus</b>&nbsp;:
+            elle ne s'affichera jamais pour un compte de 16–17 ans.</div>
+        </div>
+        <div class="f" style="margin-top:13px">
+          <label>Description</label>
+          <div class="in" style="height:82px;align-items:flex-start;line-height:1.6">Le samedi et le
+            mercredi matin, de 8 h à 13 h&nbsp;: mise en place, service au comptoir, encaissement…</div>
+          <div class="hint">Âge, sexe, origine et religion sont bloqués à la saisie. Le texte passe
+            ensuite par un contrôle humain, sous 24 h.</div>
+        </div>
+        <div class="f" style="margin-top:13px">
+          <label>Statut de l'annonce</label>
+          <div class="catgrid" style="grid-template-columns:1fr 1fr">
+            <div class="cat on">Contrat d'occupation<br>d'étudiant</div>
+            <div class="cat">Bénévolat (ASBL)</div>
+          </div>
+          <div class="hint">Deux statuts, jamais trois&nbsp;: une <b>mission chez un particulier</b> ne
+            peut pas être publiée par une entreprise — ce serait un emploi déguisé, et c'est l'autre
+            univers qui s'en occupe.</div>
+        </div>
+        <div class="fgrid" style="margin-top:13px">
+          <div class="f">
+            <label>Commune</label>
+            <div class="in filled">1170 — Watermael-Boitsfort</div>
+            <div class="hint">L'adresse exacte n'est jamais publiée.</div>
+          </div>
+          <div class="f">
+            <label>Durée</label>
+            <div class="in filled">10 h par semaine</div>
+            <div class="hint">Samedi et mercredi, 8 h – 13 h.</div>
+          </div>
+          <div class="f">
+            <label>Rémunération</label>
+            <div class="in filled">salaire convenu, commission paritaire 118</div>
+            <div class="hint">Une fourchette au minimum. <b>Aucun barème n'est affiché par Kazendra.</b></div>
+          </div>
+          <div class="f">
+            <label>À pourvoir jusqu'au</label>
+            <div class="in filled">15 novembre 2026</div>
+            <div class="hint">L'offre expire d'elle-même à cette date.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fsec">
+        <div class="fh"><h3>2 · Horaires et protections</h3><span>ce qui décide de l'âge, sans écrire
+          d'âge</span></div>
+        <div class="swrow on">
+          <div class="sw on"><i></i></div>
+          <div><div class="st">Aucune heure entre 22 h et 06 h</div>
+            <div class="sd">Votre offre reste visible pour les comptes de 16 et 17 ans.</div></div>
+        </div>
+        <div class="swrow">
+          <div class="sw"><i></i></div>
+          <div><div class="st">Cette activité est interdite aux mineurs</div>
+            <div class="sd">Travail de nuit, débit de boissons, industrie, conduite d'engins&nbsp;: l'offre
+              sera <b>réservée aux 18 ans et plus</b>, et affichée comme telle.</div></div>
+        </div>
+        <div class="swrow locked">
+          <div class="lk"><svg class="ico" viewBox="0 0 24 24" style="width:13px;height:13px">
+            <rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></div>
+          <div><div class="st">Aucune heure pendant les heures de cours
+            <span class="pill2">toujours</span></div>
+            <div class="sd">Ce n'est pas un réglage laissé à l'employeur : vous ne connaissez pas l'horaire
+              de l'étudiant, et nous ne vous le donnons pas. C'est le calendrier de sa communauté qui
+              bloque les créneaux.</div></div>
+        </div>
+      </div>
+
+      <div class="fsec">
+        <div class="fh"><h3>3 · Le prix</h3><span>et ce qui est déjà codé pour la suite</span></div>
+        <div class="crow">
+          <div class="ch"><b>Publication</b><span class="v">0 € au lancement</span></div>
+          <div class="cw">Gratuit pendant le lancement, pour toutes les entreprises. Les champs
+            <b>payant</b> et <b>échéance</b> existent déjà dans la base&nbsp;: le jour où vous facturez, c'est
+            une case à cocher, pas une reconstruction.</div>
+        </div>
+        <div class="crow">
+          <div class="ch"><b>Ce qui ne sera jamais facturé</b><span class="v">à l'étudiant</span></div>
+          <div class="cw">Ni l'inscription, ni la recherche, ni le contact d'une entreprise. Jamais.</div>
+        </div>
+        <div class="crow">
+          <div class="ch"><b>Annonces actives</b><span class="v">3 au maximum</span></div>
+          <div class="cw">Au-delà de trois offres en ligne, la plus ancienne doit être retirée ou
+            laissée expirer. Ce n'est pas une limite technique&nbsp;: c'est ce qui empêche un employeur
+            de saturer une commune.</div>
+        </div>
+        <div class="crow">
+          <div class="ch"><b>Le jour où ce sera payant</b><span class="v">« annonce sponsorisée »</span></div>
+          <div class="cw">Une annonce payante portera la mention <b>« annonce sponsorisée »</b> avec le
+            nom de l'annonceur. C'est la règle européenne, et elle ne dépend pas de nous.</div>
+        </div>
+      </div>
+
+      <div class="send">
+        <a href="#" class="go">Envoyer au contrôle</a>
+        <div class="after">Visible sous 24 h, ou refusée avec un motif écrit et une seule action&nbsp;:
+          corriger. Un refus n'est jamais automatique — sauf si le texte contient un âge, une préférence
+          de sexe, d'origine ou de religion.</div>
+      </div>
+    </div>
+
+    <div class="side">
+      <div class="entblk">
+        <h4>Déjà enregistré pour vous</h4>
+        <div class="nm2">Boulangerie du Parc</div>
+        <div class="entrow" style="margin-top:8px"><b>BCE</b><span>0748.512.396 · vérifié le
+          12/10/2026</span></div>
+        <div class="entrow"><b>Commission</b><span>118 — boulangeries et pâtisseries</span></div>
+        <div class="entrow"><b>Secrétariat social</b><span>repris sur chaque contrat</span></div>
+        <div class="entrow"><b>Prévention</b><span>service de prévention interne</span></div>
+        <div class="entrow"><b>Lois sociales</b><span>district compétent</span></div>
+        <div class="entrow"><b>Assurance</b><span>accidents du travail</span></div>
+        <div class="swnote">Ces cinq mentions sont obligatoires sur le contrat d'occupation d'étudiant.
+          Collectées une fois, jamais redemandées.</div>
+      </div>
+
+      <div class="scard">
+        <h4>Ce que le formulaire refuse</h4>
+        <ul class="never">
+          <li>Un âge, une fourchette d'âge, «&nbsp;jeune&nbsp;»</li>
+          <li>Une préférence de sexe, d'origine ou de religion</li>
+          <li>Une annonce anonyme&nbsp;: le nom de l'entreprise est toujours affiché</li>
+          <li>«&nbsp;CV à envoyer à…&nbsp;»&nbsp;: aucun CV ne passe par ici</li>
+          <li>Une photo ou un logo comme argument de recrutement</li>
+        </ul>
+      </div>
+
+      <div class="alert">
+        <b>Ce que vous devez faire, et qui n'est pas de notre ressort</b>
+        Signer le contrat d'occupation d'étudiant en deux exemplaires, déclarer la DIMONA avant le début
+        et la DmfA ensuite, respecter le barème de votre commission paritaire. Kazendra n'est ni votre
+        employeur, ni un bureau de placement.
+      </div>
+
+      <div class="scard">
+        <h4>Ce qui se passe après l'envoi</h4>
+        <div class="checklist">
+          <div><span class="n">1</span><div class="ct">Une personne lit votre offre, <b>sous 24 h</b>. Pas
+            un robot, pas un score.</div></div>
+          <div><span class="n">2</span><div class="ct">Publiée, elle reste visible jusqu'à sa date limite,
+            et pas une heure de plus.</div></div>
+          <div><span class="n">3</span><div class="ct">Refusée, elle vous revient avec un motif écrit et
+            une seule action&nbsp;: corriger.</div></div>
+        </div>
+      </div>
+
+      <div class="scard">
+        <h4>Combien d'offres à la fois&nbsp;?</h4>
+        <div class="txt" style="margin-top:6px"><b>Trois annonces actives au maximum</b>, et chacune
+          compte pour elle-même&nbsp;: sa date limite, son contrôle, son motif de refus s'il y en a un.
+          Au-delà de trois, la plus ancienne doit être retirée ou laissée expirer.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ ÉCRAN 11 ═══════════════════════════ -->
+<div class="cap">Écran 11 — Mes offres&nbsp;: cinq états, une seule action par ligne, un motif quand c'est refusé</div>
+<header>
+  <div class="wrap bar">
+    <div class="brand"><img src="kazendra-icone-256.png" alt="Kazendra"><div class="nm">Kazendra</div></div>
+    <nav><a href="#">Accueil</a><a href="#">Promos</a><a href="#">Annonces</a><a href="#">Immo</a>
+      <a href="#">Événements</a><a href="#">Rencontres</a><a href="#" class="on">Jobs étudiants</a>
+      <a href="#">Emploi</a><a href="#">Artisans</a></nav>
+    <div class="right"><span class="lnk">Boulangerie du Parc</span><div class="av">B</div></div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="doorhead">
+    <div class="top">
+      <h1>Mes offres</h1>
+      <div class="cnt">5 offres · <b>1 publiée</b><br><b>0 €</b> facturé au lancement</div>
+    </div>
+    <div class="count">
+      Une ligne = une offre, son état, et une seule action. Ce qu'une offre devient n'est jamais une
+      surprise&nbsp;: chaque refus porte un motif écrit, et chaque expiration se voit venir.
+    </div>
+  </div>
+
+  <div class="mesann">
+    <div class="wcard">
+      <div class="whead"><h2 style="font-size:15px">Novembre 2026</h2>
+        <span>de la plus récente à la plus ancienne</span></div>
+
+      <div class="arow first">
+        <div class="t"><b>Vendeur·se en boulangerie</b>
+          <span>Commerce et vente · 10 h/semaine · Watermael-Boitsfort</span></div>
+        <div class="st"><span class="tagx ok">publiée</span><br>depuis le 21/10 · jusqu'au 15/11</div>
+        <div class="ac">Modifier</div>
+      </div>
+
+      <div class="arow">
+        <div class="t"><b>Serveur·se de soirée</b>
+          <span>Horeca · 20 h/semaine · Ixelles<span class="b18mini">18 ans et plus</span></span></div>
+        <div class="st"><span class="tagx wait">en attente</span><br>envoyée il y a 3 h · contrôle en cours</div>
+        <div class="ac">Retirer</div>
+      </div>
+
+      <div class="arow">
+        <div class="t"><b>Aide-comptable (job d'été)</b>
+          <span>Administration · 15 h/semaine · Woluwe-Saint-Lambert</span>
+          <div class="motif">Refusée&nbsp;: «&nbsp;18–25 ans&nbsp;» dans le texte. Un âge est un critère protégé, y
+            compris dans une offre d'emploi. Retirez la mention et renvoyez.</div></div>
+        <div class="st"><span class="tagx bad">refusée</span><br>le 19/10 · motif écrit</div>
+        <div class="ac">Corriger</div>
+      </div>
+
+      <div class="arow">
+        <div class="t"><b>Employé·e polyvalent·e</b>
+          <span>Logistique · 12 h/semaine · Anderlecht</span></div>
+        <div class="st"><span class="tagx none">expirée</span><br>le 12/10, à sa date limite</div>
+        <div class="ac">Republier</div>
+      </div>
+
+      <div class="arow">
+        <div class="t"><b>Stage en communication</b>
+          <span>Administration · 8 h/semaine · Watermael-Boitsfort</span></div>
+        <div class="st"><span class="tagx draft">brouillon</span><br>jamais envoyée au contrôle</div>
+        <div class="ac">Continuer</div>
+      </div>
+
+      <div class="mline" style="border-top:1px solid var(--line);margin-top:4px;padding-top:12px">
+        Une offre <b>expirée</b> n'est pas perdue&nbsp;: elle se republie en un geste, avec une nouvelle date
+        limite. Une offre <b>refusée</b> garde son motif et son historique — c'est ce qui permet de
+        contester un refus, et de voir qu'on n'a pas été refusé deux fois pour la même raison.
+      </div>
+    </div>
+
+    <div class="side">
+      <div class="scard">
+        <h4>Ce qu'une offre doit porter</h4>
+        <div class="checklist">
+          <div><span class="n">1</span><div class="ct">Un employeur identifié — jamais d'annonce
+            anonyme</div></div>
+          <div><span class="n">2</span><div class="ct">Le lieu&nbsp;: la commune, jamais l'adresse exacte</div></div>
+          <div><span class="n">3</span><div class="ct">La durée et les horaires</div></div>
+          <div><span class="n">4</span><div class="ct">Le statut&nbsp;: contrat d'occupation d'étudiant</div></div>
+          <div><span class="n">5</span><div class="ct">La rémunération ou une fourchette, et la commission
+            paritaire</div></div>
+        </div>
+      </div>
+
+      <div class="scard">
+        <h4>Combien de temps</h4>
+        <div class="txt" style="margin-top:6px">Une offre vit jusqu'à sa <b>date limite</b>, puis elle
+          expire d'elle-même. Publier ne se paie pas au lancement, et rien ne se renouvelle sans vous&nbsp;:
+          une offre expirée ne revient jamais toute seule.</div>
+        <div class="txt" style="border-top:1px solid #EDF2F6;margin-top:9px;padding-top:9px">
+          <b>Trois annonces actives au maximum.</b> Les brouillons, les refusées et les expirées ne
+          comptent pas&nbsp;: seules les offres en ligne et celles en attente de contrôle occupent une
+          place.</div>
+      </div>
+
+      <div class="scard">
+        <h4>Le contrôle</h4>
+        <div class="txt" style="margin-top:6px">Une personne lit chaque offre <b>avant</b> publication —
+          sous 24 h. Elle refuse pour un motif écrit, jamais pour une impression. Les cas de refus
+          automatique sont fermés&nbsp;: un âge, une préférence de sexe, d'origine ou de religion.</div>
+      </div>
+
+      <div class="scard">
+        <h4>Ce qu'on ne vous donne pas</h4>
+        <div class="txt" style="margin-top:6px">Ni liste de candidats, ni CV, ni tri des profils.
+          <b>Vous recevez des messages, pas des dossiers</b>&nbsp;: Kazendra ne sélectionne personne pour votre
+          compte, et ne facture ni le placement ni les heures.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    Troisième lot de maquettes, 25 octobre 2026. Les entreprises, numéros d'entreprise, adresses et
+    montants sont des exemples d'affichage. Les numéros de commission paritaire sont ceux <b>déclarés par
+    l'employeur</b>&nbsp;: Kazendra n'affiche aucun barème et ne les vérifie pas. Le cadre juridique de cet
+    écran est celui de l'ancienne porte «&nbsp;annonces&nbsp;» de la porte <code>/job-etudiant</code>&nbsp;: Unia sur
+    l'âge comme critère protégé, modération humaine avant publication, activités interdites aux mineurs
+    réservées aux 18 ans et plus.
+  </div>
+</div>
+
+</body>
+</html>

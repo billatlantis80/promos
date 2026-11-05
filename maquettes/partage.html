@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Kazendra — bouton de partage (thème Kazendra, flèche de partage)</title>
+<style>
+  :root{--navy:#0D3B5B;--deep:#0A2F49;--orange:#EB912D;--ink:#13222E;--ink2:#4A5C6B;
+        --muted:#5E7180;--line:#E3E8ED;--bg2:#F5F7F9}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Liberation Sans','DejaVu Sans',Arial,sans-serif;color:var(--ink);background:#fff;
+       width:1440px;padding:30px 40px 34px;-webkit-font-smoothing:antialiased}
+  h1{font-size:23px;letter-spacing:-.6px}
+  .sub{font-size:13px;color:var(--ink2);margin-top:6px;max-width:920px;line-height:1.55}
+  .sub b{color:var(--ink)}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:22px;align-items:start}
+  .box{border:1px solid var(--line);border-radius:14px;padding:16px 18px 18px;background:#fff}
+  .box .hd{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+  .box .num{width:26px;height:26px;border-radius:8px;background:var(--navy);color:#fff;font-size:13px;
+            font-weight:800;display:flex;align-items:center;justify-content:center;flex:none}
+  .box .tt{font-size:14px;font-weight:800}
+  .box .stp{margin-left:auto;font-size:11px;color:var(--muted);font-weight:700}
+  .lab{font-size:11px;font-weight:800;color:#5E7180;text-transform:uppercase;letter-spacing:.5px;
+       margin:14px 0 8px}
+  .lab:first-of-type{margin-top:0}
+  .hint{font-size:11.5px;color:var(--ink2);line-height:1.55;margin-top:9px}
+  .hint b{color:var(--ink)}
+
+  /* ---- LE BOUTON, repris de /promo : rond, discret, flèche de partage ---- */
+  .ligne{position:relative;display:flex;align-items:center;gap:10px}
+  .part{display:inline-flex;align-items:center;justify-content:center;
+        width:34px;height:34px;padding:0;background:transparent;
+        border:1px solid var(--line);border-radius:50%;color:var(--ink2);flex:none}
+  .part svg{width:19px;height:19px;fill:currentColor;display:block}
+  .part.gros{width:40px;height:40px}
+  .part.gros svg{width:22px;height:22px}
+  .part.hover{color:var(--orange);border-color:var(--orange)}
+  .part.plein{background:var(--navy);border-color:var(--navy);color:#fff}
+
+  /* menu de repli, comme dans /promo */
+  .menu{position:absolute;right:0;bottom:calc(100% + 6px);z-index:6;display:flex;flex-direction:column;
+        min-width:158px;background:#fff;border:1px solid var(--line);border-radius:10px;
+        box-shadow:0 10px 26px rgba(11,40,62,.14);overflow:hidden}
+  /* quand le bouton est à gauche de la carte, le menu s'ouvre vers la DROITE,
+     sinon il sort du cadre (vu sur la maquette, mesuré : menu à 11 px pour une carte à 59 px) */
+  .ligne .menu{left:0;right:auto}
+  .menu a,.menu button{display:block;width:100%;text-align:left;padding:10px 12px;font-size:12.5px;
+        color:var(--ink);background:#fff;border:0;font-family:inherit;text-decoration:none}
+  .menu a+a,.menu button+*,.menu a+button{border-top:1px solid #F0F3F6}
+
+  /* contexte : colonne de droite d'une fiche */
+  .side{width:340px;border:1px solid var(--line);border-radius:14px;padding:16px;margin-top:4px}
+  .price{font-size:26px;font-weight:800;color:var(--navy);letter-spacing:-.7px}
+  .price small{display:block;font-size:11px;font-weight:400;color:var(--muted);letter-spacing:0;margin-top:3px}
+  .cta{display:block;margin-top:12px;background:var(--orange);color:#2A1602;font-weight:800;font-size:13.5px;
+       text-align:center;padding:13px;border-radius:10px}
+  .cta2{display:block;margin-top:8px;border:1px solid var(--line);color:var(--navy);font-weight:700;
+        font-size:12.5px;text-align:center;padding:11px;border-radius:10px}
+  .bas{display:flex;align-items:center;gap:12px;margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
+  .bas .lbl{font-size:12px;color:var(--ink2)}
+  .signaler{margin-left:auto;font-size:12px;color:var(--muted);text-decoration:underline;
+            text-decoration-color:#C3D0DA}
+
+  .phone{width:390px;border-radius:22px;overflow:hidden;box-shadow:0 12px 30px rgba(11,40,62,.14);
+         border:1px solid #D8E0E6}
+  .bar{display:flex;align-items:center;gap:10px;padding:11px 13px;background:#fff;border-top:1px solid var(--line)}
+  .bar.top{background:var(--deep);border:0;color:#fff}
+  .bar .p{font-size:10.5px;color:var(--muted);line-height:1.2}
+  .bar .p b{display:block;font-size:13.5px;color:var(--navy)}
+  .bar .cta{margin-top:0;padding:11px 15px;font-size:12.5px;margin-left:auto}
+  .bar.top .part{border-color:#2C5674;color:#CFE0EB}
+  .bar.top .lbl{color:#CFE0EB}
+
+  .chat{background:#F1EFEB;border-radius:14px;padding:14px;margin-top:4px}
+  .bubble{background:#fff;border:1px solid #E2DED6;border-radius:12px 12px 12px 2px;padding:10px 12px;
+          max-width:366px;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+  .bubble .txt{font-size:12.5px;line-height:1.55;color:#111B21}
+  .bubble .lnk{color:#0B6BCB;text-decoration:underline;font-size:12.5px;word-break:break-all}
+  .og{margin-top:12px;border:1px solid var(--line);border-radius:11px;overflow:hidden;width:366px;background:#fff}
+  .og .im{height:96px;background:linear-gradient(135deg,#8A4B12,#EB912D)}
+  .og .tx{padding:9px 11px}
+  .og .tx .d{font-size:10px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:var(--muted)}
+  .og .tx .t{font-size:12.5px;font-weight:700;margin-top:3px;line-height:1.35}
+  .og .tx .u{font-size:10.5px;color:var(--muted);margin-top:3px}
+  ul.rules{margin-top:6px;padding-left:16px}
+  ul.rules li{font-size:12px;line-height:1.65;color:var(--ink2);margin-bottom:5px}
+  ul.rules li b{color:var(--ink)}
+</style>
+</head>
+<body>
+
+<h1>Partager — le bouton de /promo, pas la marque WhatsApp</h1>
+<div class="sub">
+  Même bouton que sur <b>promo.kazendra.com</b> : un <b>rond discret</b>, bordure fine, et la <b>flèche de
+  partage</b> que tout le monde reconnaît (celle qu'emploient WhatsApp et Facebook). Aucun vert, aucun
+  bloc de marque : le seul accent du site reste l'orange Kazendra. Au clic, les destinations
+  s'ouvrent dans un petit menu — WhatsApp, e-mail, copier le lien.
+</div>
+
+<div class="grid">
+
+  <!-- 1 -->
+  <div class="box">
+    <div class="hd"><div class="num">1</div><div class="tt">Sur la fiche, ordinateur</div>
+      <div class="stp">thème Kazendra</div></div>
+    <div class="lab">Le bouton, menu ouvert</div>
+    <div class="side">
+      <div class="price">Entrée gratuite<small>Prix annoncé par l'organisateur</small></div>
+      <div class="cta">Je suis intéressé · 47</div>
+      <div class="cta2">Ajouter à mon agenda (.ics)</div>
+      <div class="bas">
+        <div class="ligne">
+          <div class="menu">
+            <a href="#">WhatsApp</a>
+            <a href="#">E-mail</a>
+            <button type="button">Copier le lien</button>
+          </div>
+          <button class="part hover" aria-label="Partager cette fiche" title="Partager cette fiche">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M14 9V5l7 7-7 7v-4.1c-5 0-8.5 1.6-11 5.1 1-5 4-10 11-11z"/>
+            </svg>
+          </button>
+          <span class="lbl">Partager</span>
+        </div>
+        <span class="signaler">Signaler</span>
+      </div>
+    </div>
+    <div class="hint">
+      Sur une fiche, le libellé <b>reste visible</b> (on est dans une colonne d'actions). Sur les cartes
+      de promo, l'icône seule suffit : le partage ne doit pas concurrencer le bouton d'achat.
+    </div>
+
+    <div class="lab">Les trois états du bouton</div>
+    <div class="ligne" style="gap:22px">
+      <div style="display:flex;align-items:center;gap:9px">
+        <button class="part" aria-label="Partager"><svg viewBox="0 0 24 24"><path d="M14 9V5l7 7-7 7v-4.1c-5 0-8.5 1.6-11 5.1 1-5 4-10 11-11z"/></svg></button>
+        <span class="lbl" style="font-size:11.5px;color:var(--muted)">repos</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:9px">
+        <button class="part hover" aria-label="Partager"><svg viewBox="0 0 24 24"><path d="M14 9V5l7 7-7 7v-4.1c-5 0-8.5 1.6-11 5.1 1-5 4-10 11-11z"/></svg></button>
+        <span class="lbl" style="font-size:11.5px;color:var(--muted)">survol</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:9px">
+        <button class="part plein" aria-label="Partager"><svg viewBox="0 0 24 24"><path d="M14 9V5l7 7-7 7v-4.1c-5 0-8.5 1.6-11 5.1 1-5 4-10 11-11z"/></svg></button>
+        <span class="lbl" style="font-size:11.5px;color:var(--muted)">enfoncé</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2 -->
+  <div class="box">
+    <div class="hd"><div class="num">2</div><div class="tt">Sur la fiche, téléphone</div>
+      <div class="stp">deux emplacements</div></div>
+
+    <div class="lab">Barre du haut</div>
+    <div class="phone">
+      <div class="bar top">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#B9D2E2" stroke-width="2"
+             stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg>
+        <span class="lbl" style="font-size:12.5px;font-weight:700">Événements</span>
+        <button class="part" style="margin-left:auto;width:32px;height:32px" aria-label="Partager">
+          <svg viewBox="0 0 24 24"><path d="M14 9V5l7 7-7 7v-4.1c-5 0-8.5 1.6-11 5.1 1-5 4-10 11-11z"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="lab">Barre collante, à côté du bouton principal</div>
+    <div class="phone">
+      <div class="bar">
+        <div class="p"><b>Gratuit</b>prix annoncé</div>
+        <div class="cta" style="margin-left:auto">Je suis intéressé</div>
+        <button class="part gros" aria-label="Partager">
+          <svg viewBox="0 0 24 24"><path d="M14 9V5l7 7-7 7v-4.1c-5 0-8.5 1.6-11 5.1 1-5 4-10 11-11z"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="hint">
+      La flèche reste <b>encre foncée sur fond blanc</b> : sur une barre collante, un rond vert attirait
+      l'œil plus que le bouton d'action, ce qui est exactement l'inverse de ce qu'on veut.
+    </div>
+
+    <div class="lab">Et les destinations, en bas de l'écran</div>
+    <div class="phone">
+      <div style="padding:12px 12px 0;background:#EDF1F4">
+        <div style="background:#fff;border:1px solid var(--line);border-radius:12px 12px 0 0;overflow:hidden">
+          <div style="padding:12px 14px;font-size:12.5px;border-bottom:1px solid #F0F3F6">WhatsApp</div>
+          <div style="padding:12px 14px;font-size:12.5px;border-bottom:1px solid #F0F3F6">E-mail</div>
+          <div style="padding:12px 14px;font-size:12.5px">Copier le lien</div>
+        </div>
+        <div style="background:#fff;border:1px solid var(--line);border-top:0;border-radius:0 0 12px 12px;
+                    margin-top:8px;padding:12px;text-align:center;font-size:12.5px;font-weight:700;
+                    color:var(--navy)">Annuler</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3 -->
+  <div class="box">
+    <div class="hd"><div class="num">3</div><div class="tt">Ce qui part dans le message</div>
+      <div class="stp">titre, date, commune, lien</div></div>
+    <div class="chat">
+      <div class="bubble">
+        <div class="txt">
+          <b>Brocante d'automne du quartier Saint-Servais</b><br>
+          Samedi 25 octobre, 08:00 · 5000 Namur<br>
+          <span class="lnk">https://kazendra.com/evenement/7f3c1a</span>
+        </div>
+      </div>
+    </div>
+    <div class="lab">Aperçu du lien</div>
+    <div class="og">
+      <div class="im"></div>
+      <div class="tx">
+        <div class="d">Samedi 25 octobre · 5000 Namur</div>
+        <div class="t">Brocante d'automne du quartier Saint-Servais</div>
+        <div class="u">kazendra.com</div>
+      </div>
+    </div>
+    <div class="hint">
+      L'aperçu vient des balises <b>Open Graph</b> de la page. Sans elles, le lien arrive nu dans la
+      conversation et personne ne clique.
+    </div>
+  </div>
+
+  <!-- 4 -->
+  <div class="box">
+    <div class="hd"><div class="num">4</div><div class="tt">Ce qui change par rapport à la version verte</div>
+      <div class="stp">la nuance, écrite</div></div>
+    <ul class="rules">
+      <li><b>Le vert disparaît.</b> Le site a un seul accent — l'orange. Un bouton vert en introduisait
+          un deuxième, et il ressemblait à un partenariat avec WhatsApp qu'on n'a pas.</li>
+      <li><b>La flèche suffit.</b> C'est le glyphe de partage que tout le monde connaît ; le logo complet
+          (bulle + combiné) disait « écrivez-nous sur WhatsApp », pas « partagez ».</li>
+      <li><b>Le bouton reste le même partout</b> : rond, bordure fine, flèche en encre — sur les huit
+          portes et sur les cartes de promo.</li>
+      <li><b>Le menu contient les destinations</b> (WhatsApp, e-mail, copier), donc rien n'est perdu :
+          WhatsApp reste à un clic, sans habiller la page aux couleurs de WhatsApp.</li>
+      <li><b>Aucun compteur de partages</b>, jamais : on ne mesure pas sans traqueur.</li>
+    </ul>
+    <div class="hint">
+      Technique inchangée : `navigator.share` quand le téléphone sait partager, sinon le menu de repli
+      avec `wa.me/?text=…`, `mailto:` et le presse-papiers. Gratuit, sans clé, sans SDK.
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

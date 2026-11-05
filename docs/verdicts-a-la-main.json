@@ -1,0 +1,7 @@
+{
+ "version": 1,
+ "maj": null,
+ "quoi": "Les décisions de la main sur les cartes effacées : VÉRIFIER (la carte est vérifiée, la ligne quitte la liste — la fiche et sa preuve sont conservées), RÉACTIVER (la carte revient sur le site pour 1 à 5 jours, puis ressort) et RETIRER (le sursis est ramené à maintenant). Écrit par le serveur du projet (POST /api/verdict-carte, appelé par le panneau), lu par collecteur.mjs à chaque passage, et publié avec le site.",
+ "verifiees": {},
+ "reactivees": {}
+}

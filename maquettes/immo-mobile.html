@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Kazendra — /immo sur téléphone (390 px)</title>
+<style>
+  :root{--navy:#0D3B5B;--deep:#0A2F49;--orange:#EB912D;--ink:#13222E;--ink2:#4A5C6B;
+        --muted:#5E7180;--line:#E3E8ED;--bg2:#F5F7F9}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Liberation Sans','DejaVu Sans',Arial,sans-serif;background:#E7EBEF;color:var(--ink);
+       padding:28px 34px 34px;-webkit-font-smoothing:antialiased}
+  .board{display:flex;gap:26px;align-items:flex-start}
+  .col{width:390px}
+  .cap{font-size:11.5px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:#6B7E8C;
+       margin:0 0 9px 6px}
+  .cap span{color:#9AAAB6;font-weight:400;text-transform:none;letter-spacing:0;margin-left:6px}
+  .phone{width:390px;height:844px;background:#fff;border-radius:26px;overflow:hidden;position:relative;
+         box-shadow:0 14px 34px rgba(11,40,62,.16);display:flex;flex-direction:column}
+  .ico{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;
+       stroke-linejoin:round}
+
+  /* barre haute */
+  .top{background:var(--deep);color:#fff;height:54px;display:flex;align-items:center;gap:12px;
+       padding:0 16px;flex:none}
+  .top .bk{display:flex;align-items:center;gap:7px;font-size:13px;color:#CFE0EB}
+  .top .sp{margin-left:auto;display:flex;gap:14px;color:#CFE0EB}
+  .body{flex:1;overflow:hidden;padding:0 0 8px}
+
+  /* photo */
+  .ph{height:186px;background:linear-gradient(135deg,#123F5F,#2E8399);position:relative;
+      display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.42)}
+  .ph .ico{width:52px;height:52px;stroke-width:1}
+  .ph .n{position:absolute;right:11px;bottom:11px;background:rgba(9,29,43,.72);color:#fff;font-size:10.5px;
+         padding:3px 8px;border-radius:6px}
+  .ph .tag{position:absolute;left:11px;top:11px;background:#fff;color:var(--navy);font-size:10px;
+           font-weight:800;padding:4px 8px;border-radius:6px}
+
+  .pad{padding:14px 16px 0}
+  .price{font-size:24px;font-weight:800;color:var(--navy);letter-spacing:-.7px}
+  .price small{display:block;font-size:10.5px;font-weight:400;color:var(--muted);letter-spacing:0;
+               margin-top:2px}
+  h1{font-size:16.5px;line-height:1.3;margin-top:10px;letter-spacing:-.2px}
+  .badges{display:flex;gap:6px;margin-top:9px;flex-wrap:wrap;align-items:center}
+  .bd{font-size:10.5px;font-weight:700;padding:4px 8px;border-radius:6px;background:#EAF1F5;color:var(--navy)}
+  .bd.g{background:#E4F3EF;color:#0E7A66}
+  .peb{display:inline-flex;align-items:center;font-size:10.5px;font-weight:800;padding:4px 8px;
+       border-radius:6px;color:#fff;background:#E4C528;color:#3A3200}
+
+  .facts{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:14px}
+  .facts div{border:1px solid var(--line);border-radius:9px;padding:8px 9px}
+  .facts span{display:block;font-size:9.5px;color:var(--muted);margin-bottom:2px}
+  .facts b{font-size:12.5px;color:var(--ink)}
+
+  .sec{margin-top:14px;border:1px solid var(--line);border-radius:11px;padding:12px 13px}
+  .sec .hd{display:flex;align-items:baseline;gap:8px;font-size:10.5px;font-weight:800;
+           text-transform:uppercase;letter-spacing:.5px;color:#5E7180;margin-bottom:8px}
+  .sec .hd span{margin-left:auto;text-transform:none;letter-spacing:0;font-weight:400;font-size:9.5px;
+                color:var(--muted)}
+  .txt{font-size:11.5px;line-height:1.65;color:var(--ink2)}
+
+  /* PEB compact */
+  .pbrow{display:flex;align-items:center;gap:12px}
+  .tile{width:52px;height:52px;border-radius:10px;background:#E4C528;color:#3A3200;flex:none;
+        display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .tile .lb{font-size:6.5px;text-transform:uppercase;letter-spacing:.5px;font-weight:800;opacity:.75}
+  .tile .lt{font-size:23px;font-weight:800;line-height:1;margin-top:1px}
+  .pbf div span{display:block;font-size:9.5px;color:var(--muted);margin-bottom:1px}
+  .pbf div b{font-size:11.5px;color:var(--navy)}
+  .ruler{position:relative;margin-top:16px}
+  .gauge{height:9px;border-radius:99px;
+         background:linear-gradient(90deg,#007A3D 5.56%,#00933F 16.67%,#21A038 27.78%,#8CBF35 38.89%,
+                   #E4C528 50%,#F0A02A 61.11%,#E4632A 72.22%,#D2342B 83.33%,#A81B22 94.44%)}
+  .cursor{position:absolute;top:-8px;left:50%;margin-left:-6px;width:0;height:0;
+          border-left:6px solid transparent;border-right:6px solid transparent;border-top:8px solid var(--navy)}
+  .rlab{display:grid;grid-template-columns:repeat(9,1fr);text-align:center;font-size:8px;color:var(--muted);
+        margin-top:5px}
+  .rlab b{color:var(--navy);font-size:10px}
+
+  .loc{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:10px;
+       padding:10px 11px;margin-top:12px}
+  .loc .lt2{flex:1;min-width:0}
+  .loc .v{font-size:12px;font-weight:800;color:var(--navy)}
+  .loc .c{font-size:10px;color:var(--muted);margin-top:1px}
+  .loc a{background:var(--navy);color:#fff;font-size:10.5px;font-weight:800;padding:7px 10px;
+         border-radius:7px;text-decoration:none}
+
+  /* agence */
+  .ag{display:flex;align-items:center;gap:10px}
+  .logo{width:38px;height:38px;border-radius:9px;background:var(--navy);color:#fff;flex:none;
+        display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px}
+  .ag .nm{font-size:12.5px;font-weight:800}
+  .ag .sub{font-size:10px;color:var(--muted);margin-top:1px}
+  .ver{font-size:10px;color:#0E7A66;font-weight:700;margin-top:6px;display:flex;align-items:center;gap:5px}
+  .legal{font-size:9.5px;color:var(--ink2);line-height:1.5;background:var(--bg2);border-radius:7px;
+         padding:7px 8px;margin-top:7px}
+
+  .warn{background:#FDECEC;border:1px solid #F3C4C4;border-radius:9px;padding:9px 10px;font-size:10px;
+        line-height:1.5;color:#8C2B2B;margin-top:10px}
+  .warn b{color:#6E1F1F}
+  .btn{display:block;text-align:center;background:var(--navy);color:#fff;font-weight:800;font-size:12px;
+       padding:11px;border-radius:9px;margin-top:11px}
+  .msg{margin-top:9px;border:1px solid var(--line);border-radius:9px;padding:10px 11px;font-size:11px;
+       color:var(--muted);min-height:58px}
+  .sim{display:flex;gap:9px;margin-top:2px}
+  .sim .sc{flex:1;border:1px solid var(--line);border-radius:9px;overflow:hidden}
+  .sim .sp2{height:62px;background:linear-gradient(135deg,#264653,#3E8E7E)}
+  .sim .sp2.b{background:linear-gradient(135deg,#5B3A1E,#EB912D)}
+  .sim .sb{padding:7px 8px 8px}
+  .sim .pr2{font-size:12px;font-weight:800;color:var(--navy)}
+  .sim .ds2{font-size:9.5px;color:var(--muted);margin-top:2px}
+
+  /* barre d'action collante */
+  .bar{flex:none;border-top:1px solid var(--line);background:#fff;padding:11px 16px 13px;
+       display:flex;align-items:center;gap:11px}
+  .bar .pr{font-size:15px;font-weight:800;color:var(--navy);letter-spacing:-.4px}
+  .bar .pr small{display:block;font-size:8.5px;font-weight:400;color:var(--muted);letter-spacing:0}
+  .bar .cta{margin-left:auto;background:var(--orange);color:#2A1602;font-weight:800;font-size:12.5px;
+            padding:11px 16px;border-radius:9px;display:flex;align-items:center;gap:7px}
+
+  .tabs{flex:none;border-top:1px solid var(--line);display:flex;justify-content:space-around;
+        padding:8px 0 14px;font-size:8.5px;color:var(--muted)}
+  .tabs div{display:flex;flex-direction:column;align-items:center;gap:3px}
+  .tabs .on{color:var(--navy);font-weight:800}
+</style>
+</head>
+<body>
+<div class="board">
+
+  <!-- ÉCRAN 1 -->
+  <div class="col">
+    <div class="cap">Écran 1 <span>fiche bien, haut</span></div>
+    <div class="phone">
+      <div class="top">
+        <div class="bk"><svg class="ico" viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M15 5l-7 7 7 7"/></svg> Immobilier</div>
+        <div class="sp">
+          <svg class="ico" viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M12 20s-7-4.4-7-9.2A3.9 3.9 0 0 1 12 8a3.9 3.9 0 0 1 7 2.8c0 4.8-7 9.2-7 9.2z"/></svg>
+          <svg class="ico" viewBox="0 0 24 24" style="width:16px;height:16px"><circle cx="12" cy="5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="19" r="1.6"/></svg>
+        </div>
+      </div>
+      <div class="body">
+        <div class="ph"><span class="tag">Vente</span><span class="n">1 / 6</span>
+          <svg class="ico" viewBox="0 0 24 24"><path d="M3 11 12 4l9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg></div>
+        <div class="pad">
+          <div class="price">329 000 €<small>Frais du notaire non compris</small></div>
+          <h1>Maison 3 façades, 4 chambres, jardin de 4 ares</h1>
+          <div class="badges">
+            <span class="bd">Maison 3 façades</span><span class="bd g">Libre</span>
+            <span class="peb">PEB C · 214</span>
+          </div>
+          <div class="facts">
+            <div><span>Surface</span><b>142 m²</b></div>
+            <div><span>Chambres</span><b>4</b></div>
+            <div><span>Salles de bain</span><b>2</b></div>
+            <div><span>Terrain</span><b>4 ares</b></div>
+            <div><span>Chauffage</span><b>Gaz</b></div>
+            <div><span>Garage</span><b>1</b></div>
+          </div>
+          <div class="loc">
+            <svg class="ico" viewBox="0 0 24 24" style="width:16px;height:16px;color:var(--navy)"><path d="M12 21s7-6.3 7-11a7 7 0 1 0-14 0c0 4.7 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg>
+            <div class="lt2"><div class="v">Namur</div><div class="c">5000 · Belgique · à 3 km</div></div>
+            <a href="https://www.google.com/maps/dir/?api=1&destination=5000%2C+Belgique" target="_blank" rel="noopener">Distance ↗</a>
+          </div>
+
+          <div class="sec" style="margin-top:12px">
+            <div class="hd">Dans le même quartier</div>
+            <div class="sim">
+              <div class="sc"><div class="sp2"></div><div class="sb"><div class="pr2">189 000 €</div>
+                <div class="ds2">Appartement · 86 m² · 2 ch.</div></div></div>
+              <div class="sc"><div class="sp2 b"></div><div class="sb"><div class="pr2">245 000 €</div>
+                <div class="ds2">Maison · 118 m² · 3 ch.</div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="bar">
+        <div class="pr">329 000 €<small>agence · IPI vérifié</small></div>
+        <div class="cta"><svg class="ico" viewBox="0 0 24 24" style="width:14px;height:14px"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg> Contacter</div>
+      </div>
+      <div class="tabs">
+        <div class="on"><svg class="ico" viewBox="0 0 24 24" style="width:15px;height:15px"><path d="M3 11 12 4l9 7v9H3z"/></svg>Logement</div>
+        <div><svg class="ico" viewBox="0 0 24 24" style="width:15px;height:15px"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>Rechercher</div>
+        <div><svg class="ico" viewBox="0 0 24 24" style="width:15px;height:15px"><path d="M12 20s-7-4.4-7-9.2A3.9 3.9 0 0 1 12 8a3.9 3.9 0 0 1 7 2.8c0 4.8-7 9.2-7 9.2z"/></svg>Favoris</div>
+        <div><svg class="ico" viewBox="0 0 24 24" style="width:15px;height:15px"><circle cx="12" cy="8" r="3.4"/><path d="M5 20a7 7 0 0 1 14 0"/></svg>Compte</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ÉCRAN 2 -->
+  <div class="col">
+    <div class="cap">Écran 2 <span>description et PEB</span></div>
+    <div class="phone">
+      <div class="top">
+        <div class="bk"><svg class="ico" viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M15 5l-7 7 7 7"/></svg> Retour</div>
+        <div class="sp"><span style="font-size:11.5px">Description</span></div>
+      </div>
+      <div class="body" style="padding:14px 16px 0">
+        <div class="sec" style="margin-top:0">
+          <div class="hd">Description du bien <span>par le vendeur</span></div>
+          <div class="txt">Maison de 1998, quatre chambres dont une avec salle d'eau, séjour traversant de
+            34 m² exposé sud-ouest, cuisine équipée de 2021. Chauffage gaz à condensation, double vitrage
+            partout, toiture révisée en 2019, boiler de 2022. Jardin clos de 4 ares, terrasse plein sud,
+            garage attenant, cave de 20 m². Vendue libre d'occupation. Travaux à prévoir : rafraîchissement
+            de deux chambres, volets du salon (devis de 3 800 € sur demande).</div>
+        </div>
+
+        <div class="sec">
+          <div class="hd">Performance énergétique</div>
+          <div class="pbrow">
+            <div class="tile"><span class="lb">Classe</span><span class="lt">C</span></div>
+            <div class="pbf">
+              <div><span>Consommation</span><b>214 kWh/m²/an</b></div>
+              <div style="margin-top:5px"><span>Certificat n°</span><b>20190315012345</b></div>
+            </div>
+          </div>
+          <div class="ruler">
+            <div class="gauge"></div><div class="cursor"></div>
+            <div class="rlab"><span>A++</span><span>A+</span><span>A</span><span>B</span><b>C</b>
+              <span>D</span><span>E</span><span>F</span><span>G</span></div>
+          </div>
+          <div class="legal" style="margin-top:10px">Région wallonne : le numéro de certificat est affiché
+            comme la Région l'exige. Kazendra ne l'a pas vérifié — demandez-le au vendeur.</div>
+        </div>
+
+        <div class="warn"><b>Aucun versement avant une visite.</b> Jamais de garantie, de frais de dossier
+          ni de réservation avant d'avoir vu le bien et signé.</div>
+
+        <div class="sec">
+          <div class="hd">Où se trouve le bien</div>
+          <div class="loc" style="margin-top:0">
+            <svg class="ico" viewBox="0 0 24 24" style="width:16px;height:16px;color:var(--navy)"><path d="M12 21s7-6.3 7-11a7 7 0 1 0-14 0c0 4.7 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></svg>
+            <div class="lt2"><div class="v">Namur</div><div class="c">5000 · Belgique · code postal seul</div></div>
+            <a href="https://www.google.com/maps/dir/?api=1&destination=5000%2C+Belgique" target="_blank" rel="noopener">Distance ↗</a>
+          </div>
+          <div class="legal" style="margin-top:9px">L'adresse exacte n'est jamais publiée : la distance part du
+            centre de la commune. <span style="color:var(--muted)">Signaler cette annonce</span></div>
+        </div>
+      </div>
+      <div class="bar">
+        <div class="pr">329 000 €<small>2 mois · annonce d'agence</small></div>
+        <div class="cta">Demander une visite</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ÉCRAN 3 -->
+  <div class="col">
+    <div class="cap">Écran 3 <span>agence et contact</span></div>
+    <div class="phone">
+      <div class="top">
+        <div class="bk"><svg class="ico" viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M15 5l-7 7 7 7"/></svg> Retour</div>
+        <div class="sp"><span style="font-size:11.5px">Contact</span></div>
+      </div>
+      <div class="body" style="padding:14px 16px 0">
+        <div class="sec" style="margin-top:0">
+          <div class="ag">
+            <div class="logo">DI</div>
+            <div>
+              <div class="nm">Dupont Immobilier</div>
+              <div class="sub">Agence · Namur · depuis mars 2026</div>
+            </div>
+          </div>
+          <div class="ver"><svg class="ico" viewBox="0 0 24 24" style="width:12px;height:12px"><path d="M20 6 9 17l-5-5"/></svg> n° BCE 0123.456.789</div>
+          <div class="ver" style="margin-top:3px"><svg class="ico" viewBox="0 0 24 24" style="width:12px;height:12px"><path d="M20 6 9 17l-5-5"/></svg> n° IPI 512.345 — vérifié le 24/10/2026</div>
+          <div class="legal"><b>Kazendra vérifie l'inscription BCE et le numéro IPI, rien de plus</b> : ni la
+            compétence, ni la probité, ni la solvabilité de l'agence.</div>
+        </div>
+
+        <div class="sec">
+          <div class="hd">Nous contacter</div>
+          <div class="txt">La messagerie Kazendra est le seul canal : ni numéro de téléphone publié, ni
+            contact hors plateforme. Votre numéro sert à vérifier votre compte, il n'est jamais montré.</div>
+          <div class="msg">Bonjour, je suis intéressé par la maison de 142 m² à Namur. Serait-il possible
+            de visiter samedi ?</div>
+          <div class="btn">Envoyer le message</div>
+        </div>
+
+        <div class="sec">
+          <div class="hd">Ce que Kazendra ne fait pas</div>
+          <div class="txt">Pas de visite, pas de négociation, pas de bail, pas de garantie locative, pas de
+            commission. La transaction se passe entre vous et l'agence.</div>
+        </div>
+
+        <div class="legal" style="margin-top:10px;background:#FDECEC;border:1px solid #F3C4C4;color:#8C2B2B">
+          Un doute sur une agence ? <b>Signaler un exercice illégal de la profession.</b>
+        </div>
+
+        <div class="sec">
+          <div class="hd">Cette annonce</div>
+          <div class="txt">Publiée il y a 2 heures · <b>1 240 vues</b> · 3 contacts<br>
+            Durée choisie : 2 mois, prolongeable 3 mois<br>
+            Expire le 24 décembre 2026 · réf. 2026-1024-31</div>
+        </div>
+      </div>
+      <div class="bar">
+        <div class="pr">329 000 €<small>réf. 2026-1024-31</small></div>
+        <div class="cta">Message</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

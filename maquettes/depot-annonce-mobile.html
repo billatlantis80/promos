@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Kazendra — dépôt d'annonce (mobile)</title>
+<style>
+  :root{--navy:#0D3B5B;--deep:#0A2F49;--lite:#13496D;--orange:#EB912D;
+        --ink:#13222E;--ink2:#4A5C6B;--muted:#5E7180;--line:#E3E8ED;--bg2:#F5F7F9}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Liberation Sans','DejaVu Sans',Arial,sans-serif;background:#E7EBEF;color:var(--ink);
+       padding:28px 30px 34px;-webkit-font-smoothing:antialiased}
+  .board{display:flex;gap:22px;align-items:flex-start}
+  .col{width:390px}
+  .cap{font-size:11.5px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:#5E7180;
+       margin:0 0 9px 4px}
+  .phone{width:390px;height:844px;background:#fff;border-radius:26px;overflow:hidden;position:relative;
+         box-shadow:0 14px 32px rgba(11,40,62,.16);display:flex;flex-direction:column}
+  .ico{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+  .fhead{background:var(--deep);color:#fff;padding:14px 16px;display:flex;align-items:center;gap:12px}
+  .fhead .x{font-size:17px;color:#CFE0EB}
+  .fhead .tt{font-size:14px;font-weight:700}
+  .fhead .stp{margin-left:auto;font-size:11.5px;color:#BBD3E2;background:rgba(255,255,255,.12);
+              padding:4px 9px;border-radius:999px}
+  .steps{display:flex;gap:5px;padding:11px 16px 0}
+  .step{height:3px;border-radius:2px;background:var(--line);flex:1}
+  .step.done{background:var(--navy)}
+  .step.on{background:var(--orange)}
+
+  .form{flex:1;overflow:hidden;padding:14px 16px 0}
+  .lab{font-size:10.5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:#7E93A2;
+       margin:14px 0 6px;display:flex;justify-content:space-between;align-items:center}
+  .lab:first-child{margin-top:0}
+  .lab i{font-style:normal;font-weight:400;text-transform:none;letter-spacing:0;color:#9AAAB6;font-size:10px}
+  .inp{border:1px solid var(--line);border-radius:9px;padding:10px 11px;font-size:12.5px;color:var(--ink);
+       display:flex;align-items:center;gap:8px}
+  .inp.ph{color:#9AAAB6}
+  .inp .cv{margin-left:auto;color:#9AAAB6;font-size:11px}
+  textarea.inp{height:66px;display:block;line-height:1.4;font-family:inherit;color:#9AAAB6}
+
+  .photo{border:1.5px dashed #C9D6DE;border-radius:11px;padding:18px 12px;text-align:center;color:#6E8494}
+  .slots{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+  .slot{height:74px;border-radius:9px;border:1.5px dashed #CBD8E1;display:flex;align-items:center;
+        justify-content:center;color:#9FB3C0;font-size:20px;font-weight:300}
+  .slot.full{border:0;background:linear-gradient(135deg,#123F5F,#2E8399);color:rgba(255,255,255,.55);
+             position:relative;display:flex;align-items:center;justify-content:center}
+  .slot.full .tag{position:absolute;left:5px;bottom:5px;background:#fff;color:#0A2F49;font-size:8px;
+                  font-weight:700;padding:2px 5px;border-radius:4px;letter-spacing:.2px}
+  .photo .ico{width:24px;height:24px;color:#9FB3C0;display:block;margin:0 auto 6px}
+  .photo b{font-size:12px;display:block;color:var(--ink2)}
+  .photo span{font-size:10px;color:#9AAAB6;display:block;margin-top:3px}
+  .tips{background:var(--bg2);border-radius:10px;padding:10px 12px;margin-top:11px}
+  .tips h4{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:#7E93A2;margin-bottom:6px}
+  .tips li{list-style:none;font-size:10.5px;color:var(--ink2);line-height:1.45;padding-left:12px;position:relative}
+  .tips li:before{content:"";position:absolute;left:0;top:6px;width:4px;height:4px;border-radius:50%;background:var(--orange)}
+
+  .chips{display:flex;gap:6px;flex-wrap:wrap}
+  .chip{font-size:11.5px;padding:7px 11px;border-radius:999px;border:1px solid var(--line);color:var(--ink2);white-space:nowrap}
+  .chip.on{background:var(--navy);border-color:var(--navy);color:#fff;font-weight:700}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .price-box{border:1px solid var(--line);border-radius:9px;padding:10px 11px;display:flex;align-items:center}
+  .price-box b{font-size:16px;color:var(--navy)}
+  .price-box .cur{margin-left:auto;font-size:12px;color:#9AAAB6}
+  .switch{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--line)}
+  .switch:last-child{border-bottom:0}
+  .sw{width:38px;height:22px;border-radius:999px;background:#D7E0E7;position:relative;flex:none}
+  .sw:after{content:"";position:absolute;left:2px;top:2px;width:18px;height:18px;border-radius:50%;background:#fff;
+            box-shadow:0 1px 2px rgba(0,0,0,.18)}
+  .sw.on{background:var(--navy)}
+  .sw.on:after{left:18px}
+  .switch .tx{font-size:12.5px;font-weight:700}
+  .switch .tx span{display:block;font-size:10px;color:#8CA0AE;font-weight:400;margin-top:2px}
+
+  .recap{border:1px solid var(--line);border-radius:11px;padding:10px;display:flex;gap:10px;align-items:center}
+  .recap .th{width:54px;height:54px;border-radius:8px;background:linear-gradient(135deg,#123F5F,#2E8399);
+             display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.45);flex:none}
+  .recap .tt{font-size:12px;font-weight:700;line-height:1.25}
+  .recap .mt{font-size:10.5px;color:#8CA0AE;margin-top:3px}
+  .recap .pr{font-size:14px;font-weight:700;color:var(--navy);margin-left:auto}
+  .rules{display:flex;gap:9px;margin-top:12px;font-size:10.5px;color:var(--ink2);line-height:1.45}
+  .rules .bx{width:15px;height:15px;border-radius:4px;border:1.5px solid #C3D0DA;flex:none;margin-top:1px}
+  .rules a{color:var(--lite);font-weight:700;text-decoration:none}
+  .freebar{background:#EFF6F4;border:1px solid #CFE6E0;border-radius:9px;padding:9px 11px;font-size:10.5px;
+           color:#0E6B5B;margin-top:12px;line-height:1.4}
+  .quota{background:var(--bg2);border-radius:9px;padding:9px 11px;font-size:10.5px;color:var(--ink2);margin-top:8px}
+  .quota b{color:var(--ink)}
+
+  .foot{position:absolute;bottom:0;left:0;right:0;padding:12px 16px 16px;background:#fff;border-top:1px solid var(--line)}
+  .go{background:var(--orange);color:#2A1602;font-weight:700;font-size:13.5px;text-align:center;
+      padding:13px;border-radius:11px}
+  .ghost{background:#fff;border:1px solid var(--line);color:var(--navy);font-weight:700;font-size:13.5px;
+         text-align:center;padding:12px;border-radius:11px;margin-top:8px}
+  .tiny{font-size:9px;color:#9AAAB6;text-align:center;margin-top:8px;line-height:1.4}
+</style>
+</head>
+<body>
+<div class="board">
+
+  <!-- ÉTAPE 1 -->
+  <div class="col">
+    <div class="cap">Étape 1 · photos (facultatives)</div>
+    <div class="phone">
+      <div class="fhead"><span class="x">✕</span><span class="tt">Déposer une annonce</span><span class="stp">1 / 4</span></div>
+      <div class="steps"><span class="step on"></span><span class="step"></span><span class="step"></span><span class="step"></span></div>
+
+      <div class="form">
+        <div class="lab">Photos <i>1 à 6 · la première devient la vignette</i></div>
+        <div class="slots">
+          <div class="slot full"><svg class="ico" viewBox="0 0 24 24" style="width:26px;height:26px"><circle cx="8" cy="17" r="3.2"/><circle cx="18" cy="17" r="3.2"/><path d="M8 17 11 8h4l3 9"/></svg><span class="tag">Vignette</span></div>
+          <div class="slot">+</div>
+          <div class="slot">+</div>
+          <div class="slot">+</div>
+          <div class="slot">+</div>
+          <div class="slot">+</div>
+        </div>
+
+        <div class="tips">
+          <h4>Deux secondes qui changent tout</h4>
+          <li>Lumière du jour, près d'une fenêtre</li>
+          <li>Fond neutre, objet entier dans le cadre</li>
+          <li>Une photo de chaque défaut : vous éviterez les mauvaises surprises</li>
+        </div>
+
+        <div class="lab">Que déposez-vous ?</div>
+        <div class="chips">
+          <span class="chip on">Vente</span><span class="chip">Don</span><span class="chip">Location</span><span class="chip">Échange</span>
+        </div>
+
+        <div class="freebar">Gratuit : vous êtes un particulier. 5 annonces actives maximum.</div>
+      </div>
+
+      <div class="foot">
+        <div class="go">Continuer</div>
+        <div class="tiny">Vous pourrez tout modifier avant de publier</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ÉTAPE 2 -->
+  <div class="col">
+    <div class="cap">Étape 2 · description et prix</div>
+    <div class="phone">
+      <div class="fhead"><span class="x">‹</span><span class="tt">Déposer une annonce</span><span class="stp">2 / 4</span></div>
+      <div class="steps"><span class="step done"></span><span class="step on"></span><span class="step"></span><span class="step"></span></div>
+
+      <div class="form">
+        <div class="lab">Titre <i>32 / 70</i></div>
+        <div class="inp">Vélo enfant 20 pouces, très bon état</div>
+
+        <div class="lab">Catégorie</div>
+        <div class="inp">Sport &amp; plein air · Vélos <span class="cv">changer</span></div>
+
+        <div class="lab">État</div>
+        <div class="chips">
+          <span class="chip">Neuf</span><span class="chip on">Bon état</span><span class="chip">Usagé</span><span class="chip">Pour pièces</span>
+        </div>
+
+        <div class="two" style="margin-top:14px">
+          <div>
+            <div class="lab" style="margin-top:0">Prix</div>
+            <div class="price-box"><b>45 €</b><span class="cur">EUR</span></div>
+          </div>
+          <div>
+            <div class="lab" style="margin-top:0">Négociable</div>
+            <div class="price-box"><span style="font-size:12px;color:#7E93A2">Oui, un peu</span><span class="cur">⌄</span></div>
+          </div>
+        </div>
+
+        <div class="lab">Description <i>0 / 2000</i></div>
+        <textarea class="inp">Freins révisés en septembre, pneus en bon état, quelques rayures sur le cadre. Casque offert.</textarea>
+
+        <div class="lab">Vos photos</div>
+        <div class="chips"><span class="chip">1 photo ✓</span><span class="chip">+ ajouter</span></div>
+
+        <div class="lab">Aperçu dans la liste</div>
+        <div class="recap">
+          <div class="th"><svg class="ico" viewBox="0 0 24 24" style="width:24px;height:24px"><circle cx="8" cy="17" r="3.2"/><circle cx="18" cy="17" r="3.2"/><path d="M8 17 11 8h4l3 9"/></svg></div>
+          <div><div class="tt">Vélo enfant 20 pouces, très bon état</div><div class="mt">5000 · il y a quelques secondes</div></div>
+          <div class="pr">45 €</div>
+        </div>
+      </div>
+
+      <div class="foot">
+        <div class="go">Continuer</div>
+        <div class="tiny">Le prix s'affiche dans la devise du pays choisi</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ÉTAPE 3 -->
+  <div class="col">
+    <div class="cap">Étape 3 · lieu et contact</div>
+    <div class="phone">
+      <div class="fhead"><span class="x">‹</span><span class="tt">Déposer une annonce</span><span class="stp">3 / 4</span></div>
+      <div class="steps"><span class="step done"></span><span class="step done"></span><span class="step on"></span><span class="step"></span></div>
+
+      <div class="form">
+        <div class="lab">Code postal</div>
+        <div class="inp">5000 <span class="cv">vérifié</span></div>
+
+        <div class="lab">Commune</div>
+        <div class="inp">Choisir dans la liste <span class="cv">⌄</span></div>
+
+        <div class="quota">Le code postal suffit. <b>Aucune adresse exacte n'est demandée</b> : les acheteurs
+          ne verront que la commune et la distance approximative.</div>
+
+        <div class="lab">Options</div>
+        <div class="switch"><span class="sw on"></span><div class="tx">Remise en main propre<span>Rencontre sur rendez-vous</span></div></div>
+        <div class="switch"><span class="sw"></span><div class="tx">Envoi possible<span>À vos frais et à vos risques</span></div></div>
+        <div class="switch"><span class="sw on"></span><div class="tx">Afficher le prix<span>Décochez pour « prix à discuter »</span></div></div>
+
+        <div class="lab">Disponibilité</div>
+        <div class="chips">
+          <span class="chip on">Dès maintenant</span><span class="chip">À partir d'une date</span>
+        </div>
+
+        <div class="lab">Contact</div>
+        <div class="inp" style="background:var(--bg2);color:var(--ink2);font-size:11.5px">
+          <svg class="ico" viewBox="0 0 24 24" style="width:16px;height:16px;color:#7E93A2"><path d="M4 5.5h16v11H8.5L4 20.5z"/></svg>
+          Uniquement par la messagerie Kazendra
+        </div>
+      </div>
+
+      <div class="foot">
+        <div class="go">Continuer</div>
+        <div class="tiny">Aucun numéro de téléphone n'apparaîtra sur l'annonce</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ÉTAPE 4 -->
+  <div class="col">
+    <div class="cap">Étape 4 · vérifier et publier</div>
+    <div class="phone">
+      <div class="fhead"><span class="x">‹</span><span class="tt">Déposer une annonce</span><span class="stp">4 / 4</span></div>
+      <div class="steps"><span class="step done"></span><span class="step done"></span><span class="step done"></span><span class="step on"></span></div>
+
+      <div class="form">
+        <div class="lab">Voici ce que verront les visiteurs</div>
+        <div class="recap">
+          <div class="th"><svg class="ico" viewBox="0 0 24 24" style="width:24px;height:24px"><circle cx="8" cy="17" r="3.2"/><circle cx="18" cy="17" r="3.2"/><path d="M8 17 11 8h4l3 9"/></svg></div>
+          <div><div class="tt">Vélo enfant 20 pouces, très bon état</div><div class="mt">Sport &amp; plein air · 5000 · à 2 km</div></div>
+          <div class="pr">45 €</div>
+        </div>
+
+        <div class="lab">Récapitulatif</div>
+        <div style="font-size:11.5px;line-height:1.7;color:var(--ink2)">
+          Type : <b style="color:var(--ink)">Vente</b> · État : <b style="color:var(--ink)">Bon état</b><br>
+          Photos : <b style="color:var(--ink)">1</b> · Remise en main propre · Prix affiché<br>
+          Durée : <b style="color:var(--ink)">30 jours</b>, renouvelable en un clic
+        </div>
+
+        <div class="rules"><span class="bx"></span><div>J'accepte les <a href="#">règles de publication</a> et je
+          confirme que cet objet ne figure pas sur la <a href="#">liste des objets interdits</a>.</div></div>
+
+        <div class="freebar">Publication immédiate · contrôle sous 24 h · retrait sur signalement.</div>
+        <div class="quota">Il vous restera <b>4 annonces actives</b> sur 5 après celle-ci.</div>
+      </div>
+
+      <div class="foot">
+        <div class="go">Publier gratuitement</div>
+        <div class="ghost">Enregistrer en brouillon</div>
+        <div class="tiny">Vous pourrez la modifier ou la retirer à tout moment</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

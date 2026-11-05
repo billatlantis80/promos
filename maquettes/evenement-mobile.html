@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Kazendra — /evenement sur téléphone (390 px)</title>
+<style>
+  :root{--navy:#0D3B5B;--deep:#0A2F49;--orange:#EB912D;--ink:#13222E;--ink2:#4A5C6B;
+        --muted:#5E7180;--line:#E3E8ED;--bg2:#F5F7F9}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Liberation Sans','DejaVu Sans',Arial,sans-serif;background:#E7EBEF;color:var(--ink);
+       padding:28px 34px 34px;-webkit-font-smoothing:antialiased}
+  .board{display:flex;gap:26px;align-items:flex-start}
+  .col{width:390px}
+  .cap{font-size:11.5px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:#6B7E8C;
+       margin:0 0 9px 6px}
+  .cap span{color:#9AAAB6;font-weight:400;text-transform:none;letter-spacing:0;margin-left:6px}
+  .phone{width:390px;height:844px;background:#fff;border-radius:26px;overflow:hidden;position:relative;
+         box-shadow:0 14px 34px rgba(11,40,62,.16);display:flex;flex-direction:column}
+  .ico{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;
+       stroke-linejoin:round}
+  .top{background:var(--deep);color:#fff;height:54px;display:flex;align-items:center;gap:10px;
+       padding:0 15px;flex:none}
+  .top .nm{font-size:15px;font-weight:700;letter-spacing:-.2px}
+  .top img{width:26px;height:27px;border-radius:7px}
+  .top .sp{margin-left:auto;display:flex;gap:13px;color:#CFE0EB;font-size:12px;align-items:center}
+  .body{flex:1;overflow:hidden;display:flex;flex-direction:column}
+  .scroll{flex:1;overflow:hidden}
+
+  /* écran 1 — agenda */
+  .mhead{padding:14px 15px 0}
+  .mhead h1{font-size:19px;letter-spacing:-.4px;line-height:1.2}
+  .mhead .c{font-size:11.5px;color:var(--ink2);margin-top:5px}
+  .mhead .c b{color:var(--ink)}
+  .days{display:flex;gap:7px;margin-top:11px;overflow:hidden}
+  .dc{flex:none;border:1px solid var(--line);border-radius:9px;padding:6px 10px;text-align:center}
+  .dc.on{background:var(--navy);border-color:var(--navy);color:#fff}
+  .dc .d{font-size:9.5px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;color:#5E7180}
+  .dc.on .d{color:#B9D2E2}
+  .dc .n{font-size:14px;font-weight:800;line-height:1.1;margin-top:1px}
+  .dc .k{font-size:9px;color:var(--muted);margin-top:1px}
+  .dc.on .k{color:#CFE0EB}
+  .frow{display:flex;gap:7px;margin-top:10px;padding:0 15px}
+  .fc{font-size:11.5px;border:1px solid var(--line);border-radius:999px;padding:6px 11px;color:var(--ink2);
+      white-space:nowrap}
+  .fc.on{background:#EAF1F5;border-color:#C9DCEA;color:var(--navy);font-weight:700}
+  .mday{display:flex;align-items:center;gap:8px;padding:14px 15px 7px}
+  .mday .d{font-size:11px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;color:var(--navy)}
+  .mday .n{font-size:10.5px;color:var(--muted)}
+  .mday .l{flex:1;height:1px;background:var(--line)}
+  .mev{display:flex;gap:10px;padding:9px 15px;border-top:1px solid #F0F3F6}
+  .mev .h{width:42px;flex:none;background:#F3F6F8;border-radius:8px;padding:5px 2px;text-align:center}
+  .mev .h b{display:block;font-size:13px;color:var(--navy);line-height:1.1}
+  .mev .h span{font-size:9px;font-weight:700;color:#5E7180;letter-spacing:.3px}
+  .mev .t{flex:1;min-width:0}
+  .mev .t .tt{font-size:13px;font-weight:700;line-height:1.3}
+  .mev .t .mt{font-size:10.5px;color:var(--ink2);margin-top:3px;line-height:1.35}
+  .mev .t .tg{display:flex;gap:5px;margin-top:5px;align-items:center;flex-wrap:wrap}
+  .tg span{font-size:9.5px;font-weight:700;padding:3px 6px;border-radius:5px;background:#EAF1F5;color:var(--navy)}
+  .tg span.fr{background:#E4F3EF;color:#0E7A66}
+  .tg span.pd{background:#FDF1E3;color:#8A5510}
+  .tabbar{height:56px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-around;
+          flex:none;background:#fff;position:relative}
+  .tabbar .tb{font-size:9.5px;color:var(--muted);text-align:center;display:flex;flex-direction:column;
+              align-items:center;gap:3px}
+  .tabbar .tb.on{color:var(--navy);font-weight:700}
+  .tabbar .plus{width:46px;height:46px;border-radius:50%;background:var(--orange);margin-top:-24px;
+                display:flex;align-items:center;justify-content:center;color:#2A1602;
+                box-shadow:0 6px 14px rgba(235,145,45,.45)}
+
+  /* écran 2 — fiche */
+  .poster{height:172px;background:linear-gradient(135deg,#8A4B12,#EB912D);position:relative;
+          display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.45);flex:none}
+  .poster .ico{width:46px;height:46px;stroke-width:1}
+  .poster .n{position:absolute;right:11px;bottom:10px;background:rgba(9,29,43,.72);color:#fff;font-size:10px;
+             padding:3px 8px;border-radius:6px}
+  .pad{padding:12px 15px 0}
+  .dline{display:flex;align-items:center;gap:9px}
+  .dtile{background:var(--navy);color:#fff;border-radius:9px;padding:5px 9px;text-align:center;flex:none}
+  .dtile b{display:block;font-size:16px;line-height:1}
+  .dtile span{font-size:8.5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:#B9D2E2}
+  .dline .info{font-size:11.5px;color:var(--ink2);line-height:1.45}
+  .dline .info b{color:var(--ink)}
+  h1.mt{font-size:18px;line-height:1.25;letter-spacing:-.3px;margin-top:10px}
+  .mrow{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--ink2);margin-top:7px}
+  .mrow .ico{width:12px;height:12px;color:var(--muted)}
+  .mrow .sep{color:#C3D0DA}
+  .tags{display:flex;gap:5px;margin-top:9px;flex-wrap:wrap}
+  .tags span{font-size:10px;font-weight:700;padding:3px 7px;border-radius:5px;background:#EAF1F5;color:var(--navy)}
+  .tags span.fr{background:#E4F3EF;color:#0E7A66}
+  .blk{margin:11px 15px 0;border:1px solid var(--line);border-radius:11px;padding:10px 11px}
+  .blk h4{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:#5E7180;margin-bottom:7px;
+          display:flex}
+  .blk h4 span{margin-left:auto;text-transform:none;letter-spacing:0;font-weight:400;font-size:9.5px;color:var(--muted)}
+  .blk p{font-size:11.5px;line-height:1.6;color:var(--ink2)}
+  .g2{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:11.5px}
+  .g2 div span{display:block;font-size:9.5px;color:var(--muted);margin-bottom:1px}
+  .wamber{background:#FDF7EE;border:1px solid #F3D6AE;color:#6B4A16;font-size:11px;line-height:1.5;
+          border-radius:9px;padding:9px 10px;margin:10px 15px 0}
+  .wamber b{display:block;margin-bottom:2px}
+  .sticky{flex:none;border-top:1px solid var(--line);padding:10px 15px;display:flex;align-items:center;gap:10px;
+          background:#fff;margin-top:auto}
+  .sticky .p{font-size:11px;color:var(--muted);line-height:1.2}
+  .sticky .p b{display:block;font-size:14px;color:var(--navy)}
+  .sticky .cta{margin-left:auto;background:var(--orange);color:#2A1602;font-weight:800;font-size:12.5px;
+               padding:11px 15px;border-radius:9px}
+  /* partage : même bouton rond que /promo — flèche, thème Kazendra (aucun vert) */
+  .part{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;padding:0;
+        background:transparent;border:1px solid var(--line);border-radius:50%;color:var(--ink2);flex:none}
+  .part svg{width:17px;height:17px;fill:currentColor;display:block}
+  .bar.top .part{border-color:#2C5674;color:#CFE0EB}
+  .sticky .part{width:34px;height:34px}
+  .sticky .part svg{width:19px;height:19px}
+
+  /* écran 3 — dépôt */
+  .stp{display:flex;gap:5px;padding:12px 15px 0}
+  .stp i{height:4px;border-radius:99px;background:#E6EBEF;flex:1}
+  .stp i.on{background:var(--navy)}
+  .fh{padding:10px 15px 0}
+  .fh .k{font-size:10px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:#5E7180}
+  .fh h1{font-size:17px;letter-spacing:-.3px;margin-top:3px}
+  .lab{font-size:10.5px;font-weight:700;color:#5E7180;margin:12px 15px 6px}
+  .seg{display:flex;margin:0 15px;border:1px solid var(--line);border-radius:9px;overflow:hidden}
+  .seg div{flex:1;text-align:center;padding:8px 4px;font-size:11.5px;font-weight:700;color:var(--ink2)}
+  .seg div.on{background:var(--navy);color:#fff}
+  .seg div+div{border-left:1px solid var(--line)}
+  .fld{margin:0 15px;border:1px solid #C9D6DF;border-radius:8px;padding:8px 10px;font-size:12px;
+       font-weight:700;color:var(--ink)}
+  .note{margin:8px 15px 0;background:var(--bg2);border-radius:8px;padding:8px 10px;font-size:10.5px;
+        line-height:1.5;color:var(--ink2)}
+  .note b{color:var(--ink)}
+  .itin{margin:8px 15px 0;display:flex;align-items:center;gap:6px;font-size:10.5px;color:var(--ink2);
+        background:#fff;border:1px solid var(--line);border-radius:8px;padding:7px 9px}
+  .itin b{color:var(--navy);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .itin .go{margin-left:auto;background:var(--navy);color:#fff;font-weight:700;font-size:9.5px;
+            padding:4px 7px;border-radius:5px;flex:none}
+  .next{margin-top:auto;flex:none;padding:10px 15px 14px;border-top:1px solid var(--line)}
+  .next .b{background:var(--orange);color:#2A1602;font-weight:800;font-size:13px;text-align:center;
+           padding:13px;border-radius:10px}
+  .next .s{font-size:10px;color:var(--muted);text-align:center;margin-top:7px}
+</style>
+</head>
+<body>
+<div class="board">
+
+  <!-- ÉCRAN 1 — agenda -->
+  <div class="col">
+    <div class="cap">Écran 1 — Agenda <span>liste groupée par jour</span></div>
+    <div class="phone">
+      <div class="top">
+        <img src="kazendra-icone-256.png" alt="">
+        <div class="nm">Événements</div>
+        <div class="sp">
+          <svg class="ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+          <div style="width:26px;height:26px;border-radius:50%;background:var(--orange);color:#2A1602;font-size:10.5px;font-weight:800;display:flex;align-items:center;justify-content:center">B</div>
+        </div>
+      </div>
+      <div class="body">
+        <div class="scroll">
+          <div class="mhead">
+            <h1>Que se passe-t-il près de chez vous ?</h1>
+            <div class="c"><b>128</b> à venir · <b>24</b> ce week-end</div>
+            <div class="days">
+              <div class="dc on"><div class="d">Sam</div><div class="n">25</div><div class="k">3</div></div>
+              <div class="dc"><div class="d">Dim</div><div class="n">26</div><div class="k">3</div></div>
+              <div class="dc"><div class="d">Lun</div><div class="n">27</div><div class="k">2</div></div>
+              <div class="dc"><div class="d">Mar</div><div class="n">28</div><div class="k">4</div></div>
+              <div class="dc"><div class="d">Mer</div><div class="n">29</div><div class="k">1</div></div>
+            </div>
+          </div>
+          <div class="frow">
+            <div class="fc on">Gratuit</div>
+            <div class="fc">Payant</div>
+            <div class="fc">PMR</div>
+            <div class="fc">Plein air</div>
+          </div>
+          <div class="mday"><div class="d">Samedi 25 octobre</div><div class="n">3 événements</div><div class="l"></div></div>
+          <div class="mev">
+            <div class="h"><b>08:00</b><span>17:00</span></div>
+            <div class="t">
+              <div class="tt">Brocante d'automne du quartier Saint-Servais</div>
+              <div class="mt">Place Saint-Servais, 5000 Namur · 2,4 km</div>
+              <div class="tg"><span class="fr">Gratuit</span><span>Brocante</span><span>PMR partiel</span></div>
+            </div>
+          </div>
+          <div class="mev">
+            <div class="h"><b>14:00</b><span>18:00</span></div>
+            <div class="t">
+              <div class="tt">Atelier de réparation de vélos</div>
+              <div class="mt">Maison de quartier, 5000 Namur · 3,1 km</div>
+              <div class="tg"><span class="fr">Gratuit</span><span>Atelier</span></div>
+            </div>
+          </div>
+          <div class="mev">
+            <div class="h"><b>20:00</b><span>22:00</span></div>
+            <div class="t">
+              <div class="tt">Concert de la chorale Les Voix du Namurois</div>
+              <div class="mt">Église Saint-Loup, 5000 Namur · 1,8 km</div>
+              <div class="tg"><span class="pd">10 €</span><span>Musique</span><span>Sur place</span></div>
+            </div>
+          </div>
+          <div class="mday"><div class="d">Dimanche 26 octobre</div><div class="n">3 événements</div><div class="l"></div></div>
+          <div class="mev">
+            <div class="h"><b>09:00</b><span>13:00</span></div>
+            <div class="t">
+              <div class="tt">Marché des producteurs de la Place du Marché</div>
+              <div class="mt">Place du Marché, 5000 Namur · 0,9 km</div>
+              <div class="tg"><span class="fr">Gratuit</span><span>Marché</span></div>
+            </div>
+          </div>
+          <div class="mev">
+            <div class="h"><b>15:00</b><span>18:00</span></div>
+            <div class="t">
+              <div class="tt">Halloween des enfants — maquillage et goûter</div>
+              <div class="mt">Salle de Belgrade, 5001 Belgrade · 5,2 km</div>
+              <div class="tg"><span class="pd">3 €</span><span>Enfants</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="tabbar">
+          <div class="tb on">
+            <svg class="ico" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 11h18"/></svg>
+            Agenda
+          </div>
+          <div class="tb">
+            <svg class="ico" viewBox="0 0 24 24"><path d="M4 10h16l-1.5-5h-13z"/><path d="M5 10v9h14v-9"/></svg>
+            Annonces
+          </div>
+          <div class="plus"><svg class="ico" viewBox="0 0 24 24" style="width:22px;height:22px;stroke-width:2.4"><path d="M12 5v14M5 12h14"/></svg></div>
+          <div class="tb">
+            <svg class="ico" viewBox="0 0 24 24"><path d="M4 5h16v12H8l-4 3z"/></svg>
+            Messages
+          </div>
+          <div class="tb">
+            <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c1.6-3.6 4-5 7-5s5.4 1.4 7 5"/></svg>
+            Moi
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ÉCRAN 2 — fiche -->
+  <div class="col">
+    <div class="cap">Écran 2 — Fiche <span>date, prix, action collante</span></div>
+    <div class="phone">
+      <div class="top">
+        <div class="bk" style="display:flex;align-items:center;gap:6px;font-size:12.5px;color:#CFE0EB">
+          <svg class="ico" viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M15 5l-7 7 7 7"/></svg>
+          Événements
+        </div>
+        <div class="sp">
+          <button class="part" aria-label="Partager cet événement">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M14 9V5l7 7-7 7v-4.1c-5 0-8.5 1.6-11 5.1 1-5 4-10 11-11z"/></svg>
+          </button>
+          <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><circle cx="5" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>
+        </div>
+      </div>
+      <div class="body">
+        <div class="scroll">
+          <div class="poster">
+            <svg class="ico" viewBox="0 0 24 24"><path d="M3 9h18M6 9V6h12v3M4 9v11h16V9M9 20v-5h6v5"/></svg>
+            <div class="n">Affiche de l'organisateur</div>
+          </div>
+          <div class="pad">
+            <div class="dline">
+              <div class="dtile"><b>25</b><span>oct</span></div>
+              <div class="info"><b>Samedi 25 octobre</b><br>08:00 – 17:00</div>
+              <div style="margin-left:auto;text-align:right;font-size:10.5px;color:var(--muted);line-height:1.3">
+                47 personnes<br>intéressées
+              </div>
+            </div>
+            <h1 class="mt">Brocante d'automne du quartier Saint-Servais</h1>
+            <div class="mrow">
+              <svg class="ico" viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
+              Place Saint-Servais, 5000 Namur
+              <span class="sep">·</span> 2,4 km
+            </div>
+            <div class="tags">
+              <span class="fr">Entrée gratuite</span><span>Brocante</span><span>PMR partiel</span><span>Plein air</span>
+            </div>
+          </div>
+          <div class="blk">
+            <h4>Infos pratiques <span>déclarées par l'organisateur</span></h4>
+            <div class="g2">
+              <div><span>Entrée</span>Gratuite</div>
+              <div><span>Billetterie</span>Aucune — on entre</div>
+              <div><span>Public</span>Tout public</div>
+              <div><span>Lieu</span>En plein air</div>
+            </div>
+          </div>
+          <div class="wamber">
+            <b>Kazendra n'encaisse rien</b>
+            Pas de billetterie, pas de prévente, aucun acompte. Si quelqu'un vous demande de payer
+            avant l'événement, signalez la fiche.
+          </div>
+          <div class="blk" style="margin-top:10px">
+            <h4>Où ça se passe</h4>
+            <div class="itin" style="margin:0">
+              <svg class="ico" viewBox="0 0 24 24" style="width:13px;height:13px"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
+              <b>Place Saint-Servais, 5000 Namur</b>
+              <span class="go">Itinéraire</span>
+            </div>
+          </div>
+        </div>
+        <div class="sticky">
+          <div class="p"><b>Gratuit</b>prix annoncé</div>
+          <div class="cta" style="margin-left:auto">Je suis intéressé · 47</div>
+          <button class="part" aria-label="Partager cet événement">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M14 9V5l7 7-7 7v-4.1c-5 0-8.5 1.6-11 5.1 1-5 4-10 11-11z"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ÉCRAN 3 — dépôt -->
+  <div class="col">
+    <div class="cap">Écran 3 — Dépôt <span>étape 2 sur 4, le lieu</span></div>
+    <div class="phone">
+      <div class="top">
+        <div class="bk" style="display:flex;align-items:center;gap:6px;font-size:12.5px;color:#CFE0EB">
+          <svg class="ico" viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M6 6l12 12M18 6L6 18"/></svg>
+          Annuler
+        </div>
+        <div class="sp"><span style="font-size:11.5px">Étape 2 / 4</span></div>
+      </div>
+      <div class="body">
+        <div class="stp"><i class="on"></i><i class="on"></i><i></i><i></i></div>
+        <div class="fh">
+          <div class="k">Où ça se passe</div>
+          <h1>Le lieu de votre événement</h1>
+        </div>
+
+        <div class="lab">Type de lieu</div>
+        <div class="seg"><div class="on">Lieu public</div><div>Adresse privée</div></div>
+
+        <div class="lab">Nom du lieu</div>
+        <div class="fld">Place Saint-Servais</div>
+
+        <div class="lab">Rue et numéro</div>
+        <div class="fld">Place Saint-Servais</div>
+
+        <div class="lab">Code postal · commune</div>
+        <div class="fld">5000 · Namur</div>
+
+        <div class="itin">
+          <svg class="ico" viewBox="0 0 24 24" style="width:13px;height:13px"><path d="M21 3L3 10.5l7.5 3L14 21z"/></svg>
+          <b>maps/dir/?api=1&amp;destination=Place+Saint-Servais…</b>
+          <span class="go">Tester</span>
+        </div>
+
+        <div class="note">
+          <b>Si vous choisissez « adresse privée »</b>, la fiche n'affichera que 5000 Namur. L'adresse
+          exacte se donne dans la messagerie, et l'export agenda s'arrête au code postal.
+        </div>
+
+        <div class="next">
+          <div class="b">Continuer</div>
+          <div class="s">Aucune carte affichée · lien d'itinéraire gratuit, sans clé</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

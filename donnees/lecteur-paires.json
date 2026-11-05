@@ -1,0 +1,936 @@
+{
+ "genereLe": "2026-10-11T12:22:13.049Z",
+ "pagesUtiles": 13,
+ "totalCartes": 183,
+ "pages": [
+  {
+   "fichier": "JYSK_France.html",
+   "nom": "JYSK France",
+   "pays": "FR",
+   "verdict": "PROMO_LISIBLE",
+   "octets": 513731,
+   "zones": 72,
+   "cartes": 34,
+   "exemples": [
+    {
+     "titre": "ole=\"img\" class=\"relative inline-block text-border last:mr-0\" data-testid=\"rating\" aria-label=\"5 sur 5 étoiles\">   25,",
+     "prix": "25.00",
+     "avant": "64.99",
+     "remise": 62,
+     "lien": "",
+     "source": "classe-ancien-prix"
+    },
+    {
+     "titre": "ss=\"relative inline-block text-border last:mr-0\" data-testid=\"rating\" aria-label=\"5 sur 5 étoiles\">   9,00 € /pcs",
+     "prix": "9.00",
+     "avant": "22.99",
+     "remise": 61,
+     "lien": "",
+     "source": "classe-ancien-prix"
+    },
+    {
+     "titre": "le=\"img\" class=\"relative inline-block text-border last:mr-0\" data-testid=\"rating\" aria-label=\"5 sur 5 étoiles\">   65,0",
+     "prix": "65.00",
+     "avant": "109.00",
+     "remise": 40,
+     "lien": "",
+     "source": "classe-ancien-prix"
+    }
+   ],
+   "preuves": [
+    "<div aria-label=\"Prix initial barré de l&#x27;article - 64,99 € /ens\" aria-description=\"Avant :\" data-testid=\"product-card-strike-price\" class=\"theme-product-strike-price font-bold text-neutral-500 line-through\">64,99 € /ens</div></div><!--$!--><template data-dgst=\"BAILOUT_TO_CLIENT_SIDE_RENDERING\"></template><!--/$--><a aria-label=\"Lien de l&#x27;article\" aria-describedby=\"1833904-_R_5kufbqlubq9fdkp9fivb_\" class=\"cursor-pointer text-left no-underline text-xs font-bold pt-1 pb-2\" href=\"/chambre-et-literie/parures-de-lit/parures-de-lit-en-satin/parure-de-lit-satin-sabine-240x220-creme\">Voir plus de tailles</a><div class=\"flex",
+    "<div aria-label=\"Prix initial barré de l&#x27;article - 22,99 € /pcs\" aria-description=\"Avant :\" data-testid=\"product-card-strike-price\" class=\"theme-product-strike-price font-bold text-neutral-500 line-through\">22,99 € /pcs</div></div><button class=\"text-sm text-gray-500 hover:underline underline text-left py-0\">Dont éco-part. 0.13 €</button><!--$!--><template data-dgst=\"BAILOUT_TO_CLIENT_SIDE_RENDERING\"></template><!--/$--><div class=\"flex animate-skeleton flex-col gap-2 mt-1\"><div class=\"flex items-start gap-1.5 md:gap-x-2.5 my-0.5\"><div class=\"h-3 w-3 rounded-full bg-gray-200\"></div><div class=\"h-3.5 w-full rounded-sm bg",
+    "<div aria-label=\"Prix initial barré de l&#x27;article - 109,00 € /pcs\" aria-description=\"Avant :\" data-testid=\"product-card-strike-price\" class=\"theme-product-strike-price font-bold text-neutral-500 line-through\">109,00 € /pcs</div></div><!--$!--><template data-dgst=\"BAILOUT_TO_CLIENT_SIDE_RENDERING\"></template><!--/$--><div class=\"flex animate-skeleton flex-col gap-2 mt-1\"><div class=\"flex items-start gap-1.5 md:gap-x-2.5 my-0.5\"><div class=\"h-3 w-3 rounded-full bg-gray-200\"></div><div class=\"h-3.5 w-full rounded-sm bg-gray-200\"></div></div><div class=\"flex items-start gap-1.5 md:gap-x-2.5 my-0.5\"><div class=\"h-3 w-3 rounded"
+   ]
+  },
+  {
+   "fichier": "Bongo___Wonderbox.html",
+   "nom": "Bongo & Wonderbox",
+   "pays": "BE",
+   "verdict": "PROMO_LISIBLE",
+   "octets": 512165,
+   "zones": 31,
+   "cartes": 29,
+   "exemples": [
+    {
+     "titre": ".25 7.0924 16.25 8.75Z\" stroke=\"#595F7A\" stroke-width=\"1.25\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/> 8 verblijv",
+     "prix": "134.90",
+     "avant": "144.90",
+     "remise": 7,
+     "lien": "",
+     "source": "classe-ancien-prix"
+    },
+    {
+     "titre": ".28733 11.5515 4.2771H9.62995M9.62995 4.2771V9.07894\" stroke=\"#4F4F4F\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-",
+     "prix": "239.80",
+     "avant": "290.00",
+     "remise": 17,
+     "lien": "",
+     "source": "classe-ancien-prix"
+    },
+    {
+     "titre": ".28733 11.5515 4.2771H9.62995M9.62995 4.2771V9.07894\" stroke=\"#4F4F4F\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-",
+     "prix": "299.90",
+     "avant": "335.90",
+     "remise": 11,
+     "lien": "",
+     "source": "classe-ancien-prix"
+    }
+   ],
+   "preuves": [
+    "<span class=\"price--old qa-thematic-price\" data-testid=\"productListingPage-item-0-vignette_price-displayPricePreDiscount\" data-v-f080e010>€ 144,90</span><div class=\"price-wrapping\" data-v-f080e010><div class=\"price--discounted\" data-testid=\"productListingPage-item-0-vignette_price-discounted\" data-v-f080e010><!----> € 134,90</div><div class=\"sticker\" data-v-f080e010><div class=\"promotion-sticker\" data-v-f080e010><span data-testid=\"productListingPage-item-0-vignette_sticker\" data-v-f080e010>-6%</span></div></div></div></div><!----><!--]--></div><!--]-->",
+    "<span class=\"price--old qa-thematic-price\" data-testid=\"productListingPage-item-2-vignette_price-displayPricePreDiscount\" data-v-f080e010>€ 290,00</span><div class=\"price-wrapping\" data-v-f080e010><div class=\"price--discounted\" data-testid=\"productListingPage-item-2-vignette_price-discounted\" data-v-f080e010><!----> € 239,80</div><div class=\"sticker\" data-v-f080e010><div class=\"promotion-sticker\" data-v-f080e010><span data-testid=\"productListingPage-item-2-vignette_sticker\" data-v-f080e010>-17%</span></div></div></div></div><!----><!--]--></div><!--]--",
+    "<span class=\"price--old qa-thematic-price\" data-testid=\"productListingPage-item-4-vignette_price-displayPricePreDiscount\" data-v-f080e010>€ 335,90</span><div class=\"price-wrapping\" data-v-f080e010><div class=\"price--discounted\" data-testid=\"productListingPage-item-4-vignette_price-discounted\" data-v-f080e010><!----> € 299,90</div><div class=\"sticker\" data-v-f080e010><div class=\"promotion-sticker\" data-v-f080e010><span data-testid=\"productListingPage-item-4-vignette_sticker\" data-v-f080e010>-10%</span></div></div></div></div><!----><!--]--></div><!--]--"
+   ]
+  },
+  {
+   "fichier": "DocMorris.html",
+   "nom": "DocMorris",
+   "pays": "DE",
+   "verdict": "PROMO_LISIBLE",
+   "octets": 510163,
+   "zones": 21,
+   "cartes": 21,
+   "exemples": [
+    {
+     "titre": ".007z\"> ( 3 )",
+     "prix": "8.39",
+     "avant": "9.90",
+     "remise": 15,
+     "lien": "",
+     "source": "balise-barrée"
+    },
+    {
+     "titre": "2.9z\"> ( 0 )",
+     "prix": "42.17",
+     "avant": "54.03",
+     "remise": 22,
+     "lien": "",
+     "source": "balise-barrée"
+    },
+    {
+     "titre": "data-testid=\"rating-star-100-percent\" style=\"width:1rem\" aria-hidden=\"true\"> ( 2 )",
+     "prix": "59.87",
+     "avant": "75.95",
+     "remise": 21,
+     "lien": "",
+     "source": "balise-barrée"
+    }
+   ],
+   "preuves": [
+    "<s class=\"relative no-underline after:absolute after:text-[#F10] after:tablet:text-red-400 after:left-0 after:right-0 after:top-[45%] after:rotate-[-15deg] text-neutral-700 after:border-t after:border-current\">9,90 €</s><span>*</span></span></span></div></div><div class=\"mt-2 flex gap-1 pb-4\"><div class=\"flex text-neutral-700 whitespace-nowrap leading-price text-[1.625rem] mt-[0.125rem]\" data-testid=\"sales-price\"><span class=\"sr-only\">Verkaufspreis<!-- -->:<span>8,39 €</span>",
+    "<s class=\"relative no-underline after:absolute after:text-[#F10] after:tablet:text-red-400 after:left-0 after:right-0 after:top-[45%] after:rotate-[-15deg] text-neutral-700 after:border-t after:border-current\">54,03 €</s><span>*</span></span></span></div></div><div class=\"mt-2 flex gap-1 pb-4\"><div class=\"flex text-neutral-700 whitespace-nowrap leading-price text-[1.625rem] mt-[0.125rem]\" data-testid=\"sales-price\"><span class=\"sr-only\">Verkaufspreis<!-- -->:<span>42,17 €</span",
+    "<s class=\"relative no-underline after:absolute after:text-[#F10] after:tablet:text-red-400 after:left-0 after:right-0 after:top-[45%] after:rotate-[-15deg] text-neutral-700 after:border-t after:border-current\">75,95 €</s><span>*</span></span></span></div></div><div class=\"mt-2 flex gap-1 pb-4\"><div class=\"flex text-neutral-700 whitespace-nowrap leading-price text-[1.625rem] mt-[0.125rem]\" data-testid=\"sales-price\"><span class=\"sr-only\">Verkaufspreis<!-- -->:<span>59,87 €</span"
+   ]
+  },
+  {
+   "fichier": "myToys.html",
+   "nom": "myToys",
+   "pays": "DE",
+   "verdict": "PROMO_LISIBLE",
+   "octets": 512527,
+   "zones": 36,
+   "cartes": 18,
+   "exemples": [
+    {
+     "titre": "n4\" data-oc-sheet-v1-open=\"\" data-oc-sheet-v1-open.id=\"reptile-ratings-sheet\" data-secondary-action=\"\"> (2) ab 37,59 € U",
+     "prix": "37.59",
+     "avant": "49.99",
+     "remise": 25,
+     "lien": "",
+     "source": "classe-ancien-prix"
+    },
+    {
+     "titre": "re> Barbie Puppenhaus Barbie Traumvilla (2026) 219,81 € UVP",
+     "prix": "219.81",
+     "avant": "309.99",
+     "remise": 29,
+     "lien": "",
+     "source": "classe-ancien-prix"
+    },
+    {
+     "titre": "n4\" data-oc-sheet-v1-open=\"\" data-oc-sheet-v1-open.id=\"reptile-ratings-sheet\" data-secondary-action=\"\"> (517) ab 29,99 €",
+     "prix": "29.99",
+     "avant": "48.99",
+     "remise": 39,
+     "lien": "",
+     "source": "classe-ancien-prix"
+    }
+   ],
+   "preuves": [
+    "<span class=\"reptile-price__priceValue reptile-price__priceValue--strikethrough svelte-1s6ba8o\">49,99 €</span></span><!--]--><!----><!----></div><!----> <!--[-1--><!--]--><!----> <!--[-1--><!--]--><!----> <!--[-1--><!--]--><!----> <div class=\"reptile-price__saleTags svelte-13vwedz\"><!--[0--><oc-tag-v1 variant=\"sale\" size=\"50\">-25%</oc-tag-v1><!--]--><!----> <!--[0--><!--[-1--><!--]--><!--]--><!----></div><!----><!----><!----></div><!--]--><!----> <div class=\"reptile-tile-layout__purchase-info svelte-1j6f05k\"><!",
+    "<span class=\"reptile-price__priceValue reptile-price__priceValue--strikethrough svelte-1s6ba8o\">309,99 €</span></span><!--]--><!----><!----></div><!----> <!--[-1--><!--]--><!----> <!--[-1--><!--]--><!----> <!--[-1--><!--]--><!----> <div class=\"reptile-price__saleTags svelte-13vwedz\"><!--[0--><oc-tag-v1 variant=\"sale\" size=\"50\">-29%</oc-tag-v1><!--]--><!----> <!--[0--><!--[-1--><!--]--><!--]--><!----></div><!----><!----><!----></div><!--]--><!----> <div class=\"reptile-tile-layout__purchase-info svelte-1j6f05k\"><",
+    "<span class=\"reptile-price__priceValue reptile-price__priceValue--strikethrough svelte-1s6ba8o\">48,99 €</span></span><!--]--><!----><!----></div><!----> <!--[-1--><!--]--><!----> <!--[-1--><!--]--><!----> <!--[-1--><!--]--><!----> <div class=\"reptile-price__saleTags svelte-13vwedz\"><!--[0--><oc-tag-v1 variant=\"sale\" size=\"50\">-39%</oc-tag-v1><!--]--><!----> <!--[0--><!--[-1--><!--]--><!--]--><!----></div><!----><!----><!----></div><!--]--><!----> <div class=\"reptile-tile-layout__purchase-info svelte-1j6f05k\"><!"
+   ]
+  },
+  {
+   "fichier": "GrosBill.html",
+   "nom": "GrosBill",
+   "pays": "FR",
+   "verdict": "PROMO_LISIBLE",
+   "octets": 133196,
+   "zones": 16,
+   "cartes": 16,
+   "exemples": [
+    {
+     "titre": "title-row\"> Ventes Flash Stocks réduits, prix cassés — ça part vite. Voir toutes les ventes flash › GeForce RTX 5060 Ti ",
+     "prix": "179.99",
+     "avant": "599.99",
+     "remise": 70,
+     "lien": "/msi-geforce-rtx-5060-ti-8g-ventus-2x-oc-plus-152617",
+     "source": "classe-ancien-prix"
+    },
+    {
+     "titre": "S 559,00 € -6% 599,99 € --:--:-- Frame 4000D RS ARGB Noir + RM750e Gold 179,99 € -25%",
+     "prix": "179.99",
+     "avant": "239.99",
+     "remise": 25,
+     "lien": "/corsair-frame-4000d-rs-argb-noir-rm750e-gold-170528",
+     "source": "classe-ancien-prix"
+    },
+    {
+     "titre": "3db368.webp 520w\" sizes=\"(max-width: 860px) 46vw, (max-width: 1280px) 31vw, 24vw\" loading=\"eager\" fetchpriority=\"high\"> ",
+     "prix": "53.33",
+     "avant": "194.99",
+     "remise": 73,
+     "lien": "/kingston-snv3s-1to-m-2-146543",
+     "source": "classe-ancien-prix"
+    }
+   ],
+   "preuves": [
+    "<div class=\"flash-was\">599,99 €</div>\n            <div class=\"flash-timer\" data-countdown=\"2026-10-11T23:59:00+02:00\">\n        <i class=\"ti ti-clock\" aria-hidden=\"true\"></i><span data-cd=\"full\">--:--:--</span>\n    </div>\n</a>\n<a class=\"flash-card\" href=\"/corsair-frame-4000d-rs-argb-noir-rm750e-gold-170528\">\n    <div class=\"flash-img\">\n                    <img src=\"/media/produits/m/63e705cc-b97f-4e2b-81e2-4e2f55e3458b.webp\" alt=\"Frame 4000",
+    "<div class=\"flash-was\">239,99 €</div>\n            <div class=\"flash-timer\" data-countdown=\"2026-10-12T12:00:00+02:00\">\n        <i class=\"ti ti-clock\" aria-hidden=\"true\"></i><span data-cd=\"full\">--:--:--</span>\n    </div>\n</a>\n                </div>\n            </div>\n        </section>\n    \n                <section class=\"prixbarres-section\">\n            <div class=\"section-banner banner-prix\">\n                <div class=\"section-intro\">\n ",
+    "<span class=\"price-old\">194,99 €</span>\n                                            <span class=\"card-discount\">-17 %</span>\n                                                        </div>\n\n                            <div class=\"card-installment\">\n                ou 3× 53,33 € sans frais\n            </div>\n        \n                \n                                            <div class=\"card-stockline\">\n                <span class=\"card-sto"
+   ]
+  },
+  {
+   "fichier": "eBay.de.html",
+   "nom": "eBay.de",
+   "pays": "DE",
+   "verdict": "PROMO_LISIBLE",
+   "octets": 512243,
+   "zones": 19,
+   "cartes": 16,
+   "exemples": [
+    {
+     "titre": "Globo LED Außenwandleuchte Lampe Carme Silber IP44 2 x 5W GU10 warmweiß Up&Down",
+     "prix": "9.99",
+     "avant": "69.99",
+     "remise": 86,
+     "lien": "",
+     "source": "classe-ancien-prix"
+    },
+    {
+     "titre": "Dyson V15 Detect™ Absolute Kabelloser Staubsauger Generalüberholt",
+     "prix": "389.00",
+     "avant": "559.00",
+     "remise": 30,
+     "lien": "",
+     "source": "classe-ancien-prix"
+    },
+    {
+     "titre": "Dyson V10™ Absolute Kabelloser Staubsauger Nickel/Kupfer Generalüberholt",
+     "prix": "279.00",
+     "avant": "499.00",
+     "remise": 44,
+     "lien": "",
+     "source": "classe-ancien-prix"
+    }
+   ],
+   "preuves": [
+    "<div class=dne-itemtile-original-price><span aria-hidden=true><!--F#9[0]--><span  class=itemtile-price-default>UVP </span><!--F/--><!--F#9[1]--><span  class=itemtile-price-strikethrough>EUR 69,99 </span><!--F/--><!--F#9[2]-->* <!--F/--></span><span class=clipped>Bisheriger Preis: EUR 69,99 86% Rabatt</span></div><span><!--F#9[0]--><span  class=dne-itemtile-delivery>Kostenloser Versand</span><!--F/--></span><div class=regulatory-eek data-testid=regulatory-eek><div class=regulatory-eek__eek-rating-container><span><span><!--F#0--><span class=\"infotip regulatory-eek-label regulatory-eek-action-with-laye",
+    "<div class=dne-itemtile-original-price><span aria-hidden=true><!--F#9[0]--><span  class=itemtile-price-default>Bisher </span><!--F/--><!--F#9[1]--><span  class=itemtile-price-strikethrough>EUR 559,00 </span><!--F/--><!--F#9[2]-->** <!--F/--></span><span class=clipped>Bisheriger Preis: EUR 559,00 30% Rabatt</span></div><span class=hotness-card><span><!--F#9[0]--><span class=\"dne-itemcard-hotness itemcard-hotness-red \">Fast ausverkauft</span><!--F/--></span></span><div aria-label=Refurbished tabindex=0 class=\"dne-itemtile-badge  \"><svg class=\"ebayui-image-clipped\"><g id=\"ebayui-image-authorized-seller\"><",
+    "<div class=dne-itemtile-original-price><span aria-hidden=true><!--F#9[0]--><span  class=itemtile-price-default>Bisher </span><!--F/--><!--F#9[1]--><span  class=itemtile-price-strikethrough>EUR 499,00 </span><!--F/--><!--F#9[2]-->** <!--F/--></span><span class=clipped>Bisheriger Preis: EUR 499,00 44% Rabatt</span></div><span class=hotness-card><span><!--F#9[0]--><span class=\"dne-itemcard-hotness itemcard-hotness-red \">Fast ausverkauft</span><!--F/--></span></span><div aria-label=Refurbished tabindex=0 class=\"dne-itemtile-badge  \"><svg aria-hidden=true focusable=false class=ebayui-image-authorized-seller"
+   ]
+  },
+  {
+   "fichier": "Otto_Group__mode_.html",
+   "nom": "Otto Group (mode)",
+   "pays": "DE",
+   "verdict": "PROMO_LISIBLE",
+   "octets": 512518,
+   "zones": 34,
+   "cartes": 15,
+   "exemples": [
+    {
+     "titre": ";https://i.otto.de/i/otto/0f16dad9-16e5-5c43-8645-a37ab2e34e6a?$dv_energieetikett$&quot;,&quot;scale&quot;:&quot;UNIFORM",
+     "prix": "859.00",
+     "avant": "1499.00",
+     "remise": 43,
+     "lien": "https://d.otto.de/files/2c9a7343-f157-5831-9c6a-cd3bff2948cd.pdf",
+     "source": "classe-ancien-prix"
+    },
+    {
+     "titre": ";https://i.otto.de/i/otto/bd239bc3-8145-5341-aeeb-a1c291c4c13c?$dv_energieetikett$&quot;,&quot;scale&quot;:&quot;UNIFORM",
+     "prix": "479.00",
+     "avant": "849.00",
+     "remise": 44,
+     "lien": "https://d.otto.de/files/c595ba65-8f44-5c8d-8cf6-0c3d8508420f.pdf",
+     "source": "classe-ancien-prix"
+    },
+    {
+     "titre": "3n4\" data-oc-sheet-v1-open=\"\" data-oc-sheet-v1-open.id=\"reptile-ratings-sheet\" data-secondary-action=\"\"> (2424) 429,00 €",
+     "prix": "429.00",
+     "avant": "799.99",
+     "remise": 46,
+     "lien": "",
+     "source": "classe-ancien-prix"
+    }
+   ],
+   "preuves": [
+    "<span class=\"reptile-price__priceValue reptile-price__priceValue--strikethrough svelte-1s6ba8o\">1.499,00 €</span></span><!--]--><!----><!----></div><!----> <!--[0--><span class=\"reptile-price__priceHighlightText oc-headline-50 svelte-1jrsp2r\">nur bis Dienstag</span><!--]--><!----> <!--[-1--><!--]--><!----> <!--[-1--><!--]--><!----> <div class=\"reptile-price__saleTags svelte-13vwedz\"><!--[0--><oc-tag-v1 variant=\"sale\" size=\"50\">-43%</oc-tag-v1><!--]--><!----> <!--[0--><!--[-1--><!--]--><!--]--><!----></div><!---",
+    "<span class=\"reptile-price__priceValue reptile-price__priceValue--strikethrough svelte-1s6ba8o\">849,00 €</span></span><!--]--><!----><!----></div><!----> <!--[0--><span class=\"reptile-price__priceHighlightText oc-headline-50 svelte-1jrsp2r\">nur bis Dienstag</span><!--]--><!----> <!--[-1--><!--]--><!----> <!--[-1--><!--]--><!----> <div class=\"reptile-price__saleTags svelte-13vwedz\"><!--[0--><oc-tag-v1 variant=\"sale\" size=\"50\">-44%</oc-tag-v1><!--]--><!----> <!--[0--><!--[-1--><!--]--><!--]--><!----></div><!---->",
+    "<span class=\"reptile-price__priceValue reptile-price__priceValue--strikethrough svelte-1s6ba8o\">799,99 €</span></span><!--]--><!----><!----></div><!----> <!--[0--><span class=\"reptile-price__priceHighlightText oc-headline-50 svelte-1jrsp2r\">nur bis Dienstag</span><!--]--><!----> <!--[-1--><!--]--><!----> <!--[-1--><!--]--><!----> <div class=\"reptile-price__saleTags svelte-13vwedz\"><!--[0--><oc-tag-v1 variant=\"sale\" size=\"50\">-46%</oc-tag-v1><!--]--><!----> <!--[0--><!--[-1--><!--]--><!--]--><!----></div><!---->"
+   ]
+  },
+  {
+   "fichier": "Botanic.html",
+   "nom": "Botanic",
+   "pays": "FR",
+   "verdict": "PROMO_LISIBLE",
+   "octets": 446029,
+   "zones": 14,
+   "cartes": 14,
+   "exemples": [
+    {
+     "titre": "1\" data-algolia-click=\"1\" data-algolia-object-id=\"532538\" data-algolia-user-token=\"anon_e8b8c82417c19b2f\"> Photinia Red ",
+     "prix": "18.99",
+     "avant": "28.99",
+     "remise": 34,
+     "lien": "",
+     "source": "balise-barrée"
+    },
+    {
+     "titre": "lia-click=\"1\" data-algolia-object-id=\"370808\" data-algolia-user-token=\"anon_e8b8c82417c19b2f\"> Plaquettes de châtaignier",
+     "prix": "5.99",
+     "avant": "7.49",
+     "remise": 20,
+     "lien": "",
+     "source": "balise-barrée"
+    },
+    {
+     "titre": "ata-algolia-click=\"1\" data-algolia-object-id=\"410220\" data-algolia-user-token=\"anon_e8b8c82417c19b2f\"> Engrais Gazon Ant",
+     "prix": "44.99",
+     "avant": "52.99",
+     "remise": 15,
+     "lien": "",
+     "source": "balise-barrée"
+    }
+   ],
+   "preuves": [
+    "<del class=\"price-old-value productPrice-old\" title=\"ancien prix\">\n                  28,99 €\n                </del>\n              \n              \n                            <span class=\"price-value productPrice-value\">\n                                  18,99 €\n\n                                                                                                  \n                              </span>\n            </div>\n                      \n        \n      </li>\n          </ul>\n       ",
+    "<del class=\"price-old-value productPrice-old\" title=\"ancien prix\">\n                  7,49 €\n                </del>\n              \n              \n                            <span class=\"price-value productPrice-value\">\n                                  5,99 €\n\n                                                                                                  \n                              </span>\n            </div>\n                      \n        \n      </li>\n          </ul>\n         ",
+    "<del class=\"price-old-value productPrice-old\" title=\"ancien prix\">\n                  52,99 €\n                </del>\n              \n              \n                            <span class=\"price-value productPrice-value\">\n                                  44,99 €\n\n                                                                                                              <span class=\"productPrice-unit\">\n                            3,21 € / kg\n                          </span>\n      "
+   ]
+  },
+  {
+   "fichier": "ZooRoyal.html",
+   "nom": "ZooRoyal",
+   "pays": "DE",
+   "verdict": "PROMO_LISIBLE",
+   "octets": 513177,
+   "zones": 84,
+   "cartes": 7,
+   "exemples": [
+    {
+     "titre": "19a.354.354 0 0 1-.513-.374l.587-3.426a1.41 1.41 0 0 0-.407-1.252L1.44 6.53a.353.353 0 0 1 .196-.604l3.443-.503a1.42 1.4",
+     "prix": "8.29",
+     "avant": "37.96",
+     "remise": 78,
+     "lien": "",
+     "source": "classe-ancien-prix"
+    },
+    {
+     "titre": "text-16 leading-md \" title=\"\" rel=\"follow\" href=\"#\"> 160x30cm",
+     "prix": "39.99",
+     "avant": "54.99",
+     "remise": 27,
+     "lien": "",
+     "source": "classe-ancien-prix"
+    },
+    {
+     "titre": "> ( 11 ) UVP 14,49 €",
+     "prix": "14.49",
+     "avant": "39.16",
+     "remise": 63,
+     "lien": "",
+     "source": "classe-ancien-prix"
+    }
+   ],
+   "preuves": [
+    "<p class=\"text-20 font-bold leading-[28px] text-secondary\">9,49 €</p><p class=\"!text-xs leading-2xs text-neutral-800 text-neutral-800\">0,25 l<!-- --> ( <!-- -->37,96 €<!-- --> / 1 <!-- -->l<!-- --> )</p><p class=\"mt-8 max-w-164 text-right !text-xs leading-xs text-gray-900\">Niedrigster Preis der letzten 30 Tage:<!-- --> <!-- -->8,29 €</p></div></div></div></div></a><div class=\"mt-16 flex flex-col items-end\"><div class=\"flex items-center overflow-hidden rounded-lg\"><div data-t",
+    "<p class=\"text-20 font-bold leading-[30px] text-neutral-800\">54,99 €</p></div></div></div></a></div><div class=\"grayscale\"><a class=\" text-16 leading-md  \" title=\"\" rel=\"follow\" href=\"#\"><div class=\"flex w-full cursor-pointer justify-between rounded-lg border border-neutral-500 p-12\" tabindex=\"0\" role=\"radio\" aria-checked=\"false\" aria-label=\"120x30cm Zur Zeit nicht verfügbar\"><div class=\"flex gap-12 self-center\"><div tabindex=\"-1\" id=\"variant-1000001786\" data-role=\"radio\" data",
+    "<p class=\"text-20 font-bold leading-[28px] text-secondary\">9,79 €</p><p class=\"!text-xs leading-2xs text-neutral-800 text-neutral-800\">0,25 l<!-- --> ( <!-- -->39,16 €<!-- --> / 1 <!-- -->l<!-- --> )</p></div></div></div></div></a><div class=\"absolute right-8 top-8 z-10 flex size-32 cursor-pointer items-center justify-center md:size-48\"><div aria-label=\"Zu Favoriten hinzufügen\" class=\"cursor-pointer p-10 size-44 place-items-center border-none\" role=\"button\" tabindex=\"0\"><svg"
+   ]
+  },
+  {
+   "fichier": "Macitynet.html",
+   "nom": "Macitynet",
+   "pays": "IT",
+   "verdict": "PROMO_LISIBLE",
+   "octets": 247076,
+   "zones": 4,
+   "cartes": 4,
+   "exemples": [
+    {
+     "titre": "ax, CPU 18 e GPU 32 core: progettato per l’AI, display Liquid Retina XDR da 16,2&#039;&#039;, 36GB di memoria unificata,",
+     "prix": "4199.00",
+     "avant": "5199.00",
+     "remise": 19,
+     "lien": "",
+     "source": "balise-barrée"
+    },
+    {
+     "titre": "UGREEN Docking Station Hub USB C con Supporto per Mac Mini M4 M5 Pro M6",
+     "prix": "59.99",
+     "avant": "79.99",
+     "remise": 25,
+     "lien": "",
+     "source": "balise-barrée"
+    },
+    {
+     "titre": "UGREEN NASync DH4300 Plus NAS 4 vani per casa, ufficio e team (senza HDD)",
+     "prix": "319.99",
+     "avant": "439.99",
+     "remise": 27,
+     "lien": "",
+     "source": "balise-barrée"
+    }
+   ],
+   "preuves": [
+    "<s class=\"maz-banner-ref\">5.199,00 €</s></div></div><a class=\"maz-banner-cta external\" href=\"https://www.amazon.it/dp/B0GR1L38D8?tag=macitynet0d-21&#038;linkCode=ogi&#038;th=1&#038;psc=1\" rel=\"sponsored nofollow noopener noreferrer\" target=\"_blank\">Vedi su Amazon</a></article><article class=\"maz-ban",
+    "<s class=\"maz-banner-ref\">79,99 €</s></div></div><a class=\"maz-banner-cta external\" href=\"https://www.amazon.it/dp/B0DSJ5ZH8F?tag=macitynet0d-21&#038;linkCode=ogi&#038;th=1&#038;psc=1\" rel=\"sponsored nofollow noopener noreferrer\" target=\"_blank\">Vedi su Amazon</a></article><article class=\"maz-ban",
+    "<s class=\"maz-banner-ref\">439,99 €</s></div></div><a class=\"maz-banner-cta external\" href=\"https://www.amazon.it/dp/B0F6CR39WR?tag=macitynet0d-21&#038;linkCode=ogi&#038;th=1&#038;psc=1\" rel=\"sponsored nofollow noopener noreferrer\" target=\"_blank\">Vedi su Amazon</a></article><article class=\"maz-ban"
+   ]
+  },
+  {
+   "fichier": "billiger.de.html",
+   "nom": "billiger.de",
+   "pays": "DE",
+   "verdict": "PROMO_LISIBLE",
+   "octets": 512401,
+   "zones": 8,
+   "cartes": 4,
+   "exemples": [
+    {
+     "titre": "ck\" class=\"prg-helper group cursor-pointer\" data-target=\"_blank\" title=\"AS090EUWH Crispi Pro White Heißluftfritteuse\"> N",
+     "prix": "169.99",
+     "avant": "189.99",
+     "remise": 11,
+     "lien": "",
+     "source": "balise-barrée"
+    },
+    {
+     "titre": "=\"prg-helper group cursor-pointer\" data-target=\"_blank\" title=\"eufyCam S4 Starter-Set 1+1 - Kamera mit HomeBase 3\"> eufy",
+     "prix": "369.95",
+     "avant": "598.00",
+     "remise": 38,
+     "lien": "",
+     "source": "balise-barrée"
+    },
+    {
+     "titre": "lute inset-0 hidden items-center justify-center rounded-full bg-green-500 text-white\"> Kopiert 1.839,20 €*",
+     "prix": "1839.20",
+     "avant": "3399.00",
+     "remise": 46,
+     "lien": "",
+     "source": "balise-barrée"
+    }
+   ],
+   "preuves": [
+    "<s class=\"self-center text-xs font-normal text-slate-600\" data-sales-price>189,99 €</s>\n\n    <div class=\"mt-1 flex w-full items-center gap-1 text-xs text-slate-600\" data-shipping>\n\n\n\n<i\n  style=\"--icon:url(/static/img/icons/delivery.svg);--width:20px;--height:20px\"\n  class=\"text-green-500 mask-center mask-no-repeat [&amp;.loaded]:mask-(--icon) [",
+    "<s class=\"self-center text-xs font-normal text-slate-600\" data-sales-price>598,00 €</s>\n\n    <div class=\"mt-1 flex w-full items-center gap-1 text-xs text-slate-600\" data-shipping>\n\n\n\n<i\n  style=\"--icon:url(/static/img/icons/delivery.svg);--width:20px;--height:20px\"\n  class=\"text-green-500 mask-center mask-no-repeat [&amp;.loaded]:mask-(--icon) [",
+    "<s class=\"self-center text-xs font-normal text-slate-600\" data-sales-price>3.399,00 €</s>\n\n    <div class=\"mt-1 flex w-full items-center gap-1 text-xs text-slate-600\" data-shipping>\n\n\n\n<i\n  style=\"--icon:url(/static/img/icons/delivery.svg);--width:20px;--height:20px\"\n  class=\"text-red-600 mask-center mask-no-repeat [&amp;.loaded]:mask-(--icon) [&a"
+   ]
+  },
+  {
+   "fichier": "Knuspr.html",
+   "nom": "Knuspr",
+   "pays": "DE",
+   "verdict": "PROMO_LISIBLE",
+   "octets": 512858,
+   "zones": 31,
+   "cartes": 3,
+   "exemples": [
+    {
+     "titre": "emscope itemtype=\"https://schema.org/Offer\" class=\"@container flex w-full flex-wrap items-end gap-x-100\" data-test=\"prod",
+     "prix": "2.07",
+     "avant": "2.59",
+     "remise": 20,
+     "lien": "",
+     "source": "classe-ancien-prix"
+    },
+    {
+     "titre": "99 € 2,59 € -23 % für dich",
+     "prix": "1.99",
+     "avant": "2.07",
+     "remise": 4,
+     "lien": "",
+     "source": "classe-ancien-prix"
+    },
+    {
+     "titre": "emscope itemtype=\"https://schema.org/Offer\" class=\"@container flex w-full flex-wrap items-end gap-x-100\" data-test=\"prod",
+     "prix": "1.70",
+     "avant": "1.99",
+     "remise": 15,
+     "lien": "",
+     "source": "classe-ancien-prix"
+    }
+   ],
+   "preuves": [
+    "<span class=\"notranslate text-100 text-grey-70 leading-300 line-through\" translate=\"no\" data-test=\"productCard-body-price-sale\">2,59 €</span></div></div><div class=\"rounded-small px-100 text-left\" style=\"background-color:#FFE9D6;color:#1C2529\" data-test=\"productCard-body-badge\"><span class=\"m-0 text-80 leading-[18px] font-semibold text-inherit\"><span class=\"flex gap-50\"><span class=\"line-clamp-1 min-w-0 break-words\">-23 % für dich</span></span></span></div><div class=\"rounded-small px-100 text-left\" style=\"background-color:#FFF6C8;color:#1C25",
+    "<span class=\"m-0 text-80 leading-[18px] font-semibold text-inherit\"><span class=\"flex gap-50\"><span class=\"line-clamp-1 min-w-0 break-words\">Angebotspreis: 2,07 €</span></span></span></div><h3 class=\"wrap-break-word m-0 line-clamp-2 flex-[100%] hyphens-auto p-0 text-left font-normal text-100 text-primary leading-normal\" data-test=\"productCard-body-name\" title=\"Butternut Kürbis 1kg +\"><img class=\"mr-50 inline-block h-150 w-150 align-baseline\" alt src=\"https://cdn.knuspr.de/images/coun",
+    "<span class=\"notranslate text-100 text-grey-70 leading-300 line-through\" translate=\"no\" data-test=\"productCard-body-price-sale\">1,99 €</span></div></div><div class=\"rounded-small px-100 text-left\" style=\"background-color:#FFF6C8;color:#1C2529\" data-test=\"productCard-body-badge\"><span class=\"m-0 text-80 leading-[18px] font-semibold text-inherit\"><span class=\"flex gap-50\"><span class=\"line-clamp-1 min-w-0 break-words\">-14 % bis 12. 10.</span></span></span></div><h3 class=\"wrap-break-word m-0 line-clamp-2 flex-[100%] hyphens-auto p-0 text-left f"
+   ]
+  },
+  {
+   "fichier": "Home24.html",
+   "nom": "Home24",
+   "pays": "DE",
+   "verdict": "PROMO_LISIBLE",
+   "octets": 513091,
+   "zones": 2,
+   "cartes": 2,
+   "exemples": [
+    {
+     "titre": "motion-cache-771wpf e1ip8esd0\"> Neu 399 ,99 €",
+     "prix": "399.99",
+     "avant": "499.99",
+     "remise": 20,
+     "lien": "",
+     "source": "classe-ancien-prix"
+    },
+    {
+     "titre": "aria-label=\"Dies ist ein Produkt der Aktion ABVERKAUF\" height=\"24px\" display=\"inline-flex\" class=\"elt494x1 emotion-cache",
+     "prix": "170.99",
+     "avant": "179.99",
+     "remise": 5,
+     "lien": "",
+     "source": "classe-ancien-prix"
+    }
+   ],
+   "preuves": [
+    "<span font-size=\"fs_14,,,fs_16\" font-weight=\"normal\" color=\"sys.neutral.text.active\" data-typography=\"BST2\" text-decoration=\"line-through\" data-testid=\"old-price\" class=\"emotion-cache-jzcmy9 e1ip8esd0\"><span data-testid=\"old-price-amount\">499,99 €</span></span><div font-size=\"fs_12,,,fs_14\" font-weight=\"bold\" color=\"sys.marketing.red\" data-typography=\"CB1\" data-testid=\"sale-label\" aria-label=\"-20%\" display=\"inline-flex\" class=\"emotion-cache-axi2qz e1ip8esd0\">-20%</div></div></div></div><div class=\"emotion-cache-g2ub7m\"><p font-size=\"fs_14,,,fs_16\" font-weight=\"bold\" color=\"sys.neutral.text.strong\" data-typography=\"H9\" overflow=\"hidden\" display=\"-webki",
+    "<span font-size=\"fs_14,,,fs_16\" font-weight=\"normal\" color=\"sys.neutral.text.active\" data-typography=\"BST2\" text-decoration=\"line-through\" data-testid=\"old-price\" class=\"emotion-cache-jzcmy9 e1ip8esd0\"><span data-testid=\"old-price-amount\">179,99 €</span></span><div font-size=\"fs_12,,,fs_14\" font-weight=\"bold\" color=\"sys.marketing.red\" data-typography=\"CB1\" data-testid=\"sale-label\" aria-label=\"-5%\" display=\"inline-flex\" class=\"emotion-cache-axi2qz e1ip8esd0\">-5%</div></div></div></div><div class=\"emotion-cache-g2ub7m\"><p font-size=\"fs_14,,,fs_16\" font-weight=\"bold\" color=\"sys.neutral.text.strong\" data-typography=\"H9\" overflow=\"hidden\" display=\"-webkit-"
+   ]
+  },
+  {
+   "fichier": "ALDI_France.html",
+   "nom": "ALDI France",
+   "pays": "FR",
+   "verdict": "PROMO_LISIBLE",
+   "octets": 499605,
+   "zones": 0,
+   "cartes": 0,
+   "exemples": [],
+   "preuves": []
+  },
+  {
+   "fichier": "Aldi_Nord.html",
+   "nom": "Aldi Nord",
+   "pays": "DE",
+   "verdict": "PROMO_LISIBLE",
+   "octets": 513233,
+   "zones": 0,
+   "cartes": 0,
+   "exemples": [],
+   "preuves": []
+  },
+  {
+   "fichier": "Aldi_Talk.html",
+   "nom": "Aldi Talk",
+   "pays": "DE",
+   "verdict": "PROMO_LISIBLE",
+   "octets": 176958,
+   "zones": 0,
+   "cartes": 0,
+   "exemples": [],
+   "preuves": []
+  },
+  {
+   "fichier": "Courir.html",
+   "nom": "Courir",
+   "pays": "FR",
+   "verdict": "PROMO_LISIBLE",
+   "octets": 268013,
+   "zones": 0,
+   "cartes": 0,
+   "exemples": [],
+   "preuves": []
+  },
+  {
+   "fichier": "DERTOUR_Group.html",
+   "nom": "DERTOUR Group",
+   "pays": "DE",
+   "verdict": "STRUCTURE_PRETE",
+   "octets": 512343,
+   "zones": 0,
+   "cartes": 0,
+   "exemples": [],
+   "preuves": []
+  },
+  {
+   "fichier": "Das_Futterhaus.html",
+   "nom": "Das Futterhaus",
+   "pays": "DE",
+   "verdict": "STRUCTURE_PRETE",
+   "octets": 513136,
+   "zones": 35,
+   "cartes": 0,
+   "exemples": [],
+   "preuves": []
+  },
+  {
+   "fichier": "Dealabs.html",
+   "nom": "Dealabs",
+   "pays": "BE",
+   "verdict": "PROMO_LISIBLE",
+   "octets": 306908,
+   "zones": 0,
+   "cartes": 0,
+   "exemples": [],
+   "preuves": []
+  },
+  {
+   "fichier": "Deutsche_Telekom.html",
+   "nom": "Deutsche Telekom",
+   "pays": "DE",
+   "verdict": "PROMO_LISIBLE",
+   "octets": 512298,
+   "zones": 0,
+   "cartes": 0,
+   "exemples": [],
+   "preuves": []
+  },
+  {
+   "fichier": "EMP.html",
+   "nom": "EMP",
+   "pays": "DE",
+   "verdict": "PROMO_LISIBLE",
+   "octets": 404278,
+   "zones": 12,
+   "cartes": 0,
+   "exemples": [],
+   "preuves": []
+  },
+  {
+   "fichier": "Edeka.html",
+   "nom": "Edeka",
+   "pays": "DE",
+   "verdict": "PROMO_LISIBLE",
+   "octets": 159917,
+   "zones": 0,
+   "cartes": 0,
+   "exemples": [],
+   "preuves": []
+  },
+  {
+   "fichier": "Fielmann.html",
+   "nom": "Fielmann",
+   "pays": "DE",
+   "verdict": "PROMO_LISIBLE",
+   "octets": 512799,
+   "zones": 24,
+   "cartes": 0,
+   "exemples": [],
+   "preuves": []
+  },
+  {
+   "fichier": "Franprix.html",
+   "nom": "Franprix",
+   "pays": "FR",
+   "verdict": "PROMO_LISIBLE",
+   "octets": 258365,
+   "zones": 0,
+   "cartes": 0,
+   "exemples": [],
+   "preuves": []
+  },
+  {
+   "fichier": "Getr_nke_Hoffmann.html",
+   "nom": "Getränke Hoffmann",
+   "pays": "DE",
+   "verdict": "PROMO_LISIBLE",
+   "octets": 205679,
+   "zones": 0,
+   "cartes": 0,
+   "exemples": [],
+   "preuves": []
+  },
+  {
+   "fichier": "ICI_PARIS_XL.html",
+   "nom": "ICI PARIS XL",
+   "pays": "BE",
+   "verdict": "PROMO_LISIBLE",
+   "octets": 512023,
+   "zones": 0,
+   "cartes": 0,
+   "exemples": [],
+   "preuves": []
+  },
+  {
+   "fichier": "Jochen_Schweizer_mydays.html",
+   "nom": "Jochen Schweizer mydays",
+   "pays": "DE",
+   "verdict": "STRUCTURE_PRETE",
+   "octets": 512574,
+   "zones": 11,
+   "cartes": 0,
+   "exemples": [],
+   "preuves": []
+  },
+  {
+   "fichier": "Kr_fel.html",
+   "nom": "Krëfel",
+   "pays": "BE",
+   "verdict": "PROMO_LISIBLE",
+   "octets": 512627,
+   "zones": 20,
+   "cartes": 0,
+   "exemples": [],
+   "preuves": []
+  },
+  {
+   "fichier": "La_Belle_Vie.html",
+   "nom": "La Belle Vie",
+   "pays": "FR",
+   "verdict": "PROMO_LISIBLE",
+   "octets": 513305,
+   "zones": 0,
+   "cartes": 0,
+   "exemples": [],
+   "preuves": []
+  },
+  {
+   "fichier": "La_Poste_Mobile.html",
+   "nom": "La Poste Mobile",
+   "pays": "FR",
+   "verdict": "PROMO_LISIBLE",
+   "octets": 208822,
+   "zones": 0,
+   "cartes": 0,
+   "exemples": [],
+   "preuves": []
+  },
+  {
+   "fichier": "O2_Telef_nica.html",
+   "nom": "O2 Telefónica",
+   "pays": "DE",
+   "verdict": "PROMO_LISIBLE",
+   "octets": 161129,
+   "zones": 7,
+   "cartes": 0,
+   "exemples": [],
+   "preuves": []
+  },
+  {
+   "fichier": "OBI.html",
+   "nom": "OBI",
+   "pays": "DE",
+   "verdict": "PROMO_LISIBLE",
+   "octets": 372625,
+   "zones": 0,
+   "cartes": 0,
+   "exemples": [],
+   "preuves": []
+  },
+  {
+   "fichier": "Otto__otto.de_.html",
+   "nom": "Otto (otto.de)",
+   "pays": "DE",
+   "verdict": "PROMO_LISIBLE",
+   "octets": 512500,
+   "zones": 3,
+   "cartes": 0,
+   "exemples": [],
+   "preuves": []
+  },
+  {
+   "fichier": "Poco_Einrichtungsm_rkte.html",
+   "nom": "Poco Einrichtungsmärkte",
+   "pays": "DE",
+   "verdict": "STRUCTURE_PRETE",
+   "octets": 514143,
+   "zones": 0,
+   "cartes": 0,
+   "exemples": [],
+   "preuves": []
+  },
+  {
+   "fichier": "Porta_M_bel.html",
+   "nom": "Porta Möbel",
+   "pays": "DE",
+   "verdict": "PROMO_LISIBLE",
+   "octets": 512912,
+   "zones": 0,
+   "cartes": 0,
+   "exemples": [],
+   "preuves": []
+  },
+  {
+   "fichier": "SFR.html",
+   "nom": "SFR",
+   "pays": "FR",
+   "verdict": "PROMO_LISIBLE",
+   "octets": 215704,
+   "zones": 0,
+   "cartes": 0,
+   "exemples": [],
+   "preuves": []
+  },
+  {
+   "fichier": "Schoenen_Torfs.html",
+   "nom": "Schoenen Torfs",
+   "pays": "BE",
+   "verdict": "PROMO_LISIBLE",
+   "octets": 93999,
+   "zones": 0,
+   "cartes": 0,
+   "exemples": [],
+   "preuves": []
+  },
+  {
+   "fichier": "Shop_Apotheke__Redcare_Pharmacy_.html",
+   "nom": "Shop Apotheke (Redcare Pharmacy)",
+   "pays": "DE",
+   "verdict": "PROMO_LISIBLE",
+   "octets": 516235,
+   "zones": 0,
+   "cartes": 0,
+   "exemples": [],
+   "preuves": []
+  },
+  {
+   "fichier": "Standaard_Boekhandel.html",
+   "nom": "Standaard Boekhandel",
+   "pays": "BE",
+   "verdict": "PROMO_LISIBLE",
+   "octets": 361388,
+   "zones": 0,
+   "cartes": 0,
+   "exemples": [],
+   "preuves": []
+  },
+  {
+   "fichier": "Thomas_Philipps.html",
+   "nom": "Thomas Philipps",
+   "pays": "DE",
+   "verdict": "PROMO_LISIBLE",
+   "octets": 352774,
+   "zones": 12,
+   "cartes": 0,
+   "exemples": [],
+   "preuves": []
+  },
+  {
+   "fichier": "Trinkgut.html",
+   "nom": "Trinkgut",
+   "pays": "DE",
+   "verdict": "PROMO_LISIBLE",
+   "octets": 354536,
+   "zones": 0,
+   "cartes": 0,
+   "exemples": [],
+   "preuves": []
+  },
+  {
+   "fichier": "Ultra_Premium_Direct.html",
+   "nom": "Ultra Premium Direct",
+   "pays": "FR",
+   "verdict": "PROMO_LISIBLE",
+   "octets": 459519,
+   "zones": 0,
+   "cartes": 0,
+   "exemples": [],
+   "preuves": []
+  },
+  {
+   "fichier": "Voyage_Priv_.html",
+   "nom": "Voyage Privé",
+   "pays": "BE",
+   "verdict": "STRUCTURE_PRETE",
+   "octets": 505088,
+   "zones": 0,
+   "cartes": 0,
+   "exemples": [],
+   "preuves": []
+  },
+  {
+   "fichier": "X_O_Badkamers.html",
+   "nom": "X²O Badkamers",
+   "pays": "BE",
+   "verdict": "PROMO_LISIBLE",
+   "octets": 512313,
+   "zones": 0,
+   "cartes": 0,
+   "exemples": [],
+   "preuves": []
+  },
+  {
+   "fichier": "Zalando.html",
+   "nom": "Zalando",
+   "pays": "BE",
+   "verdict": "PROMO_LISIBLE",
+   "octets": 519304,
+   "zones": 0,
+   "cartes": 0,
+   "exemples": [],
+   "preuves": []
+  },
+  {
+   "fichier": "hagebau.html",
+   "nom": "hagebau",
+   "pays": "DE",
+   "verdict": "PROMO_LISIBLE",
+   "octets": 515057,
+   "zones": 0,
+   "cartes": 0,
+   "exemples": [],
+   "preuves": []
+  },
+  {
+   "fichier": "iPhoneItalia.html",
+   "nom": "iPhoneItalia",
+   "pays": "IT",
+   "verdict": "PROMO_LISIBLE",
+   "octets": 219715,
+   "zones": 1,
+   "cartes": 0,
+   "exemples": [],
+   "preuves": []
+  },
+  {
+   "fichier": "mydealz.html",
+   "nom": "mydealz",
+   "pays": "DE",
+   "verdict": "PROMO_LISIBLE",
+   "octets": 305165,
+   "zones": 0,
+   "cartes": 0,
+   "exemples": [],
+   "preuves": []
+  },
+  {
+   "fichier": "reifen.com___reifendirekt.html",
+   "nom": "reifen.com / reifendirekt",
+   "pays": "DE",
+   "verdict": "PROMO_LISIBLE",
+   "octets": 157171,
+   "zones": 0,
+   "cartes": 0,
+   "exemples": [],
+   "preuves": []
+  },
+  {
+   "fichier": "rue_du_commerce.html",
+   "nom": "rue du commerce",
+   "pays": "FR",
+   "verdict": "PROMO_LISIBLE",
+   "octets": 251320,
+   "zones": 80,
+   "cartes": 0,
+   "exemples": [],
+   "preuves": []
+  }
+ ]
+}

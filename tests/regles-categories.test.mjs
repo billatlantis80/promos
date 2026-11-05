@@ -1,0 +1,307 @@
+/**
+ * RÈGLES DE CATÉGORIE demandées — application n°2 « Promos ».
+ *
+ * Trois règles, énoncées explicitement, et qui doivent tenir DANS LES NEUF
+ * LANGUES du catalogue :
+ *
+ *   1. tout appareil électronique ou technologique → high-tech ;
+ *   2. l'électroménager → ÉLECTROMÉNAGER (onglet dédié, à côté de High-tech) —
+ *      c'était « maison » avant la demande du 6 octobre au soir : les appareils
+ *      ménagers (froid, lavage, cuisson, entretien, soin du linge et des
+ *      cheveux) ont maintenant leur rubrique, et « maison » garde le mobilier,
+ *      la déco et le jardin ;
+ *   3. l'électronique de beauté SANS rapport avec les cheveux ni le rasage
+ *      (épilateurs, brosses à dents, soins) → beauté. Les rasoirs, tondeuses à
+ *      cheveux/barbe, sèche-cheveux et lisseurs vont en Électroménager.
+ *
+ * Ce qui rend ces règles non triviales : une MARQUE ne dit pas la famille d'un
+ * produit. Samsung fait des téléphones (high-tech) ET des réfrigérateurs
+ * (électroménager) ; Bosch des perceuses (bricolage) ET des lave-linge
+ * (électroménager) ; Dyson des aspirateurs (électroménager) ET des
+ * sèche-cheveux (électroménager aussi, désormais). Tant que la marque
+ * décidait, « Samsung Réfrigérateur » partait en high-tech.
+ *
+ * D'où la règle appliquée : dès qu'un APPAREIL EST NOMMÉ, c'est lui qui tranche,
+ * avant la marque et avant la catégorie de la source. Les cas ci-dessous
+ * contiennent donc, pour chaque règle, des titres où la marque dit le CONTRAIRE
+ * de l'appareil — c'est là que le défaut se produisait.
+ *
+ * Lancement : node --test
+ */
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { famille } from '../collecteur.mjs';
+
+test('règle 1 — tout appareil électronique ou technologique va en high-tech', () => {
+  const cas = [
+    ['Samsung Galaxy S26 Ultra 256 Go', 'smartphone'],
+    ['Apple iPhone 17 Pro', 'smartphone'],
+    ['TV Samsung QE55Q60 55 pouces', 'téléviseur'],
+    ['Téléviseur LG OLED 55"', 'téléviseur'],
+    ['Fernseher LG 55 Zoll', 'téléviseur (de)'],
+    ['Ordinateur portable Asus Zenbook 14', 'ordinateur'],
+    ['Casque audio Sony WH-1000XM6', 'casque'],
+    ['Écouteurs AirPods Pro 3', 'écouteurs'],
+    ['Montre connectée Garmin Forerunner', 'montre connectée'],
+    ['Imprimante HP Envy 6000', 'imprimante'],
+    ['Auriculares Sony WH-CH520', 'casque (es)'],
+    ['Consola PlayStation 5 Slim', 'console (es)'],
+    ['Drukarka HP DeskJet', 'imprimante (pl)'],
+    ['Słuchawki bezprzewodowe z etui', 'écouteurs (pl)'],
+    ['Smartphone Xiaomi Redmi Note 17', 'smartphone'],
+  ];
+  const rates = cas.filter(([t]) => famille(t, '') !== 'tech').map(([t]) => t);
+  assert.deepEqual(rates, [], `titres technologiques mal rangés : ${rates.join(' | ')}`);
+});
+
+test('règle 2 — l’électroménager va en ÉLECTROMÉNAGER, MÊME sous une marque de high-tech', () => {
+  const cas = [
+    ['Samsung Réfrigérateur combiné RS70F66KBTEF', 'marque high-tech + appareil'],
+    ['Réfrigérateur Samsung 400 L', ''],
+    ['Bosch Lave-linge série 6', 'marque bricolage + appareil'],
+    ['Micro-ondes Samsung 23 L', 'marque high-tech + appareil'],
+    ['Cafetière à grains Philips EP2231', 'marque ambiguë + appareil'],
+    ['Aspirateur balai Dyson V15', ''],
+    ['Philips Airfryer 5000 Series', ''],
+    ['Kühlschrank Siemens iQ300', 'allemand'],
+    ['Wasmachine Bosch Serie 4', 'néerlandais'],
+    ['Lavavajillas Bosch SMS4H', 'espagnol'],
+    ['Lavatrice Samsung EcoBubble', 'italien'],
+    ['Odkurzacz pionowy Electrolux', 'polonais'],
+    ['Dammsugare Electrolux', 'suédois'],
+  ];
+  const rates = cas.filter(([t]) => famille(t, '') !== 'electromenager').map(([t]) => t);
+  assert.deepEqual(rates, [], `électroménager mal rangé : ${rates.join(' | ')}`);
+});
+
+test('règle 2 bis — rasoirs, tondeuses et soin des cheveux → Électroménager (ils quittent Beauté)', () => {
+  const cas = [
+    ['Braun Series 9 rasoir électrique', 'rasoir électrique'],
+    ['Sèche-cheveux Dyson Supersonic', 'marque maison + appareil'],
+    ['Lisseur de cheveux Philips', 'lisseur'],
+    ['Haartrockner Philips BHD300', 'allemand — contient « trockner » (sèche-linge)'],
+    ['Tondeuse barbe Philips Series 5000', 'tondeuse à barbe'],
+    ['Tondeuse à cheveux Wahl', 'tondeuse à cheveux'],
+    ['Scheerapparaat Philips 7000', 'néerlandais'],
+    ['Asciugacapelli Philips', 'italien'],
+    ['Secador de pelo Philips', 'espagnol'],
+    ['Suszarka do włosów Philips', 'polonais'],
+  ];
+  const rates = cas.filter(([t]) => famille(t, '') !== 'electromenager').map(([t]) => `${t} → ${famille(t, '')}`);
+  assert.deepEqual(rates, [], `rasoirs / cheveux mal rangés :\n  ${rates.join('\n  ')}`);
+});
+
+test('E1 — contrôles du partage : télé → High-tech, frigo → Électroménager, tondeuse à gazon → Bricolage, tondeuse à cheveux → Électroménager', () => {
+  // Ces quatre-là sont les contrôles EXIGÉS par la demande du 6 octobre :
+  // l'onglet Électroménager ne doit pas voler les téléviseurs (high-tech), et
+  // il ne doit pas confondre la tondeuse à CHEVEUX avec la tondeuse à GAZON.
+  assert.equal(famille('Téléviseur LG OLED 55 pouces', ''), 'tech', 'une télé reste en high-tech');
+  assert.equal(famille('TV Samsung QE55Q60 55 pouces', ''), 'tech', 'une télé reste en high-tech');
+  assert.equal(famille('Enceinte Bluetooth JBL Charge 6', ''), 'tech', 'une enceinte diffuse du son : high-tech');
+  assert.equal(famille('Barre de son Samsung HW-Q600', ''), 'tech', 'une barre de son reste en high-tech');
+  assert.equal(famille('Réfrigérateur Samsung 400 L', ''), 'electromenager', 'un frigo va en électroménager');
+  assert.equal(famille('Tondeuse à gazon thermique', ''), 'bricolage', 'la tondeuse à gazon reste en bricolage');
+  assert.equal(famille('Tondeuse à cheveux Wahl', ''), 'electromenager', 'la tondeuse à cheveux va en électroménager');
+  //  POINT 24 — arbitrage de B du 7/10 : la BROSSE À DENTS est un appareil, et
+  //  elle doit aller en ÉLECTROMÉNAGER (elle était en Beauté). « brosse à dents
+  //  kids » était le cas cité : sans ce déménagement, la règle d'ENFANT la
+  //  rangeait en jouets — mesuré, c'était la seule des 84 offres de brosses à
+  //  dents dans ce cas.
+  assert.equal(famille('Brosse à dents électrique Oral-B iO', ''), 'electromenager', 'la brosse à dents va en électroménager');
+  assert.equal(famille('Oral-B iO3 Duo Electric Toothbrushes, 2 Handles', ''), 'electromenager', 'brosse à dents en anglais');
+  assert.equal(famille('Philips Sonicare DiamondClean 9000 elektrische Zahnbürste', ''), 'electromenager', 'brosse à dents en allemand');
+  assert.equal(famille('Oral-B iO 3 Spazzolino Elettrico, 1 Testina', ''), 'electromenager', 'brosse à dents en italien');
+  assert.equal(famille('Robot Tondeuse sans fil Dreame A1 Pro', ''), 'bricolage', 'un robot de tonte est une tondeuse à gazon');
+});
+
+test('point 26 — le partage se fait sur ÉLECTRIQUE, jamais sur la famille seule', () => {
+  // Demande de B, mot pour mot : « les brosses à dents électriques doivent être
+  // dans électroménager, les brosses à dents manuelles doivent être dans beauté.
+  // Même chose pour les rasoirs électriques […] Les rasoirs manuels et les lames
+  // doivent être dans beauté. »
+  // Le départage est la LONGUEUR du mot trouvé : un titre qui dit « électrique »
+  // l'emporte depuis la table électroménager ; sans ce mot, c'est Beauté.
+  const attendusElectro = [
+    'Brosse à dents électrique Oral-B iO Series 9',
+    'Oral-B iO3 Duo Electric Toothbrushes, 2 Handles',
+    'Philips Sonicare DiamondClean 9000 elektrische Zahnbürste',
+    'Oral-B iO 3 Spazzolino Elettrico, 1 Testina',
+    'Rasoir électrique Braun Series 7',
+    'Elektrorasierer Philips 5000 Series',
+    'Scheerapparaat Philips Series 3000',
+  ];
+  const attendusBeaute = [
+    'Brosse à dents manuelle bambou, lot de 4',
+    'Colgate Brosse à Dents Extra Clean, Lot de 4',
+    'Zahnbürste 4er Pack, weich',
+    'Scheermesjes Gillette Fusion 5, 8 stuks',
+    'Rasoir mécanique Gillette Mach3, un manche',
+    'Gillette Lames de Rasoir Homme Fusion 5, Pack de 16',
+    'Recharge rasoir Gillette Fusion 5, 8 cartouches',
+    'Rasierhobel Rasiermesser für Herren',
+    'Philips OneBlade Original 360-rakblad',
+  ];
+  const faux = [
+    ...attendusElectro.filter((t) => famille(t, '') !== 'electromenager').map((t) => `« ${t} » → ${famille(t, '')} (attendu Électroménager)`),
+    ...attendusBeaute.filter((t) => famille(t, '') !== 'beaute').map((t) => `« ${t} » → ${famille(t, '')} (attendu Beauté)`),
+  ];
+  assert.deepEqual(faux, [], `partage électrique/manuel mal appliqué :\n  ${faux.join('\n  ')}`);
+  // ⚠ Un appareil MANUEL nommé garde Beauté même avec un mot d'enfant : sans cet
+  // élargissement de l'exception, « brosse à dents enfant » repartait en jouets.
+  assert.equal(famille('Brosse à dents enfant souple 2-6 ans', ''), 'beaute', 'brosse manuelle d’enfant → Beauté');
+  assert.equal(famille('Rasoir enfant Gillette', ''), 'beaute', 'rasoir manuel d’enfant → Beauté');
+});
+
+test('règle 3 — l’électronique de beauté (hors cheveux et rasage) va en beauté', () => {
+  const cas = [
+    ['Épilateur Braun Silk-épil 9', ''],
+    ['Depiladora Philips BRL130', 'espagnol'],
+    ['Epilatore Philips', 'italien'],
+    ['Ontharingsapparaat Philips', 'néerlandais'],
+    ['Appareil de massage facial Philips', 'soin du visage'],
+  ];
+  const rates = cas.filter(([t]) => famille(t, '') !== 'beaute').map(([t]) => t);
+  assert.deepEqual(rates, [], `électronique de beauté mal rangée : ${rates.join(' | ')}`);
+});
+
+test('les règles d’appareil ne cassent pas les autres rayons', () => {
+  const cas = [
+    ['Perceuse visseuse Makita 18V', 'bricolage'],
+    ['Tondeuse à gazon thermique', 'bricolage'],
+    ['Sneakers Nike Air Max', 'mode'],
+    ['LEGO Editions McLaren F1', 'jouets'],
+    ['Pneus Michelin 205/55 R16', 'auto'],
+    ['Bicicletta da corsa', 'sport'],
+    ['Juguete de construcción', 'jouets'],
+    ['Profumo e crema idratante', 'beaute'],
+  ];
+  const rates = cas.filter(([t, f]) => famille(t, '') !== f).map(([t, f]) => `${t} → ${famille(t, '')} (attendu ${f})`);
+  assert.deepEqual(rates, [], `régressions hors règles d'appareil :\n  ${rates.join('\n  ')}`);
+});
+
+test('un appareil nommé l’emporte sur la catégorie de la source', () => {
+  // Une source peut se tromper : un lave-linge rangé par erreur en high-tech
+  // reste un lave-linge. C'est ce que veut dire « le mot d'appareil d'abord ».
+  assert.equal(famille('Samsung Réfrigérateur combiné', 'High-Tech'), 'electromenager');
+  assert.equal(famille('Épilateur Braun Silk-épil 9', 'High-Tech'), 'beaute');
+  assert.equal(famille('Téléviseur LG OLED 55', 'Gaming'), 'tech');
+});
+
+test('un titre réduit à une référence constructeur reste en « Autres »', () => {
+  // On ne devine pas : sans mot d'appareil, il n'y a rien à décider. Ranger
+  // d'après la seule marque (« Samsung ») enverrait des réfrigérateurs en
+  // high-tech — c'est exactement le défaut qu'on vient de corriger.
+  assert.equal(famille('Bosch MSM4B610', ''), 'autre');
+  assert.equal(famille('Miele G 5664 SC Vi', ''), 'electromenager', 'Miele est une marque d’appareils ménagers, sans ambiguïté');
+});
+
+test('un JEU DE SOCIÉTÉ ne part pas en bricolage sous prétexte qu’on y parle de bricolage', () => {
+  // Défaut rapporté : « on retrouve beaucoup de jeux de société pour les enfants
+  // dans le bricolage car il y a le mot bricolage dedans. Mais il y a aussi le
+  // mot jeu de société. Il faut corriger et les renvoyer vers jeux et jouet. »
+  //
+  //  Cause mesurée : un titre qui dit les deux comptait DEUX points pour
+  //  bricolage (le mot « bricolage », plus « brico » qu'il contient) contre UN
+  //  pour jouets. Le type de jeu est maintenant un mot fort : « jeu de societe »
+  //  (15 caractères) bat « bricolage » (9) par la longueur.
+  const cas = [
+    ['Junior Créez Votre Propre Kit De Jeu De Société, Ensemble De Bricolage', 'jouets'],
+    ['Créez Votre Propre Kit De Jeu De Société, Ensemble De Bricolage', 'jouets'],
+    ['22mm Cube de jeu pour enfants vierges à 6 côtés - Pour jeu de société', 'jouets'],
+    ['[Prime] Jeu de société Zombicide - Seconde Edition', 'jouets'],
+    ['Monopoly Deal kaartspel (Nederlandse versie)', 'jouets'],
+    ['ROKR Puzzle 3D en bois pour adulte - Kit de bricolage - Modèle globe', 'jouets'],
+    ['Play-Doh, coffret Tourbillon de smoothies, jouet avec pâte à modeler', 'jouets'],
+    ['ATM Gaming MOUTON MOUTON - Jeu de Société Famille et Amis', 'jouets'],
+    ['Korting op Beyblade speelgoed', 'jouets'],
+  ];
+  const rates = cas.filter(([t, f]) => famille(t, '') !== f).map(([t, f]) => `${t} → ${famille(t, '')} (attendu ${f})`);
+  assert.deepEqual(rates, [], `jeux de société mal rangés :\n  ${rates.join('\n  ')}`);
+});
+
+test('les FAUX AMIS ne font pas basculer un produit en jouets', () => {
+  // « peluche » désigne aussi les peluches de TISSU, et « doudou » est le début
+  // de « doudoune ». Mesuré sur les données réelles AVANT de les retirer des
+  // mots forts : un rasoir anti-bouloche Philips, des chiffons microfibre et une
+  // parka Nike partaient tous en « Jeux & jouets ». La comparaison ignorant la
+  // langue du titre, « peluche » devait être retiré de TOUTES les langues, pas
+  // seulement du français.
+  for (const [titre, piege] of [
+    ['Rasoir anti bouloche Philips GC026/80 - élimination des Peluches', 'peluche = peluches de tissu'],
+    ['Doudoune longue Nike Liverpool FC 24/25 Strike Windrunner', 'doudou = début de doudoune'],
+    ['AIDEA Lot de 50 Chiffon Microfibre sans peluche', 'peluche = peluches de tissu'],
+  ]) {
+    assert.notEqual(famille(titre, ''), 'jouets', `${piege} : « ${titre} » ne doit pas aller en jouets`);
+  }
+});
+
+test('un jeu NUMÉRIQUE n’est pas un jouet', () => {
+  // Le support est nommé, lui aussi : une application qui simule un jeu de
+  // société reste un logiciel. C'est la règle du produit nommé, appliquée à
+  // l'envers — et c'est ce qui empêche « Board Game App » de finir dans le
+  // rayon des jouets.
+  assert.equal(famille('Patchwork Board Game - Android Game App', ''), 'tech');
+  assert.equal(famille('Solitaire Pro : Card Games [Android]', ''), 'tech');
+  // Mais un jeu de société EN CARTON reste un jouet, même vendu sur un site
+  // high-tech : le mot fort doit continuer de gagner quand rien ne dit
+  // « numérique ».
+  assert.equal(famille('Casino Jeu de société familial', 'Gaming'), 'jouets');
+});
+
+test('une HOTTE est un appareil ménager, et « niveaux » n’est pas « Nivea »', () => {
+  // Défaut MESURÉ le 09/10/2026 sur une offre réelle signalée par B. Deux
+  // causes, dans le même titre — le défaut en cachait un second :
+  //   1. la marque « nivea » était lue en SOUS-CHAÎNE : « 3 niveaux de
+  //      puissance » réveillait le cosmétique, et l'offre partait en BEAUTÉ ;
+  //   2. « hotte », l'appareil nommé, n'était dans aucune liste : corrigé le
+  //      point 1, l'offre serait tombée en « Autres ».
+  // Les deux sont donc vérifiés ensemble : c'est le titre exact qui a servi à
+  // les trouver, et il doit rester classé correctement.
+  const hotte = 'Klarstein Valeria Hotte Îlot - 230W, débit max. 642 m³/h, 3 niveaux de puissance,'
+    + ' éclairage LED, panneau tactile, verre, inox, éco-énergétique, PureAmbience Concept, argent';
+  assert.equal(famille(hotte, ''), 'electromenager', 'le titre réel doit aller en électroménager');
+  assert.equal(famille('Hotte aspirante 60 cm inox', ''), 'electromenager');
+  assert.equal(famille('Plaque de cuisson induction 4 zones', ''), 'electromenager');
+  // La marque Nivea, elle, doit continuer de ranger un cosmétique en Beauté :
+  // la frontière de mot retire la collision, pas le mot.
+  assert.equal(famille('Crème hydratante Nivea Soft 200 ml', ''), 'beaute');
+  // Et le mot ORDINAIRE ne réveille plus la marque, dans les deux sens.
+  assert.notEqual(famille('Niveau à bulle magnétique 60 cm', ''), 'beaute');
+  assert.notEqual(famille('Grille-pain 3 niveaux de brunissage', ''), 'beaute');
+});
+
+test('une LAMPE FRONTALE va en Sport, et « 8 Modes » n’est pas la Mode', () => {
+  // Deuxième signalement de B le 09/10/2026, une offre réelle : une lampe
+  // frontale Rechargeable rangée en MODE. Deux causes là encore — le mot faible
+  // « mode » (le rayon des vêtements) attrapait « 8 Modes d'éclairage », et les
+  // lampes portatives n'étaient nommées dans AUCUNE rubrique : les deux offres
+  // sœurs du catalogue ne devaient leur Sport qu'à « camping » ou « randonnée ».
+  const frontale = "Blukar Lampe Frontale Rechargeable 2 Pack 2000L Super Lumineux IPX5 Étanche |"
+    + " Léger Torche Frontale LED Puissante avec Voyant Rouge, 8 Modes d'éclairage, Capteur Mouvement,"
+    + " 30H d'autonomie pour Course";
+  assert.equal(famille(frontale, ''), 'sport', 'la lampe frontale signalée doit aller en Sport');
+  assert.equal(famille('Blukar Latarka Czołowa Ładowalna 2000L Super Jasna, 8 Trybów', ''), 'sport',
+    'et sa jumelle polonaise, qui était en « Autres »');
+  assert.equal(famille('Lampe torche LED rechargeable pour camping', ''), 'sport');
+  // Le mot de la famille Mode reste lu COMME UN MOT : « mode femme » est du vêtement.
+  assert.equal(famille('Pull femme mode hiver col roulé', ''), 'mode');
+  assert.equal(famille('Veste homme mode urbaine', ''), 'mode');
+  // …mais les mots qui le CONTIENNENT ne sont pas la mode — chacun a été mesuré
+  // dans les offres publiées : « modes » (d'éclairage), « modèle », « moderne »,
+  // « Modell », « modelli » envoyaient en Mode des articles de presse, un bureau,
+  // une machine à coudre et une lampe de salon.
+  for (const titre of [
+    'Ventilateur 8 modes de vitesse silencieux',
+    'Bureau Moderne en Bois de Noyer et Acier Chromé',
+    'Machine à coudre électronique Brother CX70PES (Nouveau Modèle)',
+    'Philips Avent sterilisator (modell SCF291/00)',
+    'Friggitrici ad aria: 8 modelli senza PFAS in offerta',
+  ]) {
+    assert.notEqual(famille(titre, ''), 'mode', `« ${titre} » ne doit pas aller en Mode`);
+  }
+  // Et les lampes de la MAISON ne doivent pas être aspirées par les portatives :
+  // « lampe » seule n'est pas dans la liste Sport, à dessein.
+  assert.notEqual(famille('Lampe de table design en bois pour salon', ''), 'sport');
+  assert.notEqual(famille('Lampe de chevet tactile LED chambre', ''), 'sport');
+});
+

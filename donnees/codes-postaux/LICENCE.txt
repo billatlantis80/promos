@@ -1,0 +1,4 @@
+Source : GeoNames, fichier postal BE.txt (telecharge le 2026-10-24)
+Licence : Creative Commons Attribution 4.0 (CC BY 4.0)
+Obligation : credit avec un lien vers https://www.geonames.org
+Aucune cle, aucune limite de requetes : le fichier est chez nous.
